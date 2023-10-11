@@ -21,5 +21,6 @@ namespace Dawem.Models.Exceptions
             MessageCode = error.ErrorCode;
             Message = error.ErrorMessage;
         }
+
     }
 }

@@ -6,6 +6,7 @@ namespace Dawem.Models.Exceptions
     {
         public string MessageCode;
         public new string Message;
+
         public BusinessValidationErrorException(string messageCode)
         {
             MessageCode = messageCode;

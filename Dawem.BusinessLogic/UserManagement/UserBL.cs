@@ -1,4 +1,18 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.UserManagement;
+using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.UserManagement;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Identity;
+using Dawem.Repository.UserManagement;
 using FluentValidation.Results;
 using LinqKit;
 using Microsoft.AspNetCore.Identity;
@@ -28,22 +42,21 @@ using SmartBusinessERP.Repository.UserManagement.Contract;
 
 namespace SmartBusinessERP.BusinessLogic.UserManagement
 {
-    public class SmartUserBL : ISmartUserBL
+    public class UserBL : IUserBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly SmartUserManagerRepository smartUserManagerRepository;
-        private readonly ISmartUserRepository smartUserRepository;
+        private readonly UserManagerRepository smartUserManagerRepository;
+        private readonly IUserRepository smartUserRepository;
         private readonly RequestHeaderContext userContext;
         private readonly IBranchValidatorBL branchValidatorBL;
         private readonly IBranchRepository branchRepository;
-        private readonly ISmartUserRoleRepository smartUserRoleRepository;
+        private readonly IUserRoleRepository smartUserRoleRepository;
         private readonly IUserBranchRepository userBranchRepository;
         private readonly IUserGroupRepository userGroupRepository;
         private readonly IUserBranchBL userBranchBL;
-        private readonly IMapper mapper;
 
-        public SmartUserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IUserGroupRepository _userGroupRepository, ISmartUserRoleRepository _smartUserRoleRepository, ISmartUserRepository _smartUserRepository, SmartUserManagerRepository _smartUserManagerRepository,
-            IConfiguration _config, IMapper _mapper, RequestHeaderContext _userContext, IBranchValidatorBL _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
+        public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IUserGroupRepository _userGroupRepository, IUserRoleRepository _smartUserRoleRepository, IUserRepository _smartUserRepository, UserManagerRepository _smartUserManagerRepository,
+            IConfiguration _config, RequestHeaderContext _userContext, IBranchValidatorBL _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
             smartUserManagerRepository = _smartUserManagerRepository;
@@ -52,23 +65,22 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
             branchValidatorBL = _branchValidatorBL;
             branchRepository = _branchRepository;
             userBranchRepository = _userBranchRepository;
-            mapper = _mapper;
             userGroupRepository = _userGroupRepository;
             smartUserRoleRepository = _smartUserRoleRepository;
             userBranchBL = _userBranchBL;
 
         }
 
-        public async Task<SmartUserSearchResult> Get(SmartUserSearchCriteria criteria)
+        public async Task<UserSearchResult> Get(UserSearchCriteria criteria)
         {
 
-            SmartUserSearchResult userSearchResult = new()
+            UserSearchResult userSearchResult = new()
             {
                 Status = ResponseStatus.Success
             };
             try
             {
-                ExpressionStarter<SmartUser> userPredicate = PredicateBuilder.New<SmartUser>(true);
+                ExpressionStarter<User> userPredicate = PredicateBuilder.New<User>(true);
 
                 if (userContext.IsMainBranch && criteria.ForGridView)
                 {
@@ -119,24 +131,24 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
                 int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
                 int take = PagingHelper.Take(criteria.PageSize);
 
-                IQueryable<SmartUser> users = smartUserRepository.Get(userPredicate, IncludeProperties: !userContext.IsMainBranch && !criteria.ForGridView ? "UserBranches" : "");
+                IQueryable<User> users = smartUserRepository.Get(userPredicate, IncludeProperties: !userContext.IsMainBranch && !criteria.ForGridView ? "UserBranches" : "");
 
                 #region sorting
-                IQueryable<SmartUser> usersOrdered = smartUserRepository.OrderBy(users, "Id", "desc");
+                IQueryable<User> usersOrdered = smartUserRepository.OrderBy(users, "Id", "desc");
                 #endregion
 
-                IQueryable<SmartUser> queryOrdered = usersOrdered;
+                IQueryable<User> queryOrdered = usersOrdered;
 
 
-                IQueryable<SmartUser> queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+                IQueryable<User> queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
                 #endregion
 
-                List<SmartUser> result = await queryPaged.ToListAsync();
+                List<User> result = await queryPaged.ToListAsync();
 
-                SmartUserDTOMapper.InitUserContext(userContext);
+                UserDTOMapper.InitUserContext(userContext);
 
-                userSearchResult.SmartUsers = SmartUserDTOMapper.MapListUsers(result);
+                userSearchResult.Users = UserDTOMapper.MapListUsers(result);
                 userSearchResult.TotalCount = queryOrdered.ToList().Count;
                 userSearchResult.Status = ResponseStatus.Success;
             }
@@ -148,10 +160,10 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
             return userSearchResult;
 
         }
-        public async Task<GetSmartUserInfoResponse> GetInfo(GetSmartUserInfoCriteria criteria)
+        public async Task<GetUserInfoResponse> GetInfo(GetUserInfoCriteria criteria)
         {
 
-            GetSmartUserInfoResponse userSearchResult = new()
+            GetUserInfoResponse userSearchResult = new()
             {
                 Status = ResponseStatus.Success
             };
@@ -161,10 +173,10 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
 
                 if (user != null)
                 {
-                    SmartUserDTOMapper.InitUserContext(userContext);
+                    UserDTOMapper.InitUserContext(userContext);
 
-                    var userInfo = SmartUserDTOMapper.MapInfo(user);
-                    userSearchResult.SmartUserInfo = userInfo;
+                    var userInfo = UserDTOMapper.MapInfo(user);
+                    userSearchResult.UserInfo = userInfo;
                     userSearchResult.Status = ResponseStatus.Success;
                 }
                 else
@@ -194,7 +206,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
 
             };
 
-            SmartUser smartUser = mapper.Map<SmartUser>(createdUser);
+            User smartUser = mapper.Map<User>(createdUser);
             smartUser.MainBranchId = userContext.BranchId;
             smartUser.EmailConfirmed = true;
             smartUser.UserName = smartUser.Email;
@@ -373,7 +385,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
             //var getFromDB = smartUserRepository.GetByID(updatedUser.Id);
             //updatedUser.UserName = getFromDB.UserName;
             updatedUser.MainBranchId = userContext.BranchId ?? 0;
-            SmartUser myuser = mapper.Map<SmartUser>(updatedUser);
+            User myuser = mapper.Map<User>(updatedUser);
 
             UserValidator uservalidate = new(ValidationMode.Update, this, userContext);
 
@@ -407,11 +419,11 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
 
 
 
-                SmartUser? myuser2 = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
+                User? myuser2 = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
 
 
 
-                List<SmartUser> getDuplicateUsersList = smartUserRepository.Get(r => r.UserName == myuser.UserName && r.Id != myuser2.Id).ToList();
+                List<User> getDuplicateUsersList = smartUserRepository.Get(r => r.UserName == myuser.UserName && r.Id != myuser2.Id).ToList();
 
                 if (getDuplicateUsersList.Count() > 0)
                 {
@@ -619,7 +631,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
                 TranslationHelper.MapBaseResponse(source: ValidateChangeForMainBranchOnlyResult, destination: response);
                 return response;
             }
-            SmartUser? myUser = await smartUserRepository.Get(a => a.Id == userId).FirstOrDefaultAsync();
+            User? myUser = await smartUserRepository.Get(a => a.Id == userId).FirstOrDefaultAsync();
             if (myUser != null)
             {
                 unitOfWork.CreateTransaction();
@@ -664,7 +676,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
             try
             {
                 //string currentName;
-                SmartUser duplicateUser = null;
+                User duplicateUser = null;
                 if (string.IsNullOrEmpty(validationItem.Item))
                 {
                     response.Result = true;

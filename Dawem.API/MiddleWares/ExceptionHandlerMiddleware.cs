@@ -29,6 +29,7 @@ public class ExceptionHandlerMiddleware
 
         try
         {
+            
             await _request(context);
         }
         catch (BusinessValidationErrorException ex)

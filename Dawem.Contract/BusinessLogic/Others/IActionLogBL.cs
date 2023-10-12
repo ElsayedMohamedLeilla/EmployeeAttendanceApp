@@ -9,7 +9,7 @@ namespace SmartBusinessERP.BusinessLogic.Others.Contract
     public interface IActionLogBL
     {
         BaseResponseT<ActionLogDTO> GetById(int Id);
-        GetActionLogsResponse Get(GetActionLogsCriteria criteria);
+        Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria);
         Task<GetActionLogInfoResponse> GetInfo(GetActionLogInfoCriteria criteria);
         Task<BaseResponseT<bool>> Create(CreateActionLogModel model);
     }

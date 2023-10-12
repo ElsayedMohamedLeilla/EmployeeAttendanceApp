@@ -1,17 +1,17 @@
-﻿using LinqKit;
+﻿using Dawem.Contract.Repository.Lookups;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Lookups;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Lookups;
+using Dawem.Translations;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using SmartBusinessERP.BusinessLogic.Lookups.Contract;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Lookups;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Criteria.Lookups;
-using SmartBusinessERP.Models.Dtos.Lookups;
-using SmartBusinessERP.Models.Response.Lookups;
-using SmartBusinessERP.Repository.Lookups.Contract;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace SmartBusinessERP.BusinessLogic.Lookups
 {
@@ -30,132 +30,80 @@ namespace SmartBusinessERP.BusinessLogic.Lookups
             userContext = _userContext;
         }
 
-        public async Task<GetCountriesResponse> GetCountries(GetCountriesCriteria criteria)
+        public async Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria)
         {
+            var countryPredicate = PredicateBuilder.New<Country>(true);
 
-            GetCountriesResponse getCountriesResponse = new()
+
+            if (criteria.Id is not 0 && criteria.Id is not null)
             {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                ExpressionStarter<Country> countryPredicate = PredicateBuilder.New<Country>(true);
-
-
-                if (criteria.Id is not 0 && criteria.Id is not null)
-                {
-                    countryPredicate = countryPredicate.And(x => x.Id == criteria.Id);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-                {
-                    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-
-                    countryPredicate = countryPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
-                    countryPredicate = countryPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
-                }
-
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                var query = countryRepository.Get(countryPredicate);
-
-                #region sorting
-
-                var queryOrdered = countryRepository.OrderBy(query, "Id", "asc");
-
-                #endregion
-
-                var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                var countries = await queryPaged.Select(c => new CountryLiteDTO()
-                {
-                    Id = c.Id,
-                    GlobalName = userContext.Lang == "ar" ? c.NameAr : c.NameEn,
-                    CountryISOCode = c.Iso.ToLower()
-                }).ToListAsync();
-
-
-                getCountriesResponse.Countries = countries;
-                getCountriesResponse.TotalCount = queryOrdered.ToList().Count();
-                getCountriesResponse.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                getCountriesResponse.Exception = ex;
-                getCountriesResponse.Status = ResponseStatus.Error;
+                countryPredicate = countryPredicate.And(x => x.Id == criteria.Id);
             }
 
-            return getCountriesResponse;
+            if (!string.IsNullOrWhiteSpace(criteria.FreeText))
+            {
+                criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
+                countryPredicate = countryPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
+                countryPredicate = countryPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
+            }
+
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            var query = countryRepository.Get(countryPredicate);
+
+            #region sorting
+
+            var queryOrdered = countryRepository.OrderBy(query, "Id", "asc");
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            var countries = await queryPaged.Select(c => new CountryLiteDTO()
+            {
+                Id = c.Id,
+                GlobalName = userContext.Lang == "ar" ? c.NameAr : c.NameEn,
+                CountryISOCode = c.Iso.ToLower()
+            }).ToListAsync();
+
+            return countries;
         }
-        public async Task<GetCurrenciesResponse> GetCurrencies(GetCurrenciesCriteria criteria)
+        public async Task<List<CurrencyLiteDTO>?> GetCurrencies(GetCurrenciesCriteria criteria)
         {
+            var query = currencyRepository.GetAsQueryable(criteria);
 
-            GetCurrenciesResponse response = new()
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = currencyRepository.OrderBy(query, nameof(Currency.Id), DawemKeys.Asc);
+
+            #endregion
+
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            var currenciesList = await queryPaged.Select(c => new CurrencyLiteDTO()
             {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                ExpressionStarter<Currency> currencyPredicate = PredicateBuilder.New<Currency>(true);
+                Id = c.Id,
+                GlobalName = userContext.Lang == DawemKeys.Ar ? c.NameAr : c.NameEn,
+                CountryISOCode = c.Country.Iso.ToLower()
+            }).ToListAsync();
 
 
-                if (criteria.Id is not 0 && criteria.Id is not null)
-                {
-                    currencyPredicate = currencyPredicate.And(x => x.Id == criteria.Id);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-                {
-                    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                    currencyPredicate = currencyPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
-                    currencyPredicate = currencyPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
-                }
-
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                var query = currencyRepository.Get(currencyPredicate);
-
-                #region sorting
-
-                var queryOrdered = currencyRepository.OrderBy(query, "Id", "asc");
-
-                #endregion
-
-
-                var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                var currenciesList = await queryPaged.Select(c => new CurrencyLiteDTO()
-                {
-                    Id = c.Id,
-                    GlobalName = userContext.Lang == "ar" ? c.NameAr : c.NameEn,
-                    CountryISOCode = c.Country.Iso.ToLower()
-                }).ToListAsync();
-
-
-                response.Currencies = currenciesList;
-                response.TotalCount = queryOrdered.ToList().Count();
-                response.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                response.Exception = ex; response.Message = ex.Message;
-                response.Status = ResponseStatus.Error;
-            }
-
-            return response;
+            return currenciesList;
 
         }
     }

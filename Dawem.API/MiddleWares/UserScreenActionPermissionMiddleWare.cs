@@ -1,8 +1,10 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
+using Dawem.Enums.General;
+using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using SmartBusinessERP.BusinessLogic.Others.Contract;
-using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Criteria.Others;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -49,7 +51,7 @@ namespace Dawem.API.MiddleWares
             if (httpContext != null && userId > 0 && controllerName != null && actionName != null)
             {
                 var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
-                if (mapResult.Status == Enums.ResponseStatus.Success)
+                if (mapResult.Status == ResponseStatus.Success)
                 {
                     var model = new CheckUserPermissionModel();
                     model.Screen = mapResult.Screen;

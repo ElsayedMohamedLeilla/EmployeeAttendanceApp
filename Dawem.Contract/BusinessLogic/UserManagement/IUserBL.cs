@@ -6,10 +6,10 @@ using SmartBusinessERP.Models.Criteria.UserManagement;
 
 namespace Dawem.Contract.BusinessLogic.UserManagement
 {
-    public interface ISmartUserBL
+    public interface IUserBL
     {
-        Task<SmartUserSearchResult> Get(SmartUserSearchCriteria criteria);
-        Task<GetSmartUserInfoResponse> GetInfo(GetSmartUserInfoCriteria criteria);
+        Task<UserSearchResult> Get(SmartUserSearchCriteria criteria);
+        Task<GetUserInfoResponse> GetInfo(GetUserInfoCriteria criteria);
         Task<BaseResponseT<CreatedUser>> Create(CreatedUser createdUser);
 
 

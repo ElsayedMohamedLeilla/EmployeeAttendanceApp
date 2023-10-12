@@ -5,20 +5,15 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Shared;
 using FluentValidation;
-using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
 using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Shared;
 
 namespace Dawem.Validation.FluentValidation
 {
     public class UserValidator : AbstractValidator<User>
     {
-        private readonly ISmartUserBL SmartUserBL;
+        private readonly IUserBL SmartUserBL;
         private readonly RequestHeaderContext userContext;
-        public UserValidator(ValidationMode validationMode, ISmartUserBL _smartUserBL, RequestHeaderContext _userContext)
+        public UserValidator(ValidationMode validationMode, IUserBL _smartUserBL, RequestHeaderContext _userContext)
         {
             SmartUserBL = _smartUserBL;
             userContext = _userContext;

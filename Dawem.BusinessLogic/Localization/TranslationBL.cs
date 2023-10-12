@@ -1,13 +1,11 @@
-
-
-using SmartBusinessERP.Repository.Localization.Contract;
+using Dawem.Contract.Repository.Localization;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Response;
 using SmartBusinessERP.BusinessLogic.Localization.Contract;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Response;
 
 namespace SmartBusinessERP.BusinessLogic.Localization
 {
@@ -34,13 +32,13 @@ namespace SmartBusinessERP.BusinessLogic.Localization
                     var ar = translations.FindAll(c => c.Lang == "ar");
                     if (ar.Count > 0)
                     {
-                        TranslationHelper.setArTrans(ar.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));
+                        TranslationHelper.SetArTrans(ar.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));
                     }
 
                     var en = translations.FindAll(c => c.Lang == "en");
                     if (en.Count > 0)
                     {
-                        TranslationHelper.setEnTrans(en.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));
+                        TranslationHelper.SetEnTrans(en.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));
                     }
                 }
                 response.Result = true;

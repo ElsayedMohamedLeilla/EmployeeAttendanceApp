@@ -10,4 +10,11 @@
     <PackageReference Include="FluentValidation" Version="11.7.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dawem.Contract\Dawem.Contract.csproj" />
+    <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
+    <ProjectReference Include="..\Dawem.Repository\Dawem.Repository.csproj" />
+    <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
+  </ItemGroup>
+
 </Project>

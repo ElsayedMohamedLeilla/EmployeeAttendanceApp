@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
+    <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
+  </ItemGroup>
+
 </Project>

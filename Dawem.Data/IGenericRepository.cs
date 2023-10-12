@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Dawem.Translations;
+using System.Linq.Expressions;
 
 namespace Dawem.Data;
 
@@ -30,7 +31,6 @@ public interface IGenericRepository<T>
     T ExecWithStoreProcedure_SingleEntity(string query, params object[] parameters);
     void BulkUpdateByPropList(List<T> list, params string[] properties);
     Task<bool> DetachLocal(Expression<Func<T, bool>> match);
-
     Task<bool> ModifiedLocal(Expression<Func<T, bool>> match);
     void UpdateT(T entity);
     void DeleteIfExist(T entity);

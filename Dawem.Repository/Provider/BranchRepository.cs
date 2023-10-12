@@ -2,7 +2,10 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Generic;
+using LinqKit;
+using SmartBusinessERP.Models.Criteria.Provider;
 
 namespace Dawem.Repository.Provider
 {
@@ -18,7 +21,7 @@ namespace Dawem.Repository.Provider
         }
 
 
-        /*public IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "Company", SmartUserDTO user = null)
+        public IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "Company", UserDTO user = null)
         {
 
 
@@ -109,6 +112,6 @@ namespace Dawem.Repository.Provider
             }
 
         }
-        */
+        
     }
 }

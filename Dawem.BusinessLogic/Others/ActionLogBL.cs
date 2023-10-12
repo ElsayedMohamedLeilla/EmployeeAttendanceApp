@@ -1,19 +1,19 @@
-﻿using AutoMapper;
+﻿using Dawem.Contract.Repository.Others;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Others;
+using Dawem.Models.Exceptions;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Others;
+using Dawem.Translations;
+using Microsoft.EntityFrameworkCore;
 using SmartBusinessERP.BusinessLogic.Others.Contract;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Core;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Criteria.Core;
 using SmartBusinessERP.Models.Criteria.Others;
-using SmartBusinessERP.Models.Dtos.Others;
 using SmartBusinessERP.Models.DtosMappers.Others;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Core;
-using SmartBusinessERP.Models.Response.Others;
-using SmartBusinessERP.Repository.Others.Conract;
 
 namespace SmartBusinessERP.BusinessLogic.Others
 {
@@ -22,76 +22,53 @@ namespace SmartBusinessERP.BusinessLogic.Others
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IActionLogRepository actionLogRepository;
-        private readonly IMapper mapper;
         private readonly RequestHeaderContext userContext;
 
 
         public ActionLogBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IActionLogRepository _actionLogRepository, RequestHeaderContext _userContext,IMapper _mapper
+            IActionLogRepository _actionLogRepository, RequestHeaderContext _userContext
             )
         {
             unitOfWork = _unitOfWork;
             actionLogRepository = _actionLogRepository;
-            mapper = _mapper;
             userContext = _userContext;
         }
 
-        public BaseResponseT<ActionLogDTO> GetById(int Id)
+        public async Task<ActionLogDTO> GetById(int Id)
         {
-            BaseResponseT<ActionLogDTO> response = new();
-            try
-            {
-                var result = actionLogRepository.Get(x => x.Id == Id).FirstOrDefault();
-                if (result == null)
-                {
-                    TranslationHelper.SetResponseMessages(response, "NoDataFound", "No Data Found", "");
-                    response.Status = ResponseStatus.Error;
-                }
-                else
-                {
-                    response.Result = ActionLogDTOMapper.Map(result);
-                    response.Status = ResponseStatus.Success;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Status = ResponseStatus.Error;
-                response.Exception = ex; response.Message = ex.Message;
-            }
+            var actionLog = await actionLogRepository.GetByIdAsync(Id) ??
+                throw new BusinessValidationErrorException(DawemKeys.NoDataFound);
+
+            var response = ActionLogDTOMapper.Map(actionLog);
+
             return response;
         }
-        public GetActionLogsResponse Get(GetActionLogsCriteria criteria)
+        public async Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria)
         {
-            var result = new GetActionLogsResponse();
 
-            try
+            var query = actionLogRepository.GetAsQueryable(criteria);
+            var queryOrdered = actionLogRepository.OrderBy(query, "Id", "desc");
+
+            #region paging
+
+            var skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            var take = PagingHelper.Take(criteria.PageSize);
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            var tempActionLogs = await queryPaged.ToListAsync();
+            ActionLogDTOMapper.InitActionLogContext(userContext);
+            var actionLogs = ActionLogDTOMapper.Map(tempActionLogs);
+
+            var response = new GetActionLogsResponseModel
             {
+                ActionLogs = actionLogs,
+                TotalCount = query.Count()
+            };
 
-                var query = actionLogRepository.GetAsQueryable(criteria);
-                var queryOrdered = actionLogRepository.OrderBy(query, "Id", "desc");
-
-                #region paging
-
-                var skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                var take = PagingHelper.Take(criteria.PageSize);
-
-                var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                var actionLogs = queryPaged.ToList();
-                ActionLogDTOMapper.InitActionLogContext(userContext);
-                result.ActionLogs = ActionLogDTOMapper.Map(actionLogs);
-                result.Status = ResponseStatus.Success;
-                result.TotalCount = query.Count();
-            }
-            catch (Exception ex)
-            {
-                result.Exception = ex; result.Message = ex.Message;
-                result.Status = ResponseStatus.Error;
-            }
-
-            return result;
+            return response;
         }
         public async Task<GetActionLogInfoResponse> GetInfo(GetActionLogInfoCriteria criteria)
         {
@@ -155,7 +132,7 @@ namespace SmartBusinessERP.BusinessLogic.Others
                     await unitOfWork.SaveAsync();
                     unitOfWork.Commit();
                 }
-                
+
                 response.Status = ResponseStatus.Success;
 
             }

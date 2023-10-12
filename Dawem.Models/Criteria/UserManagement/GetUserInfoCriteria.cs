@@ -2,7 +2,7 @@
 
 namespace SmartBusinessERP.Models.Criteria.UserManagement
 {
-    public class GetSmartUserInfoCriteria : BaseCriteria
+    public class GetUserInfoCriteria : BaseCriteria
     {
         public new int Id { get; set; }
     }

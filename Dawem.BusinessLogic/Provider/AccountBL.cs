@@ -355,8 +355,8 @@ namespace SmartBusinessERP.BusinessLogic.Provider
                 result.Status = ResponseStatus.ValidationError;
                 return result;
             }
-            SmartUserDTOMapper.InitUserContext(userContext);
-            SmartUserDTO user = SmartUserDTOMapper.Map(smartUserRepository.GetByID(UserId));
+            UserDTOMapper.InitUserContext(userContext);
+            SmartUserDTO user = UserDTOMapper.Map(smartUserRepository.GetByID(UserId));
 
 
             #region Get Token For Others

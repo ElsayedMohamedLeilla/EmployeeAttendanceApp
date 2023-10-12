@@ -12,4 +12,18 @@
     <PackageReference Include="LinqKit" Version="1.2.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dawem.Contract\Dawem.Contract.csproj" />
+    <ProjectReference Include="..\Dawem.Domain\Dawem.Domain.csproj" />
+    <ProjectReference Include="..\Dawem.Helpers\Dawem.Helpers.csproj" />
+    <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
+    <ProjectReference Include="..\Dawem.Repository\Dawem.Repository.csproj" />
+    <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
+    <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
+
 </Project>

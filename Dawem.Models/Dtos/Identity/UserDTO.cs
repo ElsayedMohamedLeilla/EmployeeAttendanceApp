@@ -3,9 +3,9 @@ using Dawem.Models.Dtos.Provider;
 
 namespace Dawem.Models.Dtos.Identity
 {
-    public class SmartUserDTO
+    public class UserDTO
     {
-        public SmartUserDTO()
+        public UserDTO()
         {
 
             UserRols = new List<SmartUserRoleDTO>();

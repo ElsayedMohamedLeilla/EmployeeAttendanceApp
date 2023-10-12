@@ -1,7 +1,7 @@
-﻿using Dawem.Helpers;
+﻿using Dawem.Contract.Repository.Provider;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
-using Dawem.Repository.Provider.Contract;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.Extensions.Options;

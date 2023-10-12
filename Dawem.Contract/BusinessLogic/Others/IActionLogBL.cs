@@ -1,9 +1,8 @@
-﻿using SmartBusinessERP.Models.Criteria.Core;
+﻿using Dawem.Models.Dtos.Others;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Others;
+using SmartBusinessERP.Models.Criteria.Core;
 using SmartBusinessERP.Models.Criteria.Others;
-using SmartBusinessERP.Models.Dtos.Others;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Core;
-using SmartBusinessERP.Models.Response.Others;
 
 namespace SmartBusinessERP.BusinessLogic.Others.Contract
 {

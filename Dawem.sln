@@ -7,23 +7,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.API", "Dawem.API\Dawe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Enums", "Enums\Dawem.Enums.csproj", "{AEAD325F-45E7-4E59-AF0D-4D95582B1E8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.BusinessLogic", "Dawem.BusinessLogic\Dawem.BusinessLogic.csproj", "{D636BAC9-274E-4781-8055-FB18CF7C00F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.BusinessLogic", "Dawem.BusinessLogic\Dawem.BusinessLogic.csproj", "{D636BAC9-274E-4781-8055-FB18CF7C00F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Data", "Dawem.Data\Dawem.Data.csproj", "{A9ABA248-579C-4F37-9BE5-EC0627A59A43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Data", "Dawem.Data\Dawem.Data.csproj", "{A9ABA248-579C-4F37-9BE5-EC0627A59A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.BusinessValidation", "Dawem.BusinessValidation\Dawem.BusinessValidation.csproj", "{FD0C58FB-178B-4346-8022-E4DE7E9E708A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Validation", "Dawem.BusinessValidation\Dawem.Validation.csproj", "{FD0C58FB-178B-4346-8022-E4DE7E9E708A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Helpers", "Dawem.Helpers\Dawem.Helpers.csproj", "{E7DE346A-3F2C-4287-BF71-BA84AA2A911E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Helpers", "Dawem.Helpers\Dawem.Helpers.csproj", "{E7DE346A-3F2C-4287-BF71-BA84AA2A911E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Repository", "Dawem.Repository\Dawem.Repository.csproj", "{37898F2D-19F6-43BB-802D-3B681C42C874}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Repository", "Dawem.Repository\Dawem.Repository.csproj", "{37898F2D-19F6-43BB-802D-3B681C42C874}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Models", "Dawem.Models\Dawem.Models.csproj", "{5A866588-F042-4C37-951C-A2D0A028F007}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Models", "Dawem.Models\Dawem.Models.csproj", "{5A866588-F042-4C37-951C-A2D0A028F007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Domain", "Dawem.Domain\Dawem.Domain.csproj", "{132F07FC-2F68-4895-B012-6C6D93962D9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Domain", "Dawem.Domain\Dawem.Domain.csproj", "{132F07FC-2F68-4895-B012-6C6D93962D9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Translations", "Dawem.Translations\Dawem.Translations.csproj", "{CF310B31-575A-49FC-AFAD-6EEFAFF66114}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Translations", "Dawem.Translations\Dawem.Translations.csproj", "{CF310B31-575A-49FC-AFAD-6EEFAFF66114}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Contract", "Dawem.Contract\Dawem.Contract.csproj", "{F5E221C6-C1B1-49EF-8BCB-DA166522930C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Contract", "Dawem.Contract\Dawem.Contract.csproj", "{F5E221C6-C1B1-49EF-8BCB-DA166522930C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

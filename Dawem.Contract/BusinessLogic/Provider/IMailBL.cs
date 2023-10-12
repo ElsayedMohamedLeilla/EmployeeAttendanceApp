@@ -1,5 +1,5 @@
-﻿using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Response;
+﻿using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Response;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {

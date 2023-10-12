@@ -1,5 +1,5 @@
-﻿using SmartBusinessERP.Enums;
-using SmartBusinessERP.Models.Dtos.Provider;
+﻿using Dawem.Enums.General;
+using Dawem.Models.Dtos.Provider;
 
 namespace SmartBusinessERP.BusinessLogic.Validators
 {

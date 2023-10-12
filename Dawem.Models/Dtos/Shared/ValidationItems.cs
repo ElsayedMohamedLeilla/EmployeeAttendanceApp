@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Shared
+﻿using SmartBusinessERP.Enums;
+
+namespace Dawem.Models.Dtos.Shared
 {
     public class ValidationItems
     {

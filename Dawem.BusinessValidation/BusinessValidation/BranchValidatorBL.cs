@@ -1,14 +1,14 @@
-﻿using SmartBusinessERP.Enums;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Response;
-
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Response.Provider;
-using SmartBusinessERP.Repository.Provider.Contract;
+﻿using Dawem.Contract.Repository.Provider;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Provider;
 using SmartBusinessERP.BusinessLogic.Validators.Contract;
 using SmartBusinessERP.Models.Criteria.Provider;
 
-namespace SmartBusinessERP.BusinessLogic.Validators
+namespace Dawem.Validation.BusinessValidation
 {
 
     public class BranchValidatorBL : IBranchValidatorBL
@@ -16,7 +16,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
         private readonly RequestHeaderContext userContext;
         private readonly IBranchRepository branchRepository;
         private readonly IUserBranchRepository userBranchRepository;
-        
+
         public BranchValidatorBL(RequestHeaderContext _userContext, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository)
         {
 
@@ -51,7 +51,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
 
 
                 response.Branch = Branch;
-               
+
             }
             catch (Exception ex)
             {
@@ -70,9 +70,9 @@ namespace SmartBusinessERP.BusinessLogic.Validators
                 response.Status = ResponseStatus.Success;
                 response.Result = true;
 
-             
 
-                if (userContext == null )
+
+                if (userContext == null)
                 {
                     response.Status = ResponseStatus.ValidationError;
                     response.Result = false;
@@ -133,13 +133,13 @@ namespace SmartBusinessERP.BusinessLogic.Validators
 
                 response.Result = false;
                 response.Status = ResponseStatus.Error;
-                response.Exception = ex; response.Message = ex.Message; 
+                response.Exception = ex; response.Message = ex.Message;
             }
             return response;
         }
 
-      public async  Task<validateUserBranchResult> ValidateUserBranch(ValidateUserBranchSearchCriteria criteria)
-        { 
+        public async Task<validateUserBranchResult> ValidateUserBranch(ValidateUserBranchSearchCriteria criteria)
+        {
             var response = new validateUserBranchResult();
             response.Status = ResponseStatus.Success;
 
@@ -157,26 +157,26 @@ namespace SmartBusinessERP.BusinessLogic.Validators
 
                     var branchs = uProviderQuery.ToList();
 
-                     if (branchs.Count > 1 )
-                        {
-                            TranslationHelper.SetValidationMessages(response,
-                                "SorryThereIsMoreThanOneBranchForChoosenUser." +
-                                "YouMustChooseBranchToEnterWith!",
-                                "Sorry There Is More Than One Branch For Choosen User. " +
-                                "You Must Choose Branch To Enter With !", "",
-                                userContext.Lang);
-                            response.Status = ResponseStatus.ValidationError;
-                            return response;
-                        }
+                    if (branchs.Count > 1)
+                    {
+                        TranslationHelper.SetValidationMessages(response,
+                            "SorryThereIsMoreThanOneBranchForChoosenUser." +
+                            "YouMustChooseBranchToEnterWith!",
+                            "Sorry There Is More Than One Branch For Choosen User. " +
+                            "You Must Choose Branch To Enter With !", "",
+                            userContext.Lang);
+                        response.Status = ResponseStatus.ValidationError;
+                        return response;
+                    }
 
 
                     BranchId = branchs.FirstOrDefault();
 
                 }
-               
 
 
-            
+
+
 
                 var getUserBranch = userBranchRepository
                     .GetEntityByCondition(uas => uas.UserId == criteria.UserId && uas.BranchId == BranchId);
@@ -193,7 +193,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
                 }
 
 
-               
+
 
                 response.BranchId = BranchId;
 

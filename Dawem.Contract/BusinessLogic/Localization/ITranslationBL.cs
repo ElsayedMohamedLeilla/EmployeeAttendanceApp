@@ -1,16 +1,16 @@
 
 
-using SmartBusinessERP.Models.Response;
+using Dawem.Models.Response;
 
 namespace SmartBusinessERP.BusinessLogic.Localization.Contract
 {
     public interface ITranslationBL
-    
-    {
-      
-        BaseResponseT<bool> RefreshCachedTranslation();
-     
-    
 
-   }
+    {
+
+        BaseResponseT<bool> RefreshCachedTranslation();
+
+
+
+    }
 }

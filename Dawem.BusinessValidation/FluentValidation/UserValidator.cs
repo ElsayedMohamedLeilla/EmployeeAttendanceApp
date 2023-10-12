@@ -1,4 +1,10 @@
-﻿using FluentValidation;
+﻿using Dawem.Contract.BusinessLogic.UserManagement;
+using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Shared;
+using FluentValidation;
 using SmartBusinessERP.Areas.Identity.Data.UserManagement;
 using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
 using SmartBusinessERP.Enums;
@@ -6,9 +12,9 @@ using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Dtos.Shared;
 
-namespace SmartBusinessERP.BusinessLogic.Validators.FluentValidators
+namespace Dawem.Validation.FluentValidation
 {
-    public class UserValidator : AbstractValidator<SmartUser>
+    public class UserValidator : AbstractValidator<User>
     {
         private readonly ISmartUserBL SmartUserBL;
         private readonly RequestHeaderContext userContext;
@@ -21,16 +27,16 @@ namespace SmartBusinessERP.BusinessLogic.Validators.FluentValidators
 
 
                 _ = RuleFor(user => user.MainBranchId).NotEmpty().WithMessage(TranslationHelper.GetTranslation("PleaseChooseBranch", userContext.Lang));
-                RuleFor(user => user).Must(args => UniqueEmail(args.Email, args.Id,  ValidationMode.Create)).WithMessage(userContext.Lang == "en" ? "Email already exists" : "الايميل مكرر");
-             
+                RuleFor(user => user).Must(args => UniqueEmail(args.Email, args.Id, ValidationMode.Create)).WithMessage(userContext.Lang == "en" ? "Email already exists" : "الايميل مكرر");
+
                 _ = RuleFor(user => user.Email).NotEmpty().WithMessage(TranslationHelper.GetTranslation("EmailRequired", userContext.Lang))
                     .EmailAddress().WithMessage(TranslationHelper.GetTranslation("NotValidEmail", userContext.Lang));
-               // _ = RuleFor(p => p.BirthDate).Must(BeAValidAge).WithMessage(TranslationHelper.GetTranslation("BirthNoValid", userContext.Lang));
+                // _ = RuleFor(p => p.BirthDate).Must(BeAValidAge).WithMessage(TranslationHelper.GetTranslation("BirthNoValid", userContext.Lang));
             }
             if (validationMode == ValidationMode.Update)
             {
                 _ = RuleFor(user => user.MainBranchId).NotEmpty().WithMessage(TranslationHelper.GetTranslation("PleaseChooseBranch", userContext.Lang));
-           
+
                 RuleFor(user => user).Must(args => UniqueEmail(args.Email, args.Id, ValidationMode.Update)).WithMessage(userContext.Lang == "en" ? "Email already exists" : "الايميل مكرر");
 
                 _ = RuleFor(user => user.Email).NotEmpty().WithMessage(TranslationHelper.GetTranslation("EmailRequired", userContext.Lang))
@@ -46,14 +52,14 @@ namespace SmartBusinessERP.BusinessLogic.Validators.FluentValidators
         {
             return birthDate <= DateTime.Now && birthDate >= DateTime.Now.AddYears(-120);
         }
-        private bool UniqueEmail(string item, int? Id,  ValidationMode validationMode)
+        private bool UniqueEmail(string item, int? Id, ValidationMode validationMode)
         {
 
             ValidationItems validationItem = new();
             validationItem.Id = Id != null ? Id.Value : null;
             validationItem.Item = item;
             validationItem.validationMode = validationMode;
-            
+
             var response = SmartUserBL.IsEmailUnique(validationItem);
             return response.Status == ResponseStatus.Success && response.Result;
 

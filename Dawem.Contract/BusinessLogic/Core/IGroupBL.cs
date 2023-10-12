@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Core;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Core;
+using SmartBusinessERP.Models.Criteria.Core;
 
 namespace SmartBusinessERP.BusinessLogic.Core.Contract
 {

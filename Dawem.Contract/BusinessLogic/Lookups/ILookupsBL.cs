@@ -1,5 +1,5 @@
-﻿using SmartBusinessERP.Models.Criteria.Lookups;
-using SmartBusinessERP.Models.Response.Lookups;
+﻿using Dawem.Models.Response.Lookups;
+using SmartBusinessERP.Models.Criteria.Lookups;
 
 namespace SmartBusinessERP.BusinessLogic.Lookups.Contract
 {

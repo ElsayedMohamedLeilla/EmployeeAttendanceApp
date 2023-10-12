@@ -1,9 +1,9 @@
-﻿using SmartBusinessERP.Models.Criteria.Core;
+﻿using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Core;
+using Dawem.Models.Response.Provider;
+using SmartBusinessERP.Models.Criteria.Core;
 using SmartBusinessERP.Models.Criteria.Provider;
-using SmartBusinessERP.Models.Dtos.Provider;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Core;
-using SmartBusinessERP.Models.Response.Provider;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {

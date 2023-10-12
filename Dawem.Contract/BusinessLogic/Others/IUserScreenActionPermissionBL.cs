@@ -1,4 +1,4 @@
-﻿using SmartBusinessERP.Models.Response.Others;
+﻿using Dawem.Models.Response.Others;
 
 namespace SmartBusinessERP.BusinessLogic.Others.Contract
 {

@@ -1,8 +1,8 @@
-﻿using SmartBusinessERP.Enums;
-using SmartBusinessERP.Models.Context;
+﻿using Dawem.Enums.General;
+using Dawem.Models.Context;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Provider;
 using SmartBusinessERP.Models.Criteria.Provider;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Provider;
 
 namespace SmartBusinessERP.BusinessLogic.Validators.Contract
 {

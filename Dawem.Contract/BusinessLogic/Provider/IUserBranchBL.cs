@@ -1,7 +1,7 @@
-﻿using SmartBusinessERP.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Others;
 using SmartBusinessERP.Models.Criteria.Others;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Others;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {

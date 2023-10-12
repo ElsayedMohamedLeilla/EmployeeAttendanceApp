@@ -1,7 +1,7 @@
-﻿using SmartBusinessERP.Models.Dtos.Identity;
-using SmartBusinessERP.Models.Dtos.Provider;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Provider;
+﻿using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Provider;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {

@@ -1,8 +1,8 @@
-﻿using FluentValidation;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Shared;
-namespace SmartBusinessERP.BusinessLogic.Validators.FluentValidators
+﻿using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Shared;
+using FluentValidation;
+namespace Dawem.Validation.FluentValidation
 {
     class EmailValidator : AbstractValidator<VerifyEmailModel>
     {

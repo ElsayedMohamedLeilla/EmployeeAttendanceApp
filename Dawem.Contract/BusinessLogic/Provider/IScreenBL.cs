@@ -1,5 +1,5 @@
-﻿using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Dtos.Lookups;
+﻿using Dawem.Models.Dtos.Lookups;
+using Dawem.Models.Response;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {

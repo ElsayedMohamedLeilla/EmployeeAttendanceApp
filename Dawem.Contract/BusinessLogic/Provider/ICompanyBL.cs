@@ -1,9 +1,9 @@
-﻿using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Models.Response;
+﻿using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Response;
 
 namespace SmartBusinessERP.BusinessLogic.Provider.Contract
 {
-    public interface ICompanyBL 
+    public interface ICompanyBL
     {
         BaseResponseT<Company> Create(Company company);
     }

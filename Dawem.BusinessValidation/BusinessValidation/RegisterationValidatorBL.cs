@@ -9,7 +9,7 @@ using SmartBusinessERP.Models.Dtos.Provider;
 using SmartBusinessERP.Repository.UserManagement.Contract;
 using SmartBusinessERP.Repository.UserManagement;
 
-namespace SmartBusinessERP.BusinessLogic.Validators
+namespace Dawem.Validation.BusinessValidation
 {
 
     public class RegisterationValidatorBL : IRegisterationValidatorBL
@@ -20,7 +20,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
         private readonly ISmartUserRepository smartUserRepository;
         private readonly SmartUserManagerRepository smartUserManagerRepository;
 
-        
+
         public RegisterationValidatorBL(RequestHeaderContext _userContext, IBranchRepository _branchRepository,
             IUserBranchRepository _userBranchRepository, ISmartUserRepository _smartUserRepository, SmartUserManagerRepository _smartUserManagerRepository)
         {
@@ -34,7 +34,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
 
         public async Task<BaseResponseT<RegisterResponseModel>> RegisterationValidator(RegisterModel model)
         {
-            var response = new BaseResponseT<RegisterResponseModel> ();
+            var response = new BaseResponseT<RegisterResponseModel>();
 
 
 
@@ -53,7 +53,7 @@ namespace SmartBusinessERP.BusinessLogic.Validators
                 TranslationHelper.SetValidationMessages(response, "Account1003", "Password and confirm password do not match.", lang: userContext.Lang);
                 return response;
             }
-          
+
 
             // mobile check
             var mobileExist = smartUserRepository.Get(c => c.MobileNumber == model.UserMobileNumber).FirstOrDefault();

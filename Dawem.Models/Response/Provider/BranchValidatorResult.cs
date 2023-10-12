@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Provider;
+﻿using Dawem.Models.Dtos.Provider;
 
-namespace SmartBusinessERP.Models.Response.Provider
+namespace Dawem.Models.Response.Provider
 {
     public class BranchValidatorResult : BaseResponse
     {

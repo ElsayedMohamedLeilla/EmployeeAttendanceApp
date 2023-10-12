@@ -5,6 +5,6 @@ namespace Dawem.Repository.Others.Conract
 {
     public interface IActionLogRepository : IGenericRepository<ActionLog>
     {
-        //IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = "");
+        //IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = DawemKeys.EmptyString);
     }
 }

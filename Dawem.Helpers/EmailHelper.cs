@@ -28,7 +28,7 @@ namespace Dawem.Helpers
 
         private static Regex CreateValidEmailRegex()
         {
-            string validEmailPattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|"
+            string validEmailPattern = @"^(?!\.)(DawemKeys.EmptyString([^DawemKeys.EmptyString\r\\]|\\[DawemKeys.EmptyString\r\\])*DawemKeys.EmptyString|"
                 + @"([-a-z0-9!#$%&'*+/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)"
                 + @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
 

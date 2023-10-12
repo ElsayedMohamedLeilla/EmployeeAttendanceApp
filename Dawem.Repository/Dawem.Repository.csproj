@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Dawem.Data\Dawem.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Provider\Contract\" />
+  </ItemGroup>
+
 </Project>

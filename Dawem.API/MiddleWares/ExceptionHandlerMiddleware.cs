@@ -1,28 +1,19 @@
-﻿using Dawem.Data.UnitOfWork;
-using Dawem.Data;
+﻿using Dawem.Data;
+using Dawem.Data.UnitOfWork;
 using Dawem.Enums.General;
-using DevExpress.Xpo;
-using DocumentFormat.OpenXml.InkML;
-using Glamatek.Data;
-using Glamatek.Data.UnitOfWork;
-using Glamatek.Enums;
-using Glamatek.Model.Support;
-using Glamatek.Utils.Exceptions;
-using Glamatek.Utils.Helpers;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using SmartBusinessERP.Models.Context;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Exceptions;
+using Dawem.Models.Response;
 using Dawem.Translations;
-using Dawem.Models.Exception;
+using Newtonsoft.Json;
+using System.Net;
 
-namespace Glamatek.API.MiddleWares;
+namespace Dawem.API.MiddleWares;
 
 public class ExceptionHandlerMiddleware
 {
-    private const string JsonContentType = "application/json";
+    private const string JsonContentType = DawemKeys.ApplicationJson;
     private readonly RequestDelegate _request;
 
     public ExceptionHandlerMiddleware(RequestDelegate next)
@@ -66,7 +57,7 @@ public class ExceptionHandlerMiddleware
                 Message = !string.IsNullOrEmpty(ex.Message) &&
                        !string.IsNullOrWhiteSpace(ex.Message) ?
                        ex.Message : TranslationHelper.GetTranslation(ex.MessageCode,
-                       userContext?.RequestParam?.Lang)
+                       userContext?.Lang)
             };
             await Return(unitOfWork, context, statusCode, response);
         }
@@ -75,7 +66,7 @@ public class ExceptionHandlerMiddleware
             statusCode = (int)HttpStatusCode.Unauthorized;
             response = new ExecutionResponse<object>
             {
-                Message = ex.Message ?? "UnAuthorized"
+                Message = ex.Message ?? DawemKeys.UnAuthorized
             };
             await Return(unitOfWork, context, statusCode, response);
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
@@ -87,7 +78,7 @@ public class ExceptionHandlerMiddleware
             {
                 Result = null,
                 State = ResponseStatus.NotRegisteredUser,
-                Message = "Redirect to register"
+                Message = DawemKeys.RedirectToRegister
             };
             await Return(unitOfWork, context, statusCode, response);
 
@@ -105,11 +96,11 @@ public class ExceptionHandlerMiddleware
         }
     }
 
-    private async Task Return(IUnitOfWork<ApplicationDbContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
+    private async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
     {
         unitOfWork.Rollback();
         context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = DawemKeys.ApplicationJson;
         await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
     }
 

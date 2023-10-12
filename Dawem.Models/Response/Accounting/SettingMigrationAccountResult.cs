@@ -1,13 +1,8 @@
-﻿
-using SmartBusinessERP.Models.Dtos.Accounting;
-using SmartBusinessERP.Models.Response;
-
-
-namespace Glamatek.Model.SearchResults.Account
+﻿namespace Dawem.Models.Response.Accounting
 {
-   public class SettingMigrationAccountResult : BaseResponse
+    public class SettingMigrationAccountResult : BaseResponse
     {
-        public List<SettingMigrationAccountDto>  SettingMigrationAccounts { get; set; }
+        public List<SettingMigrationAccountDto> SettingMigrationAccounts { get; set; }
 
 
     }

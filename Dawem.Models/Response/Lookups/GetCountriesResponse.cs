@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Lookups;
+﻿using Dawem.Models.Dtos.Lookups;
 
-namespace SmartBusinessERP.Models.Response.Lookups
+namespace Dawem.Models.Response.Lookups
 {
     public class GetCountriesResponse : BaseResponse
     {

@@ -1,8 +1,8 @@
 ﻿using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Ohters;
+using Dawem.Models.Context;
 using Dawem.Repository.Others.Conract;
-using SmartBusinessERP.Models.Context;
 
 namespace Dawem.Repository.Others
 {
@@ -13,7 +13,7 @@ namespace Dawem.Repository.Others
         {
             userContext = _userContext;
         }
-        //public IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = "")
+        //public IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = DawemKeys.EmptyString)
         //{
         //    var outerpredicate = PredicateBuilder.New<ActionLog>(true);
 

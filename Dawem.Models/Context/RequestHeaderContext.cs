@@ -1,7 +1,7 @@
 ﻿using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.General;
 
-namespace SmartBusinessERP.Models.Context
+namespace Dawem.Models.Context
 {
     public class RequestHeaderContext
     {

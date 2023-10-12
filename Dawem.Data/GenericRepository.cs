@@ -369,7 +369,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
 
 
 
-    public virtual T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string includeProperties = "")
+    public virtual T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
 
@@ -387,7 +387,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
 
     }
 
-    public virtual T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string includeProperties = "")
+    public virtual T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
 
@@ -404,7 +404,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
     }
 
 
-    public virtual async Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string includeProperties = "")
+    public virtual async Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
 
@@ -420,7 +420,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
         return await query.FirstOrDefaultAsync();
     }
 
-    public virtual async Task<T> GetEntityByConditiontAsync(Expression<Func<T, bool>> filter = null, string includeProperties = "")
+    public virtual async Task<T> GetEntityByConditiontAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
 
@@ -453,7 +453,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
         return Entities.AsQueryable<T>().Where(expression);
     }
 
-    public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "")
+    public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
         if (filter != null)
@@ -479,7 +479,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
         }
     }
 
-    public virtual IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "")
+    public virtual IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;
         if (filter != null)
@@ -533,7 +533,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
         }
     }
 
-    public IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = "", string orderType = "")
+    public IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = DawemKeys.EmptyString, string orderType = DawemKeys.EmptyString)
     {
         var orderBy = SortingHelper<T>.GetOrderBy(orderColumn, orderType);
 

@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Core;
+﻿using Dawem.Models.Dtos.Core;
 
-namespace SmartBusinessERP.Models.Response.Core
+namespace Dawem.Models.Response.Core
 {
     public class GetPaymentMethodInfoResponse : BaseResponse
     {

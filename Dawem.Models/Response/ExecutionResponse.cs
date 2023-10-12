@@ -3,7 +3,7 @@ using Dawem.Models.Shared;
 using Dawem.Translations;
 using FluentValidation.Results;
 
-namespace Glamatek.Model.Support
+namespace Dawem.Models.Response
 {
     public class ExecutionResponse<T>
     {
@@ -25,11 +25,11 @@ namespace Glamatek.Model.Support
                 _state = value;
                 if (_state != ResponseStatus.Success && string.IsNullOrEmpty(Message))
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? (Lang == DawemKeys.En ? DawemKeys.ErrorHasOccurredEn : DawemKeys.ErrorHasOccurredAr) : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? DawemKeys.ErrorHasOccurredEn : DawemKeys.ErrorHasOccurredAr : Message;
                 }
                 else if (_state != ResponseStatus.Success)
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? (Lang == DawemKeys.En ?DawemKeys.SorryTryAgainLaterEn : DawemKeys.SorryTryAgainLaterAr) : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? DawemKeys.SorryTryAgainLaterEn : DawemKeys.SorryTryAgainLaterAr : Message;
                 }
             }
         }

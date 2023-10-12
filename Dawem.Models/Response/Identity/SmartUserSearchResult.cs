@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Identity;
+﻿using Dawem.Models.Dtos.Identity;
 
-namespace SmartBusinessERP.Models.Response.Identity
+namespace Dawem.Models.Response.Identity
 {
     public class SmartUserSearchResult : BaseResponse
     {

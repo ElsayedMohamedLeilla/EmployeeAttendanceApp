@@ -5,6 +5,6 @@ namespace Dawem.Repository.Provider.Contract
 {
     public interface IBranchRepository : IGenericRepository<Branch>
     {
-        //IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "", SmartUserDTO user = null);
+        //IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = DawemKeys.EmptyString, SmartUserDTO user = null);
     }
 }

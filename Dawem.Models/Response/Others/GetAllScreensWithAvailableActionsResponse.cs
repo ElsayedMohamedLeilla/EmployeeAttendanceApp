@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Others;
+﻿using Dawem.Models.Dtos.Others;
 
-namespace SmartBusinessERP.Models.Response.Others
+namespace Dawem.Models.Response.Others
 {
     public class GetAllScreensWithAvailableActionsResponse : BaseResponse
     {

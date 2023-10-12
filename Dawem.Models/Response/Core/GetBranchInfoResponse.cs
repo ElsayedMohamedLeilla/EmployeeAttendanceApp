@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Provider;
+﻿using Dawem.Models.Dtos.Provider;
 
-namespace SmartBusinessERP.Models.Response.Core
+namespace Dawem.Models.Response.Core
 {
     public class GetBranchInfoResponse : BaseResponse
     {

@@ -41,7 +41,7 @@ namespace Dawem.Translations
         public const string ES = "es";
         public const string IES = "ies";
         public const string GetDateSQL = "getdate()";
-
+        public const string EmptyString = "";
 
         public const string FourigitPhone = "FourigitPhone";
         public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
@@ -55,11 +55,15 @@ namespace Dawem.Translations
         public const string ErrorHasOccurredEn = "Error has occurred";
         public const string SorryTryAgainLaterAr = "Sorry try again later";
         public const string SorryTryAgainLaterEn = "Sorry try again later";
+        public const string ApplicationJson = "application/json";
+        public const string UnAuthorized = "UnAuthorized";
+        public const string RedirectToRegister = "Redirect to register";
+        public const string Jwt = "Jwt";
+
+        public const string Authorization = "Authorization";
+        public const string Bearer = "Bearer ";
         public const string Jwt = "Jwt";
         public const string Jwt = "Jwt";
-        public const string Jwt = "Jwt";
-        public const string Jwt = "Jwt";
-        
         
     }
 }

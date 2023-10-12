@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.General;
 using Dawem.Models.Shared;
 
-namespace SmartBusinessERP.Models.Response
+namespace Dawem.Models.Response
 {
     public class BaseResponse
     {
@@ -26,11 +26,11 @@ namespace SmartBusinessERP.Models.Response
                 _status = value;
                 if (_status != ResponseStatus.Success && string.IsNullOrEmpty(Message))
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? (Lang == DawemKeys.En ? "Error has occurred" : " حدث  خطأ") : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? "Error has occurred" : " حدث  خطأ" : Message;
                 }
                 else if (_status != ResponseStatus.Success)
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? (Lang == DawemKeys.En ? "Sorry try again later" : "لا يمكن اجراء هذا الحدث") : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? "Sorry try again later" : "لا يمكن اجراء هذا الحدث" : Message;
                 }
             }
         }

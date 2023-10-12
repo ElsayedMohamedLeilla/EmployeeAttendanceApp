@@ -7,6 +7,8 @@
         Success = 200,
         Created = 201,
         InvalidInput = 107,
+        NotRegisteredUser = 109,
+        ActionNotAllowed = 110,
         NotModified = 304,
         BadRequest = 400,
         Unauthorized = 401,
@@ -14,7 +16,7 @@
         Forbidden = 403,
         NotFound = 404,
         InternalServerError = 500,
-        NotImplemented = 501,
+        NotImplemented = 501
 
 
     }

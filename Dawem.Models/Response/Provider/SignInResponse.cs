@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Identity;
+﻿using Dawem.Models.Dtos.Identity;
 
-namespace SmartBusinessERP.Models.Response.Provider
+namespace Dawem.Models.Response.Provider
 {
     public class SignInResponse : BaseResponse
     {

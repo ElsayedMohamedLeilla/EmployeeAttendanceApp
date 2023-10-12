@@ -1,9 +1,4 @@
-﻿
-using SmartBusinessERP.Domain.Entities.Accounts;
-using SmartBusinessERP.Models.Response;
-
-
-namespace Glamatek.Model.SearchResults.Account
+﻿namespace Dawem.Models.Response.Accounting
 {
     public class BankAccountSearchResult : BaseResponse
     {

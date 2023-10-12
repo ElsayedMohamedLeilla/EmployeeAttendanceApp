@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Translations;
+using Microsoft.Extensions.Options;
 using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Generic;
 using SmartBusinessERP.Repository.Provider.Contract;
 using SmartBusinessERP.Repository.UserManagement;
@@ -8,7 +10,7 @@ using SmartBusinessERP.Repository.UserManagement.Contract;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace SmartBusinessERP.API.MiddleWares
+namespace Dawem.API.MiddleWares
 {
     public class RequestHeaderContextMiddleWare
     {
@@ -22,7 +24,7 @@ namespace SmartBusinessERP.API.MiddleWares
         public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, SmartUserManagerRepository userManager, ISmartUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             userContext.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
-            
+
             var userId = 0;
             var branchId = 0;
 
@@ -30,10 +32,10 @@ namespace SmartBusinessERP.API.MiddleWares
             {
 
 
-                string token = httpContext.Request.Headers["Authorization"];
+                string token = httpContext.Request.Headers[DawemKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {
-                    var tok = token.Replace("Bearer ", "");
+                    var tok = token.Replace(DawemKeys.Bearer, DawemKeys.EmptyString);
                     var jwttoken = new JwtSecurityTokenHandler().ReadJwtToken(tok);
 
                     var userIdText = jwttoken.Claims.First(claim => claim.Type == "UserId")?.Value;
@@ -55,7 +57,7 @@ namespace SmartBusinessERP.API.MiddleWares
 
             if (userId > 0)
             {
-                userContext.SmartUser = await userManager.FindByIdAsync(userId.ToString());
+                userContext.User = await userManager.FindByIdAsync(userId.ToString());
 
             }
 

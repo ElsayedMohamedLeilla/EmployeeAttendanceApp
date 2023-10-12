@@ -9,12 +9,12 @@ public interface IGenericRepository<T>
     Task<T> GetByIdAsync(object id);
     IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression);
     IQueryable<T> GetByConditionWithTracking(Expression<Func<T, bool>> expression);
-    IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string IncludeProperties = "");
-    IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string IncludeProperties = "");
-    T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string IncludeProperties = "");
-    T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string IncludeProperties = "");
-    Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string IncludeProperties = "");
-    IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = "", string orderType = "");
+    IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string IncludeProperties = DawemKeys.EmptyString);
+    IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string IncludeProperties = DawemKeys.EmptyString);
+    T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string IncludeProperties = DawemKeys.EmptyString);
+    T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string IncludeProperties = DawemKeys.EmptyString);
+    Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string IncludeProperties = DawemKeys.EmptyString);
+    IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = DawemKeys.EmptyString, string orderType = DawemKeys.EmptyString);
     T Insert(T entity);
     void BulkUpdateWithRelated(List<T> entityList);
     void BulkUpdate(List<T> entityList);

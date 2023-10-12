@@ -1,8 +1,8 @@
 ﻿using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Ohters;
+using Dawem.Models.Context;
 using Dawem.Repository.Others.Conract;
-using SmartBusinessERP.Models.Context;
 
 namespace Dawem.Repository.Others
 {

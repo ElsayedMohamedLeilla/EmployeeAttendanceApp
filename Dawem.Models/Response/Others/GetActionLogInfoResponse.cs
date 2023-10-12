@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Dtos.Others;
+﻿using Dawem.Models.Dtos.Others;
 
-namespace SmartBusinessERP.Models.Response.Core
+namespace Dawem.Models.Response.Others
 {
     public class GetActionLogInfoResponse : BaseResponse
     {

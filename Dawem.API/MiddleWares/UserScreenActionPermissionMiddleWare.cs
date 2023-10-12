@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
-using SmartBusinessERP.API.MiddleWares.Helpers;
+﻿using Dawem.API.MiddleWares.Helpers;
+using Dawem.Models.Context;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using SmartBusinessERP.BusinessLogic.Others.Contract;
 using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Criteria.Others;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace SmartBusinessERP.API.MiddleWares
+namespace Dawem.API.MiddleWares
 {
     public class UserScreenActionPermissionMiddleWare
     {
@@ -122,7 +122,7 @@ namespace SmartBusinessERP.API.MiddleWares
             userContext.RequestPort = httpContext.Request.Host.Port;
             userContext.RequestPath = httpContext.Request.Path;
             userContext.BaseUrl = $"{userContext.RequestProtocol}://{userContext.RequestHost}";
-            userContext.BaseUrl += userContext.RequestPort.HasValue ? ":" + userContext.RequestPort : "";
+            userContext.BaseUrl += userContext.RequestPort.HasValue ? ":" + userContext.RequestPort : DawemKeys.EmptyString;
 
             var branchId = HttpRequestHelper.getHeaderKey<int?>(httpContext.Request, "BranchId");
             userContext.BranchId = branchId == 0 ? null : branchId;

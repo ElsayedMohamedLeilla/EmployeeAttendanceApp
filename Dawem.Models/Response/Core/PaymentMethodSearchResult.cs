@@ -1,8 +1,8 @@
-﻿using SmartBusinessERP.Models.Dtos.Core;
+﻿using Dawem.Models.Dtos.Core;
 
-namespace SmartBusinessERP.Models.Response.Core
+namespace Dawem.Models.Response.Core
 {
-    public class PaymentMethodSearchResult :  BaseResponse
+    public class PaymentMethodSearchResult : BaseResponse
     {
         public List<PaymentMethodDTO> PaymentMethods { get; set; }
     }

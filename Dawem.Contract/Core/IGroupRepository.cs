@@ -5,6 +5,6 @@ namespace Dawem.Repository.Core.Conract
 {
     public interface IGroupRepository : IGenericRepository<Group>
     {
-        //IQueryable<Group> GetAsQueryable(GetGroupsCriteria criteria, string includeProperties = "");
+        //IQueryable<Group> GetAsQueryable(GetGroupsCriteria criteria, string includeProperties = DawemKeys.EmptyString);
     }
 }

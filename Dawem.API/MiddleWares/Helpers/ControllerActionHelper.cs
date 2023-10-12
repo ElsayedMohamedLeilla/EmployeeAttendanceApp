@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.General;
 
-namespace SmartBusinessERP.API.MiddleWares.Helpers
+namespace Dawem.API.MiddleWares.Helpers
 {
     public static class ControllerActionHelper
     {

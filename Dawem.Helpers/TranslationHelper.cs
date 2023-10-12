@@ -1,7 +1,8 @@
 ﻿using Dawem.Models.Shared;
+using Dawem.Translations;
 using System.Runtime.Caching;
 
-namespace Dawem.Translations
+namespace Dawem.Helpers
 {
     public class TranslationHelper
     {
@@ -75,7 +76,7 @@ namespace Dawem.Translations
             SetlangTrans(translations, DawemKeys.EnTrans);
         }
         public static List<MetaPair> GetResponseMessages(string messageCode,
-           string message, string MetaPlus = "")
+           string message, string MetaPlus = DawemKeys.EmptyString)
         {
             return new List<MetaPair>() { new MetaPair() { Property = messageCode,
                 Meta = message, MetaPlus = MetaPlus } };

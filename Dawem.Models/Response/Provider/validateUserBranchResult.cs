@@ -1,4 +1,4 @@
-﻿namespace SmartBusinessERP.Models.Response.Provider
+﻿namespace Dawem.Models.Response.Provider
 {
     public class validateUserBranchResult : BaseResponse
     {

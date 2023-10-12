@@ -20,7 +20,7 @@
             MobileNumber = MobileNumber.StartsWith("20") ? MobileNumber.Remove(0, 2) : MobileNumber;
 
             MobileNumber = MobileNumber.StartsWith("0") ?
-                MobileNumber.Replace(" ", "") : "0" + MobileNumber.Replace(" ", "");
+                MobileNumber.Replace(" ", DawemKeys.EmptyString) : "0" + MobileNumber.Replace(" ", DawemKeys.EmptyString);
             return MobileNumber;
         }
 

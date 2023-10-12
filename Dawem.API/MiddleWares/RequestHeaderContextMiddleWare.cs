@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;

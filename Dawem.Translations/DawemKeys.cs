@@ -64,7 +64,12 @@ namespace Dawem.Translations
         public const string Authorization = "Authorization";
         public const string Bearer = "Bearer ";
         public const string ProjectName = "Dawem";
-        public const string Jwt = "Jwt";
-        
+        public const string Repository = "Repository";
+
+        public const string Repository = "Repository";
+        public const string Repository = "Repository";
+        public const string Repository = "Repository";
+        public const string Repository = "Repository";
+
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Generic;
+using Dawem.Repository.Provider.Contract;
+using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.Extensions.Options;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Generic;
-using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.Repository.UserManagement;
 using SmartBusinessERP.Repository.UserManagement.Contract;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,7 +20,7 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, SmartUserManagerRepository userManager, ISmartUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
+        public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, UserManagerRepository userManager, IUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             userContext.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
 

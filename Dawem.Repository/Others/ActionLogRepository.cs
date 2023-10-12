@@ -1,8 +1,8 @@
-﻿using Dawem.Data;
+﻿using Dawem.Contract.Repository.Others;
+using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Ohters;
 using Dawem.Models.Context;
-using Dawem.Repository.Others.Conract;
 
 namespace Dawem.Repository.Others
 {

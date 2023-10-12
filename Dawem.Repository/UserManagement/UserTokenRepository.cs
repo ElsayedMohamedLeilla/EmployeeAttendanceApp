@@ -2,7 +2,7 @@
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Generic;
-using Dawem.Repository.UserManagement.Contract;
+using SmartBusinessERP.Repository.UserManagement.Contract;
 
 namespace Dawem.Repository.UserManagement
 {

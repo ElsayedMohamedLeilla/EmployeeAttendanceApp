@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UserManagement\" />
+    <ProjectReference Include="..\Dawem.Data\Dawem.Data.csproj" />
+    <ProjectReference Include="..\Dawem.Domain\Dawem.Domain.csproj" />
+    <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
   </ItemGroup>
 
 </Project>

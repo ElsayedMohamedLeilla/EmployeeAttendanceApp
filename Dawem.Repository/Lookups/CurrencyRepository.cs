@@ -1,8 +1,8 @@
-﻿using Dawem.Data;
+﻿using Dawem.Contract.Repository.Lookups;
+using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Models.Generic;
-using Dawem.Repository.Lookups.Contract;
 
 namespace Dawem.Repository.Lookups
 {

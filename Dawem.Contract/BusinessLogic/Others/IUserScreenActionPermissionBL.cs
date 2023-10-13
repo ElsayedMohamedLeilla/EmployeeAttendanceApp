@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Response.Others;
 
-namespace SmartBusinessERP.BusinessLogic.Others.Contract
+namespace Dawem.Contract.BusinessLogic.Others
 {
     public interface IUserScreenActionPermissionBL
     {

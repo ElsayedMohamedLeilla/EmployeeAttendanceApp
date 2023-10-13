@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.General;
 using Dawem.Models.Dtos.Provider;
 
-namespace SmartBusinessERP.BusinessLogic.Validators
+namespace Dawem.Models.Validation
 {
     public class BranchValidatorModel
     {

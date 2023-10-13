@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Provider;
 
-namespace SmartBusinessERP.BusinessLogic.Provider.Contract
+namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface IAccountBL
     {

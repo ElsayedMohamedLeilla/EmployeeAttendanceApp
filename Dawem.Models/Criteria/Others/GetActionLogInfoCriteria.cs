@@ -1,6 +1,4 @@
-﻿using SmartBusinessERP.Models.Request;
-
-namespace SmartBusinessERP.Models.Criteria.Core
+﻿namespace Dawem.Models.Criteria.Others
 {
     public class GetActionLogInfoCriteria : BaseCriteria
     {

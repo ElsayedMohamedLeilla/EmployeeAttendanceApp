@@ -1,4 +1,4 @@
-﻿using SmartBusinessERP.BusinessLogic.Provider.Contract;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using SmartBusinessERP.BusinessLogic.Validators.FluentValidators;
 using SmartBusinessERP.Enums;
 using SmartBusinessERP.Helpers;
@@ -8,7 +8,7 @@ using SmartBusinessERP.Models.Response;
 using System.Net;
 using System.Net.Mail;
 
-namespace SmartBusinessERP.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class MailBL : IMailBL
     {

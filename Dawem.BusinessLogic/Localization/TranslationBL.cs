@@ -1,3 +1,4 @@
+using Dawem.Contract.BusinessLogic.Localization;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -5,9 +6,8 @@ using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Response;
-using SmartBusinessERP.BusinessLogic.Localization.Contract;
 
-namespace SmartBusinessERP.BusinessLogic.Localization
+namespace Dawem.BusinessLogic.Localization
 {
     public class TranslationBL : ITranslationBL
     {

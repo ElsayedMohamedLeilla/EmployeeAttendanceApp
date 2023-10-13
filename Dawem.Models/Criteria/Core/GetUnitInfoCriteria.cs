@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Request;
+﻿using Dawem.Models.Criteria;
 
-namespace SmartBusinessERP.Models.Criteria.Core
+namespace Dawem.Models.Criteria.Core
 {
     public class GetUnitInfoCriteria : BaseCriteria
     {

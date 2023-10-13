@@ -1,6 +1,4 @@
-﻿using SmartBusinessERP.Models.Request;
-
-namespace SmartBusinessERP.Models.Criteria.Provider
+﻿namespace Dawem.Models.Criteria.Provider
 {
     public class GetBranchesCriteria : BaseCriteria
     {

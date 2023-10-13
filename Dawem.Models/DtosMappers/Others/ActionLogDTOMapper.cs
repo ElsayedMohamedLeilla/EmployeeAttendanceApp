@@ -2,7 +2,7 @@
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
 
-namespace SmartBusinessERP.Models.DtosMappers.Others
+namespace Dawem.Models.DtosMappers.Others
 {
     public class ActionLogDTOMapper
     {

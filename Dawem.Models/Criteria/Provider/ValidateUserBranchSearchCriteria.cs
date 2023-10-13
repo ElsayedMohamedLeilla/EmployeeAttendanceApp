@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Models.Request;
+﻿using Dawem.Models.Criteria;
 
-namespace SmartBusinessERP.Models.Criteria.Provider
+namespace Dawem.Models.Criteria.Provider
 {
     public class ValidateUserBranchSearchCriteria : BaseCriteria
     {

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.UserManagement;
+using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
@@ -9,7 +11,9 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identity;
+using Dawem.Models.DtosMappers;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Identity;
 using Dawem.Repository.UserManagement;
@@ -19,20 +23,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.Provider.Contract;
 using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
-using SmartBusinessERP.BusinessLogic.Validators.Contract;
 using SmartBusinessERP.BusinessLogic.Validators.FluentValidators;
 using SmartBusinessERP.Data;
 using SmartBusinessERP.Data.UnitOfWork;
 using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Enums;
 using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Criteria.UserManagement;
 using SmartBusinessERP.Models.Dtos.Identity;
 using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.DtosMappers;
 using SmartBusinessERP.Models.Response;
 using SmartBusinessERP.Models.Response.Identity;
 using SmartBusinessERP.Repository.Core.Conract;
@@ -40,7 +39,7 @@ using SmartBusinessERP.Repository.Provider.Contract;
 using SmartBusinessERP.Repository.UserManagement;
 using SmartBusinessERP.Repository.UserManagement.Contract;
 
-namespace SmartBusinessERP.BusinessLogic.UserManagement
+namespace Dawem.BusinessLogic.UserManagement
 {
     public class UserBL : IUserBL
     {
@@ -48,7 +47,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
         private readonly UserManagerRepository smartUserManagerRepository;
         private readonly IUserRepository smartUserRepository;
         private readonly RequestHeaderContext userContext;
-        private readonly IBranchValidatorBL branchValidatorBL;
+        private readonly IBranchBLValidation branchValidatorBL;
         private readonly IBranchRepository branchRepository;
         private readonly IUserRoleRepository smartUserRoleRepository;
         private readonly IUserBranchRepository userBranchRepository;
@@ -56,7 +55,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
         private readonly IUserBranchBL userBranchBL;
 
         public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IUserGroupRepository _userGroupRepository, IUserRoleRepository _smartUserRoleRepository, IUserRepository _smartUserRepository, UserManagerRepository _smartUserManagerRepository,
-            IConfiguration _config, RequestHeaderContext _userContext, IBranchValidatorBL _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
+            IConfiguration _config, RequestHeaderContext _userContext, IBranchBLValidation _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
             smartUserManagerRepository = _smartUserManagerRepository;
@@ -566,7 +565,7 @@ namespace SmartBusinessERP.BusinessLogic.UserManagement
                 myuser.UserGroups = null;
 
                 var updatedUserGroups = new List<UserBranch>();
-                var DBUserGroups = userGroupRepository.Get(u=>u.UserId == myuser.Id).ToList();
+                var DBUserGroups = userGroupRepository.Get(u => u.UserId == myuser.Id).ToList();
 
                 if (DBUserGroups != null)
                 {

@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Enums;
+﻿using Dawem.Enums.General;
 
-namespace SmartBusinessERP.Models.Request
+namespace Dawem.Models.Criteria
 {
     public class BaseCriteria
     {
@@ -13,7 +13,7 @@ namespace SmartBusinessERP.Models.Request
         public int? PageNumber { get; set; }
         public string? FreeText { get; set; }
         public OrderDirection? OrderByDirection { get; set; }
-        public bool ForGridView  { get; set; }
+        public bool ForGridView { get; set; }
 
     }
 }

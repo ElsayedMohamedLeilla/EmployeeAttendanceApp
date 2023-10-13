@@ -1,10 +1,10 @@
 ﻿using Dawem.Domain.Entities.Core;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Core;
-using SmartBusinessERP.Models.Criteria.Core;
 
-namespace SmartBusinessERP.BusinessLogic.Core.Contract
+namespace Dawem.Contract.BusinessLogic.Core
 {
     public interface IGroupBL
     {

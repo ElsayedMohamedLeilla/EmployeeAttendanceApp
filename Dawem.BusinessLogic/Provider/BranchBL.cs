@@ -1,51 +1,48 @@
-﻿using AutoMapper;
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.BusinessValidation;
+using Dawem.Contract.Repository.Provider;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Provider;
+using Dawem.Enums.General;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
+using Dawem.Models.Criteria.Provider;
+using Dawem.Models.Dtos.Provider;
+using Dawem.Models.DtosMappers;
+using Dawem.Models.Exceptions;
+using Dawem.Models.ResponseModels;
+using Dawem.Translations;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
-using SmartBusinessERP.BusinessLogic.Provider.Contract;
-using SmartBusinessERP.BusinessLogic.Validators;
-using SmartBusinessERP.BusinessLogic.Validators.Contract;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Criteria.Core;
-using SmartBusinessERP.Models.Criteria.Provider;
-using SmartBusinessERP.Models.Dtos.Provider;
-using SmartBusinessERP.Models.DtosMappers;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Core;
-using SmartBusinessERP.Models.Response.Provider;
-using SmartBusinessERP.Repository.Provider.Contract;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SmartBusinessERP.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class BranchBL : IBranchBL
     {
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IBranchRepository branchRepository;
-        private readonly RequestHeaderContext userContext;
-        private readonly IBranchValidatorBL BranchValidatorBL;
-        private readonly IBranchValidatorBL mainBranchValidatorBL;
-        private readonly IMapper mapper;
+        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly IBranchBLValidation BranchValidatorBL;
+        private readonly IBranchBLValidation mainBranchValidatorBL;
         private readonly IUserBranchBL userBranchBL;
 
         public BranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IBranchValidatorBL _mainBranchValidatorBL,
+            IBranchBLValidation _mainBranchValidatorBL,
                RequestHeaderContext _userContext, IBranchRepository _branchRepository,
-               IMapper _mapper, IBranchValidatorBL _BranchValidatorBL, IUserBranchBL _userBranchBL)
+               IBranchBLValidation _BranchValidatorBL, IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
-            userContext = _userContext;
+            requestHeaderContext = _userContext;
             mainBranchValidatorBL = _mainBranchValidatorBL;
             BranchValidatorBL = _BranchValidatorBL;
             branchRepository = _branchRepository;
-            mapper = _mapper;
             userBranchBL = _userBranchBL;
         }
 
-        public async Task<BaseResponseT<int>> Create(BranchDTO branchDTO)
+        public async Task<int> Create(BranchDTO branchDTO)
         {
 
             var response = new BaseResponseT<int>();
@@ -53,7 +50,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             #region Validation
 
             var ValidateChangeForMainBranchOnlyResult = BranchValidatorBL
-                .ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
+                .ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
 
             if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
             {
@@ -79,9 +76,9 @@ namespace SmartBusinessERP.BusinessLogic.Provider
 
             if (branchDTO.CompanyId <= 0)
             {
-                branchDTO.CompanyId = userContext.CompanyId;
+                branchDTO.CompanyId = requestHeaderContext.CompanyId;
             }
-            
+
             var branch = BranchDTOMapper.Map(branchDTO);
             try
             {
@@ -92,106 +89,56 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             }
             catch (Exception ex)
             {
-                response.Result =0;
-                TranslationHelper.SetResponseMessages(response, "MissingData", "Missing Data", userContext.Lang);
+                response.Result = 0;
+                TranslationHelper.SetResponseMessages(response, "MissingData", "Missing Data", requestHeaderContext.Lang);
             }
 
             response.Result = branch.Id;
             return response;
         }
 
-        public async Task<GetBranchInfoResponse> GetInfo(GetBranchInfoCriteria criteria)
+        public async Task<BranchDTO> GetInfo(GetBranchInfoCriteria criteria)
         {
+                var branch = await branchRepository.
+                    GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, nameof(Branch.Country) + DawemKeys.Comma + nameof(Branch.Currency)) ?? 
+                    throw new BusinessValidationErrorException(DawemKeys.BranchNotFound);
+            
+            BranchDTOMapper.InitBranchContext(requestHeaderContext);
+            var branchInfo = BranchDTOMapper.Map(branch);
 
-            GetBranchInfoResponse unitSearchResult = new()
-            {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                var branch = await branchRepository.GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "Country,Currency");
-
-                if (branch != null)
-                {
-                    BranchDTOMapper.InitBranchContext(userContext);
-                    var branchInfo = BranchDTOMapper.Map(branch);
-                    unitSearchResult.BranchInfo = branchInfo;
-                    unitSearchResult.Status = ResponseStatus.Success;
-                }
-                else
-                {
-                    unitSearchResult.Status = ResponseStatus.ValidationError;
-                    TranslationHelper
-                    .SetResponseMessages
-                        (unitSearchResult, "BranchNotFound!",
-                        "Branch Not Found !", lang: userContext.Lang);
-                }
-            }
-            catch (Exception ex)
-            {
-                unitSearchResult.Exception = ex;
-                unitSearchResult.Status = ResponseStatus.Error;
-            }
-            return unitSearchResult;
+            return branchInfo;
 
         }
 
-        public async Task<GetBranchesResponse> Get(GetBranchesCriteria criteria)
+        public async Task<GetBranchesResponseModel> Get(GetBranchesCriteria criteria)
         {
+            var query = branchRepository.GetAsQueryable(criteria,nameof(Branch.Country) + DawemKeys.Comma + nameof(Branch.Currency));
 
-            GetBranchesResponse getBranchesResponse = new()
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+         
+            #region sorting
+
+            var queryOrdered = branchRepository.OrderBy(query, "Id", "desc");
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            var branchesList = await queryPaged.ToListAsync();
+
+            BranchDTOMapper.InitBranchContext(requestHeaderContext);
+            var branches = BranchDTOMapper.Map(branchesList);
+
+            return new GetBranchesResponseModel
             {
-                Status = ResponseStatus.Success
+                Branches = branches,
+                TotalCount= query.Count()
             };
-            try
-            {
-                ExpressionStarter<Branch> branchPredicate = PredicateBuilder.New<Branch>(true);
-
-
-                if (criteria.Id > 0)
-                {
-                    branchPredicate = branchPredicate.And(x => x.Id == criteria.Id);
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-                {
-                    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-
-                    branchPredicate = branchPredicate.Start(x => x.BranchName.ToLower().Trim().Contains(criteria.FreeText));
-                }
-
-                branchPredicate = branchPredicate.And(x => x.CompanyId == userContext.CompanyId);
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                var query = branchRepository.Get(branchPredicate, IncludeProperties: "Country,Currency");
-
-                #region sorting
-
-                var queryOrdered = branchRepository.OrderBy(query, "Id", "desc");
-
-                #endregion
-
-                var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                var branches = await queryPaged.ToListAsync();
-
-                BranchDTOMapper.InitBranchContext(userContext);
-                getBranchesResponse.Branches = BranchDTOMapper.Map(branches);
-                getBranchesResponse.TotalCount = queryOrdered.ToList().Count;
-                getBranchesResponse.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                getBranchesResponse.Exception = ex;
-                getBranchesResponse.Status = ResponseStatus.Error;
-            }
-            return getBranchesResponse;
 
         }
         //public async Task<BaseResponseT<object>> MasterCreate(NewBranchBindingModel newBranchBindingModel)
@@ -248,7 +195,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             {
                 //unitOfWork.CreateTransaction();
 
-                var ValidateChangeForMainBranchOnlyResult = mainBranchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Edit);
+                var ValidateChangeForMainBranchOnlyResult = mainBranchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Edit);
 
                 if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
                 {
@@ -257,7 +204,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
                     return response;
                 }
 
-                branchDTO.CompanyId = userContext.CompanyId;
+                branchDTO.CompanyId = requestHeaderContext.CompanyId;
                 var branch = BranchDTOMapper.Map(branchDTO);
                 branchRepository.Update(branch);
                 await unitOfWork.SaveAsync();
@@ -278,7 +225,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             BaseResponseT<bool> response = new BaseResponseT<bool>();
             try
             {
-                var ValidateChangeForMainBranchOnlyResult = mainBranchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Delete);
+                var ValidateChangeForMainBranchOnlyResult = mainBranchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Delete);
                 if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
                 {
                     ResponseHelper.MapBaseResponse(source: ValidateChangeForMainBranchOnlyResult, destination: response);

@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Lookups;
-using SmartBusinessERP.Models.Criteria.Lookups;
+﻿using Dawem.Models.Criteria.Lookups;
+using Dawem.Models.Dtos.Lookups;
 
-namespace SmartBusinessERP.BusinessLogic.Lookups.Contract
+namespace Dawem.Contract.BusinessLogic.Lookups
 {
     public interface ILookupsBL
     {

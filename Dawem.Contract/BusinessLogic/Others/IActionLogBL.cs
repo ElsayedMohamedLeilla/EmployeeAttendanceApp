@@ -1,16 +1,14 @@
-﻿using Dawem.Models.Dtos.Others;
-using Dawem.Models.Response;
-using Dawem.Models.Response.Others;
-using SmartBusinessERP.Models.Criteria.Core;
-using SmartBusinessERP.Models.Criteria.Others;
+﻿using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Others;
+using Dawem.Models.ResponseModels;
 
-namespace SmartBusinessERP.BusinessLogic.Others.Contract
+namespace Dawem.Contract.BusinessLogic.Others
 {
     public interface IActionLogBL
     {
-        BaseResponseT<ActionLogDTO> GetById(int Id);
+        Task<ActionLogDTO> GetById(int Id);
         Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria);
-        Task<GetActionLogInfoResponse> GetInfo(GetActionLogInfoCriteria criteria);
-        Task<BaseResponseT<bool>> Create(CreateActionLogModel model);
+        Task<ActionLogInfo> GetInfo(GetActionLogInfoCriteria criteria);
+        Task<bool> Create(CreateActionLogModel model);
     }
 }

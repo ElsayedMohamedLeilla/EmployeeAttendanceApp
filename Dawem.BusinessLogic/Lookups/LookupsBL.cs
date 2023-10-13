@@ -1,19 +1,19 @@
-﻿using Dawem.Contract.Repository.Lookups;
+﻿using Dawem.Contract.BusinessLogic.Lookups;
+using Dawem.Contract.Repository.Lookups;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Dtos.Lookups;
 using Dawem.Translations;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
-using SmartBusinessERP.BusinessLogic.Lookups.Contract;
-using SmartBusinessERP.Models.Criteria.Lookups;
 using System.Data;
 using System.Linq.Expressions;
 
-namespace SmartBusinessERP.BusinessLogic.Lookups
+namespace Dawem.BusinessLogic.Lookups
 {
     public class LookupsBL : ILookupsBL
     {

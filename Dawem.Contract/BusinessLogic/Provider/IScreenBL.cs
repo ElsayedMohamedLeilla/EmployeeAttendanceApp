@@ -1,7 +1,7 @@
 ﻿using Dawem.Models.Dtos.Lookups;
 using Dawem.Models.Response;
 
-namespace SmartBusinessERP.BusinessLogic.Provider.Contract
+namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface IScreenBL
     {

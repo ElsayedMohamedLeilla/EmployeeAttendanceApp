@@ -1,6 +1,4 @@
-﻿using SmartBusinessERP.Models.Request;
-
-namespace SmartBusinessERP.Models.Criteria.Lookups
+﻿namespace Dawem.Models.Criteria.Lookups
 {
     public class GetCurrenciesCriteria : BaseCriteria
     {

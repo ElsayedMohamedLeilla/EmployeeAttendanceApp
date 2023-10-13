@@ -2,10 +2,10 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Lookups;
+using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 using LinqKit;
-using SmartBusinessERP.Models.Criteria.Lookups;
 
 namespace Dawem.Repository.Lookups
 {

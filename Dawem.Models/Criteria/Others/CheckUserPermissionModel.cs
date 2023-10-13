@@ -1,7 +1,6 @@
 ﻿using Dawem.Enums.General;
-using SmartBusinessERP.Models.Request;
 
-namespace SmartBusinessERP.Models.Criteria.Others
+namespace Dawem.Models.Criteria.Others
 {
     public class CheckUserPermissionModel : BaseCriteria
     {

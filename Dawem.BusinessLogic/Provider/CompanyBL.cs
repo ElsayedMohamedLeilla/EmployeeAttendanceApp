@@ -1,4 +1,4 @@
-﻿using SmartBusinessERP.BusinessLogic.Provider.Contract;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using SmartBusinessERP.Data;
 using SmartBusinessERP.Data.UnitOfWork;
 using SmartBusinessERP.Domain.Entities.Provider;
@@ -8,7 +8,7 @@ using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Response;
 using SmartBusinessERP.Repository.Provider.Contract;
 
-namespace SmartBusinessERP.Repository.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class CompanyBL : ICompanyBL
     {
@@ -16,7 +16,7 @@ namespace SmartBusinessERP.Repository.Provider
         private readonly ICompanyRepository companyRepository;
         private readonly RequestHeaderContext userContext;
         public CompanyBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-               RequestHeaderContext _userContext, ICompanyRepository _companyRepository )
+               RequestHeaderContext _userContext, ICompanyRepository _companyRepository)
         {
             unitOfWork = _unitOfWork;
             userContext = _userContext;
@@ -40,6 +40,6 @@ namespace SmartBusinessERP.Repository.Provider
             return response;
         }
 
-      
+
     }
 }

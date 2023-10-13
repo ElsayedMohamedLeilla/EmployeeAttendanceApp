@@ -2,7 +2,7 @@
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Core;
 
-namespace SmartBusinessERP.Models.DtosMappers
+namespace Dawem.Models.DtosMappers
 {
     public class UserGroupDTOMapper
     {

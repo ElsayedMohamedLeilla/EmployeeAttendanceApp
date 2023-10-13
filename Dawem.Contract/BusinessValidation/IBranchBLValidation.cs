@@ -1,12 +1,13 @@
 ﻿using Dawem.Enums.General;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Provider;
-using SmartBusinessERP.Models.Criteria.Provider;
+using Dawem.Models.Validation;
 
-namespace SmartBusinessERP.BusinessLogic.Validators.Contract
+namespace Dawem.Contract.BusinessValidation
 {
-    public interface IBranchValidatorBL
+    public interface IBranchBLValidation
     {
         Task<BranchValidatorResult> BranchCreationValidator(BranchValidatorModel branchValidatorModel);
         BaseResponseT<bool> ValidateChangeForMainBranchOnly(RequestHeaderContext userContext, ChangeType changeType);

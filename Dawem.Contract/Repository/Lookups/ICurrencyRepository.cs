@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Lookups;
+using Dawem.Models.Criteria.Lookups;
 using Dawem.Translations;
-using SmartBusinessERP.Models.Criteria.Lookups;
 
 namespace Dawem.Contract.Repository.Lookups
 {

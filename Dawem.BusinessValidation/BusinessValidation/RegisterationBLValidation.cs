@@ -4,15 +4,15 @@ using SmartBusinessERP.Models.Response;
 
 using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.BusinessLogic.Validators.Contract;
 using SmartBusinessERP.Models.Dtos.Provider;
 using SmartBusinessERP.Repository.UserManagement.Contract;
 using SmartBusinessERP.Repository.UserManagement;
+using Dawem.Contract.BusinessValidation;
 
 namespace Dawem.Validation.BusinessValidation
 {
 
-    public class RegisterationValidatorBL : IRegisterationValidatorBL
+    public class RegisterationBLValidation : IRegisterationBLValidation
     {
         private readonly RequestHeaderContext userContext;
         private readonly IBranchRepository branchRepository;
@@ -21,7 +21,7 @@ namespace Dawem.Validation.BusinessValidation
         private readonly SmartUserManagerRepository smartUserManagerRepository;
 
 
-        public RegisterationValidatorBL(RequestHeaderContext _userContext, IBranchRepository _branchRepository,
+        public RegisterationBLValidation(RequestHeaderContext _userContext, IBranchRepository _branchRepository,
             IUserBranchRepository _userBranchRepository, ISmartUserRepository _smartUserRepository, SmartUserManagerRepository _smartUserManagerRepository)
         {
 

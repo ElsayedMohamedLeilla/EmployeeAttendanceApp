@@ -1,9 +1,9 @@
 ﻿using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Response;
 
-namespace SmartBusinessERP.BusinessLogic.Validators.Contract
+namespace Dawem.Contract.BusinessValidation
 {
-    public interface IRegisterationValidatorBL
+    public interface IRegisterationBLValidation
     {
         Task<BaseResponseT<RegisterResponseModel>> RegisterationValidator(RegisterModel ValidatorModel);
 

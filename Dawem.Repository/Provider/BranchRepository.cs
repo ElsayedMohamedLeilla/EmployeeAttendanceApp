@@ -2,24 +2,24 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Context;
+using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Generic;
 using LinqKit;
-using SmartBusinessERP.Models.Criteria.Provider;
 
 namespace Dawem.Repository.Provider
 {
     public class BranchRepository : GenericRepository<Branch>, IBranchRepository
     {
 
-        private readonly ICompanyRepository companyRepository;
-        public BranchRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, ICompanyRepository _companyRepository
+        private readonly RequestHeaderContext requestHeaderContext;
+        public BranchRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestHeaderContext _requestHeaderContext
             , GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 
-            companyRepository = _companyRepository;
+            requestHeaderContext = _requestHeaderContext;
         }
-
 
         public IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "Company", UserDTO user = null)
         {
@@ -46,10 +46,6 @@ namespace Dawem.Repository.Provider
             }
 
 
-
-
-
-
             if (criteria.GetMainBranch != null)
             {
                 if (criteria.GetMainBranch.Value)
@@ -64,9 +60,6 @@ namespace Dawem.Repository.Provider
 
             }
 
-
-
-
             if (criteria.Id != null)
             {
                 predicate = predicate.And(x => x.Id == criteria.Id.Value);
@@ -79,29 +72,25 @@ namespace Dawem.Repository.Provider
             else
             {
 
-
-
-
-
                 if (criteria.BranchName != null)
                 {
                     criteria.BranchName = criteria.BranchName.ToLower().TrimStart().TrimEnd();
                     predicate = predicate.And(x => x.BranchName.Contains(criteria.BranchName));
                 }
 
-
-
                 if (criteria.UserId != null)
                 {
                     predicate = predicate.And(c => c.UserBranches.Any(ua => ua.UserId == criteria.UserId));
                 }
 
-
                 if (criteria.CompanyId != null && criteria.CompanyId != default(int))
                 {
                     predicate = predicate.And(x => x.CompanyId == criteria.CompanyId);
                 }
-
+                else
+                {
+                    predicate = predicate.And(x => x.CompanyId == requestHeaderContext.CompanyId);
+                }
 
                 predicate = predicate.And(inner);
                 var Query = Get(predicate, includeProperties: includeProperties);

@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.BusinessValidation;
+using Dawem.Models.Criteria.UserManagement;
+using Dawem.Models.DtosMappers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.Others.Contract;
-using SmartBusinessERP.BusinessLogic.Provider.Contract;
-using SmartBusinessERP.BusinessLogic.Validators.Contract;
 using SmartBusinessERP.Data;
 using SmartBusinessERP.Data.UnitOfWork;
 using SmartBusinessERP.Domain.Entities.Provider;
@@ -15,11 +17,9 @@ using SmartBusinessERP.Enums;
 using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Criteria.Provider;
-using SmartBusinessERP.Models.Criteria.UserManagement;
 using SmartBusinessERP.Models.Dtos.Identity;
 using SmartBusinessERP.Models.Dtos.Provider;
 using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.DtosMappers;
 using SmartBusinessERP.Models.Generic;
 using SmartBusinessERP.Models.Response;
 using SmartBusinessERP.Models.Response.Identity;
@@ -32,7 +32,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SmartBusinessERP.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class AccountBL : IAccountBL
     {
@@ -50,20 +50,20 @@ namespace SmartBusinessERP.BusinessLogic.Provider
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
         private readonly ISmartUserTokenRepository smartUserTokenRepository;
-        private readonly IRegisterationValidatorBL registerationValidatorBL;
+        private readonly IRegisterationBLValidation registerationValidatorBL;
         private readonly IUserBranchRepository UserBranchRepository;
-        private readonly IBranchValidatorBL branchValidatorBL;
+        private readonly IBranchBLValidation branchValidatorBL;
         private readonly IBranchRepository branchRepository;
         private readonly IActionLogBL actionLogBL;
         public AccountBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IBranchRepository _branchRepository, IActionLogBL _actionLogBL,
-            IBranchValidatorBL _branchValidatorBL, ISmartUserRepository _smartUserRepository,
+            IBranchBLValidation _branchValidatorBL, ISmartUserRepository _smartUserRepository,
             SmartUserManagerRepository _smartUserManagerRepository,
            IBranchBL _branchBL, IOptions<Jwt> _appSettings, IPackageRepository _packageRepository,
            ICompanyBL _companyBL, RequestHeaderContext _userContext,
            IBranchCurrencyRepository _branchCurrencyRepository, IMailBL _mailBL,
            ISmartUserTokenRepository _smartUserTokenRepository, IHttpContextAccessor _accessor,
-           LinkGenerator _generator, IRegisterationValidatorBL _registerationValidatorBL,
+           LinkGenerator _generator, IRegisterationBLValidation _registerationValidatorBL,
            IUserBranchRepository _userBranchRepository)
         {
             unitOfWork = _unitOfWork;
@@ -742,7 +742,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             {
 
                 var user = await smartUserManagerRepository.FindByEmailAsync(forgetPasswordBindingModel.Email);
-                if (user != null || (await smartUserManagerRepository.IsEmailConfirmedAsync(user)))
+                if (user != null || await smartUserManagerRepository.IsEmailConfirmedAsync(user))
                 {
 
                     unitOfWork.CreateTransaction();

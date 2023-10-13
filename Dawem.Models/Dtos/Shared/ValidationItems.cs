@@ -1,4 +1,4 @@
-﻿using SmartBusinessERP.Enums;
+﻿using Dawem.Enums.General;
 
 namespace Dawem.Models.Dtos.Shared
 {

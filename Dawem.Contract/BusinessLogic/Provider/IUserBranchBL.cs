@@ -1,9 +1,9 @@
 ﻿using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Others;
-using SmartBusinessERP.Models.Criteria.Others;
 
-namespace SmartBusinessERP.BusinessLogic.Provider.Contract
+namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface IUserBranchBL
     {

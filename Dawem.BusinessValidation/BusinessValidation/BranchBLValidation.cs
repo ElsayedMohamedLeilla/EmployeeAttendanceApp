@@ -1,23 +1,23 @@
-﻿using Dawem.Contract.Repository.Provider;
+﻿using Dawem.Contract.BusinessValidation;
+using Dawem.Contract.Repository.Provider;
 using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Provider;
-using SmartBusinessERP.BusinessLogic.Validators.Contract;
-using SmartBusinessERP.Models.Criteria.Provider;
 
 namespace Dawem.Validation.BusinessValidation
 {
 
-    public class BranchValidatorBL : IBranchValidatorBL
+    public class BranchBLValidation : IBranchBLValidation
     {
         private readonly RequestHeaderContext userContext;
         private readonly IBranchRepository branchRepository;
         private readonly IUserBranchRepository userBranchRepository;
 
-        public BranchValidatorBL(RequestHeaderContext _userContext, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository)
+        public BranchBLValidation(RequestHeaderContext _userContext, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository)
         {
 
             userContext = _userContext;

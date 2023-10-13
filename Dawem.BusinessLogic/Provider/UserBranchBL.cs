@@ -1,20 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Models.Criteria.Others;
+using Microsoft.EntityFrameworkCore;
 using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.Provider.Contract;
 using SmartBusinessERP.Data;
 using SmartBusinessERP.Data.UnitOfWork;
 using SmartBusinessERP.Domain.Entities.Provider;
 using SmartBusinessERP.Enums;
 using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Criteria.Others;
 using SmartBusinessERP.Models.Dtos.Provider;
 using SmartBusinessERP.Models.Response;
 using SmartBusinessERP.Models.Response.Others;
 using SmartBusinessERP.Repository.Provider.Contract;
 using SmartBusinessERP.Repository.UserManagement;
 
-namespace SmartBusinessERP.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class UserBranchBL : IUserBranchBL
     {

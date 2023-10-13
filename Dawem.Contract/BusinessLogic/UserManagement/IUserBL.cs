@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Identity;
+﻿using Dawem.Models.Criteria.UserManagement;
+using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Identity;
-using SmartBusinessERP.Models.Criteria.UserManagement;
 
 namespace Dawem.Contract.BusinessLogic.UserManagement
 {

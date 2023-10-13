@@ -3,9 +3,9 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Ohters;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Others;
 using Dawem.Translations;
 using LinqKit;
-using SmartBusinessERP.Models.Criteria.Others;
 
 namespace Dawem.Repository.Others
 {

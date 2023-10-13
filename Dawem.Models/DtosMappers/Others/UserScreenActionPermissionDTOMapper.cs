@@ -2,7 +2,7 @@
 using SmartBusinessERP.Models.Context;
 using SmartBusinessERP.Models.Dtos.Others;
 
-namespace SmartBusinessERP.Models.DtosMappers.Others
+namespace Dawem.Models.DtosMappers.Others
 {
     public class UserScreenActionPermissionDTOMapper
     {

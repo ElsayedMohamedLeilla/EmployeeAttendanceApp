@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Others;
 
-namespace Dawem.Models.Response.Others
+namespace Dawem.Models.ResponseModels
 {
     public class GetActionLogsResponseModel
     {

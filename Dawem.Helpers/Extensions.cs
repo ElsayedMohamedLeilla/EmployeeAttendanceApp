@@ -1,16 +1,16 @@
 ﻿using Newtonsoft.Json;
 
 
-namespace Glamatek.Utils.Helpers
+namespace Dawem.Helpers
 {
     public static class Extensions
     {
         public static T CloneJson<T>(this T source)
         {
             // Don't serialize a null object, simply return the default for that object
-            if (Object.ReferenceEquals(source, null))
+            if (ReferenceEquals(source, null))
             {
-                return default(T);
+                return default;
             }
 
             var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
@@ -48,7 +48,7 @@ namespace Glamatek.Utils.Helpers
 
         public static string ConvertArabicNumbersToEnglish(this string number)
         {
-            number =  number.Replace("٠", "0");
+            number = number.Replace("٠", "0");
             number = number.Replace("١", "1");
             number = number.Replace("٢", "2");
             number = number.Replace("٣", "3");

@@ -66,10 +66,15 @@ namespace Dawem.Translations
         public const string ProjectName = "Dawem";
         public const string Repository = "Repository";
 
-        public const string Repository = "Repository";
-        public const string Repository = "Repository";
-        public const string Repository = "Repository";
-        public const string Repository = "Repository";
+        public const string BL = "BL";
+        public const string BLValidation = "BLValidation";
+        public const string ActionLogNotFound = "ActionLogNotFound!";
+        public const string FullAccess = "FullAccess";
+
+        public const string ApiCcontrollerAction = "api/[controller]/[action]";
+        public const string Comma = ",";
+        public const string BranchNotFound = "BranchNotFound!";
+        public const string FullAccess2 = "FullAccess";
 
     }
 }

@@ -2,7 +2,7 @@
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Lookups;
 
-namespace SmartBusinessERP.Models.DtosMappers
+namespace Dawem.Models.DtosMappers
 {
     public class CountryDTOMapper
     {

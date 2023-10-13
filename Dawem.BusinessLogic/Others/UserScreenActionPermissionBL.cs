@@ -1,32 +1,28 @@
-﻿using AutoMapper;
-using SmartBusinessERP.BusinessLogic.Others.Contract;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Others;
-using SmartBusinessERP.Models.Response.Others;
-using SmartBusinessERP.Repository.Others.Conract;
+﻿using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Enums.General;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Others;
+using Dawem.Models.Response.Others;
 
-namespace SmartBusinessERP.BusinessLogic.Others
+namespace Dawem.BusinessLogic.Others
 {
     public class UserScreenActionPermissionBL : IUserScreenActionPermissionBL
     {
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly IActionLogRepository actionLogRepository;
-        private readonly IMapper mapper;
-        private readonly RequestHeaderContext userContext;
+        private readonly IRepositoryManager repositoryManager;
+        private readonly RequestHeaderContext requestHeaderContext;
 
 
         public UserScreenActionPermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IActionLogRepository _actionLogRepository, RequestHeaderContext _userContext, IMapper _mapper
-            )
+            IRepositoryManager _repositoryManager, RequestHeaderContext _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
-            actionLogRepository = _actionLogRepository;
-            mapper = _mapper;
-            userContext = _userContext;
+            repositoryManager = _repositoryManager;
+            requestHeaderContext = _requestHeaderContext;
         }
 
 
@@ -36,9 +32,9 @@ namespace SmartBusinessERP.BusinessLogic.Others
             response.Status = ResponseStatus.Success;
             try
             {
-                var ERPScreens = Enum.GetValues(typeof(ERPScreen)).Cast<ERPScreen>().ToList();
+                var ApplicationScreenTypes = Enum.GetValues(typeof(ApplicationScreenType)).Cast<ApplicationScreenType>().ToList();
 
-                foreach (var erpScreen in ERPScreens)
+                foreach (var erpScreen in ApplicationScreenTypes)
                 {
                     var screensWithAvailableActionsDTO = new ScreensWithAvailableActionsDTO();
 
@@ -58,38 +54,38 @@ namespace SmartBusinessERP.BusinessLogic.Others
         }
 
 
-        public List<ApiMethod> GetScreenAvailableActions(ERPScreen screen)
+        public List<ApiMethod> GetScreenAvailableActions(ApplicationScreenType screen)
         {
             var response = new List<ApiMethod>();
             try
             {
                 switch (screen)
                 {
-                    case ERPScreen.CompaniesScreen:
+                    case ApplicationScreenType.CompaniesScreen:
                         response = new List<ApiMethod>() { ApiMethod.View };
                         break;
-                    case ERPScreen.BranchesScreen:
+                    case ApplicationScreenType.BranchesScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.UsersScreen:
+                    case ApplicationScreenType.UsersScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.PaymentMethodsScreen:
+                    case ApplicationScreenType.PaymentMethodsScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.StoresScreen:
+                    case ApplicationScreenType.StoresScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.UnitsScreen:
+                    case ApplicationScreenType.UnitsScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.LogInScreen:
+                    case ApplicationScreenType.LogInScreen:
                         response = new List<ApiMethod>() { ApiMethod.LogIn };
                         break;
-                    case ERPScreen.AccountsScreen:
+                    case ApplicationScreenType.AccountsScreen:
                         response = new List<ApiMethod>() { ApiMethod.Add, ApiMethod.Update, ApiMethod.View, ApiMethod.Delete };
                         break;
-                    case ERPScreen.ActionsLogsScreen:
+                    case ApplicationScreenType.ActionsLogsScreen:
                         response = new List<ApiMethod>() { ApiMethod.View };
                         break;
                     default:

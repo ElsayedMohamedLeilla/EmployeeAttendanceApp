@@ -1,6 +1,4 @@
-﻿using SmartBusinessERP.Models.Request;
-
-namespace SmartBusinessERP.Models.Criteria.Core
+﻿namespace Dawem.Models.Criteria.Core
 {
     public class GetStoreInfoCriteria : BaseCriteria
     {

@@ -1,4 +1,4 @@
-﻿namespace SmartBusinessERP.Enums
+﻿namespace Dawem.Enums.General
 {
     public enum OrderDirection
     {

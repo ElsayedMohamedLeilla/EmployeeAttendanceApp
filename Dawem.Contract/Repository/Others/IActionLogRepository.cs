@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Ohters;
+using Dawem.Models.Criteria.Others;
 using Dawem.Translations;
-using SmartBusinessERP.Models.Criteria.Others;
 
 namespace Dawem.Contract.Repository.Others
 {

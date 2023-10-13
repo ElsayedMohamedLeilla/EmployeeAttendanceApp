@@ -1,42 +1,40 @@
-﻿using Dawem.Contract.Repository.Others;
+﻿using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Enums.General;
+using Dawem.Domain.Entities.Ohters;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Others;
+using Dawem.Models.DtosMappers.Others;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response;
-using Dawem.Models.Response.Others;
+using Dawem.Models.ResponseModels;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using SmartBusinessERP.BusinessLogic.Others.Contract;
-using SmartBusinessERP.Models.Criteria.Core;
-using SmartBusinessERP.Models.Criteria.Others;
-using SmartBusinessERP.Models.DtosMappers.Others;
 
-namespace SmartBusinessERP.BusinessLogic.Others
+namespace Dawem.BusinessLogic.Others
 {
     public class ActionLogBL : IActionLogBL
     {
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly IActionLogRepository actionLogRepository;
+        private readonly IRepositoryManager repositoryManager;
         private readonly RequestHeaderContext userContext;
 
 
         public ActionLogBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IActionLogRepository _actionLogRepository, RequestHeaderContext _userContext
+            IRepositoryManager _repositoryManager, RequestHeaderContext _userContext
             )
         {
             unitOfWork = _unitOfWork;
-            actionLogRepository = _actionLogRepository;
+            repositoryManager = _repositoryManager;
             userContext = _userContext;
         }
 
         public async Task<ActionLogDTO> GetById(int Id)
         {
-            var actionLog = await actionLogRepository.GetByIdAsync(Id) ??
+            var actionLog = await repositoryManager.ActionLogRepository.GetByIdAsync(Id) ??
                 throw new BusinessValidationErrorException(DawemKeys.NoDataFound);
 
             var response = ActionLogDTOMapper.Map(actionLog);
@@ -46,8 +44,8 @@ namespace SmartBusinessERP.BusinessLogic.Others
         public async Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria)
         {
 
-            var query = actionLogRepository.GetAsQueryable(criteria);
-            var queryOrdered = actionLogRepository.OrderBy(query, "Id", "desc");
+            var query = repositoryManager.ActionLogRepository.GetAsQueryable(criteria);
+            var queryOrdered = repositoryManager.ActionLogRepository.OrderBy(query, "Id", "desc");
 
             #region paging
 
@@ -70,78 +68,42 @@ namespace SmartBusinessERP.BusinessLogic.Others
 
             return response;
         }
-        public async Task<GetActionLogInfoResponse> GetInfo(GetActionLogInfoCriteria criteria)
+        public async Task<ActionLogInfo> GetInfo(GetActionLogInfoCriteria criteria)
         {
+            var actionLog = await repositoryManager.ActionLogRepository
+                .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "Branch,User")
+                ?? throw new BusinessValidationErrorException(DawemKeys.ActionLogNotFound);
 
-            GetActionLogInfoResponse actionLogSearchResult = new()
-            {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                var actionLog = await actionLogRepository.GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "Branch,User");
+            ActionLogDTOMapper.InitActionLogContext(userContext);
+            var actionLogInfo = ActionLogDTOMapper.MapInfo(actionLog);
 
-                if (actionLog != null)
-                {
-                    ActionLogDTOMapper.InitActionLogContext(userContext);
-                    var actionLogInfo = ActionLogDTOMapper.MapInfo(actionLog);
-                    actionLogSearchResult.ActionLogInfo = actionLogInfo;
-                    actionLogSearchResult.Status = ResponseStatus.Success;
-                }
-                else
-                {
-                    actionLogSearchResult.Status = ResponseStatus.ValidationError;
-                    TranslationHelper
-                    .SetResponseMessages
-                        (actionLogSearchResult, "ActionLogNotFound!",
-                        "ActionLog Not Found !", lang: userContext.Lang);
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                actionLogSearchResult.Exception = ex;
-                actionLogSearchResult.Status = ResponseStatus.Error;
-            }
-
-            return actionLogSearchResult;
+            return actionLogInfo;
 
         }
-        public async Task<BaseResponseT<bool>> Create(CreateActionLogModel model)
+        public async Task<bool> Create(CreateActionLogModel model)
         {
-            var response = new BaseResponseT<bool>();
-            try
+
+            if (model.ActionType > 0 && model.ActionPlace > 0)
             {
-                if (model.ActionType > 0 && model.ActionPlace > 0)
+                unitOfWork.CreateTransaction();
+
+                var actionLog = new ActionLog()
                 {
-                    unitOfWork.CreateTransaction();
-
-                    var actionLog = new ActionLog()
-                    {
-                        ActionType = model.ActionType,
-                        ActionPlace = model.ActionPlace,
-                        Date = DateTime.Now,
-                        BranchId = userContext?.BranchId ?? 0,
-                        UserId = userContext?.UserId ?? 0,
-                        ResponseStatus = model.ResponseStatus
-                    };
+                    ActionType = model.ActionType,
+                    ActionPlace = model.ActionPlace,
+                    Date = DateTime.Now,
+                    BranchId = userContext?.BranchId ?? 0,
+                    UserId = userContext?.UserId ?? 0,
+                    ResponseStatus = model.ResponseStatus
+                };
 
 
-                    actionLogRepository.Insert(actionLog);
-                    await unitOfWork.SaveAsync();
-                    unitOfWork.Commit();
-                }
-
-                response.Status = ResponseStatus.Success;
-
+                repositoryManager.ActionLogRepository.Insert(actionLog);
+                await unitOfWork.SaveAsync();
+                unitOfWork.Commit();
             }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                TranslationHelper.SetException(response, ex);
-            }
-            return response;
+
+            return true;
         }
     }
 

@@ -4,13 +4,13 @@ using SmartBusinessERP.Enums;
 using SmartBusinessERP.Helpers;
 using SmartBusinessERP.Models.Response;
 using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.BusinessLogic.Provider.Contract;
 using AutoMapper;
 using SmartBusinessERP.Models.Dtos.Lookups;
 using SmartBusinessERP.Repository.Lookups.Contract;
 using SmartBusinessERP.Domain.Entities.Lookups;
+using Dawem.Contract.BusinessLogic.Provider;
 
-namespace SmartBusinessERP.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Provider
 {
     public class ScreenBL : IScreenBL
     {
@@ -21,7 +21,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
         private readonly IBranchRepository branchRepository;
         private readonly IMapper mapper;
 
-       
+
 
         public ScreenBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IPackageRepository _packageRepository,
             IPackageScreenBL _packagescreenOrch, IScreenRepository _screenRepository, IMapper _mapper, IBranchRepository _branchRepository)
@@ -31,11 +31,11 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             packagescreenOrch = _packagescreenOrch;
             screenRepository = _screenRepository;
             branchRepository = _branchRepository;
-          
-                  mapper = _mapper;
+
+            mapper = _mapper;
 
         }
-    
+
         public BaseResponseT<bool> Delete(int Id)
         {
             var response = new BaseResponseT<bool>
@@ -76,7 +76,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
                 var dbScreen = mapper.Map<Screen>(screen);
 
                 screenRepository.Insert(dbScreen);
-                 await unitOfWork.SaveAsync();
+                await unitOfWork.SaveAsync();
 
                 unitOfWork.Commit();
                 response.Status = ResponseStatus.Success;
@@ -93,8 +93,8 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             return response;
         }
 
-        
-        public  BaseResponseT<IEnumerable<ScreenDto>> GetAllDescendantScreens(int id)
+
+        public BaseResponseT<IEnumerable<ScreenDto>> GetAllDescendantScreens(int id)
         {
             var response = new BaseResponseT<IEnumerable<ScreenDto>>
             {
@@ -102,7 +102,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             };
 
             var result = new List<Screen>();
-            var parentScreen =  screenRepository.Get(a=>a.Id == id,IncludeProperties: "ScreenModules")
+            var parentScreen = screenRepository.Get(a => a.Id == id, IncludeProperties: "ScreenModules")
                 .FirstOrDefault(s => s.Id == id);
 
             if (parentScreen == null)
@@ -119,7 +119,7 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             return response;
         }
 
-        public  BaseResponseT<bool> DeleteScreen(int id)
+        public BaseResponseT<bool> DeleteScreen(int id)
         {
             var response = new BaseResponseT<bool>
             {
@@ -177,5 +177,5 @@ namespace SmartBusinessERP.BusinessLogic.Provider
             }
         }
 
-        }
+    }
 }

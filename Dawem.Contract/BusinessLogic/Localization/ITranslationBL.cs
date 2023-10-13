@@ -1,8 +1,6 @@
-
-
 using Dawem.Models.Response;
 
-namespace SmartBusinessERP.BusinessLogic.Localization.Contract
+namespace Dawem.Contract.BusinessLogic.Localization
 {
     public interface ITranslationBL
 

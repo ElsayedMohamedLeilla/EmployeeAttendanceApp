@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Dawem.Models.Response;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dawem.Models.Dtos.Provider
 {
@@ -94,7 +95,6 @@ namespace Dawem.Models.Dtos.Provider
         public string UserName { get; set; }
         public int branchId { get; set; }
         public int CompanyId { get; set; }
-
         public string Token { get; set; }
 
     }

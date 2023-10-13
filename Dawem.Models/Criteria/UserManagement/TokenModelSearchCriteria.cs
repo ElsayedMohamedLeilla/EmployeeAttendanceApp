@@ -1,6 +1,4 @@
-﻿using SmartBusinessERP.Models.Request;
-
-namespace SmartBusinessERP.Models.Criteria.UserManagement
+﻿namespace Dawem.Models.Criteria.UserManagement
 {
     public class TokenModelSearchCriteria : BaseCriteria
     {

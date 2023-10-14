@@ -90,6 +90,13 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
 
+builder.Services.AddAutoMapper((serviceProvider, config) =>
+{
+
+    config.AddProfile<AutoMapperConfig>();
+
+}, typeof(Program));
+
 WebApplication app = builder.Build();
 IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()
     .CreateScope();

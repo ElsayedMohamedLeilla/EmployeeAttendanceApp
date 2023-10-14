@@ -1,10 +1,9 @@
 ﻿using Dawem.Contract.BusinessLogic.Provider;
-using SmartBusinessERP.BusinessLogic.Validators.FluentValidators;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Response;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Exceptions;
+using Dawem.Translations;
 using System.Net;
 using System.Net.Mail;
 
@@ -12,36 +11,26 @@ namespace Dawem.BusinessLogic.Provider
 {
     public class MailBL : IMailBL
     {
-        private readonly RequestHeaderContext userContext;
-        public MailBL(RequestHeaderContext _userContext)
+        private readonly RequestHeaderContext requestHeaderContext;
+        public MailBL(RequestHeaderContext _requestHeaderContext)
         {
 
-            userContext = _userContext;
+            requestHeaderContext = _requestHeaderContext;
         }
 
-        public async Task<BaseResponseT<bool>> SendEmail(VerifyEmailModel emailModel)
+        public async Task<bool> SendEmail(VerifyEmailModel emailModel)
         {
-            var result = new BaseResponseT<bool>();
-
-            var validator = new EmailValidator(userContext);
-            var response = validator.Validate(emailModel);
-            if (!response.IsValid)
+            var isValidEmail = EmailHelper.IsValidEmail(emailModel.Email);
+            if (!isValidEmail)
             {
-
-
-                result.Status = ResponseStatus.ValidationError;
-                result.MessageCode = response.Errors.Select(x => x.ErrorCode).FirstOrDefault();
-                result.Message = response.Errors[0].ErrorMessage;
-                return result;
+                throw new BusinessValidationException(DawemKeys.SorryYouMustEnterValidEmail);
             }
-
-
 
             // Create a new mail message
             MailMessage message = new()
             {
                 // Set the sender and recipient addresses
-                From = new MailAddress("smart.business.erp.developers@gmail.com")
+                From = new MailAddress(DawemKeys.DawemAppDevelopersGmailCom)
             };
             message.To.Add(emailModel.Email);
             message.IsBodyHtml = true;
@@ -49,30 +38,22 @@ namespace Dawem.BusinessLogic.Provider
             message.Subject = emailModel.Subject;
             message.Body = emailModel.Body;
 
-
-
-
-
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
+            var client = new SmtpClient(DawemKeys.SmtpGmailCom, 587)
             {
-                Credentials = new NetworkCredential("smart.business.erp.developers@gmail.com", "jmjjjrxvdkennqdv"),
+                Credentials = new NetworkCredential(DawemKeys.DawemAppDevelopersGmailCom, DawemKeys.DawemAppDevelopersGmailComPassword),
                 EnableSsl = true
             };
 
             try
             {
-                // Send the message
                 await client.SendMailAsync(message);
             }
-            catch (Exception ex)
+            catch
             {
-                TranslationHelper.SetValidationMessages(result, "Email_Error", "Email not sent", lang: "en");
-                result.Status = ResponseStatus.Error;
-                return result;
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhenSendEmail);
             }
-            result.Status = ResponseStatus.Success;
-            result.Result = true;
-            return result;
+
+            return true;
         }
 
 

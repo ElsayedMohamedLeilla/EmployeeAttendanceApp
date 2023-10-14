@@ -6,21 +6,11 @@ namespace Dawem.Models.Dtos.Provider
 
 
 
-    public class ChangePasswordBindingModel
+    public class ChangePasswordModel
     {
-        [Required]
-        [DataType(DataType.Password)]
         public string OldPassword { get; set; }
-
-        [Required(ErrorMessage = "Required")]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
-
-        //ErrorMessageResourceType = typeof(ar), ErrorMessageResourceName  = "PasswordAndConfirmMatch")
-        [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "PasswordAndConfirmMatch")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
         public int UserId { get; set; }
 
     }
@@ -75,14 +65,13 @@ namespace Dawem.Models.Dtos.Provider
     public class SignUpResponseModel
     {
         public int UserId { get; set; }
-        public string? Email { get; set; }
+        public string Email { get; set; }
         public int BranchId { get; set; }
         public int CompanyId { get; set; }
-        public string? Token { get; set; }
+        public string Token { get; set; }
     }
-    public class ForgetPasswordBindingModel
+    public class ForgetPasswordModel
     {
-        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 }

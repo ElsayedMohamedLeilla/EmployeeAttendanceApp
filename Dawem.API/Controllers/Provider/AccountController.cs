@@ -24,9 +24,9 @@ namespace Dawem.API.Controllers.Provider
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Register(SignUpModelOld model)
+        public async Task<ActionResult> SignUp(SignUpModel model)
         {
-            return Success(await accountBL.RegisterBasic(model));
+            return Success(await accountBL.SignUp(model));
         }
 
         [HttpPost]
@@ -49,17 +49,17 @@ namespace Dawem.API.Controllers.Provider
         {
             var response = await accountBL.VerifyEmail(emailtoken, email);
 
-            if (response.Result == false)
+            if (response == false)
             {
                 return Redirect("https://www.google.com");
             }
 
-            return Redirect("http://135.125.138.61/sessions/done-verify-account-successfully");
+            return Redirect("https://www.youtube.com");
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> ForgetPassword(ForgetPasswordBindingModel forgetPasswordBindingModel)
+        public async Task<ActionResult> ForgetPassword(ForgetPasswordModel forgetPasswordBindingModel)
         {
             if (forgetPasswordBindingModel == null)
             {
@@ -69,18 +69,15 @@ namespace Dawem.API.Controllers.Provider
 
             var response = await accountBL.ForgetPassword(forgetPasswordBindingModel);
 
-            if (response.Result == false)
+            if (response == false)
             {
                 return Redirect("https://www.google.com");
             }
 
             return Redirect("https://www.SmartBusiness.com");
         }
-
-
-
         [HttpPost]
-        public async Task<ActionResult> ResetPassword(ChangePasswordBindingModel resetPasswordModel)
+        public async Task<ActionResult> ChangePassword(ChangePasswordModel resetPasswordModel)
         {
             if (resetPasswordModel == null)
             {

@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using System.Numerics;
+
+namespace Dawem.Translations
 {
     public static class DawemKeys
     {
@@ -54,6 +56,8 @@
         public const string True = "true";
         public const string Space = " ";
         public const string Email = "Email";
+        public const string EmailConfirmationToken = "Email Confirmation Token";
+        
         public const string Authorization = "Authorization";
         public const string Bearer = "Bearer ";
         public const string ProjectName = "Dawem";
@@ -63,12 +67,14 @@
         public const string FullAccess = "FullAccess";
         public const string ApiCcontrollerAction = "api/[controller]/[action]";
         public const string Comma = ",";
-
-
-
-
-
-
+        public const string Account = "Account";
+        public const string VerifyEmail = "VerifyEmail";
+        public const string Http = "http";
+        public const string Https = "https";
+        public const string SmtpGmailCom = "smtp.gmail.com";
+        public const string DawemAppDevelopersGmailCom = "dawem.app.developers@gmail.com";
+        public const string DawemAppDevelopersGmailComPassword = "wxqo zsuj brqy ufgm";
+        public const string SmtpGmailComs = "smtp.gmail.com";
 
 
 
@@ -109,11 +115,14 @@
         public const string SorryYouMustEnterFirstName = "Sorry!!YouMustEnterFirstName!";
         public const string SorryYouMustEnterLastName = "Sorry!!YouMustEnterLastName!";
         public const string SorryYouMustEnterValidCompanyEmail = "Sorry!!YouMustEnterValidCompanyEmail!";
-
         public const string SorryYouMustEnterValidUserEmail = "Sorry!!YouMustEnterValidUserEmail!";
+        public const string SorryYouMustEnterValidEmail = "Sorry!!YouMustEnterValidEmail!";
+        public const string SorryErrorHappenWhenSendEmail = "Sorry!!ErrorHappenWhenSendEmail!";
+        public const string PleaseCheckYourMailWeSentYouMailToResetYourPassword = "PleaseCheckYourMail!WeSentYouMailToResetYourPassword.";
+        public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
 
-        public const string SorryYoujjMustEnterLastName = "Sorry!!YouMustEnterLastName!";
-
-        
+        public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
+        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
+        public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
     }
 }

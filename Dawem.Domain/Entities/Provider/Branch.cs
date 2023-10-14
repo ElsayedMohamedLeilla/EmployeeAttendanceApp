@@ -39,9 +39,7 @@ namespace Dawem.Domain.Entities.Provider
 
         public Country Country { get; set; }
 
-        public string TaxRegistrationNumber { get; set; }
-
-        public string CommercialRecordNumber { get; set; }
+     
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDate { get; set; }
 
@@ -59,12 +57,8 @@ namespace Dawem.Domain.Entities.Provider
 
 
         public List<UserBranch> UserBranches { get; set; }
-        public int? PackageId { get; set; }
 
-        public int CurrencyId { get; set; }
-        [ForeignKey(nameof(CurrencyId))]
 
-        public Currency Currency { get; set; }
         public void Delete()
         {
             IsDeleted = true;

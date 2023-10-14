@@ -4,15 +4,15 @@ using Dawem.Models.Dtos.Provider;
 namespace Dawem.Validation.BusinessValidation
 {
 
-    public class RegisterationBLValidation : IRegisterationBLValidation
+    public class SignUpBLValidation : ISignUpBLValidation
     {
 
-        public RegisterationBLValidation()
+        public SignUpBLValidation()
         {
 
         }
 
-        public bool RegisterationValidator(SignUpModel model)
+        public bool SignUpValidation(SignUpModel model)
         {
             return true;
         }

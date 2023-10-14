@@ -108,5 +108,12 @@
         public const string SorryYouMustEnterUserMobileNumber = "Sorry!!YouMustEnterUserMobileNumber!";
         public const string SorryYouMustEnterFirstName = "Sorry!!YouMustEnterFirstName!";
         public const string SorryYouMustEnterLastName = "Sorry!!YouMustEnterLastName!";
+        public const string SorryYouMustEnterValidCompanyEmail = "Sorry!!YouMustEnterValidCompanyEmail!";
+
+        public const string SorryYouMustEnterValidUserEmail = "Sorry!!YouMustEnterValidUserEmail!";
+
+        public const string SorryYoujjMustEnterLastName = "Sorry!!YouMustEnterLastName!";
+
+        
     }
 }

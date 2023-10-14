@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Provider;
+﻿using Dawem.Helpers;
+using Dawem.Models.Dtos.Provider;
 using Dawem.Translations;
 using FluentValidation;
 
@@ -16,6 +17,8 @@ namespace Dawem.Validation.FluentValidation
                    WithMessage(DawemKeys.SorryYouMustEnterCompanyAddress);
             RuleFor(signUpModel => signUpModel.CompanyEmail).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterCompanyEmail);
+            RuleFor(signUpModel => signUpModel.CompanyEmail).Must(EmailHelper.IsValidEmail).
+                 WithMessage(DawemKeys.SorryYouMustEnterValidCompanyEmail);
 
 
             RuleFor(signUpModel => signUpModel.Password).NotNull().
@@ -28,6 +31,10 @@ namespace Dawem.Validation.FluentValidation
 
             RuleFor(signUpModel => signUpModel.UserEmail).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterUserEmail);
+
+            RuleFor(signUpModel => signUpModel.UserEmail).Must(EmailHelper.IsValidEmail).
+                   WithMessage(DawemKeys.SorryYouMustEnterValidUserEmail);
+
             RuleFor(signUpModel => signUpModel.UserMobileNumber).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterUserMobileNumber);
             RuleFor(signUpModel => signUpModel.FirstName).NotNull().

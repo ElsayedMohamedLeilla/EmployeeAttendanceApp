@@ -12,10 +12,12 @@ using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Shared;
 using Dawem.Models.DtosMappers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Models.Response;
+using Dawem.Repository.Provider;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation;
@@ -25,7 +27,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -43,7 +44,7 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IMailBL mailBL;
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
-        private readonly IRegisterationBLValidation registerationValidatorBL;
+        private readonly ISignUpBLValidation signUpBLValidation;
         private readonly IBranchBLValidation branchValidatorBL;
         private readonly IRepositoryManager repositoryManager;
         private readonly IActionLogBL actionLogBL;
@@ -55,7 +56,7 @@ namespace Dawem.BusinessLogic.Provider
            IBranchBL _branchBL, IOptions<Jwt> _appSettings,
            ICompanyBL _companyBL, RequestHeaderContext _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
-           LinkGenerator _generator, IRegisterationBLValidation _registerationValidatorBL)
+           LinkGenerator _generator, ISignUpBLValidation _registerationValidatorBL)
         {
             unitOfWork = _unitOfWork;
             actionLogBL = _actionLogBL;
@@ -69,7 +70,7 @@ namespace Dawem.BusinessLogic.Provider
             mailBL = _mailBL;
             accessor = _accessor;
             generator = _generator;
-            registerationValidatorBL = _registerationValidatorBL;
+            signUpBLValidation = _registerationValidatorBL;
         }
         private async Task<User> CreateUser(SignUpModel model)
         {
@@ -293,10 +294,10 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            string? RoleName = DawemKeys.FullAccess;
+            //string RoleName = DawemKeys.FullAccess;
             requestHeaderContext.IsMainBranch = true;
 
-            registerationValidatorBL.RegisterationValidator(signUpModel);
+            signUpBLValidation.SignUpValidation(signUpModel);
 
             signUpModel.UserMobileNumber = MobileHelper.HandleMobile(signUpModel.UserMobileNumber);
 
@@ -322,101 +323,49 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            #region insert account Branch
+            #region Insert Branch
 
             Branch branch = new Branch()
             {
                 CompanyId = companyId,
                 Email = signUpModel.CompanyEmail,
-                CurrencyId = signUpModel.BusinessCurrencyId,
                 IsActive = true,
                 AdminUserId = user.Id,
                 BranchName = signUpModel.CompanyName,
-                CommercialRecordNumber = signUpModel.BusinessCommercialRecordNumber,
-                TaxRegistrationNumber = signUpModel.BusinessTaxRegistrationNumber,
                 IsMainBranch = true,
-                PackageId = signUpModel.PackageId,
                 CountryId = signUpModel.CompanyCountryId,
                 Address = signUpModel.CompanyAddress,
             };
-            BranchDTOMapper.InitBranchContext(requestHeaderContext);
-            var BranchDTO = BranchDTOMapper.Map(branch);
-            var branchResponse = await branchBL.Create(BranchDTO);
-            if (branchResponse.Status != ResponseStatus.Success)
-            {
-                unitOfWork.Rollback();
-                TranslationHelper.MapBaseResponse(branchResponse, response);
-                return response;
-            }
 
+            repositoryManager.BranchRepository.Insert(branch);
+            await unitOfWork.SaveAsync();
             #region Update User Main Branch
 
-            var getUser = userRepository.GetByID(user.Id);
-            getUser.MainBranchId = branchResponse?.Result;
+            var getUser = repositoryManager.UserRepository.GetByID(user.Id);
+            getUser.MainBranchId = branch.Id;
             unitOfWork.Save();
 
             #endregion
 
             #endregion
 
-            #region insert user branch
+            #region Insert User Branch
 
-
-            var userBranches = new UserBranch()
+            var userBranch = new UserBranch()
             {
 
                 UserId = user.Id,
-                BranchId = branchResponse.Result
+                BranchId = branch.Id
             };
 
-            try
-            {
-                var createuserBranchesResponse = userBranchRepository.Insert(userBranches);
-
-                response.Status = ResponseStatus.Success;
-
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                TranslationHelper.SetException(response, ex);
-            }
+             repositoryManager.UserBranchRepository.Insert(userBranch);
+             await unitOfWork.SaveAsync();
 
             #endregion
-
-            #region insert currency
-
-            var accountCurrency = new BranchCurrency()
-            {
-
-                BranchId = branchResponse.Result,
-                CurrencyId = signUpModel.BusinessCurrencyId,
-                CurrencyFactor = 1,
-                IsActive = true,
-                IsDefault = true
-
-            };
-            try
-            {
-                var createCurrencyResponse = branchCurrencyRepository.Insert(accountCurrency);
-
-                response.Status = ResponseStatus.Success;
-
-            }
-            catch (Exception ex)
-            {
-                unitOfWork.Rollback();
-                TranslationHelper.SetException(response, ex);
-            }
-            #endregion
-
-
 
             //Add Token to verify Email 
             var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
             var emailToken = new { emailtoken = token, email = user.Email };
-
-
             var confirmationLink = GenerateConfirmEmailLink(emailToken);
             VerifyEmailModel verifyEmail = new VerifyEmailModel
             {

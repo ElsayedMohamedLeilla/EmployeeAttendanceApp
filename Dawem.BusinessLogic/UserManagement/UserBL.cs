@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.UserManagement;
 using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Core;

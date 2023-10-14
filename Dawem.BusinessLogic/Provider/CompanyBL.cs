@@ -1,45 +1,30 @@
 ﻿using Dawem.Contract.BusinessLogic.Provider;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Repository.Provider.Contract;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Provider;
+using Dawem.Models.Context;
 
 namespace Dawem.BusinessLogic.Provider
 {
     public class CompanyBL : ICompanyBL
     {
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly ICompanyRepository companyRepository;
-        private readonly RequestHeaderContext userContext;
+        private readonly IRepositoryManager repositoryManager;
+        private readonly RequestHeaderContext requestHeaderContext;
         public CompanyBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-               RequestHeaderContext _userContext, ICompanyRepository _companyRepository)
+               RequestHeaderContext _requestHeaderContext, IRepositoryManager _repositoryManager)
         {
             unitOfWork = _unitOfWork;
-            userContext = _userContext;
-
-            companyRepository = _companyRepository;
+            requestHeaderContext = _requestHeaderContext;
+            repositoryManager = _repositoryManager;
         }
 
-        public BaseResponseT<Company> Create(Company company)
+        public async Task<Company> Create(Company company)
         {
-            BaseResponseT<Company> response = new BaseResponseT<Company>();
-            try
-            {
-                response.Result = companyRepository.Insert(company);
-                unitOfWork.Save();
-                response.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                TranslationHelper.SetException(response, ex);
-            }
-            return response;
+            var insertedCompany = repositoryManager.CompanyRepository.Insert(company);
+            await unitOfWork.SaveAsync();
+            return insertedCompany;
         }
-
-
     }
 }

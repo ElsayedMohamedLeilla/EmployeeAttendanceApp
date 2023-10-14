@@ -2,20 +2,20 @@
 {
     public enum ResponseStatus
     {
-        Success,
         Error,
+        Success,
         ValidationError,
         NotFound,
         BadRequest,
         Unauthorized,
         Forbidden,
         InternalServerError,
-        ActionNotAllowed,      
+        ActionNotAllowed,
         Created,
         InvalidInput,
-        NotRegisteredUser,      
-        NotModified,      
-        UnprocessableEntity,  
+        NotRegisteredUser,
+        NotModified,
+        UnprocessableEntity,
         NotImplemented
     }
 }

@@ -18,11 +18,15 @@ namespace Dawem.Repository.Manager
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
         private readonly RequestHeaderContext requestHeaderContext;
-        
-        
+
+
         private IUserRepository userRepository;
         private IActionLogRepository actionLogRepository;
         private IUserBranchRepository userBranchRepository;
+        private IBranchRepository branchRepository;
+        private IUserTokenRepository userTokenRepository;
+        private ICompanyRepository companyRepository;
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestHeaderContext _requestHeaderContext)
         {
@@ -32,6 +36,9 @@ namespace Dawem.Repository.Manager
 
         }
 
+
+        public ICompanyRepository CompanyRepository =>
+         companyRepository ??= new CompanyRepository( unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestHeaderContext, unitOfWork, generalSetting);
 
@@ -41,6 +48,12 @@ namespace Dawem.Repository.Manager
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
 
-        
+        public IBranchRepository BranchRepository =>
+         branchRepository ??= new BranchRepository(unitOfWork, requestHeaderContext, generalSetting);
+
+        public IUserTokenRepository UserTokenRepository =>
+         userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
+
+
     }
 }

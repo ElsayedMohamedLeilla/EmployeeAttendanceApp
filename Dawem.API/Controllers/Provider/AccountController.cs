@@ -24,7 +24,7 @@ namespace Dawem.API.Controllers.Provider
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Register(RegisterModel model)
+        public async Task<ActionResult> Register(SignUpModelOld model)
         {
             return Success(await accountBL.RegisterBasic(model));
         }

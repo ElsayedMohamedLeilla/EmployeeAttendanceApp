@@ -1,10 +1,10 @@
 ﻿using Dawem.Contract.BusinessLogic.Others;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.UserManagement;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -16,9 +16,9 @@ using Dawem.Models.DtosMappers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Models.Response;
-using Dawem.Models.Response.Identity;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Dawem.Validation.FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -36,50 +36,42 @@ namespace Dawem.BusinessLogic.Provider
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly UserManagerRepository userManagerRepository;
-        private readonly IUserRepository userRepository;
         private readonly IBranchBL branchBL;
         private readonly ICompanyBL companyBL;
-
         private readonly Jwt jwt;
-        private readonly RequestHeaderContext userContext;
+        private readonly RequestHeaderContext requestHeaderContext;
         private readonly IMailBL mailBL;
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
-        private readonly IUserTokenRepository userTokenRepository;
         private readonly IRegisterationBLValidation registerationValidatorBL;
-        private readonly IUserBranchRepository userBranchRepository;
         private readonly IBranchBLValidation branchValidatorBL;
-        private readonly IBranchRepository branchRepository;
+        private readonly IRepositoryManager repositoryManager;
         private readonly IActionLogBL actionLogBL;
         public AccountBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IBranchRepository _branchRepository, IActionLogBL _actionLogBL,
-            IBranchBLValidation _branchValidatorBL, IUserRepository _userRepository,
+           IBranchBLValidation _branchValidatorBL,
+            IActionLogBL _actionLogBL,
+            IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
            IBranchBL _branchBL, IOptions<Jwt> _appSettings,
            ICompanyBL _companyBL, RequestHeaderContext _userContext,
-            IMailBL _mailBL,
-           IUserTokenRepository _userTokenRepository, IHttpContextAccessor _accessor,
-           LinkGenerator _generator, IRegisterationBLValidation _registerationValidatorBL,
-           IUserBranchRepository _userBranchRepository)
+            IMailBL _mailBL, IHttpContextAccessor _accessor,
+           LinkGenerator _generator, IRegisterationBLValidation _registerationValidatorBL)
         {
             unitOfWork = _unitOfWork;
             actionLogBL = _actionLogBL;
             userManagerRepository = _userManagerRepository;
-            userRepository = _userRepository;
             branchBL = _branchBL;
             companyBL = _companyBL;
-            branchRepository = _branchRepository;
-            userContext = _userContext;
+            requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
+            repositoryManager = _repositoryManager;
             branchValidatorBL = _branchValidatorBL;
             mailBL = _mailBL;
             accessor = _accessor;
             generator = _generator;
-            userTokenRepository = _userTokenRepository;
             registerationValidatorBL = _registerationValidatorBL;
-            userBranchRepository = _userBranchRepository;
         }
-        private async Task<User> CreateUser(RegisterModel model)
+        private async Task<User> CreateUser(SignUpModel model)
         {
             await unitOfWork.CreateTransactionAsync();
 
@@ -101,19 +93,18 @@ namespace Dawem.BusinessLogic.Provider
                 //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
                 await unitOfWork.RollbackAsync();
-                throw new BusinessValidationErrorException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 
             var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
                 await unitOfWork.RollbackAsync();
-                throw new BusinessValidationErrorException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 
             return user;
         }
-
         private string GenerateConfirmEmailLink(object emailToken)
         {
 
@@ -125,17 +116,29 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<TokenDto> SignIn(SignInModel signInModel)
         {
-            User user = new();
+
+            #region Model Validation
+
+            var signInModelValidator = new SignInModelValidator();
+            var signInModelValidatorResult = signInModelValidator.Validate(signInModel);
+            if (!signInModelValidatorResult.IsValid)
+            {
+                var error = signInModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
 
             #region Get User Using AccessToken
 
-            var Email = signInModel.UserName;
+            User user = new();
+            var Email = signInModel.Email;
             if (!string.IsNullOrEmpty(Email))
             {
                 user = await userManagerRepository.FindByEmailAsync(Email);
                 if (user == null)
                 {
-                    throw new BusinessValidationErrorException(DawemKeys.SorryUserNotFound);
+                    throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
                 }
             }
 
@@ -161,14 +164,14 @@ namespace Dawem.BusinessLogic.Provider
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, signInModel.Password);
             if (!checkPasswordAsyncRes)
             {
-                throw new BusinessValidationErrorException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
             }
 
             #endregion
 
             if (!user.EmailConfirmed)
             {
-                throw new BusinessValidationErrorException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
+                throw new BusinessValidationException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
             }
 
             #region Get And Validate Branch
@@ -195,28 +198,13 @@ namespace Dawem.BusinessLogic.Provider
                 Roles = roles
             };
 
-            var getTokenModelResult = GetTokenModel(tokenModelSearchCriteria);
-
-            if (getTokenModelResult.Status != ResponseStatus.Success)
-            {
-                TranslationHelper.MapBaseResponse(getTokenModelResult, response);
-                return response;
-            }
-
-
-            userContext.UserId = user.Id;
-            userContext.BranchId = signInModel.BranchId;
+            var tokenData = await GetTokenModel(tokenModelSearchCriteria);
 
             #endregion
 
-            response.TokeObject = getTokenModelResult.TokenData;
-
-
-            response.Status = ResponseStatus.Success;
-            return response;
+            return tokenData;
         }
-
-        public TokenModelSearchResult GetTokenModel(TokenModelSearchCriteria criteria)
+        public async Task<TokenDto> GetTokenModel(TokenModelSearchCriteria criteria)
         {
 
             #region Create Token
@@ -227,11 +215,12 @@ namespace Dawem.BusinessLogic.Provider
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
                 new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
-                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString())
+                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString()),
+                new Claim(DawemKeys.ApplicationType , criteria.ApplicationType.ToString())
             });
             if (criteria.RememberMe)
             {
-                claimsIdentity.AddClaim(new Claim("rememberMe", "true"));
+                claimsIdentity.AddClaim(new Claim(DawemKeys.RememberMe, DawemKeys.True));
             }
             if (criteria.Roles != null)
             {
@@ -242,297 +231,198 @@ namespace Dawem.BusinessLogic.Provider
 
             var key = Encoding.ASCII.GetBytes(jwt.Key);
 
-            SecurityTokenDescriptor tokenDescriptor = new()
+            var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = claimsIdentity,
-                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(7),
+                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-
-
-            string Token = tokenHandler.WriteToken(token);
-
-            FormateTokenSearchResult tokenModelResult = FormateToken(criteria.UserId, criteria.BranchId, Token);
-
-            if (tokenModelResult.Status != ResponseStatus.Success)
-            {
-                TranslationHelper.MapBaseResponse(tokenModelResult, response);
-                return response;
-            }
-
-
-
-            response.TokenData = tokenModelResult.TokenData;
-            response.AuthToken = Token;
-
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(securityToken);
+            var tokenData = await FormateToken(criteria.UserId, criteria.BranchId, token);
 
             #endregion
 
-
-            return response;
+            return tokenData;
         }
-
-
-        public FormateTokenSearchResult FormateToken(int? UserId, int BranchId, string Token)
+        public async Task<TokenDto> FormateToken(int? userId, int branchId, string token)
         {
-
-            FormateTokenSearchResult result = new()
-            {
-                Status = ResponseStatus.Success
-            };
-
-            var branch = branchRepository.Get(a => a.Id == BranchId).Include(a => a.Company).FirstOrDefault();
-
+            var branchRepository = repositoryManager.BranchRepository;
+            var branch = await branchRepository.Get(a => a.Id == branchId)
+                .Include(a => a.Company).FirstOrDefaultAsync();
 
             if (branch == null)
             {
-                TranslationHelper.SetSearchResultMessages(result, "BranchNotFound", "Sorry! Branch Not Found  !", userContext.Lang ?? "ar");
-
-                result.Status = ResponseStatus.ValidationError;
-                return result;
+                throw new BusinessValidationException(DawemKeys.SorryBranchNotFound);
             }
-            UserDTOMapper.InitUserContext(userContext);
-            UserDTO user = UserDTOMapper.Map(userRepository.GetByID(UserId));
+            UserDTOMapper.InitUserContext(requestHeaderContext);
+            UserDTO user = UserDTOMapper.Map(await repositoryManager.UserRepository.GetByIdAsync(userId));
 
 
-            #region Get Token For Others
+            #region Get Token
 
             TokenDto tokenModel = new()
             {
                 UserId = user.Id,
                 BranchName = branch.BranchName,
-                UserFullName = user.FirstName + " " + user.LastName,
-                Token = Token,
-                UserName = user.UserName,
+                UserFullName = user.FirstName + DawemKeys.Space + user.LastName,
+                Token = token,
+                Email = user.UserName,
                 CurrentBranchId = branch.Id,
                 CompanyId = branch.CompanyId,
                 CompanyName = branch.Company?.CompanyName,
                 IsMainBranch = branch.IsMainBranch
-
             };
-
-
-            result.TokenData = tokenModel;
-
-            return result;
 
             #endregion
 
+            return tokenModel;
         }
-
-
-        public async Task<BaseResponseT<RegisterResponseModel>> RegisterBasic(RegisterModel model)
+        public async Task<SignUpResponseModel> SignUp(SignUpModel signUpModel)
         {
-            var response = new BaseResponseT<RegisterResponseModel>();
-            User user = null;
+            #region Model Validation
 
-            string RoleName = "FullAccess";
-
-            userContext.IsMainBranch = true;
-            if (model.FirstName == null || model.LastName == null)
+            var signUpModelValidator = new SignUpModelValidator();
+            var signUpModelValidatorResult = signUpModelValidator.Validate(signUpModel);
+            if (!signUpModelValidatorResult.IsValid)
             {
-                TranslationHelper.SetValidationMessages(response, "MissingData", "Missing Name", userContext.Lang);
+                var error = signUpModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            string? RoleName = DawemKeys.FullAccess;
+            requestHeaderContext.IsMainBranch = true;
+
+            registerationValidatorBL.RegisterationValidator(signUpModel);
+
+            signUpModel.UserMobileNumber = MobileHelper.HandleMobile(signUpModel.UserMobileNumber);
+
+            unitOfWork.CreateTransaction();
+
+
+            #region insert user
+
+            var user = await CreateUser(signUpModel);
+
+            #endregion
+
+            #region Insert Company
+
+            var insertedCompany = repositoryManager.CompanyRepository.Insert(new Company()
+            {
+                CompanyName = signUpModel.CompanyName,
+                IsActive = true,
+                CountryId = signUpModel.CompanyCountryId
+            });
+            await unitOfWork.SaveAsync();
+            var companyId = insertedCompany.Id;
+
+            #endregion
+
+            #region insert account Branch
+
+            Branch branch = new Branch()
+            {
+                CompanyId = companyId,
+                Email = signUpModel.CompanyEmail,
+                CurrencyId = signUpModel.BusinessCurrencyId,
+                IsActive = true,
+                AdminUserId = user.Id,
+                BranchName = signUpModel.CompanyName,
+                CommercialRecordNumber = signUpModel.BusinessCommercialRecordNumber,
+                TaxRegistrationNumber = signUpModel.BusinessTaxRegistrationNumber,
+                IsMainBranch = true,
+                PackageId = signUpModel.PackageId,
+                CountryId = signUpModel.CompanyCountryId,
+                Address = signUpModel.CompanyAddress,
+            };
+            BranchDTOMapper.InitBranchContext(requestHeaderContext);
+            var BranchDTO = BranchDTOMapper.Map(branch);
+            var branchResponse = await branchBL.Create(BranchDTO);
+            if (branchResponse.Status != ResponseStatus.Success)
+            {
+                unitOfWork.Rollback();
+                TranslationHelper.MapBaseResponse(branchResponse, response);
                 return response;
             }
-            try
+
+            #region Update User Main Branch
+
+            var getUser = userRepository.GetByID(user.Id);
+            getUser.MainBranchId = branchResponse?.Result;
+            unitOfWork.Save();
+
+            #endregion
+
+            #endregion
+
+            #region insert user branch
+
+
+            var userBranches = new UserBranch()
             {
 
-                var resValid = await registerationValidatorBL.RegisterationValidator(model);
-                if (resValid.Status != ResponseStatus.Success)
-                {
-                    return resValid;
-                }
-                model.UserMobileNumber = MobileHelper.HandleMobile(model.UserMobileNumber);
-                unitOfWork.CreateTransaction();
+                UserId = user.Id,
+                BranchId = branchResponse.Result
+            };
 
+            try
+            {
+                var createuserBranchesResponse = userBranchRepository.Insert(userBranches);
 
-                #region insert user
+                response.Status = ResponseStatus.Success;
 
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                TranslationHelper.SetException(response, ex);
+            }
 
+            #endregion
 
+            #region insert currency
 
+            var accountCurrency = new BranchCurrency()
+            {
 
-                var userRes = await CreateUser(model);
-                if (userRes.Status != ResponseStatus.Success)
-                {
-                    response.Status = userRes.Status;
-                    response.Message = userRes.Message;
-                    return response;
-                }
-                user = userRes.Result;
-                #endregion
+                BranchId = branchResponse.Result,
+                CurrencyId = signUpModel.BusinessCurrencyId,
+                CurrencyFactor = 1,
+                IsActive = true,
+                IsDefault = true
 
-                #region insert company
+            };
+            try
+            {
+                var createCurrencyResponse = branchCurrencyRepository.Insert(accountCurrency);
 
+                response.Status = ResponseStatus.Success;
 
-
-                int companyId;
-
-                var company = new Company()
-                {
-                    CompanyName = model.BusinessName,
-
-                    IsActive = true,
-
-                    CountryId = model.BusinessCountryId
-
-                };
-
-
-                var companyResponse = companyBL.Create(company);
-
-                if (companyResponse.Status != ResponseStatus.Success)
-                {
-                    unitOfWork.Rollback();
-
-                    TranslationHelper.MapBaseResponse(companyResponse, response);
-                    return response;
-                }
-                companyId = company.Id;
-
-
-                #endregion
-
-                #region insert account Branch
-
-                #region Set Default Package
-                var pack = model.PackageId != null ? packageRepository
-                    .GetByID(model.PackageId) : null;
-                if (pack == null)
-                {
-                    model.PackageId = null;
-                }
-                if (model.PackageId == null)
-                {
-                    var getDefaultPackage = packageRepository.GetEntityByCondition(p => p.IsDefaultPackage);
-
-                    if (getDefaultPackage != null)
-                    {
-                        model.PackageId = getDefaultPackage.Id;
-                    }
-                }
-
-                #endregion
-
-                Branch branch = new Branch()
-                {
-                    CompanyId = companyId,
-
-                    Email = model.BusinessEmail,
-
-                    CurrencyId = model.BusinessCurrencyId,
-                    IsActive = true,
-                    AdminUserId = user.Id,
-                    BranchName = model.BusinessName,
-                    CommercialRecordNumber = model.BusinessCommercialRecordNumber,
-                    TaxRegistrationNumber = model.BusinessTaxRegistrationNumber,
-                    IsMainBranch = true,
-
-                    PackageId = model.PackageId,
-                    CountryId = model.BusinessCountryId,
-
-                    Address = model.BusinessAddress,
-
-
-                    financialYears = new List<FinancialYear>
-                    {
-                        new FinancialYear
-                        {
-                            StartDate = DateTime.Now,
-                            EndDate = DateTime.Now.AddYears(1)
-                        }
-                    },
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                TranslationHelper.SetException(response, ex);
+            }
+            #endregion
 
 
 
-
-                };
-                BranchDTOMapper.InitBranchContext(userContext);
-                var BranchDTO = BranchDTOMapper.Map(branch);
-                var branchResponse = await branchBL.Create(BranchDTO);
-                if (branchResponse.Status != ResponseStatus.Success)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.MapBaseResponse(branchResponse, response);
-                    return response;
-                }
-
-                #region Update User Main Branch
-
-                var getUser = userRepository.GetByID(user.Id);
-                getUser.MainBranchId = branchResponse?.Result;
-                unitOfWork.Save();
-
-                #endregion
-
-                #endregion
-
-                #region insert user branch
+            //Add Token to verify Email 
+            var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
+            var emailToken = new { emailtoken = token, email = user.Email };
 
 
-                var userBranches = new UserBranch()
-                {
-
-                    UserId = user.Id,
-                    BranchId = branchResponse.Result
-                };
-
-                try
-                {
-                    var createuserBranchesResponse = userBranchRepository.Insert(userBranches);
-
-                    response.Status = ResponseStatus.Success;
-
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                }
-
-                #endregion
-
-                #region insert currency
-
-                var accountCurrency = new BranchCurrency()
-                {
-
-                    BranchId = branchResponse.Result,
-                    CurrencyId = model.BusinessCurrencyId,
-                    CurrencyFactor = 1,
-                    IsActive = true,
-                    IsDefault = true
-
-                };
-                try
-                {
-                    var createCurrencyResponse = branchCurrencyRepository.Insert(accountCurrency);
-
-                    response.Status = ResponseStatus.Success;
-
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                }
-                #endregion
-
-
-
-                //Add Token to verify Email 
-                var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
-                var emailToken = new { emailtoken = token, email = user.Email };
-
-
-                var confirmationLink = GenerateConfirmEmailLink(emailToken);
-                VerifyEmailModel verifyEmail = new VerifyEmailModel
-                {
-                    Email = user.Email,
-                    Subject = "شكرا للتسجيل مع سمارت بيزنس",
-                    Body = @"<meta charset='UTF-8'>
+            var confirmationLink = GenerateConfirmEmailLink(emailToken);
+            VerifyEmailModel verifyEmail = new VerifyEmailModel
+            {
+                Email = user.Email,
+                Subject = "شكرا للتسجيل مع سمارت بيزنس",
+                Body = @"<meta charset='UTF-8'>
                                             <title>شكرا للتسجيل مع سمارت بيزنس</title>
                                             <style>
                                             body { direction: rtl; }
@@ -551,92 +441,83 @@ namespace Dawem.BusinessLogic.Provider
                                             </html>"
 
 
-                };
-                try
-                {
+            };
+            try
+            {
 
-                    var MailResponse = await mailBL.SendEmail(verifyEmail);
-
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                }
-
-                #region UserTokens
-
-                var userToken = new UserToken()
-                {
-
-                    UserId = user.Id,
-                    LoginProvider = "email",
-                    Name = "Email Confirmation Token",
-                    Value = token
-
-                };
-
-                try
-                {
-                    var createCurrencyResponse = userTokenRepository.Insert(userToken);
-
-                    response.Status = ResponseStatus.Success;
-
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                }
-                #endregion
-
-                //try
-                //{
-                //    VerifyEmailModel verifyEmail = new VerifyEmailModel
-                //    {
-                //        Email = user.Email,
-                //        UserName = user.FirstName + " " + user.LastName,
-                //        verificationCode = EmailHelper.GenerateVerificationCode()
-                //};
-
-                //    var MailResponse = mailBL.SendEmail(verifyEmail);
-
-                //  user.verificationCode = verifyEmail.verificationCode;
-                //response.Status = ResponseStatus.Success;
-
-                //}
-                //catch (Exception ex)
-                //{
-                //    unitOfWork.Rollback();
-                //    TranslationHelper.SetException(response, ex);
-                //}
-
-
-                unitOfWork.Save();
-                unitOfWork.Commit();
-                var registerResponseModel = new RegisterResponseModel()
-                {
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    branchId = branch.Id,
-                    CompanyId = Convert.ToInt32(branch.CompanyId),
-
-
-                };
-
-                response.Result = registerResponseModel;
-
+                var MailResponse = await mailBL.SendEmail(verifyEmail);
 
             }
             catch (Exception ex)
             {
-                if (user != null)
-                {
-                    await userManagerRepository.RemoveFromRoleAsync(user, RoleName);
-                    await userManagerRepository.DeleteAsync(user);
-                }
+                unitOfWork.Rollback();
                 TranslationHelper.SetException(response, ex);
             }
+
+            #region UserTokens
+
+            var userToken = new UserToken()
+            {
+
+                UserId = user.Id,
+                LoginProvider = "email",
+                Name = "Email Confirmation Token",
+                Value = token
+
+            };
+
+            try
+            {
+                var createCurrencyResponse = userTokenRepository.Insert(userToken);
+
+                response.Status = ResponseStatus.Success;
+
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.Rollback();
+                TranslationHelper.SetException(response, ex);
+            }
+            #endregion
+
+            //try
+            //{
+            //    VerifyEmailModel verifyEmail = new VerifyEmailModel
+            //    {
+            //        Email = user.Email,
+            //        UserName = user.FirstName + " " + user.LastName,
+            //        verificationCode = EmailHelper.GenerateVerificationCode()
+            //};
+
+            //    var MailResponse = mailBL.SendEmail(verifyEmail);
+
+            //  user.verificationCode = verifyEmail.verificationCode;
+            //response.Status = ResponseStatus.Success;
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    unitOfWork.Rollback();
+            //    TranslationHelper.SetException(response, ex);
+            //}
+
+
+            unitOfWork.Save();
+            unitOfWork.Commit();
+            var registerResponseModel = new SignUpResponseModel()
+            {
+                UserId = user.Id,
+                Email = user.UserName,
+                BranchId = branch.Id,
+                CompanyId = Convert.ToInt32(branch.CompanyId),
+
+
+            };
+
+            response.Result = registerResponseModel;
+
+
+
             return response;
 
         }
@@ -651,7 +532,7 @@ namespace Dawem.BusinessLogic.Provider
                     var result = await userManagerRepository.ConfirmEmailAsync(user, token);
                     if (!result.Succeeded)
                     {
-                        TranslationHelper.MapIdentityResultToBaseResponse(response, result, userContext.Lang);
+                        TranslationHelper.MapIdentityResultToBaseResponse(response, result, requestHeaderContext.Lang);
                         response.Result = false;
                         return response;
 
@@ -719,10 +600,10 @@ namespace Dawem.BusinessLogic.Provider
                         var confirmationLink = GenerateConfirmEmailLink(emailToken);
                         VerifyEmailModel verifyEmail = new VerifyEmailModel
                         {
-                            Subject = userContext.Lang == "ar" ? "مرحبًا بك في سمارت بيزنس! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to  Business! Reset Your Password",
+                            Subject = requestHeaderContext.Lang == "ar" ? "مرحبًا بك في سمارت بيزنس! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to  Business! Reset Your Password",
                             UserName = user.FirstName + " " + user.LastName,
                             Body = string.Format("{0} <a href=\"" + confirmationLink + "\">here</a>",
-                            userContext.Lang == "ar" ? " يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر علي" : "Please reset your password by clicking"),
+                            requestHeaderContext.Lang == "ar" ? " يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر علي" : "Please reset your password by clicking"),
                             Email = user.Email
 
                         };
@@ -733,13 +614,13 @@ namespace Dawem.BusinessLogic.Provider
                     catch (Exception ex)
                     {
 
-                        TranslationHelper.SetValidationMessages(response, "NotValidEmail", userContext.Lang == "ar" ? "بريدك الالكتروني غير صالح" : "Not valid email", "", lang: userContext.Lang);
+                        TranslationHelper.SetValidationMessages(response, "NotValidEmail", requestHeaderContext.Lang == "ar" ? "بريدك الالكتروني غير صالح" : "Not valid email", "", lang: requestHeaderContext.Lang);
                     }
                     await unitOfWork.SaveAsync();
                     unitOfWork.Commit();
                     response.Status = ResponseStatus.Success;
 
-                    TranslationHelper.SetResponseMessages(response, "", userContext.Lang == "ar" ? "الرجاء تفحص بريدك الإلكتروني ! أرسلنا لك البريد لإعادة تعيين كلمة المرور الخاصة بك" :
+                    TranslationHelper.SetResponseMessages(response, "", requestHeaderContext.Lang == "ar" ? "الرجاء تفحص بريدك الإلكتروني ! أرسلنا لك البريد لإعادة تعيين كلمة المرور الخاصة بك" :
                         "please check your mail ! we sent you mail to reset your password.");
                     return response;
                 }
@@ -758,17 +639,17 @@ namespace Dawem.BusinessLogic.Provider
 
 
 
-        public async Task<BaseResponseT<RegisterResponseModel>> ChangePassword(ChangePasswordBindingModel model)
+        public async Task<BaseResponseT<SignUpResponseModel>> ChangePassword(ChangePasswordBindingModel model)
         {
-            BaseResponseT<RegisterResponseModel> response = new BaseResponseT<RegisterResponseModel>();
-            RegisterResponseModel _RegisterResponseModel = new RegisterResponseModel();
+            BaseResponseT<SignUpResponseModel> response = new BaseResponseT<SignUpResponseModel>();
+            SignUpResponseModel _RegisterResponseModel = new SignUpResponseModel();
 
             try
             {
                 var user = await userManagerRepository.FindByIdAsync(model.UserId.ToString());
                 if (user == null)
                 {
-                    TranslationHelper.SetValidationMessages(response, "NoUserWithSuchName", "NoUserWithSuchName", lang: userContext.Lang);
+                    TranslationHelper.SetValidationMessages(response, "NoUserWithSuchName", "NoUserWithSuchName", lang: requestHeaderContext.Lang);
                     return response;
                 }
                 IdentityResult result = await userManagerRepository.ChangePasswordAsync(user, model.OldPassword,
@@ -785,10 +666,10 @@ namespace Dawem.BusinessLogic.Provider
                 }
 
                 _RegisterResponseModel.UserId = user.Id;
-                _RegisterResponseModel.UserName = user.UserName;
+                _RegisterResponseModel.Email = user.UserName;
                 response.Result = _RegisterResponseModel;
                 response.Status = ResponseStatus.Success;
-                TranslationHelper.SetResponseMessages(response, "ChangedPass", userContext.Lang == "ar" ? "تم تغيير كلمة المرور" : "Password has been changed !", lang: userContext.Lang);
+                TranslationHelper.SetResponseMessages(response, "ChangedPass", requestHeaderContext.Lang == "ar" ? "تم تغيير كلمة المرور" : "Password has been changed !", lang: requestHeaderContext.Lang);
 
             }
             catch (Exception ex)

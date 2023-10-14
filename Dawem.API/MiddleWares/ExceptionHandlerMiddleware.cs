@@ -32,7 +32,7 @@ public class ExceptionHandlerMiddleware
             
             await _request(context);
         }
-        catch (BusinessValidationErrorException ex)
+        catch (BusinessValidationException ex)
         {
             statusCode = (int)HttpStatusCode.UnprocessableEntity;
             response = new ExecutionResponse<object>

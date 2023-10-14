@@ -2,21 +2,21 @@
 
 namespace Dawem.Models.Exceptions
 {
-    public class BusinessValidationError : Exception
+    public class BusinessValidationException : Exception
     {
         public string MessageCode;
         public new string Message;
 
-        public BusinessValidationError(string messageCode)
+        public BusinessValidationException(string messageCode)
         {
             MessageCode = messageCode;
         }
-        public BusinessValidationError(string messageCode, string message) : base(message)
+        public BusinessValidationException(string messageCode, string message) : base(message)
         {
             MessageCode = messageCode;
             Message = message;
         }
-        public BusinessValidationError(ValidationResult validateResult)
+        public BusinessValidationException(ValidationResult validateResult)
         {
             var error = validateResult.Errors.FirstOrDefault();
             MessageCode = error.ErrorCode;

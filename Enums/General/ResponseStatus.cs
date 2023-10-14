@@ -2,22 +2,20 @@
 {
     public enum ResponseStatus
     {
-        Error = 101,
-        ValidationError = 102,
-        Success = 200,
-        Created = 201,
-        InvalidInput = 107,
-        NotRegisteredUser = 109,
-        ActionNotAllowed = 110,
-        NotModified = 304,
-        BadRequest = 400,
-        Unauthorized = 401,
-        UnprocessableEntity = 422,
-        Forbidden = 403,
-        NotFound = 404,
-        InternalServerError = 500,
-        NotImplemented = 501
-
-
+        Success,
+        Error,
+        ValidationError,
+        NotFound,
+        BadRequest,
+        Unauthorized,
+        Forbidden,
+        InternalServerError,
+        ActionNotAllowed,      
+        Created,
+        InvalidInput,
+        NotRegisteredUser,      
+        NotModified,      
+        UnprocessableEntity,  
+        NotImplemented
     }
 }

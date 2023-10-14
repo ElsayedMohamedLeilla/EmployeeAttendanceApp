@@ -74,7 +74,29 @@ namespace Dawem.Translations
         public const string ApiCcontrollerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string BranchNotFound = "BranchNotFound!";
-        public const string FullAccess2 = "FullAccess";
+        public const string YouMustChooseCountry = "YouMustChooseCountry!";
 
+
+        public const string SorryuserContextNull = " SorryuserContextNull!";
+        public const string SorryYouCurrentBranchIsNotMainBranch = "Sorry!!YouCurrentBranchIsNotMainBranch!";
+        public const string SorryAddCanBeDoneInMainBranchOnly = "SorryAddCanBeDoneInMainBranchOnly!";
+        public const string SorryEditCanBeDoneInMainBranchOnly = "SorryEditCanBeDoneInMainBranchOnly!";
+        public const string SorryDeleteCanBeDoneInMainBranchOnly = "SorryDeleteCanBeDoneInMainBranchOnly!";
+        public const string SorryThereIsMoreThanOneBranchForChoosenUserYouMustChooseBranchToEnterWith = "SorryThereIsMoreThanOneBranchForChoosenUser.YouMustChooseBranchToEnterWith!";
+        public const string SorryThisUserDoNotHaveAccessToSelectedBranch = "Sorry!!ThisUserDoNotHaveAccessToSelectedBranch!";
+        public const string YouMustChooseCountrys = "YouMustChooseCountry!";
+        public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
+
+        public const string SorryUserNotFound = "Sorry!!UserNotFound!";
+        public const string SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser = "Sorry!!PasswordIncorrect.EnterCorrectPasswordForSelectedUser!";
+        public const string SorryEmailNotConfirmedPleaseCheckYourEmail = "Sorry!!EmailNotConfirmedPleaseCheckYourEmail!";
+        public const string UserId = "UserId";
+        public const string BranchId = "BranchId";
+        public const string SorryYouMustEnterEmail = "Sorry!!YouMustEnterEmail!";
+        public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
+        public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
+        public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
+        
     }
+   
 }

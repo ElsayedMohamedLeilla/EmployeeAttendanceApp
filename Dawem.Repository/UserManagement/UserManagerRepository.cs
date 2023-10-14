@@ -9,7 +9,6 @@ namespace Dawem.Repository.UserManagement
     {
 
     }
-
     public sealed class UserManagerRepository : UserManager<User>
     {
 

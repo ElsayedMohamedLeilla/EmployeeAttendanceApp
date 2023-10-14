@@ -89,7 +89,7 @@ namespace Dawem.Models.Dtos.Provider
 
     }
 
-    public class RegisterResponseModel : BaseResponse
+    public class RegisterResponseModel
     {
         public int UserId { get; set; }
         public string UserName { get; set; }

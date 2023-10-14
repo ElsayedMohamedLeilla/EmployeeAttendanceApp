@@ -1,32 +1,30 @@
 ﻿using Dawem.Contract.BusinessLogic.Others;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
+using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.UserManagement;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.UserManagement;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Criteria.UserManagement;
+using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Provider;
 using Dawem.Models.DtosMappers;
+using Dawem.Models.Exceptions;
+using Dawem.Models.Generic;
+using Dawem.Models.Response;
+using Dawem.Models.Response.Identity;
+using Dawem.Repository.UserManagement;
+using Dawem.Translations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Criteria.Provider;
-using SmartBusinessERP.Models.Dtos.Identity;
-using SmartBusinessERP.Models.Dtos.Provider;
-using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Generic;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Identity;
-using SmartBusinessERP.Models.Response.Provider;
-using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.Repository.UserManagement;
-using SmartBusinessERP.Repository.UserManagement.Contract;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -37,99 +35,83 @@ namespace Dawem.BusinessLogic.Provider
     public class AccountBL : IAccountBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly SmartUserManagerRepository smartUserManagerRepository;
-        private readonly ISmartUserRepository smartUserRepository;
+        private readonly UserManagerRepository userManagerRepository;
+        private readonly IUserRepository userRepository;
         private readonly IBranchBL branchBL;
         private readonly ICompanyBL companyBL;
 
         private readonly Jwt jwt;
-        public readonly IBranchCurrencyRepository branchCurrencyRepository;
-        private readonly IPackageRepository packageRepository;
         private readonly RequestHeaderContext userContext;
         private readonly IMailBL mailBL;
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
-        private readonly ISmartUserTokenRepository smartUserTokenRepository;
+        private readonly IUserTokenRepository userTokenRepository;
         private readonly IRegisterationBLValidation registerationValidatorBL;
-        private readonly IUserBranchRepository UserBranchRepository;
+        private readonly IUserBranchRepository userBranchRepository;
         private readonly IBranchBLValidation branchValidatorBL;
         private readonly IBranchRepository branchRepository;
         private readonly IActionLogBL actionLogBL;
         public AccountBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IBranchRepository _branchRepository, IActionLogBL _actionLogBL,
-            IBranchBLValidation _branchValidatorBL, ISmartUserRepository _smartUserRepository,
-            SmartUserManagerRepository _smartUserManagerRepository,
-           IBranchBL _branchBL, IOptions<Jwt> _appSettings, IPackageRepository _packageRepository,
+            IBranchBLValidation _branchValidatorBL, IUserRepository _userRepository,
+            UserManagerRepository _userManagerRepository,
+           IBranchBL _branchBL, IOptions<Jwt> _appSettings,
            ICompanyBL _companyBL, RequestHeaderContext _userContext,
-           IBranchCurrencyRepository _branchCurrencyRepository, IMailBL _mailBL,
-           ISmartUserTokenRepository _smartUserTokenRepository, IHttpContextAccessor _accessor,
+            IMailBL _mailBL,
+           IUserTokenRepository _userTokenRepository, IHttpContextAccessor _accessor,
            LinkGenerator _generator, IRegisterationBLValidation _registerationValidatorBL,
            IUserBranchRepository _userBranchRepository)
         {
             unitOfWork = _unitOfWork;
             actionLogBL = _actionLogBL;
-            smartUserManagerRepository = _smartUserManagerRepository;
-            smartUserRepository = _smartUserRepository;
+            userManagerRepository = _userManagerRepository;
+            userRepository = _userRepository;
             branchBL = _branchBL;
-            packageRepository = _packageRepository;
             companyBL = _companyBL;
             branchRepository = _branchRepository;
             userContext = _userContext;
             jwt = _appSettings.Value;
-
             branchValidatorBL = _branchValidatorBL;
-            branchCurrencyRepository = _branchCurrencyRepository;
             mailBL = _mailBL;
             accessor = _accessor;
             generator = _generator;
-            smartUserTokenRepository = _smartUserTokenRepository;
+            userTokenRepository = _userTokenRepository;
             registerationValidatorBL = _registerationValidatorBL;
-            UserBranchRepository = _userBranchRepository;
-
+            userBranchRepository = _userBranchRepository;
         }
-        private async Task<BaseResponseT<SmartUser>> CreateUser(RegisterModel model)
+        private async Task<User> CreateUser(RegisterModel model)
         {
-            var response = new BaseResponseT<SmartUser>();
-            string RoleName = "FullAccess";
-            var user = new SmartUser()
+            await unitOfWork.CreateTransactionAsync();
+
+            string RoleName = DawemKeys.FullAccess;
+            var user = new User()
             {
                 UserName = model.UserEmail,
-
                 Email = model.UserEmail,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 MobileNumber = model.UserMobileNumber,
-
                 IsAdmin = true,
                 IsActive = true
-
             };
 
-            var createUserResponse = await smartUserManagerRepository.CreateAsync(user, model.Password);
+            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
             {
-
-                response.Message = string.Join(",", createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
-                response.MessageCode = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                TranslationHelper.SetResponseMessages(response, response.MessageCode, response.Message, lang: userContext.Lang ?? "ar");
-                response.Status = ResponseStatus.ValidationError;
-
-
-                unitOfWork.Rollback();
-                return response;
+                //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
+                //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
+                await unitOfWork.RollbackAsync();
+                throw new BusinessValidationErrorException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 
-            var assignRole = await smartUserManagerRepository.AddToRoleAsync(user, RoleName);
+            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
-                unitOfWork.Rollback();
-
-                TranslationHelper.MapIdentityResultToBaseResponse(response, createUserResponse, userContext.Lang);
-                return response;
+                await unitOfWork.RollbackAsync();
+                throw new BusinessValidationErrorException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
-            response.Result = user;
-            response.Status = ResponseStatus.Success;
-            return response;
+
+            return user;
         }
 
         private string GenerateConfirmEmailLink(object emailToken)
@@ -141,197 +123,153 @@ namespace Dawem.BusinessLogic.Provider
             var confirmEmailLink = $"{protocol}://{host}{path}";
             return confirmEmailLink;
         }
-        public async Task<SignInResponse> SignIn(SignInModel signInModel)
+        public async Task<TokenDto> SignIn(SignInModel signInModel)
         {
-            SignInResponse response = new();
+            User user = new();
 
-            try
+            #region Get User Using AccessToken
+
+            var Email = signInModel.UserName;
+            if (!string.IsNullOrEmpty(Email))
             {
-                SmartUser user = new();
-
-                #region Get User Using AccessToken
-                var Email = signInModel.UserName;
-                if (!string.IsNullOrEmpty(Email))
+                user = await userManagerRepository.FindByEmailAsync(Email);
+                if (user == null)
                 {
-                    user = await smartUserManagerRepository.FindByEmailAsync(Email);
-                    if (user == null)
-                    {
-                        TranslationHelper.SetSearchResultMessages(response, "UserNameNotExist", "Email Not Exist", lang: userContext.Lang ?? "ar");
-                        response.Status = ResponseStatus.ValidationError;
-                        return response;
-                    }
+                    throw new BusinessValidationErrorException(DawemKeys.SorryUserNotFound);
                 }
-
-                #endregion
-
-                #region Handle User Role
-
-                var roles = await smartUserManagerRepository.GetRolesAsync(user);
-
-
-                if (roles.FirstOrDefault(r => r == "FullAccess") == null)
-                {
-                    var addingToRoleResult = await smartUserManagerRepository.AddToRoleAsync(user, "FullAccess");
-
-                    if (addingToRoleResult.Succeeded)
-                    {
-                        roles.Add("FullAccess");
-                    }
-                }
-
-
-
-                #endregion
-
-                #region Check Password
-                bool checkPasswordAsyncRes = await smartUserManagerRepository.CheckPasswordAsync(user, signInModel.Password);
-                if (!checkPasswordAsyncRes)
-                {
-                    TranslationHelper.SetSearchResultMessages(response, "PasswordIncorrect", "Sorry! Password Incorrect. Enter Correct Password For Selected User !", userContext.Lang ?? "ar");
-
-                    response.Status = ResponseStatus.ValidationError;
-                    return response;
-                }
-
-                #endregion
-
-
-                if (!user.EmailConfirmed)
-                {
-                    TranslationHelper.SetSearchResultMessages(response, "EmailNotConfirmed",
-                        "Email Not Confirmed Please check your email!", userContext.Lang ?? "ar");
-
-                    response.Status = ResponseStatus.ValidationError;
-                    return response;
-                }
-
-                #region Get And Validate Branch
-
-                var validateUserBranchSearchCriteria = new ValidateUserBranchSearchCriteria
-                {
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    BranchId = signInModel.BranchId
-                };
-
-                var validateUserBranchResult = await branchValidatorBL.ValidateUserBranch(validateUserBranchSearchCriteria);
-
-                if (validateUserBranchResult.Status != ResponseStatus.Success)
-                {
-                    TranslationHelper.MapBaseResponse(source: validateUserBranchResult, destination: response);
-                    return response;
-                }
-
-
-
-                #endregion
-
-                #region Get Token Model
-
-                TokenModelSearchCriteria tokenModelSearchCriteria = new()
-                {
-                    BranchId = signInModel.BranchId,
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    RememberMe = signInModel.RememberMe,
-                    Roles = roles
-                };
-
-                TokenModelSearchResult getTokenModelResult = GetTokenModel(tokenModelSearchCriteria);
-
-                if (getTokenModelResult.Status != ResponseStatus.Success)
-                {
-                    TranslationHelper.MapBaseResponse(getTokenModelResult, response);
-                    return response;
-                }
-
-
-                userContext.UserId = user.Id;
-                userContext.BranchId = signInModel.BranchId;
-
-                #endregion
-
-                response.TokeObject = getTokenModelResult.TokenData;
-
             }
 
-            catch (Exception)
-            {
-                throw;
+            #endregion
 
+            #region Handle User Role
+
+            var roles = await userManagerRepository.GetRolesAsync(user);
+            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
+            {
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+
+                if (addingToRoleResult.Succeeded)
+                {
+                    roles.Add(DawemKeys.FullAccess);
+                }
             }
+
+            #endregion
+
+            #region Check Password
+
+            bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, signInModel.Password);
+            if (!checkPasswordAsyncRes)
+            {
+                throw new BusinessValidationErrorException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+            }
+
+            #endregion
+
+            if (!user.EmailConfirmed)
+            {
+                throw new BusinessValidationErrorException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
+            }
+
+            #region Get And Validate Branch
+
+            var validateUserBranchSearchCriteria = new ValidateUserBranchSearchCriteria
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                BranchId = signInModel.BranchId
+            };
+
+            await branchValidatorBL.ValidateUserBranch(validateUserBranchSearchCriteria);
+
+            #endregion
+
+            #region Get Token Model
+
+            TokenModelSearchCriteria tokenModelSearchCriteria = new()
+            {
+                BranchId = signInModel.BranchId,
+                UserId = user.Id,
+                UserName = user.UserName,
+                RememberMe = signInModel.RememberMe,
+                Roles = roles
+            };
+
+            var getTokenModelResult = GetTokenModel(tokenModelSearchCriteria);
+
+            if (getTokenModelResult.Status != ResponseStatus.Success)
+            {
+                TranslationHelper.MapBaseResponse(getTokenModelResult, response);
+                return response;
+            }
+
+
+            userContext.UserId = user.Id;
+            userContext.BranchId = signInModel.BranchId;
+
+            #endregion
+
+            response.TokeObject = getTokenModelResult.TokenData;
+
+
             response.Status = ResponseStatus.Success;
             return response;
         }
 
         public TokenModelSearchResult GetTokenModel(TokenModelSearchCriteria criteria)
         {
-            TokenModelSearchResult response = new()
+
+            #region Create Token
+
+            ClaimsIdentity claimsIdentity = new(new Claim[]
             {
-                Status = ResponseStatus.Success
+                new Claim(JwtRegisteredClaimNames.Sub, criteria.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
+                new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
+                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString())
+            });
+            if (criteria.RememberMe)
+            {
+                claimsIdentity.AddClaim(new Claim("rememberMe", "true"));
+            }
+            if (criteria.Roles != null)
+            {
+                claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
+
+            JwtSecurityTokenHandler tokenHandler = new();
+
+            var key = Encoding.ASCII.GetBytes(jwt.Key);
+
+            SecurityTokenDescriptor tokenDescriptor = new()
+            {
+                Subject = claimsIdentity,
+                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            try
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+
+            string Token = tokenHandler.WriteToken(token);
+
+            FormateTokenSearchResult tokenModelResult = FormateToken(criteria.UserId, criteria.BranchId, Token);
+
+            if (tokenModelResult.Status != ResponseStatus.Success)
             {
-                #region Create Token
-                //var company = accountSetupRepository.Get(a => a.Id == criteria.branchId)
-                //    .Select(a => a.Company).FirstOrDefault();
-
-                ClaimsIdentity claimsIdentity = new(new Claim[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, criteria.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
-                     new Claim("UserId", criteria.UserId.ToString()),
-                    new Claim("BranchId" , criteria.BranchId.ToString())
-
-                });
-                if (criteria.RememberMe)
-                {
-                    claimsIdentity.AddClaim(new Claim("rememberMe", "true"));
-                }
-                if (criteria.Roles != null)
-                {
-                    claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-                }
-
-                JwtSecurityTokenHandler tokenHandler = new();
-
-                var key = Encoding.ASCII.GetBytes(jwt.Key);
-
-                SecurityTokenDescriptor tokenDescriptor = new()
-                {
-                    Subject = claimsIdentity,
-                    Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddDays(7),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-
-                SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-
-
-                string Token = tokenHandler.WriteToken(token);
-
-                FormateTokenSearchResult tokenModelResult = FormateToken(criteria.UserId, criteria.BranchId, Token);
-
-                if (tokenModelResult.Status != ResponseStatus.Success)
-                {
-                    TranslationHelper.MapBaseResponse(tokenModelResult, response);
-                    return response;
-                }
-
-
-
-                response.TokenData = tokenModelResult.TokenData;
-                response.AuthToken = Token;
-
-
-                #endregion
+                TranslationHelper.MapBaseResponse(tokenModelResult, response);
+                return response;
             }
-            catch (Exception ex)
-            {
-                response.Exception = ex; response.Message = ex.Message;
-                response.Status = ResponseStatus.NotImplemented;
-            }
+
+
+
+            response.TokenData = tokenModelResult.TokenData;
+            response.AuthToken = Token;
+
+
+            #endregion
+
 
             return response;
         }
@@ -356,7 +294,7 @@ namespace Dawem.BusinessLogic.Provider
                 return result;
             }
             UserDTOMapper.InitUserContext(userContext);
-            SmartUserDTO user = UserDTOMapper.Map(smartUserRepository.GetByID(UserId));
+            UserDTO user = UserDTOMapper.Map(userRepository.GetByID(UserId));
 
 
             #region Get Token For Others
@@ -388,7 +326,7 @@ namespace Dawem.BusinessLogic.Provider
         public async Task<BaseResponseT<RegisterResponseModel>> RegisterBasic(RegisterModel model)
         {
             var response = new BaseResponseT<RegisterResponseModel>();
-            SmartUser user = null;
+            User user = null;
 
             string RoleName = "FullAccess";
 
@@ -523,7 +461,7 @@ namespace Dawem.BusinessLogic.Provider
 
                 #region Update User Main Branch
 
-                var getUser = smartUserRepository.GetByID(user.Id);
+                var getUser = userRepository.GetByID(user.Id);
                 getUser.MainBranchId = branchResponse?.Result;
                 unitOfWork.Save();
 
@@ -543,7 +481,7 @@ namespace Dawem.BusinessLogic.Provider
 
                 try
                 {
-                    var createuserBranchesResponse = UserBranchRepository.Insert(userBranches);
+                    var createuserBranchesResponse = userBranchRepository.Insert(userBranches);
 
                     response.Status = ResponseStatus.Success;
 
@@ -585,7 +523,7 @@ namespace Dawem.BusinessLogic.Provider
 
 
                 //Add Token to verify Email 
-                var token = await smartUserManagerRepository.GenerateEmailConfirmationTokenAsync(user);
+                var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
                 var emailToken = new { emailtoken = token, email = user.Email };
 
 
@@ -628,7 +566,7 @@ namespace Dawem.BusinessLogic.Provider
 
                 #region UserTokens
 
-                var smartUserToken = new SmartUserToken()
+                var userToken = new UserToken()
                 {
 
                     UserId = user.Id,
@@ -640,7 +578,7 @@ namespace Dawem.BusinessLogic.Provider
 
                 try
                 {
-                    var createCurrencyResponse = smartUserTokenRepository.Insert(smartUserToken);
+                    var createCurrencyResponse = userTokenRepository.Insert(userToken);
 
                     response.Status = ResponseStatus.Success;
 
@@ -694,8 +632,8 @@ namespace Dawem.BusinessLogic.Provider
             {
                 if (user != null)
                 {
-                    await smartUserManagerRepository.RemoveFromRoleAsync(user, RoleName);
-                    await smartUserManagerRepository.DeleteAsync(user);
+                    await userManagerRepository.RemoveFromRoleAsync(user, RoleName);
+                    await userManagerRepository.DeleteAsync(user);
                 }
                 TranslationHelper.SetException(response, ex);
             }
@@ -707,10 +645,10 @@ namespace Dawem.BusinessLogic.Provider
             var response = new BaseResponseT<bool>();
             try
             {
-                var user = await smartUserManagerRepository.FindByEmailAsync(email);
+                var user = await userManagerRepository.FindByEmailAsync(email);
                 if (user != null)
                 {
-                    var result = await smartUserManagerRepository.ConfirmEmailAsync(user, token);
+                    var result = await userManagerRepository.ConfirmEmailAsync(user, token);
                     if (!result.Succeeded)
                     {
                         TranslationHelper.MapIdentityResultToBaseResponse(response, result, userContext.Lang);
@@ -720,9 +658,9 @@ namespace Dawem.BusinessLogic.Provider
                     }
                     //else
                     //{
-                    //  var smartUserToken =  smartUserTokenRepository.Get(a => a.Value == token && a.UserId == user.Id).FirstOrDefault();
-                    //    if (smartUserToken != null) 
-                    //   smartUserTokenRepository.Delete(smartUserToken);
+                    //  var userToken =  userTokenRepository.Get(a => a.Value == token && a.UserId == user.Id).FirstOrDefault();
+                    //    if (userToken != null) 
+                    //   userTokenRepository.Delete(userToken);
                     //   await unitOfWork.SaveAsync();
                     //}
 
@@ -741,18 +679,18 @@ namespace Dawem.BusinessLogic.Provider
             try
             {
 
-                var user = await smartUserManagerRepository.FindByEmailAsync(forgetPasswordBindingModel.Email);
-                if (user != null || await smartUserManagerRepository.IsEmailConfirmedAsync(user))
+                var user = await userManagerRepository.FindByEmailAsync(forgetPasswordBindingModel.Email);
+                if (user != null || await userManagerRepository.IsEmailConfirmedAsync(user))
                 {
 
                     unitOfWork.CreateTransaction();
 
-                    var token = await smartUserManagerRepository.GenerateEmailConfirmationTokenAsync(user);
+                    var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
                     var emailToken = new { emailtoken = token, email = user.Email };
 
                     //#region UserTokens
 
-                    //var smartUserToken = new SmartUserToken()
+                    //var userToken = new UserToken()
                     //{
 
                     //    UserId = user.Id,
@@ -764,7 +702,7 @@ namespace Dawem.BusinessLogic.Provider
 
                     //try
                     //{
-                    //    var createCurrencyResponse = smartUserTokenRepository.Insert(smartUserToken);
+                    //    var createCurrencyResponse = userTokenRepository.Insert(userToken);
 
                     //    response.Status = ResponseStatus.Success;
 
@@ -781,7 +719,7 @@ namespace Dawem.BusinessLogic.Provider
                         var confirmationLink = GenerateConfirmEmailLink(emailToken);
                         VerifyEmailModel verifyEmail = new VerifyEmailModel
                         {
-                            Subject = userContext.Lang == "ar" ? "مرحبًا بك في سمارت بيزنس! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to Smart Business! Reset Your Password",
+                            Subject = userContext.Lang == "ar" ? "مرحبًا بك في سمارت بيزنس! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to  Business! Reset Your Password",
                             UserName = user.FirstName + " " + user.LastName,
                             Body = string.Format("{0} <a href=\"" + confirmationLink + "\">here</a>",
                             userContext.Lang == "ar" ? " يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر علي" : "Please reset your password by clicking"),
@@ -827,13 +765,13 @@ namespace Dawem.BusinessLogic.Provider
 
             try
             {
-                var user = await smartUserManagerRepository.FindByIdAsync(model.UserId.ToString());
+                var user = await userManagerRepository.FindByIdAsync(model.UserId.ToString());
                 if (user == null)
                 {
                     TranslationHelper.SetValidationMessages(response, "NoUserWithSuchName", "NoUserWithSuchName", lang: userContext.Lang);
                     return response;
                 }
-                IdentityResult result = await smartUserManagerRepository.ChangePasswordAsync(user, model.OldPassword,
+                IdentityResult result = await userManagerRepository.ChangePasswordAsync(user, model.OldPassword,
                     model.NewPassword);
 
                 if (!result.Succeeded)

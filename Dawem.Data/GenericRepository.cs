@@ -387,6 +387,25 @@ public abstract class GenericRepository<T> : IGenericRepository<T>, IDisposable 
 
     }
 
+    public virtual async Task<T> GetEntityByConditionAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+    {
+        IQueryable<T> query = Entities;
+
+        if (filter != null)
+        {
+            query = query.AsNoTracking().Where(filter);
+        }
+
+        foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            query = query.Include(includeProperty);
+        }
+
+        return await query.FirstOrDefaultAsync();
+
+    }
+
+
     public virtual T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
     {
         IQueryable<T> query = Entities;

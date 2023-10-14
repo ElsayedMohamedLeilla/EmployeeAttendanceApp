@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Response.Identity
 {
-    public class TokenModelSearchResult : BaseResponse
+    public class TokenModelSearchResult
     {
         public TokenDto? TokenData { get; set; }
 

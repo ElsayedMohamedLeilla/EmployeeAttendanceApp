@@ -1,70 +1,32 @@
-﻿using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Repository.Provider.Contract;
-using AutoMapper;
-using SmartBusinessERP.Models.Dtos.Lookups;
-using SmartBusinessERP.Repository.Lookups.Contract;
-using SmartBusinessERP.Domain.Entities.Lookups;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Models.Dtos.Lookups;
 
 namespace Dawem.BusinessLogic.Provider
 {
     public class ScreenBL : IScreenBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly IPackageRepository packageRepository;
-        private readonly IPackageScreenBL packagescreenOrch;
-        private readonly IScreenRepository screenRepository;
-        private readonly IBranchRepository branchRepository;
-        private readonly IMapper mapper;
-
-
-
-        public ScreenBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IPackageRepository _packageRepository,
-            IPackageScreenBL _packagescreenOrch, IScreenRepository _screenRepository, IMapper _mapper, IBranchRepository _branchRepository)
+        private readonly IRepositoryManager repositoryManager;
+        public ScreenBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IRepositoryManager _repositoryManager)
         {
             unitOfWork = _unitOfWork;
-            packageRepository = _packageRepository;
-            packagescreenOrch = _packagescreenOrch;
-            screenRepository = _screenRepository;
-            branchRepository = _branchRepository;
-
-            mapper = _mapper;
-
+            repositoryManager = _repositoryManager;
         }
 
-        public BaseResponseT<bool> Delete(int Id)
+        public async Task<bool> Delete(int Id)
         {
-            var response = new BaseResponseT<bool>
-            {
-            };
-            try
-            {
-                packageRepository.Delete(Id);
-                unitOfWork.Save();
-                response.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                TranslationHelper.SetException(response, ex);
-
-            }
-
-            return response;
+            repositoryManager.screenRepository.Delete(Id);
+            await unitOfWork.SaveAsync();
+            return true;
         }
 
-        public async Task<BaseResponseT<CreatedScreen>> Create(CreatedScreen screen)
+        public async Task<CreatedScreen> Create(CreatedScreen screen)
         {
-            var response = new BaseResponseT<CreatedScreen>();
-
-            try
-            {
                 unitOfWork.CreateTransaction();
-
-                var parentScreen = screenRepository.Get(p => p.Id == screen.ParentId).FirstOrDefault();
+                var parentScreen = repositoryManager.screenRepository.Get(p => p.Id == screen.ParentId).FirstOrDefault();
                 if (parentScreen != null)
                 {
                     screen.Level = parentScreen.Level + 1;
@@ -81,13 +43,7 @@ namespace Dawem.BusinessLogic.Provider
                 unitOfWork.Commit();
                 response.Status = ResponseStatus.Success;
 
-            }
-
-            catch (Exception ex)
-
-            {
-                TranslationHelper.SetException(response, ex);
-            }
+           
 
 
             return response;

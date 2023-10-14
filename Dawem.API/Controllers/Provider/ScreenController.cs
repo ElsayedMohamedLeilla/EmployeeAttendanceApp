@@ -60,7 +60,7 @@ namespace Dawem.API.Controllers.Provider
 
             }
 
-            var result = screenBL.DeleteScreen(Id);
+            var result = screenBL.Delete(Id);
             return Ok(result);
         }
 

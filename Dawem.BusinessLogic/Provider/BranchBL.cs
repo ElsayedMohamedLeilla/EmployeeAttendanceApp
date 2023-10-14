@@ -69,7 +69,7 @@ namespace Dawem.BusinessLogic.Provider
         public async Task<BranchDTO> GetInfo(GetBranchInfoCriteria criteria)
         {
             var branch = await branchRepository.
-                GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, nameof(Branch.Country) + DawemKeys.Comma + nameof(Branch.Currency)) ??
+                GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, nameof(Branch.Country)) ??
                 throw new BusinessValidationException(DawemKeys.BranchNotFound);
 
             BranchDTOMapper.InitBranchContext(requestHeaderContext);
@@ -79,7 +79,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<GetBranchesResponseModel> Get(GetBranchesCriteria criteria)
         {
-            var query = branchRepository.GetAsQueryable(criteria, nameof(Branch.Country) + DawemKeys.Comma + nameof(Branch.Currency));
+            var query = branchRepository.GetAsQueryable(criteria, nameof(Branch.Country));
 
             #region paging
 

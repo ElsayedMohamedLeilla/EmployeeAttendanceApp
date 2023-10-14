@@ -25,10 +25,6 @@ namespace Dawem.Domain.Entities.Lookups
 
 
         public List<Screen> ScreenModules { get; set; }
-        public virtual List<PackageScreen> PackageScreens { get; set; }
-
-
-
         public bool IsActive { get; set; }
     }
 }

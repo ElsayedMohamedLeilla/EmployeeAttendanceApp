@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Others;
+﻿using Dawem.Contract.Repository.Lookups;
+using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
 
@@ -11,4 +12,7 @@ public interface IRepositoryManager
     IUserBranchRepository UserBranchRepository { get; }
     IBranchRepository BranchRepository { get; }
     IUserTokenRepository UserTokenRepository { get; }
+    IScreenRepository screenRepository { get; }
+
+
 }

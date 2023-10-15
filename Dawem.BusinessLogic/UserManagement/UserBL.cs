@@ -1,9 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.UserManagement;
 using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.Repository.Core;
-using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.UserManagement;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
@@ -15,147 +13,60 @@ using Dawem.Models.Dtos.Identity;
 using Dawem.Models.DtosMappers;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Identity;
+using Dawem.Models.ResponseModels;
 using Dawem.Repository.UserManagement;
+using Dawem.Translations;
 using FluentValidation.Results;
 using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
-using SmartBusinessERP.BusinessLogic.Validators.FluentValidators;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Identity;
-using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Identity;
-using SmartBusinessERP.Repository.Core.Conract;
-using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.Repository.UserManagement;
-using SmartBusinessERP.Repository.UserManagement.Contract;
 
 namespace Dawem.BusinessLogic.UserManagement
 {
     public class UserBL : IUserBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly UserManagerRepository smartUserManagerRepository;
-        private readonly IUserRepository smartUserRepository;
-        private readonly RequestHeaderContext userContext;
+        private readonly UserManagerRepository userManagerRepository;
+        private readonly RequestHeaderContext requestHeaderContext;
         private readonly IBranchBLValidation branchValidatorBL;
-        private readonly IBranchRepository branchRepository;
-        private readonly IUserRoleRepository smartUserRoleRepository;
-        private readonly IUserBranchRepository userBranchRepository;
-        private readonly IUserGroupRepository userGroupRepository;
+        private readonly IRepositoryManager repositoryManager;
         private readonly IUserBranchBL userBranchBL;
 
-        public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IUserGroupRepository _userGroupRepository, IUserRoleRepository _smartUserRoleRepository, IUserRepository _smartUserRepository, UserManagerRepository _smartUserManagerRepository,
-            IConfiguration _config, RequestHeaderContext _userContext, IBranchBLValidation _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
+        public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IRepositoryManager _repositoryManager,
+            UserManagerRepository _smartUserManagerRepository,
+            IConfiguration _config, RequestHeaderContext _userContext,
+            IBranchBLValidation _branchValidatorBL,
+             IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
-            smartUserManagerRepository = _smartUserManagerRepository;
-            smartUserRepository = _smartUserRepository;
-            userContext = _userContext;
+            userManagerRepository = _smartUserManagerRepository;
+            requestHeaderContext = _userContext;
             branchValidatorBL = _branchValidatorBL;
-            branchRepository = _branchRepository;
-            userBranchRepository = _userBranchRepository;
-            userGroupRepository = _userGroupRepository;
-            smartUserRoleRepository = _smartUserRoleRepository;
             userBranchBL = _userBranchBL;
-
+            repositoryManager = _repositoryManager;
         }
 
-        public async Task<UserSearchResult> Get(UserSearchCriteria criteria)
+        public async Task<GetUsersResponseModel> Get(UserSearchCriteria criteria)
         {
+            var query = repositoryManager.UserRepository.GetAsQueryable(criteria,nameof(User.UserBranches));
+            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(User.Id), DawemKeys.Desc);
 
-            UserSearchResult userSearchResult = new()
-            {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                ExpressionStarter<User> userPredicate = PredicateBuilder.New<User>(true);
+            #region paging
 
-                if (userContext.IsMainBranch && criteria.ForGridView)
-                {
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
-                    userPredicate = userPredicate.And(x => x.MainBranchId == userContext.BranchId);
-                }
-                else
-                {
-                    userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == userContext.BranchId));
-                }
+            #endregion
 
+            var users = await queryPaged.ToListAsync();
 
+            UserDTOMapper.InitUserContext(requestHeaderContext);
 
-                if (criteria.Id is not null)
-                {
-                    userPredicate = userPredicate.And(x => x.Id == criteria.Id);
-                }
+            var usersList = UserDTOMapper.MapListUsers(users);
 
-
-                if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-                {
-                    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-
-                    userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.FirstName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.LastName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.UserName))
-                {
-                    userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().Contains(criteria.UserName.ToLower().Trim()));
-                }
-
-
-
-                if (criteria.IsActive != null)
-                {
-                    userPredicate = userPredicate.And(x => x.IsActive == true);
-                }
-
-
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                IQueryable<User> users = smartUserRepository.Get(userPredicate, IncludeProperties: !userContext.IsMainBranch && !criteria.ForGridView ? "UserBranches" : "");
-
-                #region sorting
-                IQueryable<User> usersOrdered = smartUserRepository.OrderBy(users, "Id", "desc");
-                #endregion
-
-                IQueryable<User> queryOrdered = usersOrdered;
-
-
-                IQueryable<User> queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                List<User> result = await queryPaged.ToListAsync();
-
-                UserDTOMapper.InitUserContext(userContext);
-
-                userSearchResult.Users = UserDTOMapper.MapListUsers(result);
-                userSearchResult.TotalCount = queryOrdered.ToList().Count;
-                userSearchResult.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                userSearchResult.Exception = ex;
-                userSearchResult.Status = ResponseStatus.Error;
-            }
-            return userSearchResult;
+            return new GetUsersResponseModel { Users = usersList,TotalCount = await query.CountAsync()};
 
         }
         public async Task<GetUserInfoResponse> GetInfo(GetUserInfoCriteria criteria)
@@ -171,7 +82,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
                 if (user != null)
                 {
-                    UserDTOMapper.InitUserContext(userContext);
+                    UserDTOMapper.InitUserContext(requestHeaderContext);
 
                     var userInfo = UserDTOMapper.MapInfo(user);
                     userSearchResult.UserInfo = userInfo;
@@ -183,7 +94,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     TranslationHelper
                     .SetResponseMessages
                         (userSearchResult, "UserNotFound!",
-                        "User Not Found !", lang: userContext.Lang);
+                        "User Not Found !", lang: requestHeaderContext.Lang);
                 }
 
 
@@ -205,10 +116,10 @@ namespace Dawem.BusinessLogic.UserManagement
             };
 
             User smartUser = mapper.Map<User>(createdUser);
-            smartUser.MainBranchId = userContext.BranchId;
+            smartUser.MainBranchId = requestHeaderContext.BranchId;
             smartUser.EmailConfirmed = true;
             smartUser.UserName = smartUser.Email;
-            UserValidator uservalidate = new(ValidationMode.Create, this, userContext);
+            UserValidator uservalidate = new(ValidationMode.Create, this, requestHeaderContext);
 
             ValidationResult validation = uservalidate.Validate(smartUser);
 
@@ -222,7 +133,7 @@ namespace Dawem.BusinessLogic.UserManagement
                 return response;
 
             }
-            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
+            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
 
             if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
             {
@@ -240,7 +151,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     TranslationHelper
                     .SetResponseMessages
                         (response, "MustChooseOneOrMoreBranchForTheUser!",
-                        "Must Choose One Or More Branch For The User !", lang: userContext.Lang);
+                        "Must Choose One Or More Branch For The User !", lang: requestHeaderContext.Lang);
                 }
                 else
                 {
@@ -261,14 +172,14 @@ namespace Dawem.BusinessLogic.UserManagement
                 unitOfWork.CreateTransaction();
 
 
-                IdentityResult createUserResponse = await smartUserManagerRepository.CreateAsync(smartUser, createdUser.Password);
+                IdentityResult createUserResponse = await userManagerRepository.CreateAsync(smartUser, createdUser.Password);
 
                 if (!createUserResponse.Succeeded)
                 {
 
                     response.Message = string.Join(",", createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                     response.MessageCode = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                    TranslationHelper.SetResponseMessages(response, response.MessageCode, response.Message, lang: userContext.Lang ?? "ar");
+                    TranslationHelper.SetResponseMessages(response, response.MessageCode, response.Message, lang: requestHeaderContext.Lang ?? "ar");
                     response.Status = ResponseStatus.ValidationError;
 
 
@@ -278,13 +189,13 @@ namespace Dawem.BusinessLogic.UserManagement
                 IdentityResult? addingToRoleResult = new();
                 if (createdUser.UserRols == null || createdUser.UserRols.Count == 0)
                 {
-                    addingToRoleResult = await smartUserManagerRepository.AddToRoleAsync(smartUser, "FullAccess");
+                    addingToRoleResult = await userManagerRepository.AddToRoleAsync(smartUser, "FullAccess");
 
                 }
                 else
                 {
 
-                    addingToRoleResult = await smartUserManagerRepository.AddToRolesAsync(smartUser, createdUser.UserRols.ToArray());
+                    addingToRoleResult = await userManagerRepository.AddToRolesAsync(smartUser, createdUser.UserRols.ToArray());
                 }
 
 
@@ -293,12 +204,12 @@ namespace Dawem.BusinessLogic.UserManagement
 
                 if (!addingToRoleResult.Succeeded)
                 {
-                    await smartUserManagerRepository.DeleteAsync(smartUser);
+                    await userManagerRepository.DeleteAsync(smartUser);
 
 
                     var message = string.Join(",", createUserResponse.Errors.Select(x => x.Description).ToList().ToArray());
 
-                    TranslationHelper.SetResponseMessages(response, "", message, lang: userContext.Lang);
+                    TranslationHelper.SetResponseMessages(response, "", message, lang: requestHeaderContext.Lang);
 
                     response.Status = ResponseStatus.ValidationError;
                     unitOfWork.Rollback();
@@ -382,10 +293,10 @@ namespace Dawem.BusinessLogic.UserManagement
             BaseResponseT<CreatedUser> response = new() { };
             //var getFromDB = smartUserRepository.GetByID(updatedUser.Id);
             //updatedUser.UserName = getFromDB.UserName;
-            updatedUser.MainBranchId = userContext.BranchId ?? 0;
+            updatedUser.MainBranchId = requestHeaderContext.BranchId ?? 0;
             User myuser = mapper.Map<User>(updatedUser);
 
-            UserValidator uservalidate = new(ValidationMode.Update, this, userContext);
+            UserValidator uservalidate = new(ValidationMode.Update, this, requestHeaderContext);
 
             ValidationResult result = await uservalidate.ValidateAsync(myuser);
 
@@ -405,7 +316,7 @@ namespace Dawem.BusinessLogic.UserManagement
             try
             {
 
-                var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
+                var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
 
                 if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
                 {
@@ -417,7 +328,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
 
 
-                User? myuser2 = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
+                User? myuser2 = await userManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
 
 
 
@@ -426,7 +337,7 @@ namespace Dawem.BusinessLogic.UserManagement
                 if (getDuplicateUsersList.Count() > 0)
                 {
 
-                    TranslationHelper.SetResponseMessages(response, "DuplicateUserName", "Duplicate User Name Or Mobile Not Allowed", lang: userContext.Lang ?? "ar");
+                    TranslationHelper.SetResponseMessages(response, "DuplicateUserName", "Duplicate User Name Or Mobile Not Allowed", lang: requestHeaderContext.Lang ?? "ar");
 
 
                     response.Status = ResponseStatus.ValidationError;
@@ -443,7 +354,7 @@ namespace Dawem.BusinessLogic.UserManagement
                         TranslationHelper
                         .SetResponseMessages
                             (response, "MustChooseOneOrMoreBranchForTheUser!",
-                            "Must Choose One Or More Branch For The User !", lang: userContext.Lang);
+                            "Must Choose One Or More Branch For The User !", lang: requestHeaderContext.Lang);
                     }
                     else
                     {
@@ -469,20 +380,20 @@ namespace Dawem.BusinessLogic.UserManagement
                 myuser2.PhoneNumber = myuser.PhoneNumber;
                 myuser2.MobileNumber = myuser.MobileNumber;
 
-                IdentityResult updateUserResponse = await smartUserManagerRepository.UpdateAsync(myuser2);
+                IdentityResult updateUserResponse = await userManagerRepository.UpdateAsync(myuser2);
 
                 if (!updateUserResponse.Succeeded)
                 {
 
                     string message = string.Join(",", updateUserResponse.Errors.Select(x => x.Description).ToList().ToArray());
 
-                    TranslationHelper.SetResponseMessages(response, "", message, lang: userContext.Lang ?? "ar");
+                    TranslationHelper.SetResponseMessages(response, "", message, lang: requestHeaderContext.Lang ?? "ar");
 
                     response.Status = ResponseStatus.ValidationError;
                     unitOfWork.Rollback();
                     return response;
                 }
-                myuser = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
+                myuser = await userManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
 
 
 
@@ -614,7 +525,7 @@ namespace Dawem.BusinessLogic.UserManagement
             catch (Exception ex)
             {
                 unitOfWork.Rollback();
-                TranslationHelper.SetException(response, ex, lang: userContext.Lang ?? "ar");
+                TranslationHelper.SetException(response, ex, lang: requestHeaderContext.Lang ?? "ar");
             }
             return response;
         }
@@ -622,7 +533,7 @@ namespace Dawem.BusinessLogic.UserManagement
         {
             BaseResponseT<bool> response = new();
 
-            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
+            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
 
             if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
             {
@@ -660,7 +571,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     unitOfWork.Rollback();
                     response.Status = ResponseStatus.ValidationError;
                     response.Result = false;
-                    TranslationHelper.SetResponseMessages(response, "Can'tBeDeletedItIsRelatedToOtherData", "Can't Be Deleted It Is Related To Other Data !", lang: userContext.Lang);
+                    TranslationHelper.SetResponseMessages(response, "Can'tBeDeletedItIsRelatedToOtherData", "Can't Be Deleted It Is Related To Other Data !", lang: requestHeaderContext.Lang);
                 }
             }
 

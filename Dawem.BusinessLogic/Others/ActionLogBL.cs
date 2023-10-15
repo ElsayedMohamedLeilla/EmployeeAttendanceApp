@@ -63,7 +63,7 @@ namespace Dawem.BusinessLogic.Others
             var response = new GetActionLogsResponseModel
             {
                 ActionLogs = actionLogs,
-                TotalCount = query.Count()
+                TotalCount = await query.CountAsync()
             };
 
             return response;

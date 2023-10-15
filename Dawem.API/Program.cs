@@ -1,15 +1,20 @@
 using Dawem.API;
+using Dawem.API.MiddleWares;
 using Dawem.Data;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Models.AutoMapper;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Glamatek.API.MiddleWares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
+using System.ComponentModel;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(DawemKeys.DawemConnectionString) ??
@@ -88,13 +93,15 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.UseCamelCasing(true);
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+    options.SerializerSettings.Converters.Add(new Dawem.API.DateTimeConverter());
 });
 
 builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
-
     config.AddProfile<AutoMapperConfig>();
-
 }, typeof(Program));
 
 WebApplication app = builder.Build();

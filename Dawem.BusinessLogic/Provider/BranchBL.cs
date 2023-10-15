@@ -104,7 +104,7 @@ namespace Dawem.BusinessLogic.Provider
             return new GetBranchesResponseModel
             {
                 Branches = branches,
-                TotalCount = query.Count()
+                TotalCount = await query.CountAsync()
             };
 
         }

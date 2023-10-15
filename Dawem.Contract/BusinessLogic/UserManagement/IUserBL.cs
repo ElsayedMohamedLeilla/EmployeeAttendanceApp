@@ -1,21 +1,17 @@
 ﻿using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Shared;
-using Dawem.Models.Response;
-using Dawem.Models.Response.Identity;
+using Dawem.Models.ResponseModels;
 
 namespace Dawem.Contract.BusinessLogic.UserManagement
 {
     public interface IUserBL
     {
-        Task<UserSearchResult> Get(SmartUserSearchCriteria criteria);
-        Task<GetUserInfoResponse> GetInfo(GetUserInfoCriteria criteria);
-        Task<BaseResponseT<CreatedUser>> Create(CreatedUser createdUser);
-
-
-        BaseResponseT<bool> IsEmailUnique(ValidationItems validationItem);
-        Task<BaseResponseT<CreatedUser>> Update(CreatedUser smartUserDto);
-        Task<BaseResponseT<bool>> DeleteById(int userId);
-
+        Task<GetUsersResponseModel> Get(UserSearchCriteria criteria);
+        Task<UserInfo> GetInfo(GetUserInfoCriteria criteria);
+        Task<int> Create(CreatedUser createdUser);
+        Task<bool> IsEmailUnique(ValidationItems validationItem);
+        Task<bool> Update(CreatedUser smartUserDto);
+        Task<bool> DeleteById(int userId);
     }
 }

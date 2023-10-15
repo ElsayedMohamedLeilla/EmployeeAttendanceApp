@@ -4,6 +4,6 @@ namespace Dawem.Models.Response.Identity
 {
     public class GetUserInfoResponse : BaseResponse
     {
-        public SmartUserInfo? UserInfo { get; set; }
+        public UserInfo? UserInfo { get; set; }
     }
 }

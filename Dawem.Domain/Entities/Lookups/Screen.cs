@@ -7,8 +7,8 @@ namespace Dawem.Domain.Entities.Lookups
     public class Screen : BaseEntity
     {
 
-        public string? Description { get; set; }
-        public string? DescriptionAr { get; set; }
+        public string Description { get; set; }
+        public string DescriptionAr { get; set; }
 
         public string TitleAr { get; set; }
         public string TitleEn { get; set; }
@@ -24,7 +24,7 @@ namespace Dawem.Domain.Entities.Lookups
         public int Order { get; set; }
 
 
-        public List<Screen> ScreenModules { get; set; }
-        public bool IsActive { get; set; }
+        public List<Screen> Children { get; set; }
+        public new bool IsActive { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Dawem.API.Controllers.UserManagement
 
         [HttpPost]
 
-        public async Task<ActionResult<SmartUserSearchResult>> Get(SmartUserSearchCriteria criteria)
+        public async Task<ActionResult<SmartUserSearchResult>> Get(UserSearchCriteria criteria)
         {
 
             if (criteria == null)

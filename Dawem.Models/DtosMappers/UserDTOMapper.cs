@@ -42,10 +42,10 @@ namespace Dawem.Models.DtosMappers
             return users.Select(Map).ToList();
         }
 
-        public static SmartUserInfo MapInfo(User user)
+        public static UserInfo MapInfo(User user)
         {
             if (user == null) return null;
-            var DTO = new SmartUserInfo()
+            var DTO = new UserInfo()
             {
                 Id = user.Id,
                 Email = user.Email,

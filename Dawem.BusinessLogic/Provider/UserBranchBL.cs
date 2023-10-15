@@ -1,212 +1,147 @@
 ﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.UserManagement;
+using Dawem.Helpers;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Exceptions;
+using Dawem.Models.ResponseModels;
+using Dawem.Repository.UserManagement;
+using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Provider;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Others;
-using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.Repository.UserManagement;
 
 namespace Dawem.BusinessLogic.Provider
 {
     public class UserBranchBL : IUserBranchBL
     {
 
-        private readonly IUserBranchRepository userBranchRepository;
-        private readonly RequestHeaderContext userContext;
+        private readonly RequestHeaderContext requestHeaderContext;
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly SmartUserManagerRepository smartUserManagerRepository;
+        private readonly UserManagerRepository userManagerRepository;
+        private readonly IRepositoryManager repositoryManager;
 
 
-        public UserBranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, RequestHeaderContext _userContext, IUserBranchRepository _userBranchRepository, SmartUserManagerRepository _smartUserManagerRepository)
+        public UserBranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, RequestHeaderContext _requestHeaderContext,
+            IRepositoryManager _repositoryManager, UserManagerRepository _userManagerRepository)
         {
-
-            userContext = _userContext;
-
-            userBranchRepository = _userBranchRepository;
-            smartUserManagerRepository = _smartUserManagerRepository;
+            requestHeaderContext = _requestHeaderContext;
+            repositoryManager = _repositoryManager;
+            userManagerRepository = _userManagerRepository;
             unitOfWork = _unitOfWork;
 
 
         }
-        public BaseResponseT<UserBranch> Create(UserBranch userBranch)
+        public async Task<int> Create(UserBranch userBranch)
         {
-            BaseResponseT<UserBranch> response = new BaseResponseT<UserBranch>();
-            try
-            {
-                response.Result = userBranchRepository.Insert(userBranch);
-                unitOfWork.Save();
-                response.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                TranslationHelper.SetException(response, ex);
-            }
-            return response;
+            repositoryManager.UserBranchRepository.Insert(userBranch);
+            await unitOfWork.SaveAsync();
+            return userBranch.Id;
         }
-        public async Task<GetUserBranchesResponse> GetUserBranches(GetUserBranchCriteria criteria)
+        public async Task<GetUserBranchesResponseModel> GetUserBranches(GetUserBranchCriteria criteria)
         {
+            #region Get User Using AccessToken
 
-            GetUserBranchesResponse response = new()
+            User user = new();
+
+            var Email = criteria.UserName;
+            if (!string.IsNullOrEmpty(Email))
             {
-                Status = ResponseStatus.Success
+                user = await userManagerRepository.FindByEmailAsync(Email);
+                if (user == null)
+                {
+                    throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                }
+            }
+
+            #endregion
+
+            #region Handle User Role
+
+            var roles = await userManagerRepository.GetRolesAsync(user);
+
+            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
+            {
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+
+                if (addingToRoleResult.Succeeded)
+                {
+                    roles.Add(DawemKeys.FullAccess);
+                }
+            }
+
+            #endregion
+
+            #region Check Password
+
+            bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, criteria.Password);
+            if (!checkPasswordAsyncRes)
+            {
+                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+            }
+
+
+            #endregion
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            var query = repositoryManager.UserBranchRepository.Get(a => a.UserId == user.Id, IncludeProperties: nameof(UserBranch.Branch));
+            var queryPaged = criteria.PagingEnabled ? query.Skip(skip).Take(take) : query;
+
+            #endregion
+
+            var userBranches = queryPaged.Select(c => new BranchLiteDTO()
+            {
+                Id = c.BranchId,
+                GlobalName = c.Branch.BranchName
+            }).ToList();
+
+            return new GetUserBranchesResponseModel
+            {
+                UserBranches = userBranches,
+                TotalCount = await query.CountAsync()
             };
-            try
-            {
-
-                SmartUser user = new();
-
-                #region Get User Using AccessToken
-                var Email = criteria.UserName;
-                if (!string.IsNullOrEmpty(Email))
-                {
-                    user = await smartUserManagerRepository.FindByEmailAsync(Email);
-                    if (user == null)
-                    {
-                        TranslationHelper.SetSearchResultMessages(response, "UserNameNotExist", "Email Not Exist", lang: userContext.Lang ?? "ar");
-                        response.Status = ResponseStatus.ValidationError;
-                        return response;
-                    }
-                }
-
-                #endregion
-
-                #region Handle User Role
-
-                var roles = await smartUserManagerRepository.GetRolesAsync(user);
-
-
-                if (roles.FirstOrDefault(r => r == "FullAccess") == null)
-                {
-                    var addingToRoleResult = await smartUserManagerRepository.AddToRoleAsync(user, "FullAccess");
-
-                    if (addingToRoleResult.Succeeded)
-                    {
-                        roles.Add("FullAccess");
-                    }
-                }
-
-
-
-                #endregion
-
-                #region Check Password
-
-
-
-                bool checkPasswordAsyncRes = await smartUserManagerRepository.CheckPasswordAsync(user, criteria.Password);
-                if (!checkPasswordAsyncRes)
-                {
-                    TranslationHelper.SetSearchResultMessages(response, "PasswordIncorrect", "Sorry! Password Incorrect. Enter Correct Password For Selected User !", userContext.Lang ?? "ar");
-
-                    response.Status = ResponseStatus.ValidationError;
-                    return response;
-                }
-
-
-                #endregion
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                var query = userBranchRepository.Get(a => a.UserId == user.Id, IncludeProperties: "Branch");
-
-
-
-                var queryPaged = criteria.PagingEnabled ? query.Skip(skip).Take(take) : query;
-
-                #endregion
-
-                var branches = queryPaged.Select(c => new BranchLiteDTO()
-                {
-                    Id = c.BranchId,
-                    GlobalName = c.Branch.BranchName
-                }).ToList();
-
-
-                response.UserBranches = branches;
-                response.TotalCount = query.ToList().Count();
-                response.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                response.Exception = ex; response.Message = ex.Message;
-                response.Status = ResponseStatus.Error;
-            }
-
-            return response;
-
         }
 
 
-        public async Task<BaseResponseT<List<UserBranch>>> GetByUser(int userId)
+        public async Task<List<UserBranch>> GetByUser(int userId)
         {
-            BaseResponseT<List<UserBranch>> response = new BaseResponseT<List<UserBranch>>();
-            try
-            {
-                var userBranches = await userBranchRepository
-                    .Get(user => user.UserId == userId, IncludeProperties: "Branch").ToListAsync();
+            var userBranch = new List<UserBranch>();
 
-                if (userBranches != null && userBranches.Count() > 0)
-                {
-                    response.Result = userBranches;
-                    response.Status = ResponseStatus.Success;
-                }
-                else
-                {
-                    response.Result = null;
-                    response.Status = ResponseStatus.ValidationError;
-                    TranslationHelper.SetValidationMessages(response, "NoBranchForThisUser", "No Branch For This User !");
+            var userBranches = await repositoryManager.UserBranchRepository
+                .Get(user => user.UserId == userId, IncludeProperties: nameof(UserBranch.Branch))
+                .ToListAsync();
 
-                }
-            }
-            catch (Exception ex)
+            if (userBranches == null || userBranches.Count() <= 0)
             {
-                response.Result = null;
-                response.Status = ResponseStatus.Error;
-                response.Exception = ex; response.Message = ex.Message;
+                throw new BusinessValidationException(DawemKeys.SorryThereIsNoBranchesForThisUser);
             }
-            return response;
+
+            return userBranches;
         }
 
-        public async Task<BaseResponseT<List<UserBranch>>> GetByBranch(int branchId)
+        public async Task<List<UserBranch>> GetByBranch(int branchId)
         {
-            BaseResponseT<List<UserBranch>> response = new BaseResponseT<List<UserBranch>>();
-            try
-            {
-                var userBranches = await userBranchRepository
-                    .GetWithTracking(user => user.BranchId == branchId, IncludeProperties: "Branch").ToListAsync();
+            var userBranch = new List<UserBranch>();
 
-                if (userBranches != null && userBranches.Count() > 0)
-                {
-                    response.Result = userBranches;
-                    response.Status = ResponseStatus.Success;
-                }
-                else
-                {
-                    response.Result = null;
-                    response.Status = ResponseStatus.ValidationError;
-                    TranslationHelper.SetValidationMessages(response, "NoBranchForThisUser", "No Branch For This User !");
+            var userBranches = await repositoryManager.UserBranchRepository
+                .Get(user => user.BranchId == branchId, IncludeProperties: nameof(UserBranch.Branch))
+                .ToListAsync();
 
-                }
-            }
-            catch (Exception ex)
+            if (userBranches == null || userBranches.Count() <= 0)
             {
-                response.Result = null;
-                response.Status = ResponseStatus.Error;
-                response.Exception = ex; response.Message = ex.Message;
+                throw new BusinessValidationException(DawemKeys.SorryThereIsNoBranchesForThisUser);
             }
-            return response;
+
+            return userBranches;
         }
+
 
     }
 }

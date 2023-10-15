@@ -120,9 +120,12 @@ namespace Dawem.Translations
         public const string SorryErrorHappenWhenSendEmail = "Sorry!!ErrorHappenWhenSendEmail!";
         public const string PleaseCheckYourMailWeSentYouMailToResetYourPassword = "PleaseCheckYourMail!WeSentYouMailToResetYourPassword.";
         public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
-
+        public const string SorryScreenNotFound = "Sorry!!ScreenNotFound!";
         public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
         public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
         public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
+        public const string SorryThereIsNoBranchesForThisUser = "Sorry!!ThereIsNoBranchesForThisUser!";
+        public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
+        
     }
 }

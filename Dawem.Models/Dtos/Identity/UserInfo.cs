@@ -3,9 +3,9 @@ using Dawem.Models.Dtos.Provider;
 
 namespace Dawem.Models.Dtos.Identity
 {
-    public class SmartUserInfo
+    public class UserInfo
     {
-        public SmartUserInfo()
+        public UserInfo()
         {
 
         }

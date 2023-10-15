@@ -1,14 +1,19 @@
 using Dawem.API;
+using Dawem.API.MiddleWares;
 using Dawem.Data;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Models.AutoMapper;
 using Dawem.Models.Generic;
+using Dawem.Repository;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Dawem.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +39,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(AllowSpecificOrigins,
         builder => builder
-
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowAnyOrigin());
@@ -77,8 +81,8 @@ builder.Services.Configure<IdentityOptions>(opt => { opt.SignIn.RequireConfirmed
 
 builder.Services.AddTransient<UserManagerRepository>();
 builder.Services.ConfigureSQLContext(builder.Configuration);
-builder.Services.ConfigureRepositoryContainer();
-builder.Services.ConfigureBLContainer();
+builder.Services.ConfigureBLValidation();
+builder.Services.ConfigureRepository();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -88,13 +92,15 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.UseCamelCasing(true);
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+    options.SerializerSettings.Converters.Add(new Dawem.API.DateTimeConverter());
 });
 
 builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
-
     config.AddProfile<AutoMapperConfig>();
-
 }, typeof(Program));
 
 WebApplication app = builder.Build();
@@ -131,7 +137,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+//var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (/*app.Environment.IsDevelopment() || app.Environment.IsProduction()*/true)

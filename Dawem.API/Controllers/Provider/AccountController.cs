@@ -1,5 +1,4 @@
-﻿using Dawem.API.Controllers;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Dtos.Shared;

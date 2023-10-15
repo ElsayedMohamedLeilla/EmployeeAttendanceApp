@@ -1,21 +1,21 @@
-﻿using Dawem.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Data.UnitOfWork;
-
-public interface IUnitOfWork<out TContext> where TContext : DbContext, new()
+namespace Dawem.Data.UnitOfWork
 {
-    ApplicationDBContext Context { get; }
-    void CreateTransaction();
-    void Commit();
-    void Rollback();
+    public interface IUnitOfWork<out TContext> where TContext : DbContext, new()
+    {
+        ApplicationDBContext Context { get; }
+        void CreateTransaction();
+        void Commit();
+        void Rollback();
 
-    Task CreateTransactionAsync();
-    Task CommitAsync();
-    Task RollbackAsync();
+        Task CreateTransactionAsync();
+        Task CommitAsync();
+        Task RollbackAsync();
 
-    void Save();
-    Task SaveAsync();
-    void DetachEntity<T>(T Entity) where T : class;
+        void Save();
+        Task SaveAsync();
+        void DetachEntity<T>(T Entity) where T : class;
 
+    }
 }

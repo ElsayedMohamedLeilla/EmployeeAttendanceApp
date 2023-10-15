@@ -1,716 +1,358 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
+﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.UserManagement;
 using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.Repository.Core;
-using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.UserManagement;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Shared;
 using Dawem.Models.DtosMappers;
-using Dawem.Models.Response;
-using Dawem.Models.Response.Identity;
+using Dawem.Models.Exceptions;
+using Dawem.Models.ResponseModels;
 using Dawem.Repository.UserManagement;
-using FluentValidation.Results;
-using LinqKit;
+using Dawem.Translations;
+using Dawem.Validation.FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using SmartBusinessERP.Areas.Identity.Data.UserManagement;
-using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
-using SmartBusinessERP.BusinessLogic.Validators.FluentValidators;
-using SmartBusinessERP.Data;
-using SmartBusinessERP.Data.UnitOfWork;
-using SmartBusinessERP.Domain.Entities.Provider;
-using SmartBusinessERP.Helpers;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Identity;
-using SmartBusinessERP.Models.Dtos.Shared;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Identity;
-using SmartBusinessERP.Repository.Core.Conract;
-using SmartBusinessERP.Repository.Provider.Contract;
-using SmartBusinessERP.Repository.UserManagement;
-using SmartBusinessERP.Repository.UserManagement.Contract;
 
 namespace Dawem.BusinessLogic.UserManagement
 {
     public class UserBL : IUserBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly UserManagerRepository smartUserManagerRepository;
-        private readonly IUserRepository smartUserRepository;
-        private readonly RequestHeaderContext userContext;
+        private readonly UserManagerRepository userManagerRepository;
+        private readonly RequestHeaderContext requestHeaderContext;
         private readonly IBranchBLValidation branchValidatorBL;
-        private readonly IBranchRepository branchRepository;
-        private readonly IUserRoleRepository smartUserRoleRepository;
-        private readonly IUserBranchRepository userBranchRepository;
-        private readonly IUserGroupRepository userGroupRepository;
+        private readonly IRepositoryManager repositoryManager;
         private readonly IUserBranchBL userBranchBL;
+        private readonly IMapper mapper;
+        private readonly IUserBLValidation userBLValidation;
 
-        public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IUserGroupRepository _userGroupRepository, IUserRoleRepository _smartUserRoleRepository, IUserRepository _smartUserRepository, UserManagerRepository _smartUserManagerRepository,
-            IConfiguration _config, RequestHeaderContext _userContext, IBranchBLValidation _branchValidatorBL, IBranchRepository _branchRepository, IUserBranchRepository _userBranchRepository, IUserBranchBL _userBranchBL)
+        public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IRepositoryManager _repositoryManager,
+            UserManagerRepository _smartUserManagerRepository, IMapper _mapper,
+            IConfiguration _config, RequestHeaderContext _userContext,
+            IBranchBLValidation _branchValidatorBL, IUserBLValidation _userBLValidation,
+             IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
-            smartUserManagerRepository = _smartUserManagerRepository;
-            smartUserRepository = _smartUserRepository;
-            userContext = _userContext;
+            userManagerRepository = _smartUserManagerRepository;
+            requestHeaderContext = _userContext;
             branchValidatorBL = _branchValidatorBL;
-            branchRepository = _branchRepository;
-            userBranchRepository = _userBranchRepository;
-            userGroupRepository = _userGroupRepository;
-            smartUserRoleRepository = _smartUserRoleRepository;
             userBranchBL = _userBranchBL;
-
+            repositoryManager = _repositoryManager;
+            mapper = _mapper;
+            userBLValidation = _userBLValidation;
         }
 
-        public async Task<UserSearchResult> Get(UserSearchCriteria criteria)
+        public async Task<GetUsersResponseModel> Get(UserSearchCriteria criteria)
         {
+            var query = repositoryManager.UserRepository.GetAsQueryable(criteria, nameof(User.UserBranches));
+            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(User.Id), DawemKeys.Desc);
 
-            UserSearchResult userSearchResult = new()
-            {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                ExpressionStarter<User> userPredicate = PredicateBuilder.New<User>(true);
+            #region paging
 
-                if (userContext.IsMainBranch && criteria.ForGridView)
-                {
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
-                    userPredicate = userPredicate.And(x => x.MainBranchId == userContext.BranchId);
-                }
-                else
-                {
-                    userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == userContext.BranchId));
-                }
+            #endregion
 
+            var users = await queryPaged.ToListAsync();
 
+            UserDTOMapper.InitUserContext(requestHeaderContext);
 
-                if (criteria.Id is not null)
-                {
-                    userPredicate = userPredicate.And(x => x.Id == criteria.Id);
-                }
+            var usersList = UserDTOMapper.MapListUsers(users);
 
-
-                if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-                {
-                    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-
-                    userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.FirstName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.LastName.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                    userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
-                }
-
-                if (!string.IsNullOrWhiteSpace(criteria.UserName))
-                {
-                    userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().Contains(criteria.UserName.ToLower().Trim()));
-                }
-
-
-
-                if (criteria.IsActive != null)
-                {
-                    userPredicate = userPredicate.And(x => x.IsActive == true);
-                }
-
-
-
-                #region paging
-
-                int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-                int take = PagingHelper.Take(criteria.PageSize);
-
-                IQueryable<User> users = smartUserRepository.Get(userPredicate, IncludeProperties: !userContext.IsMainBranch && !criteria.ForGridView ? "UserBranches" : "");
-
-                #region sorting
-                IQueryable<User> usersOrdered = smartUserRepository.OrderBy(users, "Id", "desc");
-                #endregion
-
-                IQueryable<User> queryOrdered = usersOrdered;
-
-
-                IQueryable<User> queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-                #endregion
-
-                List<User> result = await queryPaged.ToListAsync();
-
-                UserDTOMapper.InitUserContext(userContext);
-
-                userSearchResult.Users = UserDTOMapper.MapListUsers(result);
-                userSearchResult.TotalCount = queryOrdered.ToList().Count;
-                userSearchResult.Status = ResponseStatus.Success;
-            }
-            catch (Exception ex)
-            {
-                userSearchResult.Exception = ex;
-                userSearchResult.Status = ResponseStatus.Error;
-            }
-            return userSearchResult;
+            return new GetUsersResponseModel { Users = usersList, TotalCount = await query.CountAsync() };
 
         }
-        public async Task<GetUserInfoResponse> GetInfo(GetUserInfoCriteria criteria)
+        public async Task<UserInfo> GetInfo(GetUserInfoCriteria criteria)
         {
+            var user = await repositoryManager.UserRepository
+            .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id,
+            nameof(User.UserBranches) + DawemKeys.Comma + nameof(User.UserBranches) + DawemKeys.Dot + nameof(UserBranch.Branch) +
+             DawemKeys.Comma + nameof(User.UserGroups) + DawemKeys.Comma + nameof(User.UserGroups) + DawemKeys.Dot + nameof(UserGroup.Group)) ??
+             throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
 
-            GetUserInfoResponse userSearchResult = new()
-            {
-                Status = ResponseStatus.Success
-            };
-            try
-            {
-                var user = await smartUserRepository.GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "UserBranches,UserBranches.Branch,UserGroups,UserGroups.Group");
+            UserDTOMapper.InitUserContext(requestHeaderContext);
+            var userInfo = UserDTOMapper.MapInfo(user);
 
-                if (user != null)
-                {
-                    UserDTOMapper.InitUserContext(userContext);
-
-                    var userInfo = UserDTOMapper.MapInfo(user);
-                    userSearchResult.UserInfo = userInfo;
-                    userSearchResult.Status = ResponseStatus.Success;
-                }
-                else
-                {
-                    userSearchResult.Status = ResponseStatus.ValidationError;
-                    TranslationHelper
-                    .SetResponseMessages
-                        (userSearchResult, "UserNotFound!",
-                        "User Not Found !", lang: userContext.Lang);
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                userSearchResult.Exception = ex;
-                userSearchResult.Status = ResponseStatus.Error;
-            }
-            return userSearchResult;
-
+            return userInfo;
         }
-        public async Task<BaseResponseT<CreatedUser>> Create(CreatedUser createdUser)
+        public async Task<int> Create(CreatedUser createdUser)
         {
+            User user = mapper.Map<User>(createdUser);
+            user.MainBranchId = requestHeaderContext.BranchId;
+            user.EmailConfirmed = true;
+            user.UserName = user.Email;
 
-            BaseResponseT<CreatedUser> response = new()
+            #region Model Validation
+
+            var userValidator = new UserValidator();
+            var userValidatorResult = userValidator.Validate(user);
+            if (!userValidatorResult.IsValid)
             {
-
-            };
-
-            User smartUser = mapper.Map<User>(createdUser);
-            smartUser.MainBranchId = userContext.BranchId;
-            smartUser.EmailConfirmed = true;
-            smartUser.UserName = smartUser.Email;
-            UserValidator uservalidate = new(ValidationMode.Create, this, userContext);
-
-            ValidationResult validation = uservalidate.Validate(smartUser);
-
-
-            if (!validation.IsValid)
-            {
-                response.Status = ResponseStatus.ValidationError;
-                response.Message = validation.Errors[0].ErrorMessage;
-                response.MessageCode = validation.Errors[0].ErrorCode;
-
-                return response;
-
-            }
-            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
-
-            if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
-            {
-                TranslationHelper.MapBaseResponse(source: ValidateChangeForMainBranchOnlyResult, destination: response);
-                return response;
+                var error = userValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
             }
 
-            if (createdUser.UserBranches == null ||
-                    createdUser.UserBranches.Count() <= 0)
-            {
-                if (createdUser.MainBranchId <= 0)
-                {
-                    response.Status = ResponseStatus.ValidationError;
+            #endregion
 
-                    TranslationHelper
-                    .SetResponseMessages
-                        (response, "MustChooseOneOrMoreBranchForTheUser!",
-                        "Must Choose One Or More Branch For The User !", lang: userContext.Lang);
-                }
-                else
-                {
-                    createdUser.UserBranches = new List<UserBranch>
-                    {
-                        new UserBranch()
-                        {
-                            BranchId = createdUser.MainBranchId
-                        }
-                    };
-                }
+            branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
+            await userBLValidation.CreateUserValidation(createdUser);
+
+            await unitOfWork.CreateTransactionAsync();
+
+            IdentityResult createUserResponse = await userManagerRepository.CreateAsync(user, createdUser.Password);
+            if (!createUserResponse.Succeeded)
+            {
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
-
-
-
-            try
+            IdentityResult addingToRoleResult = new();
+            if (createdUser.UserRols == null || createdUser.UserRols.Count == 0)
             {
-                unitOfWork.CreateTransaction();
-
-
-                IdentityResult createUserResponse = await smartUserManagerRepository.CreateAsync(smartUser, createdUser.Password);
-
-                if (!createUserResponse.Succeeded)
-                {
-
-                    response.Message = string.Join(",", createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
-                    response.MessageCode = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                    TranslationHelper.SetResponseMessages(response, response.MessageCode, response.Message, lang: userContext.Lang ?? "ar");
-                    response.Status = ResponseStatus.ValidationError;
-
-
-                    unitOfWork.Rollback();
-                    return response;
-                }
-                IdentityResult? addingToRoleResult = new();
-                if (createdUser.UserRols == null || createdUser.UserRols.Count == 0)
-                {
-                    addingToRoleResult = await smartUserManagerRepository.AddToRoleAsync(smartUser, "FullAccess");
-
-                }
-                else
-                {
-
-                    addingToRoleResult = await smartUserManagerRepository.AddToRolesAsync(smartUser, createdUser.UserRols.ToArray());
-                }
-
-
-
-
-
-                if (!addingToRoleResult.Succeeded)
-                {
-                    await smartUserManagerRepository.DeleteAsync(smartUser);
-
-
-                    var message = string.Join(",", createUserResponse.Errors.Select(x => x.Description).ToList().ToArray());
-
-                    TranslationHelper.SetResponseMessages(response, "", message, lang: userContext.Lang);
-
-                    response.Status = ResponseStatus.ValidationError;
-                    unitOfWork.Rollback();
-                    return response;
-                }
-                #region User Branches
-
-                var userBranches = createdUser.UserBranches;
-
-
-                try
-                {
-                    foreach (var item in userBranches)
-                    {
-                        item.UserId = smartUser.Id;
-                    }
-                    var createuserBranchesResponse = userBranchRepository.BulkInsert(userBranches);
-
-                    response.Status = ResponseStatus.Success;
-                    unitOfWork.Save();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                    response.Exception = ex; response.Message = ex.Message;
-                    response.Status = ResponseStatus.NotImplemented;
-                    return response;
-                }
-
-                #endregion
-
-
-                #region User Groups
-
-                var userGroups = createdUser.UserGroups;
-
-
-                try
-                {
-                    foreach (var item in userGroups)
-                    {
-                        item.UserId = smartUser.Id;
-                    }
-                    var createuserBranchesResponse = userGroupRepository.BulkInsert(userGroups);
-
-                    response.Status = ResponseStatus.Success;
-                    unitOfWork.Save();
-                }
-                catch (Exception ex)
-                {
-                    unitOfWork.Rollback();
-                    TranslationHelper.SetException(response, ex);
-                    response.Exception = ex; response.Message = ex.Message;
-                    response.Status = ResponseStatus.NotImplemented;
-                    return response;
-                }
-
-                #endregion
-
-
-                unitOfWork.Commit();
-                createdUser = mapper.Map<CreatedUser>(smartUser);
-                response.Result = createdUser;
-                response.Status = ResponseStatus.Success;
+                addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
 
             }
-            catch (Exception ex)
+            else
             {
+                addingToRoleResult = await userManagerRepository.AddToRolesAsync(user, createdUser.UserRols.ToArray());
+            }
 
+            if (!addingToRoleResult.Succeeded)
+            {
                 unitOfWork.Rollback();
-                response.Exception = ex; response.Message = ex.Message;
-                response.Status = ResponseStatus.NotImplemented;
-
+                await userManagerRepository.DeleteAsync(user);
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
-            return response;
+
+            #region User Branches
+
+            var userBranches = createdUser.UserBranches;
+
+            foreach (var item in userBranches)
+            {
+                item.UserId = user.Id;
+            }
+            repositoryManager.UserBranchRepository.BulkInsert(userBranches);
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region User Groups
+
+            var userGroups = createdUser.UserGroups;
+
+            foreach (var item in userGroups)
+            {
+                item.UserId = user.Id;
+            }
+            repositoryManager.UserGroupRepository.BulkInsert(userGroups);
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            await unitOfWork.CommitAsync();
+            return user.Id;
 
         }
-        public async Task<BaseResponseT<CreatedUser>> Update(CreatedUser updatedUser)
+        public async Task<bool> Update(CreatedUser updatedUser)
         {
-            BaseResponseT<CreatedUser> response = new() { };
-            //var getFromDB = smartUserRepository.GetByID(updatedUser.Id);
-            //updatedUser.UserName = getFromDB.UserName;
-            updatedUser.MainBranchId = userContext.BranchId ?? 0;
-            User myuser = mapper.Map<User>(updatedUser);
+            updatedUser.MainBranchId = requestHeaderContext.BranchId ?? 0;
+            User user = mapper.Map<User>(updatedUser);
 
-            UserValidator uservalidate = new(ValidationMode.Update, this, userContext);
+            #region Model Validation
 
-            ValidationResult result = await uservalidate.ValidateAsync(myuser);
-
-
-            if (!result.IsValid)
+            var userValidator = new UserValidator();
+            var userValidatorResult = userValidator.Validate(user);
+            if (!userValidatorResult.IsValid)
             {
-
-                response.Status = ResponseStatus.ValidationError;
-                response.MessageCode = result.Errors.Select(x => x.ErrorCode).FirstOrDefault();
-                response.Message = result.Errors[0].ErrorMessage;
-                return response;
-
+                var error = userValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
             }
 
+            #endregion
 
+            branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Edit);
+            await userBLValidation.CreateUserValidation(updatedUser);
 
-            try
+            await unitOfWork.CreateTransactionAsync();
+
+            var user2 = await userManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
+
+            user2.Email = user.Email;
+            user2.FirstName = user.FirstName;
+            user2.LastName = user.LastName;
+            user2.IsActive = user.IsActive;
+            user2.Gender = user.Gender;
+            user2.BirthDate = user.BirthDate;
+            user2.PhoneNumber = user.PhoneNumber;
+            user2.MobileNumber = user.MobileNumber;
+
+            var updateUserResponse = await userManagerRepository.UpdateAsync(user2);
+
+            if (!updateUserResponse.Succeeded)
             {
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+            }
 
-                var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
+            user = await userManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
 
-                if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
+            #region User Branches
+
+            var UserBranches = updatedUser.UserBranches;
+
+            user.UserBranches = null;
+
+            var updatedBranches = new List<UserBranch>();
+            var DBUserBranches = await userBranchBL.GetByUser(user.Id);
+
+            if (DBUserBranches != null)
+            {
+                var FindWillDeletedUserBranches = DBUserBranches.Where(dbss => !UserBranches.Any(ss => ss.BranchId == dbss.BranchId))
+                    .ToList();
+
+                foreach (var willDeletedUserBranche in FindWillDeletedUserBranches)
                 {
-                    TranslationHelper.MapBaseResponse(source: ValidateChangeForMainBranchOnlyResult, destination: response);
-                    return response;
+                    repositoryManager.UserBranchRepository.Delete(willDeletedUserBranche.Id);
                 }
-                unitOfWork.CreateTransaction();
 
+                await unitOfWork.SaveAsync();
+            }
 
-
-
-                User? myuser2 = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
-
-
-
-                List<User> getDuplicateUsersList = smartUserRepository.Get(r => r.UserName == myuser.UserName && r.Id != myuser2.Id).ToList();
-
-                if (getDuplicateUsersList.Count() > 0)
+            if (UserBranches != null)
+            {
+                foreach (var item in updatedUser.UserBranches)
                 {
-
-                    TranslationHelper.SetResponseMessages(response, "DuplicateUserName", "Duplicate User Name Or Mobile Not Allowed", lang: userContext.Lang ?? "ar");
-
-
-                    response.Status = ResponseStatus.ValidationError;
-                    unitOfWork.Rollback();
-                    return response;
-                }
-                if (updatedUser.UserBranches == null ||
-                 updatedUser.UserBranches.Count() <= 0)
-                {
-                    if (updatedUser.MainBranchId <= 0)
+                    item.UserId = user.Id;
+                    if (item.Id > 0)
                     {
-                        response.Status = ResponseStatus.ValidationError;
-
-                        TranslationHelper
-                        .SetResponseMessages
-                            (response, "MustChooseOneOrMoreBranchForTheUser!",
-                            "Must Choose One Or More Branch For The User !", lang: userContext.Lang);
+                        repositoryManager.UserBranchRepository.Update(item);
                     }
                     else
                     {
-                        updatedUser.UserBranches = new List<UserBranch>
-                    {
-                        new UserBranch()
-                        {
-                            BranchId = updatedUser.MainBranchId,
-                            UserId = updatedUser.Id
-                        }
-                    };
+                        repositoryManager.UserBranchRepository.Insert(item);
                     }
-                }
+                };
 
-
-
-                myuser2.Email = myuser.Email;
-                myuser2.FirstName = myuser.FirstName;
-                myuser2.LastName = myuser.LastName;
-                myuser2.IsActive = myuser.IsActive;
-                myuser2.Gender = myuser.Gender;
-                myuser2.BirthDate = myuser.BirthDate;
-                myuser2.PhoneNumber = myuser.PhoneNumber;
-                myuser2.MobileNumber = myuser.MobileNumber;
-
-                IdentityResult updateUserResponse = await smartUserManagerRepository.UpdateAsync(myuser2);
-
-                if (!updateUserResponse.Succeeded)
-                {
-
-                    string message = string.Join(",", updateUserResponse.Errors.Select(x => x.Description).ToList().ToArray());
-
-                    TranslationHelper.SetResponseMessages(response, "", message, lang: userContext.Lang ?? "ar");
-
-                    response.Status = ResponseStatus.ValidationError;
-                    unitOfWork.Rollback();
-                    return response;
-                }
-                myuser = await smartUserManagerRepository.FindByIdAsync(updatedUser.Id.ToString());
-
-
-
-                /*var roles = await smartUserManagerRepository.GetRolesAsync(myuser);
-                await smartUserManagerRepository.RemoveFromRolesAsync(myuser, updatedUser.UserRols);
-
-
-                var addingToRoleResult = await smartUserManagerRepository.AddToRolesAsync(myuser, updatedUser.UserRols);
-
-
-                if (!addingToRoleResult.Succeeded)
-                {
-
-                    var message = string.Join(",", addingToRoleResult.Errors.Select(x => x.Description).ToList());
-
-                    TranslationHelper.SetValidationMessages(response, "", message, lang: userContext.Lang);
-
-                    response.Status = ResponseStatus.ValidationError;
-                    unitOfWork.Rollback();
-                    return response;
-
-                }*/
-
-
-                #region User Branches
-
-
-                var UserBranches = updatedUser.UserBranches;
-
-                myuser.UserBranches = null;
-
-                var updatedBranches = new List<UserBranch>();
-                var DBUserBranches = await userBranchBL.GetByUser(myuser.Id);
-
-                if (DBUserBranches.Result != null)
-                {
-
-                    var FindWillDeletedUserBranches = DBUserBranches.Result.Where(dbss => !UserBranches.Any(ss => ss.BranchId == dbss.BranchId))
-                        .ToList();
-
-                    foreach (var willDeletedUserBranche in FindWillDeletedUserBranches)
-                    {
-
-
-                        userBranchRepository.Delete(willDeletedUserBranche.Id);
-
-                    }
-
-                    unitOfWork.Save();
-                }
-
-                if (UserBranches != null)
-                {
-                    foreach (var item in updatedUser.UserBranches)
-                    {
-                        item.UserId = myuser.Id;
-                        if (item.Id > 0)
-                        {
-                            userBranchRepository.Update(item);
-                        }
-                        else
-                        {
-                            userBranchRepository.Insert(item);
-                        }
-                    };
-
-                    unitOfWork.Save();
-
-
-                }
-
-                #endregion
-
-                #region User Groups
-
-
-                var UserGroups = updatedUser.UserGroups;
-
-                myuser.UserGroups = null;
-
-                var updatedUserGroups = new List<UserBranch>();
-                var DBUserGroups = userGroupRepository.Get(u => u.UserId == myuser.Id).ToList();
-
-                if (DBUserGroups != null)
-                {
-
-                    var FindWillDeletedUserGroups = DBUserGroups.Where(dbss => !UserGroups.Any(ss => ss.GroupId == dbss.GroupId))
-                        .ToList();
-
-                    foreach (var willDeletedUserGroup in FindWillDeletedUserGroups)
-                    {
-
-
-                        userGroupRepository.Delete(willDeletedUserGroup.Id);
-
-                    }
-
-                    unitOfWork.Save();
-                }
-
-                if (UserGroups != null)
-                {
-                    foreach (var item in updatedUser.UserGroups)
-                    {
-                        item.UserId = myuser.Id;
-                        if (item.Id > 0)
-                        {
-                            userGroupRepository.Update(item);
-                        }
-                        else
-                        {
-                            userGroupRepository.Insert(item);
-                        }
-                    };
-
-                    unitOfWork.Save();
-
-
-                }
-
-                #endregion
-
-                unitOfWork.Commit();
-
-                response.Result = mapper.Map<CreatedUser>(myuser2);
-                response.Status = ResponseStatus.Success;
-
+                await unitOfWork.SaveAsync();
             }
-            catch (Exception ex)
+
+            #endregion
+
+            #region User Groups
+
+            var UserGroups = updatedUser.UserGroups;
+
+            user.UserGroups = null;
+
+            var updatedUserGroups = new List<UserBranch>();
+            var DBUserGroups = repositoryManager.UserGroupRepository.Get(u => u.UserId == user.Id).ToList();
+
+            if (DBUserGroups != null)
             {
-                unitOfWork.Rollback();
-                TranslationHelper.SetException(response, ex, lang: userContext.Lang ?? "ar");
+
+                var FindWillDeletedUserGroups = DBUserGroups.Where(dbss => !UserGroups.Any(ss => ss.GroupId == dbss.GroupId))
+                    .ToList();
+
+                foreach (var willDeletedUserGroup in FindWillDeletedUserGroups)
+                {
+                    repositoryManager.UserGroupRepository.Delete(willDeletedUserGroup.Id);
+                }
+
+                await unitOfWork.SaveAsync();
             }
-            return response;
+
+            if (UserGroups != null)
+            {
+                foreach (var item in updatedUser.UserGroups)
+                {
+                    item.UserId = user.Id;
+                    if (item.Id > 0)
+                    {
+                        repositoryManager.UserGroupRepository.Update(item);
+                    }
+                    else
+                    {
+                        repositoryManager.UserGroupRepository.Insert(item);
+                    }
+                };
+                await unitOfWork.SaveAsync();
+            }
+
+            #endregion
+
+            await unitOfWork.CommitAsync();
+            return true;
         }
-        public async Task<BaseResponseT<bool>> DeleteById(int userId)
+        public async Task<bool> DeleteById(int userId)
         {
-            BaseResponseT<bool> response = new();
+            branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Delete);
+            var myUser = await repositoryManager.UserRepository.Get(a => a.Id == userId).FirstOrDefaultAsync();
 
-            var ValidateChangeForMainBranchOnlyResult = branchValidatorBL.ValidateChangeForMainBranchOnly(userContext, ChangeType.Add);
-
-            if (ValidateChangeForMainBranchOnlyResult.Status != ResponseStatus.Success)
-            {
-                TranslationHelper.MapBaseResponse(source: ValidateChangeForMainBranchOnlyResult, destination: response);
-                return response;
-            }
-            User? myUser = await smartUserRepository.Get(a => a.Id == userId).FirstOrDefaultAsync();
             if (myUser != null)
             {
-                unitOfWork.CreateTransaction();
-                try
+                await unitOfWork.CreateTransactionAsync();
+                var userbranches = repositoryManager.UserBranchRepository.Get(a => a.UserId == userId).ToList();
+
+                foreach (var item in userbranches)
                 {
-                    var userbranches = userBranchRepository.Get(a => a.UserId == userId).ToList();
-
-                    foreach (var item in userbranches)
-                    {
-                        userBranchRepository.Delete(item);
-                    }
-
-                    var userRoles = smartUserRoleRepository.Get(a => a.UserId == userId).ToList();
-
-                    foreach (var item in userRoles)
-                    {
-                        smartUserRoleRepository.Delete(item);
-                    }
-
-
-                    smartUserRepository.Delete(myUser);
-
-                    unitOfWork.Save();
-                    unitOfWork.Commit();
+                    repositoryManager.UserBranchRepository.Delete(item);
                 }
-                catch (Exception ex)
+
+                var userRoles = repositoryManager.UserRoleRepository.Get(a => a.UserId == userId).ToList();
+
+                foreach (var item in userRoles)
                 {
-                    unitOfWork.Rollback();
-                    response.Status = ResponseStatus.ValidationError;
-                    response.Result = false;
-                    TranslationHelper.SetResponseMessages(response, "Can'tBeDeletedItIsRelatedToOtherData", "Can't Be Deleted It Is Related To Other Data !", lang: userContext.Lang);
+                    repositoryManager.UserRoleRepository.Delete(item);
                 }
+
+                repositoryManager.UserRepository.Delete(myUser);
+
+                await unitOfWork.SaveAsync();
+                await unitOfWork.CommitAsync();
             }
-
-            response.Result = true;
-            response.Status = ResponseStatus.Success;
-            return response;
+            return true;
         }
-        public BaseResponseT<bool> IsEmailUnique(ValidationItems validationItem)
+        public async Task<bool> IsEmailUnique(ValidationItems validationItem)
         {
-            BaseResponseT<bool> response = new BaseResponseT<bool>();
-            try
+            User duplicateUser = null;
+            if (string.IsNullOrEmpty(validationItem.Item))
             {
-                //string currentName;
-                User duplicateUser = null;
-                if (string.IsNullOrEmpty(validationItem.Item))
-                {
-                    response.Result = true;
-                    response.Status = ResponseStatus.Success;
-                    return response;
-                }
-                if (validationItem.validationMode == ValidationMode.Create)
-                {
-                    duplicateUser = smartUserRepository.Get(x => x.Email.ToLower().Trim() == validationItem.Item.ToLower().Trim()).FirstOrDefault();
-                }
-
-                else if (validationItem.validationMode == ValidationMode.Update && validationItem.Id != null)
-                {
-
-
-                    duplicateUser = smartUserRepository.Get(x => x.Email.ToLower() == validationItem.Item.ToLower() && x.Id != validationItem.Id.Value).FirstOrDefault();
-                }
-
-                if (duplicateUser == null)
-                {
-                    response.Result = true;
-                }
-                else
-                {
-                    response.Result = false;
-
-                }
-                response.Status = ResponseStatus.Success;
+                throw new ArgumentNullException(nameof(validationItem));
             }
-            catch (Exception ex)
+            if (validationItem.validationMode == ValidationMode.Create)
             {
-                response.Result = false;
-                response.Status = ResponseStatus.Error;
-                response.Exception = ex; response.Message = ex.Message;
+                duplicateUser = await repositoryManager.UserRepository.Get(x => x.Email.ToLower().Trim() == validationItem.Item.ToLower().Trim())
+                    .FirstOrDefaultAsync();
             }
-            return response;
+
+            else if (validationItem.validationMode == ValidationMode.Update && validationItem.Id != null)
+            {
+                duplicateUser = await repositoryManager.UserRepository
+                    .Get(x => x.Email.ToLower() == validationItem.Item.ToLower() && x.Id != validationItem.Id.Value)
+                   .FirstOrDefaultAsync();
+            }
+
+            if (duplicateUser == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+
+            }
         }
     }
 }

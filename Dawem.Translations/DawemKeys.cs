@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class DawemKeys
     {
@@ -67,6 +65,7 @@ namespace Dawem.Translations
         public const string FullAccess = "FullAccess";
         public const string ApiCcontrollerAction = "api/[controller]/[action]";
         public const string Comma = ",";
+        public const string Dot = ".";
         public const string Account = "Account";
         public const string VerifyEmail = "VerifyEmail";
         public const string Http = "http";
@@ -92,7 +91,12 @@ namespace Dawem.Translations
         public const string SorryThisUserDoNotHaveAccessToSelectedBranch = "Sorry!!ThisUserDoNotHaveAccessToSelectedBranch!";
         public const string YouMustChooseCountrys = "YouMustChooseCountry!";
         public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
+        public const string SorryErrorHappenWhileUpdatingUser = "Sorry!!ErrorHappenWhileUpdatingUser!";
+        
         public const string DoneSuccessfully = "DoneSuccessfully";
+        public const string DoneCreateUserSuccessfully = "DoneCreateUserSuccessfully";
+        public const string DoneUpdateUserSuccessfully = "DoneUpdateUserSuccessfully";
+        public const string DoneDeleteUserSuccessfully = "DoneDeleteUserSuccessfully";
         public const string SorryUserNotFound = "Sorry!!UserNotFound!";
         public const string SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser = "Sorry!!PasswordIncorrect.EnterCorrectPasswordForSelectedUser!";
         public const string SorryEmailNotConfirmedPleaseCheckYourEmail = "Sorry!!EmailNotConfirmedPleaseCheckYourEmail!";
@@ -101,6 +105,8 @@ namespace Dawem.Translations
         public const string SorryBranchNotFound = "Sorry!!BranchNotFound!";
         public const string ActionLogNotFound = "ActionLogNotFound!";
         public const string SorryYouMustEnterEmail = "Sorry!!YouMustEnterEmail!";
+        public const string SorryYouMustEnterMobileNumber = "Sorry!!YouMustEnterMobileNumber!";
+        
         public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
         public const string SorryYouMustEnterApplicationType = "Sorry!!YouMustEnterApplicationType!";
         public const string NoDataFound = "NoDataFound";
@@ -120,9 +126,23 @@ namespace Dawem.Translations
         public const string SorryErrorHappenWhenSendEmail = "Sorry!!ErrorHappenWhenSendEmail!";
         public const string PleaseCheckYourMailWeSentYouMailToResetYourPassword = "PleaseCheckYourMail!WeSentYouMailToResetYourPassword.";
         public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
-
+        public const string SorryScreenNotFound = "Sorry!!ScreenNotFound!";
         public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
         public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
         public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
+        public const string SorryThereIsNoBranchesForThisUser = "Sorry!!ThereIsNoBranchesForThisUser!";
+        public const string SorryYouMustEnterUser = "Sorry!!YouMustEnterUser!";
+
+
+        public const string SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail = "Sorry!!UserEmailIsDuplicated.YouMustEnterUniqueEmail!";
+        public const string SorryYouMustChooseOneOrMoreBranchForTheUser = "Sorry!!YouMustChooseOneOrMoreBranchForTheUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        /*public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
+        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";*/
+
     }
 }

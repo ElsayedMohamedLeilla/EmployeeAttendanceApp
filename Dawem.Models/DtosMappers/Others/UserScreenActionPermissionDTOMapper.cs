@@ -1,6 +1,6 @@
-﻿using SmartBusinessERP.Domain.Entities.Ohters;
-using SmartBusinessERP.Models.Context;
-using SmartBusinessERP.Models.Dtos.Others;
+﻿using Dawem.Domain.Entities.Ohters;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Others;
 
 namespace Dawem.Models.DtosMappers.Others
 {

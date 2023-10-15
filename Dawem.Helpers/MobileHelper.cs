@@ -1,4 +1,6 @@
-﻿namespace Dawem.Helpers
+﻿using Dawem.Translations;
+
+namespace Dawem.Helpers
 {
     public static class MobileHelper
     {

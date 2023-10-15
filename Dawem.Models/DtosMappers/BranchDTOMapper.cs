@@ -23,15 +23,11 @@ namespace Dawem.Models.DtosMappers
                 Address = branch.Address,
                 AddUserId = branch.AddUserId,
                 IsActive = branch.IsActive,
-                CurrencyId = branch.CurrencyId,
                 CountryId = branch.CountryId,
                 Email = branch.Email,
                 IsMainBranch = branch.IsMainBranch,
                 PhoneNumber = branch.PhoneNumber,
-                TaxRegistrationNumber = branch.TaxRegistrationNumber,
-                CommercialRecordNumber = branch.CommercialRecordNumber,
-                CountryGlobalName = userContext.Lang == "ar" ? branch?.Country?.NameAr : branch?.Country?.NameEn,
-                CurrencyGlobalName = userContext.Lang == "ar" ? branch?.Currency?.NameAr : branch?.Currency?.NameEn
+                CountryGlobalName = userContext.Lang == "ar" ? branch?.Country?.NameAr : branch?.Country?.NameEn
             };
             return DTO;
         }
@@ -47,13 +43,10 @@ namespace Dawem.Models.DtosMappers
                 Address = BranchDTO.Address,
                 AddUserId = BranchDTO.AddUserId,
                 IsActive = BranchDTO.IsActive,
-                CurrencyId = BranchDTO.CurrencyId,
                 CountryId = BranchDTO.CountryId,
                 Email = BranchDTO.Email,
                 IsMainBranch = BranchDTO.IsMainBranch,
-                PhoneNumber = BranchDTO.PhoneNumber,
-                TaxRegistrationNumber = BranchDTO.TaxRegistrationNumber,
-                CommercialRecordNumber = BranchDTO.CommercialRecordNumber
+                PhoneNumber = BranchDTO.PhoneNumber
             };
             return _branch;
         }

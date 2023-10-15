@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Lookups;
+﻿using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
@@ -7,6 +8,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
+using Dawem.Repository.Core;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
 using Dawem.Repository.Provider;
@@ -29,10 +31,9 @@ namespace Dawem.Repository.Manager
         private IUserTokenRepository userTokenRepository;
         private ICompanyRepository companyRepository;
         private IScreenRepository screenRepository;
-
-        
-
-
+        private IUserRoleRepository userRoleRepository;
+        private IUserGroupRepository userGroupRepository;
+       
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestHeaderContext _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
@@ -62,6 +63,12 @@ namespace Dawem.Repository.Manager
         public IScreenRepository ScreenRepository =>
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
 
+        public IUserRoleRepository UserRoleRepository =>
+        userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
 
+
+        public IUserGroupRepository UserGroupRepository =>
+        userGroupRepository ??= new UserGroupRepository(unitOfWork, generalSetting);
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Provider;
+﻿using Dawem.Enums.General;
+using Dawem.Models.Dtos.Provider;
 
 namespace Dawem.Models.Dtos.Lookups
 {
@@ -15,7 +16,7 @@ namespace Dawem.Models.Dtos.Lookups
 
 
         public int? ParentId { get; set; }
-        public Screen Parent { get; set; }
+        public ApplicationScreenType Parent { get; set; }
         public int Level { get; set; }
 
         public int Order { get; set; }

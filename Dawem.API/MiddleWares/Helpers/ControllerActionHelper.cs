@@ -1,4 +1,8 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.API.Controllers.Others;
+using Dawem.API.Controllers.Provider;
+using Dawem.API.Controllers.UserManagement;
+using Dawem.Enums.General;
+using Dawem.Models.Response.Others;
 
 namespace Dawem.API.MiddleWares.Helpers
 {
@@ -25,76 +29,11 @@ namespace Dawem.API.MiddleWares.Helpers
 
                         break;
 
-                    case nameof(UnitController):
-
-                        screen = ApplicationScreenType.UnitsScreen;
-                        if (actionName == nameof(UnitController.GetById) || actionName == nameof(UnitController.GetInfo) || actionName == nameof(UnitController.Get))
-                        {
-                            method = ApiMethod.View;
-                        }
-                        else if (actionName == nameof(UnitController.Create))
-                        {
-                            method = ApiMethod.Add;
-                        }
-                        else if (actionName == nameof(UnitController.Update))
-                        {
-                            method = ApiMethod.Update;
-                        }
-                        else if (actionName == nameof(UnitController.Delete))
-                        {
-                            method = ApiMethod.Delete;
-                        }
-
-                        break;
-
-                    case nameof(PaymentMethodController):
-
-                        screen = ApplicationScreenType.PaymentMethodsScreen;
-                        if (actionName == nameof(PaymentMethodController.GetById) || actionName == nameof(PaymentMethodController.GetInfo) || actionName == nameof(PaymentMethodController.Get))
-                        {
-                            method = ApiMethod.View;
-                        }
-                        else if (actionName == nameof(PaymentMethodController.Create))
-                        {
-                            method = ApiMethod.Add;
-                        }
-                        else if (actionName == nameof(PaymentMethodController.Update))
-                        {
-                            method = ApiMethod.Update;
-                        }
-                        else if (actionName == nameof(PaymentMethodController.Delete))
-                        {
-                            method = ApiMethod.Delete;
-                        }
-
-                        break;
-
-
-                    case nameof(StoreController):
-
-                        screen = ApplicationScreenType.StoresScreen;
-                        if (actionName == nameof(StoreController.GetById) || actionName == nameof(StoreController.GetInfo) || actionName == nameof(StoreController.Get))
-                        {
-                            method = ApiMethod.View;
-                        }
-                        else if (actionName == nameof(StoreController.Create))
-                        {
-                            method = ApiMethod.Add;
-                        }
-                        else if (actionName == nameof(StoreController.Update))
-                        {
-                            method = ApiMethod.Update;
-                        }
-                        else if (actionName == nameof(StoreController.Delete))
-                        {
-                            method = ApiMethod.Delete;
-                        }
-
-                        break;
+                   
                     case nameof(UserController):
 
                         screen = ApplicationScreenType.UsersScreen;
-                        if (actionName == nameof(UserController.GetInfo) || actionName == nameof(StoreController.Get))
+                        if (actionName == nameof(UserController.GetInfo) || actionName == nameof(UserController.Get))
                         {
                             method = ApiMethod.View;
                         }

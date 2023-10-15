@@ -129,7 +129,7 @@ namespace Dawem.BusinessLogic.Others
         //        ActionLogDTOMapper.InitActionLogContext(userContext);
         //        result.ActionLogs = ActionLogDTOMapper.Map(actionLogs);
         //        result.Status = ResponseStatus.Success;
-        //        result.TotalCount = query.Count();
+        //        result.TotalCount = await query.CountAsync()
         //    }
         //    catch (Exception ex)
         //    {

@@ -1,23 +1,26 @@
 using Dawem.Contract.BusinessLogic.Localization;
 using Dawem.Contract.Repository.Localization;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Response;
+using Dawem.Repository.Manager;
 
 namespace Dawem.BusinessLogic.Localization
 {
     public class TranslationBL : ITranslationBL
     {
 
-        private readonly ITranslationRepository _translationRepository;
+        private readonly IRepositoryManager repositoryManager;
+
         private readonly IUnitOfWork<ApplicationDBContext> _unitOfWork;
-        public TranslationBL(IUnitOfWork<ApplicationDBContext> unitOfWork, ITranslationRepository translationRepository)
+        public TranslationBL(IUnitOfWork<ApplicationDBContext> unitOfWork,RepositoryManager _repositoryManager)
         {
             _unitOfWork = unitOfWork;
-            _translationRepository = translationRepository;
+            repositoryManager = _repositoryManager;
         }
 
         public BaseResponseT<bool> RefreshCachedTranslation()
@@ -25,7 +28,7 @@ namespace Dawem.BusinessLogic.Localization
             BaseResponseT<bool> response = new BaseResponseT<bool>();
             try
             {
-                var query = _translationRepository.Get();
+                var query = repositoryManager.TranslationRepository.Get();
                 var translations = query.ToList();
                 if (translations != null)
                 {

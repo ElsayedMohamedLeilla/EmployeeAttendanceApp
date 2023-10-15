@@ -1,5 +1,4 @@
-﻿using Dawem.API.Controllers;
-using Dawem.Contract.BusinessLogic.Lookups;
+﻿using Dawem.Contract.BusinessLogic.Lookups;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;

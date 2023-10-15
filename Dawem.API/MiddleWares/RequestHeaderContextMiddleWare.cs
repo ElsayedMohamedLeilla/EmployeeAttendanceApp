@@ -6,7 +6,6 @@ using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.Extensions.Options;
-using SmartBusinessERP.Repository.UserManagement.Contract;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 

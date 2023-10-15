@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Provider;
-using Dawem.Enums.General;
+﻿using Dawem.Enums.General;
 using Dawem.Models.Dtos.Provider;
 
 namespace Dawem.Models.Dtos.Shared

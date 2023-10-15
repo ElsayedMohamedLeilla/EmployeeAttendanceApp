@@ -20,15 +20,15 @@ namespace Dawem.Domain.Entities.UserManagement
         public bool IsAdmin { get; set; }
         public DateTime BirthDate { get; set; }
         public bool IsActive { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public Gender Gender { get; set; }
-        public string? MobileNumber { get; set; }
+        public string MobileNumber { get; set; }
 
         [NotMapped]
         public List<UserRole> UserRols { get; set; }
-        public List<UserBranch?>? UserBranches { get; set; }
-        public List<UserGroup?>? UserGroups { get; set; }
+        public List<UserBranch> UserBranches { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
         public int CompanyId { get; set; }
         public int BranchId { get; set; }
         public bool Status { get; set; }

@@ -106,7 +106,6 @@ namespace Dawem.BusinessLogic.Provider
                 Branches = branches,
                 TotalCount = await query.CountAsync()
             };
-
         }
         public async Task<bool> Update(BranchDTO branchDTO)
         {

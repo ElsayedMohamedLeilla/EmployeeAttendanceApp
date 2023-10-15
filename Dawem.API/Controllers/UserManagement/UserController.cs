@@ -1,13 +1,11 @@
-﻿using Dawem.API.Controllers;
+﻿using Dawem.Contract.BusinessLogic.UserManagement;
+using Dawem.Enums.General;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
+using Dawem.Models.Dtos.Identity;
+using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusinessERP.BusinessLogic.UserManagement.Contract;
-using SmartBusinessERP.Enums;
-using SmartBusinessERP.Models.Dtos.Identity;
-using SmartBusinessERP.Models.Response;
-using SmartBusinessERP.Models.Response.Identity;
-using SmartBusinessERP.Repository.UserManagement;
 
 namespace Dawem.API.Controllers.UserManagement
 {
@@ -16,20 +14,28 @@ namespace Dawem.API.Controllers.UserManagement
     [Authorize]
     public class UserController : BaseController
     {
-        private readonly ISmartUserBL smartUserBL;
-        private readonly SmartUserManagerRepository userManager;
+        private readonly IUserBL userBL;
 
-
-        public UserController(ISmartUserBL _smartUserBL, SmartUserManagerRepository _userManager)
+        public UserController(IUserBL _smartUserBL, RequestHeaderContext _requestHeaderContext) : base(_requestHeaderContext)
         {
-            smartUserBL = _smartUserBL;
-            userManager = _userManager;
-
+            userBL = _smartUserBL;
         }
 
         [HttpPost]
 
-        public async Task<ActionResult<SmartUserSearchResult>> Get(UserSearchCriteria criteria)
+        public async Task<ActionResult> Get(UserSearchCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await userBL.Get(criteria);
+            return Success(result.Users, result.TotalCount);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetInfo(GetUserInfoCriteria criteria)
         {
 
             if (criteria == null)
@@ -37,85 +43,44 @@ namespace Dawem.API.Controllers.UserManagement
                 return BadRequest();
             }
 
-            SmartUserSearchResult result = await smartUserBL.Get(criteria);
-
-            return Ok(result);
+            var result = await userBL.GetInfo(criteria);
+            return Success(result);
         }
 
         [HttpPost]
-
-        public async Task<ActionResult<GetSmartUserInfoResponse>> GetInfo(GetSmartUserInfoCriteria criteria)
+        [Authorize(Roles = DawemKeys.FullAccess)]
+        public async Task<ActionResult> Create(CreatedUser createdUser)
         {
-
-            if (criteria == null)
-            {
-                return BadRequest();
-            }
-
-            var result = await smartUserBL.GetInfo(criteria);
-
-            return Ok(result);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "FullAccess")]
-
-        public async Task<ActionResult<BaseResponseT<CreatedUser>>> Create(CreatedUser createdUser)
-        {
-
             if (createdUser == null)
             {
                 return BadRequest();
             }
 
             Update(createdUser, InserationMode.Insert);
-
-
-
-            BaseResponseT<CreatedUser> result = await smartUserBL.Create(createdUser);
-
-            return Ok(result);
+            return Success(await userBL.Create(createdUser), messageCode: DawemKeys.DoneCreateUserSuccessfully);
         }
-
-
-
         [HttpPost]
-        [Authorize(Roles = "FullAccess")]
-        public async Task<ActionResult<BaseResponseT<UpdatedUser>>> Update(CreatedUser updatedUser)
+        [Authorize(Roles = DawemKeys.FullAccess)]
+        public async Task<ActionResult> Update(CreatedUser updatedUser)
         {
-
             if (updatedUser == null)
             {
                 return BadRequest();
             }
-
-
             Update(updatedUser, InserationMode.Update);
-
-            BaseResponseT<CreatedUser> result = await smartUserBL.Update(updatedUser);
-
-            return Ok(result);
+            return Success(await userBL.Update(updatedUser), messageCode: DawemKeys.DoneUpdateUserSuccessfully);
 
         }
 
-
-
         [HttpPost]
-        [Authorize()]
-        public async Task<ActionResult<BaseResponseT<bool>>> DeleteUser([FromBody] int UserId)
+        [Authorize(Roles = DawemKeys.FullAccess)]
+        public async Task<ActionResult> DeleteUser([FromBody] int UserId)
         {
-
             if (!ModelState.IsValid || UserId <= 0)
             {
                 return BadRequest();
             }
-            BaseResponseT<bool> result = await smartUserBL.DeleteById(UserId);
-            return Ok(result);
+            return Success(await userBL.DeleteById(UserId), messageCode: DawemKeys.DoneDeleteUserSuccessfully);
         }
-
-
-
-
-
     }
 }

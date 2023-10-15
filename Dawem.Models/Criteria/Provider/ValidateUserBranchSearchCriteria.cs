@@ -1,6 +1,4 @@
-﻿using Dawem.Models.Criteria;
-
-namespace Dawem.Models.Criteria.Provider
+﻿namespace Dawem.Models.Criteria.Provider
 {
     public class ValidateUserBranchSearchCriteria : BaseCriteria
     {

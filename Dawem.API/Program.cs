@@ -4,9 +4,10 @@ using Dawem.Data;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.AutoMapper;
 using Dawem.Models.Generic;
+using Dawem.Repository;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Glamatek.API.MiddleWares;
+using Dawem.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,6 @@ using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using System.ComponentModel;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(DawemKeys.DawemConnectionString) ??
@@ -39,7 +39,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(AllowSpecificOrigins,
         builder => builder
-
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowAnyOrigin());
@@ -82,8 +81,8 @@ builder.Services.Configure<IdentityOptions>(opt => { opt.SignIn.RequireConfirmed
 
 builder.Services.AddTransient<UserManagerRepository>();
 builder.Services.ConfigureSQLContext(builder.Configuration);
-builder.Services.ConfigureRepositoryContainer();
-builder.Services.ConfigureBLContainer();
+builder.Services.ConfigureBLValidation();
+builder.Services.ConfigureRepository();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -138,7 +137,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+//var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (/*app.Environment.IsDevelopment() || app.Environment.IsProduction()*/true)

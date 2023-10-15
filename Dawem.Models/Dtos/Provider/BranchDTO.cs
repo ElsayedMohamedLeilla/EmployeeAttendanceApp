@@ -27,9 +27,6 @@ namespace Dawem.Models.Dtos.Provider
         public string? MobileNumber { get; set; }
         public string? Email { get; set; }
 
-
-        public List<FinancialYearDto>? financialYears { get; set; }
-
         public string? TaxRegistrationNumber { get; set; }
 
         public string? CommercialRecordNumber { get; set; }

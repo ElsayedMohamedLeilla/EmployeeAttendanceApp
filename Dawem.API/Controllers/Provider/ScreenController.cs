@@ -1,9 +1,9 @@
-﻿using Dawem.API.Controllers;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Domain.Entities.Lookups;
+using Dawem.Models.Dtos.Lookups;
+using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartBusinessERP.Domain.Entities.Lookups;
-using SmartBusinessERP.Models.Dtos.Lookups;
 
 namespace Dawem.API.Controllers.Provider
 {

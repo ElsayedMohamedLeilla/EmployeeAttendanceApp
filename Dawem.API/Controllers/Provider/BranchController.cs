@@ -1,5 +1,4 @@
-﻿using Dawem.API.Controllers;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Dtos.Provider;

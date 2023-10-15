@@ -1,5 +1,6 @@
 ﻿using Dawem.Enums.General;
 using Dawem.Models.Shared;
+using Dawem.Translations;
 
 namespace Dawem.Models.Response
 {

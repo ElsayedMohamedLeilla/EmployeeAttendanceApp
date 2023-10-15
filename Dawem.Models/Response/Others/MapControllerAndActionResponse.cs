@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Response.Others
+﻿using Dawem.Enums.General;
+
+namespace Dawem.Models.Response.Others
 {
     public class MapControllerAndActionResponse : BaseResponse
     {

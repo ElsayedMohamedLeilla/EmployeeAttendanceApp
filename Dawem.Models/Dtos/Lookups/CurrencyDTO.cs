@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Lookups
+﻿using Dawem.Domain.Entities.Lookups;
+
+namespace Dawem.Models.Dtos.Lookups
 {
     public class CurrencyDTO
     {

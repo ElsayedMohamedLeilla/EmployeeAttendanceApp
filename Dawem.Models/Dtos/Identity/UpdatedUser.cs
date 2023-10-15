@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Identity
+﻿using Dawem.Enums.General;
+
+namespace Dawem.Models.Dtos.Identity
 {
     public class UpdatedUser
     {

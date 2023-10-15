@@ -1,5 +1,4 @@
-﻿using Dawem.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Data.UnitOfWork
 {

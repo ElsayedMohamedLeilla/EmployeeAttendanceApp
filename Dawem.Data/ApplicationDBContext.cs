@@ -76,6 +76,17 @@ namespace Dawem.Data
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + DawemKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<UserGroup>().HasOne(p => p.User).WithMany(b => b.UserGroups).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
+
+
+
+
+            builder.Entity<Translation>()
+                .Property(p => p.IsActive)
+                .HasDefaultValue(true);
+
+            builder.Entity<Translation>()
+                .Property(p => p.IsDeleted)
+                .HasDefaultValue(false);
         }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }

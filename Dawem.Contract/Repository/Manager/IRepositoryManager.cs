@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
@@ -17,6 +18,8 @@ namespace Dawem.Contract.Repository.Manager
         IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }
         IUserGroupRepository UserGroupRepository { get; }
+        ITranslationRepository TranslationRepository { get; }
+
 
     }
 }

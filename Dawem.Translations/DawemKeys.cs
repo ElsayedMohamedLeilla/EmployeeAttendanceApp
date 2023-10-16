@@ -3,7 +3,7 @@
     public static class DawemKeys
     {
         public const string DawemConnectionString = "DawemConnectionString";
-        public const string ConnectionStringNotFound = "Connection string 'SmartBusinessERPConnection' not found.";
+        public const string ConnectionStringNotFound = "Connection string 'DawemConnectionString' not found.";
         public const string AllowSpecificOrigins = "_allowSpecificOrigins";
         public const string AppsettingsFile = "appsettings.json";
         public const string AccountFeatures = "AccountFeatures";

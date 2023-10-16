@@ -16,11 +16,11 @@ namespace Dawem.Domain.Entities.Ohters
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public int BranchId { get; set; }
         [ForeignKey(nameof(BranchId))]
-        public virtual Branch? Branch { get; set; }
+        public virtual Branch Branch { get; set; }
 
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public virtual User? User { get; set; }
+        public virtual MyUser User { get; set; }
         public ApplicationScreenType ActionPlace { get; set; }
         public ApiMethod ActionType { get; set; }
 

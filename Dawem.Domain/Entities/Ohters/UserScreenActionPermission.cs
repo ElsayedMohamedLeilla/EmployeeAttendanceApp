@@ -16,7 +16,7 @@ namespace Dawem.Domain.Entities.Ohters
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
         public int? UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public virtual User? User { get; set; }
+        public virtual MyUser? User { get; set; }
 
         public int? GroupId { get; set; }
         [ForeignKey(nameof(GroupId))]

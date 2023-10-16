@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.UserManagement
 {
-    [Table(nameof(User) + DawemKeys.S)]
-    public class User : IdentityUser<int>, IBaseEntity
+    [Table(nameof(MyUser) + DawemKeys.S)]
+    public class MyUser : IdentityUser<int>, IBaseEntity
     {
         // public string verificationCode { get; set; }
 

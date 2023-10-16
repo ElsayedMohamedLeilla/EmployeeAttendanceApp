@@ -1,20 +1,25 @@
 using Dawem.API;
 using Dawem.API.MiddleWares;
+using Dawem.BusinessLogic;
+using Dawem.BusinessLogic.Localization;
 using Dawem.Data;
+using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.AutoMapper;
+using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository;
+using Dawem.Repository.Manager;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(DawemKeys.DawemConnectionString) ??
@@ -45,7 +50,7 @@ builder.Services.AddCors(options =>
 });
 
 
-builder.Services.AddIdentityCore<User>(options =>
+builder.Services.AddIdentityCore<MyUser>(options =>
 {
 
     options.SignIn.RequireConfirmedAccount = true;
@@ -81,6 +86,7 @@ builder.Services.Configure<IdentityOptions>(opt => { opt.SignIn.RequireConfirmed
 
 builder.Services.AddTransient<UserManagerRepository>();
 builder.Services.ConfigureSQLContext(builder.Configuration);
+builder.Services.ConfigureRepositoryContainer();
 builder.Services.ConfigureBLValidation();
 builder.Services.ConfigureRepository();
 builder.Services.AddHttpContextAccessor();
@@ -93,7 +99,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-    options.SerializerSettings.Converters.Add(new Dawem.API.DateTimeConverter());
+    options.SerializerSettings.Converters.Add(new DateTimeConverter());
 });
 
 builder.Services.AddAutoMapper((serviceProvider, config) =>
@@ -109,41 +115,54 @@ ApplicationDBContext context = serviceScope.ServiceProvider.GetRequiredService<A
 SeedDB.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
 app.UseMiddleware<RequestHeaderContextMiddleWare>();
 
+if (!app.Environment.IsDevelopment())
+{
+    context.Database.Migrate();
+}
 
+IServiceScopeFactory serviceScopeFactory = serviceScope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
+IServiceProvider serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
+IUnitOfWork<ApplicationDBContext> unitOfWork = serviceProvider.GetService<IUnitOfWork<ApplicationDBContext>>();
+GeneralSetting generalSetting = serviceProvider.GetService<GeneralSetting>();
+RepositoryManager repositoryManager = new(unitOfWork, generalSetting, new RequestHeaderContext());
+new TranslationBL(unitOfWork, repositoryManager).RefreshCachedTranslation();
 
-
-
-
-
-
-
-
-
-
-
-
-// Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (/*app.Environment.IsDevelopment() || app.Environment.IsProduction()*/true)
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
+app.UseStaticFiles();
 
+List<CultureInfo> supportedCultures = new()
+{
+                    new CultureInfo(DawemKeys.En),
+                    new CultureInfo(DawemKeys.Ar)
+                };
+
+app.UseCors(AllowSpecificOrigins);
+
+RequestLocalizationOptions requestLocalizationOptions = new()
+{
+    DefaultRequestCulture = new RequestCulture(DawemKeys.En),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseRequestLocalization(requestLocalizationOptions);
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ActionLogMiddleWare>();
+//app.UseMiddleware<UserScreenActionPermissionMiddleWare>();
 
 app.MapControllers();
-
 app.Run();
+

@@ -48,8 +48,6 @@ namespace Dawem.API
 
             }
            );
-
-
         }
 
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
@@ -78,7 +76,7 @@ namespace Dawem.API
                 };
             });
         }
-        public static void ConfigureRepositoryContainer(this IServiceCollection services)
+        public static void ConfigureRepositoryContainerOld(this IServiceCollection services)
         {
             services.AddScoped<ApplicationDBContext>();
             services.AddScoped<IUnitOfWork<ApplicationDBContext>, UnitOfWork<ApplicationDBContext>>();
@@ -92,7 +90,7 @@ namespace Dawem.API
         public static void AddUserConfiguration(this IServiceCollection services)
         {
 
-            IdentityBuilder myUserBuilder = services.AddIdentity<User, Role>(options =>
+            IdentityBuilder myUserBuilder = services.AddIdentity<MyUser, Role>(options =>
             {
                 //  options.SignIn.RequireConfirmedAccount = true;
 

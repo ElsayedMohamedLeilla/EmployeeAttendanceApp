@@ -5,7 +5,7 @@ namespace Dawem.Models.Context
 {
     public class RequestHeaderContext
     {
-        public User? User { get; set; }
+        public MyUser? User { get; set; }
 
         public string? Lang { get; set; }
         public int? UserId { get; set; }

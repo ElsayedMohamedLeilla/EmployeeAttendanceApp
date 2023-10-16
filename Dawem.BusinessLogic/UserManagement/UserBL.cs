@@ -56,8 +56,8 @@ namespace Dawem.BusinessLogic.UserManagement
 
         public async Task<GetUsersResponseModel> Get(UserSearchCriteria criteria)
         {
-            var query = repositoryManager.UserRepository.GetAsQueryable(criteria, nameof(User.UserBranches));
-            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(User.Id), DawemKeys.Desc);
+            var query = repositoryManager.UserRepository.GetAsQueryable(criteria, nameof(MyUser.UserBranches));
+            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(MyUser.Id), DawemKeys.Desc);
 
             #region paging
 
@@ -80,8 +80,8 @@ namespace Dawem.BusinessLogic.UserManagement
         {
             var user = await repositoryManager.UserRepository
             .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id,
-            nameof(User.UserBranches) + DawemKeys.Comma + nameof(User.UserBranches) + DawemKeys.Dot + nameof(UserBranch.Branch) +
-             DawemKeys.Comma + nameof(User.UserGroups) + DawemKeys.Comma + nameof(User.UserGroups) + DawemKeys.Dot + nameof(UserGroup.Group)) ??
+            nameof(MyUser.UserBranches) + DawemKeys.Comma + nameof(MyUser.UserBranches) + DawemKeys.Dot + nameof(UserBranch.Branch) +
+             DawemKeys.Comma + nameof(MyUser.UserGroups) + DawemKeys.Comma + nameof(MyUser.UserGroups) + DawemKeys.Dot + nameof(UserGroup.Group)) ??
              throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
 
             UserDTOMapper.InitUserContext(requestHeaderContext);
@@ -91,7 +91,7 @@ namespace Dawem.BusinessLogic.UserManagement
         }
         public async Task<int> Create(CreatedUser createdUser)
         {
-            User user = mapper.Map<User>(createdUser);
+            MyUser user = mapper.Map<MyUser>(createdUser);
             user.MainBranchId = requestHeaderContext.BranchId;
             user.EmailConfirmed = true;
             user.UserName = user.Email;
@@ -99,7 +99,7 @@ namespace Dawem.BusinessLogic.UserManagement
             #region Model Validation
 
             var userValidator = new UserValidator();
-            var userValidatorResult = userValidator.Validate(user);
+            var userValidatorResult = userValidator.Validate(createdUser);
             if (!userValidatorResult.IsValid)
             {
                 var error = userValidatorResult.Errors.FirstOrDefault();
@@ -169,12 +169,12 @@ namespace Dawem.BusinessLogic.UserManagement
         public async Task<bool> Update(CreatedUser updatedUser)
         {
             updatedUser.MainBranchId = requestHeaderContext.BranchId ?? 0;
-            User user = mapper.Map<User>(updatedUser);
+            MyUser user = mapper.Map<MyUser>(updatedUser);
 
             #region Model Validation
 
             var userValidator = new UserValidator();
-            var userValidatorResult = userValidator.Validate(user);
+            var userValidatorResult = userValidator.Validate(updatedUser);
             if (!userValidatorResult.IsValid)
             {
                 var error = userValidatorResult.Errors.FirstOrDefault();
@@ -326,7 +326,7 @@ namespace Dawem.BusinessLogic.UserManagement
         }
         public async Task<bool> IsEmailUnique(ValidationItems validationItem)
         {
-            User duplicateUser = null;
+            MyUser duplicateUser = null;
             if (string.IsNullOrEmpty(validationItem.Item))
             {
                 throw new ArgumentNullException(nameof(validationItem));

@@ -26,8 +26,13 @@ namespace Dawem.Validation.FluentValidation
             RuleFor(signUpModel => signUpModel.ConfirmPassword).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterConfirmPassword);
 
+            RuleFor(signUpModel => signUpModel.Password).Length(6, 50).
+                  WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
+
             RuleFor(signUpModel => signUpModel).Must(signUpModel => signUpModel.Password == signUpModel.ConfirmPassword).
                   WithMessage(DawemKeys.SorryPasswordAndConfirmPasswordMustEqual);
+
+           
 
             RuleFor(signUpModel => signUpModel.UserEmail).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterUserEmail);

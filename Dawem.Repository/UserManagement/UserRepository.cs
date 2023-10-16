@@ -10,7 +10,7 @@ using LinqKit;
 
 namespace Dawem.Repository.UserManagement
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
         private readonly RequestHeaderContext requestHeaderContext;
         public UserRepository(RequestHeaderContext _requestHeaderContext, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
@@ -18,9 +18,9 @@ namespace Dawem.Repository.UserManagement
             requestHeaderContext = _requestHeaderContext;
         }
 
-        public IQueryable<User> GetAsQueryable(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString)
+        public IQueryable<MyUser> GetAsQueryable(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString)
         {
-            var userPredicate = PredicateBuilder.New<User>(true);
+            var userPredicate = PredicateBuilder.New<MyUser>(true);
 
             if (requestHeaderContext.IsMainBranch && criteria.ForGridView)
             {

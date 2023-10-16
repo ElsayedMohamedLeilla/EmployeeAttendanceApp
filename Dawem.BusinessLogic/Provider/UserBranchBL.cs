@@ -45,7 +45,7 @@ namespace Dawem.BusinessLogic.Provider
         {
             #region Get User Using AccessToken
 
-            User user = new();
+            MyUser user = new();
 
             var Email = criteria.UserName;
             if (!string.IsNullOrEmpty(Email))

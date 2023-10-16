@@ -9,10 +9,10 @@ namespace Dawem.Domain.Entities.Provider
     {
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public virtual User? User { get; set; }
+        public virtual MyUser User { get; set; }
 
-        public int BranchId { get; set; }
+        public new int BranchId { get; set; }
         [ForeignKey(nameof(BranchId))]
-        public virtual Branch? Branch { get; set; }
+        public virtual Branch Branch { get; set; }
     }
 }

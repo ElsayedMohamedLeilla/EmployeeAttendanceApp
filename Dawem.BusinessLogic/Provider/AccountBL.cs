@@ -62,12 +62,12 @@ namespace Dawem.BusinessLogic.Provider
             generator = _generator;
             signUpBLValidation = _registerationValidatorBL;
         }
-        private async Task<User> CreateUser(SignUpModel model)
+        private async Task<MyUser> CreateUser(SignUpModel model)
         {
             await unitOfWork.CreateTransactionAsync();
 
             string RoleName = DawemKeys.FullAccess;
-            var user = new User()
+            var user = new MyUser()
             {
                 UserName = model.UserEmail,
                 Email = model.UserEmail,
@@ -121,7 +121,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Get User Using AccessToken
 
-            User user = new();
+            MyUser user = new();
             var Email = signInModel.Email;
             if (!string.IsNullOrEmpty(Email))
             {

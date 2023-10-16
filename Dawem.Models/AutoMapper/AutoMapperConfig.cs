@@ -13,14 +13,14 @@ namespace Dawem.Models.AutoMapper
             CreateMap<Screen, ScreenDto>();
 
 
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<MyUser, UserDTO>().ReverseMap();
 
-            CreateMap<User, UpdatedUser>().ForMember(dest => dest.UserRols, opt => opt.Ignore()).ForMember(dest => dest.userBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
-            CreateMap<UpdatedUser, User>().ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
-            CreateMap<User, CreatedUser>().ForMember(dest => dest.UserRols, opt => opt.Ignore()).ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
-            CreateMap<CreatedUser, User>().ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore()).ForMember(dest => dest.UserRols, opt => opt.Ignore());
+            CreateMap<MyUser, UpdatedUser>().ForMember(dest => dest.UserRols, opt => opt.Ignore()).ForMember(dest => dest.userBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
+            CreateMap<UpdatedUser, MyUser>().ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
+            CreateMap<MyUser, CreatedUser>().ForMember(dest => dest.UserRols, opt => opt.Ignore()).ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore());
+            CreateMap<CreatedUser, MyUser>().ForMember(dest => dest.UserBranches, opt => opt.Ignore()).ForMember(dest => dest.UserGroups, opt => opt.Ignore()).ForMember(dest => dest.UserRols, opt => opt.Ignore());
 
-            CreateMap<CreatedScreen, User>().ForMember(dest => dest.UserBranches, opt => opt.Ignore());
+            CreateMap<CreatedScreen, MyUser>().ForMember(dest => dest.UserBranches, opt => opt.Ignore());
             CreateMap<CreatedScreen, Screen>().ReverseMap();
 
 

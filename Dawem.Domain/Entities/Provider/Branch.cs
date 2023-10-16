@@ -24,7 +24,7 @@ namespace Dawem.Domain.Entities.Provider
         [ForeignKey(nameof(MainBranchId))]
 
         public Branch MainBranch { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         public bool IsMainBranch { get; set; }
         public string Address { get; set; }

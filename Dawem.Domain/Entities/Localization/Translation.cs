@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Dawem.Translations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace Dawem.Domain.Entities.Localization
 {
-    [Table(nameof(Translation) + "s")]
+    [Table(nameof(Translation) + DawemKeys.S)]
     public class Translation
     {
         [Key]
@@ -26,8 +26,6 @@ namespace Dawem.Domain.Entities.Localization
         public int? CompanyId { get; set; }
 
         public int? BranchId { get; set; }
-
-        [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }
 
@@ -39,11 +37,11 @@ namespace Dawem.Domain.Entities.Localization
             DeletionDate = DateTime.UtcNow;
         }
         [StringLength(500)]
-        public string? KeyWord { get; set; }
+        public string KeyWord { get; set; }
 
-        public string? TransWords { get; set; }
+        public string TransWords { get; set; }
 
-        public string? Lang { get; set; }
+        public string Lang { get; set; }
 
 
 

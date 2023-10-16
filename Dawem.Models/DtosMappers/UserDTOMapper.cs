@@ -16,7 +16,7 @@ namespace Dawem.Models.DtosMappers
             UserBranchDTOMapper.InitUserContext(userContext);
         }
 
-        public static UserDTO Map(User user)
+        public static UserDTO Map(MyUser user)
         {
             if (user == null) return null;
             var DTO = new UserDTO()
@@ -35,14 +35,14 @@ namespace Dawem.Models.DtosMappers
             };
             return DTO;
         }
-        public static List<UserDTO> MapListUsers(List<User> users)
+        public static List<UserDTO> MapListUsers(List<MyUser> users)
         {
             if (users == null) return null;
 
             return users.Select(Map).ToList();
         }
 
-        public static UserInfo MapInfo(User user)
+        public static UserInfo MapInfo(MyUser user)
         {
             if (user == null) return null;
             var DTO = new UserInfo()
@@ -67,10 +67,10 @@ namespace Dawem.Models.DtosMappers
 
 
 
-        public static User Map(UserDTO userDTO)
+        public static MyUser Map(UserDTO userDTO)
         {
             if (userDTO == null) return null;
-            var _user = new User()
+            var _user = new MyUser()
             {
                 Id = userDTO.Id,
                 Email = userDTO.Email,

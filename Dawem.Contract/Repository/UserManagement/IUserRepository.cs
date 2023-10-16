@@ -5,8 +5,8 @@ using Dawem.Translations;
 
 namespace Dawem.Contract.Repository.UserManagement
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IUserRepository : IGenericRepository<MyUser>
     {
-        IQueryable<User> GetAsQueryable(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString);
+        IQueryable<MyUser> GetAsQueryable(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString);
     }
 }

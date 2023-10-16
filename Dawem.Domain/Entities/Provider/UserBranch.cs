@@ -11,7 +11,7 @@ namespace Dawem.Domain.Entities.Provider
         [ForeignKey(nameof(UserId))]
         public virtual MyUser User { get; set; }
 
-        public new int BranchId { get; set; }
+        public int BranchId { get; set; }
         [ForeignKey(nameof(BranchId))]
         public virtual Branch Branch { get; set; }
     }

@@ -1,14 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Lookups
 {
     [Table("Currencies")]
-    public class Currency
+    public class Currency : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public string NameAr { get; set; }
         public string NameEn { get; set; }
         public string Code { get; set; }
@@ -16,9 +12,7 @@ namespace Dawem.Domain.Entities.Lookups
         public int? CountryId { get; set; }
 
         [ForeignKey(nameof(CountryId))]
-        public Country? Country { get; set; }
-
-
+        public Country Country { get; set; }
 
     }
 }

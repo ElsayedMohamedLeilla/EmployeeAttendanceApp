@@ -10,8 +10,6 @@ namespace Dawem.Domain.Entities.UserManagement
     [Table(nameof(MyUser) + DawemKeys.S)]
     public class MyUser : IdentityUser<int>, IBaseEntity
     {
-        // public string verificationCode { get; set; }
-
         public DateTime AddedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public int? AddUserId { get; set; }
@@ -24,13 +22,17 @@ namespace Dawem.Domain.Entities.UserManagement
         public string LastName { get; set; }
         public Gender Gender { get; set; }
         public string MobileNumber { get; set; }
-
         [NotMapped]
         public List<UserRole> UserRols { get; set; }
         public List<UserBranch> UserBranches { get; set; }
         public List<UserGroup> UserGroups { get; set; }
         public int CompanyId { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public virtual Company Company { get; set; }
         public int BranchId { get; set; }
+        [ForeignKey(nameof(BranchId))]
+        public virtual Branch Branch { get; set; }
         public bool Status { get; set; }
+        public DateTime? DeletionDate { get; set; }
     }
 }

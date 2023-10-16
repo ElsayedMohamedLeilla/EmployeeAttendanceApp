@@ -9,8 +9,8 @@ namespace Dawem.Domain.Entities.Core
         public int MainBranchId { get; set; }
 
         [ForeignKey(nameof(MainBranchId))]
-        public virtual Branch? MainBranch { get; set; }
-        public string? NameEn { get; set; }
-        public string? NameAr { get; set; }
+        public virtual Branch MainBranch { get; set; }
+        public string NameEn { get; set; }
+        public string NameAr { get; set; }
     }
 }

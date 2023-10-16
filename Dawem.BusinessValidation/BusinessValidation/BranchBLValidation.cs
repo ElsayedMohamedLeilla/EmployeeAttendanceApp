@@ -38,7 +38,7 @@ namespace Dawem.Validation.BusinessValidation
 
             if (userContext == null)
             {
-                throw new BusinessValidationException(DawemKeys.SorryuserContextNull);
+                throw new BusinessValidationException(DawemKeys.SorryUserContextNull);
             }
 
             if (!userContext.IsMainBranch && changeType == ChangeType.View)

@@ -82,7 +82,7 @@
 
         // to be translated
 
-        public const string SorryuserContextNull = "Sorry!!UserContextNull!";
+        public const string SorryUserContextNull = "Sorry!!UserContextNull!";
         public const string SorryYouCurrentBranchIsNotMainBranch = "Sorry!!YouCurrentBranchIsNotMainBranch!";
         public const string SorryAddCanBeDoneInMainBranchOnly = "SorryAddCanBeDoneInMainBranchOnly!";
         public const string SorryEditCanBeDoneInMainBranchOnly = "SorryEditCanBeDoneInMainBranchOnly!";

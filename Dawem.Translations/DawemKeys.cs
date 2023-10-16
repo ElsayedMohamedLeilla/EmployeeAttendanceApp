@@ -85,58 +85,75 @@
         public const string SorryUserContextNull = "Sorry!!UserContextNull!";
         public const string SorryYouCurrentBranchIsNotMainBranch = "Sorry!!YouCurrentBranchIsNotMainBranch!";
         public const string SorryAddCanBeDoneInMainBranchOnly = "SorryAddCanBeDoneInMainBranchOnly!";
+
+
         public const string SorryEditCanBeDoneInMainBranchOnly = "SorryEditCanBeDoneInMainBranchOnly!";
+
         public const string SorryDeleteCanBeDoneInMainBranchOnly = "SorryDeleteCanBeDoneInMainBranchOnly!";
+
         public const string SorryThereIsMoreThanOneBranchForChoosenUserYouMustChooseBranchToEnterWith = "SorryThereIsMoreThanOneBranchForChoosenUser.YouMustChooseBranchToEnterWith!";
         public const string SorryThisUserDoNotHaveAccessToSelectedBranch = "Sorry!!ThisUserDoNotHaveAccessToSelectedBranch!";
-        public const string YouMustChooseCountrys = "YouMustChooseCountry!";
+
+        public const string YouMustChooseCountry = "YouMustChooseCountry!";
+
         public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
+
         public const string SorryErrorHappenWhileUpdatingUser = "Sorry!!ErrorHappenWhileUpdatingUser!";
-        
+
         public const string DoneSuccessfully = "DoneSuccessfully";
+
         public const string DoneCreateUserSuccessfully = "DoneCreateUserSuccessfully";
+
         public const string DoneUpdateUserSuccessfully = "DoneUpdateUserSuccessfully";
         public const string DoneDeleteUserSuccessfully = "DoneDeleteUserSuccessfully";
         public const string SorryUserNotFound = "Sorry!!UserNotFound!";
         public const string SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser = "Sorry!!PasswordIncorrect.EnterCorrectPasswordForSelectedUser!";
         public const string SorryEmailNotConfirmedPleaseCheckYourEmail = "Sorry!!EmailNotConfirmedPleaseCheckYourEmail!";
         public const string BranchNotFound = "BranchNotFound!";
-        public const string YouMustChooseCountry = "YouMustChooseCountry!";
+
         public const string SorryBranchNotFound = "Sorry!!BranchNotFound!";
         public const string ActionLogNotFound = "ActionLogNotFound!";
+
         public const string SorryYouMustEnterEmail = "Sorry!!YouMustEnterEmail!";
         public const string SorryYouMustEnterMobileNumber = "Sorry!!YouMustEnterMobileNumber!";
-        
         public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
         public const string SorryYouMustEnterApplicationType = "Sorry!!YouMustEnterApplicationType!";
+
         public const string NoDataFound = "NoDataFound";
         public const string SorryYouMustEnterCompanyName = "Sorry!!YouMustEnterCompanyName!";
+
         public const string SorryYouMustChooseCountry = "Sorry!!YouMustChooseCountry!";
+
+
         public const string SorryYouMustEnterCompanyAddress = "Sorry!!YouMustEnterCompanyAddress!";
         public const string SorryYouMustEnterCompanyEmail = "Sorry!!YouMustEnterCompanyEmail";
+
         public const string SorryYouMustEnterConfirmPassword = "Sorry!!YouMustEnterConfirmPassword!";
         public const string SorryPasswordAndConfirmPasswordMustEqual = "Sorry!!PasswordAndConfirmPasswordMustEqual!";
+
         public const string SorryYouMustEnterUserEmail = "Sorry!!YouMustEnterUserEmail!";
         public const string SorryYouMustEnterUserMobileNumber = "Sorry!!YouMustEnterUserMobileNumber!";
         public const string SorryYouMustEnterFirstName = "Sorry!!YouMustEnterFirstName!";
         public const string SorryYouMustEnterLastName = "Sorry!!YouMustEnterLastName!";
         public const string SorryYouMustEnterValidCompanyEmail = "Sorry!!YouMustEnterValidCompanyEmail!";
         public const string SorryYouMustEnterValidUserEmail = "Sorry!!YouMustEnterValidUserEmail!";
+
+
         public const string SorryYouMustEnterValidEmail = "Sorry!!YouMustEnterValidEmail!";
         public const string SorryErrorHappenWhenSendEmail = "Sorry!!ErrorHappenWhenSendEmail!";
         public const string PleaseCheckYourMailWeSentYouMailToResetYourPassword = "PleaseCheckYourMail!WeSentYouMailToResetYourPassword.";
         public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
         public const string SorryScreenNotFound = "Sorry!!ScreenNotFound!";
         public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
-        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
+        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";  //not entered
         public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
         public const string SorryThereIsNoBranchesForThisUser = "Sorry!!ThereIsNoBranchesForThisUser!";
         public const string SorryYouMustEnterUser = "Sorry!!YouMustEnterUser!";
-
-
         public const string SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail = "Sorry!!UserEmailIsDuplicated.YouMustEnterUniqueEmail!";
         public const string SorryYouMustChooseOneOrMoreBranchForTheUser = "Sorry!!YouMustChooseOneOrMoreBranchForTheUser!";
         public const string SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters = "Sorry!!YouMustEnterPasswordWithMinimumLengthOf6Charachters!"; 
+       
+        
         /*public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";

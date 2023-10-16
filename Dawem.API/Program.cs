@@ -83,9 +83,7 @@ builder.Services.AddTransient<UserManagerRepository>();
 builder.Services.ConfigureSQLContext(builder.Configuration);
 builder.Services.ConfigureBLValidation();
 builder.Services.ConfigureRepository();
-
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -93,7 +91,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.UseCamelCasing(true);
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-    //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
     options.SerializerSettings.Converters.Add(new Dawem.API.DateTimeConverter());
 });
@@ -108,11 +106,7 @@ IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()
     .CreateScope();
 
 ApplicationDBContext context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-
-
 SeedDB.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
-
-
 app.UseMiddleware<RequestHeaderContextMiddleWare>();
 
 

@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
+using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
@@ -26,6 +27,7 @@ namespace Dawem.API.MiddleWares
 
             var userId = 0;
             var branchId = 0;
+            int applicationType = 0;
 
             try
             {
@@ -37,14 +39,17 @@ namespace Dawem.API.MiddleWares
                     var tok = token.Replace(DawemKeys.Bearer, DawemKeys.EmptyString);
                     var jwttoken = new JwtSecurityTokenHandler().ReadJwtToken(tok);
 
-                    var userIdText = jwttoken.Claims.First(claim => claim.Type == "UserId")?.Value;
-                    var branchIdText = jwttoken.Claims.First(claim => claim.Type == "BranchId")?.Value;
+                    var userIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.UserId)?.Value;
+                    var branchIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.BranchId)?.Value;
+                    var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.ApplicationType)?.Value;
 
                     int.TryParse(userIdText.ToString(), out userId);
                     int.TryParse(branchIdText.ToString(), out branchId);
+                    int.TryParse(applicationTypeText.ToString(), out applicationType);
 
                     userContext.UserId = userId;
                     userContext.BranchId = branchId;
+                    userContext.ApplicationType = (ApplicationType)applicationType;
                 }
 
             }

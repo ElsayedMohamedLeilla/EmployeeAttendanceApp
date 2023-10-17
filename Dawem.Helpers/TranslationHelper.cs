@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Shared;
+﻿using Dawem.Models.Dtos.Shared;
 using Dawem.Translations;
 using System.Runtime.Caching;
 
@@ -16,7 +16,7 @@ namespace Dawem.Helpers
                     return (T)memCache.Get(key);
                 return default;
             }
-            catch
+            catch (Exception ex)
             {
                 return default;
             }

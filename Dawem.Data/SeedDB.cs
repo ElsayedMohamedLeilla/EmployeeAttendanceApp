@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Dawem.Domain.Entities.Lookups;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Dawem.Data
 {
@@ -21,7 +23,7 @@ namespace Dawem.Data
             //}
 
 
-            /*var allCountriesCount = context.Countries.Count();
+            var allCountriesCount = context.Countries.Count();
 
             if (allCountriesCount <= 0)
             {
@@ -31,7 +33,7 @@ namespace Dawem.Data
 
                 context.Countries.AddRange(countries);
                 context.SaveChanges();
-            }*/
+            }
 
 
 

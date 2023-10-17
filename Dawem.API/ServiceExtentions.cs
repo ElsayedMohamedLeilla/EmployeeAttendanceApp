@@ -80,7 +80,7 @@ namespace Dawem.API
         {
             services.AddScoped<ApplicationDBContext>();
             services.AddScoped<IUnitOfWork<ApplicationDBContext>, UnitOfWork<ApplicationDBContext>>();
-            
+           
         }
         public static void ConfigureBLContainer(this IServiceCollection services)
         {

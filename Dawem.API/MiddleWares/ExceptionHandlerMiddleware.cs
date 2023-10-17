@@ -8,6 +8,7 @@ using Dawem.Models.Response;
 using Dawem.Translations;
 using Newtonsoft.Json;
 using System.Net;
+using System.Text;
 
 namespace Dawem.API.MiddleWares
 {
@@ -97,12 +98,13 @@ namespace Dawem.API.MiddleWares
             }
         }
 
-        private async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
+        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = DawemKeys.ApplicationJson;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            return  await context.Response.WriteAsync(JsonConvert.SerializeObject(response), Encoding.UTF8);
+            return context.Response.WriteAsync(result);
         }
 
 

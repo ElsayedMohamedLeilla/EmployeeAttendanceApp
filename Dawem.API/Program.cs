@@ -89,6 +89,7 @@ builder.Services.ConfigureSQLContext(builder.Configuration);
 builder.Services.ConfigureRepositoryContainer();
 builder.Services.ConfigureBLValidation();
 builder.Services.ConfigureRepository();
+builder.Services.ConfigureBusinessLogic();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 
@@ -127,7 +128,6 @@ GeneralSetting generalSetting = serviceProvider.GetService<GeneralSetting>();
 RepositoryManager repositoryManager = new(unitOfWork, generalSetting, new RequestHeaderContext());
 new TranslationBL(unitOfWork, repositoryManager).RefreshCachedTranslation();
 
-builder.Services.AddSwaggerGen();
 
 //var app = builder.Build();
 

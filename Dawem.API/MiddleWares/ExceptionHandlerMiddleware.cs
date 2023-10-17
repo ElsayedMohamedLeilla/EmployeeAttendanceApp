@@ -92,7 +92,8 @@ namespace Dawem.API.MiddleWares
                 {
                     Result = null,
                     State = ResponseStatus.Error,
-                    Message = exception.Message
+                    Message = exception.Message,
+                    Exception = exception
                 };
                 await Return(unitOfWork, context, statusCode, response);
             }
@@ -103,8 +104,7 @@ namespace Dawem.API.MiddleWares
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = DawemKeys.ApplicationJson;
-            return  await context.Response.WriteAsync(JsonConvert.SerializeObject(response), Encoding.UTF8);
-            return context.Response.WriteAsync(result);
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
 
 

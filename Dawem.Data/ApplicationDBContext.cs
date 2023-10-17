@@ -49,6 +49,7 @@ namespace Dawem.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.HasDefaultSchema("Dawem");
             base.OnModelCreating(builder);
             foreach (var relationship in builder.Model.GetEntityTypes()
                    .SelectMany(e => e.GetForeignKeys()))

@@ -36,7 +36,7 @@ namespace Dawem.Models.DtosMappers.Others
                 UserId = actionLog.UserId,
                 ActionType = actionLog.ActionType,
                 ActionPlace = actionLog.ActionPlace,
-                BranchGlobalName = actionLog?.Branch?.BranchName,
+                BranchGlobalName = actionLog?.Branch?.Name,
                 UserGlobalName = actionLog?.User?.FirstName + " " + actionLog?.User?.FirstName,
                 ResponseStatus = actionLog.ResponseStatus
             };

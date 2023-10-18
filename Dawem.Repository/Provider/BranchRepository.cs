@@ -33,7 +33,7 @@ namespace Dawem.Repository.Provider
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.BranchName.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
 
                 inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
 
@@ -75,7 +75,7 @@ namespace Dawem.Repository.Provider
                 if (criteria.BranchName != null)
                 {
                     criteria.BranchName = criteria.BranchName.ToLower().TrimStart().TrimEnd();
-                    predicate = predicate.And(x => x.BranchName.Contains(criteria.BranchName));
+                    predicate = predicate.And(x => x.Name.Contains(criteria.BranchName));
                 }
 
                 if (criteria.UserId != null)

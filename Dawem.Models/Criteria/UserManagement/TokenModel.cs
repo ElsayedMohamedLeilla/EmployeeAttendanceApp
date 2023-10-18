@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Criteria.UserManagement
 {
-    public class TokenModelSearchCriteria : BaseCriteria
+    public class TokenModel : BaseCriteria
     {
         public int UserId { get; set; }
         public string UserName { get; set; }

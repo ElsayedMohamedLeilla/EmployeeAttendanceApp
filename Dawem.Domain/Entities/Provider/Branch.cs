@@ -10,7 +10,7 @@ namespace Dawem.Domain.Entities.Provider
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-        public string BranchName { get; set; }
+        public string Name { get; set; }
         public int? MainBranchId { get; set; }
         [ForeignKey(nameof(MainBranchId))]
         public Branch MainBranch { get; set; }

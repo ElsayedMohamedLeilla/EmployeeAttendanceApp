@@ -18,7 +18,7 @@ namespace Dawem.Models.DtosMappers
             {
                 Id = branch.Id,
                 CompanyId = branch.CompanyId,
-                BranchName = branch.BranchName,
+                BranchName = branch.Name,
                 AddedDate = branch.AddedDate,
                 Address = branch.Address,
                 AddUserId = branch.AddUserId,
@@ -38,7 +38,7 @@ namespace Dawem.Models.DtosMappers
             {
                 Id = BranchDTO.Id,
                 CompanyId = BranchDTO.CompanyId,
-                BranchName = BranchDTO.BranchName,
+                Name = BranchDTO.BranchName,
                 AddedDate = BranchDTO.AddedDate,
                 Address = BranchDTO.Address,
                 AddUserId = BranchDTO.AddUserId,

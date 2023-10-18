@@ -5,6 +5,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Provider;
@@ -39,7 +40,7 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IMailBL mailBL;
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
-        private readonly ISignUpBLValidation signUpBLValidation;
+        private readonly IAccountBLValidation accountBLValidation;
         private readonly IBranchBLValidation branchValidatorBL;
         private readonly IRepositoryManager repositoryManager;
         public AccountBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
@@ -49,7 +50,7 @@ namespace Dawem.BusinessLogic.Provider
             IOptions<Jwt> _appSettings,
            RequestHeaderContext _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
-           LinkGenerator _generator, ISignUpBLValidation _registerationValidatorBL)
+           LinkGenerator _generator, IAccountBLValidation _registerationValidatorBL)
         {
             unitOfWork = _unitOfWork;
             userManagerRepository = _userManagerRepository;
@@ -60,219 +61,9 @@ namespace Dawem.BusinessLogic.Provider
             mailBL = _mailBL;
             accessor = _accessor;
             generator = _generator;
-            signUpBLValidation = _registerationValidatorBL;
-        }
-        private async Task<MyUser> CreateUser(SignUpModel model)
-        {
-
-            string RoleName = DawemKeys.FullAccess;
-            var user = new MyUser()
-            {
-                UserName = model.UserEmail,
-                Email = model.UserEmail,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                MobileNumber = model.UserMobileNumber,
-                IsAdmin = true,
-                IsActive = true
-            };
-
-            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
-            if (!createUserResponse.Succeeded)
-            {
-                //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
-                //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                foreach (var error in createUserResponse.Errors)
-                {
-                    if (error.Code == DawemKeys.DuplicateUserName)
-                        throw new BusinessValidationException(DawemKeys.ThisEmailIsAlreadyUsedPleaseSelectAnotherOne);
-                    else
-                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
-                }
-            }
-
-            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
-            if (!assignRole.Succeeded)
-            {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
-            }
-
-            return user;
-        }
-        private string GenerateConfirmEmailLink(object emailToken)
-        {
-            var path = generator.GetPathByAction(DawemKeys.VerifyEmail, DawemKeys.Account, emailToken);
-            var protocol = accessor.HttpContext.Request.IsHttps ? DawemKeys.Https : DawemKeys.Http;
-            var host = accessor.HttpContext.Request.Host.Value;
-            var confirmEmailLink = $"{protocol}://{host}{path}";
-            return confirmEmailLink;
-        }
-        public async Task<TokenDto> SignIn(SignInModel signInModel)
-        {
-
-            #region Model Validation
-
-            var signInModelValidator = new SignInModelValidator();
-            var signInModelValidatorResult = signInModelValidator.Validate(signInModel);
-            if (!signInModelValidatorResult.IsValid)
-            {
-                var error = signInModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
-            #region Get User Using AccessToken
-
-            MyUser user = new();
-            var Email = signInModel.Email;
-            if (!string.IsNullOrEmpty(Email))
-            {
-                user = await userManagerRepository.FindByEmailAsync(Email);
-                if (user == null)
-                {
-                    throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
-                }
-            }
-
-            #endregion
-
-            #region Handle User Role
-
-            var roles = await userManagerRepository.GetRolesAsync(user);
-            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
-            {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
-
-                if (addingToRoleResult.Succeeded)
-                {
-                    roles.Add(DawemKeys.FullAccess);
-                }
-            }
-
-            #endregion
-
-            #region Check Password
-
-            bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, signInModel.Password);
-            if (!checkPasswordAsyncRes)
-            {
-                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
-            }
-
-            #endregion
-
-            if (!user.EmailConfirmed)
-            {
-                throw new BusinessValidationException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
-            }
-
-            #region Get And Validate Branch
-
-            var validateUserBranchSearchCriteria = new ValidateUserBranchSearchCriteria
-            {
-                UserId = user.Id,
-                UserName = user.UserName,
-                BranchId = signInModel.BranchId
-            };
-
-            await branchValidatorBL.ValidateUserBranch(validateUserBranchSearchCriteria);
-
-            #endregion
-
-            #region Get Token Model
-
-            TokenModelSearchCriteria tokenModelSearchCriteria = new()
-            {
-                BranchId = signInModel.BranchId,
-                UserId = user.Id,
-                UserName = user.UserName,
-                RememberMe = signInModel.RememberMe,
-                Roles = roles
-            };
-
-            var tokenData = await GetTokenModel(tokenModelSearchCriteria);
-
-            #endregion
-
-            return tokenData;
-        }
-        public async Task<TokenDto> GetTokenModel(TokenModelSearchCriteria criteria)
-        {
-
-            #region Create Token
-
-            ClaimsIdentity claimsIdentity = new(new Claim[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, criteria.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
-                new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
-                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString()),
-                new Claim(DawemKeys.ApplicationType , criteria.ApplicationType.ToString())
-            });
-            if (criteria.RememberMe)
-            {
-                claimsIdentity.AddClaim(new Claim(DawemKeys.RememberMe, DawemKeys.True));
-            }
-            if (criteria.Roles != null)
-            {
-                claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            }
-
-            JwtSecurityTokenHandler tokenHandler = new();
-
-            var key = Encoding.ASCII.GetBytes(jwt.Key);
-
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = claimsIdentity,
-                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
-            var tokenData = await FormateToken(criteria.UserId, criteria.BranchId, token);
-
-            #endregion
-
-            return tokenData;
-        }
-        public async Task<TokenDto> FormateToken(int? userId, int branchId, string token)
-        {
-            var branchRepository = repositoryManager.BranchRepository;
-            var branch = await branchRepository.Get(a => a.Id == branchId)
-                .Include(a => a.Company).FirstOrDefaultAsync();
-
-            if (branch == null)
-            {
-                throw new BusinessValidationException(DawemKeys.SorryBranchNotFound);
-            }
-            UserDTOMapper.InitUserContext(requestHeaderContext);
-            UserDTO user = UserDTOMapper.Map(await repositoryManager.UserRepository.GetByIdAsync(userId));
-
-
-            #region Get Token
-
-            TokenDto tokenModel = new()
-            {
-                UserId = user.Id,
-                BranchName = branch.BranchName,
-                UserFullName = user.FirstName + DawemKeys.Space + user.LastName,
-                Token = token,
-                Email = user.UserName,
-                CurrentBranchId = branch.Id,
-                CompanyId = branch.CompanyId,
-                CompanyName = branch.Company?.CompanyName,
-                IsMainBranch = branch.IsMainBranch
-            };
-
-            #endregion
-
-            return tokenModel;
-        }
-        public async Task<SignUpResponseModel> SignUp(SignUpModel signUpModel)
+            accountBLValidation = _registerationValidatorBL;
+        }      
+        public async Task<bool> SignUp(SignUpModel signUpModel)
         {
             #region Model Validation
 
@@ -288,7 +79,13 @@ namespace Dawem.BusinessLogic.Provider
 
             requestHeaderContext.IsMainBranch = true;
 
-            signUpBLValidation.SignUpValidation(signUpModel);
+            #region Business Validation
+
+            await accountBLValidation.SignUpValidation(signUpModel);
+
+            #endregion
+
+
 
             signUpModel.UserMobileNumber = MobileHelper.HandleMobile(signUpModel.UserMobileNumber);
 
@@ -304,7 +101,7 @@ namespace Dawem.BusinessLogic.Provider
 
             var insertedCompany = repositoryManager.CompanyRepository.Insert(new Company()
             {
-                CompanyName = signUpModel.CompanyName,
+                Name = signUpModel.CompanyName,
                 IsActive = true,
                 CountryId = signUpModel.CompanyCountryId
             });
@@ -315,13 +112,13 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Insert Branch
 
-            Branch branch = new Branch()
+            Branch branch = new()
             {
                 CompanyId = companyId,
                 Email = signUpModel.CompanyEmail,
                 IsActive = true,
                 AdminUserId = user.Id,
-                BranchName = signUpModel.CompanyName,
+                Name = signUpModel.CompanyName,
                 IsMainBranch = true,
                 CountryId = signUpModel.CompanyCountryId,
                 Address = signUpModel.CompanyAddress,
@@ -329,6 +126,7 @@ namespace Dawem.BusinessLogic.Provider
 
             repositoryManager.BranchRepository.Insert(branch);
             await unitOfWork.SaveAsync();
+
             #region Update User Main Branch
 
             var getUser = repositoryManager.UserRepository.GetByID(user.Id);
@@ -406,17 +204,171 @@ namespace Dawem.BusinessLogic.Provider
             #region Handle Response
 
             await unitOfWork.CommitAsync();
+            return true;
 
-            var registerResponseModel = new SignUpResponseModel()
-            {
-                UserId = user.Id,
-                Email = user.UserName,
-                BranchId = branch.Id,
-                CompanyId = Convert.ToInt32(branch.CompanyId),
-            };
             #endregion
 
-            return registerResponseModel;
+
+        }
+        private async Task<MyUser> CreateUser(SignUpModel model)
+        {
+
+            string RoleName = DawemKeys.FullAccess;
+            var user = new MyUser()
+            {
+                UserName = model.UserEmail,
+                Email = model.UserEmail,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                MobileNumber = model.UserMobileNumber,
+                IsAdmin = true,
+                IsActive = true
+            };
+
+            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
+            if (!createUserResponse.Succeeded)
+            {
+                //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
+                //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
+            }
+
+            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
+            if (!assignRole.Succeeded)
+            {
+                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+            }
+
+            return user;
+        }
+        public async Task<TokenDto> SignIn(SignInModel signInModel)
+        {
+
+            #region Model Validation
+
+            var signInModelValidator = new SignInModelValidator();
+            var signInModelValidatorResult = signInModelValidator.Validate(signInModel);
+            if (!signInModelValidatorResult.IsValid)
+            {
+                var error = signInModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            var user = await accountBLValidation.SignInValidation(signInModel);
+
+            #endregion
+
+            #region Handle User Role
+
+            var roles = await userManagerRepository.GetRolesAsync(user);
+            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
+            {
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+
+                if (addingToRoleResult.Succeeded)
+                {
+                    roles.Add(DawemKeys.FullAccess);
+                }
+            }
+
+            #endregion
+
+            #region Get Token Model
+
+            TokenModel tokenModelSearchCriteria = new()
+            {
+                BranchId = signInModel.BranchId,
+                UserId = user.Id,
+                UserName = user.UserName,
+                RememberMe = signInModel.RememberMe,
+                Roles = roles,
+                ApplicationType = signInModel.ApplicationType
+            };
+
+            var tokenData = await GetTokenModel(tokenModelSearchCriteria);
+
+            #endregion
+
+            return tokenData;
+        }
+        public async Task<TokenDto> GetTokenModel(TokenModel criteria)
+        {
+
+            #region Create Token
+
+            ClaimsIdentity claimsIdentity = new(new Claim[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, criteria.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
+                new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
+                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString()),
+                new Claim(DawemKeys.ApplicationType , criteria.ApplicationType.ToString())
+            });
+            if (criteria.RememberMe)
+            {
+                claimsIdentity.AddClaim(new Claim(DawemKeys.RememberMe, DawemKeys.True));
+            }
+            if (criteria.Roles != null)
+            {
+                claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            }
+
+            JwtSecurityTokenHandler tokenHandler = new();
+
+            var key = Encoding.ASCII.GetBytes(jwt.Key);
+
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = claimsIdentity,
+                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(securityToken);
+            var tokenData = await FormateToken(criteria.UserId, criteria.BranchId, token);
+
+            #endregion
+
+            return tokenData;
+        }
+        public async Task<TokenDto> FormateToken(int? userId, int branchId, string token)
+        {
+            var branchRepository = repositoryManager.BranchRepository;
+            var branch = await branchRepository.Get(a => a.Id == branchId)
+                .Include(a => a.Company).FirstOrDefaultAsync();
+
+            if (branch == null)
+            {
+                throw new BusinessValidationException(DawemKeys.SorryBranchNotFound);
+            }
+            UserDTOMapper.InitUserContext(requestHeaderContext);
+            UserDTO user = UserDTOMapper.Map(await repositoryManager.UserRepository.GetByIdAsync(userId));
+
+
+            #region Get Token
+
+            TokenDto tokenModel = new()
+            {
+                Token = token
+            };
+
+            #endregion
+
+            return tokenModel;
+        }
+        private string GenerateConfirmEmailLink(object emailToken)
+        {
+            var path = generator.GetPathByAction(DawemKeys.VerifyEmail, DawemKeys.Account, emailToken);
+            var protocol = accessor.HttpContext.Request.IsHttps ? DawemKeys.Https : DawemKeys.Http;
+            var host = accessor.HttpContext.Request.Host.Value;
+            var confirmEmailLink = $"{protocol}://{host}{path}";
+            return confirmEmailLink;
         }
         public async Task<bool> VerifyEmail(string token, string email)
         {

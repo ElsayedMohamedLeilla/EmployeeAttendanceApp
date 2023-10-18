@@ -25,14 +25,14 @@ namespace Dawem.API.Controllers.Provider
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
-            return Success(await accountBL.SignUp(model));
+            return Success(await accountBL.SignUp(model),message: DawemKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> SignIn(SignInModel signInModel)
         {
-            return Success(await accountBL.SignIn(signInModel));
+            return Success(await accountBL.SignIn(signInModel), message: DawemKeys.DoneSignYouInSuccessfully);
         }
 
         [AllowAnonymous]

@@ -99,7 +99,7 @@ namespace Dawem.BusinessLogic.Provider
             var userBranches = queryPaged.Select(c => new BranchLiteDTO()
             {
                 Id = c.BranchId,
-                GlobalName = c.Branch.BranchName
+                GlobalName = c.Branch.Name
             }).ToList();
 
             return new GetUserBranchesResponseModel

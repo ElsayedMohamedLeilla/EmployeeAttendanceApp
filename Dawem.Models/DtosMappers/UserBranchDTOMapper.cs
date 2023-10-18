@@ -23,7 +23,7 @@ namespace Dawem.Models.DtosMappers
                 BranchId = userBranch.BranchId,
                 UserId = userBranch.UserId,
                 UserGlobalName = userBranch.User?.FirstName + " " + userBranch.User?.LastName,
-                BranchGlobalName = userContext.Lang == "ar" ? userBranch.Branch?.BranchName : ""
+                BranchGlobalName = userContext.Lang == "ar" ? userBranch.Branch?.Name : ""
 
 
             };

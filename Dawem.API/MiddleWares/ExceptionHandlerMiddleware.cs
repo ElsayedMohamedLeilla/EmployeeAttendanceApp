@@ -1,4 +1,5 @@
-﻿using Dawem.Data;
+﻿using Azure;
+using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.General;
 using Dawem.Helpers;
@@ -6,9 +7,13 @@ using Dawem.Models.Context;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response;
 using Dawem.Translations;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.API.MiddleWares
 {
@@ -98,13 +103,14 @@ namespace Dawem.API.MiddleWares
             }
         }
 
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
+        [Produces("application/json")]
+        private static async Task<ActionResult> Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = DawemKeys.ApplicationJson;
-            return  await context.Response.WriteAsync(JsonConvert.SerializeObject(response), Encoding.UTF8);
-            return context.Response.WriteAsync(result);
+            //return  await context.Response.WriteAsync(JsonConvert.SerializeObject(response), Encoding.UTF8);
+            // return await JsonResult(response);
         }
 
 

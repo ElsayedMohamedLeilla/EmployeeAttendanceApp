@@ -76,6 +76,7 @@ namespace Dawem.API.MiddleWares
 
                 newBody.Seek(0, SeekOrigin.Begin);
                 await newBody.CopyToAsync(originalBody);
+                newBody.Seek(0, SeekOrigin.Begin);
             }
         }
     }

@@ -64,7 +64,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
-            await unitOfWork.CreateTransactionAsync();
 
             string RoleName = DawemKeys.FullAccess;
             var user = new MyUser()
@@ -83,14 +82,12 @@ namespace Dawem.BusinessLogic.Provider
             {
                 //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                await unitOfWork.RollbackAsync();
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 
             var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
-                await unitOfWork.RollbackAsync();
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 

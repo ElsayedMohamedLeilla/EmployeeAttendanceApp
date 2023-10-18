@@ -103,8 +103,10 @@ namespace Dawem.BusinessLogic.Provider
             {
                 Name = signUpModel.CompanyName,
                 IsActive = true,
-                CountryId = signUpModel.CompanyCountryId
+                CountryId = signUpModel.CompanyCountryId,
+                Email = signUpModel.CompanyEmail
             });
+
             await unitOfWork.SaveAsync();
             var companyId = insertedCompany.Id;
 

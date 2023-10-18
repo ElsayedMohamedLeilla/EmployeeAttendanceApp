@@ -84,7 +84,7 @@ namespace Dawem.BusinessLogic.Provider
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
                 foreach (var error in createUserResponse.Errors)
                 {
-                    if (error.Code == "DuplicateUserName")
+                    if (error.Code == DawemKeys.DuplicateUserName)
                         throw new BusinessValidationException(DawemKeys.ThisEmailIsAlreadyUsedPleaseSelectAnotherOne);
                     else
                         throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default

@@ -57,7 +57,7 @@
         public const string Space = " ";
         public const string Email = "Email";
         public const string EmailConfirmationToken = "Email Confirmation Token";
-        
+        public const string DuplicateUserName = "DuplicateUserName";
         public const string Authorization = "Authorization";
         public const string Bearer = "Bearer ";
         public const string ProjectName = "Dawem";

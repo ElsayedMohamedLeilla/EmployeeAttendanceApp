@@ -104,8 +104,7 @@ namespace Dawem.API.MiddleWares
             }
         }
 
-        [Produces("application/json")]
-        private static async Task<ActionResult> Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
+        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;

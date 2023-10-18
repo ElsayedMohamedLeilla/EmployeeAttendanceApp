@@ -153,9 +153,11 @@
         public const string SorryYouMustEnterUser = "Sorry!!YouMustEnterUser!";
         public const string SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail = "Sorry!!UserEmailIsDuplicated.YouMustEnterUniqueEmail!";
         public const string SorryYouMustChooseOneOrMoreBranchForTheUser = "Sorry!!YouMustChooseOneOrMoreBranchForTheUser!";
-        public const string SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters = "Sorry!!YouMustEnterPasswordWithMinimumLengthOf6Charachters!"; 
-       
+        public const string SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters = "Sorry!!YouMustEnterPasswordWithMinimumLengthOf6Charachters!";
+        public const string ThisEmailIsAlreadyUsedPleaseSelectAnotherOne = "Sorry!!ThisEmailIsAlreadyUsedPleaseSelectAnotherOne";
+
         
+
         /*public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";

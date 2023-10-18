@@ -82,7 +82,13 @@ namespace Dawem.BusinessLogic.Provider
             {
                 //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                foreach (var error in createUserResponse.Errors)
+                {
+                    if (error.Code == "DuplicateUserName")
+                        throw new BusinessValidationException(DawemKeys.ThisEmailIsAlreadyUsedPleaseSelectAnotherOne);
+                    else
+                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
+                }
             }
 
             var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);

@@ -15,8 +15,10 @@ namespace Dawem.Validation.FluentValidation
                    WithMessage(DawemKeys.SorryYouMustChooseCountry);
             RuleFor(signUpModel => signUpModel.CompanyAddress).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterCompanyAddress);
+
             RuleFor(signUpModel => signUpModel.CompanyEmail).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterCompanyEmail);
+
             RuleFor(signUpModel => signUpModel.CompanyEmail).Must(EmailHelper.IsValidEmail).
                  WithMessage(DawemKeys.SorryYouMustEnterValidCompanyEmail);
 

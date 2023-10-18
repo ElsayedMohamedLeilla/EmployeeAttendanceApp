@@ -7,11 +7,15 @@ namespace Dawem.Helpers
     {
         public static bool IsValidEmail(string email)
         {
+            if(email == null)
+            {
+                return false;
+            }
             var trimmedEmail = email.Trim();
 
             if (trimmedEmail.EndsWith("."))
             {
-                return false;
+               
             }
             try
             {

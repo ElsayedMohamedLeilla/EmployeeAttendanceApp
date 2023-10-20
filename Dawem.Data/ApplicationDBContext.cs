@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities;
 using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Ohters;
@@ -89,6 +90,8 @@ namespace Dawem.Data
                 .Property(p => p.IsDeleted)
                 .HasDefaultValue(false);
         }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<Translation> Translations { get; set; }

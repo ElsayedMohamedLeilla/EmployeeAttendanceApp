@@ -14,7 +14,6 @@ namespace Dawem.Domain.Entities.UserManagement
         public DateTime? ModifiedDate { get; set; }
         public int? AddUserId { get; set; }
         public int? ModifyUserId { get; set; }
-        public int? MainBranchId { get; set; }
         public bool IsAdmin { get; set; }
         public DateTime BirthDate { get; set; }
         public bool IsActive { get; set; }

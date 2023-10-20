@@ -56,7 +56,7 @@ namespace Dawem.Models.DtosMappers
                 PhoneNumber = user.PhoneNumber,
                 IsActive = user.IsActive,
                 AddedDate = user.AddedDate,
-                BranchId = user.MainBranchId ?? 0,
+                BranchId = user.BranchId ?? 0,
                 AddUserId = user.AddUserId,
                 UserBranches = UserBranchDTOMapper.Map(user.UserBranches),
                 UserGroups = UserGroupDTOMapper.Map(user.UserGroups)

@@ -103,9 +103,10 @@ namespace Dawem.BusinessLogic.Provider
             {
                 Name = signUpModel.CompanyName,
                 IsActive = true,
+                AddUserId = user.Id,
                 CountryId = signUpModel.CompanyCountryId,
                 Email = signUpModel.CompanyEmail
-            });
+            }) ; 
 
             await unitOfWork.SaveAsync();
             var companyId = insertedCompany.Id;
@@ -132,7 +133,9 @@ namespace Dawem.BusinessLogic.Provider
             #region Update User Main Branch
 
             var getUser = repositoryManager.UserRepository.GetByID(user.Id);
-            getUser.MainBranchId = branch.Id;
+            getUser.BranchId = branch.Id;
+            getUser.CompanyId = insertedCompany.Id;
+
             unitOfWork.Save();
 
             #endregion
@@ -178,8 +181,8 @@ namespace Dawem.BusinessLogic.Provider
                                             <p><a href=' " + verificationLink + @" '> اضغط لتأكيد البريد الإلكتروني </a></p>
                                             <p>فريق خدمة العملاء لشركة داوم يتطلع لخدمتك.</p>
                                             <p>للتواصل معنا:</p>
-                                            <p> البريد الإلكتروني: <a href='mailto:info@smart-bt.com'>info@smart-bt.com</a></p>
-                                            <p> الهاتف: (+20)105210214
+                                            <p> البريد الإلكتروني: <a href='mailto:dawem.app.developers@gmail.com'>dawem.app.developers@gmail.com</a></p>
+                                            <p> الهاتف: (+20)01234567
                                             </body>
                                             </html>"
             };
@@ -283,7 +286,6 @@ namespace Dawem.BusinessLogic.Provider
 
             TokenModel tokenModelSearchCriteria = new()
             {
-                BranchId = signInModel.BranchId,
                 UserId = user.Id,
                 UserName = user.UserName,
                 RememberMe = signInModel.RememberMe,

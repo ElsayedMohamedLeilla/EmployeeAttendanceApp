@@ -92,7 +92,7 @@ namespace Dawem.BusinessLogic.UserManagement
         public async Task<int> Create(CreatedUser createdUser)
         {
             MyUser user = mapper.Map<MyUser>(createdUser);
-            user.MainBranchId = requestHeaderContext.BranchId;
+            user.BranchId = requestHeaderContext.BranchId;
             user.EmailConfirmed = true;
             user.UserName = user.Email;
 

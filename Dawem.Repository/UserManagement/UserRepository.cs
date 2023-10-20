@@ -25,7 +25,7 @@ namespace Dawem.Repository.UserManagement
             if (requestHeaderContext.IsMainBranch && criteria.ForGridView)
             {
 
-                userPredicate = userPredicate.And(x => x.MainBranchId == requestHeaderContext.BranchId);
+                userPredicate = userPredicate.And(x => x.BranchId == requestHeaderContext.BranchId);
             }
             else
             {

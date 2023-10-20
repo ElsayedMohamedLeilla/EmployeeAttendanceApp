@@ -4,7 +4,7 @@ using Dawem.Models.Dtos.Identity;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation
+namespace Dawem.Validation.FluentValidation.Authentication
 {
     public class UserValidator : AbstractValidator<CreatedUser>
     {
@@ -26,7 +26,7 @@ namespace Dawem.Validation.FluentValidation
             RuleFor(user => user.ConfirmPassword).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterConfirmPassword);
 
-            RuleFor(user => user.Password).Length(6,50).
+            RuleFor(user => user.Password).Length(6, 50).
                    WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
 
             RuleFor(user => user).Must(user => user.Password == user.ConfirmPassword).

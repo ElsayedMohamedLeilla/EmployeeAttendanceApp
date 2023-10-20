@@ -11,7 +11,7 @@ namespace Dawem.Models.Dtos.Provider
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
         public string ConfirmNewPassword { get; set; }
-        public int UserId { get; set; }
+        public string UserEmail { get; set; }
 
     }
     public class UserBranchModel
@@ -70,8 +70,15 @@ namespace Dawem.Models.Dtos.Provider
         public int CompanyId { get; set; }
         public string Token { get; set; }
     }
-    public class ForgetPasswordModel
+    public class RequestResetPasswordModel
     {
-        public string Email { get; set; }
+        public string UserEmail { get; set; }
+    }
+    public class ResetPasswordModel
+    {
+        public string ResetToken { get; set; }
+        public string UserEmail { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
     }
 }

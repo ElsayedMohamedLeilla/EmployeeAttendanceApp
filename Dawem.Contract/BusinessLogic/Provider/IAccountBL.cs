@@ -5,7 +5,8 @@ namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface IAccountBL
     {
-        Task<bool> ForgetPassword(ForgetPasswordModel model);
+        Task<bool> RequestResetPassword(RequestResetPasswordModel model);
+        Task<bool> ResetPassword(ResetPasswordModel model);
         Task<bool> SignUp(SignUpModel model);
         Task<bool> VerifyEmail(string token, string email);
         Task<TokenDto> SignIn(SignInModel model);

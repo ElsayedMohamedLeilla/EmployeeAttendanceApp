@@ -2,7 +2,7 @@
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Shared;
 using FluentValidation;
-namespace Dawem.Validation.FluentValidation
+namespace Dawem.Validation.FluentValidation.Authentication
 {
     class EmailValidator : AbstractValidator<VerifyEmailModel>
     {

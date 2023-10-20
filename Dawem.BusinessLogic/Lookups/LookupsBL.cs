@@ -43,7 +43,7 @@ namespace Dawem.BusinessLogic.Lookups
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                countryPredicate = countryPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
+                countryPredicate = countryPredicate.Start(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
                 countryPredicate = countryPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
             }
 
@@ -68,7 +68,7 @@ namespace Dawem.BusinessLogic.Lookups
             var countries = await queryPaged.Select(c => new CountryLiteDTO()
             {
                 Id = c.Id,
-                GlobalName = userContext.Lang == "ar" ? c.NameAr : c.NameEn,
+                GlobalName = userContext.Lang == "ar" ? c.NameEn : c.NameEn,
                 CountryISOCode = c.Iso.ToLower()
             }).ToListAsync();
 

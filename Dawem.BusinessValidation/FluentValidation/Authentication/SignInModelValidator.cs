@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation
+namespace Dawem.Validation.FluentValidation.Authentication
 {
     public class SignInModelValidator : AbstractValidator<SignInModel>
     {

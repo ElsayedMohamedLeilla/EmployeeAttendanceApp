@@ -18,8 +18,8 @@ namespace Dawem.API.Controllers.Lookups
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult> GetCountries(GetCountriesCriteria criteria)
+        [HttpGet]
+        public async Task<ActionResult> GetCountries([FromQuery] GetCountriesCriteria criteria)
         {
             var countriesRes = await lookupsBL.GetCountries(criteria);
             return Success(countriesRes);

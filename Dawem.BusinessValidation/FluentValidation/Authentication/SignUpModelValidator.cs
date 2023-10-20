@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation
+namespace Dawem.Validation.FluentValidation.Authentication
 {
     public class SignUpModelValidator : AbstractValidator<SignUpModel>
     {
@@ -34,7 +34,7 @@ namespace Dawem.Validation.FluentValidation
             RuleFor(signUpModel => signUpModel).Must(signUpModel => signUpModel.Password == signUpModel.ConfirmPassword).
                   WithMessage(DawemKeys.SorryPasswordAndConfirmPasswordMustEqual);
 
-           
+
 
             RuleFor(signUpModel => signUpModel.UserEmail).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterUserEmail);

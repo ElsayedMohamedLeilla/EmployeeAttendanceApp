@@ -10,6 +10,7 @@ namespace Dawem.API.Controllers.Provider
 {
     [Route(DawemKeys.ApiCcontrollerAction)]
     [ApiController]
+    [Authorize]
     public class AccountController : BaseController
     {
         private readonly IAccountBL accountBL;
@@ -25,14 +26,14 @@ namespace Dawem.API.Controllers.Provider
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
-            return Success(await accountBL.SignUp(model),message: DawemKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+            return Success(await accountBL.SignUp(model), messageCode: DawemKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> SignIn(SignInModel signInModel)
         {
-            return Success(await accountBL.SignIn(signInModel), message: DawemKeys.DoneSignYouInSuccessfully);
+            return Success(await accountBL.SignIn(signInModel), messageCode: DawemKeys.DoneSignYouInSuccessfully);
         }
 
         [AllowAnonymous]
@@ -55,33 +56,31 @@ namespace Dawem.API.Controllers.Provider
 
             return Redirect("https://www.youtube.com");
         }
-
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> ForgetPassword(ForgetPasswordModel forgetPasswordBindingModel)
+        public async Task<ActionResult> RequestResetPassword(RequestResetPasswordModel forgetPasswordBindingModel)
         {
             if (forgetPasswordBindingModel == null)
             {
                 return BadRequest();
 
             }
-
-            var response = await accountBL.ForgetPassword(forgetPasswordBindingModel);
-
-            if (response == false)
-            {
-                return Redirect("https://www.google.com");
-            }
-
-            return Redirect("https://www.SmartBusiness.com");
+            var forgetPasswordResponse = await accountBL.RequestResetPassword(forgetPasswordBindingModel);
+            return Success(forgetPasswordResponse, messageCode: DawemKeys.DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully);
         }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        {
+            var response = await accountBL.ResetPassword(model);
+            return Success(response, messageCode: DawemKeys.DoneResetPasswordSuccessfully);
+        }        
         [HttpPost]
         public async Task<ActionResult> ChangePassword(ChangePasswordModel resetPasswordModel)
         {
             if (resetPasswordModel == null)
             {
                 return BadRequest();
-
             }
             if (!ModelState.IsValid)
             {
@@ -89,7 +88,7 @@ namespace Dawem.API.Controllers.Provider
                 return Success(ret);
             }
             var result = await accountBL.ChangePassword(resetPasswordModel);
-            return Success(result);
+            return Success(result, messageCode: DawemKeys.DoneChangePasswordSuccessfully);
         }
 
     }

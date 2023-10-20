@@ -119,6 +119,10 @@
         public const string SorryYouMustEnterEmail = "Sorry!!YouMustEnterEmail!";
         public const string SorryYouMustEnterMobileNumber = "Sorry!!YouMustEnterMobileNumber!";
         public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
+
+        
+
+        
         public const string SorryYouMustEnterApplicationType = "Sorry!!YouMustEnterApplicationType!";
 
         public const string NoDataFound = "NoDataFound";
@@ -165,6 +169,25 @@
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn = "DoneSignUpSuccessfully.CheckYourEmailToVerifyItAndLogIn";
         public const string DoneSignYouInSuccessfully = "DoneSignYouInSuccessfully";
+
+
+
+
+
+        public const string SorryYouMustEnterOldPassword = "Sorry!!YouMustEnterOldPassword!";
+        public const string SorryYouMustEnterNewPassword = "Sorry!!YouMustEnterNewPassword!";
+        public const string SorryYouMustEnterConfirmNewPassword = "Sorry!!YouMustEnterConfirmNewPassword!";
+        public const string SorryNewPasswordAndConfirmNewPasswordMustEqual = "Sorry!!NewPasswordAndConfirmNewPasswordMustEqual!";
+        public const string SorryNewPasswordAndOldPasswordMustNotEqual = "Sorry!!NewPasswordAndOldPasswordMustNotEquall!";     
+        public const string SorryCannotFindUserWithEnteredEmail = "Sorry!!CannotFindUserWithEnteredEmaild!";
+        public const string SorryErrorHappenWhenChangePassword = "Sorry!!ErrorHappenWhenChangePassword!";
+        public const string DoneChangePasswordSuccessfully = "DoneChangePasswordSuccessfully";
+        public const string PleaseCheckYouEmailWithSendResetPasswordLinkToYou = "PleaseCheckYouEmailWithSendResetPasswordLinkToYou";
+        public const string DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully = "DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully";
+        public const string DoneResetPasswordSuccessfully = "DoneResetPasswordSuccessfully";
+        public const string SorryYouMustEnterResetToken = "Sorry!!YouMustEnterResetToken!";
+        public const string SorryErrorHappenWhileResetPassword = "Sorry!!ErrorHappenWhileResetPassword!";
+        
         /*public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
         public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";

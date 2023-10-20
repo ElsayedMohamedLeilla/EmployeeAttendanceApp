@@ -3,23 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dawem.Models.Dtos.Provider
 {
-
-
-
-    public class ChangePasswordModel
-    {
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
-        public string ConfirmNewPassword { get; set; }
-        public string UserEmail { get; set; }
-
-    }
-    public class UserBranchModel
-    {
-        public string UserName { get; set; }
-    }
-
-
     public class SignUpModelOld
     {
         #region CompanyData
@@ -60,25 +43,5 @@ namespace Dawem.Models.Dtos.Provider
         public string? LastName { get; set; }
         public bool Agreed { get; set; }
         #endregion
-    }
-
-    public class SignUpResponseModel
-    {
-        public int UserId { get; set; }
-        public string Email { get; set; }
-        public int BranchId { get; set; }
-        public int CompanyId { get; set; }
-        public string Token { get; set; }
-    }
-    public class RequestResetPasswordModel
-    {
-        public string UserEmail { get; set; }
-    }
-    public class ResetPasswordModel
-    {
-        public string ResetToken { get; set; }
-        public string UserEmail { get; set; }
-        public string NewPassword { get; set; }
-        public string ConfirmNewPassword { get; set; }
     }
 }

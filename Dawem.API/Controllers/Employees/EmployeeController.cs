@@ -85,7 +85,7 @@ namespace Dawem.API.Controllers.Provider
         [HttpDelete]
         public async Task<ActionResult> Delete(int employeeId)
         {
-            if (employeeId < 1)
+            if (employeeId < 1) 
             {
                 return BadRequest();
             }

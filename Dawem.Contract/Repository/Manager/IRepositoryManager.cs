@@ -20,6 +20,7 @@ namespace Dawem.Contract.Repository.Manager
         IUserGroupRepository UserGroupRepository { get; }
         ITranslationRepository TranslationRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
+        IDepartmentRepository DepartmentRepository { get; }
 
     }
 }

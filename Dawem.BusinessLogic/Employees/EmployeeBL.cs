@@ -84,6 +84,7 @@ namespace Dawem.BusinessLogic.Provider
 
             var employee = mapper.Map<Employee>(model);
             employee.CompanyId = requestInfo.CompanyId;
+            employee.AddUserId = requestInfo.UserId;
             employee.Code = getNextCode;
             repositoryManager.EmployeeRepository.Insert(employee);
             await unitOfWork.SaveAsync();
@@ -128,6 +129,7 @@ namespace Dawem.BusinessLogic.Provider
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;
             getEmployee.JoiningDate = model.JoiningDate;
+            getEmployee.ModifiedDate = DateTime.Now;
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -281,6 +283,7 @@ namespace Dawem.BusinessLogic.Provider
             var employee = await repositoryManager.EmployeeRepository.GetByIdAsync(employeeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
             employee.IsDeleted = true;
+            employee.DeletionDate = DateTime.Now;
             await unitOfWork.SaveAsync();
             return true;
         }

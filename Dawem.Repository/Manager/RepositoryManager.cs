@@ -23,9 +23,8 @@ namespace Dawem.Repository.Manager
 
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
-        private readonly RequestInfo requestHeaderContext;
-
-
+        private readonly RequestInfo requestInfo;
+        
         private IUserRepository userRepository;
         private IActionLogRepository actionLogRepository;
         private IUserBranchRepository userBranchRepository;
@@ -37,25 +36,25 @@ namespace Dawem.Repository.Manager
         private IUserGroupRepository userGroupRepository;
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
-        
+        private IDepartmentRepository departmentRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
             generalSetting = _generalSetting;
-            requestHeaderContext = _requestHeaderContext;
+            requestInfo = _requestHeaderContext;
         }
 
         public ICompanyRepository CompanyRepository =>
-         companyRepository ??= new CompanyRepository( unitOfWork, generalSetting);
+         companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
-         userRepository ??= new UserRepository(requestHeaderContext, unitOfWork, generalSetting);
+         userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IActionLogRepository ActionLogRepository =>
-         actionLogRepository ??= new ActionLogRepository(unitOfWork, requestHeaderContext);
+         actionLogRepository ??= new ActionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IBranchRepository BranchRepository =>
-         branchRepository ??= new BranchRepository(unitOfWork, requestHeaderContext, generalSetting);
+         branchRepository ??= new BranchRepository(unitOfWork, requestInfo, generalSetting);
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
         public IScreenRepository ScreenRepository =>
@@ -68,7 +67,9 @@ namespace Dawem.Repository.Manager
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
         employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting);
+        public IDepartmentRepository DepartmentRepository =>
+        departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
 
-       
+
     }
 }

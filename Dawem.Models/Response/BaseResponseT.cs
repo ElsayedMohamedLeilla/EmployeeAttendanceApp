@@ -19,7 +19,7 @@ namespace Dawem.Models.Response
         public int TotalCount { get; set; }
 
         private ResponseStatus _status;
-        private readonly string? Lang;
+        private readonly string Lang;
         public virtual ResponseStatus Status
         {
             get => _status;
@@ -37,12 +37,12 @@ namespace Dawem.Models.Response
             }
         }
         public virtual List<MetaPair> DetailedMessages { get; set; }
-        public T? Result { get; set; }
-        public virtual string? Title { get; set; }
+        public T Result { get; set; }
+        public virtual string Title { get; set; }
         public virtual string Message { get; set; } = "تم بنجاح";
-        public virtual string? MessageCode { get; set; }
-        public virtual List<string>? Messages { get; set; }
-        public virtual Exception? Exception { get; set; }
+        public virtual string MessageCode { get; set; }
+        public virtual List<string> Messages { get; set; }
+        public virtual Exception Exception { get; set; }
 
     }
 }

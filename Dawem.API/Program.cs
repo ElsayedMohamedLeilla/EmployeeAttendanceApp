@@ -107,6 +107,7 @@ builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
     config.AddProfile<AutoMapperConfig>();
     config.AddProfile<EmployeesMapProfile>();
+    config.AddProfile<DepartmentsMapProfile>();
 }, typeof(Program));
 
 WebApplication app = builder.Build();

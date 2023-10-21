@@ -1,0 +1,83 @@
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Models.Dtos.Provider;
+using Dawem.Translations;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+
+namespace Dawem.API.Controllers.Provider
+{
+    [Route(DawemKeys.ApiControllerAction)]
+    [ApiController]
+    [Authorize]
+    public class DepartmentController : BaseController
+    {
+        private readonly IDepartmentBL departmentBL;
+
+        public DepartmentController(IDepartmentBL _departmentBL)
+        {
+            departmentBL = _departmentBL;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create(CreateDepartmentModel model)
+        {
+            var result = await departmentBL.Create(model);
+            return Success(result, messageCode: DawemKeys.DoneCreateDepartmentSuccessfully);
+        }
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateDepartmentModel model)
+        {
+          
+            var result = await departmentBL.Update(model);
+            return Success(result, messageCode: DawemKeys.DoneUpdateDepartmentSuccessfully);
+        }
+        [HttpGet]
+        public async Task<ActionResult> Get(GetDepartmentsCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.Get(criteria));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetForDropDown(GetDepartmentsCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.GetForDropDown(criteria));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetInfo(int departmentId)
+        {
+            if (departmentId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.GetInfo(departmentId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetById(int departmentId)
+        {
+            if (departmentId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.GetById(departmentId));
+        }
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int departmentId)
+        {
+            if (departmentId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.Delete(departmentId));
+        }
+
+    }
+}

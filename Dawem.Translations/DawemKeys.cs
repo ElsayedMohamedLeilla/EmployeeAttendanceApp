@@ -32,6 +32,8 @@
         public const string S = "s";
         public const string ES = "es";
         public const string IES = "ies";
+        public const string Uploads = "uploads";
+        public const string Employees = "Employees";    
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
         public const string FourigitPhone = "FourigitPhone";
@@ -70,10 +72,15 @@
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string Dot = ".";
+        public const string Slash = "/";
+        public const string BackSlash = @"\";
+        public const string UnderScore = "_";
         public const string Account = "Account";
         public const string VerifyEmail = "VerifyEmail";
         public const string Http = "http";
         public const string Https = "https";
+        public const string ImagesFolder = "ImagesFolder";
+        
         public const string SmtpGmailCom = "smtp.gmail.com";
         public const string DawemAppDevelopersGmailCom = "dawem.app.developers@gmail.com";
         public const string DawemAppDevelopersGmailComPassword = "wxqo zsuj brqy ufgm";

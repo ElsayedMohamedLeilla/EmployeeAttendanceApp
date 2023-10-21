@@ -12,6 +12,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Provider
@@ -23,9 +24,11 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IEmployeeBLValidation employeeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment webHostEnvironment;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
+            IWebHostEnvironment _webHostEnvironment,
            RequestInfo _requestHeaderContext,
            IEmployeeBLValidation _employeeBLValidation)
         {
@@ -34,6 +37,7 @@ namespace Dawem.BusinessLogic.Provider
             repositoryManager = _repositoryManager;
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
+            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
@@ -56,6 +60,15 @@ namespace Dawem.BusinessLogic.Provider
             #endregion
 
             unitOfWork.CreateTransaction();
+
+            #region Upload Image
+
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await UploadHelper.UploadImageFile(model.ProfileImageFile, DawemKeys.Employees, webHostEnvironment);
+            }
+
+            #endregion
 
             #region Insert Employee
 

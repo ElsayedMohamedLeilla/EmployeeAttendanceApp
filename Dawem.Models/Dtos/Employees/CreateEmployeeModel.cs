@@ -10,5 +10,6 @@ namespace Dawem.Models.Dtos.Provider
         public DateTime JoiningDate { get; set; }
         public IFormFile ProfileImageFile { get; set; }
         public bool IsActive { get; set; }
+
     }
 }

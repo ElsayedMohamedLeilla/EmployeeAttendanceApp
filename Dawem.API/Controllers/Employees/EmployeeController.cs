@@ -33,7 +33,7 @@ namespace Dawem.API.Controllers.Provider
             return Success(result, messageCode: DawemKeys.DoneCreateEmployeeSuccessfully);
         }
 
-        [HttpPost, DisableRequestSizeLimit]
+        [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> Update([FromForm] UpdateEmployeeWithImageModel formData)
         {
             if (formData == null || formData.UpdateEmployeeModelString == null)
@@ -82,7 +82,7 @@ namespace Dawem.API.Controllers.Provider
             }
             return Success(await employeeBL.GetById(employeeId));
         }
-        [HttpPost]
+        [HttpDelete]
         public async Task<ActionResult> Delete(int employeeId)
         {
             if (employeeId < 1)

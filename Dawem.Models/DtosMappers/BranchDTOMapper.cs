@@ -6,12 +6,12 @@ namespace Dawem.Models.DtosMappers
 {
     public class BranchDTOMapper
     {
-        private static RequestInfo? userContext;
+        private static RequestInfo userContext;
         public static void InitBranchContext(RequestInfo _userContext)
         {
             userContext = _userContext;
         }
-        public static BranchDTO? Map(Branch? branch)
+        public static BranchDTO Map(Branch branch)
         {
             if (branch == null) return null;
             var DTO = new BranchDTO()
@@ -31,7 +31,7 @@ namespace Dawem.Models.DtosMappers
             };
             return DTO;
         }
-        public static Branch? Map(BranchDTO? BranchDTO)
+        public static Branch Map(BranchDTO BranchDTO)
         {
             if (BranchDTO == null) return null;
             var _branch = new Branch()
@@ -51,7 +51,7 @@ namespace Dawem.Models.DtosMappers
             return _branch;
         }
 
-        public static List<BranchDTO?>? Map(List<Branch>? branches)
+        public static List<BranchDTO> Map(List<Branch> branches)
         {
             if (branches == null) return null;
             return branches.Select(selector: Map).ToList();

@@ -16,34 +16,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Provider
 {
-    public class EmployeeBL : IEmployeeBL
+    public class DepartmentBL : IDepartmentBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IEmployeeBLValidation employeeBLValidation;
+        private readonly IDepartmentBLValidation departmentBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public DepartmentBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
-           IEmployeeBLValidation _employeeBLValidation)
+           IDepartmentBLValidation _departmentBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            employeeBLValidation = _employeeBLValidation;
+            departmentBLValidation = _departmentBLValidation;
             mapper = _mapper;
         }
-        public async Task<int> Create(CreateEmployeeModel model)
+        public async Task<int> Create(CreateDepartmentModel model)
         {
             #region Model Validation
 
-            var createEmployeeModel = new CreateEmployeeModelValidator();
-            var createEmployeeModelResult = createEmployeeModel.Validate(model);
-            if (!createEmployeeModelResult.IsValid)
+            var createDepartmentModel = new CreateDepartmentModelValidator();
+            var createDepartmentModelResult = createDepartmentModel.Validate(model);
+            if (!createDepartmentModelResult.IsValid)
             {
-                var error = createEmployeeModelResult.Errors.FirstOrDefault();
+                var error = createDepartmentModelResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
             }
 
@@ -51,29 +51,26 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Business Validation
 
-            await employeeBLValidation.CreateValidation(model);
+            await departmentBLValidation.CreateValidation(model);
 
             #endregion
-
             unitOfWork.CreateTransaction();
+            #region Insert Department
 
-            #region Insert Employee
-
-            #region Set Employee code
-
-            var getNextCode = await repositoryManager.EmployeeRepository
+            #region Set Department code
+            var getNextCode = await repositoryManager.DepartmentRepository
                 .Get(e => e.CompanyId == requestInfo.CompanyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
-
             #endregion
 
-            var employee = mapper.Map<Employee>(model);
-            employee.CompanyId = requestInfo.CompanyId;
-            employee.AddUserId = requestInfo.UserId;
-            employee.Code = getNextCode;
-            repositoryManager.EmployeeRepository.Insert(employee);
+            var department = mapper.Map<Department>(model);
+            department.CompanyId = requestInfo.CompanyId;
+            department.AddUserId = requestInfo.UserId;
+           
+            department.Code = getNextCode;
+            repositoryManager.DepartmentRepository.Insert(department);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -81,58 +78,46 @@ namespace Dawem.BusinessLogic.Provider
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return employee.Id;
+            return department.Id;
 
             #endregion
 
         }
-        public async Task<bool> Update(UpdateEmployeeModel model)
+        public async Task<bool> Update(UpdateDepartmentModel model)
         {
             #region Model Validation
-
-            var updateEmployeeModelValidator = new UpdateEmployeeModelValidator();
-            var updateEmployeeModelValidatorResult = updateEmployeeModelValidator.Validate(model);
-            if (!updateEmployeeModelValidatorResult.IsValid)
+            var updateDepartmentModelValidator = new UpdateDepartmentModelValidator();
+            var updateDepartmentModelValidatorResult = updateDepartmentModelValidator.Validate(model);
+            if (!updateDepartmentModelValidatorResult.IsValid)
             {
-                var error = updateEmployeeModelValidatorResult.Errors.FirstOrDefault();
+                var error = updateDepartmentModelValidatorResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
             }
-
             #endregion
 
             #region Business Validation
-
-            await employeeBLValidation.UpdateValidation(model);
-
+            await departmentBLValidation.UpdateValidation(model);
             #endregion
-
             unitOfWork.CreateTransaction();
+            #region Update Department
 
-            #region Update Employee
-
-            var getEmployee = await repositoryManager.EmployeeRepository.GetByIdAsync(model.Id);
-
-            getEmployee.Name = model.Name;
-            getEmployee.DepartmentId = model.DepartmentId;
-            getEmployee.IsActive = model.IsActive;
-            getEmployee.JoiningDate = model.JoiningDate;
-            getEmployee.ModifiedDate = DateTime.Now;
+            var getDepartment = await repositoryManager.DepartmentRepository.GetByIdAsync(model.Id);
+            getDepartment.Name = model.Name;
+            getDepartment.IsActive = model.IsActive;
+            getDepartment.ModifiedDate = DateTime.Now;
+            getDepartment.ModifyUserId = requestInfo.UserId;
             await unitOfWork.SaveAsync();
-
             #endregion
-
             #region Handle Response
-
             await unitOfWork.CommitAsync();
             return true;
-
             #endregion
 
         }
-        public async Task<GetEmployeesResponse> Get(GetEmployeesCriteria criteria)
+        public async Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria criteria)
         {
             #region Model Validation
-
+            
             var getValidator = new GetValidator();
             var getValidatorResult = getValidator.Validate(criteria);
             if (!getValidatorResult.IsValid)
@@ -142,51 +127,37 @@ namespace Dawem.BusinessLogic.Provider
             }
 
             #endregion
-
-            var employeeRepository = repositoryManager.EmployeeRepository;
-            var query = employeeRepository.GetAsQueryable(criteria);
-
+            var departmentRepository = repositoryManager.DepartmentRepository;
+            var query = departmentRepository.GetAsQueryable(criteria);
             #region paging
-
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
-
             #region sorting
-
-            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), DawemKeys.Desc);
-
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), DawemKeys.Desc);
             #endregion
-
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
             #endregion
 
             #region Handle Response
 
-            var employeesList = await queryPaged.Select(e => new GetEmployeesResponseModel
+            var departmentsList = await queryPaged.Select(e => new GetDepartmentsResponseModel
             {
                 Id = e.Id,
                 Code = e.Code,
                 Name = e.Name,
-                DapartmentName = e.Department.Name,
                 IsActive = e.IsActive,
-                JoiningDate = e.JoiningDate,
-                ProfileImagePath = e.ProfileImagePath
             }).ToListAsync();
-
-            return new GetEmployeesResponse
+            return new GetDepartmentsResponse
             {
-                Employees = employeesList,
+                Departments = departmentsList,
                 TotalCount = await query.CountAsync()
             };
-
             #endregion
 
         }
-        public async Task<GetEmployeesForDropDownResponse> GetForDropDown(GetEmployeesCriteria criteria)
+        public async Task<GetDepartmentsForDropDownResponse> GetForDropDown(GetDepartmentsCriteria criteria)
         {
             #region Model Validation
-
             var getValidator = new GetValidator();
             var getValidatorResult = getValidator.Validate(criteria);
             if (!getValidatorResult.IsValid)
@@ -194,12 +165,11 @@ namespace Dawem.BusinessLogic.Provider
                 var error = getValidatorResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
             }
-
             #endregion
 
             criteria.IsActive = true;
-            var employeeRepository = repositoryManager.EmployeeRepository;
-            var query = employeeRepository.GetAsQueryable(criteria);
+            var departmentRepository = repositoryManager.DepartmentRepository;
+            var query = departmentRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -207,9 +177,7 @@ namespace Dawem.BusinessLogic.Provider
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-
-            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), DawemKeys.Desc);
-
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), DawemKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -218,59 +186,53 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Response
 
-            var employeesList = await queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
+            var departmentsList = await queryPaged.Select(e => new GetDepartmentsForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
             }).ToListAsync();
 
-            return new GetEmployeesForDropDownResponse
+            return new GetDepartmentsForDropDownResponse
             {
-                Employees = employeesList,
+                Departments = departmentsList,
                 TotalCount = await query.CountAsync()
             };
 
             #endregion
 
         }
-        public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
+        public async Task<GetDepartmentInfoResponseModel> GetInfo(int DepartmentId)
         {
-            var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
-                .Select(e => new GetEmployeeInfoResponseModel
+            var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
+                .Select(e => new GetDepartmentInfoResponseModel
                 {
                     Code = e.Code,
                     Name = e.Name,
-                    DapartmentName = e.Department.Name,
                     IsActive = e.IsActive,
-                    JoiningDate = e.JoiningDate,
-                    ProfileImagePath = e.ProfileImagePath
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 
-            return employee;
+            return department;
         }
-        public async Task<GetEmployeeByIdResponseModel> GetById(int employeeId)
+        public async Task<GetDepartmentByIdResponseModel> GetById(int DepartmentId)
         {
-            var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
-                .Select(e => new GetEmployeeByIdResponseModel
+            var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
+                .Select(e => new GetDepartmentByIdResponseModel
                 {
                     Id  = e.Id,
                     Code = e.Code,
                     Name = e.Name,
-                    DepartmentId = e.DepartmentId,
                     IsActive = e.IsActive,
-                    JoiningDate = e.JoiningDate,
-                    ProfileImagePath = e.ProfileImagePath
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 
-            return employee;
+            return department;
 
         }
-        public async Task<bool> Delete(int employeeId)
+        public async Task<bool> Delete(int departmentd)
         {
-            var employee = await repositoryManager.EmployeeRepository.GetByIdAsync(employeeId) ??
+            var department = await repositoryManager.DepartmentRepository.GetByIdAsync(departmentd) ??
                 throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
-            employee.IsDeleted = true;
-            employee.DeletionDate = DateTime.Now;
+            department.IsDeleted = true;
+            department.DeletionDate = DateTime.Now;
             await unitOfWork.SaveAsync();
             return true;
         }

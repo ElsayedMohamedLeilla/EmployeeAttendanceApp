@@ -168,7 +168,24 @@
         public const string SorryEmployeeNameIsDuplicated = "Sorry!!EmployeeNameIsDuplicated!";
         public const string SorryYouMustEnterEmployeeId = "Sorry!!YouMustEnterEmployeeId!";
         public const string SorryEmployeeNotFound = "Sorry!!EmployeeNotFound!";
+        public const string SorryDepartmentNameIsDuplicated = "Sorry!!DepartmentNameIsDuplicated";
+        public const string SorryYouMustEnterDepartmentName = "Sorry!!YouMustEnterDepartmentName";
+        public const string SorryYouMustEnterDepartmentId = "Sorry!!YouMustEnterDepartmentId";
+        public const string SorryDepartmentNotFound = "Sorry!!DepartmentNotFound";
+        public const string DoneCreateDepartmentSuccessfully = "DoneCreateDepartmentSuccessfully";
+        public const string DoneUpdateDepartmentSuccessfully = "DoneUpdateDepartmentSuccessfully";
 
         
+
+
+
+
+
+
+
+
+
+
+
     }
 }

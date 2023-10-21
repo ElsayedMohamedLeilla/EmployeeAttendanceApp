@@ -19,13 +19,13 @@ namespace Dawem.BusinessLogic.Provider
     public class UserBranchBL : IUserBranchBL
     {
 
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly UserManagerRepository userManagerRepository;
         private readonly IRepositoryManager repositoryManager;
 
 
-        public UserBranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, RequestHeaderContext _requestHeaderContext,
+        public UserBranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, RequestInfo _requestHeaderContext,
             IRepositoryManager _repositoryManager, UserManagerRepository _userManagerRepository)
         {
             requestHeaderContext = _requestHeaderContext;

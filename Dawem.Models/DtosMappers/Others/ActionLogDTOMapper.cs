@@ -6,9 +6,9 @@ namespace Dawem.Models.DtosMappers.Others
 {
     public class ActionLogDTOMapper
     {
-        private static RequestHeaderContext? userContext;
+        private static RequestInfo? userContext;
 
-        public static void InitActionLogContext(RequestHeaderContext _userContext)
+        public static void InitActionLogContext(RequestInfo _userContext)
         {
             userContext = _userContext;
         }

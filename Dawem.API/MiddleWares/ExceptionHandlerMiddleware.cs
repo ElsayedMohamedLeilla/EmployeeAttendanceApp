@@ -26,9 +26,9 @@ namespace Dawem.API.MiddleWares
         {
             _request = next;
         }
-        public Task Invoke(HttpContext context, RequestHeaderContext userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
+        public Task Invoke(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
 
-        async Task InvokeAsync(HttpContext context, RequestHeaderContext userContext, IUnitOfWork<ApplicationDBContext> unitOfWork)
+        async Task InvokeAsync(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
             var response = new ExecutionResponse<object>();
             int statusCode = 500;

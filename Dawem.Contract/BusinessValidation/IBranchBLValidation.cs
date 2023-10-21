@@ -9,7 +9,7 @@ namespace Dawem.Contract.BusinessValidation
     public interface IBranchBLValidation
     {
         BranchDTO BranchCreationValidator(BranchValidatorModel branchValidatorModel);
-        bool ValidateChangeForMainBranchOnly(RequestHeaderContext requestHeaderContext, ChangeType changeType);
+        bool ValidateChangeForMainBranchOnly(RequestInfo requestHeaderContext, ChangeType changeType);
         Task<int> ValidateUserBranch(ValidateUserBranchSearchCriteria validateUserBranchSearchCriteria);
     }
 }

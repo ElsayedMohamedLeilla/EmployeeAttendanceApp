@@ -11,8 +11,8 @@ namespace Dawem.Repository.Others
 {
     public class ActionLogRepository : GenericRepository<ActionLog>, IActionLogRepository
     {
-        private readonly RequestHeaderContext userContext;
-        public ActionLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestHeaderContext _userContext) : base(unitOfWork)
+        private readonly RequestInfo userContext;
+        public ActionLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestInfo _userContext) : base(unitOfWork)
         {
             userContext = _userContext;
         }

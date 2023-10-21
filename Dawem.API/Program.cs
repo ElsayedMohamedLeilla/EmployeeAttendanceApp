@@ -106,6 +106,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
     config.AddProfile<AutoMapperConfig>();
+    config.AddProfile<EmployeesMapProfile>();
 }, typeof(Program));
 
 WebApplication app = builder.Build();
@@ -125,7 +126,7 @@ IServiceScopeFactory serviceScopeFactory = serviceScope.ServiceProvider.GetRequi
 IServiceProvider serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
 IUnitOfWork<ApplicationDBContext> unitOfWork = serviceProvider.GetService<IUnitOfWork<ApplicationDBContext>>();
 GeneralSetting generalSetting = serviceProvider.GetService<GeneralSetting>();
-RepositoryManager repositoryManager = new(unitOfWork, generalSetting, new RequestHeaderContext());
+RepositoryManager repositoryManager = new(unitOfWork, generalSetting, new RequestInfo());
 new TranslationBL(unitOfWork, repositoryManager).RefreshCachedTranslation();
 
 

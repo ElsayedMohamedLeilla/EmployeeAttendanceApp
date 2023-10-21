@@ -51,6 +51,8 @@
         public const string Jwt = "Jwt";
         public const string UserId = "UserId";
         public const string BranchId = "BranchId";
+        public const string CompanyId = "CompanyId";
+        
         public const string ApplicationType = "ApplicationType";
         public const string RememberMe = "RememberMe";
         public const string True = "true";
@@ -65,7 +67,7 @@
         public const string BL = "BL";
         public const string BLValidation = "BLValidation";
         public const string FullAccess = "FullAccess";
-        public const string ApiCcontrollerAction = "api/[controller]/[action]";
+        public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string Dot = ".";
         public const string Account = "Account";
@@ -154,10 +156,19 @@
         public const string SorryYouMustEnterResetToken = "Sorry!!YouMustEnterResetToken!";
         public const string SorryErrorHappenWhileResetPassword = "Sorry!!ErrorHappenWhileResetPassword!";
 
-        /*public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
-        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
-        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";
-        public const string SorryYouMustEnterUser2 = "Sorry!!YouMustEnterUser!";*/
 
+        //new
+        public const string SorryUserEmailNotConfirmed = "Sorry!!UserEmailNotConfirmed!";
+        public const string DoneCreateEmployeeSuccessfully = "DoneCreateEmployeeSuccessfully";
+        public const string DoneUpdateEmployeeSuccessfully = "DoneUpdateEmployeeSuccessfully";
+        public const string SorryYouMustChooseDepartment = "Sorry!!YouMustChooseDepartment!";
+        public const string SorryYouMustEnterEmployeeName = "Sorry!!YouMustEnterEmployeeName!";
+        public const string SorryYouMustEnterPaginationSettings = "Sorry!!YouMustEnterPaginationSettings!";
+        public const string SorryYouMustEnterCompanyId = "SorryYouMustEnterCompanyId!";
+        public const string SorryEmployeeNameIsDuplicated = "Sorry!!EmployeeNameIsDuplicated!";
+        public const string SorryYouMustEnterEmployeeId = "Sorry!!YouMustEnterEmployeeId!";
+        public const string SorryEmployeeNotFound = "Sorry!!EmployeeNotFound!";
+
+        
     }
 }

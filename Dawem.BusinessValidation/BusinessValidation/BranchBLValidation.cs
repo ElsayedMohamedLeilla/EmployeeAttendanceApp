@@ -33,7 +33,7 @@ namespace Dawem.Validation.BusinessValidation
 
             return branch;
         }
-        public bool ValidateChangeForMainBranchOnly(RequestHeaderContext userContext, ChangeType changeType)
+        public bool ValidateChangeForMainBranchOnly(RequestInfo userContext, ChangeType changeType)
         {
 
             if (userContext == null)

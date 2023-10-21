@@ -6,8 +6,8 @@ namespace Dawem.Models.DtosMappers
 {
     public class CountryDTOMapper
     {
-        private static RequestHeaderContext? userContext;
-        public static void InitBranchContext(RequestHeaderContext _userContext)
+        private static RequestInfo? userContext;
+        public static void InitBranchContext(RequestInfo _userContext)
         {
             userContext = _userContext;
         }

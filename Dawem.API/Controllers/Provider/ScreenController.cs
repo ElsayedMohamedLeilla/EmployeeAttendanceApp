@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Provider
 {
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     public class ScreenController : BaseController
     {

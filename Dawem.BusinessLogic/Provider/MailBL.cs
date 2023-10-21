@@ -11,8 +11,8 @@ namespace Dawem.BusinessLogic.Provider
 {
     public class MailBL : IMailBL
     {
-        private readonly RequestHeaderContext requestHeaderContext;
-        public MailBL(RequestHeaderContext _requestHeaderContext)
+        private readonly RequestInfo requestHeaderContext;
+        public MailBL(RequestInfo _requestHeaderContext)
         {
 
             requestHeaderContext = _requestHeaderContext;

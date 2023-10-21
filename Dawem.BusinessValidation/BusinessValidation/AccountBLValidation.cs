@@ -49,7 +49,7 @@ namespace Dawem.Validation.BusinessValidation
         {
             #region Find User
 
-            var user = await userManagerRepository.FindByEmailAsync(model.Email) ?? 
+            var user = await userManagerRepository.FindByNameAsync(model.Email) ?? 
                 throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
 
             #endregion
@@ -67,9 +67,7 @@ namespace Dawem.Validation.BusinessValidation
             if (!user.EmailConfirmed)
             {
                 throw new BusinessValidationException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
-            }
-
-            
+            }    
             return user;
         }
     }

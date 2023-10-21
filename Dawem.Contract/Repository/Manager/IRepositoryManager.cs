@@ -19,7 +19,7 @@ namespace Dawem.Contract.Repository.Manager
         IUserRoleRepository UserRoleRepository { get; }
         IUserGroupRepository UserGroupRepository { get; }
         ITranslationRepository TranslationRepository { get; }
-
+        IEmployeeRepository EmployeeRepository { get; }
 
     }
 }

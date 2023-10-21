@@ -6,10 +6,10 @@ namespace Dawem.Validation.FluentValidation.Authentication
 {
     class EmailValidator : AbstractValidator<VerifyEmailModel>
     {
-        private readonly RequestHeaderContext userContext;
+        private readonly RequestInfo userContext;
 
 
-        public EmailValidator(RequestHeaderContext _userContext)
+        public EmailValidator(RequestInfo _userContext)
         {
             userContext = _userContext;
             RuleFor(x => x.Email).NotEmpty().WithMessage(TranslationHelper.GetTranslation("EmailRequired", userContext.Lang))

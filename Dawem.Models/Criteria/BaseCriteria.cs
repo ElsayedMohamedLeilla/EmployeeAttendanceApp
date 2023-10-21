@@ -14,6 +14,7 @@ namespace Dawem.Models.Criteria
         public string? FreeText { get; set; }
         public OrderDirection? OrderByDirection { get; set; }
         public bool ForGridView { get; set; }
+        public bool? IsActive { get; set; }
 
     }
 }

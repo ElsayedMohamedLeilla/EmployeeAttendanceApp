@@ -177,11 +177,14 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("Code")
                         .HasColumnType("int");
 
-                    b.Property<int>("DapartmentId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -206,7 +209,9 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DapartmentId");
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees", "Dawem");
                 });
@@ -931,13 +936,21 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Employees.Department", "Dapartment")
+                    b.HasOne("Dawem.Domain.Entities.Provider.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("DapartmentId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Dapartment");
+                    b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Lookups.Currency", b =>

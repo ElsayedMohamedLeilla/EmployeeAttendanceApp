@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Provider
 {
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize]
+    [AllowAnonymous]
     public class AccountController : BaseController
     {
         private readonly IAccountBL accountBL;
@@ -22,7 +22,6 @@ namespace Dawem.API.Controllers.Provider
             mailBL = _mailBL;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
@@ -30,20 +29,15 @@ namespace Dawem.API.Controllers.Provider
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ActionResult> SignIn(SignInModel signInModel)
         {
             return Success(await accountBL.SignIn(signInModel), messageCode: DawemKeys.DoneSignYouInSuccessfully);
         }
-
-        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> SendVerificationCode(VerifyEmailModel model)
         {
             return Success(await mailBL.SendEmail(model));
         }
-
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> VerifyEmail(string emailtoken, string email)
         {
@@ -56,7 +50,6 @@ namespace Dawem.API.Controllers.Provider
 
             return Redirect("https://www.youtube.com");
         }
-        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> RequestResetPassword(RequestResetPasswordModel forgetPasswordBindingModel)
         {
@@ -68,13 +61,13 @@ namespace Dawem.API.Controllers.Provider
             var forgetPasswordResponse = await accountBL.RequestResetPassword(forgetPasswordBindingModel);
             return Success(forgetPasswordResponse, messageCode: DawemKeys.DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully);
         }
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             var response = await accountBL.ResetPassword(model);
             return Success(response, messageCode: DawemKeys.DoneResetPasswordSuccessfully);
-        }        
+        }
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult> ChangePassword(ChangePasswordModel resetPasswordModel)
         {

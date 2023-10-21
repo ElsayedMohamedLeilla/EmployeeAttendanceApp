@@ -23,12 +23,12 @@ namespace Dawem.BusinessLogic.Provider
     {
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IBranchRepository branchRepository;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         private readonly IBranchBLValidation branchBLValidation;
         private readonly IUserBranchBL userBranchBL;
 
         public BranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-               RequestHeaderContext _userContext, IBranchRepository _branchRepository,
+               RequestInfo _userContext, IBranchRepository _branchRepository,
                IBranchBLValidation _BranchValidatorBL, IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;

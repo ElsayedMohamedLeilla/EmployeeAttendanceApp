@@ -11,9 +11,9 @@ namespace Dawem.BusinessLogic.Provider
     {
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IRepositoryManager repositoryManager;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         public CompanyBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-               RequestHeaderContext _requestHeaderContext, IRepositoryManager _repositoryManager)
+               RequestInfo _requestHeaderContext, IRepositoryManager _repositoryManager)
         {
             unitOfWork = _unitOfWork;
             requestHeaderContext = _requestHeaderContext;

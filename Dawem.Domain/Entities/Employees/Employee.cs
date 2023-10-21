@@ -1,4 +1,5 @@
-﻿using Dawem.Translations;
+﻿using Dawem.Domain.Entities.Provider;
+using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
@@ -6,10 +7,17 @@ namespace Dawem.Domain.Entities.Employees
     [Table(nameof(Employee) + DawemKeys.S)]
     public class Employee : BaseEntity
     {
-        public int Code { get; set; }
-        public int DapartmentId { get; set; }
-        [ForeignKey(nameof(DapartmentId))]
-        public Department Dapartment { get; set; }
+        #region Foregn Keys
+
+        public int CompanyId { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public Company Company { get; set; }
+        public int DepartmentId { get; set; }
+        [ForeignKey(nameof(DepartmentId))]
+        public Department Department { get; set; }
+
+        #endregion
+        public int Code { get; set; }       
         public string Name { get; set; }
         public string ProfileImagePath { get; set; }
         public DateTime JoiningDate { get; set; }

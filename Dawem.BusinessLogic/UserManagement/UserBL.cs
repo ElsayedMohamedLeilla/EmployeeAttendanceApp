@@ -32,7 +32,7 @@ namespace Dawem.BusinessLogic.UserManagement
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly UserManagerRepository userManagerRepository;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         private readonly IBranchBLValidation branchValidatorBL;
         private readonly IRepositoryManager repositoryManager;
         private readonly IUserBranchBL userBranchBL;
@@ -41,7 +41,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
         public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, IRepositoryManager _repositoryManager,
             UserManagerRepository _smartUserManagerRepository, IMapper _mapper,
-            IConfiguration _config, RequestHeaderContext _userContext,
+            IConfiguration _config, RequestInfo _userContext,
             IBranchBLValidation _branchValidatorBL, IUserBLValidation _userBLValidation,
              IUserBranchBL _userBranchBL)
         {

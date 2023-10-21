@@ -20,7 +20,7 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, IUserScreenActionPermissionBL userScreenActionPermissionBL)
+        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IUserScreenActionPermissionBL userScreenActionPermissionBL)
         {
 
 

@@ -23,7 +23,7 @@ namespace Dawem.Repository.Manager
 
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
 
 
         private IUserRepository userRepository;
@@ -36,47 +36,39 @@ namespace Dawem.Repository.Manager
         private IUserRoleRepository userRoleRepository;
         private IUserGroupRepository userGroupRepository;
         private ITranslationRepository translationRepository;
+        private IEmployeeRepository employeeRepository;
+        
 
-
-        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestHeaderContext _requestHeaderContext)
+        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
             generalSetting = _generalSetting;
             requestHeaderContext = _requestHeaderContext;
-
         }
-
 
         public ICompanyRepository CompanyRepository =>
          companyRepository ??= new CompanyRepository( unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestHeaderContext, unitOfWork, generalSetting);
-
         public IActionLogRepository ActionLogRepository =>
          actionLogRepository ??= new ActionLogRepository(unitOfWork, requestHeaderContext);
-
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
-
         public IBranchRepository BranchRepository =>
          branchRepository ??= new BranchRepository(unitOfWork, requestHeaderContext, generalSetting);
-
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
-
         public IScreenRepository ScreenRepository =>
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
-
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
-
-
         public IUserGroupRepository UserGroupRepository =>
         userGroupRepository ??= new UserGroupRepository(unitOfWork, generalSetting);
-
-
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
+        public IEmployeeRepository EmployeeRepository =>
+        employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting);
 
+       
     }
 }

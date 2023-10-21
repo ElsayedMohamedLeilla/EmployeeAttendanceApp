@@ -21,12 +21,12 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, UserManagerRepository userManager, IUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
+        public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, UserManagerRepository userManager, IUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
-            userContext.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
 
             var userId = 0;
-            var branchId = 0;
+            var companyId = 0;
             int applicationType = 0;
 
             try
@@ -40,16 +40,16 @@ namespace Dawem.API.MiddleWares
                     var jwttoken = new JwtSecurityTokenHandler().ReadJwtToken(tok);
 
                     var userIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.UserId)?.Value;
-                    var branchIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.BranchId)?.Value;
+                    var companyIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.CompanyId)?.Value;
                     var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.ApplicationType)?.Value;
 
                     int.TryParse(userIdText.ToString(), out userId);
-                    int.TryParse(branchIdText.ToString(), out branchId);
+                    int.TryParse(companyIdText.ToString(), out companyId);
                     int.TryParse(applicationTypeText.ToString(), out applicationType);
 
-                    userContext.UserId = userId;
-                    userContext.BranchId = branchId;
-                    userContext.ApplicationType = (ApplicationType)applicationType;
+                    requestInfo.UserId = userId;
+                    requestInfo.CompanyId = companyId;
+                    requestInfo.ApplicationType = (ApplicationType)applicationType;
                 }
 
             }
@@ -61,17 +61,9 @@ namespace Dawem.API.MiddleWares
 
             if (userId > 0)
             {
-                userContext.User = await userManager.FindByIdAsync(userId.ToString());
+                requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
 
             }
-
-            if (branchId > 0)
-            {
-                var branch = branchRepository.GetEntityByCondition(b => b.Id == branchId);
-                userContext.IsMainBranch = branch.IsMainBranch;
-                userContext.CompanyId = branch.CompanyId;
-            }
-
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(DawemKeys.Ar))
             {

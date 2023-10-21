@@ -14,11 +14,11 @@ namespace Dawem.BusinessLogic.Others
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IRepositoryManager repositoryManager;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
 
 
         public UserScreenActionPermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IRepositoryManager _repositoryManager, RequestHeaderContext _requestHeaderContext)
+            IRepositoryManager _repositoryManager, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
             repositoryManager = _repositoryManager;

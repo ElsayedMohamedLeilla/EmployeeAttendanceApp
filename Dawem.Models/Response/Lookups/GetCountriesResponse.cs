@@ -4,7 +4,7 @@ namespace Dawem.Models.Response.Lookups
 {
     public class GetCountriesResponse : BaseResponse
     {
-        public List<CountryLiteDTO>? Countries { get; set; }
+        public List<CountryLiteDTO> Countries { get; set; }
 
     }
 }

@@ -6,9 +6,9 @@ namespace Dawem.Models.DtosMappers
 {
     public class GroupDTOMapper
     {
-        private static RequestHeaderContext? userContext;
+        private static RequestInfo? userContext;
 
-        public static void InitGroupContext(RequestHeaderContext _userContext)
+        public static void InitGroupContext(RequestInfo _userContext)
         {
             userContext = _userContext;
         }

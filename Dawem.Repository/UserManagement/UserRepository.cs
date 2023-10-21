@@ -12,8 +12,8 @@ namespace Dawem.Repository.UserManagement
 {
     public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
-        private readonly RequestHeaderContext requestHeaderContext;
-        public UserRepository(RequestHeaderContext _requestHeaderContext, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestHeaderContext;
+        public UserRepository(RequestInfo _requestHeaderContext, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
             requestHeaderContext = _requestHeaderContext;
         }

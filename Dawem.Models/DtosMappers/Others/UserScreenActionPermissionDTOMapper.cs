@@ -6,9 +6,9 @@ namespace Dawem.Models.DtosMappers.Others
 {
     public class UserScreenActionPermissionDTOMapper
     {
-        private static RequestHeaderContext? userContext;
+        private static RequestInfo? userContext;
 
-        public static void InitUserScreenActionPermissionContext(RequestHeaderContext _userContext)
+        public static void InitUserScreenActionPermissionContext(RequestInfo _userContext)
         {
             userContext = _userContext;
         }

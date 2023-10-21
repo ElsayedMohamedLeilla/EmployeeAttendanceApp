@@ -8,8 +8,8 @@ namespace Dawem.Repository.Core
 {
     public class GroupRepository : GenericRepository<Group>, IGroupRepository
     {
-        private readonly RequestHeaderContext userContext;
-        public GroupRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestHeaderContext _userContext) : base(unitOfWork)
+        private readonly RequestInfo userContext;
+        public GroupRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestInfo _userContext) : base(unitOfWork)
         {
             userContext = _userContext;
         }

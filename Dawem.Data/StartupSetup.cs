@@ -13,7 +13,7 @@ namespace Dawem.BusinessLogic
             services.AddScoped<ApplicationDBContext>();
             services.AddScoped<IUnitOfWork<ApplicationDBContext>, UnitOfWork<ApplicationDBContext>>();
             services.AddScoped<GeneralSetting>();
-            services.AddScoped<RequestHeaderContext>();
+            services.AddScoped<RequestInfo>();
             
         }
     }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Others
 {
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize(Roles = DawemKeys.FullAccess)]
     public class ActionLogController : BaseController

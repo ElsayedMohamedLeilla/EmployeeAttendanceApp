@@ -16,7 +16,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation;
 using Dawem.Validation.FluentValidation.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +33,7 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly UserManagerRepository userManagerRepository;
         private readonly Jwt jwt;
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         private readonly IMailBL mailBL;
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
@@ -46,7 +45,7 @@ namespace Dawem.BusinessLogic.Provider
             IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
-           RequestHeaderContext _userContext,
+           RequestInfo _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
            LinkGenerator _generator, IAccountBLValidation _registerationValidatorBL)
         {
@@ -208,8 +207,6 @@ namespace Dawem.BusinessLogic.Provider
             return true;
 
             #endregion
-
-
         }
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
@@ -285,6 +282,7 @@ namespace Dawem.BusinessLogic.Provider
                 UserName = user.UserName,
                 RememberMe = signInModel.RememberMe,
                 Roles = roles,
+                CompanyId = user.CompanyId,
                 ApplicationType = signInModel.ApplicationType
             };
 
@@ -305,7 +303,7 @@ namespace Dawem.BusinessLogic.Provider
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
                 new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
-                new Claim(DawemKeys.BranchId , criteria.BranchId.ToString()),
+                new Claim(DawemKeys.CompanyId , criteria.CompanyId.ToString()),
                 new Claim(DawemKeys.ApplicationType , criteria.ApplicationType.ToString())
             });
             if (criteria.RememberMe)
@@ -324,7 +322,7 @@ namespace Dawem.BusinessLogic.Provider
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = claimsIdentity,
-                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(30),
+                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -400,32 +398,29 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 
-            if (await userManagerRepository.IsEmailConfirmedAsync(user))
-            {
-                var token = await userManagerRepository.GenerateEmailConfirmationTokenAsync(user);
-
-                var passwordResetToken = await userManagerRepository.GeneratePasswordResetTokenAsync(user);
-                var tokenObject = new ResetPasswordToken { Token = passwordResetToken, Email = user.Email };
-
-                var confirmationLink = GetResetPasswordLink(tokenObject);
-                var verifyEmail = new VerifyEmailModel
-                {
-                    Subject = requestHeaderContext.Lang == "ar" ? "مرحبًا بك في داوم! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to  Dawem! Reset Your Password",
-                    UserName = user.FirstName + " " + user.LastName,
-                    Body = string.Format("{0} <a href=\"" + confirmationLink + "\"> " + (requestHeaderContext.Lang == "ar" ? "تعيين كلمة المرور" : "Reset Password") + "</a>",
-                    requestHeaderContext.Lang == "ar" ? " يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر علي" : "Please reset your password by clicking"),
-                    Email = user.Email
-                };
-
-                await mailBL.SendEmail(verifyEmail);
-
-                return true;
+            if (!user.EmailConfirmed) {
+                throw new BusinessValidationException(DawemKeys.SorryUserEmailNotConfirmed);
             }
 
-            return false;
+            var passwordResetToken = await userManagerRepository.GeneratePasswordResetTokenAsync(user);
+            var tokenObject = new ResetPasswordToken { Token = passwordResetToken, Email = user.Email };
+
+            var confirmationLink = GetResetPasswordLink(tokenObject);
+            var verifyEmail = new VerifyEmailModel
+            {
+                Subject = requestHeaderContext.Lang == "ar" ? "مرحبًا بك في داوم! أعد تعيين كلمة المرور الخاصة بك" : "Welcome to  Dawem! Reset Your Password",
+                UserName = user.FirstName + " " + user.LastName,
+                Body = string.Format("{0} <a href=\"" + confirmationLink + "\"> " + (requestHeaderContext.Lang == "ar" ? "تعيين كلمة المرور" : "Reset Password") + "</a>",
+                requestHeaderContext.Lang == "ar" ? " يرجى إعادة تعيين كلمة المرور الخاصة بك عن طريق النقر علي" : "Please reset your password by clicking"),
+                Email = user.Email
+            };
+
+            await mailBL.SendEmail(verifyEmail);
+
+            return true;
         }
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
@@ -441,7 +436,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 
             var resetPasswordResult = await userManagerRepository.ResetPasswordAsync(user, model.ResetToken, model.NewPassword);
@@ -466,7 +461,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, model.OldPassword);

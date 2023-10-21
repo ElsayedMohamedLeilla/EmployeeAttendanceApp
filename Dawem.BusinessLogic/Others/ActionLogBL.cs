@@ -20,11 +20,11 @@ namespace Dawem.BusinessLogic.Others
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly IRepositoryManager repositoryManager;
-        private readonly RequestHeaderContext userContext;
+        private readonly RequestInfo userContext;
 
 
         public ActionLogBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IRepositoryManager _repositoryManager, RequestHeaderContext _userContext
+            IRepositoryManager _repositoryManager, RequestInfo _userContext
             )
         {
             unitOfWork = _unitOfWork;

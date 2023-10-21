@@ -7,9 +7,9 @@ namespace Dawem.Models.DtosMappers
     public class UserDTOMapper
     {
 
-        private static RequestHeaderContext userContext;
+        private static RequestInfo userContext;
 
-        public static void InitUserContext(RequestHeaderContext _userContext)
+        public static void InitUserContext(RequestInfo _userContext)
         {
             userContext = _userContext;
             UserGroupDTOMapper.InitUserContext(userContext);

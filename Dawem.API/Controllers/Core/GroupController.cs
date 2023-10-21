@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Core
 {
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize(Roles = DawemKeys.FullAccess)]
     public class GroupController : BaseController

@@ -19,9 +19,9 @@ namespace Dawem.BusinessLogic.Lookups
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly ICountryRepository countryRepository;
         private readonly ICurrencyRepository currencyRepository;
-        private readonly RequestHeaderContext userContext;
+        private readonly RequestInfo userContext;
         public LookupsBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, ICurrencyRepository _currencyRepository, ICountryRepository _countryRepository,
-             RequestHeaderContext _userContext)
+             RequestInfo _userContext)
         {
             unitOfWork = _unitOfWork;
             currencyRepository = _currencyRepository;

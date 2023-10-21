@@ -13,8 +13,8 @@ namespace Dawem.Repository.Provider
     public class BranchRepository : GenericRepository<Branch>, IBranchRepository
     {
 
-        private readonly RequestHeaderContext requestHeaderContext;
-        public BranchRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestHeaderContext _requestHeaderContext
+        private readonly RequestInfo requestHeaderContext;
+        public BranchRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestInfo _requestHeaderContext
             , GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 

@@ -12,15 +12,15 @@ using Newtonsoft.Json.Serialization;
 namespace Dawem.API.Controllers
 {
 
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     public class BaseController : ControllerBase
     {
-        private readonly RequestHeaderContext requestHeaderContext;
+        private readonly RequestInfo requestHeaderContext;
         public BaseController()
         {
         }
-        public BaseController(RequestHeaderContext _requestHeaderContext)
+        public BaseController(RequestInfo _requestHeaderContext)
         {
             requestHeaderContext = _requestHeaderContext;
         }

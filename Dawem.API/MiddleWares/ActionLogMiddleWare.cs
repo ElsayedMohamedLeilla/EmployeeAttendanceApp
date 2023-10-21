@@ -19,7 +19,7 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestHeaderContext userContext, IUnitOfWork<ApplicationDBContext> unitOfWork, IActionLogBL actionLogBL)
+        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork, IActionLogBL actionLogBL)
         {
 
 

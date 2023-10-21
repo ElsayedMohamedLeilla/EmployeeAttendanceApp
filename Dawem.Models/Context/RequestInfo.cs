@@ -3,12 +3,11 @@ using Dawem.Enums.General;
 
 namespace Dawem.Models.Context
 {
-    public class RequestHeaderContext
+    public class RequestInfo
     {
         public MyUser User { get; set; }
-
         public string Lang { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int CompanyId { get; set; }
         public int? BranchId { get; set; }
         public ApplicationType? ApplicationType { get; set; }

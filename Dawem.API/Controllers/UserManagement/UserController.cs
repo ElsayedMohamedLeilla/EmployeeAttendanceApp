@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.UserManagement
 {
-    [Route(DawemKeys.ApiCcontrollerAction)]
+    [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class UserController : BaseController
     {
         private readonly IUserBL userBL;
 
-        public UserController(IUserBL _smartUserBL, RequestHeaderContext _requestHeaderContext) : base(_requestHeaderContext)
+        public UserController(IUserBL _smartUserBL, RequestInfo _requestHeaderContext) : base(_requestHeaderContext)
         {
             userBL = _smartUserBL;
         }

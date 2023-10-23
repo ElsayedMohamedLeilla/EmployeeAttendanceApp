@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using Dawem.Translations;
 using Dawem.Enums.General;
 using Dawem.Domain.Entities.UserManagement;

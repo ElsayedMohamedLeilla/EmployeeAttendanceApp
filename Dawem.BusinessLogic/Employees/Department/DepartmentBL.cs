@@ -12,7 +12,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

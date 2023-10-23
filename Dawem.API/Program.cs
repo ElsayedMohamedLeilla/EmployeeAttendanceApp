@@ -90,6 +90,7 @@ builder.Services.ConfigureRepositoryContainer();
 builder.Services.ConfigureBLValidation();
 builder.Services.ConfigureRepository();
 builder.Services.ConfigureBusinessLogic();
+builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 

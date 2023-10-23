@@ -32,6 +32,8 @@
         public const string S = "s";
         public const string ES = "es";
         public const string IES = "ies";
+        public const string Uploads = "uploads";
+        public const string Employees = "Employees";    
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
         public const string FourigitPhone = "FourigitPhone";
@@ -57,6 +59,7 @@
         public const string RememberMe = "RememberMe";
         public const string True = "true";
         public const string Space = " ";
+        public const string QuestionMark = "?";
         public const string Email = "Email";
         public const string EmailConfirmationToken = "Email Confirmation Token";
         public const string DuplicateUserName = "DuplicateUserName";
@@ -65,15 +68,22 @@
         public const string ProjectName = "Dawem";
         public const string Repository = "Repository";
         public const string BL = "BL";
+        public const string BLC = "BLC";
         public const string BLValidation = "BLValidation";
         public const string FullAccess = "FullAccess";
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string Dot = ".";
+        public const string Slash = "/";
+        public const string BackSlash = @"\";
+        public const string UnderScore = "_";
         public const string Account = "Account";
         public const string VerifyEmail = "VerifyEmail";
+        public const string Browse = "Browse";
         public const string Http = "http";
         public const string Https = "https";
+        public const string ImagesFolder = "ImagesFolder";
+        
         public const string SmtpGmailCom = "smtp.gmail.com";
         public const string DawemAppDevelopersGmailCom = "dawem.app.developers@gmail.com";
         public const string DawemAppDevelopersGmailComPassword = "wxqo zsuj brqy ufgm";
@@ -170,8 +180,10 @@
         public const string SorryDepartmentNotFound = "Sorry!!DepartmentNotFound";
         public const string DoneCreateDepartmentSuccessfully = "DoneCreateDepartmentSuccessfully";
         public const string DoneUpdateDepartmentSuccessfully = "DoneUpdateDepartmentSuccessfully";
-
+        public const string SorryErrorHappenWhileUploadProfileImage = "Sorry!!ErrorHappenWhileUploadProfileImage!";
         
+
+
 
 
 

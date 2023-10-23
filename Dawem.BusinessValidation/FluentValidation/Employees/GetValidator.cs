@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Authentication
+namespace Dawem.Validation.FluentValidation.Employees
 {
     public class GetValidator : AbstractValidator<BaseCriteria>
     {

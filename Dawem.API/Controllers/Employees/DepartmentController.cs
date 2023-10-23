@@ -2,9 +2,7 @@
 using Dawem.Models.Dtos.Provider;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Dawem.API.Controllers.Provider
 {

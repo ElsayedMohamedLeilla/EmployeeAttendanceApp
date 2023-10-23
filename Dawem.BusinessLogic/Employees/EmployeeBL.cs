@@ -11,8 +11,12 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Authentication;
+using Dawem.Validation.FluentValidation.Employees;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.BusinessLogic.Provider
 {
@@ -23,9 +27,15 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IEmployeeBLValidation employeeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly LinkGenerator generator;
+        private readonly IUploadBLC uploadBLC;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
+            IUploadBLC _uploadBLC,
+            LinkGenerator _generator,
+            IWebHostEnvironment _webHostEnvironment,
            RequestInfo _requestHeaderContext,
            IEmployeeBLValidation _employeeBLValidation)
         {
@@ -34,6 +44,9 @@ namespace Dawem.BusinessLogic.Provider
             repositoryManager = _repositoryManager;
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
+            uploadBLC = _uploadBLC;
+            generator = _generator;
+            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
@@ -57,6 +70,18 @@ namespace Dawem.BusinessLogic.Provider
 
             unitOfWork.CreateTransaction();
 
+            #region Upload Profile Image
+
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Employees)
+                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                imageName = result.FileName;
+            }
+
+            #endregion
+
             #region Insert Employee
 
             #region Set Employee code
@@ -72,6 +97,7 @@ namespace Dawem.BusinessLogic.Provider
             var employee = mapper.Map<Employee>(model);
             employee.CompanyId = requestInfo.CompanyId;
             employee.AddUserId = requestInfo.UserId;
+            employee.ProfileImageName = imageName;
             employee.Code = getNextCode;
             repositoryManager.EmployeeRepository.Insert(employee);
             await unitOfWork.SaveAsync();
@@ -108,6 +134,18 @@ namespace Dawem.BusinessLogic.Provider
 
             unitOfWork.CreateTransaction();
 
+            #region Upload Profile Image
+
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Employees)
+                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage);
+                imageName = result.FileName;
+            }
+
+            #endregion
+
             #region Update Employee
 
             var getEmployee = await repositoryManager.EmployeeRepository.GetByIdAsync(model.Id);
@@ -117,6 +155,8 @@ namespace Dawem.BusinessLogic.Provider
             getEmployee.IsActive = model.IsActive;
             getEmployee.JoiningDate = model.JoiningDate;
             getEmployee.ModifiedDate = DateTime.Now;
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName) 
+                ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -127,7 +167,6 @@ namespace Dawem.BusinessLogic.Provider
             return true;
 
             #endregion
-
         }
         public async Task<GetEmployeesResponse> Get(GetEmployeesCriteria criteria)
         {
@@ -171,7 +210,7 @@ namespace Dawem.BusinessLogic.Provider
                 DapartmentName = e.Department.Name,
                 IsActive = e.IsActive,
                 JoiningDate = e.JoiningDate,
-                ProfileImagePath = e.ProfileImagePath
+                ProfileImagePath = e.ProfileImageName
             }).ToListAsync();
 
             return new GetEmployeesResponse
@@ -243,7 +282,7 @@ namespace Dawem.BusinessLogic.Provider
                     DapartmentName = e.Department.Name,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
-                    ProfileImagePath = e.ProfileImagePath
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
 
             return employee;
@@ -259,7 +298,8 @@ namespace Dawem.BusinessLogic.Provider
                     DepartmentId = e.DepartmentId,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
-                    ProfileImagePath = e.ProfileImagePath
+                    ProfileImageName = e.ProfileImageName,
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
 
             return employee;

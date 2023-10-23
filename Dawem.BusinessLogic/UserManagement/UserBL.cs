@@ -19,7 +19,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.ResponseModels;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation;
 using Dawem.Validation.FluentValidation.Authentication;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;

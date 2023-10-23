@@ -19,7 +19,7 @@ namespace Dawem.Domain.Entities.Employees
         #endregion
         public int Code { get; set; }       
         public string Name { get; set; }
-        public string ProfileImagePath { get; set; }
+        public string ProfileImageName { get; set; }
         public DateTime JoiningDate { get; set; }
     }
 }

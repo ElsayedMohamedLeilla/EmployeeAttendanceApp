@@ -1,17 +1,31 @@
-﻿using Dawem.Models.Dtos.Others;
+﻿using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Models.Dtos.Others;
 using Dawem.Translations;
 using Glamatek.Utils.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using System.Drawing;
 
-namespace Dawem.Helpers
+namespace Dawem.BusinessLogicCore
 {
-    public static class UploadHelper
+    public class UploadBLC : IUploadBLC
     {
-        public static async Task<UploadResult> UploadImageFile(IFormFile imageFile, string FolderName, IWebHostEnvironment webHostEnvironment)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly LinkGenerator generator;
+        private readonly IHttpContextAccessor accessor;
+        public UploadBLC(LinkGenerator _generator,
+            IHttpContextAccessor _accessor,
+            IWebHostEnvironment _webHostEnvironment)
         {
-            UploadResult uploadResult = null;
+            generator = _generator;
+            accessor = _accessor;
+            webHostEnvironment = _webHostEnvironment;
+        }
+
+        public async Task<UploadResult> UploadImageFile(IFormFile imageFile, string FolderName)
+        {
+            UploadResult uploadResult;
             try
             {
                 var uniqueFileName = GetUniqueFileName(imageFile.FileName);
@@ -26,11 +40,9 @@ namespace Dawem.Helpers
                 {
                     File.Delete(filePath);
                 }
-
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-
-                    if (stream.Length > 300000)
+                    if (imageFile.Length > 300000)
                     {
                         await imageFile.CopyToAsync(stream);
                         var img = Image.FromStream(stream);
@@ -46,7 +58,7 @@ namespace Dawem.Helpers
                 {
                     FileName = uniqueFileName,
                     FolderName = FolderName,
-                    //Path = GetFilePath(uniqueFileName, FolderName, webHostEnvironment)
+                    Path = GetFilePath(uniqueFileName, FolderName)
                 };
 
             }
@@ -57,20 +69,16 @@ namespace Dawem.Helpers
 
             return uploadResult;
         }
-        /*public static string GetFilePath(string fileName, string fileFolder)
+        public string GetFilePath(string fileName, string folderName)
         {
-            return Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, fileFolder, fileName);
+            var protocol = (accessor?.HttpContext?.Request?.IsHttps ?? true) ? DawemKeys.Https : DawemKeys.Http;
+            var host = accessor?.HttpContext?.Request?.Host.Value;
+            var path = generator.GetPathByAction(DawemKeys.Browse, DawemKeys.Browse, null);
+            var browseLink = $"{protocol}://{host}{path}";
 
-            var path = generator.GetPathByAction(DawemKeys.VerifyEmail, DawemKeys.Account, emailToken);
-            var protocol = accessor.HttpContext.Request.IsHttps ? DawemKeys.Https : DawemKeys.Http;
-            var host = accessor.HttpContext.Request.Host.Value;
-            var confirmEmailLink = $"{protocol}://{host}{path}";
-            return confirmEmailLink;
-
-            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return null;
-            var baseUrl = webHostEnvironment.WebRootPath + "api/Upload/Images?";
-            return baseUrl + "na=" + fileName + "&fld=" + fileFolder;
-        }*/
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return DawemKeys.EmptyString;
+            return browseLink + DawemKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
+        }
         private static string GetUniqueFileName(string fileName)
         {
             fileName = Path.GetFileName(fileName);
@@ -84,3 +92,4 @@ namespace Dawem.Helpers
         }
     }
 }
+

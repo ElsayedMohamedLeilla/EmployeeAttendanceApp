@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.UserManagement;
-using Dawem.Helpers;
+﻿using Dawem.Helpers;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Translations;
 using FluentValidation;

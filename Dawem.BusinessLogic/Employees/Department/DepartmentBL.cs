@@ -11,7 +11,8 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Authentication;
+using Dawem.Validation.FluentValidation.Employees;
+using Dawem.Validation.FluentValidation.Employees.Department;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Provider

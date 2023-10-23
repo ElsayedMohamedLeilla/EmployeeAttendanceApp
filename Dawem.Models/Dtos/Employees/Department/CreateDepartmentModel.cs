@@ -1,7 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
-
-namespace Dawem.Models.Dtos.Provider
+﻿namespace Dawem.Models.Dtos.Provider
 {
     public class CreateDepartmentModel
     {

@@ -6,7 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation
+namespace Dawem.Validation.BusinessValidation.Employees
 {
 
     public class EmployeeBLValidation : IEmployeeBLValidation

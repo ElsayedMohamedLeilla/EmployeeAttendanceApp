@@ -85,7 +85,6 @@
 
 
         // to be translated
-
         public const string SorryUserContextNull = "Sorry!!UserContextNull!";
         public const string SorryYouCurrentBranchIsNotMainBranch = "Sorry!!YouCurrentBranchIsNotMainBranch!";
         public const string SorryAddCanBeDoneInMainBranchOnly = "SorryAddCanBeDoneInMainBranchOnly!";
@@ -155,9 +154,6 @@
         public const string DoneResetPasswordSuccessfully = "DoneResetPasswordSuccessfully";
         public const string SorryYouMustEnterResetToken = "Sorry!!YouMustEnterResetToken!";
         public const string SorryErrorHappenWhileResetPassword = "Sorry!!ErrorHappenWhileResetPassword!";
-
-
-        //new
         public const string SorryUserEmailNotConfirmed = "Sorry!!UserEmailNotConfirmed!";
         public const string DoneCreateEmployeeSuccessfully = "DoneCreateEmployeeSuccessfully";
         public const string DoneUpdateEmployeeSuccessfully = "DoneUpdateEmployeeSuccessfully";

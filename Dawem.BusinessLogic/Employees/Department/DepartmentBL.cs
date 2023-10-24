@@ -11,9 +11,9 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.Department;
+using Dawem.Validation.FluentValidation.Authentication;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.BusinessLogic.Provider
 {
@@ -103,17 +103,24 @@ namespace Dawem.BusinessLogic.Provider
             #region Update Department
 
             var getDepartment = await repositoryManager.DepartmentRepository.GetByIdAsync(model.Id);
-            getDepartment.Name = model.Name;
-            getDepartment.IsActive = model.IsActive;
-            getDepartment.ModifiedDate = DateTime.Now;
-            getDepartment.ModifyUserId = requestInfo.UserId;
-            await unitOfWork.SaveAsync();
-            #endregion
-            #region Handle Response
-            await unitOfWork.CommitAsync();
-            return true;
-            #endregion
 
+            if (getDepartment != null)
+            {
+                getDepartment.Name = model.Name;
+                getDepartment.IsActive = model.IsActive;
+                getDepartment.ModifiedDate = DateTime.Now;
+                getDepartment.ModifyUserId = requestInfo.UserId;
+                await unitOfWork.SaveAsync();
+                #region Handle Response
+                await unitOfWork.CommitAsync();
+                return true;
+                #endregion
+            }
+            #endregion
+            else
+                throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
+
+               
         }
         public async Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria criteria)
         {

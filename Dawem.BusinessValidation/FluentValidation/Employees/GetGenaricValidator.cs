@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Employees
 {
-    public class GetValidator : AbstractValidator<BaseCriteria>
+    public class GetGenaricValidator : AbstractValidator<BaseCriteria>
     {
-        public GetValidator()
+        public GetGenaricValidator()
         {
             RuleFor(model => model).Must(m => m.PagingEnabled && m.PageSize < 20).
                     WithMessage(DawemKeys.SorryYouMustEnterPaginationSettings);

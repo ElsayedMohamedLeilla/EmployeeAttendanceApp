@@ -172,7 +172,7 @@ namespace Dawem.BusinessLogic.Provider
         {
             #region Model Validation
 
-            var getValidator = new GetValidator();
+            var getValidator = new GetGenaricValidator();
             var getValidatorResult = getValidator.Validate(criteria);
             if (!getValidatorResult.IsValid)
             {
@@ -226,7 +226,7 @@ namespace Dawem.BusinessLogic.Provider
         {
             #region Model Validation
 
-            var getValidator = new GetValidator();
+            var getValidator = new GetGenaricValidator();
             var getValidatorResult = getValidator.Validate(criteria);
             if (!getValidatorResult.IsValid)
             {

@@ -11,11 +11,9 @@ using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Authentication;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Department;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.BusinessLogic.Provider
 {
@@ -71,7 +69,7 @@ namespace Dawem.BusinessLogic.Provider
             var department = mapper.Map<Department>(model);
             department.CompanyId = requestInfo.CompanyId;
             department.AddUserId = requestInfo.UserId;
-           
+
             department.Code = getNextCode;
             repositoryManager.DepartmentRepository.Insert(department);
             await unitOfWork.SaveAsync();
@@ -127,12 +125,12 @@ namespace Dawem.BusinessLogic.Provider
             else
                 throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 
-               
+
         }
         public async Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria criteria)
         {
             #region Model Validation
-            
+
             var getValidator = new GetGenaricValidator();
             var getValidatorResult = getValidator.Validate(criteria);
             if (!getValidatorResult.IsValid)
@@ -233,7 +231,7 @@ namespace Dawem.BusinessLogic.Provider
             var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
                 .Select(e => new GetDepartmentByIdResponseModel
                 {
-                    Id  = e.Id,
+                    Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
@@ -244,8 +242,8 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> Delete(int departmentd)
         {
-            var department = await repositoryManager.DepartmentRepository.GetByIdAsync(departmentd) ??
-                throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+            var department = await repositoryManager.DepartmentRepository.GetEntityByConditionAsync(d => !d.IsDeleted && d.Id == departmentd) ??
+                throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
             department.IsDeleted = true;
             department.DeletionDate = DateTime.Now;
             await unitOfWork.SaveAsync();

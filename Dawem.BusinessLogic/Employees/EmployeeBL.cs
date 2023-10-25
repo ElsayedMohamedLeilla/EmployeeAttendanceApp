@@ -307,8 +307,9 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> Delete(int employeeId)
         {
-            var employee = await repositoryManager.EmployeeRepository.GetByIdAsync(employeeId) ??
+            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionAsync(d => !d.IsDeleted && d.Id == employeeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+
             employee.IsDeleted = true;
             employee.DeletionDate = DateTime.Now;
             await unitOfWork.SaveAsync();

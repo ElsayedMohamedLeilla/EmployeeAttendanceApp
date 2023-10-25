@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Test\**" />
+    <Content Remove="wwwroot\Test\**" />
+    <EmbeddedResource Remove="wwwroot\Test\**" />
+    <EntityDeploy Remove="wwwroot\Test\**" />
+    <None Remove="wwwroot\Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Collection" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
@@ -42,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Test\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

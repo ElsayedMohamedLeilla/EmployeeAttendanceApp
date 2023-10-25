@@ -50,7 +50,9 @@ namespace Dawem.API.Controllers.Provider
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.GetForDropDown(criteria));
+            var departmensresponse = await departmentBL.GetForDropDown(criteria);
+
+            return Success(departmensresponse.Departments, departmensresponse.TotalCount);
         }
         [HttpGet]
         public async Task<ActionResult> GetInfo(int departmentId)

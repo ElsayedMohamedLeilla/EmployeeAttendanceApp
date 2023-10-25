@@ -65,7 +65,9 @@ namespace Dawem.API.Controllers.Provider
             {
                 return BadRequest();
             }
-            return Success(await employeeBL.GetForDropDown(criteria));
+            var employeesresponse = await employeeBL.GetForDropDown(criteria);
+
+            return Success(employeesresponse.Employees, employeesresponse.TotalCount);
         }
         [HttpGet]
         public async Task<ActionResult> GetInfo([FromQuery] int employeeId)

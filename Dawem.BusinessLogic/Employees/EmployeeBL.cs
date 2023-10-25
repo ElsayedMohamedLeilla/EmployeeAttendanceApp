@@ -15,6 +15,8 @@ using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.BusinessLogic.Provider
 {
@@ -25,11 +27,15 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IEmployeeBLValidation employeeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly LinkGenerator generator;
         private readonly IUploadBLC uploadBLC;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
+            LinkGenerator _generator,
+            IWebHostEnvironment _webHostEnvironment,
            RequestInfo _requestHeaderContext,
            IEmployeeBLValidation _employeeBLValidation)
         {
@@ -39,6 +45,8 @@ namespace Dawem.BusinessLogic.Provider
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            generator = _generator;
+            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
@@ -147,7 +155,7 @@ namespace Dawem.BusinessLogic.Provider
             getEmployee.IsActive = model.IsActive;
             getEmployee.JoiningDate = model.JoiningDate;
             getEmployee.ModifiedDate = DateTime.Now;
-            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName) 
                 ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();
 
@@ -202,7 +210,7 @@ namespace Dawem.BusinessLogic.Provider
                 DapartmentName = e.Department.Name,
                 IsActive = e.IsActive,
                 JoiningDate = e.JoiningDate,
-                ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Employees)
+                ProfileImagePath = e.ProfileImageName
             }).ToListAsync();
 
             return new GetEmployeesResponse
@@ -284,7 +292,7 @@ namespace Dawem.BusinessLogic.Provider
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeByIdResponseModel
                 {
-                    Id = e.Id,
+                    Id  = e.Id,
                     Code = e.Code,
                     Name = e.Name,
                     DepartmentId = e.DepartmentId,

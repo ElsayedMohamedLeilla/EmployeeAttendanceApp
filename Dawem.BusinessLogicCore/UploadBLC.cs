@@ -28,8 +28,6 @@ namespace Dawem.BusinessLogicCore
             UploadResult uploadResult;
             try
             {
-                //TO DO : check file extension
-
                 var uniqueFileName = GetUniqueFileName(imageFile.FileName);
                 var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);
@@ -89,7 +87,7 @@ namespace Dawem.BusinessLogicCore
                       + DawemKeys.UnderScore
                       + Guid.NewGuid().ToString()
                       + DawemKeys.UnderScore
-                      + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-fff")
+                      + DateTime.Now.ToString("yyyyMMddHHmmssfff")
                       + Path.GetExtension(fileName);
         }
     }

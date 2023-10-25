@@ -33,7 +33,7 @@ namespace Dawem.API.Controllers.Provider
             return Success(result, messageCode: DawemKeys.DoneUpdateDepartmentSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get(GetDepartmentsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetDepartmentsCriteria criteria)
         {
             if (criteria == null)
             {
@@ -44,7 +44,7 @@ namespace Dawem.API.Controllers.Provider
             return Success(departmensresponse.Departments, departmensresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown(GetDepartmentsCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetDepartmentsCriteria criteria)
         {
             if (criteria == null)
             {
@@ -55,7 +55,7 @@ namespace Dawem.API.Controllers.Provider
             return Success(departmensresponse.Departments, departmensresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo(int departmentId)
+        public async Task<ActionResult> GetInfo([FromQuery] int departmentId)
         {
             if (departmentId < 1)
             {
@@ -64,7 +64,7 @@ namespace Dawem.API.Controllers.Provider
             return Success(await departmentBL.GetInfo(departmentId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById(int departmentId)
+        public async Task<ActionResult> GetById([FromQuery] int departmentId)
         {
             if (departmentId < 1)
             {

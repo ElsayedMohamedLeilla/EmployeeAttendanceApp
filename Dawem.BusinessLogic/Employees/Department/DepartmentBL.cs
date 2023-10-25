@@ -89,6 +89,7 @@ namespace Dawem.BusinessLogic.Provider
         public async Task<bool> Update(UpdateDepartmentModel model)
         {
             #region Model Validation
+
             var updateDepartmentModelValidator = new UpdateDepartmentModelValidator();
             var updateDepartmentModelValidatorResult = updateDepartmentModelValidator.Validate(model);
             if (!updateDepartmentModelValidatorResult.IsValid)
@@ -96,12 +97,15 @@ namespace Dawem.BusinessLogic.Provider
                 var error = updateDepartmentModelValidatorResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
             }
+
             #endregion
 
             #region Business Validation
             await departmentBLValidation.UpdateValidation(model);
             #endregion
+
             unitOfWork.CreateTransaction();
+
             #region Update Department
 
             var getDepartment = await repositoryManager.DepartmentRepository.GetByIdAsync(model.Id);
@@ -119,6 +123,7 @@ namespace Dawem.BusinessLogic.Provider
                 #endregion
             }
             #endregion
+
             else
                 throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 

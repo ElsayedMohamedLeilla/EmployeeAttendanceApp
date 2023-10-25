@@ -64,7 +64,7 @@ namespace Dawem.BusinessLogicCore
             }
             catch (Exception ex)
             {
-                //throw ex;
+                return null;
             }
 
             return uploadResult;

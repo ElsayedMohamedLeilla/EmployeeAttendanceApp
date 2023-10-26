@@ -10,7 +10,7 @@ namespace Dawem.API.Controllers.Provider
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class EmployeeController : BaseController
+    public class EmployeeController : BaseController 
     {
         private readonly IEmployeeBL employeeBL;
         

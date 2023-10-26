@@ -32,7 +32,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
         public async Task<bool> UpdateValidation(UpdateDepartmentModel model)
         {
             var checkDepartmentDuplicate = await repositoryManager
-                .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkDepartmentDuplicate)
             {

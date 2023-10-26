@@ -69,6 +69,7 @@
         public const string Repository = "Repository";
         public const string BL = "BL";
         public const string BLC = "BLC";
+        public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string FullAccess = "FullAccess";
         public const string ApiControllerAction = "api/[controller]/[action]";
@@ -181,7 +182,9 @@
         public const string DoneCreateDepartmentSuccessfully = "DoneCreateDepartmentSuccessfully";
         public const string DoneUpdateDepartmentSuccessfully = "DoneUpdateDepartmentSuccessfully";
         public const string SorryErrorHappenWhileUploadProfileImage = "Sorry!!ErrorHappenWhileUploadProfileImage!";
-        
+        public const string SorryYouMustUploadImagesOnly = "Sorry!!YouMustUploadImagesOnly!";
+
+
 
 
 

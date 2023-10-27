@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Provider;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Dtos.Provider;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +27,7 @@ namespace Dawem.API.Controllers.Provider
         [HttpPut]
         public async Task<ActionResult> Update(UpdateDepartmentModel model)
         {
-          
+
             var result = await departmentBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdateDepartmentSuccessfully);
         }

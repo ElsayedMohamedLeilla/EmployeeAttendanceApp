@@ -92,6 +92,7 @@ namespace Dawem.Data
         }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<JustificationsType> JustificationsTypes { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<Translation> Translations { get; set; }

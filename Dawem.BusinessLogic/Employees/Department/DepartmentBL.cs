@@ -242,7 +242,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> Delete(int departmentd)
         {
-            var department = await repositoryManager.DepartmentRepository.GetEntityByConditionAsync(d => !d.IsDeleted && d.Id == departmentd) ??
+            var department = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
                 throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
             department.IsDeleted = true;
             department.DeletionDate = DateTime.Now;

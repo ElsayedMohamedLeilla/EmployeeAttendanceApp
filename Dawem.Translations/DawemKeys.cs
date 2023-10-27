@@ -188,6 +188,20 @@
 
 
 
+        // JustificationsTypes
+        public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
+        public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
+        public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
+        public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
+        public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
+
+        
+
+
+
+
+
 
 
 

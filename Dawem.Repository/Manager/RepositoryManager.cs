@@ -10,6 +10,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Core;
+using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
@@ -24,7 +25,7 @@ namespace Dawem.Repository.Manager
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
-        
+
         private IUserRepository userRepository;
         private IActionLogRepository actionLogRepository;
         private IUserBranchRepository userBranchRepository;
@@ -37,6 +38,8 @@ namespace Dawem.Repository.Manager
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
         private IDepartmentRepository departmentRepository;
+        private IJustificationsTypeRepository justificationsTypeRepository;
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -69,6 +72,9 @@ namespace Dawem.Repository.Manager
         employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
+
+        public IJustificationsTypeRepository JustificationsTypeRepository =>
+        justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
 
 
     }

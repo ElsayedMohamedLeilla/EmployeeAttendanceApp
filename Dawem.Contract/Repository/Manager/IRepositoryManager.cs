@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;

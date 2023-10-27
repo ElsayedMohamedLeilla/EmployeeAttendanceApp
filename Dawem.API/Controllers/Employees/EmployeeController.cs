@@ -1,19 +1,19 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Models.Dtos.Provider;
+﻿using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Models.Dtos.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Provider
+namespace Dawem.API.Controllers.Employees
 {
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class EmployeeController : BaseController 
+    public class EmployeeController : BaseController
     {
         private readonly IEmployeeBL employeeBL;
-        
+
 
         public EmployeeController(IEmployeeBL _employeeBL)
         {
@@ -90,7 +90,7 @@ namespace Dawem.API.Controllers.Provider
         [HttpDelete]
         public async Task<ActionResult> Delete(int employeeId)
         {
-            if (employeeId < 1) 
+            if (employeeId < 1)
             {
                 return BadRequest();
             }

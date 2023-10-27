@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees
+﻿namespace Dawem.Models.Response.Employees.Departments
 {
     public class GetDepartmentsResponse
     {

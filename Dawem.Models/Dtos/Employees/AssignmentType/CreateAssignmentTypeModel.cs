@@ -1,6 +1,7 @@
-﻿namespace Dawem.Models.Dtos.Employees.Department
+﻿
+namespace Dawem.Models.Dtos.Employees.AssignmentType
 {
-    public class CreateDepartmentModel
+    public class CreateAssignmentTypeModel
     {
         public string Name { get; set; }
         public bool IsActive { get; set; }

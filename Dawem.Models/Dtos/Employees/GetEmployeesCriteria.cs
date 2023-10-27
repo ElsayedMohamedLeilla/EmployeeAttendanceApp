@@ -1,7 +1,6 @@
-﻿
-using Dawem.Models.Criteria;
+﻿using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Provider
+namespace Dawem.Models.Dtos.Employees
 {
     public class GetEmployeesCriteria : BaseCriteria
     {

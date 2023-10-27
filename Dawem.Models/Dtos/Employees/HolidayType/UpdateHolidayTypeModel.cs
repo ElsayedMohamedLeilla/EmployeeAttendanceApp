@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.Department
+﻿namespace Dawem.Models.Dtos.Employees.HolidayType
 {
-    public class UpdateDepartmentModel
+    public class UpdateHolidayTypeModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

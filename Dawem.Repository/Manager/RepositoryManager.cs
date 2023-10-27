@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
@@ -11,6 +12,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
+using Dawem.Repository.Employees;
 using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;

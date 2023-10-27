@@ -1,10 +1,11 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Models.Dtos.Provider;
+﻿using Dawem.BusinessLogic.Provider;
+using Dawem.Contract.BusinessLogic.Employees.Department;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Provider
+namespace Dawem.API.Controllers.Employees
 {
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]

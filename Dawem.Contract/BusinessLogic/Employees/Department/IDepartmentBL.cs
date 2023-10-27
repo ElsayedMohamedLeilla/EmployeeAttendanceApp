@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Provider;
-using Dawem.Models.Response.Employees;
+﻿using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Response.Employees.Departments;
 
-namespace Dawem.Contract.BusinessLogic.Provider
+namespace Dawem.Contract.BusinessLogic.Employees.Department
 {
     public interface IDepartmentBL
     {

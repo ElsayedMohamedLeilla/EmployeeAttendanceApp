@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.Repository.Lookups;
+﻿using Dawem.Contract.Repository.Employees;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Lookups
+namespace Dawem.Repository.Employees
 {
     public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {

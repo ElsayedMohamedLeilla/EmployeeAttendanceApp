@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees;
+using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Department;
 using Microsoft.EntityFrameworkCore;
+using Dawem.Domain.Entities.Employees;
 
-namespace Dawem.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Employees.Departments
 {
     public class DepartmentBL : IDepartmentBL
     {

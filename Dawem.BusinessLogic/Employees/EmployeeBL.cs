@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -7,7 +8,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;
@@ -15,10 +16,8 @@ using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Dawem.BusinessLogic.Provider
+namespace Dawem.BusinessLogic.Employees
 {
     public class EmployeeBL : IEmployeeBL
     {
@@ -155,7 +154,7 @@ namespace Dawem.BusinessLogic.Provider
             getEmployee.IsActive = model.IsActive;
             getEmployee.JoiningDate = model.JoiningDate;
             getEmployee.ModifiedDate = DateTime.Now;
-            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName) 
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();
 
@@ -292,7 +291,7 @@ namespace Dawem.BusinessLogic.Provider
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeByIdResponseModel
                 {
-                    Id  = e.Id,
+                    Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
                     DepartmentId = e.DepartmentId,

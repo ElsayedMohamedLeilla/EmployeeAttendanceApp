@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Dawem.API
+namespace Dawem.Helpers
 {
     public class DateTimeConverter : DateTimeConverterBase
     {

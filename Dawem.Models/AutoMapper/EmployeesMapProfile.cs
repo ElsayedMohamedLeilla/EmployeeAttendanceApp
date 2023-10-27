@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees;
 
 namespace Dawem.Models.AutoMapper
 {

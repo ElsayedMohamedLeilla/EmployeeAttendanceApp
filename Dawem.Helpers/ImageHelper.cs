@@ -2,7 +2,7 @@
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-namespace Glamatek.Utils.Helpers
+namespace Dawem.Helpers
 {
     public static class ImageHelper
     {
@@ -21,10 +21,10 @@ namespace Glamatek.Utils.Helpers
             return image;
         }
 
-        public static string ImageToBase64(String ImagePath)
+        public static string ImageToBase64(string ImagePath)
         {
             string path = "D:\\SampleImage.jpg";
-            using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
+            using (Image image = Image.FromFile(path))
             {
                 using (MemoryStream m = new MemoryStream())
                 {
@@ -35,15 +35,15 @@ namespace Glamatek.Utils.Helpers
                 }
             }
         }
-        public static System.Drawing.Image Base64ToImage(string base64String)
+        public static Image Base64ToImage(string base64String)
         {
             byte[] imageBytes = Convert.FromBase64String(base64String);
             MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
             ms.Write(imageBytes, 0, imageBytes.Length);
-            System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
+            Image image = Image.FromStream(ms, true);
             return image;
         }
-        public static Boolean SaveImageFrombase64(string base64String, string imagesfloder, string ImageName)
+        public static bool SaveImageFrombase64(string base64String, string imagesfloder, string ImageName)
         {
             EnsureFolderExist(imagesfloder);
             Image image = Base64ToImage(base64String);
@@ -65,14 +65,14 @@ namespace Glamatek.Utils.Helpers
                 throw new ArgumentOutOfRangeException("quality must be between 0 and 100.");
 
             // Encoder parameter for image quality 
-            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+            EncoderParameter qualityParam = new EncoderParameter(Encoder.Quality, quality);
             // JPEG image codec 
             ImageCodecInfo jpegCodec = GetEncoderInfo("image/jpeg");
             EncoderParameters encoderParams = new EncoderParameters(1);
             encoderParams.Param[0] = qualityParam;
             img.Save(path, jpegCodec, encoderParams);
         }
-        public static Boolean SaveImage(string base64String, string imagesfloder, string ImageName)
+        public static bool SaveImage(string base64String, string imagesfloder, string ImageName)
         {
             EnsureFolderExist(imagesfloder);
             Image image = Base64ToImage(base64String);

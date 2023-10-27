@@ -1,8 +1,8 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees;
 
-namespace Dawem.Contract.Repository.Lookups
+namespace Dawem.Contract.Repository.Employees
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {

@@ -3,7 +3,7 @@ using Dawem.Translations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Dawem.BusinessLogic
+namespace Dawem.BusinessLogicCore
 {
     public static class StartupSetup
     {

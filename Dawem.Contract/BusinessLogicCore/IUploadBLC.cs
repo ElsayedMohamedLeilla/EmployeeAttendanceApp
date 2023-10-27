@@ -1,7 +1,7 @@
 ﻿using Dawem.Models.Dtos.Others;
 using Microsoft.AspNetCore.Http;
 
-namespace Dawem.Contract.BusinessLogic.Provider
+namespace Dawem.Contract.BusinessLogicCore
 {
     public interface IUploadBLC
     {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.Core
 {
-    public class VacationsTypeBLValidation : IVacationsTypeBLValidation
+    public class VacationsTypeBLValidation : IVacationTypeBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly RequestInfo requestInfo; // header

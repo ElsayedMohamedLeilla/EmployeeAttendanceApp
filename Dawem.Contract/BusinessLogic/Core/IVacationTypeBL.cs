@@ -4,7 +4,7 @@ using Dawem.Models.Response.Core.VacationsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
-    public interface IVacationsTypeBL
+    public interface IVacationTypeBL
     {
         Task<int> Create(CreateVacationsTypeDTO model);
         Task<bool> Update(UpdateVacationsTypeDTO model);

@@ -4,7 +4,7 @@ using Dawem.Models.Response.Core.PermissionsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
-    public interface IPermissionsTypeBL
+    public interface IPermissionTypeBL
     {
         Task<int> Create(CreatePermissionsTypeDTO model);
         Task<bool> Update(UpdatePermissionsTypeDTO model);

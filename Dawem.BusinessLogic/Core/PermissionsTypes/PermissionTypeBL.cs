@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -15,39 +14,30 @@ using Dawem.Models.Response.Core.PermissionsTypes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Core.PermissionsTypes;
 using Dawem.Validation.FluentValidation.Employees;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.PermissionsTypes
 {
-    public class PermissionsTypeBL : IPermissionsTypeBL
+    public class PermissionTypeBL : IPermissionTypeBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IPermissionsTypeBLValidation PermissionsTypeBLValidation;
+        private readonly IPermissionsTypeBLValidation permissionTypeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly LinkGenerator generator;
 
 
-        public PermissionsTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public PermissionTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
-         IUploadBLC _uploadBLC,
-         LinkGenerator _generator,
-         IWebHostEnvironment _webHostEnvironment,
         RequestInfo _requestHeaderContext,
         IPermissionsTypeBLValidation _PermissionsTypeBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            PermissionsTypeBLValidation = _PermissionsTypeBLValidation;
+            permissionTypeBLValidation = _PermissionsTypeBLValidation;
             mapper = _mapper;
-            generator = _generator;
-            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreatePermissionsTypeDTO model)
         {
@@ -65,7 +55,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region Business Validation
 
-            await PermissionsTypeBLValidation.CreateValidation(model);
+            await permissionTypeBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -116,7 +106,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region Business Validation
 
-            await PermissionsTypeBLValidation.UpdateValidation(model);
+            await permissionTypeBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -267,11 +257,11 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         }
         public async Task<bool> Delete(int PermissionsTypeId)
         {
-            var PermissionsType = await repositoryManager.PermissionsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PermissionsTypeId) ??
+            var permissionsType = await repositoryManager.PermissionsTypeRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PermissionsTypeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
 
-            repositoryManager.PermissionsTypeRepository.Delete(PermissionsType);
-
+            permissionsType.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }

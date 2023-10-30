@@ -281,15 +281,14 @@ namespace Dawem.Data
                     throw new ArgumentNullException(DawemKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
-                if (entity is BaseEntity)
+
+                /*if (entity is BaseEntity)
                 {
                     (entity as BaseEntity).DeletionDate = Globals.ToLocal(DateTime.UtcNow, generalSetting);
                     (entity as BaseEntity).IsDeleted = true;
-                    this.Context.SaveChanges();
-                }
+                }*/
 
-                //Entities.Remove(entity);
-
+                Entities.Remove(entity);
             }
 
             catch (ConstraintException e)
@@ -368,9 +367,6 @@ namespace Dawem.Data
         {
             return Entities.Find(id);
         }
-
-
-
         public virtual T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
         {
             IQueryable<T> query = Entities;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dawem.Contract.BusinessValidation.Core
 {
-    public interface IVacationsTypeBLValidation
+    public interface IVacationTypeBLValidation
     {
         Task<bool> CreateValidation(CreateVacationsTypeDTO model);
         Task<bool> UpdateValidation(UpdateVacationsTypeDTO model);

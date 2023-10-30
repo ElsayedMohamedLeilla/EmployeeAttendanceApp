@@ -11,10 +11,10 @@ namespace Dawem.API.Controllers.Core
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class PermissionsTypeController : BaseController
+    public class PermissionTypeController : BaseController
     {
-        private readonly IPermissionsTypeBL PermissionsTypeBL;
-        public PermissionsTypeController(IPermissionsTypeBL _PermissionsTypeBL)
+        private readonly IPermissionTypeBL PermissionsTypeBL;
+        public PermissionTypeController(IPermissionTypeBL _PermissionsTypeBL)
         {
             PermissionsTypeBL = _PermissionsTypeBL;
         }

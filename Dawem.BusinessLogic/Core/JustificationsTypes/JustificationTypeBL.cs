@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -15,39 +14,30 @@ using Dawem.Models.Response.Core.JustificationsTypes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Core.JustificationsTypes;
 using Dawem.Validation.FluentValidation.Employees;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.JustificationsTypes
 {
-    public class JustificationsTypeBL : IJustificationsTypeBL
+    public class JustificationTypeBL : IJustificationTypeBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IJustificationsTypeBLValidation justificationsTypeBLValidation;
+        private readonly IJustificationTypeBLValidation justificationTypeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly LinkGenerator generator;
 
 
-        public JustificationsTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public JustificationTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
-         IUploadBLC _uploadBLC,
-         LinkGenerator _generator,
-         IWebHostEnvironment _webHostEnvironment,
         RequestInfo _requestHeaderContext,
-        IJustificationsTypeBLValidation _justificationsTypeBLValidation)
+        IJustificationTypeBLValidation _justificationsTypeBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            justificationsTypeBLValidation = _justificationsTypeBLValidation;
+            justificationTypeBLValidation = _justificationsTypeBLValidation;
             mapper = _mapper;
-            generator = _generator;
-            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateJustificationsTypeDTO model)
         {
@@ -65,7 +55,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region Business Validation
 
-            await justificationsTypeBLValidation.CreateValidation(model);
+            await justificationTypeBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -116,7 +106,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region Business Validation
 
-            await justificationsTypeBLValidation.UpdateValidation(model);
+            await justificationTypeBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -269,11 +259,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         {
             var justificationsType = await repositoryManager.JustificationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == JustificationsTypeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNotFound);
-
-
-            repositoryManager.JustificationsTypeRepository.Delete(justificationsType);
-
-
+            justificationsType.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }

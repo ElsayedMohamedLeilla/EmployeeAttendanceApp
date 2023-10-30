@@ -4,7 +4,7 @@ using Dawem.Models.Response.Core.JustificationsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
-    public interface IJustificationsTypeBL
+    public interface IJustificationTypeBL
     {
         Task<int> Create(CreateJustificationsTypeDTO model);
         Task<bool> Update(UpdateJustificationsTypeDTO model);

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.Core
 {
-    public class JustificationsTypeBLValidation : IJustificationsTypeBLValidation
+    public class JustificationsTypeBLValidation : IJustificationTypeBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly RequestInfo requestInfo; // header

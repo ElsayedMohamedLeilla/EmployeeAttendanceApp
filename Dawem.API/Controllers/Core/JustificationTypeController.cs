@@ -11,10 +11,10 @@ namespace Dawem.API.Controllers.Core
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class JustificationsTypeController : BaseController
+    public class JustificationTypeController : BaseController
     {
-        private readonly IJustificationsTypeBL justificationsTypeBL;
-        public JustificationsTypeController(IJustificationsTypeBL _justificationsTypeBL)
+        private readonly IJustificationTypeBL justificationsTypeBL;
+        public JustificationTypeController(IJustificationTypeBL _justificationsTypeBL)
         {
             justificationsTypeBL = _justificationsTypeBL;
         }

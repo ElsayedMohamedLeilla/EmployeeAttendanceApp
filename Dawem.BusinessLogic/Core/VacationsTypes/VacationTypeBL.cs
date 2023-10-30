@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -15,39 +14,30 @@ using Dawem.Models.Response.Core.VacationsTypes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Core.VacationsTypes;
 using Dawem.Validation.FluentValidation.Employees;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.VacationsTypes
 {
-    public class VacationsTypeBL : IVacationsTypeBL
+    public class VacationTypeBL : IVacationTypeBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IVacationsTypeBLValidation VacationsTypeBLValidation;
+        private readonly IVacationTypeBLValidation vacationTypeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly LinkGenerator generator;
 
 
-        public VacationsTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public VacationTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
-         IUploadBLC _uploadBLC,
-         LinkGenerator _generator,
-         IWebHostEnvironment _webHostEnvironment,
         RequestInfo _requestHeaderContext,
-        IVacationsTypeBLValidation _VacationsTypeBLValidation)
+        IVacationTypeBLValidation _VacationsTypeBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            VacationsTypeBLValidation = _VacationsTypeBLValidation;
+            vacationTypeBLValidation = _VacationsTypeBLValidation;
             mapper = _mapper;
-            generator = _generator;
-            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateVacationsTypeDTO model)
         {
@@ -65,7 +55,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region Business Validation
 
-            await VacationsTypeBLValidation.CreateValidation(model);
+            await vacationTypeBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -116,7 +106,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region Business Validation
 
-            await VacationsTypeBLValidation.UpdateValidation(model);
+            await vacationTypeBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -267,11 +257,9 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         }
         public async Task<bool> Delete(int VacationsTypeId)
         {
-            var VacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
+            var vacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNotFound);
-
-            repositoryManager.VacationsTypeRepository.Delete(VacationsType);
-
+            vacationsType.Delete();
 
             await unitOfWork.SaveAsync();
             return true;

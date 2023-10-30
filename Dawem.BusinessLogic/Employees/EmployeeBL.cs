@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
@@ -9,15 +8,12 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Employees;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees
@@ -29,15 +25,11 @@ namespace Dawem.BusinessLogic.Employees
         private readonly IEmployeeBLValidation employeeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly LinkGenerator generator;
         private readonly IUploadBLC uploadBLC;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
-            LinkGenerator _generator,
-            IWebHostEnvironment _webHostEnvironment,
            RequestInfo _requestHeaderContext,
            IEmployeeBLValidation _employeeBLValidation)
         {
@@ -47,8 +39,6 @@ namespace Dawem.BusinessLogic.Employees
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            generator = _generator;
-            webHostEnvironment = _webHostEnvironment;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {

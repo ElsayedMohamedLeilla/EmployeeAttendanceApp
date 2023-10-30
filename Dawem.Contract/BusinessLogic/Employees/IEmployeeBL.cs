@@ -1,6 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees;
-using Dawem.Models.Dtos.Provider;
-using Dawem.Models.Response.Employees;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Response.Employees.Employee;
 
 namespace Dawem.Contract.BusinessLogic.Employees
 {

@@ -11,10 +11,10 @@ namespace Dawem.API.Controllers.Core
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class VacationsTypeController : BaseController
+    public class VacationTypeController : BaseController
     {
-        private readonly IVacationsTypeBL VacationsTypeBL;
-        public VacationsTypeController(IVacationsTypeBL _VacationsTypeBL)
+        private readonly IVacationTypeBL VacationsTypeBL;
+        public VacationTypeController(IVacationTypeBL _VacationsTypeBL)
         {
             VacationsTypeBL = _VacationsTypeBL;
         }

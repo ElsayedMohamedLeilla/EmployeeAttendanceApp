@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dawem.Validation.FluentValidation.Lookups
+namespace Dawem.Validation.FluentValidation.Core.JustificationsTypes
 {
     public class UpdateJustificationsTypeModelValidator : AbstractValidator<UpdateJustificationsTypeDTO>
     {
@@ -16,10 +16,10 @@ namespace Dawem.Validation.FluentValidation.Lookups
         {
             RuleFor(model => model.Id).GreaterThan(0).
                     WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeId);
-          
+
             RuleFor(model => model.Name).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeName);
-           
+
         }
     }
 }

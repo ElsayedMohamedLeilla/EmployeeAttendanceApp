@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
@@ -9,6 +10,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees;
+using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees;
 using Dawem.Translations;

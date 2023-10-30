@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="FluentValidation\Lookups\" />
     <Folder Include="Lookups\" />
   </ItemGroup>
 

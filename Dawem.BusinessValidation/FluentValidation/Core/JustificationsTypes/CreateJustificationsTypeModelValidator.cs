@@ -7,16 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dawem.Validation.FluentValidation.Lookups
+namespace Dawem.Validation.FluentValidation.Core.JustificationsTypes
 {
-    public class CreateJustificationsTypeModelValidator :  AbstractValidator<CreateJustificationsTypeDTO>
+    public class CreateJustificationsTypeModelValidator : AbstractValidator<CreateJustificationsTypeDTO>
     {
         public CreateJustificationsTypeModelValidator()
         {
-           
+
             RuleFor(model => model.Name).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeName);
-       
+
         }
     }
 }

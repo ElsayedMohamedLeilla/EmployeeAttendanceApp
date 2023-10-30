@@ -1,8 +1,8 @@
 ﻿using Dawem.Contract.Repository.Core;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Lookups;
-using Dawem.Models.Dtos.Core.JustificationsTypes;
+using Dawem.Domain.Entities.Core;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
 

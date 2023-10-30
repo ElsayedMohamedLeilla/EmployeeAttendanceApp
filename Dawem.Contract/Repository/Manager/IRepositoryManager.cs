@@ -24,5 +24,10 @@ namespace Dawem.Contract.Repository.Manager
         IDepartmentRepository DepartmentRepository { get; }
         IJustificationsTypeRepository JustificationsTypeRepository { get; }
 
+        IVacationsTypeRepository VacationsTypeRepository { get; }
+
+        IPermissionsTypeRepository PermissionsTypeRepository { get; }
+
+
     }
 }

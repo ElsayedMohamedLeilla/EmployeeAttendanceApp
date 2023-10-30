@@ -1,10 +1,11 @@
 ﻿using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Lookups
+namespace Dawem.API.Controllers.Core
 {
 
     [Route(DawemKeys.ApiControllerAction)]

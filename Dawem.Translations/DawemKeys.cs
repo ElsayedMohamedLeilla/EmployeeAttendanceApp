@@ -195,8 +195,20 @@
         public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
         public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
         public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
+        public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound";
+        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterPermissionsTypeName = "Sorry!!YouMustEnterPermissionsTypeName";
+        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId";
+        public const string DoneCreatePermissionsTypeSuccessfully = "DoneCreatePermissionsTypeSuccessfully";
+        public const string DoneUpdatePermissionsTypeSuccessfully = "DoneUpdatePermissionsTypeSuccessfully";
+        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound";
+        public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName";
+        public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId";
+        public const string DoneCreateVacationsTypeSuccessfully = "DoneCreateVacationsTypeSuccessfully";
+        public const string DoneUpdateVacationsTypeSuccessfully = "DoneUpdateVacationsTypeSuccessfully";
 
-        
+
 
 
 

@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessLogic.Provider;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.Core;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.JustificationsTypes;
 using Dawem.Translations;
+using Dawem.Validation.FluentValidation.Core.JustificationsTypes;
 using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Lookups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -269,8 +270,9 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
             var justificationsType = await repositoryManager.JustificationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == JustificationsTypeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNotFound);
 
-            justificationsType.IsDeleted = true;
-            justificationsType.DeletionDate = DateTime.Now;
+
+            repositoryManager.JustificationsTypeRepository.Delete(justificationsType);
+
 
             await unitOfWork.SaveAsync();
             return true;

@@ -12,6 +12,8 @@ using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
+using Dawem.Repository.Core.PermissionsTypes;
+using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
@@ -41,6 +43,9 @@ namespace Dawem.Repository.Manager
         private IEmployeeRepository employeeRepository;
         private IDepartmentRepository departmentRepository;
         private IJustificationsTypeRepository justificationsTypeRepository;
+        private IPermissionsTypeRepository permissionsTypeRepository;
+        private IVacationsTypeRepository vacationsTypeRepository;
+
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
@@ -77,6 +82,16 @@ namespace Dawem.Repository.Manager
 
         public IJustificationsTypeRepository JustificationsTypeRepository =>
         justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
+
+        public IVacationsTypeRepository VacationsTypeRepository =>
+        vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting);
+
+        public IPermissionsTypeRepository PermissionsTypeRepository =>
+        permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
+
+
+        
+            
 
 
     }

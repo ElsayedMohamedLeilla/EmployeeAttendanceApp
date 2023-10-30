@@ -77,7 +77,7 @@ namespace Dawem.Data.UnitOfWork
                 }
                 if (e != null)
                 {
-                    _errorMessage += string.Format("You cant delete this item");
+                    _errorMessage += string.Format("You can't delete this item");
                 }
                 else
                 {

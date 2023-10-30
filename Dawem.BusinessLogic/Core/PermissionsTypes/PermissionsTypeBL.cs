@@ -1,0 +1,280 @@
+﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Contract.BusinessLogicCore;
+using Dawem.Contract.BusinessValidation.Core;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
+using Dawem.Models.Dtos.Core.PermissionsTypes;
+using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Core.PermissionsTypes;
+using Dawem.Translations;
+using Dawem.Validation.FluentValidation.Core.PermissionsTypes;
+using Dawem.Validation.FluentValidation.Employees;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
+
+namespace Dawem.BusinessLogic.Core.PermissionsTypes
+{
+    public class PermissionsTypeBL : IPermissionsTypeBL
+    {
+        private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
+        private readonly RequestInfo requestInfo;
+        private readonly IPermissionsTypeBLValidation PermissionsTypeBLValidation;
+        private readonly IRepositoryManager repositoryManager;
+        private readonly IMapper mapper;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly LinkGenerator generator;
+
+
+        public PermissionsTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+         IRepositoryManager _repositoryManager,
+         IMapper _mapper,
+         IUploadBLC _uploadBLC,
+         LinkGenerator _generator,
+         IWebHostEnvironment _webHostEnvironment,
+        RequestInfo _requestHeaderContext,
+        IPermissionsTypeBLValidation _PermissionsTypeBLValidation)
+        {
+            unitOfWork = _unitOfWork;
+            requestInfo = _requestHeaderContext;
+            repositoryManager = _repositoryManager;
+            PermissionsTypeBLValidation = _PermissionsTypeBLValidation;
+            mapper = _mapper;
+            generator = _generator;
+            webHostEnvironment = _webHostEnvironment;
+        }
+        public async Task<int> Create(CreatePermissionsTypeDTO model)
+        {
+            #region Model Validation
+
+            var createPermissionsTypeModel = new CreatePermissionsTypeModelValidator();
+            var createPermissionsTypeModelResult = createPermissionsTypeModel.Validate(model);
+            if (!createPermissionsTypeModelResult.IsValid)
+            {
+                var error = createPermissionsTypeModelResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await PermissionsTypeBLValidation.CreateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Insert PermissionsType
+
+            #region Set PermissionsType code
+
+            var getNextCode = await repositoryManager.PermissionsTypeRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
+            var PermissionsType = mapper.Map<PermissionsType>(model);
+            PermissionsType.CompanyId = requestInfo.CompanyId;
+            PermissionsType.AddUserId = requestInfo.UserId;
+            PermissionsType.Code = getNextCode;
+            repositoryManager.PermissionsTypeRepository.Insert(PermissionsType);
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return PermissionsType.Id;
+
+            #endregion
+
+        }
+        public async Task<bool> Update(UpdatePermissionsTypeDTO model)
+        {
+            #region Model Validation
+
+            var updatePermissionsTypeModelValidator = new UpdatePermissionsTypeModelValidator();
+            var updatePermissionsTypeModelValidatorResult = updatePermissionsTypeModelValidator.Validate(model);
+            if (!updatePermissionsTypeModelValidatorResult.IsValid)
+            {
+                var error = updatePermissionsTypeModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await PermissionsTypeBLValidation.UpdateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+            #region Update PermissionsType
+            var getPermissionsType = await repositoryManager.PermissionsTypeRepository.GetByIdAsync(model.Id);
+            getPermissionsType.Name = model.Name;
+            getPermissionsType.IsActive = model.IsActive;
+            getPermissionsType.ModifiedDate = DateTime.Now;
+            getPermissionsType.ModifyUserId = requestInfo.UserId;
+            await unitOfWork.SaveAsync();
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
+        }
+        public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypeCriteria criteria)
+        {
+            #region Model Validation
+
+            var getValidator = new GetGenaricValidator(); // validate on pageining and all common validation 
+            var getValidatorResult = getValidator.Validate(criteria);
+            if (!getValidatorResult.IsValid)
+            {
+                var error = getValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;
+            var query = PermissionsTypeRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), DawemKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var PermissionsTypesList = await queryPaged.Select(e => new GetPermissionsTypeResponseModelDTO
+            {
+                Id = e.Id,
+                Code = e.Code,
+                Name = e.Name,
+                IsActive = e.IsActive,
+            }).ToListAsync();
+
+            return new GetPermissionsTypeResponseDTO
+            {
+                PermissionsTypes = PermissionsTypesList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypeCriteria criteria)
+        {
+            #region Model Validation
+
+            var getValidator = new GetGenaricValidator();
+            var getValidatorResult = getValidator.Validate(criteria);
+            if (!getValidatorResult.IsValid)
+            {
+                var error = getValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            criteria.IsActive = true;
+            var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;
+            var query = PermissionsTypeRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), DawemKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var PermissionsTypesList = await queryPaged.Select(e => new GetPermissionsTypeForDropDownResponseModelDTO
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToListAsync();
+
+            return new GetPermissionsTypeDropDownResponseDTO
+            {
+                PermissionsTypes = PermissionsTypesList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<GetPermissionsTypeInfoResponseDTO> GetInfo(int PermissionsTypeId)
+        {
+            var PermissionsType = await repositoryManager.PermissionsTypeRepository.Get(e => e.Id == PermissionsTypeId && !e.IsDeleted)
+                .Select(e => new GetPermissionsTypeInfoResponseDTO
+                {
+                    Code = e.Code,
+                    Name = e.Name,
+                    IsActive = e.IsActive,
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+
+            return PermissionsType;
+        }
+        public async Task<GetPermissionsTypeByIdResponseDTO> GetById(int PermissionsTypeId)
+        {
+            var PermissionsType = await repositoryManager.PermissionsTypeRepository.Get(e => e.Id == PermissionsTypeId && !e.IsDeleted)
+                .Select(e => new GetPermissionsTypeByIdResponseDTO
+                {
+                    Id = e.Id,
+                    Code = e.Code,
+                    Name = e.Name,
+                    IsActive = e.IsActive,
+
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+
+            return PermissionsType;
+
+        }
+        public async Task<bool> Delete(int PermissionsTypeId)
+        {
+            var PermissionsType = await repositoryManager.PermissionsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PermissionsTypeId) ??
+                throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+
+            repositoryManager.PermissionsTypeRepository.Delete(PermissionsType);
+
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+
+    }
+}

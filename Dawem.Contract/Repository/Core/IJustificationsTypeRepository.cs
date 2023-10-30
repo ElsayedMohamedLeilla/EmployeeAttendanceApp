@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Lookups;
-using Dawem.Models.Dtos.Core.JustificationsTypes;
+using Dawem.Domain.Entities.Core;
+using Dawem.Models.Criteria.Core;
 
 namespace Dawem.Contract.Repository.Core
 {

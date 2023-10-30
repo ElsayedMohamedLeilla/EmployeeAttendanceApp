@@ -8,7 +8,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.AutoMapper;
-using Dawem.Models.AutoMapper.Lookups;
+using Dawem.Models.AutoMapper.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository;
@@ -113,6 +113,9 @@ builder.Services.AddAutoMapper((serviceProvider, config) =>
     config.AddProfile<EmployeesMapProfile>();
     config.AddProfile<DepartmentsMapProfile>();
     config.AddProfile<JustificationsTypeMapProfile>();
+    config.AddProfile<VacationsTypeMapProfile>();
+    config.AddProfile<PermissionsTypeMapProfile>();
+
 }, typeof(Program));
 
 WebApplication app = builder.Build();

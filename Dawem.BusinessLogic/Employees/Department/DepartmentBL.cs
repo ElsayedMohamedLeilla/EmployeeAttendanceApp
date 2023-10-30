@@ -4,6 +4,7 @@ using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Department;
@@ -13,7 +14,6 @@ using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Department;
 using Microsoft.EntityFrameworkCore;
-using Dawem.Domain.Entities.Employees;
 
 namespace Dawem.BusinessLogic.Employees.Departments
 {

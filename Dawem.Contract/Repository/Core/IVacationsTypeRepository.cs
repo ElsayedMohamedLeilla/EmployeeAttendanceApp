@@ -6,6 +6,6 @@ namespace Dawem.Contract.Repository.Core
 {
     public interface IVacationsTypeRepository : IGenericRepository<VacationsType>
     {
-        IQueryable<VacationsType> GetAsQueryable(GetVacationsTypeCriteria criteria);
+        IQueryable<VacationsType> GetAsQueryable(GetVacationTypeCriteria criteria);
     }
 }

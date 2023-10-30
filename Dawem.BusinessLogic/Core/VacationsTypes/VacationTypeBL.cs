@@ -127,7 +127,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #endregion
         }
-        public async Task<GetVacationsTypeResponseDTO> Get(GetVacationsTypeCriteria criteria)
+        public async Task<GetVacationsTypeResponseDTO> Get(GetVacationTypeCriteria criteria)
         {
             #region Model Validation
 
@@ -178,7 +178,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #endregion
 
         }
-        public async Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationsTypeCriteria criteria)
+        public async Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationTypeCriteria criteria)
         {
             #region Model Validation
 

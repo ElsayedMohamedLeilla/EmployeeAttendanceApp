@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Dtos.Core.PermissionsTypes
 {
-    public class UpdatePermissionsTypeDTO
+    public class UpdatePermissionTypeDTO
     {
         public int Id { get; set; }
         public int Code { get; set; }

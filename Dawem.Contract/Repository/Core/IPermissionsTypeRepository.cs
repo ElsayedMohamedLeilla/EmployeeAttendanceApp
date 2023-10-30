@@ -6,6 +6,6 @@ namespace Dawem.Contract.Repository.Core
 {
     public interface IPermissionsTypeRepository : IGenericRepository<PermissionsType>
     {
-        IQueryable<PermissionsType> GetAsQueryable(GetPermissionsTypeCriteria criteria);
+        IQueryable<PermissionsType> GetAsQueryable(GetPermissionTypeCriteria criteria);
     }
 }

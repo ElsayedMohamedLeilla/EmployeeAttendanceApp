@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Dawem.Validation.FluentValidation.Core.PermissionsTypes
 {
-    public class CreatePermissionsTypeModelValidator : AbstractValidator<CreatePermissionsTypeDTO>
+    public class CreatePermissionsTypeModelValidator : AbstractValidator<CreatePermissionTypeDTO>
     {
         public CreatePermissionsTypeModelValidator()
         {

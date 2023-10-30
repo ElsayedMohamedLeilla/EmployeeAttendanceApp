@@ -10,7 +10,7 @@ namespace Dawem.Contract.BusinessValidation.Core
 {
     public interface IPermissionsTypeBLValidation
     {
-        Task<bool> CreateValidation(CreatePermissionsTypeDTO model);
-        Task<bool> UpdateValidation(UpdatePermissionsTypeDTO model);
+        Task<bool> CreateValidation(CreatePermissionTypeDTO model);
+        Task<bool> UpdateValidation(UpdatePermissionTypeDTO model);
     }
 }

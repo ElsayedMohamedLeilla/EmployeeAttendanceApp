@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Criteria.Core
 {
-    public class GetVacationsTypeCriteria : BaseCriteria
+    public class GetVacationTypeCriteria : BaseCriteria
     {
 
     }

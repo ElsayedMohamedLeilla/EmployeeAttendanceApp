@@ -18,7 +18,7 @@ namespace Dawem.Validation.Core
             requestInfo = _requestInfo;
         }
 
-        public async Task<bool> CreateValidation(CreatePermissionsTypeDTO model)
+        public async Task<bool> CreateValidation(CreatePermissionTypeDTO model)
         {
             var checkPermissionsTypeDuplicate = await repositoryManager
                 .PermissionsTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
@@ -31,7 +31,7 @@ namespace Dawem.Validation.Core
         }
 
 
-        public async Task<bool> UpdateValidation(UpdatePermissionsTypeDTO model)
+        public async Task<bool> UpdateValidation(UpdatePermissionTypeDTO model)
         {
             var checkPermissionsTypeDuplicate = await repositoryManager
                 .PermissionsTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&

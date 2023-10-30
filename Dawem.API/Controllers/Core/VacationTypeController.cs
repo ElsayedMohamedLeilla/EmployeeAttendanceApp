@@ -13,71 +13,71 @@ namespace Dawem.API.Controllers.Core
     [Authorize]
     public class VacationTypeController : BaseController
     {
-        private readonly IVacationTypeBL VacationsTypeBL;
-        public VacationTypeController(IVacationTypeBL _VacationsTypeBL)
+        private readonly IVacationTypeBL vacationTypeBL;
+        public VacationTypeController(IVacationTypeBL _vacationTypeBL)
         {
-            VacationsTypeBL = _VacationsTypeBL;
+            vacationTypeBL = _vacationTypeBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreateVacationsTypeDTO model)
         {
-            var result = await VacationsTypeBL.Create(model);
+            var result = await vacationTypeBL.Create(model);
             return Success(result, messageCode: DawemKeys.DoneCreateVacationsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateVacationsTypeDTO model)
         {
 
-            var result = await VacationsTypeBL.Update(model);
+            var result = await vacationTypeBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdateVacationsTypeSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetVacationsTypeCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetVacationTypeCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var result = await VacationsTypeBL.Get(criteria);
+            var result = await vacationTypeBL.Get(criteria);
             return Success(result.VacationsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetVacationsTypeCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetVacationTypeCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var result = await VacationsTypeBL.GetForDropDown(criteria);
+            var result = await vacationTypeBL.GetForDropDown(criteria);
             return Success(result.VacationsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int VacationsTypeId)
+        public async Task<ActionResult> GetInfo([FromQuery] int vacationTypeId)
         {
-            if (VacationsTypeId < 1)
+            if (vacationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await VacationsTypeBL.GetInfo(VacationsTypeId));
+            return Success(await vacationTypeBL.GetInfo(vacationTypeId));
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int VacationsTypeId)
+        public async Task<ActionResult> GetById([FromQuery] int vacationTypeId)
         {
-            if (VacationsTypeId < 1)
+            if (vacationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await VacationsTypeBL.GetById(VacationsTypeId));
+            return Success(await vacationTypeBL.GetById(vacationTypeId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int VacationsTypeId)
+        public async Task<ActionResult> Delete(int vacationTypeId)
         {
-            if (VacationsTypeId < 1)
+            if (vacationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await VacationsTypeBL.Delete(VacationsTypeId));
+            return Success(await vacationTypeBL.Delete(vacationTypeId));
         }
 
     }

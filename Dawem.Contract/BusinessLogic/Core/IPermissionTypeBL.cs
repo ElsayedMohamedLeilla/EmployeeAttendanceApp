@@ -6,12 +6,12 @@ namespace Dawem.Contract.BusinessLogic.Core
 {
     public interface IPermissionTypeBL
     {
-        Task<int> Create(CreatePermissionsTypeDTO model);
-        Task<bool> Update(UpdatePermissionsTypeDTO model);
+        Task<int> Create(CreatePermissionTypeDTO model);
+        Task<bool> Update(UpdatePermissionTypeDTO model);
         Task<GetPermissionsTypeInfoResponseDTO> GetInfo(int PermissionsTypeId);
         Task<GetPermissionsTypeByIdResponseDTO> GetById(int PermissionsTypeId);
-        Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypeCriteria model);
-        Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypeCriteria model);
+        Task<GetPermissionsTypeResponseDTO> Get(GetPermissionTypeCriteria model);
+        Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionTypeCriteria model);
         Task<bool> Delete(int PermissionsTypeId);
     }
 }

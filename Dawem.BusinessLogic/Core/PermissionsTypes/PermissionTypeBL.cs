@@ -39,7 +39,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
             permissionTypeBLValidation = _PermissionsTypeBLValidation;
             mapper = _mapper;
         }
-        public async Task<int> Create(CreatePermissionsTypeDTO model)
+        public async Task<int> Create(CreatePermissionTypeDTO model)
         {
             #region Model Validation
 
@@ -90,7 +90,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
             #endregion
 
         }
-        public async Task<bool> Update(UpdatePermissionsTypeDTO model)
+        public async Task<bool> Update(UpdatePermissionTypeDTO model)
         {
             #region Model Validation
 
@@ -127,7 +127,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #endregion
         }
-        public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypeCriteria criteria)
+        public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionTypeCriteria criteria)
         {
             #region Model Validation
 
@@ -178,7 +178,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
             #endregion
 
         }
-        public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypeCriteria criteria)
+        public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionTypeCriteria criteria)
         {
             #region Model Validation
 

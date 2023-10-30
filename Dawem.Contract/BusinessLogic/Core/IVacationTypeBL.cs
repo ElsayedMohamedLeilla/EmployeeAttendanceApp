@@ -10,8 +10,8 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Update(UpdateVacationsTypeDTO model);
         Task<GetVacationsTypeInfoResponseDTO> GetInfo(int VacationsTypeId);
         Task<GetVacationsTypeByIdResponseDTO> GetById(int VacationsTypeId);
-        Task<GetVacationsTypeResponseDTO> Get(GetVacationsTypeCriteria model);
-        Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationsTypeCriteria model);
+        Task<GetVacationsTypeResponseDTO> Get(GetVacationTypeCriteria model);
+        Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationTypeCriteria model);
         Task<bool> Delete(int VacationsTypeId);
     }
 }

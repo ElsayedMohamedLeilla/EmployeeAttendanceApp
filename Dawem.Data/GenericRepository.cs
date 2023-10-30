@@ -284,9 +284,11 @@ namespace Dawem.Data
                 if (entity is BaseEntity)
                 {
                     (entity as BaseEntity).DeletionDate = Globals.ToLocal(DateTime.UtcNow, generalSetting);
+                    (entity as BaseEntity).IsDeleted = true;
+                    this.Context.SaveChanges();
                 }
 
-                Entities.Remove(entity);
+                //Entities.Remove(entity);
 
             }
 

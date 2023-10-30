@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Dawem.Data
 {
-    public interface IGenericRepository<T>
+    public interface IGenericRepository<T> 
     {
         IQueryable<T> GetAll();
         T GetByID(int? id);

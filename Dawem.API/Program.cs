@@ -8,6 +8,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.AutoMapper;
+using Dawem.Models.AutoMapper.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository;

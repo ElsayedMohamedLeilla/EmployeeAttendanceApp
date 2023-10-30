@@ -12,7 +12,6 @@ namespace Dawem.Data.UnitOfWork
         Task CreateTransactionAsync();
         Task CommitAsync();
         Task RollbackAsync();
-
         void Save();
         Task SaveAsync();
         void DetachEntity<T>(T Entity) where T : class;

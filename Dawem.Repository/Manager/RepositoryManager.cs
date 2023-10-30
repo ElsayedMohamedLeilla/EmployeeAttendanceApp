@@ -11,6 +11,9 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Core;
+using Dawem.Repository.Core.JustificationsTypes;
+using Dawem.Repository.Core.PermissionsTypes;
+using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
@@ -26,7 +29,7 @@ namespace Dawem.Repository.Manager
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
-        
+
         private IUserRepository userRepository;
         private IActionLogRepository actionLogRepository;
         private IUserBranchRepository userBranchRepository;
@@ -42,6 +45,11 @@ namespace Dawem.Repository.Manager
         private IAssignmentTypeRepository assignmentTypeRepository;
         private ITaskTypeRepository taskTypeRepository;
         private IHolidayTypeRepository holidayTypeRepository;
+        private IJustificationsTypeRepository justificationsTypeRepository;
+        private IPermissionsTypeRepository permissionsTypeRepository;
+        private IVacationsTypeRepository vacationsTypeRepository;
+
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -83,6 +91,19 @@ namespace Dawem.Repository.Manager
         holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
 
         
+        public IJustificationsTypeRepository JustificationsTypeRepository =>
+        justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
+
+        public IVacationsTypeRepository VacationsTypeRepository =>
+        vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting);
+
+        public IPermissionsTypeRepository PermissionsTypeRepository =>
+        permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
+
+
+        
+            
+
 
     }
 }

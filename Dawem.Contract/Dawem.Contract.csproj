@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BusinessValidation\Lookups\" />
+  </ItemGroup>
+
 </Project>

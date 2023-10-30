@@ -6,6 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Dawem.Validation.BusinessValidation.Employees
 {
 

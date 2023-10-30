@@ -13,22 +13,22 @@ namespace Dawem.API.Controllers.Core
     [Authorize]
     public class JustificationTypeController : BaseController
     {
-        private readonly IJustificationTypeBL justificationsTypeBL;
-        public JustificationTypeController(IJustificationTypeBL _justificationsTypeBL)
+        private readonly IJustificationTypeBL justificationTypeBL;
+        public JustificationTypeController(IJustificationTypeBL _justificationTypeBL)
         {
-            justificationsTypeBL = _justificationsTypeBL;
+            justificationTypeBL = _justificationTypeBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreateJustificationsTypeDTO model)
         {
-            var result = await justificationsTypeBL.Create(model);
+            var result = await justificationTypeBL.Create(model);
             return Success(result, messageCode: DawemKeys.DoneCreateJustificationsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateJustificationsTypeDTO model)
         {
 
-            var result = await justificationsTypeBL.Update(model);
+            var result = await justificationTypeBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdateJustificationsTypeSuccessfully);
         }
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await justificationsTypeBL.Get(criteria);
+            var result = await justificationTypeBL.Get(criteria);
             return Success(result.JustificationsTypes, result.TotalCount);
         }
         [HttpGet]
@@ -48,36 +48,36 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await justificationsTypeBL.GetForDropDown(criteria);
+            var result = await justificationTypeBL.GetForDropDown(criteria);
             return Success(result.JustificationsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int justificationsTypeId)
+        public async Task<ActionResult> GetInfo([FromQuery] int justificationTypeId)
         {
-            if (justificationsTypeId < 1)
+            if (justificationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await justificationsTypeBL.GetInfo(justificationsTypeId));
+            return Success(await justificationTypeBL.GetInfo(justificationTypeId));
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int justificationsTypeId)
+        public async Task<ActionResult> GetById([FromQuery] int justificationTypeId)
         {
-            if (justificationsTypeId < 1)
+            if (justificationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await justificationsTypeBL.GetById(justificationsTypeId));
+            return Success(await justificationTypeBL.GetById(justificationTypeId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int justificationsTypeId)
+        public async Task<ActionResult> Delete(int justificationTypeId)
         {
-            if (justificationsTypeId < 1)
+            if (justificationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await justificationsTypeBL.Delete(justificationsTypeId));
+            return Success(await justificationTypeBL.Delete(justificationTypeId));
         }
 
     }

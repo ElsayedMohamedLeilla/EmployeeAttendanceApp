@@ -11,24 +11,24 @@ namespace Dawem.API.Controllers.Employees
     [Authorize]
     public class AssignmentTypeController : BaseController
     {
-        private readonly IAssignmentTypeBL departmentBL;
+        private readonly IAssignmentTypeBL assignmentTypeBL;
 
-        public AssignmentTypeController(IAssignmentTypeBL _departmentBL)
+        public AssignmentTypeController(IAssignmentTypeBL _assignmentTypeBL)
         {
-            departmentBL = _departmentBL;
+            assignmentTypeBL = _assignmentTypeBL;
         }
 
         [HttpPost]
         public async Task<ActionResult> Create(CreateAssignmentTypeModel model)
         {
-            var result = await departmentBL.Create(model);
+            var result = await assignmentTypeBL.Create(model);
             return Success(result, messageCode: DawemKeys.DoneCreateAssignmentTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateAssignmentTypeModel model)
         {
 
-            var result = await departmentBL.Update(model);
+            var result = await assignmentTypeBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdateAssignmentTypeSuccessfully);
         }
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Dawem.API.Controllers.Employees
             {
                 return BadRequest();
             }
-            var departmensresponse = await departmentBL.Get(criteria);
+            var departmensresponse = await assignmentTypeBL.Get(criteria);
 
             return Success(departmensresponse.AssignmentTypes, departmensresponse.TotalCount);
         }
@@ -49,36 +49,36 @@ namespace Dawem.API.Controllers.Employees
             {
                 return BadRequest();
             }
-            var departmensresponse = await departmentBL.GetForDropDown(criteria);
+            var departmensresponse = await assignmentTypeBL.GetForDropDown(criteria);
 
             return Success(departmensresponse.AssignmentTypes, departmensresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int departmentId)
+        public async Task<ActionResult> GetInfo([FromQuery] int assignmentTypeId)
         {
-            if (departmentId < 1)
+            if (assignmentTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.GetInfo(departmentId));
+            return Success(await assignmentTypeBL.GetInfo(assignmentTypeId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int departmentId)
+        public async Task<ActionResult> GetById([FromQuery] int assignmentTypeId)
         {
-            if (departmentId < 1)
+            if (assignmentTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.GetById(departmentId));
+            return Success(await assignmentTypeBL.GetById(assignmentTypeId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int departmentId)
+        public async Task<ActionResult> Delete(int assignmentTypeId)
         {
-            if (departmentId < 1)
+            if (assignmentTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.Delete(departmentId));
+            return Success(await assignmentTypeBL.Delete(assignmentTypeId));
         }
 
     }

@@ -13,22 +13,22 @@ namespace Dawem.API.Controllers.Core
     [Authorize]
     public class PermissionTypeController : BaseController
     {
-        private readonly IPermissionTypeBL permissionsTypeBL;
+        private readonly IPermissionTypeBL permissionTypeBL;
         public PermissionTypeController(IPermissionTypeBL _permissionTypeBL)
         {
-            permissionsTypeBL = _permissionTypeBL;
+            permissionTypeBL = _permissionTypeBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreatePermissionTypeDTO model)
         {
-            var result = await permissionsTypeBL.Create(model);
+            var result = await permissionTypeBL.Create(model);
             return Success(result, messageCode: DawemKeys.DoneCreatePermissionsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdatePermissionTypeDTO model)
         {
 
-            var result = await permissionsTypeBL.Update(model);
+            var result = await permissionTypeBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdatePermissionsTypeSuccessfully);
         }
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await permissionsTypeBL.Get(criteria);
+            var result = await permissionTypeBL.Get(criteria);
             return Success(result.PermissionsTypes, result.TotalCount);
         }
         [HttpGet]
@@ -48,36 +48,36 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await permissionsTypeBL.GetForDropDown(criteria);
+            var result = await permissionTypeBL.GetForDropDown(criteria);
             return Success(result.PermissionsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int permissionsTypeId)
+        public async Task<ActionResult> GetInfo([FromQuery] int permissionTypeId)
         {
-            if (permissionsTypeId < 1)
+            if (permissionTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await permissionsTypeBL.GetInfo(permissionsTypeId));
+            return Success(await permissionTypeBL.GetInfo(permissionTypeId));
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int permissionsTypeId)
+        public async Task<ActionResult> GetById([FromQuery] int permissionTypeId)
         {
-            if (permissionsTypeId < 1)
+            if (permissionTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await permissionsTypeBL.GetById(permissionsTypeId));
+            return Success(await permissionTypeBL.GetById(permissionTypeId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int permissionsTypeId)
+        public async Task<ActionResult> Delete(int permissionTypeId)
         {
-            if (permissionsTypeId < 1)
+            if (permissionTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await permissionsTypeBL.Delete(permissionsTypeId));
+            return Success(await permissionTypeBL.Delete(permissionTypeId));
         }
 
     }

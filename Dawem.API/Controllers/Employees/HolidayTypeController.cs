@@ -11,24 +11,24 @@ namespace Dawem.API.Controllers.Employees
     [Authorize]
     public class HolidayTypeController : BaseController
     {
-        private readonly IHolidayTypeBL departmentBL;
+        private readonly IHolidayTypeBL holidayTypeBL;
 
-        public HolidayTypeController(IHolidayTypeBL _departmentBL)
+        public HolidayTypeController(IHolidayTypeBL _holidayTypeBL)
         {
-            departmentBL = _departmentBL;
+            holidayTypeBL = _holidayTypeBL;
         }
 
         [HttpPost]
         public async Task<ActionResult> Create(CreateHolidayTypeModel model)
         {
-            var result = await departmentBL.Create(model);
+            var result = await holidayTypeBL.Create(model);
             return Success(result, messageCode: DawemKeys.DoneCreateHolidayTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateHolidayTypeModel model)
         {
 
-            var result = await departmentBL.Update(model);
+            var result = await holidayTypeBL.Update(model);
             return Success(result, messageCode: DawemKeys.DoneUpdateHolidayTypeSuccessfully);
         }
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Dawem.API.Controllers.Employees
             {
                 return BadRequest();
             }
-            var departmensresponse = await departmentBL.Get(criteria);
+            var departmensresponse = await holidayTypeBL.Get(criteria);
 
             return Success(departmensresponse.HolidayTypes, departmensresponse.TotalCount);
         }
@@ -49,36 +49,36 @@ namespace Dawem.API.Controllers.Employees
             {
                 return BadRequest();
             }
-            var departmensresponse = await departmentBL.GetForDropDown(criteria);
+            var departmensresponse = await holidayTypeBL.GetForDropDown(criteria);
 
             return Success(departmensresponse.HolidayTypes, departmensresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int departmentId)
+        public async Task<ActionResult> GetInfo([FromQuery] int holidayTypeId)
         {
-            if (departmentId < 1)
+            if (holidayTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.GetInfo(departmentId));
+            return Success(await holidayTypeBL.GetInfo(holidayTypeId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int departmentId)
+        public async Task<ActionResult> GetById([FromQuery] int holidayTypeId)
         {
-            if (departmentId < 1)
+            if (holidayTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.GetById(departmentId));
+            return Success(await holidayTypeBL.GetById(holidayTypeId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int departmentId)
+        public async Task<ActionResult> Delete(int holidayTypeId)
         {
-            if (departmentId < 1)
+            if (holidayTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await departmentBL.Delete(departmentId));
+            return Success(await holidayTypeBL.Delete(holidayTypeId));
         }
 
     }

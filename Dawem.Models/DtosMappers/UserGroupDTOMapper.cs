@@ -22,7 +22,7 @@ namespace Dawem.Models.DtosMappers
                 Id = userGroup.Id,
                 GroupId = userGroup.GroupId,
                 UserId = userGroup.UserId,
-                UserGlobalName = userGroup.User?.FirstName + " " + userGroup.User?.LastName,
+                UserGlobalName = userGroup.User?.Name,
                 GroupGlobalName = userContext.Lang == "ar" ? userGroup.Group?.NameAr : userGroup.Group?.NameEn
 
 

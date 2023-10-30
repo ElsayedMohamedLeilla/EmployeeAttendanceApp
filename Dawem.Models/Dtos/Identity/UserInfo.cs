@@ -20,8 +20,7 @@ namespace Dawem.Models.Dtos.Identity
         public string? MobileNumber { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string? Name { get; set; }
         public string? Password { get; set; }
         public List<UserBranchDTO?>? UserBranches { get; set; }
         public List<UserGroupDTO?>? UserGroups { get; set; }

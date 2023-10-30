@@ -33,7 +33,9 @@
         public const string ES = "es";
         public const string IES = "ies";
         public const string Uploads = "uploads";
-        public const string Employees = "Employees";    
+        public const string Employees = "Employees";
+        public const string Users = "Users";
+        
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
         public const string FourigitPhone = "FourigitPhone";
@@ -191,12 +193,34 @@
 
 
 
+        //new
 
+        public const string SorryAssignmentTypeNameIsDuplicated = "Sorry!!AssignmentTypeNameIsDuplicated";
+        public const string SorryYouMustEnterAssignmentTypeName = "Sorry!!YouMustEnterAssignmentTypeName";
+        public const string SorryYouMustEnterAssignmentTypeId = "Sorry!!YouMustEnterAssignmentTypeId";
+        public const string SorryAssignmentTypeNotFound = "Sorry!!AssignmentTypeNotFound";
+        public const string DoneCreateAssignmentTypeSuccessfully = "DoneCreateAssignmentTypeSuccessfully";
+        public const string DoneUpdateAssignmentTypeSuccessfully = "DoneUpdateAssignmentTypeSuccessfully";
 
+        public const string SorryTaskTypeNameIsDuplicated = "Sorry!!TaskTypeNameIsDuplicated";
+        public const string SorryYouMustEnterTaskTypeName = "Sorry!!YouMustEnterTaskTypeName";
+        public const string SorryYouMustEnterTaskTypeId = "Sorry!!YouMustEnterTaskTypeId";
+        public const string SorryTaskTypeNotFound = "Sorry!!TaskTypeNotFound";
+        public const string DoneCreateTaskTypeSuccessfully = "DoneCreateTaskTypeSuccessfully";
+        public const string DoneUpdateTaskTypeSuccessfully = "DoneUpdateTaskTypeSuccessfully";
 
-
-
-
-
+        public const string SorryHolidayTypeNameIsDuplicated = "Sorry!!HolidayTypeNameIsDuplicated";
+        public const string SorryYouMustEnterHolidayTypeName = "Sorry!!YouMustEnterHolidayTypeName";
+        public const string SorryYouMustEnterHolidayTypeId = "Sorry!!YouMustEnterHolidayTypeId";
+        public const string SorryHolidayTypeNotFound = "Sorry!!HolidayTypeNotFound";
+        public const string DoneCreateHolidayTypeSuccessfully = "DoneCreateHolidayTypeSuccessfully";
+        public const string DoneUpdateHolidayTypeSuccessfully = "DoneUpdateHolidayTypeSuccessfully";
+        public const string MainDepartment = "MainDepartment";
+        public const string AdminEmployee = "AdminEmployee";
+        public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
+        public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
+        public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
+        
+        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
     }
 }

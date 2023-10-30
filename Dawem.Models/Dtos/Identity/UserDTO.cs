@@ -23,8 +23,7 @@ namespace Dawem.Models.Dtos.Identity
         public virtual string? Email { get; set; }
         public DateTime BirthDate { get; set; }
         public virtual string? PhoneNumber { get; set; }
-        public virtual string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public virtual string? Name { get; set; }
         public string? Password { get; set; }
         public List<SmartUserRoleDTO>? UserRols { get; set; }
 

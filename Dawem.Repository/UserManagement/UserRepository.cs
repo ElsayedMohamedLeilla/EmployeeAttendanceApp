@@ -1,9 +1,12 @@
 ﻿using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
+using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 using LinqKit;
@@ -18,7 +21,7 @@ namespace Dawem.Repository.UserManagement
             requestHeaderContext = _requestHeaderContext;
         }
 
-        public IQueryable<MyUser> GetAsQueryable(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString)
+        public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString)
         {
             var userPredicate = PredicateBuilder.New<MyUser>(true);
 
@@ -42,8 +45,7 @@ namespace Dawem.Repository.UserManagement
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
                 userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.FirstName.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.LastName.ToLower().Trim().Contains(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
@@ -61,6 +63,34 @@ namespace Dawem.Repository.UserManagement
 
             var query = Get(userPredicate, includeProperties: includeProperties);
             return query;
+        }
+
+        public IQueryable<MyUser> GetAsQueryable(GetUsersCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<MyUser>(true);
+
+            if (!string.IsNullOrWhiteSpace(criteria.FreeText))
+            {
+                criteria.FreeText = criteria.FreeText.ToLower().Trim();
+
+                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+
+                if (int.TryParse(criteria.FreeText, out int id))
+                {
+                    criteria.Id = id;
+                }
+            }
+            if (criteria.IsActive != null)
+            {
+                predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+
+            predicate = predicate.And(inner);
+            var Query = Get(predicate);
+            return Query;
+
         }
     }
 

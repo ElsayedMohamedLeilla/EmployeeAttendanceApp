@@ -19,10 +19,10 @@ namespace Dawem.API.MiddleWares.Helpers
             {
                 switch (controllerName)
                 {
-                    case nameof(AccountController):
+                    case nameof(AuthenticationController):
 
                         screen = ApplicationScreenType.LogInScreen;
-                        if (actionName == nameof(AccountController.SignIn))
+                        if (actionName == nameof(AuthenticationController.SignIn))
                         {
                             method = ApiMethod.LogIn;
                         }
@@ -30,22 +30,22 @@ namespace Dawem.API.MiddleWares.Helpers
                         break;
 
                    
-                    case nameof(UserController):
+                    case nameof(Controllers.Users.UserController):
 
                         screen = ApplicationScreenType.UsersScreen;
-                        if (actionName == nameof(UserController.GetInfo) || actionName == nameof(UserController.Get))
+                        if (actionName == nameof(Controllers.Users.UserController.GetInfo) || actionName == nameof(Controllers.Users.UserController.Get))
                         {
                             method = ApiMethod.View;
                         }
-                        else if (actionName == nameof(UserController.Create))
+                        else if (actionName == nameof(Controllers.Users.UserController.Create))
                         {
                             method = ApiMethod.Add;
                         }
-                        else if (actionName == nameof(UserController.Update))
+                        else if (actionName == nameof(Controllers.Users.UserController.Update))
                         {
                             method = ApiMethod.Update;
                         }
-                        else if (actionName == nameof(UserController.DeleteUser))
+                        else if (actionName == nameof(Controllers.Users.UserController.Delete))
                         {
                             method = ApiMethod.Delete;
                         }

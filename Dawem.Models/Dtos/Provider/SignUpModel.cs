@@ -16,8 +16,7 @@
         public string ConfirmPassword { get; set; }
         public string UserEmail { get; set; }
         public string UserMobileNumber { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
         public bool Agreed { get; set; }
 
         #endregion

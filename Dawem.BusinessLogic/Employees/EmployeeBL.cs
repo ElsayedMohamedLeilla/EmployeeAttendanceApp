@@ -8,11 +8,12 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees;
+using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
+using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -147,7 +148,8 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Update Employee
 
-            var getEmployee = await repositoryManager.EmployeeRepository.GetByIdAsync(model.Id);
+            var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+            && employee.Id == model.Id);
 
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
@@ -306,11 +308,10 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Delete(int employeeId)
         {
-            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionAsync(d => !d.IsDeleted && d.Id == employeeId) ??
+            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
                 throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
 
-            employee.IsDeleted = true;
-            employee.DeletionDate = DateTime.Now;
+            employee.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }

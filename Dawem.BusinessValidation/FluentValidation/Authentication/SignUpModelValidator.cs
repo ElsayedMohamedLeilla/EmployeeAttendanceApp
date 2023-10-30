@@ -44,10 +44,8 @@ namespace Dawem.Validation.FluentValidation.Authentication
 
             RuleFor(signUpModel => signUpModel.UserMobileNumber).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterUserMobileNumber);
-            RuleFor(signUpModel => signUpModel.FirstName).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterFirstName);
-            RuleFor(signUpModel => signUpModel.LastName).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterLastName);
+            RuleFor(signUpModel => signUpModel.Name).NotNull().
+                   WithMessage(DawemKeys.SorryYouMustEnterUserName);
         }
     }
 }

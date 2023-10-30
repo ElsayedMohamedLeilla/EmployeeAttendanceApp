@@ -16,6 +16,9 @@ namespace Dawem.Validation.FluentValidation.Authentication
                     WithMessage(DawemKeys.SorryYouMustEnterNewPassword);
             RuleFor(model => model.ConfirmNewPassword).NotNull().
                     WithMessage(DawemKeys.SorryYouMustEnterConfirmNewPassword);
+            RuleFor(user => user.NewPassword).Length(6, 50)
+                 .When(user => user.NewPassword != null)
+                 .WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
             RuleFor(model => model)
                 .Must(model => model.NewPassword == model.ConfirmNewPassword)
                 .WithMessage(DawemKeys.SorryNewPasswordAndConfirmNewPasswordMustEqual);

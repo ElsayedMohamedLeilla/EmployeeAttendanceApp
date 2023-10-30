@@ -14,5 +14,6 @@ namespace Dawem.Domain.Entities.Employees
         #endregion
         public int Code { get; set; }
         public string Name { get; set; }
+        public List<Employee> Employees { get; set; }
     }
 }

@@ -22,6 +22,8 @@ namespace Dawem.Contract.Repository.Manager
         ITranslationRepository TranslationRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
         IDepartmentRepository DepartmentRepository { get; }
-
+        IAssignmentTypeRepository AssignmentTypeRepository { get; }
+        ITaskTypeRepository TaskTypeRepository { get; }
+        IHolidayTypeRepository HolidayTypeRepository { get; }
     }
 }

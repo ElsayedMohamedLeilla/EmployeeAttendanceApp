@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
+        public int NumberOfEmployees { get; set; }
         public bool IsActive { get; set; }
     }
 }

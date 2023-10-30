@@ -108,10 +108,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
-    config.AddProfile<AutoMapperConfig>();
-    config.AddProfile<EmployeesMapProfile>();
-    config.AddProfile<DepartmentsMapProfile>();
-}, typeof(Program));
+}, typeof(AutoMapperConfig));
 
 WebApplication app = builder.Build();
 IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()

@@ -39,6 +39,9 @@ namespace Dawem.Repository.Manager
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
         private IDepartmentRepository departmentRepository;
+        private IAssignmentTypeRepository assignmentTypeRepository;
+        private ITaskTypeRepository taskTypeRepository;
+        private IHolidayTypeRepository holidayTypeRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -72,6 +75,14 @@ namespace Dawem.Repository.Manager
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
 
+        public IAssignmentTypeRepository AssignmentTypeRepository =>
+        assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting);
+        public ITaskTypeRepository TaskTypeRepository =>
+        taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting);
+        public IHolidayTypeRepository HolidayTypeRepository =>
+        holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
+
+        
 
     }
 }

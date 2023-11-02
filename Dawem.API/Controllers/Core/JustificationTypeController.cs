@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Controllers.Core
 {
 
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(DawemKeys.ApiControllerAction)] 
     [ApiController]
     [Authorize]
     public class JustificationTypeController : BaseController

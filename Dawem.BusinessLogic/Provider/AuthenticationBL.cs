@@ -254,7 +254,7 @@ namespace Dawem.BusinessLogic.Provider
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
             }
 
-            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
+            var assignRole = await userManagerRepository.ro .AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);

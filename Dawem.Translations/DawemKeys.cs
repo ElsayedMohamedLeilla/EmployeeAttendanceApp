@@ -73,7 +73,11 @@
         public const string BLC = "BLC";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
-        public const string FullAccess = "FullAccess";
+        public const string FullAccess = "FULLACCESS";
+        public const string Admin = "ADMIN";
+        public const string Manager = "MANAGER";
+        public const string Employee = "EMPLOYEE";
+        public const string User = "USER";
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string Dot = ".";
@@ -234,7 +238,7 @@
         public const string SorryTaskTypeNotFound = "Sorry!!TaskTypeNotFound";
         public const string DoneCreateTaskTypeSuccessfully = "DoneCreateTaskTypeSuccessfully";
         public const string DoneUpdateTaskTypeSuccessfully = "DoneUpdateTaskTypeSuccessfully";
-
+        public const string SorryYouMustEnterOneRoleAtLeast = "Sorry!!YouMustEnterOneRoleAtLeast!";
         public const string SorryHolidayTypeNameIsDuplicated = "Sorry!!HolidayTypeNameIsDuplicated";
         public const string SorryYouMustEnterHolidayTypeName = "Sorry!!YouMustEnterHolidayTypeName";
         public const string SorryYouMustEnterHolidayTypeId = "Sorry!!YouMustEnterHolidayTypeId";

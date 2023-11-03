@@ -13,6 +13,7 @@ using Dawem.Models.Generic;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
+using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localization;
@@ -48,6 +49,7 @@ namespace Dawem.Repository.Manager
         private IJustificationsTypeRepository justificationsTypeRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
+        private IRoleRepository roleRepository;
 
 
 
@@ -100,10 +102,11 @@ namespace Dawem.Repository.Manager
         public IPermissionsTypeRepository PermissionsTypeRepository =>
         permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
 
+        public IRoleRepository RoleRepository =>
+        roleRepository ??= new RoleRepository(unitOfWork, generalSetting);
+
+
 
         
-            
-
-
     }
 }

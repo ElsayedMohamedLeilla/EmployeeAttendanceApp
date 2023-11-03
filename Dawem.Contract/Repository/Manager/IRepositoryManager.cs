@@ -27,10 +27,11 @@ namespace Dawem.Contract.Repository.Manager
         IVacationsTypeRepository VacationsTypeRepository { get; }
 
         IPermissionsTypeRepository PermissionsTypeRepository { get; }
-
-
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
         IHolidayTypeRepository HolidayTypeRepository { get; }
+
+        IRoleRepository RoleRepository { get; }
+
     }
 }

@@ -89,6 +89,22 @@ namespace Dawem.Data
             builder.Entity<Translation>()
                 .Property(p => p.IsDeleted)
                 .HasDefaultValue(false);
+
+            builder.Entity<Translation>()
+               .Property(p => p.IsActive)
+               .HasDefaultValue(true);
+
+
+            builder.Entity<UserRole>().HasOne(p => p.Role)
+                   .WithMany(r => r.UserRoles)
+                   .HasForeignKey(p => p.RoleId)
+                   .IsRequired();
+
+            builder.Entity<UserRole>().HasOne(p => p.User)
+                   .WithMany(r => r.UserRoles)
+                   .HasForeignKey(p => p.UserId)
+                   .IsRequired();
+
         }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }

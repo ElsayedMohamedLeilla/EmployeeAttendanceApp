@@ -16,7 +16,6 @@ using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Employees;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -117,7 +116,7 @@ namespace Dawem.BusinessLogic.Users
                 }
                 await unitOfWork.SaveAsync();
             }
-            
+
             #endregion
 
             #region Handle Response
@@ -193,7 +192,7 @@ namespace Dawem.BusinessLogic.Users
             var getUserRolesFromDB = await userManagerRepository.GetRolesAsync(getUser);
             if ((model.Roles == null || model.Roles.Count == 0) && getUserRolesFromDB != null && getUserRolesFromDB.Count > 0)
             {
-               var removeRolesResult =  await userManagerRepository.RemoveFromRolesAsync(getUser, getUserRolesFromDB);
+                var removeRolesResult = await userManagerRepository.RemoveFromRolesAsync(getUser, getUserRolesFromDB);
                 if (!removeRolesResult.Succeeded)
                 {
                     unitOfWork.Rollback();
@@ -351,26 +350,26 @@ namespace Dawem.BusinessLogic.Users
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users)
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users),
+                    Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
-
-            //user.Roles = await userManagerRepository.GetRolesAsync(user);
             return user;
         }
         public async Task<GetUserByIdResponseModel> GetById(int userId)
         {
             var user = await repositoryManager.UserRepository.Get(e => e.Id == userId && !e.IsDeleted)
-                .Select(e => new GetUserByIdResponseModel
+                .Select(user => new GetUserByIdResponseModel
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = e.Name,
-                    EmployeeId = e.EmployeeId,
-                    IsActive = e.IsActive,
-                    Email = e.Email,
-                    MobileNumber = e.MobileNumber,
-                    ProfileImageName = e.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Users)
+                    Id = user.Id,
+                    Code = user.Code,
+                    Name = user.Name,
+                    EmployeeId = user.EmployeeId,
+                    IsActive = user.IsActive,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+                    ProfileImageName = user.ProfileImageName,
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users),
+                    Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
 
             return user;

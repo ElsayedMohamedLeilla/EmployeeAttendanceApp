@@ -18,6 +18,9 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(DawemKeys.SorryYouMustEnterValidEmail);
 
+            RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
+               WithMessage(DawemKeys.SorryYouMustEnterOneRoleAtLeast);
+
             /*RuleFor(user => user.Password).Length(6, 50)
                  .When(user => user.Password != null)
                  .WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);

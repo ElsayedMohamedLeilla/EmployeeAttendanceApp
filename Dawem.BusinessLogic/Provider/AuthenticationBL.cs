@@ -234,7 +234,7 @@ namespace Dawem.BusinessLogic.Provider
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
 
-            string RoleName = DawemKeys.FullAccess;
+            string RoleName = DawemKeys.Admin;
             var user = new MyUser()
             {
                 UserName = model.UserEmail,

@@ -13,5 +13,6 @@ namespace Dawem.Models.Dtos.Employees.User
         public IFormFile ProfileImageFile { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsActive { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

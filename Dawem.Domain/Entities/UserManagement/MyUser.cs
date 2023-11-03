@@ -37,8 +37,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public Gender Gender { get; set; }
         public string MobileNumber { get; set; }
         public string ProfileImageName { get; set; }
-        [NotMapped]
-        public List<UserRole> UserRols { get; set; }
+        public List<UserRole> UserRoles { get; set; }
         public List<UserBranch> UserBranches { get; set; }
         public List<UserGroup> UserGroups { get; set; }       
         public bool Status { get; set; }

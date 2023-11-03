@@ -1,6 +1,10 @@
 ﻿using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.UserManagement;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System.Numerics;
 
 namespace Dawem.Data
 {
@@ -10,17 +14,33 @@ namespace Dawem.Data
         {
             var context = serviceProvider.GetRequiredService<ApplicationDBContext>();
             context.Database.EnsureCreated();
-            //if (!context.AccountTypes.Any())
-            //{
-            //    context.AccountTypes.Add(new AccountType { NameAr = "الأصول", NameEn = "Assets", Code = 1 });
-            //    context.AccountTypes.Add(new AccountType { NameAr = "الالتزامات", NameEn = "Liabilities", Code = 2 });
-            //    context.AccountTypes.Add(new AccountType { NameAr = "الإيرادات", NameEn = "Revenues", Code = 3 });
-            //    context.AccountTypes.Add(new AccountType { NameAr = "المصاريف", NameEn = "Expenses", Code = 4 });
-            //    context.AccountTypes.Add(new AccountType { NameAr = "حقوق الملكية", NameEn = "Rights", Code = 5 });
 
-            //    context.SaveChanges();
+            var rolesToSeed = new List<Role>
+            {
+                new Role { Name = "FULLACCESS", NormalizedName = "FULLACCESS" ,ConcurrencyStamp =null},
+                new Role { Name = "ADMIN", NormalizedName = "ADMIN",ConcurrencyStamp =null},
+                new Role { Name = "EMPLOYEE", NormalizedName = "EMPLOYEE",ConcurrencyStamp =null},
+                new Role { Name = "USER", NormalizedName = "USER",ConcurrencyStamp =null},
+                new Role { Name = "MANAGER", NormalizedName = "MANAGER",ConcurrencyStamp =null},
+                new Role { Name = "DEVELOPER", NormalizedName = "DEVELOPER",ConcurrencyStamp =null}, 
+                new Role { Name = "SUPPORT", NormalizedName = "SUPPORT",ConcurrencyStamp =null}, 
+                new Role { Name = "CUSTOMER", NormalizedName = "CUSTOMER",ConcurrencyStamp =null},
+                new Role { Name = "VIEWER", NormalizedName = "VIEWER",ConcurrencyStamp =null},
+                new Role { Name = "DOCTOR", NormalizedName = "DOCTOR",ConcurrencyStamp =null},
+                new Role { Name = "NURSE", NormalizedName = "NURSE",ConcurrencyStamp =null},
+                new Role { Name = "MEDICALASSISTANT", NormalizedName = "MEDICALASSISTANT",ConcurrencyStamp =null},
+                new Role { Name = "PHARMACIST", NormalizedName = "PHARMACIST",ConcurrencyStamp =null},
+                new Role { Name = "RECEPTIONIST", NormalizedName = "RECEPTIONIST",ConcurrencyStamp =null},
+                new Role { Name = "SECURITYOFFICER", NormalizedName = "SECURITYOFFICER",ConcurrencyStamp =null},
+                new Role { Name = "HOUSEKEEPING", NormalizedName = "HOUSEKEEPING",ConcurrencyStamp =null},
+                new Role { Name = "ITSUPPORT", NormalizedName = "ITSUPPORT",ConcurrencyStamp =null},  
 
-            //}
+            };
+            if (!context.Roles.Any())
+            {
+                context.Roles.AddRange(rolesToSeed);
+                context.SaveChanges();
+            }
 
 
             var allCountriesCount = context.Countries.Count();

@@ -148,6 +148,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.IsActive = model.IsActive;
             getEmployee.JoiningDate = model.JoiningDate;
             getEmployee.ModifiedDate = DateTime.Now;
+            getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();

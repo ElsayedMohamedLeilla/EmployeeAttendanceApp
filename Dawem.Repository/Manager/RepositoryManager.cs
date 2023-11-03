@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Core;
+﻿using Dawem.Contract.Repository.Attendances.WeekAttendances;
+using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
@@ -10,6 +11,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
+using Dawem.Repository.Attendances.WeekAttendances;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -49,7 +51,10 @@ namespace Dawem.Repository.Manager
         private IPermissionsTypeRepository permissionsTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
 
+        private IWeekAttendanceRepository weekAttendanceRepository;
+        private IWeekAttendanceShiftRepository weekAttendanceShiftRepository;
 
+        
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -101,9 +106,10 @@ namespace Dawem.Repository.Manager
         permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
 
 
-        
-            
-
+        public IWeekAttendanceRepository WeekAttendanceRepository =>
+        weekAttendanceRepository ??= new WeekAttendanceRepository(unitOfWork, generalSetting);
+        public IWeekAttendanceShiftRepository WeekAttendanceShiftRepository =>
+        weekAttendanceShiftRepository ??= new WeekAttendanceShiftRepository(unitOfWork, generalSetting);
 
     }
 }

@@ -174,6 +174,7 @@ namespace Dawem.BusinessLogic.Employees
             getUser.IsActive = model.IsActive;
             getUser.IsAdmin = model.IsAdmin;
             getUser.ModifiedDate = DateTime.Now;
+            getUser.ModifyUserId = requestInfo.UserId;
             getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getUser.ProfileImageName : null;
 

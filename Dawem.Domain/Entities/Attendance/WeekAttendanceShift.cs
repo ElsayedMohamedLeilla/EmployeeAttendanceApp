@@ -10,9 +10,6 @@ namespace Dawem.Domain.Entities.Attendance
     {
         #region Foregn Keys
 
-        public int CompanyId { get; set; }
-        [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
         public int WeekAttendanceId { get; set; }
         [ForeignKey(nameof(WeekAttendanceId))]
         public WeekAttendance WeekAttendance { get; set; }

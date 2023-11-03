@@ -34,8 +34,7 @@
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
-        public const string Users = "Users";
-        
+        public const string Users = "Users";    
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
         public const string FourigitPhone = "FourigitPhone";
@@ -55,8 +54,7 @@
         public const string Jwt = "Jwt";
         public const string UserId = "UserId";
         public const string BranchId = "BranchId";
-        public const string CompanyId = "CompanyId";
-        
+        public const string CompanyId = "CompanyId";        
         public const string ApplicationType = "ApplicationType";
         public const string RememberMe = "RememberMe";
         public const string True = "true";
@@ -89,19 +87,11 @@
         public const string Browse = "Browse";
         public const string Http = "http";
         public const string Https = "https";
-        public const string ImagesFolder = "ImagesFolder";
-        
+        public const string ImagesFolder = "ImagesFolder";       
         public const string SmtpGmailCom = "smtp.gmail.com";
         public const string DawemAppDevelopersGmailCom = "dawem.app.developers@gmail.com";
         public const string DawemAppDevelopersGmailComPassword = "wxqo zsuj brqy ufgm";
         public const string SmtpGmailComs = "smtp.gmail.com";
-
-
-
-
-
-
-        // to be translated
         public const string SorryUserContextNull = "Sorry!!UserContextNull!";
         public const string SorryYouCurrentBranchIsNotMainBranch = "Sorry!!YouCurrentBranchIsNotMainBranch!";
         public const string SorryAddCanBeDoneInMainBranchOnly = "SorryAddCanBeDoneInMainBranchOnly!";
@@ -254,9 +244,19 @@
         public const string AdminEmployee = "AdminEmployee";
         public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
-        public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
-        
+        public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";        
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
+        public const string SorryWeekAttendanceNameIsDuplicated = "Sorry!!WeekAttendanceNameIsDuplicated!";
+        public const string SorryYouMustEnterWeekAttendanceName = "Sorry!!YouMustEnterWeekAttendanceName!";
+        public const string SorryYouMustEnterWeekShifts = "Sorry!!YouMustEnterWeekShifts!";
+        public const string SorryYouMustEnterAll7WeekDaysInWeekShifts = "Sorry!!YouMustEnterAll7WeekDaysInWeekShifts!";
+        public const string SorryYouMustEnterValidWeekDay = "Sorry!!YouMustEnterValidWeekDay!";
+        public const string SorryYouChooseValidShift = "Sorry!!YouChooseValidShift!";
+        public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";
+        public const string SorryWeekAttendanceNotFound = "Sorry!!WeekAttendanceNotFound!";
+        public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
+        public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
+        public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
         
     }
 }

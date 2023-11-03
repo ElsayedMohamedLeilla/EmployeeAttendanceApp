@@ -13,8 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessLogic\Attendances\WeekAttendances\" />
-    <Folder Include="BusinessValidation\Attendances\WeekAttendances\" />
     <Folder Include="BusinessValidation\Lookups\" />
   </ItemGroup>
 

@@ -231,7 +231,6 @@
         public const string SorryAssignmentTypeNotFound = "Sorry!!AssignmentTypeNotFound";
         public const string DoneCreateAssignmentTypeSuccessfully = "DoneCreateAssignmentTypeSuccessfully";
         public const string DoneUpdateAssignmentTypeSuccessfully = "DoneUpdateAssignmentTypeSuccessfully";
-
         public const string SorryTaskTypeNameIsDuplicated = "Sorry!!TaskTypeNameIsDuplicated";
         public const string SorryYouMustEnterTaskTypeName = "Sorry!!YouMustEnterTaskTypeName";
         public const string SorryYouMustEnterTaskTypeId = "Sorry!!YouMustEnterTaskTypeId";

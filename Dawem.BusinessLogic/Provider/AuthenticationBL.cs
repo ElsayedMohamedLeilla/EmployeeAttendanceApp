@@ -234,7 +234,7 @@ namespace Dawem.BusinessLogic.Provider
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
 
-            string RoleName = DawemKeys.FullAccess;
+            string RoleName = DawemKeys.Admin;
             var user = new MyUser()
             {
                 UserName = model.UserEmail,
@@ -254,7 +254,7 @@ namespace Dawem.BusinessLogic.Provider
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
             }
 
-            var assignRole = await userManagerRepository.ro .AddToRoleAsync(user, RoleName);
+            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);

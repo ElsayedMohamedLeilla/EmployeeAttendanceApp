@@ -16,7 +16,9 @@ using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Employees;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Dawem.BusinessLogic.Users
 {
@@ -98,8 +100,6 @@ namespace Dawem.BusinessLogic.Users
             user.ProfileImageName = imageName;
             user.Code = getNextCode;
 
-            string RoleName = DawemKeys.FullAccess;
-
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
             {
@@ -107,14 +107,17 @@ namespace Dawem.BusinessLogic.Users
                 throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
             }
 
-            var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
-            if (!assignRole.Succeeded)
+            if (model.Roles != null)
             {
-                unitOfWork.Rollback();
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, model.Roles);
+                if (!assignRolesResult.Succeeded)
+                {
+                    unitOfWork.Rollback();
+                    throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                }
+                await unitOfWork.SaveAsync();
             }
-            await unitOfWork.SaveAsync();
-
+            
             #endregion
 
             #region Handle Response
@@ -184,6 +187,45 @@ namespace Dawem.BusinessLogic.Users
             }
 
             await unitOfWork.SaveAsync();
+
+            #region Update Roles
+
+            var getUserRolesFromDB = await userManagerRepository.GetRolesAsync(getUser);
+            if ((model.Roles == null || model.Roles.Count == 0) && getUserRolesFromDB != null && getUserRolesFromDB.Count > 0)
+            {
+               var removeRolesResult =  await userManagerRepository.RemoveFromRolesAsync(getUser, getUserRolesFromDB);
+                if (!removeRolesResult.Succeeded)
+                {
+                    unitOfWork.Rollback();
+                    throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                }
+            }
+            if (model.Roles != null)
+            {
+                var getWillDeletedUserRoles = getUserRolesFromDB.Where(dbr => !model.Roles.Contains(dbr)).ToList();
+                if (getWillDeletedUserRoles != null && getWillDeletedUserRoles.Count > 0)
+                {
+                    var removeRolesResult = await userManagerRepository.RemoveFromRolesAsync(getUser, getWillDeletedUserRoles);
+                    if (!removeRolesResult.Succeeded)
+                    {
+                        unitOfWork.Rollback();
+                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                    }
+                }
+                var getWillAddedUserRoles = model.Roles.Where(dbr => !getUserRolesFromDB.Contains(dbr)).ToList();
+                if (getWillAddedUserRoles != null && getWillAddedUserRoles.Count > 0)
+                {
+                    var addRolesResult = await userManagerRepository.AddToRolesAsync(getUser, getWillAddedUserRoles);
+                    if (!addRolesResult.Succeeded)
+                    {
+                        unitOfWork.Rollback();
+                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                    }
+                }
+                await unitOfWork.SaveAsync();
+            }
+
+            #endregion
 
             #endregion
 
@@ -300,18 +342,19 @@ namespace Dawem.BusinessLogic.Users
         public async Task<GetUserInfoResponseModel> GetInfo(int userId)
         {
             var user = await repositoryManager.UserRepository.Get(e => e.Id == userId && !e.IsDeleted)
-                .Select(e => new GetUserInfoResponseModel
+                .Select(user => new GetUserInfoResponseModel
                 {
-                    Code = e.Code,
-                    Name = e.Name,
-                    EmployeeName = e.Employee != null ? e.Employee.Name : null,
-                    IsActive = e.IsActive,
-                    IsAdmin = e.IsAdmin,
-                    Email = e.Email,
-                    MobileNumber = e.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Users)
+                    Code = user.Code,
+                    Name = user.Name,
+                    EmployeeName = user.Employee != null ? user.Employee.Name : null,
+                    IsActive = user.IsActive,
+                    IsAdmin = user.IsAdmin,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
 
+            //user.Roles = await userManagerRepository.GetRolesAsync(user);
             return user;
         }
         public async Task<GetUserByIdResponseModel> GetById(int userId)

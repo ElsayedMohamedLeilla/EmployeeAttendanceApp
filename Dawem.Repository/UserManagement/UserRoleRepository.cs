@@ -10,6 +10,7 @@ namespace Dawem.Repository.UserManagement
     {
         public UserRoleRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
+
         }
     }
 

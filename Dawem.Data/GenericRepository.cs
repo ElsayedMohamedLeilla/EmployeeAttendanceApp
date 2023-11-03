@@ -65,8 +65,6 @@ namespace Dawem.Data
                 Entities.Add(entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
-
-
                 return entity;
 
             }

@@ -15,6 +15,7 @@ namespace Dawem.Domain.Entities
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }
+        public string Notes { get; set; }
         public void Delete()
         {
             IsDeleted = true;

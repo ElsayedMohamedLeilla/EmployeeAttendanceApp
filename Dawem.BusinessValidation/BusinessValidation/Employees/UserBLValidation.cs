@@ -6,7 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Users
+namespace Dawem.Validation.BusinessValidation.Employees
 {
 
     public class UserBLValidation : IUserBLValidation
@@ -43,7 +43,7 @@ namespace Dawem.Validation.BusinessValidation.Users
             #region Validate Mobile Number
 
             var checkMobileDuplicate = await repositoryManager.UserRepository
-            .Get(u =>  u.MobileNumber == model.MobileNumber.Trim())
+            .Get(u => u.MobileNumber == model.MobileNumber.Trim())
             .AnyAsync();
 
             if (checkMobileDuplicate)

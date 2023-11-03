@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Employees.User;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Employees
+namespace Dawem.Validation.FluentValidation.Employees.User
 {
     public class CreateUserModelValidator : AbstractValidator<CreateUserModel>
     {
@@ -18,7 +18,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(DawemKeys.SorryYouMustEnterValidEmail);
 
-            RuleFor(user => user.Roles).Must(r=> r != null && r.Count > 0).
+            RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
                WithMessage(DawemKeys.SorryYouMustEnterOneRoleAtLeast);
 
             RuleFor(user => user.Password).NotNull().

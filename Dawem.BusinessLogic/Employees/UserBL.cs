@@ -10,16 +10,16 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Employee;
 using Dawem.Models.Response.Employees.User;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Employees;
+using Dawem.Validation.FluentValidation.Employees.User;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace Dawem.BusinessLogic.Users
+namespace Dawem.BusinessLogic.Employees
 {
     public class UserBL : IUserBL
     {

@@ -189,7 +189,13 @@
         public const string DoneUpdateDepartmentSuccessfully = "DoneUpdateDepartmentSuccessfully";
         public const string SorryErrorHappenWhileUploadProfileImage = "Sorry!!ErrorHappenWhileUploadProfileImage!";
         public const string SorryYouMustUploadImagesOnly = "Sorry!!YouMustUploadImagesOnly!";
-
+        public const string Saturday = "Saturday";
+        public const string Sunday = "Sunday";
+        public const string Monday = "Monday";
+        public const string Tuesday = "Tuesday";
+        public const string Wednesday = "Wednesday";
+        public const string Thursday = "Thursday";
+        public const string Friday = "Friday";
 
 
 
@@ -251,5 +257,6 @@
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
+        
     }
 }

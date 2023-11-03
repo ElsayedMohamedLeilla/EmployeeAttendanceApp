@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities;
+using Dawem.Domain.Entities.Attendance;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Emit;
 
 namespace Dawem.Data
 {
@@ -103,9 +105,18 @@ namespace Dawem.Data
             builder.Entity<UserRole>().HasOne(p => p.User)
                    .WithMany(r => r.UserRoles)
                    .HasForeignKey(p => p.UserId)
-                   .IsRequired();
+            .IsRequired();
+
+
+            builder.Entity<WeekAttendanceShift>()
+                .HasOne(p => p.WeekAttendance)
+                .WithMany(b => b.WeekAttendanceShifts)
+                .HasForeignKey(p => p.WeekAttendanceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
+        public DbSet<WeekAttendance> WeekAttendances { get; set; }
+        public DbSet<WeekAttendanceShift> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }

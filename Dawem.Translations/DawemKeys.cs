@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using System.Data;
+
+namespace Dawem.Translations
 {
     public static class DawemKeys
     {
@@ -209,7 +211,23 @@
         public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId";
         public const string DoneCreateVacationsTypeSuccessfully = "DoneCreateVacationsTypeSuccessfully";
         public const string DoneUpdateVacationsTypeSuccessfully = "DoneUpdateVacationsTypeSuccessfully";
-
+        public const string FULLACCESS = "FULLACCESS";
+        public const string ADMIN = "ADMIN";
+        public const string EMPLOYEE = "EMPLOYEE";
+        public const string USER = "USER";
+        public const string MANAGER = "MANAGER";
+        public const string DEVELOPER = "DEVELOPER";
+        public const string SUPPORT = "SUPPORT";
+        public const string CUSTOMER = "CUSTOMER";
+        public const string VIEWER = "VIEWER";
+        public const string DOCTOR = "DOCTOR";
+        public const string NURSE = "NURSE";
+        public const string MEDICALASSISTANT = "MEDICALASSISTANT";
+        public const string PHARMACIST = "PHARMACIST";
+        public const string RECEPTIONIST = "RECEPTIONIST";
+        public const string SECURITYOFFICER = "SECURITYOFFICER";
+        public const string HOUSEKEEPING = "HOUSEKEEPING";
+        public const string ITSUPPORT = "ITSUPPORT";
 
 
 
@@ -244,7 +262,13 @@
         public const string AdminEmployee = "AdminEmployee";
         public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
-        public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";        
+        public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
+        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
+
+       
+
+
+        
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
         public const string SorryWeekAttendanceNameIsDuplicated = "Sorry!!WeekAttendanceNameIsDuplicated!";
         public const string SorryYouMustEnterWeekAttendanceName = "Sorry!!YouMustEnterWeekAttendanceName!";

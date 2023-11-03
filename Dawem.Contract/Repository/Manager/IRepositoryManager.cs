@@ -28,8 +28,6 @@ namespace Dawem.Contract.Repository.Manager
         IVacationsTypeRepository VacationsTypeRepository { get; }
 
         IPermissionsTypeRepository PermissionsTypeRepository { get; }
-
-
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
         IHolidayTypeRepository HolidayTypeRepository { get; }
@@ -37,5 +35,8 @@ namespace Dawem.Contract.Repository.Manager
 
         IWeekAttendanceRepository WeekAttendanceRepository { get; }
         IWeekAttendanceShiftRepository WeekAttendanceShiftRepository { get; }
+
+        IRoleRepository RoleRepository { get; }
+
     }
 }

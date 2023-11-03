@@ -1,4 +1,5 @@
-﻿using Dawem.API.Controllers.Others;
+﻿using Dawem.API.Controllers.Employees;
+using Dawem.API.Controllers.Others;
 using Dawem.API.Controllers.Provider;
 using Dawem.API.Controllers.UserManagement;
 using Dawem.Enums.General;
@@ -30,22 +31,22 @@ namespace Dawem.API.MiddleWares.Helpers
                         break;
 
                    
-                    case nameof(Controllers.Users.UserController):
+                    case nameof(UserController):
 
                         screen = ApplicationScreenType.UsersScreen;
-                        if (actionName == nameof(Controllers.Users.UserController.GetInfo) || actionName == nameof(Controllers.Users.UserController.Get))
+                        if (actionName == nameof(UserController.GetInfo) || actionName == nameof(UserController.Get))
                         {
                             method = ApiMethod.View;
                         }
-                        else if (actionName == nameof(Controllers.Users.UserController.Create))
+                        else if (actionName == nameof(UserController.Create))
                         {
                             method = ApiMethod.Add;
                         }
-                        else if (actionName == nameof(Controllers.Users.UserController.Update))
+                        else if (actionName == nameof(UserController.Update))
                         {
                             method = ApiMethod.Update;
                         }
-                        else if (actionName == nameof(Controllers.Users.UserController.Delete))
+                        else if (actionName == nameof(UserController.Delete))
                         {
                             method = ApiMethod.Delete;
                         }

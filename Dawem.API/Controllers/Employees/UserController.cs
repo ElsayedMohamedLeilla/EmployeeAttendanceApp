@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Users
+namespace Dawem.API.Controllers.Employees
 {
     [Route(DawemKeys.ApiControllerAction)]
     [ApiController]

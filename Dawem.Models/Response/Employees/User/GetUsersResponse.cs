@@ -1,7 +1,6 @@
-﻿using Dawem.Models.Response.Employees.User;
-using Dawem.Models.ResponseModels;
+﻿using Dawem.Models.ResponseModels;
 
-namespace Dawem.Models.Response.Employees.Employee
+namespace Dawem.Models.Response.Employees.User
 {
     public class GetUsersResponse
     {

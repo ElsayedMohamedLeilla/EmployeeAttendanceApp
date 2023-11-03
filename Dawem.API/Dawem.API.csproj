@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Attendances\WeekAttendances\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Employees.User;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Employees
+namespace Dawem.Validation.FluentValidation.Employees.User
 {
     public class UpdateUserModelValidator : AbstractValidator<UpdateUserModel>
     {

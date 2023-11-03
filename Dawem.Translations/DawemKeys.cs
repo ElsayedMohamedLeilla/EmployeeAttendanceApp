@@ -198,29 +198,6 @@ namespace Dawem.Translations
         public const string Wednesday = "Wednesday";
         public const string Thursday = "Thursday";
         public const string Friday = "Friday";
-
-
-
-
-        // JustificationsTypes
-        public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
-        public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
-        public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
-        public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
-        public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
-        public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound";
-        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterPermissionsTypeName = "Sorry!!YouMustEnterPermissionsTypeName";
-        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId";
-        public const string DoneCreatePermissionsTypeSuccessfully = "DoneCreatePermissionsTypeSuccessfully";
-        public const string DoneUpdatePermissionsTypeSuccessfully = "DoneUpdatePermissionsTypeSuccessfully";
-        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound";
-        public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName";
-        public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId";
-        public const string DoneCreateVacationsTypeSuccessfully = "DoneCreateVacationsTypeSuccessfully";
-        public const string DoneUpdateVacationsTypeSuccessfully = "DoneUpdateVacationsTypeSuccessfully";
         public const string FULLACCESS = "FULLACCESS";
         public const string ADMIN = "ADMIN";
         public const string EMPLOYEE = "EMPLOYEE";
@@ -243,12 +220,25 @@ namespace Dawem.Translations
 
 
 
-
-
-
-
-        //new
-
+        // new
+        public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
+        public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
+        public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
+        public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
+        public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
+        public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound";
+        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterPermissionsTypeName = "Sorry!!YouMustEnterPermissionsTypeName";
+        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId";
+        public const string DoneCreatePermissionsTypeSuccessfully = "DoneCreatePermissionsTypeSuccessfully";
+        public const string DoneUpdatePermissionsTypeSuccessfully = "DoneUpdatePermissionsTypeSuccessfully";
+        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound";
+        public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated";
+        public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName";
+        public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId";
+        public const string DoneCreateVacationsTypeSuccessfully = "DoneCreateVacationsTypeSuccessfully";
+        public const string DoneUpdateVacationsTypeSuccessfully = "DoneUpdateVacationsTypeSuccessfully";
         public const string SorryAssignmentTypeNameIsDuplicated = "Sorry!!AssignmentTypeNameIsDuplicated";
         public const string SorryYouMustEnterAssignmentTypeName = "Sorry!!YouMustEnterAssignmentTypeName";
         public const string SorryYouMustEnterAssignmentTypeId = "Sorry!!YouMustEnterAssignmentTypeId";
@@ -274,12 +264,7 @@ namespace Dawem.Translations
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-
-       
-
-
         
-        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
         
     }
 }

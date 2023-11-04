@@ -2,7 +2,7 @@
 {
     public class WeekAttendanceShiftTextModel
     {
-        public string WeekDay { get; set; }
+        public string WeekDayName { get; set; }
         public string ShiftName { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Core;
+﻿using Dawem.Contract.Repository.Attendances.WeekAttendances;
+using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
@@ -30,6 +31,10 @@ namespace Dawem.Contract.Repository.Manager
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
         IHolidayTypeRepository HolidayTypeRepository { get; }
+
+
+        IWeekAttendanceRepository WeekAttendanceRepository { get; }
+        IWeekAttendanceShiftRepository WeekAttendanceShiftRepository { get; }
 
         IRoleRepository RoleRepository { get; }
 

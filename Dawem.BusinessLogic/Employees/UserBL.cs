@@ -13,9 +13,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.User;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.Employees;
-using Dawem.Validation.FluentValidation.Employees.User;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -322,7 +319,7 @@ namespace Dawem.BusinessLogic.Employees
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
-                    Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
+                    Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             return user;

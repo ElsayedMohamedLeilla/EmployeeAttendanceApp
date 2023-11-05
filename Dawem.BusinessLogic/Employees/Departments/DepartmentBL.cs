@@ -225,6 +225,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 {
                     Code = e.Code,
                     Name = e.Name,
+                    ParentName = e.Parent != null ? e.Parent.Name : null,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 
@@ -238,6 +239,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
+                    ParentId = e.Parent != null ? e.ParentId : null,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 

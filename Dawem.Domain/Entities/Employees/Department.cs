@@ -11,6 +11,9 @@ namespace Dawem.Domain.Entities.Employees
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
+        public int? ParentId { get; set; }
+        [ForeignKey(nameof(ParentId))]
+        public Department Parent { get; set; }
         #endregion
         public int Code { get; set; }
         public string Name { get; set; }

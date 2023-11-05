@@ -137,7 +137,7 @@ namespace Dawem.Translations
         public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
         public const string SorryScreenNotFound = "Sorry!!ScreenNotFound!";
         public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
-        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";  //not entered
+        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
         public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
         public const string SorryThereIsNoBranchesForThisUser = "Sorry!!ThereIsNoBranchesForThisUser!";
         public const string SorryYouMustEnterUser = "Sorry!!YouMustEnterUser!";

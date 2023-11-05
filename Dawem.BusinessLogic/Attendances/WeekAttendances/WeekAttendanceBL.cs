@@ -11,8 +11,6 @@ using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.WeekAttendances

@@ -36,18 +36,6 @@ namespace Dawem.BusinessLogic.Core.Roles
 
         public async Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRoleCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var RoleRepository = repositoryManager.RoleRepository;
             var query = RoleRepository.GetAsQueryable(criteria);

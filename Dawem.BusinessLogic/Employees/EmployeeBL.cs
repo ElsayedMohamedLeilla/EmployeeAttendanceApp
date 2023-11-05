@@ -42,18 +42,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
-            #region Model Validation
-
-            var createEmployeeModel = new CreateEmployeeModelValidator();
-            var createEmployeeModelResult = createEmployeeModel.Validate(model);
-            if (!createEmployeeModelResult.IsValid)
-            {
-                var error = createEmployeeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await employeeBLValidation.CreateValidation(model);
@@ -106,18 +94,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateEmployeeModel model)
         {
-            #region Model Validation
-
-            var updateEmployeeModelValidator = new UpdateEmployeeModelValidator();
-            var updateEmployeeModelValidatorResult = updateEmployeeModelValidator.Validate(model);
-            if (!updateEmployeeModelValidatorResult.IsValid)
-            {
-                var error = updateEmployeeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await employeeBLValidation.UpdateValidation(model);
@@ -164,18 +140,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeesResponse> Get(GetEmployeesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var employeeRepository = repositoryManager.EmployeeRepository;
             var query = employeeRepository.GetAsQueryable(criteria);
 
@@ -218,18 +182,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeesForDropDownResponse> GetForDropDown(GetEmployeesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var employeeRepository = repositoryManager.EmployeeRepository;
             var query = employeeRepository.GetAsQueryable(criteria);

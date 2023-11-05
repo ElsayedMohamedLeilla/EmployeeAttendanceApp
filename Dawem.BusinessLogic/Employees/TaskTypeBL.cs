@@ -38,24 +38,14 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateTaskTypeModel model)
         {
-            #region Model Validation
-
-            var createTaskTypeModel = new CreateTaskTypeModelValidator();
-            var createTaskTypeModelResult = createTaskTypeModel.Validate(model);
-            if (!createTaskTypeModelResult.IsValid)
-            {
-                var error = createTaskTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
 
             #endregion
+
             unitOfWork.CreateTransaction();
+
             #region Insert TaskType
 
             #region Set TaskType code
@@ -86,18 +76,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateTaskTypeModel model)
         {
-            #region Model Validation
-
-            var updateTaskTypeModelValidator = new UpdateTaskTypeModelValidator();
-            var updateTaskTypeModelValidatorResult = updateTaskTypeModelValidator.Validate(model);
-            if (!updateTaskTypeModelValidatorResult.IsValid)
-            {
-                var error = updateTaskTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
             await departmentBLValidation.UpdateValidation(model);
             #endregion
@@ -131,19 +109,9 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetTaskTypesResponse> Get(GetTaskTypesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
             var departmentRepository = repositoryManager.TaskTypeRepository;
             var query = departmentRepository.GetAsQueryable(criteria);
+
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
@@ -172,16 +140,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetTaskTypesForDropDownResponse> GetForDropDown(GetTaskTypesCriteria criteria)
         {
-            #region Model Validation
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-            #endregion
-
             criteria.IsActive = true;
             var departmentRepository = repositoryManager.TaskTypeRepository;
             var query = departmentRepository.GetAsQueryable(criteria);

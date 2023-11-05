@@ -41,18 +41,6 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         }
         public async Task<int> Create(CreateJustificationsTypeDTO model)
         {
-            #region Model Validation
-
-            var createJustificationsTypeModel = new CreateJustificationsTypeModelValidator();
-            var createJustificationsTypeModelResult = createJustificationsTypeModel.Validate(model);
-            if (!createJustificationsTypeModelResult.IsValid)
-            {
-                var error = createJustificationsTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await justificationTypeBLValidation.CreateValidation(model);
@@ -92,18 +80,6 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         }
         public async Task<bool> Update(UpdateJustificationsTypeDTO model)
         {
-            #region Model Validation
-
-            var updateJustificationsTypeModelValidator = new UpdateJustificationsTypeModelValidator();
-            var updateJustificationsTypeModelValidatorResult = updateJustificationsTypeModelValidator.Validate(model);
-            if (!updateJustificationsTypeModelValidatorResult.IsValid)
-            {
-                var error = updateJustificationsTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await justificationTypeBLValidation.UpdateValidation(model);
@@ -129,18 +105,6 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         }
         public async Task<GetJustificationsTypeResponseDTO> Get(GetJustificationsTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator(); // validate on pageining and all common validation 
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var justificationsTypeRepository = repositoryManager.JustificationsTypeRepository;
             var query = justificationsTypeRepository.GetAsQueryable(criteria);
 
@@ -180,18 +144,6 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         }
         public async Task<GetJustificationsTypeDropDownResponseDTO> GetForDropDown(GetJustificationsTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var JustificationsTypeRepository = repositoryManager.JustificationsTypeRepository;
             var query = JustificationsTypeRepository.GetAsQueryable(criteria);

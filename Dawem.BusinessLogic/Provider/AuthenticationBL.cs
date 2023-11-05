@@ -63,18 +63,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> SignUp(SignUpModel signUpModel)
         {
-            #region Model Validation
-
-            var signUpModelValidator = new SignUpModelValidator();
-            var signUpModelValidatorResult = signUpModelValidator.Validate(signUpModel);
-            if (!signUpModelValidatorResult.IsValid)
-            {
-                var error = signUpModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             requestHeaderContext.IsMainBranch = true;
 
             #region Business Validation
@@ -264,18 +252,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<TokenDto> SignIn(SignInModel signInModel)
         {
-            #region Model Validation
-
-            var signInModelValidator = new SignInModelValidator();
-            var signInModelValidatorResult = signInModelValidator.Validate(signInModel);
-            if (!signInModelValidatorResult.IsValid)
-            {
-                var error = signInModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             var user = await accountBLValidation.SignInValidation(signInModel);
@@ -409,18 +385,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> RequestResetPassword(RequestResetPasswordModel model)
         {
-            #region Model Validation
-
-            var forgetPasswordModelValidator = new RequestResetPasswordModelValidator();
-            var forgetPasswordModelValidatorResult = forgetPasswordModelValidator.Validate(model);
-            if (!forgetPasswordModelValidatorResult.IsValid)
-            {
-                var error = forgetPasswordModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 
@@ -448,18 +412,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
-            #region Model Validation
-
-            var resetPasswordModelValidator = new ResetPasswordModelValidator();
-            var resetPasswordModelValidatorResult = resetPasswordModelValidator.Validate(model);
-            if (!resetPasswordModelValidatorResult.IsValid)
-            {
-                var error = resetPasswordModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 
@@ -473,18 +425,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> ChangePassword(ChangePasswordModel model)
         {
-            #region Model Validation
-
-            var changePasswordModelValidator = new ChangePasswordModelValidator();
-            var changePasswordModelValidatorResult = changePasswordModelValidator.Validate(model);
-            if (!changePasswordModelValidatorResult.IsValid)
-            {
-                var error = changePasswordModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
                 throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
 

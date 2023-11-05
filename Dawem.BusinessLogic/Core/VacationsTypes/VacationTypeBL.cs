@@ -41,18 +41,6 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         }
         public async Task<int> Create(CreateVacationsTypeDTO model)
         {
-            #region Model Validation
-
-            var createVacationsTypeModel = new CreateVacationsTypeModelValidator();
-            var createVacationsTypeModelResult = createVacationsTypeModel.Validate(model);
-            if (!createVacationsTypeModelResult.IsValid)
-            {
-                var error = createVacationsTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await vacationTypeBLValidation.CreateValidation(model);
@@ -92,18 +80,6 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         }
         public async Task<bool> Update(UpdateVacationsTypeDTO model)
         {
-            #region Model Validation
-
-            var updateVacationsTypeModelValidator = new UpdateVacationsTypeModelValidator();
-            var updateVacationsTypeModelValidatorResult = updateVacationsTypeModelValidator.Validate(model);
-            if (!updateVacationsTypeModelValidatorResult.IsValid)
-            {
-                var error = updateVacationsTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await vacationTypeBLValidation.UpdateValidation(model);
@@ -129,18 +105,6 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         }
         public async Task<GetVacationsTypeResponseDTO> Get(GetVacationTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator(); // validate on pageining and all common validation 
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var VacationsTypeRepository = repositoryManager.VacationsTypeRepository;
             var query = VacationsTypeRepository.GetAsQueryable(criteria);
 
@@ -180,18 +144,6 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         }
         public async Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var VacationsTypeRepository = repositoryManager.VacationsTypeRepository;
             var query = VacationsTypeRepository.GetAsQueryable(criteria);

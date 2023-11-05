@@ -38,18 +38,6 @@ namespace Dawem.BusinessLogic.WeekAttendances
         }
         public async Task<int> Create(CreateWeekAttendanceModel model)
         {
-            #region Model Validation
-
-            var createWeekAttendanceModel = new CreateWeekAttendanceModelValidator();
-            var createWeekAttendanceModelResult = createWeekAttendanceModel.Validate(model);
-            if (!createWeekAttendanceModelResult.IsValid)
-            {
-                var error = createWeekAttendanceModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await weekAttendanceBLValidation.CreateValidation(model);
@@ -89,18 +77,6 @@ namespace Dawem.BusinessLogic.WeekAttendances
         }
         public async Task<bool> Update(UpdateWeekAttendanceModel model)
         {
-            #region Model Validation
-
-            var updateWeekAttendanceModelValidator = new UpdateWeekAttendanceModelValidator();
-            var updateWeekAttendanceModelValidatorResult = updateWeekAttendanceModelValidator.Validate(model);
-            if (!updateWeekAttendanceModelValidatorResult.IsValid)
-            {
-                var error = updateWeekAttendanceModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await weekAttendanceBLValidation.UpdateValidation(model);
@@ -149,18 +125,6 @@ namespace Dawem.BusinessLogic.WeekAttendances
         }
         public async Task<GetWeekAttendancesResponse> Get(GetWeekAttendancesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var weekAttendanceRepository = repositoryManager.WeekAttendanceRepository;
             var query = weekAttendanceRepository.GetAsQueryable(criteria);
 
@@ -200,18 +164,6 @@ namespace Dawem.BusinessLogic.WeekAttendances
         }
         public async Task<GetWeekAttendancesForDropDownResponse> GetForDropDown(GetWeekAttendancesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var weekAttendanceRepository = repositoryManager.WeekAttendanceRepository;
             var query = weekAttendanceRepository.GetAsQueryable(criteria);

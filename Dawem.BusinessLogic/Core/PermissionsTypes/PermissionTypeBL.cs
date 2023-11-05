@@ -41,18 +41,6 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         }
         public async Task<int> Create(CreatePermissionTypeDTO model)
         {
-            #region Model Validation
-
-            var createPermissionsTypeModel = new CreatePermissionsTypeModelValidator();
-            var createPermissionsTypeModelResult = createPermissionsTypeModel.Validate(model);
-            if (!createPermissionsTypeModelResult.IsValid)
-            {
-                var error = createPermissionsTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await permissionTypeBLValidation.CreateValidation(model);
@@ -92,18 +80,6 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         }
         public async Task<bool> Update(UpdatePermissionTypeDTO model)
         {
-            #region Model Validation
-
-            var updatePermissionsTypeModelValidator = new UpdatePermissionsTypeModelValidator();
-            var updatePermissionsTypeModelValidatorResult = updatePermissionsTypeModelValidator.Validate(model);
-            if (!updatePermissionsTypeModelValidatorResult.IsValid)
-            {
-                var error = updatePermissionsTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await permissionTypeBLValidation.UpdateValidation(model);
@@ -129,18 +105,6 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         }
         public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator(); // validate on pageining and all common validation 
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;
             var query = PermissionsTypeRepository.GetAsQueryable(criteria);
 
@@ -180,18 +144,6 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         }
         public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionTypeCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             criteria.IsActive = true;
             var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;
             var query = PermissionsTypeRepository.GetAsQueryable(criteria);

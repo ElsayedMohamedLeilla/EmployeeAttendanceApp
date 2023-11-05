@@ -24,7 +24,7 @@ namespace Dawem.Validation.BusinessValidation.WeekAttendances
                 .WeekAttendanceRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkWeekAttendanceDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryWeekAttendanceNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNameIsDuplicated);
             }
 
             return true;
@@ -36,7 +36,7 @@ namespace Dawem.Validation.BusinessValidation.WeekAttendances
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkWeekAttendanceDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryWeekAttendanceNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNameIsDuplicated);
             }
 
             return true;

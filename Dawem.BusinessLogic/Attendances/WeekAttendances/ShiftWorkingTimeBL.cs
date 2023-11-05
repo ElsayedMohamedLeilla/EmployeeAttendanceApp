@@ -145,7 +145,7 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
 
             #region sorting
 
-            var queryOrdered = ShiftWorkingTimeRepository.OrderBy(query, nameof(ShiftWorkingTime.Id), DawemKeys.Desc);
+            var queryOrdered = ShiftWorkingTimeRepository.OrderBy(query, nameof(ShiftWorkingTime.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -200,7 +200,7 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
 
             #region sorting
 
-            var queryOrdered = ShiftWorkingTimeRepository.OrderBy(query, nameof(ShiftWorkingTime.Id), DawemKeys.Desc);
+            var queryOrdered = ShiftWorkingTimeRepository.OrderBy(query, nameof(ShiftWorkingTime.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -236,7 +236,7 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
                     CheckOutTime = e.CheckOutTime,
                     AllowedMinutes = e.AllowedMinutes,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryShiftWorkingTimeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
 
             return ShiftWorkingTime;
         }
@@ -253,7 +253,7 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
                     AllowedMinutes = e.AllowedMinutes,
                     IsActive = e.IsActive,
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryShiftWorkingTimeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
 
             return ShiftWorkingTime;
 
@@ -261,7 +261,7 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
         public async Task<bool> Delete(int ShiftWorkingTimeId)
         {
             var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
-                throw new BusinessValidationException(DawemKeys.SorryShiftWorkingTimeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
             ShiftWorkingTime.Delete();
             await unitOfWork.SaveAsync();
             return true;

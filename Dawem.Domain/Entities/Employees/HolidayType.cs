@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
 {
-    [Table(nameof(HolidayType) + DawemKeys.S)]
+    [Table(nameof(HolidayType) + LeillaKeys.S)]
     public class HolidayType : BaseEntity
     {
         #region Forign Key

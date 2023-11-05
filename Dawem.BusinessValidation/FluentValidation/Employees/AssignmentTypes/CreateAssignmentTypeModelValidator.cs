@@ -10,7 +10,7 @@ namespace Dawem.Validation.FluentValidation.Employees.AssignmentTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterAssignmentTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterAssignmentTypeName);
 
         }
     }

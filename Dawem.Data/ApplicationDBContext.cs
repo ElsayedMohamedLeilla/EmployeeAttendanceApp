@@ -24,11 +24,11 @@ namespace Dawem.Data
     {
         public static DbContextOptions<ApplicationDBContext> GetDbContextOptions()
         {
-            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile(DawemKeys.AppsettingsFile)
+            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile(LeillaKeys.AppsettingsFile)
                 .SetBasePath(Directory.GetCurrentDirectory()).Build();
 
             return new DbContextOptionsBuilder<ApplicationDBContext>()
-                  .UseSqlServer(new SqlConnection(configuration.GetConnectionString(DawemKeys.DawemConnectionString)), providerOptions => providerOptions.CommandTimeout(300))
+                  .UseSqlServer(new SqlConnection(configuration.GetConnectionString(LeillaKeys.DawemConnectionString)), providerOptions => providerOptions.CommandTimeout(300))
                   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug))).EnableSensitiveDataLogging(true).Options;
         }
     }
@@ -66,18 +66,18 @@ namespace Dawem.Data
                     var entityTypeBuilder = builder.Entity(entityType.ClrType);
                     entityTypeBuilder
                         .Property(nameof(IBaseEntity.AddedDate))
-                        .HasDefaultValueSql(DawemKeys.GetDateSQL);
+                        .HasDefaultValueSql(LeillaKeys.GetDateSQL);
                 }
             }
 
             builder.Entity<Translation>().HasIndex(x => new { x.KeyWord, x.Lang }).IsUnique();
-            builder.Entity<MyUser>(entity => { entity.ToTable(name: nameof(MyUser) + DawemKeys.S).HasKey(x => x.Id); });
-            builder.Entity<UserRole>(entity => { entity.ToTable(name: nameof(UserRole) + DawemKeys.S); });
-            builder.Entity<UserClaim>(entity => { entity.ToTable(nameof(UserClaim) + DawemKeys.S); });
-            builder.Entity<UserLogIn>(entity => { entity.ToTable(nameof(UserLogIn) + DawemKeys.S); });
-            builder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + DawemKeys.S); });
-            builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + DawemKeys.S); });
-            builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + DawemKeys.S); });
+            builder.Entity<MyUser>(entity => { entity.ToTable(name: nameof(MyUser) + LeillaKeys.S).HasKey(x => x.Id); });
+            builder.Entity<UserRole>(entity => { entity.ToTable(name: nameof(UserRole) + LeillaKeys.S); });
+            builder.Entity<UserClaim>(entity => { entity.ToTable(nameof(UserClaim) + LeillaKeys.S); });
+            builder.Entity<UserLogIn>(entity => { entity.ToTable(nameof(UserLogIn) + LeillaKeys.S); });
+            builder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
+            builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
+            builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.Entity<UserGroup>().HasOne(p => p.User).WithMany(b => b.UserGroups).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 

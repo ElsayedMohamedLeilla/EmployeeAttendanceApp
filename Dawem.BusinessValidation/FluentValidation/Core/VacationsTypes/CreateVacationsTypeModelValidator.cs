@@ -15,7 +15,7 @@ namespace Dawem.Validation.FluentValidation.Core.VacationsTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterVacationsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
 
         }
     }

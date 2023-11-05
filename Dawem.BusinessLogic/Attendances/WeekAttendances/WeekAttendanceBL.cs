@@ -133,7 +133,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
 
             #region sorting
 
-            var queryOrdered = weekAttendanceRepository.OrderBy(query, nameof(WeekAttendance.Id), DawemKeys.Desc);
+            var queryOrdered = weekAttendanceRepository.OrderBy(query, nameof(WeekAttendance.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -173,7 +173,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
 
             #region sorting
 
-            var queryOrdered = weekAttendanceRepository.OrderBy(query, nameof(WeekAttendance.Id), DawemKeys.Desc);
+            var queryOrdered = weekAttendanceRepository.OrderBy(query, nameof(WeekAttendance.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -212,7 +212,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
                         WeekDayName = TranslationHelper.GetTranslation(weekShift.WeekDay.ToString(), requestInfo.Lang),
                         ShiftName = "Temp Shift"
                     }).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryWeekAttendanceNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNotFound);
 
             return weekAttendance;
         }
@@ -231,7 +231,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
                         WeekDay = weekShift.WeekDay,
                         ShiftId = weekShift.ShiftId,
                     }).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryWeekAttendanceNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNotFound);
 
             return weekAttendance;
 
@@ -239,7 +239,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
         public async Task<bool> Delete(int weekAttendanceId)
         {
             var weekAttendance = await repositoryManager.WeekAttendanceRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == weekAttendanceId) ??
-                throw new BusinessValidationException(DawemKeys.SorryWeekAttendanceNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNotFound);
 
             weekAttendance.Delete();
             await unitOfWork.SaveAsync();

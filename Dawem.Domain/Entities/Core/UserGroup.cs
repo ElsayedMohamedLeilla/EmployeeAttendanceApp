@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(UserGroup) + DawemKeys.S)]
+    [Table(nameof(UserGroup) + LeillaKeys.S)]
     public class UserGroup : BaseEntity
     {
         #region Foriegn Keys

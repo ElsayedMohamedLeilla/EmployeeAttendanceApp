@@ -10,11 +10,11 @@ namespace Dawem.BusinessLogic
         public static void ConfigureBusinessLogic(this IServiceCollection services)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes()
-             .Where(p => p.Name.EndsWith(DawemKeys.BL) && !p.IsInterface);
+             .Where(p => p.Name.EndsWith(LeillaKeys.BL) && !p.IsInterface);
 
             foreach (var type in types)
             {
-                var interfaceType = type.GetInterfaces(false).FirstOrDefault(i => i.Name.EndsWith(DawemKeys.BL));
+                var interfaceType = type.GetInterfaces(false).FirstOrDefault(i => i.Name.EndsWith(LeillaKeys.BL));
                 if (interfaceType != null)
                 {
                     services.AddScoped(interfaceType, type);

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.WeekAttendances
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class WeekAttendanceController : BaseController
@@ -28,7 +28,7 @@ namespace Dawem.API.Controllers.WeekAttendances
             }
 
             var result = await weekAttendanceBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateWeekAttendanceSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateWeekAttendanceSuccessfully);
         }
 
         [HttpPut, DisableRequestSizeLimit]
@@ -39,7 +39,7 @@ namespace Dawem.API.Controllers.WeekAttendances
                 return BadRequest();
             }
             var result = await weekAttendanceBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateWeekAttendanceSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateWeekAttendanceSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetWeekAttendancesCriteria criteria)

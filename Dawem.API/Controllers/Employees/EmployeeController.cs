@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Controllers.Employees
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class EmployeeController : BaseController
@@ -31,7 +31,7 @@ namespace Dawem.API.Controllers.Employees
             var model = JsonConvert.DeserializeObject<CreateEmployeeModel>(formData.CreateEmployeeModelString);
             model.ProfileImageFile = formData.ProfileImageFile;
             var result = await employeeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateEmployeeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateEmployeeSuccessfully);
         }
 
         [HttpPut, DisableRequestSizeLimit]
@@ -45,7 +45,7 @@ namespace Dawem.API.Controllers.Employees
             var model = JsonConvert.DeserializeObject<UpdateEmployeeModel>(formData.UpdateEmployeeModelString);
             model.ProfileImageFile = formData.ProfileImageFile;
             var result = await employeeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateEmployeeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateEmployeeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetEmployeesCriteria criteria)

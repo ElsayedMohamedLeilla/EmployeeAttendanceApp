@@ -9,7 +9,7 @@ namespace Dawem.Validation.FluentValidation.Authentication
         public RequestResetPasswordModelValidator()
         {
             RuleFor(changePasswordModel => changePasswordModel.UserEmail).NotNull().
-                    WithMessage(DawemKeys.SorryYouMustEnterUserEmail);
+                    WithMessage(LeillaKeys.SorryYouMustEnterUserEmail);
         }
     }
 }

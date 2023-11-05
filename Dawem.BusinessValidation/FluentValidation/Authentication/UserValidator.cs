@@ -10,26 +10,26 @@ namespace Dawem.Validation.FluentValidation.Authentication
         public UserValidator()
         {
             RuleFor(user => user.FirstName).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterFirstName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterFirstName);
             RuleFor(user => user.LastName).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterLastName);
+                 WithMessage(LeillaKeys.SorryYouMustEnterLastName);
             RuleFor(user => user.Email).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterEmail);
+                 WithMessage(LeillaKeys.SorryYouMustEnterEmail);
             RuleFor(user => user.MobileNumber).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterMobileNumber);
+                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
-                WithMessage(DawemKeys.SorryYouMustEnterValidEmail);
+                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
             RuleFor(user => user.Password).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPassword);
             RuleFor(user => user.ConfirmPassword).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterConfirmPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterConfirmPassword);
 
             RuleFor(user => user.Password).Length(6, 50).
-                   WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
 
             RuleFor(user => user).Must(user => user.Password == user.ConfirmPassword).
-                  WithMessage(DawemKeys.SorryPasswordAndConfirmPasswordMustEqual);
+                  WithMessage(LeillaKeys.SorryPasswordAndConfirmPasswordMustEqual);
 
         }
     }

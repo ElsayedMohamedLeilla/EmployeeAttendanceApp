@@ -9,10 +9,10 @@ namespace Dawem.Validation.FluentValidation.Employees.TaskTypes
         public UpdateTaskTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterTaskTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterTaskTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterTaskTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterTaskTypeName);
 
         }
     }

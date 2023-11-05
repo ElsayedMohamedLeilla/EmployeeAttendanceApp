@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Controllers.Core
 {
 
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class VacationTypeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Core
         public async Task<ActionResult> Create(CreateVacationsTypeDTO model)
         {
             var result = await vacationTypeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateVacationsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateVacationsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateVacationsTypeDTO model)
         {
 
             var result = await vacationTypeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateVacationsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateVacationsTypeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetVacationTypeCriteria criteria)

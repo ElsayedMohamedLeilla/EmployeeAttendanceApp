@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Controllers.Core
 {
 
-    [Route(DawemKeys.ApiControllerAction)] 
+    [Route(LeillaKeys.ApiControllerAction)] 
     [ApiController]
     [Authorize]
     public class JustificationTypeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Core
         public async Task<ActionResult> Create(CreateJustificationsTypeDTO model)
         {
             var result = await justificationTypeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateJustificationsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateJustificationsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateJustificationsTypeDTO model)
         {
 
             var result = await justificationTypeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateJustificationsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateJustificationsTypeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetJustificationsTypeCriteria criteria)

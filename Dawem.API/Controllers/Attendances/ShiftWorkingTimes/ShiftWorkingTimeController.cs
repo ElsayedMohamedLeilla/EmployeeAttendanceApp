@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Controllers.Core
 {
 
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class ShiftWorkingTimeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Core
         public async Task<ActionResult> Create(CreateShiftWorkingTimeModelDTO model)
         {
             var result = await ShiftWorkingTimeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateShiftWorkingTimeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateShiftWorkingTimeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateShiftWorkingTimeModelDTO model)
         {
 
             var result = await ShiftWorkingTimeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateShiftWorkingTimeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateShiftWorkingTimeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetShiftWorkingTimesCriteria criteria)

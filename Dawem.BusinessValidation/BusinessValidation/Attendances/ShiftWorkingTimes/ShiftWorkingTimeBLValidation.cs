@@ -24,7 +24,7 @@ namespace Dawem.Validation.Core
                 .ShiftWorkingTimeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkShiftWorkingTimeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryShiftWorkingTimeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNameIsDuplicated);
             }
 
             return true;
@@ -38,7 +38,7 @@ namespace Dawem.Validation.Core
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkShiftWorkingTimeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryShiftWorkingTimeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNameIsDuplicated);
             }
 
             return true;

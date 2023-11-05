@@ -24,7 +24,7 @@ namespace Dawem.Validation.Core
                 .PermissionsTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkPermissionsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNameIsDuplicated);
             }
 
             return true;
@@ -38,7 +38,7 @@ namespace Dawem.Validation.Core
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkPermissionsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNameIsDuplicated);
             }
 
             return true;

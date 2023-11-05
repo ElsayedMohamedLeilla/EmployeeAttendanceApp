@@ -15,11 +15,11 @@ namespace Dawem.Repository
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             var types = Assembly.GetExecutingAssembly().GetTypes()
-                        .Where(p => p.Name.EndsWith(DawemKeys.Repository) && !p.IsInterface);
+                        .Where(p => p.Name.EndsWith(LeillaKeys.Repository) && !p.IsInterface);
 
             foreach (var type in types)
             {
-                var interfaceType = type.GetInterfaces(false).FirstOrDefault(i => i.Name.EndsWith(DawemKeys.Repository));
+                var interfaceType = type.GetInterfaces(false).FirstOrDefault(i => i.Name.EndsWith(LeillaKeys.Repository));
                 if (interfaceType != null)
                 {
                     services.AddScoped(interfaceType, type);

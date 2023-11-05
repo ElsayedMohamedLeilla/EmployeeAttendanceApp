@@ -11,7 +11,7 @@ namespace Dawem.Validation.FluentValidation.Employees.TaskTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterTaskTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterTaskTypeName);
 
         }
     }

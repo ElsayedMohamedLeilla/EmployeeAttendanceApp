@@ -27,9 +27,9 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
-string connectionString = builder.Configuration.GetConnectionString(DawemKeys.DawemConnectionString) ??
-    throw new InvalidOperationException(DawemKeys.ConnectionStringNotFound);
-string AllowSpecificOrigins = DawemKeys.AllowSpecificOrigins;
+string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
+    throw new InvalidOperationException(LeillaKeys.ConnectionStringNotFound);
+string AllowSpecificOrigins = LeillaKeys.AllowSpecificOrigins;
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
 //builder.Services.AddControllers().AddJsonOptions(options =>
@@ -59,8 +59,8 @@ builder.Services.AddIdentityCore<MyUser>(options =>
 {
 
     options.SignIn.RequireConfirmedAccount = true;
-    options.Tokens.ChangePhoneNumberTokenProvider = DawemKeys.FourigitPhone;
-    options.User.AllowedUserNameCharacters = DawemKeys.AllowedUserNameCharacters;
+    options.Tokens.ChangePhoneNumberTokenProvider = LeillaKeys.FourigitPhone;
+    options.User.AllowedUserNameCharacters = LeillaKeys.AllowedUserNameCharacters;
 })
 .AddRoles<Role>()
 .AddEntityFrameworkStores<ApplicationDBContext>();
@@ -83,7 +83,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedPhoneNumber = false;
 });
 
-IConfigurationSection appSettingsSection = builder.Configuration.GetSection(DawemKeys.AppSettings);
+IConfigurationSection appSettingsSection = builder.Configuration.GetSection(LeillaKeys.AppSettings);
 
 builder.Services.AddUserConfiguration();
 builder.Services.Configure<Jwt>(appSettingsSection);
@@ -155,15 +155,15 @@ app.UseStaticFiles();
 
 List<CultureInfo> supportedCultures = new()
 {
-                    new CultureInfo(DawemKeys.En),
-                    new CultureInfo(DawemKeys.Ar)
+                    new CultureInfo(LeillaKeys.En),
+                    new CultureInfo(LeillaKeys.Ar)
                 };
 
 app.UseCors(AllowSpecificOrigins);
 
 RequestLocalizationOptions requestLocalizationOptions = new()
 {
-    DefaultRequestCulture = new RequestCulture(DawemKeys.En),
+    DefaultRequestCulture = new RequestCulture(LeillaKeys.En),
     SupportedCultures = supportedCultures,
     SupportedUICultures = supportedCultures
 };

@@ -9,12 +9,12 @@ namespace Dawem.Validation.FluentValidation.Authentication
         public SignInModelValidator()
         {
             RuleFor(signInModel => signInModel.Email).NotNull().
-                    WithMessage(DawemKeys.SorryYouMustEnterEmail);
+                    WithMessage(LeillaKeys.SorryYouMustEnterEmail);
             RuleFor(signInModel => signInModel.Password).NotNull().
-                WithMessage(DawemKeys.SorryYouMustEnterPassword);
+                WithMessage(LeillaKeys.SorryYouMustEnterPassword);
             RuleFor(signInModel => (int)signInModel.ApplicationType)
                 .Must(applicationType => applicationType > 0 && applicationType < 4).
-                WithMessage(DawemKeys.SorryYouMustEnterApplicationType);
+                WithMessage(LeillaKeys.SorryYouMustEnterApplicationType);
         }
     }
 }

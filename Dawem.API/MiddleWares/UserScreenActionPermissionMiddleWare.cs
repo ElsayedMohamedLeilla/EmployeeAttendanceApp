@@ -112,10 +112,10 @@ namespace Dawem.API.MiddleWares
             //}
 
 
-            if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(DawemKeys.Ar))
+            if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))
             {
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(DawemKeys.En);
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(DawemKeys.En);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(LeillaKeys.En);
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.En);
             }
 
 
@@ -124,7 +124,7 @@ namespace Dawem.API.MiddleWares
             userContext.RequestPort = httpContext.Request.Host.Port;
             userContext.RequestPath = httpContext.Request.Path;
             userContext.BaseUrl = $"{userContext.RequestProtocol}://{userContext.RequestHost}";
-            userContext.BaseUrl += userContext.RequestPort.HasValue ? ":" + userContext.RequestPort : DawemKeys.EmptyString;
+            userContext.BaseUrl += userContext.RequestPort.HasValue ? ":" + userContext.RequestPort : LeillaKeys.EmptyString;
 
             var branchId = HttpRequestHelper.getHeaderKey<int?>(httpContext.Request, "BranchId");
             userContext.BranchId = branchId == 0 ? null : branchId;

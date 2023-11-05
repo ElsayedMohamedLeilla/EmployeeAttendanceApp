@@ -9,10 +9,10 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
         public UpdateDepartmentModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterDepartmentId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterDepartmentId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterDepartmentName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterDepartmentName);
 
         }
     }

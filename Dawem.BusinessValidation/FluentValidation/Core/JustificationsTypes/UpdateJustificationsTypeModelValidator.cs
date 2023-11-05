@@ -15,10 +15,10 @@ namespace Dawem.Validation.FluentValidation.Core.JustificationsTypes
         public UpdateJustificationsTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterJustificationsTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterJustificationsTypeName);
 
         }
     }

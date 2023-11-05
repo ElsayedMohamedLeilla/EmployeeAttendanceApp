@@ -8,9 +8,9 @@ namespace Dawem.Helpers
     {
         public static string getLangKey(HttpRequest request)
         {
-            var language = getHeaderKey<string>(request, DawemKeys.Lang);
-            if (string.IsNullOrEmpty(language)) language = getHeaderKey<string>(request, DawemKeys.AcceptLanguage);
-            if (string.IsNullOrEmpty(language)) language = DawemKeys.Ar;
+            var language = getHeaderKey<string>(request, LeillaKeys.Lang);
+            if (string.IsNullOrEmpty(language)) language = getHeaderKey<string>(request, LeillaKeys.AcceptLanguage);
+            if (string.IsNullOrEmpty(language)) language = LeillaKeys.Ar;
             return language;
 
         }

@@ -19,7 +19,7 @@ namespace Dawem.Models.Dtos.Provider
         public string? BusinessTaxRegistrationNumber { get; set; }
         public string? BusinessCommercialRecordNumber { get; set; }
         [Required]
-        [Display(Name = DawemKeys.Email)]
+        [Display(Name = LeillaKeys.Email)]
         public string? BusinessEmail { get; set; }
 
         #endregion

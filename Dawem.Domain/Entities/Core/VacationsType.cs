@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(VacationsType) + DawemKeys.S)]
+    [Table(nameof(VacationsType) + LeillaKeys.S)]
     public class VacationsType : BaseEntity
     {
         public int CompanyId { get; set; }

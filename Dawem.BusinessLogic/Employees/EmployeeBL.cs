@@ -55,8 +55,8 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Employees)
-                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Employees)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
                 imageName = result.FileName;
             }
 
@@ -107,8 +107,8 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Employees)
-                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage);
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Employees)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }
 
@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region sorting
 
-            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), DawemKeys.Desc);
+            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -193,7 +193,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region sorting
 
-            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), DawemKeys.Desc);
+            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -228,8 +228,8 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Employees)
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
         }
@@ -245,8 +245,8 @@ namespace Dawem.BusinessLogic.Employees
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
                     ProfileImageName = e.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Employees)
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
 
@@ -254,7 +254,7 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<bool> Delete(int employeeId)
         {
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
-                throw new BusinessValidationException(DawemKeys.SorryEmployeeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             employee.Delete();
             await unitOfWork.SaveAsync();

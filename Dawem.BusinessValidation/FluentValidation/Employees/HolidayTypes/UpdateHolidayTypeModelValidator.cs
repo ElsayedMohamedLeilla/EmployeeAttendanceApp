@@ -9,10 +9,10 @@ namespace Dawem.Validation.FluentValidation.Employees.HolidayTypes
         public UpdateHolidayTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterHolidayTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterHolidayTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterHolidayTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterHolidayTypeName);
 
         }
     }

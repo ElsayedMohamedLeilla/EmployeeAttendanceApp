@@ -5,7 +5,7 @@ namespace Dawem.Models.Response
 {
     public class SuccessResponse<T>
     {
-        public SuccessResponse(T data, int? totalCount = null, string message = DawemKeys.DoneSuccessfully)
+        public SuccessResponse(T data, int? totalCount = null, string message = LeillaKeys.DoneSuccessfully)
         {
             State = ResponseStatus.Success;
             Message = message;

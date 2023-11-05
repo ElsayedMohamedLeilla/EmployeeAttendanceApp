@@ -103,7 +103,7 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
             else
-                throw new BusinessValidationException(DawemKeys.SorryTaskTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
 
 
         }
@@ -116,7 +116,7 @@ namespace Dawem.BusinessLogic.Employees
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(TaskType.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(TaskType.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Employees
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(TaskType.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(TaskType.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -182,7 +182,7 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryTaskTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
 
             return department;
         }
@@ -195,7 +195,7 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryTaskTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
 
             return department;
 
@@ -203,7 +203,7 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<bool> Delete(int departmentd)
         {
             var department = await repositoryManager.TaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
-                throw new BusinessValidationException(DawemKeys.SorryTaskTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;

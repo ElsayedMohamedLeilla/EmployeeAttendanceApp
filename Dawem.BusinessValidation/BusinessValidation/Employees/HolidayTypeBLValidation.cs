@@ -24,7 +24,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 .HolidayTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkHolidayTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryHolidayTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryHolidayTypeNameIsDuplicated);
             }
 
             return true;
@@ -36,7 +36,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkHolidayTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryHolidayTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryHolidayTypeNameIsDuplicated);
             }
 
             return true;

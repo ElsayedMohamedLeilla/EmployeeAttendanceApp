@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Employees
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class DepartmentController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Employees
         public async Task<ActionResult> Create(CreateDepartmentModel model)
         {
             var result = await departmentBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateDepartmentSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateDepartmentSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateDepartmentModel model)
         {
 
             var result = await departmentBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateDepartmentSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateDepartmentSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetDepartmentsCriteria criteria)

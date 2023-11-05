@@ -15,7 +15,7 @@ namespace Dawem.Validation.FluentValidation.Core.JustificationsTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterJustificationsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterJustificationsTypeName);
 
         }
     }

@@ -35,7 +35,7 @@ namespace Dawem.BusinessLogic.Others
         public async Task<ActionLogDTO> GetById(int Id)
         {
             var actionLog = await repositoryManager.ActionLogRepository.GetByIdAsync(Id) ??
-                throw new BusinessValidationException(DawemKeys.NoDataFound);
+                throw new BusinessValidationException(LeillaKeys.NoDataFound);
 
             var response = ActionLogDTOMapper.Map(actionLog);
 
@@ -72,7 +72,7 @@ namespace Dawem.BusinessLogic.Others
         {
             var actionLog = await repositoryManager.ActionLogRepository
                 .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "Branch,User")
-                ?? throw new BusinessValidationException(DawemKeys.ActionLogNotFound);
+                ?? throw new BusinessValidationException(LeillaKeys.ActionLogNotFound);
 
             ActionLogDTOMapper.InitActionLogContext(userContext);
             var actionLogInfo = ActionLogDTOMapper.MapInfo(actionLog);

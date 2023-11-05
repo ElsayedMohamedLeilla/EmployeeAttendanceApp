@@ -10,27 +10,27 @@ namespace Dawem.Validation.FluentValidation.Employees.User
         public CreateUserModelValidator()
         {
             RuleFor(user => user.Name).NotNull().
-                  WithMessage(DawemKeys.SorryYouMustEnterUserName);
+                  WithMessage(LeillaKeys.SorryYouMustEnterUserName);
             RuleFor(user => user.Email).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterEmail);
+                 WithMessage(LeillaKeys.SorryYouMustEnterEmail);
             RuleFor(user => user.MobileNumber).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterMobileNumber);
+                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
-                WithMessage(DawemKeys.SorryYouMustEnterValidEmail);
+                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
             RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
-               WithMessage(DawemKeys.SorryYouMustEnterOneRoleAtLeast);
+               WithMessage(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
 
             RuleFor(user => user.Password).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPassword);
             RuleFor(user => user.ConfirmPassword).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterConfirmPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterConfirmPassword);
 
             RuleFor(user => user.Password).Length(6, 50).
-                   WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
 
             RuleFor(user => user).Must(user => user.Password == user.ConfirmPassword).
-                  WithMessage(DawemKeys.SorryPasswordAndConfirmPasswordMustEqual);
+                  WithMessage(LeillaKeys.SorryPasswordAndConfirmPasswordMustEqual);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkDepartmentDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryDepartmentNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNameIsDuplicated);
             }
 
             return true;
@@ -37,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkDepartmentDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryDepartmentNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNameIsDuplicated);
             }
 
             return true;

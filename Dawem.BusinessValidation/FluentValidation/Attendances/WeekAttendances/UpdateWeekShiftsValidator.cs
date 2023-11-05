@@ -11,18 +11,18 @@ namespace Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances
         {
             RuleFor(model => model.Id)
                 .GreaterThan(0)
-                .WithMessage(DawemKeys.SorryYouMustEnterValidId);
+                .WithMessage(LeillaKeys.SorryYouMustEnterValidId);
 
             var weekDaysList = Enum.GetValues(typeof(WeekDays)).Cast<WeekDays>().ToList();
 
             RuleFor(model => model.WeekDay)
                 .Must(weekDaysList.Contains)
-                .WithMessage(DawemKeys.SorryYouMustEnterValidWeekDay);
+                .WithMessage(LeillaKeys.SorryYouMustEnterValidWeekDay);
 
             RuleFor(model => model.ShiftId)
                 .Must(s => s > 0)
                 .When(s => s.ShiftId != null)
-                .WithMessage(DawemKeys.SorryYouMustChooseValidShift);
+                .WithMessage(LeillaKeys.SorryYouMustChooseValidShift);
         }
     }
 

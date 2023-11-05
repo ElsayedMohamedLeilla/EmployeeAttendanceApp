@@ -16,7 +16,7 @@ namespace Dawem.Repository.Others
         {
             userContext = _userContext;
         }
-        public IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = DawemKeys.EmptyString)
+        public IQueryable<ActionLog> GetAsQueryable(GetActionLogsCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
             var outerpredicate = PredicateBuilder.New<ActionLog>(true);
 

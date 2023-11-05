@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Employees
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class HolidayTypeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Employees
         public async Task<ActionResult> Create(CreateHolidayTypeModel model)
         {
             var result = await holidayTypeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateHolidayTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateHolidayTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateHolidayTypeModel model)
         {
 
             var result = await holidayTypeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateHolidayTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateHolidayTypeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetHolidayTypesCriteria criteria)

@@ -75,11 +75,11 @@ namespace Dawem.Models.Generic
             return allowTax ? (float)(price * (rate * .01)) : 0;
         }
 
-        public const string FeaturesFolder = DawemKeys.AccountFeatures;
+        public const string FeaturesFolder = LeillaKeys.AccountFeatures;
         public static IEnumerable<BasicCountryInfo> CountryCultures = new List<BasicCountryInfo>() {
-            new BasicCountryInfo(){ TimeZoneId =DawemKeys.ArabStandardTime, CountryId=1939, CultureName = DawemKeys.ArSA, CurrentCulture = CultureInfo.GetCultureInfo(DawemKeys.ArSA)} ,
-            new BasicCountryInfo(){ TimeZoneId =DawemKeys.EgyptStandardTime, CountryId=1938, CultureName = DawemKeys.ArEG, CurrentCulture = CultureInfo.GetCultureInfo(DawemKeys.ArEG) },
-            new BasicCountryInfo(){ TimeZoneId =DawemKeys.EgyptStandardTime, CountryId=1938, CultureName =DawemKeys.En, CurrentCulture = CultureInfo.GetCultureInfo(DawemKeys.ArEG) }
+            new BasicCountryInfo(){ TimeZoneId =LeillaKeys.ArabStandardTime, CountryId=1939, CultureName = LeillaKeys.ArSA, CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.ArSA)} ,
+            new BasicCountryInfo(){ TimeZoneId =LeillaKeys.EgyptStandardTime, CountryId=1938, CultureName = LeillaKeys.ArEG, CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.ArEG) },
+            new BasicCountryInfo(){ TimeZoneId =LeillaKeys.EgyptStandardTime, CountryId=1938, CultureName =LeillaKeys.En, CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.ArEG) }
         };
 
         public static string? DefualtCountryCode { get; set; }

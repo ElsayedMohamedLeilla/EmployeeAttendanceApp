@@ -61,8 +61,8 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Users)
-                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Users)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
                 imageName = result.FileName;
             }
 
@@ -91,7 +91,7 @@ namespace Dawem.BusinessLogic.Employees
             if (!createUserResponse.Succeeded)
             {
                 unitOfWork.Rollback();
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
             if (model.Roles != null)
@@ -100,7 +100,7 @@ namespace Dawem.BusinessLogic.Employees
                 if (!assignRolesResult.Succeeded)
                 {
                     unitOfWork.Rollback();
-                    throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                    throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
                 }
                 await unitOfWork.SaveAsync();
             }
@@ -130,8 +130,8 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, DawemKeys.Users)
-                    ?? throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUploadProfileImage);
+                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Users)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }
 
@@ -159,7 +159,7 @@ namespace Dawem.BusinessLogic.Employees
             if (!updateUserResponse.Succeeded)
             {
                 await unitOfWork.RollbackAsync();
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
             }
 
             await unitOfWork.SaveAsync();
@@ -173,7 +173,7 @@ namespace Dawem.BusinessLogic.Employees
                 if (!removeRolesResult.Succeeded)
                 {
                     unitOfWork.Rollback();
-                    throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                    throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
                 }
             }
             if (model.Roles != null)
@@ -185,7 +185,7 @@ namespace Dawem.BusinessLogic.Employees
                     if (!removeRolesResult.Succeeded)
                     {
                         unitOfWork.Rollback();
-                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                        throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
                     }
                 }
                 var getWillAddedUserRoles = model.Roles.Where(dbr => !getUserRolesFromDB.Contains(dbr)).ToList();
@@ -195,7 +195,7 @@ namespace Dawem.BusinessLogic.Employees
                     if (!addRolesResult.Succeeded)
                     {
                         unitOfWork.Rollback();
-                        throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                        throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
                     }
                 }
                 await unitOfWork.SaveAsync();
@@ -224,7 +224,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region sorting
 
-            var queryOrdered = userRepository.OrderBy(query, nameof(MyUser.Id), DawemKeys.Desc);
+            var queryOrdered = userRepository.OrderBy(query, nameof(MyUser.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -241,7 +241,7 @@ namespace Dawem.BusinessLogic.Employees
                 Name = e.Name,
                 IsActive = e.IsActive,
                 IsAdmin = e.IsAdmin,
-                ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, DawemKeys.Users)
+                ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Users)
             }).ToListAsync();
 
             return new GetUsersResponse
@@ -266,7 +266,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region sorting
 
-            var queryOrdered = userRepository.OrderBy(query, nameof(MyUser.Id), DawemKeys.Desc);
+            var queryOrdered = userRepository.OrderBy(query, nameof(MyUser.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -303,9 +303,9 @@ namespace Dawem.BusinessLogic.Employees
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             return user;
         }
         public async Task<GetUserByIdResponseModel> GetById(int userId)
@@ -321,9 +321,9 @@ namespace Dawem.BusinessLogic.Employees
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, DawemKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             return user;
 
@@ -331,7 +331,7 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<bool> Delete(int userId)
         {
             MyUser user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == userId) ??
-                throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             user.Delete();
             await unitOfWork.SaveAsync();
             return true;

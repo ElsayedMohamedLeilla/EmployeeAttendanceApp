@@ -28,7 +28,7 @@ namespace Dawem.Validation.BusinessValidation
 
             if (branch.CountryId <= 0)
             {
-                throw new BusinessValidationException(DawemKeys.YouMustChooseCountry);
+                throw new BusinessValidationException(LeillaKeys.YouMustChooseCountry);
             }
 
             return branch;
@@ -38,27 +38,27 @@ namespace Dawem.Validation.BusinessValidation
 
             if (userContext == null)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserContextNull);
+                throw new BusinessValidationException(LeillaKeys.SorryUserContextNull);
             }
 
             if (!userContext.IsMainBranch && changeType == ChangeType.View)
             {
-                throw new BusinessValidationException(DawemKeys.SorryYouCurrentBranchIsNotMainBranch);
+                throw new BusinessValidationException(LeillaKeys.SorryYouCurrentBranchIsNotMainBranch);
             }
 
             if (!userContext.IsMainBranch && changeType == ChangeType.Add)
             {
-                throw new BusinessValidationException(DawemKeys.SorryAddCanBeDoneInMainBranchOnly);
+                throw new BusinessValidationException(LeillaKeys.SorryAddCanBeDoneInMainBranchOnly);
             }
 
             if (!userContext.IsMainBranch && changeType == ChangeType.Edit)
             {
-                throw new BusinessValidationException(DawemKeys.SorryEditCanBeDoneInMainBranchOnly);
+                throw new BusinessValidationException(LeillaKeys.SorryEditCanBeDoneInMainBranchOnly);
             }
 
             if (!userContext.IsMainBranch && changeType == ChangeType.Delete)
             {
-                throw new BusinessValidationException(DawemKeys.SorryDeleteCanBeDoneInMainBranchOnly);
+                throw new BusinessValidationException(LeillaKeys.SorryDeleteCanBeDoneInMainBranchOnly);
             }
             return true;
         }
@@ -82,7 +82,7 @@ namespace Dawem.Validation.BusinessValidation
 
                 if (branchs.Count > 1)
                 {
-                    throw new BusinessValidationException(DawemKeys.SorryThereIsMoreThanOneBranchForChoosenUserYouMustChooseBranchToEnterWith);
+                    throw new BusinessValidationException(LeillaKeys.SorryThereIsMoreThanOneBranchForChoosenUserYouMustChooseBranchToEnterWith);
                 }
                 branchId = branchs.FirstOrDefault();
             }
@@ -91,7 +91,7 @@ namespace Dawem.Validation.BusinessValidation
                 .GetEntityByConditionAsync(uas => uas.UserId == criteria.UserId && uas.BranchId == branchId);
 
             return getUserBranch == null
-                ? throw new BusinessValidationException(DawemKeys.SorryThisUserDoNotHaveAccessToSelectedBranch)
+                ? throw new BusinessValidationException(LeillaKeys.SorryThisUserDoNotHaveAccessToSelectedBranch)
                 : branchId;
         }
     }

@@ -10,10 +10,10 @@ namespace Dawem.Models.Response
         public ExecutionResponse()
         {
         }
-        public ExecutionResponse(string lang = DawemKeys.Ar)
+        public ExecutionResponse(string lang = LeillaKeys.Ar)
         {
             Lang = lang;
-            Message = lang == DawemKeys.Ar ? DawemKeys.DoneSuccessfullyAr : DawemKeys.DoneSuccessfullyEn;
+            Message = lang == LeillaKeys.Ar ? LeillaKeys.DoneSuccessfullyAr : LeillaKeys.DoneSuccessfullyEn;
         }
         ResponseStatus _state;
         string Lang;
@@ -25,11 +25,11 @@ namespace Dawem.Models.Response
                 _state = value;
                 if (_state != ResponseStatus.Success && string.IsNullOrEmpty(Message))
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? DawemKeys.ErrorHasOccurredEn : DawemKeys.ErrorHasOccurredAr : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == LeillaKeys.En ? LeillaKeys.ErrorHasOccurredEn : LeillaKeys.ErrorHasOccurredAr : Message;
                 }
                 else if (_state != ResponseStatus.Success)
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? DawemKeys.SorryTryAgainLaterEn : DawemKeys.SorryTryAgainLaterAr : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == LeillaKeys.En ? LeillaKeys.SorryTryAgainLaterEn : LeillaKeys.SorryTryAgainLaterAr : Message;
                 }
             }
         }

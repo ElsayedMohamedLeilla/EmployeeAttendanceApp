@@ -9,11 +9,11 @@ namespace Dawem.Validation
         public static void ConfigureBLValidation(this IServiceCollection services)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(p => p.Name.EndsWith(DawemKeys.BLValidation) && !p.IsInterface);
+            .Where(p => p.Name.EndsWith(LeillaKeys.BLValidation) && !p.IsInterface);
 
             foreach (var type in types)
             {
-                var interfaceType = type.GetInterfaces().FirstOrDefault(i => i.Name.EndsWith(DawemKeys.BLValidation));
+                var interfaceType = type.GetInterfaces().FirstOrDefault(i => i.Name.EndsWith(LeillaKeys.BLValidation));
                 if (interfaceType != null)
                 {
                     services.AddScoped(interfaceType, type);

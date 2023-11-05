@@ -70,7 +70,7 @@ namespace Dawem.BusinessLogic.Provider
         {
             var branch = await branchRepository.
                 GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, nameof(Branch.Country)) ??
-                throw new BusinessValidationException(DawemKeys.BranchNotFound);
+                throw new BusinessValidationException(LeillaKeys.BranchNotFound);
 
             BranchDTOMapper.InitBranchContext(requestHeaderContext);
             var branchInfo = BranchDTOMapper.Map(branch);

@@ -11,10 +11,10 @@ namespace Dawem.Models.Response
         {
 
         }
-        public BaseResponse(string lang = DawemKeys.Ar)
+        public BaseResponse(string lang = LeillaKeys.Ar)
         {
             Lang = lang;
-            Message = lang == DawemKeys.Ar ? "تم بنجاح" : "Done Successfully";
+            Message = lang == LeillaKeys.Ar ? "تم بنجاح" : "Done Successfully";
         }
         public int TotalCount { get; set; }
         private ResponseStatus _status;
@@ -27,11 +27,11 @@ namespace Dawem.Models.Response
                 _status = value;
                 if (_status != ResponseStatus.Success && string.IsNullOrEmpty(Message))
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? "Error has occurred" : " حدث  خطأ" : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == LeillaKeys.En ? "Error has occurred" : " حدث  خطأ" : Message;
                 }
                 else if (_status != ResponseStatus.Success)
                 {
-                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == DawemKeys.En ? "Sorry try again later" : "لا يمكن اجراء هذا الحدث" : Message;
+                    Message = string.IsNullOrWhiteSpace(Message) || string.IsNullOrEmpty(Message) ? Lang == LeillaKeys.En ? "Sorry try again later" : "لا يمكن اجراء هذا الحدث" : Message;
                 }
             }
         }

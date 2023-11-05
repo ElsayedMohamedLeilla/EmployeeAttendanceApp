@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region sorting
 
-            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), DawemKeys.Desc);
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region sorting
 
-            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), DawemKeys.Desc);
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -188,7 +188,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
 
             return PermissionsType;
         }
@@ -202,7 +202,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
                     Name = e.Name,
                     IsActive = e.IsActive,
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
 
             return PermissionsType;
 
@@ -211,7 +211,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
         {
             var permissionsType = await repositoryManager.PermissionsTypeRepository
                 .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PermissionsTypeId) ??
-                throw new BusinessValidationException(DawemKeys.SorryPermissionsTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
 
             permissionsType.Delete();
             await unitOfWork.SaveAsync();

@@ -24,7 +24,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 .TaskTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkTaskTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryTaskTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNameIsDuplicated);
             }
 
             return true;
@@ -36,7 +36,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkTaskTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryTaskTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNameIsDuplicated);
             }
 
             return true;

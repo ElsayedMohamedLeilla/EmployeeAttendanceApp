@@ -9,13 +9,13 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
         public UpdateEmployeeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterEmployeeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeId);
             RuleFor(model => model.DepartmentId).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustChooseDepartment);
+                    WithMessage(LeillaKeys.SorryYouMustChooseDepartment);
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
-                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
         }
     }
 }

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Core
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles = DawemKeys.FullAccess)]
+    [Authorize(Roles = LeillaKeys.FullAccess)]
     public class GroupController : BaseController
     {
         private readonly IGroupBL groupBL;

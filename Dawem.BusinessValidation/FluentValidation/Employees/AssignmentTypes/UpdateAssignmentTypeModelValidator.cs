@@ -9,10 +9,10 @@ namespace Dawem.Validation.FluentValidation.Employees.AssignmentTypes
         public UpdateAssignmentTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterAssignmentTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterAssignmentTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterAssignmentTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterAssignmentTypeName);
 
         }
     }

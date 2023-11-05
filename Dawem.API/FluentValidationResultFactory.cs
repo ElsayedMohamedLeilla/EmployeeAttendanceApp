@@ -32,7 +32,7 @@ namespace Dawem.API
                     var errorModel = new ErrorModel
                     {
                         FieldName = !string.IsNullOrEmpty(error.Key) ?
-                        error.Key.ToCamelCase() : DawemKeys.EmptyString,
+                        error.Key.ToCamelCase() : LeillaKeys.EmptyString,
                         Message = subError
                     };
                     if (string.IsNullOrEmpty(errorResponse.Message))

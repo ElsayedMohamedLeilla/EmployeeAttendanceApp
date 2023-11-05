@@ -10,42 +10,42 @@ namespace Dawem.Validation.FluentValidation.Authentication
         public SignUpModelValidator()
         {
             RuleFor(signUpModel => signUpModel.CompanyName).NotNull().
-                    WithMessage(DawemKeys.SorryYouMustEnterCompanyName);
+                    WithMessage(LeillaKeys.SorryYouMustEnterCompanyName);
             RuleFor(signUpModel => signUpModel.CompanyCountryId).GreaterThan(0).
-                   WithMessage(DawemKeys.SorryYouMustChooseCountry);
+                   WithMessage(LeillaKeys.SorryYouMustChooseCountry);
             RuleFor(signUpModel => signUpModel.CompanyAddress).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterCompanyAddress);
+                   WithMessage(LeillaKeys.SorryYouMustEnterCompanyAddress);
 
             RuleFor(signUpModel => signUpModel.CompanyEmail).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterCompanyEmail);
+                   WithMessage(LeillaKeys.SorryYouMustEnterCompanyEmail);
 
             RuleFor(signUpModel => signUpModel.CompanyEmail).Must(EmailHelper.IsValidEmail).
-                 WithMessage(DawemKeys.SorryYouMustEnterValidCompanyEmail);
+                 WithMessage(LeillaKeys.SorryYouMustEnterValidCompanyEmail);
 
 
             RuleFor(signUpModel => signUpModel.Password).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPassword);
             RuleFor(signUpModel => signUpModel.ConfirmPassword).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterConfirmPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterConfirmPassword);
 
             RuleFor(signUpModel => signUpModel.Password).Length(6, 50).
-                  WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
+                  WithMessage(LeillaKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);
 
             RuleFor(signUpModel => signUpModel).Must(signUpModel => signUpModel.Password == signUpModel.ConfirmPassword).
-                  WithMessage(DawemKeys.SorryPasswordAndConfirmPasswordMustEqual);
+                  WithMessage(LeillaKeys.SorryPasswordAndConfirmPasswordMustEqual);
 
 
 
             RuleFor(signUpModel => signUpModel.UserEmail).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterUserEmail);
+                   WithMessage(LeillaKeys.SorryYouMustEnterUserEmail);
 
             RuleFor(signUpModel => signUpModel.UserEmail).Must(EmailHelper.IsValidEmail).
-                   WithMessage(DawemKeys.SorryYouMustEnterValidUserEmail);
+                   WithMessage(LeillaKeys.SorryYouMustEnterValidUserEmail);
 
             RuleFor(signUpModel => signUpModel.UserMobileNumber).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterUserMobileNumber);
+                   WithMessage(LeillaKeys.SorryYouMustEnterUserMobileNumber);
             RuleFor(signUpModel => signUpModel.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterUserName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterUserName);
         }
     }
 }

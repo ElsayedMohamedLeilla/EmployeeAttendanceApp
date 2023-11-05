@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Controllers.Core
 {
 
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class PermissionTypeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Core
         public async Task<ActionResult> Create(CreatePermissionTypeDTO model)
         {
             var result = await permissionTypeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreatePermissionsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreatePermissionsTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdatePermissionTypeDTO model)
         {
 
             var result = await permissionTypeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdatePermissionsTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionsTypeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetPermissionTypeCriteria criteria)

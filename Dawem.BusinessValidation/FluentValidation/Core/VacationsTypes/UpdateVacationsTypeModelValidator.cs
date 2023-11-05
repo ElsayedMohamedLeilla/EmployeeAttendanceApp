@@ -15,10 +15,10 @@ namespace Dawem.Validation.FluentValidation.Core.VacationsTypes
         public UpdateVacationsTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterVacationsTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterVacationsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
 
         }
     }

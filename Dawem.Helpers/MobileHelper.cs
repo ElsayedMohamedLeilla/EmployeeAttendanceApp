@@ -22,7 +22,7 @@ namespace Dawem.Helpers
             MobileNumber = MobileNumber.StartsWith("20") ? MobileNumber.Remove(0, 2) : MobileNumber;
 
             MobileNumber = MobileNumber.StartsWith("0") ?
-                MobileNumber.Replace(" ", DawemKeys.EmptyString) : "0" + MobileNumber.Replace(" ", DawemKeys.EmptyString);
+                MobileNumber.Replace(" ", LeillaKeys.EmptyString) : "0" + MobileNumber.Replace(" ", LeillaKeys.EmptyString);
             return MobileNumber;
         }
 

@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 c.Name == model.Name).AnyAsync();
             if (checkUserDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
             }
 
             #region Validate Email
@@ -35,7 +35,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             if (checkEmailDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
             }
 
             #endregion
@@ -48,7 +48,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             if (checkMobileDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
             }
 
             #endregion
@@ -63,7 +63,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
                 if (!checkEmployee)
                 {
-                    throw new BusinessValidationException(DawemKeys.SorrySelectedEmployeeNotFound);
+                    throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
             }
 
@@ -78,7 +78,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkUserDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
             }
 
             #region Validate Email
@@ -88,7 +88,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             if (checkEmailDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
             }
 
             #endregion
@@ -101,7 +101,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             if (checkMobileDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
             }
 
             #endregion
@@ -116,7 +116,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
                 if (!checkEmployee)
                 {
-                    throw new BusinessValidationException(DawemKeys.SorrySelectedEmployeeNotFound);
+                    throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
             }
 

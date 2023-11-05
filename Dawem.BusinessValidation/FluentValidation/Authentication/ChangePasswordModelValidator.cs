@@ -9,20 +9,20 @@ namespace Dawem.Validation.FluentValidation.Authentication
         public ChangePasswordModelValidator()
         {
             RuleFor(changePasswordModel => changePasswordModel.OldPassword).NotNull().
-                    WithMessage(DawemKeys.SorryYouMustEnterOldPassword);
+                    WithMessage(LeillaKeys.SorryYouMustEnterOldPassword);
             RuleFor(changePasswordModel => changePasswordModel.NewPassword).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterNewPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterNewPassword);
             RuleFor(changePasswordModel => changePasswordModel.UserEmail).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterUserEmail);
+                   WithMessage(LeillaKeys.SorryYouMustEnterUserEmail);
             RuleFor(changePasswordModel => changePasswordModel.ConfirmNewPassword).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterConfirmNewPassword);
+                   WithMessage(LeillaKeys.SorryYouMustEnterConfirmNewPassword);
             RuleFor(changePasswordModel => changePasswordModel)
                 .Must(changePasswordModel => changePasswordModel.NewPassword == changePasswordModel.ConfirmNewPassword)
-                .WithMessage(DawemKeys.SorryNewPasswordAndConfirmNewPasswordMustEqual);
+                .WithMessage(LeillaKeys.SorryNewPasswordAndConfirmNewPasswordMustEqual);
 
             RuleFor(changePasswordModel => changePasswordModel)
                 .Must(changePasswordModel => changePasswordModel.OldPassword != changePasswordModel.NewPassword)
-                .WithMessage(DawemKeys.SorryNewPasswordAndOldPasswordMustNotEqual);
+                .WithMessage(LeillaKeys.SorryNewPasswordAndOldPasswordMustNotEqual);
         }
     }
 }

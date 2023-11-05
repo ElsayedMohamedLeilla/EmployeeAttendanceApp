@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(JustificationsType) + DawemKeys.S)]
+    [Table(nameof(JustificationsType) + LeillaKeys.S)]
     public class JustificationsType : BaseEntity
     {
         public int CompanyId { get; set; }

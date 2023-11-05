@@ -23,10 +23,10 @@ namespace Dawem.Helpers
         }
         public static string GetTranslation(string key, string lang)
         {
-            string cachedKey = DawemKeys.ArTrans;
-            if (lang == DawemKeys.En)
+            string cachedKey = LeillaKeys.ArTrans;
+            if (lang == LeillaKeys.En)
             {
-                cachedKey = DawemKeys.EnTrans;
+                cachedKey = LeillaKeys.EnTrans;
             }
             var cached = GetCachedData<IEnumerable<TransModel>>(cachedKey);
 
@@ -69,14 +69,14 @@ namespace Dawem.Helpers
         }
         public static void SetArTrans(object translations)
         {
-            SetlangTrans(translations, DawemKeys.ArTrans);
+            SetlangTrans(translations, LeillaKeys.ArTrans);
         }
         public static void SetEnTrans(object translations)
         {
-            SetlangTrans(translations, DawemKeys.EnTrans);
+            SetlangTrans(translations, LeillaKeys.EnTrans);
         }
         public static List<MetaPair> GetResponseMessages(string messageCode,
-           string message, string MetaPlus = DawemKeys.EmptyString)
+           string message, string MetaPlus = LeillaKeys.EmptyString)
         {
             return new List<MetaPair>() { new MetaPair() { Property = messageCode,
                 Meta = message, MetaPlus = MetaPlus } };

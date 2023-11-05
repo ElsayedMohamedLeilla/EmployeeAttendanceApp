@@ -53,7 +53,7 @@ namespace Dawem.BusinessLogic.Provider
                 user = await userManagerRepository.FindByEmailAsync(Email);
                 if (user == null)
                 {
-                    throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                    throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
                 }
             }
 
@@ -63,13 +63,13 @@ namespace Dawem.BusinessLogic.Provider
 
             var roles = await userManagerRepository.GetRolesAsync(user);
 
-            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
+            if (roles.FirstOrDefault(r => r == LeillaKeys.FullAccess) == null)
             {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.FullAccess);
 
                 if (addingToRoleResult.Succeeded)
                 {
-                    roles.Add(DawemKeys.FullAccess);
+                    roles.Add(LeillaKeys.FullAccess);
                 }
             }
 
@@ -80,7 +80,7 @@ namespace Dawem.BusinessLogic.Provider
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, criteria.Password);
             if (!checkPasswordAsyncRes)
             {
-                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+                throw new BusinessValidationException(LeillaKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
             }
 
 
@@ -120,7 +120,7 @@ namespace Dawem.BusinessLogic.Provider
 
             if (userBranches == null || userBranches.Count() <= 0)
             {
-                throw new BusinessValidationException(DawemKeys.SorryThereIsNoBranchesForThisUser);
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoBranchesForThisUser);
             }
 
             return userBranches;
@@ -136,7 +136,7 @@ namespace Dawem.BusinessLogic.Provider
 
             if (userBranches == null || userBranches.Count() <= 0)
             {
-                throw new BusinessValidationException(DawemKeys.SorryThereIsNoBranchesForThisUser);
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoBranchesForThisUser);
             }
 
             return userBranches;

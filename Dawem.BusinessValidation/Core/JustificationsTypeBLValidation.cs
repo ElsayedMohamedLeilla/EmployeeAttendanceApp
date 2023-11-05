@@ -24,7 +24,7 @@ namespace Dawem.Validation.Core
                 .JustificationsTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkJustificationsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNameIsDuplicated);
             }
 
             return true;
@@ -38,7 +38,7 @@ namespace Dawem.Validation.Core
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkJustificationsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNameIsDuplicated);
             }
 
             return true;

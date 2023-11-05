@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Provider
 {
-    [Table(nameof(Branch) + DawemKeys.ES)]
+    [Table(nameof(Branch) + LeillaKeys.ES)]
     public class Branch : BaseEntity
     {
         public int CompanyId { get; set; }

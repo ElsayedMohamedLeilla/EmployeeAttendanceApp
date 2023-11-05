@@ -14,7 +14,7 @@ namespace Dawem.Helpers
             try
             {
                 var uniqueFileName = GetUniqueFileName(imageFile.FileName);
-                var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, FolderName);
+                var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);
 
                 if (!Directory.Exists(uploadsDirectory))
@@ -75,9 +75,9 @@ namespace Dawem.Helpers
             fileName = Path.GetFileName(fileName);
 
             return Path.GetFileNameWithoutExtension(fileName)
-                      + DawemKeys.UnderScore
+                      + LeillaKeys.UnderScore
                       + Guid.NewGuid().ToString()
-                      + DawemKeys.UnderScore
+                      + LeillaKeys.UnderScore
                       + DateTime.Now.ToString("yyyyMMddHHmmssfff")
                       + Path.GetExtension(fileName);
         }

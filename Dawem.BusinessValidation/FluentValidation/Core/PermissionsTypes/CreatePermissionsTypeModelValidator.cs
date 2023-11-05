@@ -15,7 +15,7 @@ namespace Dawem.Validation.FluentValidation.Core.PermissionsTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterPermissionsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPermissionsTypeName);
 
         }
     }

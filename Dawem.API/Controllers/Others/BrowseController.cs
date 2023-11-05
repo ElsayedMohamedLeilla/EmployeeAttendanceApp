@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Others
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     public class BrowseController : BaseController
     {
@@ -22,10 +22,10 @@ namespace Dawem.API.Controllers.Others
 
             string imgPath;
             if (!string.IsNullOrEmpty(folderName))
-                imgPath = Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, folderName, fileName);
+                imgPath = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, folderName, fileName);
 
             else
-                imgPath = Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, fileName);
+                imgPath = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, fileName);
             if (System.IO.File.Exists(imgPath))
             {
                 var image = System.IO.File.OpenRead(imgPath);

@@ -34,7 +34,7 @@ namespace Dawem.API
         {
             _ = services.AddDbContext<ApplicationDBContext>(opts =>
             {
-                _ = opts.UseSqlServer(config[DawemKeys.ConnectionStringsDawemConnection],
+                _ = opts.UseSqlServer(config[LeillaKeys.ConnectionStringsDawemConnection],
                 opts => opts.CommandTimeout(60));
                 _ = opts.EnableSensitiveDataLogging(true);
 
@@ -43,7 +43,7 @@ namespace Dawem.API
             _ = services.AddDbContext<ApplicationDBContext>(options =>
             {
                 _ = options.UseSqlServer(
-                config.GetConnectionString(DawemKeys.ConnectionStrings));
+                config.GetConnectionString(LeillaKeys.ConnectionStrings));
                 _ = options.EnableSensitiveDataLogging(true);
 
             }
@@ -52,7 +52,7 @@ namespace Dawem.API
 
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            IConfigurationSection appSettingsSection = config.GetSection(DawemKeys.Jwt);
+            IConfigurationSection appSettingsSection = config.GetSection(LeillaKeys.Jwt);
             _ = services.Configure<Jwt>(appSettingsSection);
             Jwt? appSettings = appSettingsSection.Get<Jwt>();
             byte[] key = Encoding.ASCII.GetBytes(appSettings.Key);
@@ -95,7 +95,7 @@ namespace Dawem.API
                 //  options.SignIn.RequireConfirmedAccount = true;
 
                 options.User.AllowedUserNameCharacters =
-                DawemKeys.AllowedUserNameCharacters;
+                LeillaKeys.AllowedUserNameCharacters;
             });
             myUserBuilder = new IdentityBuilder(myUserBuilder.UserType, typeof(UserRole), myUserBuilder.Services);
             _ = myUserBuilder.AddRoles<Role>()

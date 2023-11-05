@@ -13,7 +13,7 @@ namespace Dawem.API.MiddleWares
 {
     public class ExceptionHandlerMiddleware
     {
-        private const string JsonContentType = DawemKeys.ApplicationJson;
+        private const string JsonContentType = LeillaKeys.ApplicationJson;
         private readonly RequestDelegate _request;
 
         public ExceptionHandlerMiddleware(RequestDelegate next)
@@ -67,7 +67,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.Unauthorized;
                 response = new ExecutionResponse<object>
                 {
-                    Message = ex.Message ?? DawemKeys.UnAuthorized
+                    Message = ex.Message ?? LeillaKeys.UnAuthorized
                 };
                 await Return(unitOfWork, context, statusCode, response);
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
@@ -79,7 +79,7 @@ namespace Dawem.API.MiddleWares
                 {
                     Result = null,
                     State = ResponseStatus.NotRegisteredUser,
-                    Message = DawemKeys.RedirectToRegister
+                    Message = LeillaKeys.RedirectToRegister
                 };
                 await Return(unitOfWork, context, statusCode, response);
 
@@ -102,7 +102,7 @@ namespace Dawem.API.MiddleWares
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;
-            context.Response.ContentType = DawemKeys.ApplicationJson;
+            context.Response.ContentType = LeillaKeys.ApplicationJson;
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
 

@@ -85,7 +85,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = currencyRepository.OrderBy(query, nameof(Currency.Id), DawemKeys.Asc);
+            var queryOrdered = currencyRepository.OrderBy(query, nameof(Currency.Id), LeillaKeys.Asc);
 
             #endregion
 
@@ -97,7 +97,7 @@ namespace Dawem.BusinessLogic.Lookups
             var currenciesList = await queryPaged.Select(c => new CurrencyLiteDTO()
             {
                 Id = c.Id,
-                GlobalName = userContext.Lang == DawemKeys.Ar ? c.NameAr : c.NameEn,
+                GlobalName = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
                 CountryISOCode = c.Country.Iso.ToLower()
             }).ToListAsync();
 

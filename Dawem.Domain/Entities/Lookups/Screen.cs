@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Lookups
 {
-    [Table(nameof(Screen) + DawemKeys.S)]
+    [Table(nameof(Screen) + LeillaKeys.S)]
     public class Screen : BaseEntity
     {
         public string Description { get; set; }

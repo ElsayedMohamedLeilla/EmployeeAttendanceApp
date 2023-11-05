@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Provider
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [AllowAnonymous]
     public class AuthenticationController : BaseController
@@ -25,13 +25,13 @@ namespace Dawem.API.Controllers.Provider
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
-            return Success(await authenticationBL.SignUp(model), messageCode: DawemKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+            return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }
 
         [HttpPost]
         public async Task<ActionResult> SignIn(SignInModel signInModel)
         {
-            return Success(await authenticationBL.SignIn(signInModel), messageCode: DawemKeys.DoneSignYouInSuccessfully);
+            return Success(await authenticationBL.SignIn(signInModel), messageCode: LeillaKeys.DoneSignYouInSuccessfully);
         }
         [HttpPost]
         public async Task<ActionResult> SendVerificationCode(VerifyEmailModel model)
@@ -59,13 +59,13 @@ namespace Dawem.API.Controllers.Provider
 
             }
             var forgetPasswordResponse = await authenticationBL.RequestResetPassword(forgetPasswordBindingModel);
-            return Success(forgetPasswordResponse, messageCode: DawemKeys.DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully);
+            return Success(forgetPasswordResponse, messageCode: LeillaKeys.DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully);
         }
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             var response = await authenticationBL.ResetPassword(model);
-            return Success(response, messageCode: DawemKeys.DoneResetPasswordSuccessfully);
+            return Success(response, messageCode: LeillaKeys.DoneResetPasswordSuccessfully);
         }
         [Authorize]
         [HttpPost]
@@ -81,7 +81,7 @@ namespace Dawem.API.Controllers.Provider
                 return Success(ret);
             }
             var result = await authenticationBL.ChangePassword(resetPasswordModel);
-            return Success(result, messageCode: DawemKeys.DoneChangePasswordSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneChangePasswordSuccessfully);
         }
 
     }

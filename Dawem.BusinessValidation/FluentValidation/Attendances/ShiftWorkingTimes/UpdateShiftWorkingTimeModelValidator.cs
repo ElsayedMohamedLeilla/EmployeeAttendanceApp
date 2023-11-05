@@ -9,22 +9,22 @@ namespace Dawem.Validation.FluentValidation.Core.ShiftWorkingTimes
         public UpdateShiftWorkingTimeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterShiftWorkingTimeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterShiftWorkingTimeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterShiftWorkingTimeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterShiftWorkingTimeName);
 
             RuleFor(model => model.CheckInTime).GreaterThan(default(DateTime)).
-               WithMessage(DawemKeys.SorryYouMustEnterShiftWorkingTimeCheckInTime);
+               WithMessage(LeillaKeys.SorryYouMustEnterShiftWorkingTimeCheckInTime);
 
             RuleFor(model => model.CheckOutTime).GreaterThan(default(DateTime)).
-                WithMessage(DawemKeys.SorryYouMustEnterShiftWorkingTimeCheckOutTime);
+                WithMessage(LeillaKeys.SorryYouMustEnterShiftWorkingTimeCheckOutTime);
 
             RuleFor(model => model.CheckInTime).GreaterThan(model => model.CheckOutTime).
-              WithMessage(DawemKeys.SorryShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime);
+              WithMessage(LeillaKeys.SorryShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime);
 
             RuleFor(model => model.AllowedMinutes).LessThan(0).
-              WithMessage(DawemKeys.SorryShiftWorkingTimeAllowedMinutesCantBeLessThanZero);
+              WithMessage(LeillaKeys.SorryShiftWorkingTimeAllowedMinutesCantBeLessThanZero);
 
         }
     }

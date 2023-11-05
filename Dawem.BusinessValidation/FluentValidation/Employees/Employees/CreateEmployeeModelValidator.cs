@@ -9,16 +9,16 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
         public CreateEmployeeModelValidator()
         {
             RuleFor(model => model.DepartmentId).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustChooseDepartment);
+                    WithMessage(LeillaKeys.SorryYouMustChooseDepartment);
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
-                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeJoiningDate);
+                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeJoiningDate);
 
             RuleFor(model => model.ProfileImageFile)
-                  .Must(file => file.Length > 0 && file.ContentType.Contains(DawemKeys.Image))
+                  .Must(file => file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
                   .When(file => file != null)
-                  .WithMessage(DawemKeys.SorryYouMustUploadImagesOnly);
+                  .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
         }
     }
 }

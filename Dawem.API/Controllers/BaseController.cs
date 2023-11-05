@@ -12,7 +12,7 @@ using Newtonsoft.Json.Serialization;
 namespace Dawem.API.Controllers
 {
 
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     public class BaseController : ControllerBase
     {
@@ -78,7 +78,7 @@ namespace Dawem.API.Controllers
         [NonAction]
         public BaseResponseT<bool?> GetExecutionResponseWithModelStateErrors()
         {
-            string errorsMsg = DawemKeys.EmptyString;
+            string errorsMsg = LeillaKeys.EmptyString;
             BaseResponseT<bool?> response = new BaseResponseT<bool?>();
             response.Status = ResponseStatus.InvalidInput;
             foreach (ModelError error in ModelState.Keys.Select(k => ModelState[k].Errors).First())
@@ -90,7 +90,7 @@ namespace Dawem.API.Controllers
             return response;
         }
 
-        protected ContentResult Success<T>(T result, int? totalCount = null, string messageCode = DawemKeys.DoneSuccessfully, string message = null)
+        protected ContentResult Success<T>(T result, int? totalCount = null, string messageCode = LeillaKeys.DoneSuccessfully, string message = null)
         {
             var responseMessage = message == null ?
                 TranslationHelper.GetTranslation(messageCode, requestHeaderContext?.Lang) :
@@ -101,7 +101,7 @@ namespace Dawem.API.Controllers
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
             string json = JsonConvert.SerializeObject(response, settings);
-            return Content(json, DawemKeys.ApplicationJson);
+            return Content(json, LeillaKeys.ApplicationJson);
         }
     }
 }

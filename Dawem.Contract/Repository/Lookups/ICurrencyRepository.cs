@@ -7,6 +7,6 @@ namespace Dawem.Contract.Repository.Lookups
 {
     public interface ICurrencyRepository : IGenericRepository<Currency>
     {
-        IQueryable<Currency> GetAsQueryable(GetCurrenciesCriteria criteria, string includeProperties = DawemKeys.EmptyString);
+        IQueryable<Currency> GetAsQueryable(GetCurrenciesCriteria criteria, string includeProperties = LeillaKeys.EmptyString);
     }
 }

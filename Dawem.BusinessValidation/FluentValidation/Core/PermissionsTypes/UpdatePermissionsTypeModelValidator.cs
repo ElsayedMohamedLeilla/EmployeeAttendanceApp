@@ -15,10 +15,10 @@ namespace Dawem.Validation.FluentValidation.Core.PermissionsTypes
         public UpdatePermissionsTypeModelValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(DawemKeys.SorryYouMustEnterPermissionsTypeId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterPermissionsTypeId);
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterPermissionsTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterPermissionsTypeName);
 
         }
     }

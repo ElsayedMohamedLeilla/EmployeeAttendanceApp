@@ -33,15 +33,15 @@ namespace Dawem.API.MiddleWares
             {
 
 
-                string token = httpContext.Request.Headers[DawemKeys.Authorization];
+                string token = httpContext.Request.Headers[LeillaKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {
-                    var tok = token.Replace(DawemKeys.Bearer, DawemKeys.EmptyString);
+                    var tok = token.Replace(LeillaKeys.Bearer, LeillaKeys.EmptyString);
                     var jwttoken = new JwtSecurityTokenHandler().ReadJwtToken(tok);
 
-                    var userIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.UserId)?.Value;
-                    var companyIdText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.CompanyId)?.Value;
-                    var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == DawemKeys.ApplicationType)?.Value;
+                    var userIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.UserId)?.Value;
+                    var companyIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.CompanyId)?.Value;
+                    var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.ApplicationType)?.Value;
 
                     int.TryParse(userIdText.ToString(), out userId);
                     int.TryParse(companyIdText.ToString(), out companyId);
@@ -65,10 +65,10 @@ namespace Dawem.API.MiddleWares
 
             }
 
-            if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(DawemKeys.Ar))
+            if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))
             {
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(DawemKeys.En);
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(DawemKeys.En);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(LeillaKeys.En);
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.En);
             }
 
             await _next.Invoke(httpContext);

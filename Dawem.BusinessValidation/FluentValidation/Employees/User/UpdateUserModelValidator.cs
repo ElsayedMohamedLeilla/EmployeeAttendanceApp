@@ -10,16 +10,16 @@ namespace Dawem.Validation.FluentValidation.Employees.User
         public UpdateUserModelValidator()
         {
             RuleFor(user => user.Name).NotNull().
-                  WithMessage(DawemKeys.SorryYouMustEnterUserName);
+                  WithMessage(LeillaKeys.SorryYouMustEnterUserName);
             RuleFor(user => user.Email).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterEmail);
+                 WithMessage(LeillaKeys.SorryYouMustEnterEmail);
             RuleFor(user => user.MobileNumber).NotNull().
-                 WithMessage(DawemKeys.SorryYouMustEnterMobileNumber);
+                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
-                WithMessage(DawemKeys.SorryYouMustEnterValidEmail);
+                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
             RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
-               WithMessage(DawemKeys.SorryYouMustEnterOneRoleAtLeast);
+               WithMessage(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
 
             /*RuleFor(user => user.Password).Length(6, 50)
                  .When(user => user.Password != null)

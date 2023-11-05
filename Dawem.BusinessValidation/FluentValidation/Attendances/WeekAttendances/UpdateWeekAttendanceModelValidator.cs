@@ -9,21 +9,21 @@ namespace Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances
         public UpdateWeekAttendanceModelValidator()
         {
             RuleFor(model => model.Id).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterValidId);
+                   WithMessage(LeillaKeys.SorryYouMustEnterValidId);
 
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterWeekAttendanceName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterWeekAttendanceName);
 
             RuleFor(model => model.WeekShifts)
                 .NotNull()
-                .WithMessage(DawemKeys.SorryYouMustEnterWeekShifts)
+                .WithMessage(LeillaKeys.SorryYouMustEnterWeekShifts)
                 .Must(w => w.Count == 7)
-                .WithMessage(DawemKeys.SorryYouMustEnterAll7WeekDaysInWeekShifts);
+                .WithMessage(LeillaKeys.SorryYouMustEnterAll7WeekDaysInWeekShifts);
 
             RuleFor(model => model.WeekShifts)
                 .Must(w => !w.GroupBy(x => x.WeekDay).ToList().Any(w => w.Count() > 1))
-                .WithMessage(DawemKeys.SorryWeekDayCannotBeRepeated);
+                .WithMessage(LeillaKeys.SorryWeekDayCannotBeRepeated);
 
             RuleForEach(model => model.WeekShifts).SetValidator(new UpdateWeekShiftsValidator());
         }

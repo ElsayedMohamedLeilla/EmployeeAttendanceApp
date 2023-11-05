@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Others
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles = DawemKeys.FullAccess)]
+    [Authorize(Roles = LeillaKeys.FullAccess)]
     public class UserScreenActionPermissionController : BaseController
     {
         private readonly IUserScreenActionPermissionBL userScreenActionPermissionBL;

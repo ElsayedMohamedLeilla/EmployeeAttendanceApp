@@ -126,12 +126,12 @@ namespace Dawem.BusinessLogic.Provider
                     CompanyId = companyId,
                     Code = 1,
                     IsActive = true,
-                    Name = TranslationHelper.GetTranslation(DawemKeys.MainDepartment, DawemKeys.Ar)
+                    Name = TranslationHelper.GetTranslation(LeillaKeys.MainDepartment, LeillaKeys.Ar)
                 },
                 Code = 1,
                 JoiningDate = DateTime.UtcNow,
                 IsActive = true,
-                Name = TranslationHelper.GetTranslation(DawemKeys.AdminEmployee, DawemKeys.Ar)
+                Name = TranslationHelper.GetTranslation(LeillaKeys.AdminEmployee, LeillaKeys.Ar)
             });
             await unitOfWork.SaveAsync();
 
@@ -202,8 +202,8 @@ namespace Dawem.BusinessLogic.Provider
             var userToken = new UserToken()
             {
                 UserId = user.Id,
-                LoginProvider = DawemKeys.Email,
-                Name = DawemKeys.EmailConfirmationToken,
+                LoginProvider = LeillaKeys.Email,
+                Name = LeillaKeys.EmailConfirmationToken,
                 Value = token
             };
 
@@ -222,7 +222,7 @@ namespace Dawem.BusinessLogic.Provider
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
 
-            string RoleName = DawemKeys.Admin;
+            string RoleName = LeillaKeys.Admin;
             var user = new MyUser()
             {
                 UserName = model.UserEmail,
@@ -239,13 +239,13 @@ namespace Dawem.BusinessLogic.Provider
             {
                 //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser); //default
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser); //default
             }
 
             var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);
             if (!assignRole.Succeeded)
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
             return user;
@@ -261,13 +261,13 @@ namespace Dawem.BusinessLogic.Provider
             #region Handle User Role
 
             var roles = await userManagerRepository.GetRolesAsync(user);
-            if (roles.FirstOrDefault(r => r == DawemKeys.FullAccess) == null)
+            if (roles.FirstOrDefault(r => r == LeillaKeys.FullAccess) == null)
             {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.FullAccess);
 
                 if (addingToRoleResult.Succeeded)
                 {
-                    roles.Add(DawemKeys.FullAccess);
+                    roles.Add(LeillaKeys.FullAccess);
                 }
             }
 
@@ -301,13 +301,13 @@ namespace Dawem.BusinessLogic.Provider
                 new Claim(JwtRegisteredClaimNames.Sub, criteria.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
-                new Claim(DawemKeys.UserId, criteria.UserId.ToString()),
-                new Claim(DawemKeys.CompanyId , criteria.CompanyId.ToString()),
-                new Claim(DawemKeys.ApplicationType , criteria.ApplicationType.ToString())
+                new Claim(LeillaKeys.UserId, criteria.UserId.ToString()),
+                new Claim(LeillaKeys.CompanyId , criteria.CompanyId.ToString()),
+                new Claim(LeillaKeys.ApplicationType , criteria.ApplicationType.ToString())
             });
             if (criteria.RememberMe)
             {
-                claimsIdentity.AddClaim(new Claim(DawemKeys.RememberMe, DawemKeys.True));
+                claimsIdentity.AddClaim(new Claim(LeillaKeys.RememberMe, LeillaKeys.True));
             }
             if (criteria.Roles != null)
             {
@@ -352,8 +352,8 @@ namespace Dawem.BusinessLogic.Provider
         }
         private string GenerateConfirmEmailLink(object emailToken)
         {
-            var path = generator.GetPathByAction(DawemKeys.VerifyEmail, DawemKeys.Account, emailToken);
-            var protocol = accessor.HttpContext.Request.IsHttps ? DawemKeys.Https : DawemKeys.Http;
+            var path = generator.GetPathByAction(LeillaKeys.VerifyEmail, LeillaKeys.Account, emailToken);
+            var protocol = accessor.HttpContext.Request.IsHttps ? LeillaKeys.Https : LeillaKeys.Http;
             var host = accessor.HttpContext.Request.Host.Value;
             var confirmEmailLink = $"{protocol}://{host}{path}";
             return confirmEmailLink;
@@ -361,7 +361,7 @@ namespace Dawem.BusinessLogic.Provider
         private static string GetResetPasswordLink(ResetPasswordToken emailToken)
         {
             var path = "resetpassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
-            var protocol = DawemKeys.Https;
+            var protocol = LeillaKeys.Https;
             var host = "pro.dawem.app/";
             var resetPasswordLink = $"{protocol}://{host}{path}";
             return resetPasswordLink;
@@ -386,11 +386,11 @@ namespace Dawem.BusinessLogic.Provider
         public async Task<bool> RequestResetPassword(RequestResetPasswordModel model)
         {
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
-                throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             if (!user.EmailConfirmed)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserEmailNotConfirmed);
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailNotConfirmed);
             }
 
             var passwordResetToken = await userManagerRepository.GeneratePasswordResetTokenAsync(user);
@@ -413,25 +413,25 @@ namespace Dawem.BusinessLogic.Provider
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
-                throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             var resetPasswordResult = await userManagerRepository.ResetPasswordAsync(user, model.ResetToken, model.NewPassword);
 
             if (!resetPasswordResult.Succeeded)
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileResetPassword);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileResetPassword);
             }
             return false;
         }
         public async Task<bool> ChangePassword(ChangePasswordModel model)
         {
             var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
-                throw new BusinessValidationException(DawemKeys.SorryCannotFindUserWithEnteredEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, model.OldPassword);
             if (!checkPasswordAsyncRes)
             {
-                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+                throw new BusinessValidationException(LeillaKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
             }
 
             IdentityResult result = await userManagerRepository.ChangePasswordAsync(user, model.OldPassword,
@@ -439,7 +439,7 @@ namespace Dawem.BusinessLogic.Provider
 
             if (!result.Succeeded)
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhenChangePassword);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhenChangePassword);
             }
 
             return true;

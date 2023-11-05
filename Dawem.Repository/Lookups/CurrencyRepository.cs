@@ -16,7 +16,7 @@ namespace Dawem.Repository.Lookups
             
 
         }
-        public IQueryable<Currency> GetAsQueryable(GetCurrenciesCriteria criteria, string includeProperties = DawemKeys.EmptyString)
+        public IQueryable<Currency> GetAsQueryable(GetCurrenciesCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
             var currencyPredicate = PredicateBuilder.New<Currency>(true);
 

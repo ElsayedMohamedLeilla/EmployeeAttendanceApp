@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region sorting
 
-            var queryOrdered = justificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), DawemKeys.Desc);
+            var queryOrdered = justificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region sorting
 
-            var queryOrdered = JustificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), DawemKeys.Desc);
+            var queryOrdered = JustificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -188,7 +188,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
 
             return justificationsType;
         }
@@ -202,7 +202,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
                     Name = e.Name,
                     IsActive = e.IsActive,
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
 
             return justificationsType;
 
@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
         public async Task<bool> Delete(int JustificationsTypeId)
         {
             var justificationsType = await repositoryManager.JustificationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == JustificationsTypeId) ??
-                throw new BusinessValidationException(DawemKeys.SorryJustificationsTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
             justificationsType.Delete();
             await unitOfWork.SaveAsync();
             return true;

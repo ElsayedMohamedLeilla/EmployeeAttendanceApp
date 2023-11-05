@@ -24,7 +24,7 @@ namespace Dawem.Helpers
                 type = pi.PropertyType;
             }
             LambdaExpression lambda = Expression.Lambda(expr, arg);
-            string methodName = orderType == DawemKeys.Asc ? DawemKeys.OrderBy: DawemKeys.OrderByDescending;
+            string methodName = orderType == LeillaKeys.Asc ? LeillaKeys.OrderBy: LeillaKeys.OrderByDescending;
 
             MethodCallExpression resultExp =
                 Expression.Call(typeof(Queryable), methodName, new Type[] { typeof(TEntity), type }, outerExpression.Body, Expression.Quote(lambda));

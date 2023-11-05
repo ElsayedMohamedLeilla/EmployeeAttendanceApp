@@ -26,21 +26,21 @@ namespace Dawem.Validation.BusinessValidation
                 .CompanyRepository.Get(c => c.Email == model.CompanyEmail).AnyAsync();
             if (checkCompanyemailDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryCompanyEmailAlreadyUsedPleaseSelectAnotherOne);
+                throw new BusinessValidationException(LeillaKeys.SorryCompanyEmailAlreadyUsedPleaseSelectAnotherOne);
             }
 
             var checkCompanyNameDuplicate = await repositoryManager
                 .CompanyRepository.Get(c => c.Name == model.CompanyName).AnyAsync();
             if (checkCompanyNameDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryCompanyNameAlreadyUsedPleaseSelectAnotherOne);
+                throw new BusinessValidationException(LeillaKeys.SorryCompanyNameAlreadyUsedPleaseSelectAnotherOne);
             }
 
             var checkUserEmailDuplicate = await repositoryManager
                 .UserRepository.Get(c => c.Email == model.UserEmail).AnyAsync();
             if (checkCompanyemailDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserEmailAlreadyUsedPleaseSelectAnotherOne);
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailAlreadyUsedPleaseSelectAnotherOne);
             }
 
             return true;
@@ -50,7 +50,7 @@ namespace Dawem.Validation.BusinessValidation
             #region Find User
 
             var user = await userManagerRepository.FindByNameAsync(model.Email) ?? 
-                throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion
 
@@ -59,14 +59,14 @@ namespace Dawem.Validation.BusinessValidation
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, model.Password);
             if (!checkPasswordAsyncRes)
             {
-                throw new BusinessValidationException(DawemKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+                throw new BusinessValidationException(LeillaKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
             }
 
             #endregion
 
             if (!user.EmailConfirmed)
             {
-                throw new BusinessValidationException(DawemKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
             }    
             return user;
         }

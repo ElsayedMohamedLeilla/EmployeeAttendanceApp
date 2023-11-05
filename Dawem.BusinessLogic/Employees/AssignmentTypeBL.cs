@@ -106,7 +106,7 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
             else
-                throw new BusinessValidationException(DawemKeys.SorryAssignmentTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
 
 
         }
@@ -119,7 +119,7 @@ namespace Dawem.BusinessLogic.Employees
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
@@ -154,7 +154,7 @@ namespace Dawem.BusinessLogic.Employees
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -186,7 +186,7 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryAssignmentTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
 
             return department;
         }
@@ -199,7 +199,7 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryAssignmentTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
 
             return department;
 
@@ -207,7 +207,7 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<bool> Delete(int departmentd)
         {
             var department = await repositoryManager.AssignmentTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
-                throw new BusinessValidationException(DawemKeys.SorryAssignmentTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;

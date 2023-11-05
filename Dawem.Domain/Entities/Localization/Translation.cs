@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Localization
 {
-    [Table(nameof(Translation) + DawemKeys.S)]
+    [Table(nameof(Translation) + LeillaKeys.S)]
     public class Translation : BaseEntity
     {
         [StringLength(500)]

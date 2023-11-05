@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.UserManagement
 {
-    [Table(nameof(MyUser) + DawemKeys.S)]
+    [Table(nameof(MyUser) + LeillaKeys.S)]
     public class MyUser : IdentityUser<int>, IBaseEntity
     {
         #region Forign Keys

@@ -23,14 +23,14 @@ namespace Dawem.BusinessLogic.Provider
             var isValidEmail = EmailHelper.IsValidEmail(emailModel.Email);
             if (!isValidEmail)
             {
-                throw new BusinessValidationException(DawemKeys.SorryYouMustEnterValidEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterValidEmail);
             }
 
             // Create a new mail message
             MailMessage message = new()
             {
                 // Set the sender and recipient addresses
-                From = new MailAddress(DawemKeys.DawemAppDevelopersGmailCom)
+                From = new MailAddress(LeillaKeys.DawemAppDevelopersGmailCom)
             };
             message.To.Add(emailModel.Email);
             message.IsBodyHtml = true;
@@ -38,9 +38,9 @@ namespace Dawem.BusinessLogic.Provider
             message.Subject = emailModel.Subject;
             message.Body = emailModel.Body;
 
-            var client = new SmtpClient(DawemKeys.SmtpGmailCom, 587)
+            var client = new SmtpClient(LeillaKeys.SmtpGmailCom, 587)
             {
-                Credentials = new NetworkCredential(DawemKeys.DawemAppDevelopersGmailCom, DawemKeys.DawemAppDevelopersGmailComPassword),
+                Credentials = new NetworkCredential(LeillaKeys.DawemAppDevelopersGmailCom, LeillaKeys.DawemAppDevelopersGmailComPassword),
                 EnableSsl = true
             };
 
@@ -50,7 +50,7 @@ namespace Dawem.BusinessLogic.Provider
             }
             catch
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhenSendEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhenSendEmail);
             }
 
             return true;

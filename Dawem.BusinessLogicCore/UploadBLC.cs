@@ -29,7 +29,7 @@ namespace Dawem.BusinessLogicCore
             try
             {
                 var uniqueFileName = GetUniqueFileName(imageFile.FileName);
-                var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, DawemKeys.Uploads, FolderName);
+                var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);
 
                 if (!Directory.Exists(uploadsDirectory))
@@ -71,22 +71,22 @@ namespace Dawem.BusinessLogicCore
         }
         public string GetFilePath(string fileName, string folderName)
         {
-            var protocol = (accessor?.HttpContext?.Request?.IsHttps ?? true) ? DawemKeys.Https : DawemKeys.Http;
+            var protocol = (accessor?.HttpContext?.Request?.IsHttps ?? true) ? LeillaKeys.Https : LeillaKeys.Http;
             var host = accessor?.HttpContext?.Request?.Host.Value;
-            var path = generator.GetPathByAction(DawemKeys.Browse, DawemKeys.Browse, null);
+            var path = generator.GetPathByAction(LeillaKeys.Browse, LeillaKeys.Browse, null);
             var browseLink = $"{protocol}://{host}{path}";
 
-            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return DawemKeys.EmptyString;
-            return browseLink + DawemKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return LeillaKeys.EmptyString;
+            return browseLink + LeillaKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
         }
         private static string GetUniqueFileName(string fileName)
         {
             fileName = Path.GetFileName(fileName);
 
             return Path.GetFileNameWithoutExtension(fileName)
-                      + DawemKeys.UnderScore
+                      + LeillaKeys.UnderScore
                       + Guid.NewGuid().ToString()
-                      + DawemKeys.UnderScore
+                      + LeillaKeys.UnderScore
                       + DateTime.Now.ToString("yyyyMMddHHmmssfff")
                       + Path.GetExtension(fileName);
         }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
 {
-    [Table(nameof(AssignmentType) + DawemKeys.S)]
+    [Table(nameof(AssignmentType) + LeillaKeys.S)]
     public class AssignmentType : BaseEntity
     {
         #region Forign Key

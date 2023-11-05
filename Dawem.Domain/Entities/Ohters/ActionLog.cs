@@ -6,7 +6,7 @@ using Dawem.Domain.Entities.Provider;
 
 namespace Dawem.Domain.Entities.Ohters
 {
-    [Table(nameof(ActionLog) + DawemKeys.S)]
+    [Table(nameof(ActionLog) + LeillaKeys.S)]
     public class ActionLog:BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.UtcNow;

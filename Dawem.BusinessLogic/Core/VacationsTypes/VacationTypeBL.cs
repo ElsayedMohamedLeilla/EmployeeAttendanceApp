@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), DawemKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), DawemKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -188,7 +188,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
 
             return VacationsType;
         }
@@ -202,7 +202,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                     Name = e.Name,
                     IsActive = e.IsActive,
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
 
             return VacationsType;
 
@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         public async Task<bool> Delete(int VacationsTypeId)
         {
             var vacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
-                throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
             vacationsType.Delete();
 
             await unitOfWork.SaveAsync();

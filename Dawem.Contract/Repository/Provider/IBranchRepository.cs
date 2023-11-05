@@ -8,6 +8,6 @@ namespace Dawem.Contract.Repository.Provider
 {
     public interface IBranchRepository : IGenericRepository<Branch>
     {
-        IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = DawemKeys.EmptyString, UserDTO user = null);
+        IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = LeillaKeys.EmptyString, UserDTO user = null);
     }
 }

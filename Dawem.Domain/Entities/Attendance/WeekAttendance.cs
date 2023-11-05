@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Attendance
 {
-    [Table(nameof(WeekAttendance) + DawemKeys.S)]
+    [Table(nameof(WeekAttendance) + LeillaKeys.S)]
     public class WeekAttendance : BaseEntity
     {
         #region Foregn Keys

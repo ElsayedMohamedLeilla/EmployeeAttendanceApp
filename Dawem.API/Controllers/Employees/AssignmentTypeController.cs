@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Employees
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class AssignmentTypeController : BaseController
@@ -22,14 +22,14 @@ namespace Dawem.API.Controllers.Employees
         public async Task<ActionResult> Create(CreateAssignmentTypeModel model)
         {
             var result = await assignmentTypeBL.Create(model);
-            return Success(result, messageCode: DawemKeys.DoneCreateAssignmentTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateAssignmentTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateAssignmentTypeModel model)
         {
 
             var result = await assignmentTypeBL.Update(model);
-            return Success(result, messageCode: DawemKeys.DoneUpdateAssignmentTypeSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateAssignmentTypeSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetAssignmentTypesCriteria criteria)

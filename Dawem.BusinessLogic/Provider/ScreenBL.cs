@@ -58,7 +58,7 @@ namespace Dawem.BusinessLogic.Provider
                 .FirstOrDefaultAsync(s => s.Id == id);
             if (parentScreen == null)
             {
-                throw new BusinessValidationException(DawemKeys.SorryScreenNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             }
 
             screens.Add(parentScreen);

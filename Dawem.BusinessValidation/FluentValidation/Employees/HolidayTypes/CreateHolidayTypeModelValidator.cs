@@ -10,7 +10,7 @@ namespace Dawem.Validation.FluentValidation.Employees.HolidayTypes
         {
 
             RuleFor(model => model.Name).NotNull().
-                   WithMessage(DawemKeys.SorryYouMustEnterTaskTypeName);
+                   WithMessage(LeillaKeys.SorryYouMustEnterTaskTypeName);
 
         }
     }

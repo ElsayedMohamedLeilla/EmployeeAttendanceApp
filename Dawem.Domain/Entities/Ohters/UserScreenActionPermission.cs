@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Ohters
 {
-    [Table(nameof(UserScreenActionPermission) + DawemKeys.S)]
+    [Table(nameof(UserScreenActionPermission) + LeillaKeys.S)]
     public class UserScreenActionPermission : BaseEntity
     {
         public int? UserId { get; set; }

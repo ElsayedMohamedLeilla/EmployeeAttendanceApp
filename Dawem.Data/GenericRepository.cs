@@ -60,7 +60,7 @@ namespace Dawem.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 //}
                 Entities.Add(entity);
                 if (Context == null || _isDisposed)
@@ -73,11 +73,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
                 throw;
             }
@@ -94,7 +94,7 @@ namespace Dawem.Data
             {
                 if (entities == null)
                 {
-                    throw new ArgumentNullException(DawemKeys.Entities);
+                    throw new ArgumentNullException(LeillaKeys.Entities);
                 }
 
                 Context.ChangeTracker.AutoDetectChangesEnabled = false;
@@ -111,11 +111,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
                 throw;
             }
@@ -128,7 +128,7 @@ namespace Dawem.Data
 
 
                 if (entityList == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
                 foreach (var entityToUpdate in entityList)
@@ -144,11 +144,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw;
@@ -162,7 +162,7 @@ namespace Dawem.Data
 
 
                 if (entity == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
                 Entities.Update(entity);
@@ -175,11 +175,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw;
@@ -192,7 +192,7 @@ namespace Dawem.Data
             try
             {
                 if (entityList == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
                 foreach (var entityToUpdate in entityList)
@@ -208,11 +208,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw;
@@ -234,7 +234,7 @@ namespace Dawem.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
 
@@ -250,11 +250,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw;
@@ -276,7 +276,7 @@ namespace Dawem.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
 
@@ -298,11 +298,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw e;
@@ -318,7 +318,7 @@ namespace Dawem.Data
             try
             {
                 if (entityList.Count <= 0)
-                    throw new ArgumentNullException(DawemKeys.Entity);
+                    throw new ArgumentNullException(LeillaKeys.Entity);
                 if (Context == null || _isDisposed)
                     Context = new ApplicationDBContext();
                 Entities.RemoveRange(entityList);
@@ -336,11 +336,11 @@ namespace Dawem.Data
                 SqlException s = e.InnerException.InnerException as SqlException;
                 if (s != null && s.Number == 2627)
                 {
-                    _errorMessage += string.Format(DawemKeys.PartNumberAlreadyExists, s.Number);
+                    _errorMessage += string.Format(LeillaKeys.PartNumberAlreadyExists, s.Number);
                 }
                 else
                 {
-                    _errorMessage += string.Format(DawemKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
+                    _errorMessage += string.Format(LeillaKeys.AnErrorOccuredPleaseContactYourSystemAdministrator);
                 }
 
                 throw e;
@@ -365,7 +365,7 @@ namespace Dawem.Data
         {
             return Entities.Find(id);
         }
-        public virtual T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual T GetEntityByCondition(Expression<Func<T, bool>> filter = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
 
@@ -383,7 +383,7 @@ namespace Dawem.Data
 
         }
 
-        public virtual async Task<T> GetEntityByConditionAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual async Task<T> GetEntityByConditionAsync(Expression<Func<T, bool>> filter = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
 
@@ -402,7 +402,7 @@ namespace Dawem.Data
         }
 
 
-        public virtual T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual T GetEntityByConditionWithTracking(Expression<Func<T, bool>> filter = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
 
@@ -419,7 +419,7 @@ namespace Dawem.Data
         }
 
 
-        public virtual async Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual async Task<T> GetEntityByConditionWithTrackingAsync(Expression<Func<T, bool>> filter = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
 
@@ -435,7 +435,7 @@ namespace Dawem.Data
             return await query.FirstOrDefaultAsync();
         }
 
-        public virtual async Task<T> GetEntityByConditiontAsync(Expression<Func<T, bool>> filter = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual async Task<T> GetEntityByConditiontAsync(Expression<Func<T, bool>> filter = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
 
@@ -468,7 +468,7 @@ namespace Dawem.Data
             return Entities.AsQueryable<T>().Where(expression);
         }
 
-        public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
             if (filter != null)
@@ -494,7 +494,7 @@ namespace Dawem.Data
             }
         }
 
-        public virtual IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = DawemKeys.EmptyString)
+        public virtual IQueryable<T> GetWithTracking(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = LeillaKeys.EmptyString)
         {
             IQueryable<T> query = Entities;
             if (filter != null)
@@ -548,7 +548,7 @@ namespace Dawem.Data
             }
         }
 
-        public IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = DawemKeys.EmptyString, string orderType = DawemKeys.EmptyString)
+        public IQueryable<T> OrderBy(IQueryable<T> query, string orderColumn = LeillaKeys.EmptyString, string orderType = LeillaKeys.EmptyString)
         {
             var orderBy = SortingHelper<T>.GetOrderBy(orderColumn, orderType);
 

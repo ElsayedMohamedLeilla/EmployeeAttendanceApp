@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.UserManagement
 {
-    [Route(DawemKeys.ApiControllerAction)]
+    [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
     public class UserOldController : BaseController
@@ -48,7 +48,7 @@ namespace Dawem.API.Controllers.UserManagement
         }
 
         [HttpPost]
-        [Authorize(Roles = DawemKeys.FullAccess)]
+        [Authorize(Roles = LeillaKeys.FullAccess)]
         public async Task<ActionResult> Create(CreatedUser createdUser)
         {
             if (createdUser == null)
@@ -57,10 +57,10 @@ namespace Dawem.API.Controllers.UserManagement
             }
 
             Update(createdUser, InserationMode.Insert);
-            return Success(await userBL.Create(createdUser), messageCode: DawemKeys.DoneCreateUserSuccessfully);
+            return Success(await userBL.Create(createdUser), messageCode: LeillaKeys.DoneCreateUserSuccessfully);
         }
         [HttpPost]
-        [Authorize(Roles = DawemKeys.FullAccess)]
+        [Authorize(Roles = LeillaKeys.FullAccess)]
         public async Task<ActionResult> Update(CreatedUser updatedUser)
         {
             if (updatedUser == null)
@@ -68,19 +68,19 @@ namespace Dawem.API.Controllers.UserManagement
                 return BadRequest();
             }
             Update(updatedUser, InserationMode.Update);
-            return Success(await userBL.Update(updatedUser), messageCode: DawemKeys.DoneUpdateUserSuccessfully);
+            return Success(await userBL.Update(updatedUser), messageCode: LeillaKeys.DoneUpdateUserSuccessfully);
 
         }
 
         [HttpPost]
-        [Authorize(Roles = DawemKeys.FullAccess)]
+        [Authorize(Roles = LeillaKeys.FullAccess)]
         public async Task<ActionResult> DeleteUser([FromBody] int UserId)
         {
             if (!ModelState.IsValid || UserId <= 0)
             {
                 return BadRequest();
             }
-            return Success(await userBL.DeleteById(UserId), messageCode: DawemKeys.DoneDeleteUserSuccessfully);
+            return Success(await userBL.DeleteById(UserId), messageCode: LeillaKeys.DoneDeleteUserSuccessfully);
         }
     }
 }

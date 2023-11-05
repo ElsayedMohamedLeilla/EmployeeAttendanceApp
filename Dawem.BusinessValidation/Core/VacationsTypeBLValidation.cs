@@ -24,7 +24,7 @@ namespace Dawem.Validation.Core
                 .VacationsTypeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkVacationsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNameIsDuplicated);
             }
 
             return true;
@@ -38,7 +38,7 @@ namespace Dawem.Validation.Core
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkVacationsTypeDuplicate)
             {
-                throw new BusinessValidationException(DawemKeys.SorryVacationsTypeNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNameIsDuplicated);
             }
 
             return true;

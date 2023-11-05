@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Attendance
 {
-    [Table(nameof(ShiftWorkingTime) + DawemKeys.S)]
+    [Table(nameof(ShiftWorkingTime) + LeillaKeys.S)]
     public class ShiftWorkingTime : BaseEntity
     {
         #region Foregn Keys

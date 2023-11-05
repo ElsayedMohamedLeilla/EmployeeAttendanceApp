@@ -20,7 +20,7 @@ namespace Dawem.Validation.BusinessValidation
         {
             if (createdUser == null)
             {
-                throw new BusinessValidationException(DawemKeys.SorryYouMustEnterUser);
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterUser);
             }
 
             #region Validate Email
@@ -30,7 +30,7 @@ namespace Dawem.Validation.BusinessValidation
 
             if (createdUser is not null)
             {
-                throw new BusinessValidationException(DawemKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
             }
 
             #endregion
@@ -40,7 +40,7 @@ namespace Dawem.Validation.BusinessValidation
             {
                 if (createdUser.MainBranchId <= 0)
                 {
-                    throw new BusinessValidationException(DawemKeys.SorryYouMustChooseOneOrMoreBranchForTheUser);
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustChooseOneOrMoreBranchForTheUser);
                 }
                 else
                 {

@@ -21,7 +21,7 @@ namespace Dawem.Repository.UserManagement
             requestHeaderContext = _requestHeaderContext;
         }
 
-        public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = DawemKeys.EmptyString)
+        public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
             var userPredicate = PredicateBuilder.New<MyUser>(true);
 

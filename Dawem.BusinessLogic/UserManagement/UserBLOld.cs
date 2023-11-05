@@ -57,7 +57,7 @@ namespace Dawem.BusinessLogic.UserManagement
         public async Task<GetUsersResponseModelOld> Get(UserSearchCriteria criteria)
         {
             var query = repositoryManager.UserRepository.GetAsQueryableOld(criteria, nameof(MyUser.UserBranches));
-            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(MyUser.Id), DawemKeys.Desc);
+            var queryOrdered = repositoryManager.UserRepository.OrderBy(query, nameof(MyUser.Id), LeillaKeys.Desc);
 
             #region paging
 
@@ -80,9 +80,9 @@ namespace Dawem.BusinessLogic.UserManagement
         {
             var user = await repositoryManager.UserRepository
             .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id,
-            nameof(MyUser.UserBranches) + DawemKeys.Comma + nameof(MyUser.UserBranches) + DawemKeys.Dot + nameof(UserBranch.Branch) +
-             DawemKeys.Comma + nameof(MyUser.UserGroups) + DawemKeys.Comma + nameof(MyUser.UserGroups) + DawemKeys.Dot + nameof(UserGroup.Group)) ??
-             throw new BusinessValidationException(DawemKeys.SorryUserNotFound);
+            nameof(MyUser.UserBranches) + LeillaKeys.Comma + nameof(MyUser.UserBranches) + LeillaKeys.Dot + nameof(UserBranch.Branch) +
+             LeillaKeys.Comma + nameof(MyUser.UserGroups) + LeillaKeys.Comma + nameof(MyUser.UserGroups) + LeillaKeys.Dot + nameof(UserGroup.Group)) ??
+             throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             UserDTOMapper.InitUserContext(requestHeaderContext);
             var userInfo = UserDTOMapper.MapInfo(user);
@@ -104,12 +104,12 @@ namespace Dawem.BusinessLogic.UserManagement
             IdentityResult createUserResponse = await userManagerRepository.CreateAsync(user, createdUser.Password);
             if (!createUserResponse.Succeeded)
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
             IdentityResult addingToRoleResult = new();
             if (createdUser.UserRols == null || createdUser.UserRols.Count == 0)
             {
-                addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, DawemKeys.FullAccess);
+                addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.FullAccess);
 
             }
             else
@@ -121,7 +121,7 @@ namespace Dawem.BusinessLogic.UserManagement
             {
                 unitOfWork.Rollback();
                 await userManagerRepository.DeleteAsync(user);
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
             #region User Branches
@@ -178,7 +178,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             if (!updateUserResponse.Succeeded)
             {
-                throw new BusinessValidationException(DawemKeys.SorryErrorHappenWhileUpdatingUser);
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
             }
 
             user = await userManagerRepository.FindByIdAsync(updatedUser.Id.ToString());

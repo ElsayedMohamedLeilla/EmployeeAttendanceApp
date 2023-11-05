@@ -101,7 +101,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             #endregion
 
             else
-                throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
 
         }
@@ -113,7 +113,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
@@ -149,7 +149,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), DawemKeys.Desc);
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -182,7 +182,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Name = e.Name,
                     ParentName = e.Parent != null ? e.Parent.Name : null,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
             return department;
         }
@@ -196,7 +196,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Name = e.Name,
                     ParentId = e.Parent != null ? e.ParentId : null,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
             return department;
 
@@ -204,7 +204,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
         public async Task<bool> Delete(int departmentd)
         {
             var department = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
-                throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;

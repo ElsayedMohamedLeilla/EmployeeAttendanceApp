@@ -209,10 +209,6 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName!";
         public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId!";
         public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound!";
-        public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
-        public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
-        public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
         public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
         public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
         public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound!";
@@ -263,6 +259,273 @@ namespace Dawem.Translations
         public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
         public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
         public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //not translated yet
+
+        public const string SorryYouMustEnterShiftWorkingTimeName = "Sorry!!YouMustEnterShiftWorkingTimeName!";
+        public const string SorryYouMustEnterEmployeeJoiningDate = "Sorry!!YouMustEnterEmployeeJoiningDate!";
+        public const string SorryYouMustEnterShiftWorkingTimeCheckInTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckInTime!";
+        public const string SorryYouMustEnterShiftWorkingTimeCheckOutTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckOutTime!";
+        public const string SorryShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime = "Sorry!!ShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime!";
+        public const string SorryShiftWorkingTimeAllowedMinutesCantBeLessThanZero = "Sorry!!ShiftWorkingTimeAllowedMinutesCantBeLessThanZero!";
+        public const string SorryYouMustEnterShiftWorkingTimeId = "Sorry!!YouMustEnterShiftWorkingTimeId!";
+        public const string SorryShiftWorkingTimeNameIsDuplicated = "Sorry!!ShiftWorkingTimeNameIsDuplicated!";
+        public const string SorryShiftWorkingTimeNotFound = "Sorry!!ShiftWorkingTimeNotFound!";
+        public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
+        public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
+
         
+
+
+
+
     }
 }

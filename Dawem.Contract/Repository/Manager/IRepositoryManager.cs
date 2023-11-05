@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
+using Dawem.Contract.Repository.Attendances.WeekAttendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -37,6 +38,7 @@ namespace Dawem.Contract.Repository.Manager
         IWeekAttendanceShiftRepository WeekAttendanceShiftRepository { get; }
 
         IRoleRepository RoleRepository { get; }
+        IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }
 
     }
 }

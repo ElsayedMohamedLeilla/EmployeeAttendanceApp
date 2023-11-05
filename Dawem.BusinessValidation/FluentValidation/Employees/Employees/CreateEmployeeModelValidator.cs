@@ -13,7 +13,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
             RuleFor(model => model.Name).NotNull().
                    WithMessage(DawemKeys.SorryYouMustEnterEmployeeName);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
-                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeName);
+                   WithMessage(DawemKeys.SorryYouMustEnterEmployeeJoiningDate);
 
             RuleFor(model => model.ProfileImageFile)
                   .Must(file => file.Length > 0 && file.ContentType.Contains(DawemKeys.Image))

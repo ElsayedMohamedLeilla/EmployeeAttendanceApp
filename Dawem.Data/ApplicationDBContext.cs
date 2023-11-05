@@ -125,6 +125,7 @@ namespace Dawem.Data
         public DbSet<JustificationsType> JustificationsTypes { get; set; }
         public DbSet<VacationsType> VacationsTypes { get; set; }
         public DbSet<PermissionsType> PermissionsTypes { get; set; }
+        public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
 
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }

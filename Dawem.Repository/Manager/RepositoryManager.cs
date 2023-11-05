@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
+using Dawem.Contract.Repository.Attendances.WeekAttendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -11,6 +12,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
+using Dawem.Repository.Attendances.ShiftWorkingTimes;
 using Dawem.Repository.Attendances.WeekAttendances;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
@@ -55,8 +57,9 @@ namespace Dawem.Repository.Manager
 
         private IWeekAttendanceRepository weekAttendanceRepository;
         private IWeekAttendanceShiftRepository weekAttendanceShiftRepository;
+        private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
 
-        
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -97,7 +100,7 @@ namespace Dawem.Repository.Manager
         public IHolidayTypeRepository HolidayTypeRepository =>
         holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
 
-        
+
         public IJustificationsTypeRepository JustificationsTypeRepository =>
         justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
 
@@ -110,9 +113,10 @@ namespace Dawem.Repository.Manager
         public IRoleRepository RoleRepository =>
         roleRepository ??= new RoleRepository(unitOfWork, generalSetting);
 
+        public IShiftWorkingTimeRepository ShiftWorkingTimeRepository =>
+        shiftWorkingTimeRepository ??= new ShiftWorkingTimeRepository(unitOfWork, generalSetting);
 
 
-        
 
         public IWeekAttendanceRepository WeekAttendanceRepository =>
         weekAttendanceRepository ??= new WeekAttendanceRepository(unitOfWork, generalSetting);

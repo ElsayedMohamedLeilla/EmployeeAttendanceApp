@@ -18,7 +18,7 @@ namespace Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances
             RuleFor(model => model.ShiftId)
                 .Must(s => s > 0)
                 .When(s => s.ShiftId != null)
-                .WithMessage(DawemKeys.SorryYouChooseValidShift);
+                .WithMessage(DawemKeys.SorryYouMustChooseValidShift);
         }
     }
 

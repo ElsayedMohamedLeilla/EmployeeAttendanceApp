@@ -205,12 +205,6 @@ namespace Dawem.Translations
         public const string SECURITYOFFICER = "SECURITYOFFICER";
         public const string HOUSEKEEPING = "HOUSEKEEPING";
         public const string ITSUPPORT = "ITSUPPORT";
-
-
-
-
-
-        // new
         public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
         public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
         public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
@@ -254,23 +248,285 @@ namespace Dawem.Translations
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-
-       
-
-
-        
-        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
         public const string SorryWeekAttendanceNameIsDuplicated = "Sorry!!WeekAttendanceNameIsDuplicated!";
         public const string SorryYouMustEnterWeekAttendanceName = "Sorry!!YouMustEnterWeekAttendanceName!";
         public const string SorryYouMustEnterWeekShifts = "Sorry!!YouMustEnterWeekShifts!";
         public const string SorryYouMustEnterAll7WeekDaysInWeekShifts = "Sorry!!YouMustEnterAll7WeekDaysInWeekShifts!";
         public const string SorryYouMustEnterValidWeekDay = "Sorry!!YouMustEnterValidWeekDay!";
-        public const string SorryYouChooseValidShift = "Sorry!!YouChooseValidShift!";
+        public const string SorryYouMustChooseValidShift = "Sorry!!YouChooseValidShift!";
         public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";
         public const string SorryWeekAttendanceNotFound = "Sorry!!WeekAttendanceNotFound!";
         public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
         public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
         public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //not translated yet
         
+        public const string SorryYouMustEnterShiftWorkingTimeName = "Sorry!!YouMustEnterShiftWorkingTimeName!";
+        public const string SorryYouMustEnterEmployeeJoiningDate = "Sorry!!YouMustEnterEmployeeJoiningDate!";
+        public const string SorryYouMustEnterShiftWorkingTimeCheckInTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckInTime!";
+        public const string SorryYouMustEnterShiftWorkingTimeCheckOutTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckOutTime!";
+        public const string SorryShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime = "Sorry!!ShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime!";
+        public const string SorryShiftWorkingTimeAllowedMinutesCantBeLessThanZero = "Sorry!!ShiftWorkingTimeAllowedMinutesCantBeLessThanZero!";
+        public const string SorryYouMustEnterShiftWorkingTimeId = "Sorry!!YouMustEnterShiftWorkingTimeId!";
+        public const string SorryShiftWorkingTimeNameIsDuplicated = "Sorry!!ShiftWorkingTimeNameIsDuplicated!";
+        public const string SorryShiftWorkingTimeNotFound = "Sorry!!ShiftWorkingTimeNotFound!";
+        public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
+        public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
+
+
+
+
+
+
+
     }
 }

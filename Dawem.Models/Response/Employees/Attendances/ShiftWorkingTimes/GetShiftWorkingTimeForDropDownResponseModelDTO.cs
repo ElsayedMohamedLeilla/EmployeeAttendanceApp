@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dawem.Models.Response.Core.Roles
+namespace Dawem.Models.Response.Core.ShiftWorkingTimes
 {
-    public class GetRoleResponseModelDTO
+    public class GetShiftWorkingTimeForDropDownResponseModelDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

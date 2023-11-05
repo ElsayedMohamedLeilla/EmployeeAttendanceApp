@@ -38,23 +38,12 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<int> Create(CreateDepartmentModel model)
         {
-            #region Model Validation
-
-            var createDepartmentModel = new CreateDepartmentModelValidator();
-            var createDepartmentModelResult = createDepartmentModel.Validate(model);
-            if (!createDepartmentModelResult.IsValid)
-            {
-                var error = createDepartmentModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
 
             #endregion
+
             unitOfWork.CreateTransaction();
             #region Insert Department
 
@@ -86,18 +75,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<bool> Update(UpdateDepartmentModel model)
         {
-            #region Model Validation
-
-            var updateDepartmentModelValidator = new UpdateDepartmentModelValidator();
-            var updateDepartmentModelValidatorResult = updateDepartmentModelValidator.Validate(model);
-            if (!updateDepartmentModelValidatorResult.IsValid)
-            {
-                var error = updateDepartmentModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
             await departmentBLValidation.UpdateValidation(model);
             #endregion
@@ -130,18 +107,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             var departmentRepository = repositoryManager.DepartmentRepository;
             var query = departmentRepository.GetAsQueryable(criteria);
             #region paging
@@ -174,16 +139,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<GetDepartmentsForDropDownResponse> GetForDropDown(GetDepartmentsCriteria criteria)
         {
-            #region Model Validation
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-            #endregion
-
             criteria.IsActive = true;
             var departmentRepository = repositoryManager.DepartmentRepository;
             var query = departmentRepository.GetAsQueryable(criteria);
@@ -225,6 +180,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 {
                     Code = e.Code,
                     Name = e.Name,
+                    ParentName = e.Parent != null ? e.Parent.Name : null,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 
@@ -238,6 +194,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
+                    ParentId = e.Parent != null ? e.ParentId : null,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(DawemKeys.SorryDepartmentNotFound);
 

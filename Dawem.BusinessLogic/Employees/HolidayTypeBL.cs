@@ -38,18 +38,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateHolidayTypeModel model)
         {
-            #region Model Validation
-
-            var createHolidayTypeModel = new CreateHolidayTypeModelValidator();
-            var createHolidayTypeModelResult = createHolidayTypeModel.Validate(model);
-            if (!createHolidayTypeModelResult.IsValid)
-            {
-                var error = createHolidayTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
@@ -88,18 +76,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateHolidayTypeModel model)
         {
-            #region Model Validation
-
-            var updateHolidayTypeModelValidator = new UpdateHolidayTypeModelValidator();
-            var updateHolidayTypeModelValidatorResult = updateHolidayTypeModelValidator.Validate(model);
-            if (!updateHolidayTypeModelValidatorResult.IsValid)
-            {
-                var error = updateHolidayTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
             await departmentBLValidation.UpdateValidation(model);
             #endregion
@@ -133,19 +109,9 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetHolidayTypesResponse> Get(GetHolidayTypesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
             var departmentRepository = repositoryManager.HolidayTypeRepository;
             var query = departmentRepository.GetAsQueryable(criteria);
+
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
@@ -174,16 +140,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetHolidayTypesForDropDownResponse> GetForDropDown(GetHolidayTypesCriteria criteria)
         {
-            #region Model Validation
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-            #endregion
-
             criteria.IsActive = true;
             var departmentRepository = repositoryManager.HolidayTypeRepository;
             var query = departmentRepository.GetAsQueryable(criteria);

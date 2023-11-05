@@ -96,18 +96,6 @@ namespace Dawem.BusinessLogic.UserManagement
             user.EmailConfirmed = true;
             user.UserName = user.Email;
 
-            #region Model Validation
-
-            var userValidator = new UserValidator();
-            var userValidatorResult = userValidator.Validate(createdUser);
-            if (!userValidatorResult.IsValid)
-            {
-                var error = userValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
             await userBLValidation.CreateUserValidation(createdUser);
 
@@ -170,18 +158,6 @@ namespace Dawem.BusinessLogic.UserManagement
         {
             updatedUser.MainBranchId = requestHeaderContext.BranchId ?? 0;
             MyUser user = mapper.Map<MyUser>(updatedUser);
-
-            #region Model Validation
-
-            var userValidator = new UserValidator();
-            var userValidatorResult = userValidator.Validate(updatedUser);
-            if (!userValidatorResult.IsValid)
-            {
-                var error = userValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
 
             branchValidatorBL.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Edit);
             await userBLValidation.CreateUserValidation(updatedUser);

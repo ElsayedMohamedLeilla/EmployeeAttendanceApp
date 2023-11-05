@@ -36,7 +36,7 @@ namespace Dawem.Translations
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
-        public const string Users = "Users";    
+        public const string Users = "Users";
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
         public const string FourigitPhone = "FourigitPhone";
@@ -56,7 +56,7 @@ namespace Dawem.Translations
         public const string Jwt = "Jwt";
         public const string UserId = "UserId";
         public const string BranchId = "BranchId";
-        public const string CompanyId = "CompanyId";        
+        public const string CompanyId = "CompanyId";
         public const string ApplicationType = "ApplicationType";
         public const string RememberMe = "RememberMe";
         public const string True = "true";
@@ -89,7 +89,7 @@ namespace Dawem.Translations
         public const string Browse = "Browse";
         public const string Http = "http";
         public const string Https = "https";
-        public const string ImagesFolder = "ImagesFolder";       
+        public const string ImagesFolder = "ImagesFolder";
         public const string SmtpGmailCom = "smtp.gmail.com";
         public const string DawemAppDevelopersGmailCom = "dawem.app.developers@gmail.com";
         public const string DawemAppDevelopersGmailComPassword = "wxqo zsuj brqy ufgm";
@@ -118,11 +118,11 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterMobileNumber = "Sorry!!YouMustEnterMobileNumber!";
         public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
         public const string SorryYouMustEnterApplicationType = "Sorry!!YouMustEnterApplicationType!";
-        public const string NoDataFound = "NoDataFound";
+        public const string NoDataFound = "NoDataFound!";
         public const string SorryYouMustEnterCompanyName = "Sorry!!YouMustEnterCompanyName!";
         public const string SorryYouMustChooseCountry = "Sorry!!YouMustChooseCountry!";
         public const string SorryYouMustEnterCompanyAddress = "Sorry!!YouMustEnterCompanyAddress!";
-        public const string SorryYouMustEnterCompanyEmail = "Sorry!!YouMustEnterCompanyEmail";
+        public const string SorryYouMustEnterCompanyEmail = "Sorry!!YouMustEnterCompanyEmail!";
         public const string SorryYouMustEnterConfirmPassword = "Sorry!!YouMustEnterConfirmPassword!";
         public const string SorryPasswordAndConfirmPasswordMustEqual = "Sorry!!PasswordAndConfirmPasswordMustEqual!";
         public const string SorryYouMustEnterUserEmail = "Sorry!!YouMustEnterUserEmail!";
@@ -137,14 +137,14 @@ namespace Dawem.Translations
         public const string NoUserWithSuchName = "Sorry!!NoUserWithSuchName!";
         public const string SorryScreenNotFound = "Sorry!!ScreenNotFound!";
         public const string SorryTheOldPasswordIsNotCorrect = "Sorry!!TheOldPasswordIsNotCorrect!";
-        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";  //not entered
+        public const string sorryTheOldPasswordIsNotCorrects = "Sorry!!NoUserWithSuchName!";
         public const string NoUserWithSuchNames = "Sorry!!NoUserWithSuchName!";
         public const string SorryThereIsNoBranchesForThisUser = "Sorry!!ThereIsNoBranchesForThisUser!";
         public const string SorryYouMustEnterUser = "Sorry!!YouMustEnterUser!";
         public const string SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail = "Sorry!!UserEmailIsDuplicated.YouMustEnterUniqueEmail!";
         public const string SorryYouMustChooseOneOrMoreBranchForTheUser = "Sorry!!YouMustChooseOneOrMoreBranchForTheUser!";
         public const string SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters = "Sorry!!YouMustEnterPasswordWithMinimumLengthOfA6Charachters!";
-        public const string ThisEmailIsAlreadyUsedPleaseSelectAnotherOne = "Sorry!!ThisEmailIslreadyUsedPleaseSelectAnotherOne";
+        public const string ThisEmailIsAlreadyUsedPleaseSelectAnotherOne = "Sorry!!ThisEmailIslreadyUsedPleaseSelectAnotherOne!";
         public const string SorryCompanyEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!CompanyEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string SorryCompanyNameAlreadyUsedPleaseSelectAnotherOne = "Sorry!!CompanyNameAlreadyUsedPleaseSelectAnotherOne!";
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
@@ -173,10 +173,10 @@ namespace Dawem.Translations
         public const string SorryEmployeeNameIsDuplicated = "Sorry!!EmployeeNameIsDuplicated!";
         public const string SorryYouMustEnterEmployeeId = "Sorry!!YouMustEnterEmployeeId!";
         public const string SorryEmployeeNotFound = "Sorry!!EmployeeNotFound!";
-        public const string SorryDepartmentNameIsDuplicated = "Sorry!!DepartmentNameIsDuplicated";
-        public const string SorryYouMustEnterDepartmentName = "Sorry!!YouMustEnterDepartmentName";
-        public const string SorryYouMustEnterDepartmentId = "Sorry!!YouMustEnterDepartmentId";
-        public const string SorryDepartmentNotFound = "Sorry!!DepartmentNotFound";
+        public const string SorryDepartmentNameIsDuplicated = "Sorry!!DepartmentNameIsDuplicated!";
+        public const string SorryYouMustEnterDepartmentName = "Sorry!!YouMustEnterDepartmentName!";
+        public const string SorryYouMustEnterDepartmentId = "Sorry!!YouMustEnterDepartmentId!";
+        public const string SorryDepartmentNotFound = "Sorry!!DepartmentNotFound!";
         public const string DoneCreateDepartmentSuccessfully = "DoneCreateDepartmentSuccessfully";
         public const string DoneUpdateDepartmentSuccessfully = "DoneUpdateDepartmentSuccessfully";
         public const string SorryErrorHappenWhileUploadProfileImage = "Sorry!!ErrorHappenWhileUploadProfileImage!";
@@ -205,41 +205,45 @@ namespace Dawem.Translations
         public const string SECURITYOFFICER = "SECURITYOFFICER";
         public const string HOUSEKEEPING = "HOUSEKEEPING";
         public const string ITSUPPORT = "ITSUPPORT";
+        public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName!";
+        public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId!";
+        public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound!";
         public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated";
         public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName";
         public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId";
         public const string SorryJustificationsTypeNotFound = "Sorry!!JustificationsTypeNotFound";
         public const string DoneCreateJustificationsTypeSuccessfully = "DoneCreateJustificationsTypeSuccessfully";
         public const string DoneUpdateJustificationsTypeSuccessfully = "DoneUpdateJustificationsTypeSuccessfully";
-        public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound";
-        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterPermissionsTypeName = "Sorry!!YouMustEnterPermissionsTypeName";
-        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId";
+        public const string SorryPermissionsTypeNotFound = "Sorry!!PermissionsTypeNotFound!";
+        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterPermissionsTypeName = "Sorry!!YouMustEnterPermissionsTypeName!";
+        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId!";
         public const string DoneCreatePermissionsTypeSuccessfully = "DoneCreatePermissionsTypeSuccessfully";
         public const string DoneUpdatePermissionsTypeSuccessfully = "DoneUpdatePermissionsTypeSuccessfully";
-        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound";
-        public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated";
-        public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName";
-        public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId";
+        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound!";
+        public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName!";
+        public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId!";
         public const string DoneCreateVacationsTypeSuccessfully = "DoneCreateVacationsTypeSuccessfully";
         public const string DoneUpdateVacationsTypeSuccessfully = "DoneUpdateVacationsTypeSuccessfully";
-        public const string SorryAssignmentTypeNameIsDuplicated = "Sorry!!AssignmentTypeNameIsDuplicated";
-        public const string SorryYouMustEnterAssignmentTypeName = "Sorry!!YouMustEnterAssignmentTypeName";
-        public const string SorryYouMustEnterAssignmentTypeId = "Sorry!!YouMustEnterAssignmentTypeId";
-        public const string SorryAssignmentTypeNotFound = "Sorry!!AssignmentTypeNotFound";
+        public const string SorryAssignmentTypeNameIsDuplicated = "Sorry!!AssignmentTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterAssignmentTypeName = "Sorry!!YouMustEnterAssignmentTypeName!";
+        public const string SorryYouMustEnterAssignmentTypeId = "Sorry!!YouMustEnterAssignmentTypeId!";
+        public const string SorryAssignmentTypeNotFound = "Sorry!!AssignmentTypeNotFound!";
         public const string DoneCreateAssignmentTypeSuccessfully = "DoneCreateAssignmentTypeSuccessfully";
         public const string DoneUpdateAssignmentTypeSuccessfully = "DoneUpdateAssignmentTypeSuccessfully";
-        public const string SorryTaskTypeNameIsDuplicated = "Sorry!!TaskTypeNameIsDuplicated";
-        public const string SorryYouMustEnterTaskTypeName = "Sorry!!YouMustEnterTaskTypeName";
-        public const string SorryYouMustEnterTaskTypeId = "Sorry!!YouMustEnterTaskTypeId";
-        public const string SorryTaskTypeNotFound = "Sorry!!TaskTypeNotFound";
+        public const string SorryTaskTypeNameIsDuplicated = "Sorry!!TaskTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterTaskTypeName = "Sorry!!YouMustEnterTaskTypeName!";
+        public const string SorryYouMustEnterTaskTypeId = "Sorry!!YouMustEnterTaskTypeId!";
+        public const string SorryTaskTypeNotFound = "Sorry!!TaskTypeNotFound!";
         public const string DoneCreateTaskTypeSuccessfully = "DoneCreateTaskTypeSuccessfully";
         public const string DoneUpdateTaskTypeSuccessfully = "DoneUpdateTaskTypeSuccessfully";
         public const string SorryYouMustEnterOneRoleAtLeast = "Sorry!!YouMustEnterOneRoleAtLeast!";
-        public const string SorryHolidayTypeNameIsDuplicated = "Sorry!!HolidayTypeNameIsDuplicated";
-        public const string SorryYouMustEnterHolidayTypeName = "Sorry!!YouMustEnterHolidayTypeName";
-        public const string SorryYouMustEnterHolidayTypeId = "Sorry!!YouMustEnterHolidayTypeId";
-        public const string SorryHolidayTypeNotFound = "Sorry!!HolidayTypeNotFound";
+        public const string SorryHolidayTypeNameIsDuplicated = "Sorry!!HolidayTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterHolidayTypeName = "Sorry!!YouMustEnterHolidayTypeName!";
+        public const string SorryYouMustEnterHolidayTypeId = "Sorry!!YouMustEnterHolidayTypeId!";
+        public const string SorryHolidayTypeNotFound = "Sorry!!HolidayTypeNotFound!";
         public const string DoneCreateHolidayTypeSuccessfully = "DoneCreateHolidayTypeSuccessfully";
         public const string DoneUpdateHolidayTypeSuccessfully = "DoneUpdateHolidayTypeSuccessfully";
         public const string MainDepartment = "MainDepartment";
@@ -259,274 +263,6 @@ namespace Dawem.Translations
         public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
         public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
         public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //not translated yet
         
-        public const string SorryYouMustEnterShiftWorkingTimeName = "Sorry!!YouMustEnterShiftWorkingTimeName!";
-        public const string SorryYouMustEnterEmployeeJoiningDate = "Sorry!!YouMustEnterEmployeeJoiningDate!";
-        public const string SorryYouMustEnterShiftWorkingTimeCheckInTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckInTime!";
-        public const string SorryYouMustEnterShiftWorkingTimeCheckOutTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckOutTime!";
-        public const string SorryShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime = "Sorry!!ShiftCheckInTimeCantBeGreaterThanShiftCheckOutTime!";
-        public const string SorryShiftWorkingTimeAllowedMinutesCantBeLessThanZero = "Sorry!!ShiftWorkingTimeAllowedMinutesCantBeLessThanZero!";
-        public const string SorryYouMustEnterShiftWorkingTimeId = "Sorry!!YouMustEnterShiftWorkingTimeId!";
-        public const string SorryShiftWorkingTimeNameIsDuplicated = "Sorry!!ShiftWorkingTimeNameIsDuplicated!";
-        public const string SorryShiftWorkingTimeNotFound = "Sorry!!ShiftWorkingTimeNotFound!";
-        public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
-        public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
-
-
-
-
-
-
-
     }
 }

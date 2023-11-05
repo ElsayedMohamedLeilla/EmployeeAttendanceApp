@@ -38,24 +38,14 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateAssignmentTypeModel model)
         {
-            #region Model Validation
-
-            var createAssignmentTypeModel = new CreateAssignmentTypeModelValidator();
-            var createAssignmentTypeModelResult = createAssignmentTypeModel.Validate(model);
-            if (!createAssignmentTypeModelResult.IsValid)
-            {
-                var error = createAssignmentTypeModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
 
             #endregion
+
             unitOfWork.CreateTransaction();
+
             #region Insert AssignmentType
 
             #region Set AssignmentType code
@@ -86,20 +76,10 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateAssignmentTypeModel model)
         {
-            #region Model Validation
-
-            var updateAssignmentTypeModelValidator = new UpdateAssignmentTypeModelValidator();
-            var updateAssignmentTypeModelValidatorResult = updateAssignmentTypeModelValidator.Validate(model);
-            if (!updateAssignmentTypeModelValidatorResult.IsValid)
-            {
-                var error = updateAssignmentTypeModelValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
-
             #region Business Validation
+
             await departmentBLValidation.UpdateValidation(model);
+
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -132,19 +112,9 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetAssignmentTypesResponse> Get(GetAssignmentTypesCriteria criteria)
         {
-            #region Model Validation
-
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-
-            #endregion
             var departmentRepository = repositoryManager.AssignmentTypeRepository;
             var query = departmentRepository.GetAsQueryable(criteria);
+
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
@@ -173,15 +143,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetAssignmentTypesForDropDownResponse> GetForDropDown(GetAssignmentTypesCriteria criteria)
         {
-            #region Model Validation
-            var getValidator = new GetGenaricValidator();
-            var getValidatorResult = getValidator.Validate(criteria);
-            if (!getValidatorResult.IsValid)
-            {
-                var error = getValidatorResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }
-            #endregion
 
             criteria.IsActive = true;
             var departmentRepository = repositoryManager.AssignmentTypeRepository;

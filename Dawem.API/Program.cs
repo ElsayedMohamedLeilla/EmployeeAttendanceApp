@@ -8,7 +8,6 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.AutoMapper;
-using Dawem.Models.AutoMapper.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository;
@@ -16,12 +15,15 @@ using Dawem.Repository.Manager;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation;
+using Dawem.Validation.FluentValidation.Authentication;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -105,6 +107,13 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
     options.SerializerSettings.Converters.Add(new DateTimeConverter());
+});
+
+builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
+builder.Services.AddFluentValidationAutoValidation(cpnfig =>
+{
+    cpnfig.OverrideDefaultResultFactoryWith<FluentValidationResultFactory>();
+
 });
 
 builder.Services.AddAutoMapper((serviceProvider, config) =>

@@ -230,15 +230,7 @@ namespace Dawem.Translations
         public const string ITSUPPORT = "ITSUPPORT";
 
 
-
-
-
-
-
-
-
         //new
-
         public const string SorryAssignmentTypeNameIsDuplicated = "Sorry!!AssignmentTypeNameIsDuplicated";
         public const string SorryYouMustEnterAssignmentTypeName = "Sorry!!YouMustEnterAssignmentTypeName";
         public const string SorryYouMustEnterAssignmentTypeId = "Sorry!!YouMustEnterAssignmentTypeId";
@@ -263,13 +255,7 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
-        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-
-       
-
-
-        
-        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
+        public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";  
         public const string SorryWeekAttendanceNameIsDuplicated = "Sorry!!WeekAttendanceNameIsDuplicated!";
         public const string SorryYouMustEnterWeekAttendanceName = "Sorry!!YouMustEnterWeekAttendanceName!";
         public const string SorryYouMustEnterWeekShifts = "Sorry!!YouMustEnterWeekShifts!";

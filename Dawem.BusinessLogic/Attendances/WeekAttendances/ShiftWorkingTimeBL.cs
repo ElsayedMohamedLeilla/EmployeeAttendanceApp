@@ -108,6 +108,10 @@ namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
             #region Update ShiftWorkingTime
             var getShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetByIdAsync(model.Id);
             getShiftWorkingTime.Name = model.Name;
+            getShiftWorkingTime.AllowedMinutes = model.AllowedMinutes;
+            getShiftWorkingTime.CheckInTime = model.CheckInTime;
+            getShiftWorkingTime.CheckOutTime = model.CheckOutTime;
+            getShiftWorkingTime.TimePeriod = model.TimePeriod;
             getShiftWorkingTime.IsActive = model.IsActive;
             getShiftWorkingTime.ModifiedDate = DateTime.UtcNow;
             getShiftWorkingTime.ModifyUserId = requestInfo.UserId;

@@ -114,6 +114,21 @@ namespace Dawem.Data
                 .HasForeignKey(p => p.WeekAttendanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<ShiftWorkingTime>()
+           .Property(e => e.CheckInTime)
+           .HasConversion(
+               v => v.ToTimeSpan(),     // Convert TimeOnly to TimeSpan when saving to the database
+               v => TimeOnly.FromTimeSpan(v)  // Convert TimeSpan to TimeOnly when reading from the database
+           );
+            builder.Entity<ShiftWorkingTime>()
+          .Property(e => e.CheckOutTime)
+          .HasConversion(
+              v => v.ToTimeSpan(),     // Convert TimeOnly to TimeSpan when saving to the database
+              v => TimeOnly.FromTimeSpan(v)  // Convert TimeSpan to TimeOnly when reading from the database
+          );
+
+            base.OnModelCreating(builder);
+
         }
         public DbSet<WeekAttendance> WeekAttendances { get; set; }
         public DbSet<WeekAttendanceShift> WeekAttendanceShifts { get; set; }

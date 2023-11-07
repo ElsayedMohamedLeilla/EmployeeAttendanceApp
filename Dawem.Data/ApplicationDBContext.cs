@@ -127,8 +127,6 @@ namespace Dawem.Data
               v => TimeOnly.FromTimeSpan(v)  // Convert TimeSpan to TimeOnly when reading from the database
           );
 
-            base.OnModelCreating(builder);
-
         }
         public DbSet<WeekAttendance> WeekAttendances { get; set; }
         public DbSet<WeekAttendanceShift> WeekAttendanceShifts { get; set; }

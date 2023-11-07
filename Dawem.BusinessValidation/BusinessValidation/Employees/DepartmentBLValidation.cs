@@ -28,6 +28,13 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNameIsDuplicated);
             }
 
+            var checkDepartmentParent = await repositoryManager
+                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
+            if (!checkDepartmentParent)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);
+            }
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateDepartmentModel model)
@@ -38,6 +45,18 @@ namespace Dawem.Validation.BusinessValidation.Employees
             if (checkDepartmentDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNameIsDuplicated);
+            }
+
+            var checkDepartmentParent = await repositoryManager
+                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
+            if (!checkDepartmentParent)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);
+            }
+
+            if (model.Id == model.ParentId)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryParentDepartmentMustNotEqualToCurrentDepartment);
             }
 
             return true;

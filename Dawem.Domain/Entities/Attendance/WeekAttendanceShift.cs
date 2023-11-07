@@ -13,7 +13,10 @@ namespace Dawem.Domain.Entities.Attendance
         public int WeekAttendanceId { get; set; }
         [ForeignKey(nameof(WeekAttendanceId))]
         public WeekAttendance WeekAttendance { get; set; }
+
         public int? ShiftId { get; set; }
+        [ForeignKey(nameof(ShiftId))]
+        public ShiftWorkingTime Shift { get; set; }
 
         #endregion
         public WeekDays WeekDay { get; set; }

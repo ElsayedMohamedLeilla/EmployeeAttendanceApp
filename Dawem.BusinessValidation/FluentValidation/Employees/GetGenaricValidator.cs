@@ -9,7 +9,10 @@ namespace Dawem.Validation.FluentValidation.Employees
         public GetGenaricValidator()
         {
             RuleFor(model => model).Must(m => m.PagingEnabled && m.PageSize < 20).
-                    WithMessage(LeillaKeys.SorryYouMustEnterPaginationSettings);
+                    WithMessage(LeillaKeys.SorryYouMustEnablePagination);
+
+            RuleFor(model => model).Must(m => m.PageSize <= 5).
+                    WithMessage(LeillaKeys.SorryPageSizeMustLessThanOrEqual5);
         }
     }
 }

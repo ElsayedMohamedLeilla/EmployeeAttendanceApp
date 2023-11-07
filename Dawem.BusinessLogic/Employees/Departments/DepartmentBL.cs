@@ -89,6 +89,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             if (getDepartment != null)
             {
                 getDepartment.Name = model.Name;
+                getDepartment.ParentId = model.ParentId;
                 getDepartment.IsActive = model.IsActive;
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;

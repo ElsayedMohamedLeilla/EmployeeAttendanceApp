@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231106231920_Reset")]
+    partial class Reset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,8 +182,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ShiftId");
 
                     b.HasIndex("WeekAttendanceId");
 
@@ -1449,18 +1450,11 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Attendance.WeekAttendanceShift", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Attendance.ShiftWorkingTime", "Shift")
-                        .WithMany()
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Dawem.Domain.Entities.Attendance.WeekAttendance", "WeekAttendance")
                         .WithMany("WeekAttendanceShifts")
                         .HasForeignKey("WeekAttendanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Shift");
 
                     b.Navigation("WeekAttendance");
                 });

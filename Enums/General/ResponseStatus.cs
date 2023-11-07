@@ -7,7 +7,7 @@
         ValidationError,
         NotFound,
         BadRequest,
-        Unauthorized,
+        UnAuthorized,
         Forbidden,
         InternalServerError,
         ActionNotAllowed,

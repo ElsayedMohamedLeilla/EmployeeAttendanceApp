@@ -4,108 +4,82 @@ using Dawem.Enums.General;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response;
+using Dawem.Models.Generic;
 using Dawem.Translations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Net;
 
 namespace Dawem.API.MiddleWares
 {
     public class ExceptionHandlerMiddleware
     {
-        private const string JsonContentType = LeillaKeys.ApplicationJson;
         private readonly RequestDelegate _request;
-
         public ExceptionHandlerMiddleware(RequestDelegate next)
         {
             _request = next;
         }
         public Task Invoke(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
-
-        async Task InvokeAsync(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork)
+        async Task InvokeAsync(HttpContext context, RequestInfo requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
-            var response = new ExecutionResponse<object>();
+
+            var response = new ErrorResponse();
             int statusCode = 500;
 
             try
             {
-
                 await _request(context);
             }
             catch (BusinessValidationException ex)
             {
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
-                response = new ExecutionResponse<object>
-                {
-                    Result = null,
-                    State = ResponseStatus.ValidationError,
-                    MessageCode = ex.MessageCode,
-                    Message = !string.IsNullOrEmpty(ex.Message) &&
-                           !string.IsNullOrWhiteSpace(ex.Message) ?
-                           ex.Message : TranslationHelper.GetTranslation(ex.MessageCode,
-                           userContext?.Lang)
-                };
+                response.State = ResponseStatus.ValidationError;
+                response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
+                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
                 await Return(unitOfWork, context, statusCode, response);
             }
             catch (ActionNotAllowedValidationError ex)
             {
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
-                response = new ExecutionResponse<object>
-                {
-                    Result = null,
-                    State = ResponseStatus.ActionNotAllowed,
-                    MessageCode = ex.MessageCode,
-                    Message = !string.IsNullOrEmpty(ex.Message) &&
-                           !string.IsNullOrWhiteSpace(ex.Message) ?
-                           ex.Message : TranslationHelper.GetTranslation(ex.MessageCode,
-                           userContext?.Lang)
-                };
+                response.State = ResponseStatus.ActionNotAllowed;
+                response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
+                                TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
                 await Return(unitOfWork, context, statusCode, response);
             }
             catch (UnAuthorizedException ex)
             {
                 statusCode = (int)HttpStatusCode.Unauthorized;
-                response = new ExecutionResponse<object>
-                {
-                    Message = ex.Message ?? LeillaKeys.UnAuthorized
-                };
+                response.State = ResponseStatus.UnAuthorized;
+                response.Message = string.IsNullOrEmpty(ex.Message) ? LeillaKeys.UnAuthorized : ex.Message;
                 await Return(unitOfWork, context, statusCode, response);
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
             }
             catch (NotRegisteredUserException)
             {
                 statusCode = (int)HttpStatusCode.OK;
-                response = new ExecutionResponse<object>
-                {
-                    Result = null,
-                    State = ResponseStatus.NotRegisteredUser,
-                    Message = LeillaKeys.RedirectToRegister
-                };
+                response.State = ResponseStatus.NotRegisteredUser;
+                response.Message = LeillaKeys.RedirectToRegister;
                 await Return(unitOfWork, context, statusCode, response);
 
             }
             catch (Exception exception)
             {
                 statusCode = (int)HttpStatusCode.InternalServerError;
-                response = new ExecutionResponse<object>
-                {
-                    Result = null,
-                    State = ResponseStatus.Error,
-                    Message = exception.Message,
-                    Exception = exception
-                };
+                response.State = ResponseStatus.Error;
+                response.Message = exception.Message;
                 await Return(unitOfWork, context, statusCode, response);
             }
         }
-
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ExecutionResponse<object> response)
+        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = LeillaKeys.ApplicationJson;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
         }
-
-
     }
 }

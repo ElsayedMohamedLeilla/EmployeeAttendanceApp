@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.WeekAttendances
                     WeekShifts = weekAttendance.WeekAttendanceShifts.Select(weekShift => new WeekAttendanceShiftTextModel
                     {
                         WeekDayName = TranslationHelper.GetTranslation(weekShift.WeekDay.ToString(), requestInfo.Lang),
-                        ShiftName = "Temp Shift"
+                        ShiftName = weekShift.Shift != null ? weekShift.Shift.Name : null
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryWeekAttendanceNotFound);
 
@@ -247,4 +247,3 @@ namespace Dawem.BusinessLogic.WeekAttendances
         }
     }
 }
-

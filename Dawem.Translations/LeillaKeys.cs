@@ -169,6 +169,8 @@ namespace Dawem.Translations
         public const string SorryYouMustChooseDepartment = "Sorry!!YouMustChooseDepartment!";
         public const string SorryYouMustEnterEmployeeName = "Sorry!!YouMustEnterEmployeeName!";
         public const string SorryYouMustEnterPaginationSettings = "Sorry!!YouMustEnterPaginationSettings!";
+        public const string SorryYouMustEnablePagination = "Sorry!!YouMustEnablePagination!";
+        public const string SorryPageSizeMustLessThanOrEqual5 = "Sorry!!PageSizeMustLessThanOrEqual5!";
         public const string SorryYouMustEnterCompanyId = "SorryYouMustEnterCompanyId!";
         public const string SorryEmployeeNameIsDuplicated = "Sorry!!EmployeeNameIsDuplicated!";
         public const string SorryYouMustEnterEmployeeId = "Sorry!!YouMustEnterEmployeeId!";
@@ -258,8 +260,9 @@ namespace Dawem.Translations
         public const string SorryWeekAttendanceNotFound = "Sorry!!WeekAttendanceNotFound!";
         public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
         public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
-        public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
-        //not translated yet
+        public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";       
+        public const string SorryYouMustSelectValidParent = "Sorry!!YouMustSelectValidParent!";
+        public const string SorryParentDepartmentMustNotEqualToCurrentDepartment = "Sorry!!ParentDepartmentMustNotEqualToCurrentDepartment!";       
         public const string SorryYouMustEnterShiftWorkingTimeName = "Sorry!!YouMustEnterShiftWorkingTimeName!";
         public const string SorryYouMustEnterEmployeeJoiningDate = "Sorry!!YouMustEnterEmployeeJoiningDate!";
         public const string SorryYouMustEnterShiftWorkingTimeCheckInTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckInTime!";
@@ -271,5 +274,9 @@ namespace Dawem.Translations
         public const string SorryShiftWorkingTimeNotFound = "Sorry!!ShiftWorkingTimeNotFound!";
         public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
         public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
+        public const string SorryYouAreForbiddenToAccessRequestedData = "Sorry!!YouAreForbiddenToAccessRequestedData!";
+        public const string SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword = "Sorry!!YourAccessDataIsIncorrect.PleaseCheckYourUserNameAndPassword!";
+
+
     }
 }

@@ -32,8 +32,6 @@ string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.D
 string AllowSpecificOrigins = LeillaKeys.AllowSpecificOrigins;
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
-//builder.Services.AddControllers().AddJsonOptions(options =>
-//                options.JsonSerializerOptions.Converters.Add(new IntToStringConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 Serilog.Core.Logger logger = new LoggerConfiguration()
@@ -78,7 +76,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Default SignIn settings.
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 });
@@ -167,6 +164,7 @@ RequestLocalizationOptions requestLocalizationOptions = new()
     SupportedCultures = supportedCultures,
     SupportedUICultures = supportedCultures
 };
+app.UseMiddleware<UnauthorizedMessageHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization(requestLocalizationOptions);

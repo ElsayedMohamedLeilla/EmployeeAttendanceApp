@@ -275,8 +275,10 @@ namespace Dawem.Translations
         public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
         public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
         public const string SorryYouAreForbiddenToAccessRequestedData = "Sorry!!YouAreForbiddenToAccessRequestedData!";
-        public const string SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword = "Sorry!!YourAccessDataIsIncorrect.PleaseCheckYourUserNameAndPassword!";
-
-
+        public const string SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword = "Sorry!!YourAccessDataIsIncorrect.PleaseCheckYourUserNameAndPassword!";       
+        public const string SorryYouMustEnterAttendanceType = "Sorry!!YouMustEnterAttendanceType!";
+        public const string FullAttendance = "FullAttendance";
+        public const string PartialAttendance = "PartialAttendance";
+        public const string FreeOrShiftAttendance = "FreeOrShiftAttendance";
     }
 }

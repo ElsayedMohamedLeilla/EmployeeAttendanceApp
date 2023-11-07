@@ -15,6 +15,9 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeJoiningDate);
 
+            RuleFor(model => model.AttendanceType).NotNull().
+                   WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);
+
             RuleFor(model => model.ProfileImageFile)
                   .Must(file => file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
                   .When(file => file != null)

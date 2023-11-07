@@ -11,8 +11,6 @@ namespace Dawem.API.Controllers.General
     public class GeneralController : BaseController
     {
         private readonly IGeneralBL generalBL;
-
-
         public GeneralController(IGeneralBL _generalBL)
         {
             generalBL = _generalBL;

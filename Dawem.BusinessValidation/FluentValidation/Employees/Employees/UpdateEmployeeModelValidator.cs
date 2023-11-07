@@ -12,6 +12,8 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                     WithMessage(LeillaKeys.SorryYouMustEnterEmployeeId);
             RuleFor(model => model.DepartmentId).GreaterThan(0).
                     WithMessage(LeillaKeys.SorryYouMustChooseDepartment);
+            RuleFor(model => model.AttendanceType).NotNull().
+                   WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).

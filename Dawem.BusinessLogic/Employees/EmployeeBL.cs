@@ -125,6 +125,9 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.JoiningDate = model.JoiningDate;
             getEmployee.ModifiedDate = DateTime.Now;
             getEmployee.ModifyUserId = requestInfo.UserId;
+            getEmployee.AttendanceType = model.AttendanceType;
+            getEmployee.JobTitleId = model.JobTitleId;
+            getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;          
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();
@@ -228,6 +231,9 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
+                    AnnualVacationBalance = e.AnnualVacationBalance,
+                    JobTitleName = e.JobTitleId.ToString(),
+                    AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
@@ -244,6 +250,9 @@ namespace Dawem.BusinessLogic.Employees
                     DepartmentId = e.DepartmentId,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
+                    AnnualVacationBalance = e.AnnualVacationBalance,
+                    JobTitleId = e.JobTitleId,
+                    AttendanceType = e.AttendanceType,
                     ProfileImageName = e.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);

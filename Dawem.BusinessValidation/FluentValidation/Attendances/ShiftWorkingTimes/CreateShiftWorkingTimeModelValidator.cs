@@ -9,7 +9,6 @@ namespace Dawem.Validation.FluentValidation.Core.ShiftWorkingTimes
     {
         public CreateShiftWorkingTimeModelValidator()
         {
-
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterShiftWorkingTimeName);
 

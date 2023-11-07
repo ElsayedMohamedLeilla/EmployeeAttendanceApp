@@ -28,7 +28,7 @@ namespace Dawem.API.MiddleWares
 
             try
             {
-                await _request(context);
+                await _request.Invoke(context);
             }
             catch (BusinessValidationException ex)
             {

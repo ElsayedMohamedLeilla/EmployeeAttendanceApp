@@ -7,7 +7,7 @@ namespace Dawem.API.Controllers.General
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles =LeillaKeys.NURSE)]
+    [Authorize]
     public class GeneralController : BaseController
     {
         private readonly IGeneralBL generalBL;

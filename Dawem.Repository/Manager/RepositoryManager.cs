@@ -55,8 +55,8 @@ namespace Dawem.Repository.Manager
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
 
-        private IWeekAttendanceRepository weekAttendanceRepository;
-        private IWeekAttendanceShiftRepository weekAttendanceShiftRepository;
+        private IScheduleRepository weekAttendanceRepository;
+        private IScheduleDayRepository weekAttendanceShiftRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
 
 
@@ -118,10 +118,10 @@ namespace Dawem.Repository.Manager
 
 
 
-        public IWeekAttendanceRepository WeekAttendanceRepository =>
-        weekAttendanceRepository ??= new WeekAttendanceRepository(unitOfWork, generalSetting);
-        public IWeekAttendanceShiftRepository WeekAttendanceShiftRepository =>
-        weekAttendanceShiftRepository ??= new WeekAttendanceShiftRepository(unitOfWork, generalSetting);
+        public IScheduleRepository ScheduleRepository =>
+        weekAttendanceRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
+        public IScheduleDayRepository ScheduleDayRepository =>
+        weekAttendanceShiftRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
 
     }
 }

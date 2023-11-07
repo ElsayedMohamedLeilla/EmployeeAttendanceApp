@@ -34,8 +34,8 @@ namespace Dawem.Contract.Repository.Manager
         IHolidayTypeRepository HolidayTypeRepository { get; }
 
 
-        IWeekAttendanceRepository WeekAttendanceRepository { get; }
-        IWeekAttendanceShiftRepository WeekAttendanceShiftRepository { get; }
+        IScheduleRepository ScheduleRepository { get; }
+        IScheduleDayRepository ScheduleDayRepository { get; }
 
         IRoleRepository RoleRepository { get; }
         IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }

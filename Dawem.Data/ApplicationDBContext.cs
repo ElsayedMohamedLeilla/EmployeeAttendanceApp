@@ -108,10 +108,10 @@ namespace Dawem.Data
             .IsRequired();
 
 
-            builder.Entity<WeekAttendanceShift>()
-                .HasOne(p => p.WeekAttendance)
-                .WithMany(b => b.WeekAttendanceShifts)
-                .HasForeignKey(p => p.WeekAttendanceId)
+            builder.Entity<ScheduleDay>()
+                .HasOne(p => p.Schedule)
+                .WithMany(b => b.ScheduleDays)
+                .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<ShiftWorkingTime>()
@@ -128,8 +128,8 @@ namespace Dawem.Data
           );
 
         }
-        public DbSet<WeekAttendance> WeekAttendances { get; set; }
-        public DbSet<WeekAttendanceShift> WeekAttendanceShifts { get; set; }
+        public DbSet<Schedule> WeekAttendances { get; set; }
+        public DbSet<ScheduleDay> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }

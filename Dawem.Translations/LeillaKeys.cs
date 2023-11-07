@@ -250,16 +250,19 @@ namespace Dawem.Translations
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-        public const string SorryWeekAttendanceNameIsDuplicated = "Sorry!!WeekAttendanceNameIsDuplicated!";
-        public const string SorryYouMustEnterWeekAttendanceName = "Sorry!!YouMustEnterWeekAttendanceName!";
-        public const string SorryYouMustEnterWeekShifts = "Sorry!!YouMustEnterWeekShifts!";
-        public const string SorryYouMustEnterAll7WeekDaysInWeekShifts = "Sorry!!YouMustEnterAll7WeekDaysInWeekShifts!";
+        
+        public const string SorryScheduleNameIsDuplicated = "Sorry!!ScheduleNameIsDuplicated!";
+        public const string SorryYouMustEnterScheduleName = "Sorry!!YouMustEnterScheduleName!";
+        public const string SorryScheduleNotFound = "Sorry!!ScheduleNotFound!";
+        public const string DoneCreateScheduleSuccessfully = "DoneCreateScheduleSuccessfully";
+        public const string DoneUpdateScheduleSuccessfully = "DoneUpdateScheduleSuccessfully";
+        public const string SorryYouMustEnterSchedules = "Sorry!!YouMustEnterSchedules!";
+        public const string SorryYouMustEnterScheduleDays = "Sorry!!YouMustEnterScheduleDays!";
+        public const string SorryYouMustEnterAll7WeekDaysInScheduleDays = "Sorry!!YouMustEnterAll7WeekDaysInScheduleDays!";
+
         public const string SorryYouMustEnterValidWeekDay = "Sorry!!YouMustEnterValidWeekDay!";
         public const string SorryYouMustChooseValidShift = "Sorry!!YouChooseValidShift!";
-        public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";
-        public const string SorryWeekAttendanceNotFound = "Sorry!!WeekAttendanceNotFound!";
-        public const string DoneCreateWeekAttendanceSuccessfully = "DoneCreateWeekAttendanceSuccessfully";
-        public const string DoneUpdateWeekAttendanceSuccessfully = "DoneUpdateWeekAttendanceSuccessfully";
+        public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";      
         public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";       
         public const string SorryYouMustSelectValidParent = "Sorry!!YouMustSelectValidParent!";
         public const string SorryParentDepartmentMustNotEqualToCurrentDepartment = "Sorry!!ParentDepartmentMustNotEqualToCurrentDepartment!";       

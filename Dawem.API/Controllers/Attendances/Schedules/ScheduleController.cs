@@ -1,0 +1,95 @@
+﻿using Dawem.Contract.BusinessLogic.WeekAttendances;
+using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Translations;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Dawem.API.Controllers.Schedules
+{
+    [Route(LeillaKeys.ApiControllerAction)]
+    [ApiController]
+    [Authorize]
+    public class ScheduleController : BaseController
+    {
+        private readonly IScheduleBL scheduleBL;
+
+
+        public ScheduleController(IScheduleBL _scheduleBL)
+        {
+            scheduleBL = _scheduleBL;
+        }
+
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> Create(CreateScheduleModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await scheduleBL.Create(model);
+            return Success(result, messageCode: LeillaKeys.DoneCreateScheduleSuccessfully);
+        }
+
+        [HttpPut, DisableRequestSizeLimit]
+        public async Task<ActionResult> Update(UpdateScheduleModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            var result = await scheduleBL.Update(model);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateScheduleSuccessfully);
+        }
+        [HttpGet]
+        public async Task<ActionResult> Get([FromQuery] GetSchedulesCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var schedulesresponse = await scheduleBL.Get(criteria);
+
+            return Success(schedulesresponse.Schedules, schedulesresponse.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetSchedulesCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var schedulesresponse = await scheduleBL.GetForDropDown(criteria);
+
+            return Success(schedulesresponse.Schedules, schedulesresponse.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetInfo([FromQuery] int scheduleId)
+        {
+            if (scheduleId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await scheduleBL.GetInfo(scheduleId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetById([FromQuery] int scheduleId)
+        {
+            if (scheduleId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await scheduleBL.GetById(scheduleId));
+        }
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int scheduleId)
+        {
+            if (scheduleId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await scheduleBL.Delete(scheduleId));
+        }
+
+    }
+}

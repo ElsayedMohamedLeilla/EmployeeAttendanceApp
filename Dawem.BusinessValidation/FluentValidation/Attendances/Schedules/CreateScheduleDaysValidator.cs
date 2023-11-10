@@ -12,7 +12,7 @@ namespace Dawem.Validation.FluentValidation.Attendances.Schedules
             var weekDaysList = Enum.GetValues(typeof(WeekDay)).Cast<WeekDay>().ToList();
 
             RuleFor(model => model.WeekDay)
-                .Must(weekDaysList.Contains)
+                .IsInEnum()
                 .WithMessage(LeillaKeys.SorryYouMustEnterValidWeekDay);
 
             RuleFor(model => model.ShiftId)

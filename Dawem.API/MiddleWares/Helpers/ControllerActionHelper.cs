@@ -1,7 +1,6 @@
 ﻿using Dawem.API.Controllers.Employees;
 using Dawem.API.Controllers.Others;
 using Dawem.API.Controllers.Provider;
-using Dawem.API.Controllers.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Models.Response.Others;
 

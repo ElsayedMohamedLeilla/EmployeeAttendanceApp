@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dawem.Models.Response.Core.ShiftWorkingTimes
+namespace Dawem.Models.Response.Employees.Attendances.ShiftWorkingTimes
 {
     public class GetShiftWorkingTimeByIdResponseDTO
     {

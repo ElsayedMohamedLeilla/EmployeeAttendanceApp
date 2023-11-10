@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Employees.Attendance;
 
 namespace Dawem.Models.Response.Employees.Attendances.WeeksAttendances
 {

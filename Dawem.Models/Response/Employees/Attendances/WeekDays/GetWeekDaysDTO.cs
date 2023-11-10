@@ -1,10 +1,10 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Employees.Attendances.WeeksAttendances
+namespace Dawem.Models.Response.Employees.Attendances.WeekDays
 {
     public class GetWeekDaysDTO
     {
-        public WeekDays WeekDay { get; set; }
+        public WeekDay WeekDay { get; set; }
         public string Name { get; set; }
     }
 }

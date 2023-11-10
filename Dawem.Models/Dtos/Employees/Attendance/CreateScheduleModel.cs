@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.Employees
+﻿namespace Dawem.Models.Dtos.Employees.Attendance
 {
     public class CreateScheduleModel
     {

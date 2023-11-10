@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidation.Attendances.Schedules;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Attendance;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.WeekAttendances
+namespace Dawem.Validation.BusinessValidation.Attendances.Schedule
 {
 
     public class ScheduleBLValidation : IScheduleBLValidation

@@ -283,5 +283,11 @@ namespace Dawem.Translations
         public const string FullAttendance = "FullAttendance";
         public const string PartialAttendance = "PartialAttendance";
         public const string FreeOrShiftAttendance = "FreeOrShiftAttendance";
+        public const string SorryJobTitleNameIsDuplicated = "Sorry!!JobTitleNameIsDuplicated!";
+        public const string SorryYouMustEnterJobTitleName = "Sorry!!YouMustEnterJobTitleName!";
+        public const string SorryYouMustEnterJobTitleId = "Sorry!!YouMustEnterJobTitleId!";
+        public const string SorryJobTitleNotFound = "Sorry!!JobTitleNotFound!";
+        public const string DoneCreateJobTitleSuccessfully = "DoneCreateJobTitleSuccessfully";
+        public const string DoneUpdateJobTitleSuccessfully = "DoneUpdateJobTitleSuccessfully";
     }
 }

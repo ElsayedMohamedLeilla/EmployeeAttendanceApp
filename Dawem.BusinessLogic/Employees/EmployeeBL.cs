@@ -232,7 +232,7 @@ namespace Dawem.BusinessLogic.Employees
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
                     AnnualVacationBalance = e.AnnualVacationBalance,
-                    JobTitleName = e.JobTitleId.ToString(),
+                    JobTitleName = e.JobTitle.Name,
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);

@@ -1,6 +1,4 @@
-﻿
-
-namespace Dawem.Enums.General
+﻿namespace Dawem.Enums.Generals
 {
     public enum AmPm
     {

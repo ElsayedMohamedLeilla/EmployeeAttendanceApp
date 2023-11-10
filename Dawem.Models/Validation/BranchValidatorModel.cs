@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Provider;
 
 namespace Dawem.Models.Validation

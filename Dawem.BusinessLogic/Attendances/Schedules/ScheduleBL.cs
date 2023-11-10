@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.WeekAttendances;
-using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.BusinessLogic.Attendances.Schedules;
+using Dawem.Contract.BusinessValidation.Attendances.Schedules;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendance;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Attendance;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Schedules
+namespace Dawem.BusinessLogic.Attendances.Schedules
 {
     public class ScheduleBL : IScheduleBL
     {

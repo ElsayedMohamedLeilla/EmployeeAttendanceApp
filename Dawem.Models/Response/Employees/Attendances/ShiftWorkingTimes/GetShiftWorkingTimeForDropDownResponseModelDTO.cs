@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Core.ShiftWorkingTimes
+﻿namespace Dawem.Models.Response.Employees.Attendances.ShiftWorkingTimes
 {
     public class GetShiftWorkingTimeForDropDownResponseModelDTO
     {

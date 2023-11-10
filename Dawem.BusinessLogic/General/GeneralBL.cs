@@ -1,8 +1,8 @@
-﻿using Dawem.Contract.BusinessLogic.Employees.Department;
-using Dawem.Enums.General;
+﻿using Dawem.Contract.BusinessLogic.General;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
+using Dawem.Models.Response.Employees.Attendances.WeekDays;
 
 namespace Dawem.BusinessLogic.General
 {
@@ -15,7 +15,7 @@ namespace Dawem.BusinessLogic.General
         }
         public List<GetWeekDaysDTO> GetWeekDays()
         {
-            var weekDaysList = Enum.GetValues(typeof(WeekDays)).Cast<WeekDays>().ToList();
+            var weekDaysList = Enum.GetValues(typeof(WeekDay)).Cast<WeekDay>().ToList();
             var result = new List<GetWeekDaysDTO>();
 
             foreach (var weekDay in weekDaysList)

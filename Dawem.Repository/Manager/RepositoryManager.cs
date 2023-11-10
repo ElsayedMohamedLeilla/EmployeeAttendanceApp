@@ -1,5 +1,4 @@
-﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
-using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -12,8 +11,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
-using Dawem.Repository.Attendances.ShiftWorkingTimes;
-using Dawem.Repository.Attendances.WeekAttendances;
+using Dawem.Repository.Attendances.Schedules;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -49,6 +47,8 @@ namespace Dawem.Repository.Manager
         private IDepartmentRepository departmentRepository;
         private IAssignmentTypeRepository assignmentTypeRepository;
         private ITaskTypeRepository taskTypeRepository;
+        private IJobTitleRepository jobTitleRepository;
+
         private IHolidayTypeRepository holidayTypeRepository;
         private IJustificationsTypeRepository justificationsTypeRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
@@ -97,6 +97,9 @@ namespace Dawem.Repository.Manager
         assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting);
         public ITaskTypeRepository TaskTypeRepository =>
         taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting);
+
+        public IJobTitleRepository JobTitleRepository =>
+        jobTitleRepository ??= new JobTitleRepository(unitOfWork, generalSetting);
         public IHolidayTypeRepository HolidayTypeRepository =>
         holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
 

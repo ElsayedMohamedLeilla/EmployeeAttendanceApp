@@ -1,11 +1,11 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Employees.Employees
+namespace Dawem.Models.Dtos.Employees.Attendance
 {
     public class ScheduleDayUpdateModel
     {
         public int Id { get; set; }
-        public WeekDays WeekDay { get; set; }
+        public WeekDay WeekDay { get; set; }
         public int? ShiftId { get; set; }
     }
 }

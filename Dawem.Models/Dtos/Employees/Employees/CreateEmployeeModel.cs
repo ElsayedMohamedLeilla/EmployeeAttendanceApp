@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 using Microsoft.AspNetCore.Http;
 
 namespace Dawem.Models.Dtos.Employees.Employees

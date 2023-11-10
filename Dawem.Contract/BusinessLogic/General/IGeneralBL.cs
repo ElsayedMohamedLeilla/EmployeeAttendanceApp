@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
+﻿using Dawem.Models.Response.Employees.Attendances.WeekDays;
 
-namespace Dawem.Contract.BusinessLogic.Employees.Department
+namespace Dawem.Contract.BusinessLogic.General
 {
     public interface IGeneralBL
     {

@@ -1,6 +1,6 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
 using Dawem.Contract.BusinessLogic.Others;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;

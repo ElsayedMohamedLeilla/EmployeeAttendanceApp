@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.General;
-
-namespace Dawem.Models.Response.Employees.Employee
+﻿namespace Dawem.Models.Response.Employees.Employee
 {
     public class GetEmployeeInfoResponseModel
     {

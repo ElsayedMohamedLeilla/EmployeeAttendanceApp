@@ -1,7 +1,7 @@
 ﻿using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Provider;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
 
-namespace Dawem.Contract.BusinessValidation.Core
+namespace Dawem.Contract.BusinessValidation.Attendances.ShiftWorkingTimes
 {
     public interface IShiftWorkingTimeBLValidation
     {

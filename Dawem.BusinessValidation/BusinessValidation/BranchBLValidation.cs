@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Manager;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Provider;
 using Dawem.Models.Dtos.Provider;

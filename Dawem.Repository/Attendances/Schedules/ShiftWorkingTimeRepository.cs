@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
+﻿using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -8,7 +8,7 @@ using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Attendances.ShiftWorkingTimes
+namespace Dawem.Repository.Attendances.Schedules
 {
     public class ShiftWorkingTimeRepository : GenericRepository<ShiftWorkingTime>, IShiftWorkingTimeRepository
     {

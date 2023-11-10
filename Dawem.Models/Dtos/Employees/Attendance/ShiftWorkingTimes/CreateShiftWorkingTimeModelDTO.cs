@@ -1,6 +1,6 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Employees.Employees
+namespace Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes
 {
     public class CreateShiftWorkingTimeModelDTO
     {
@@ -10,7 +10,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public TimeOnly CheckInTime { get; set; }
         public TimeOnly CheckOutTime { get; set; }
         public double AllowedMinutes { get; set; }
-        public  bool IsActive { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }

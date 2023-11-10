@@ -1,5 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.UserManagement;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identity;

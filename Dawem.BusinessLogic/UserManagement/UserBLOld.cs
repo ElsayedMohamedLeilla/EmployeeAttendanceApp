@@ -8,7 +8,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;

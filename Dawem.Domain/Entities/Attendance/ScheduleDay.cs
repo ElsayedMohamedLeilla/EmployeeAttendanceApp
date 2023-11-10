@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,7 +18,7 @@ namespace Dawem.Domain.Entities.Attendance
         public ShiftWorkingTime Shift { get; set; }
 
         #endregion
-        public WeekDays WeekDay { get; set; }
+        public WeekDay WeekDay { get; set; }
 
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Dawem.Enums.General
+﻿namespace Dawem.Enums.Generals
 {
-    public enum WeekDays
+    public enum WeekDay
     {
         Sunday = 0,
         Monday = 1,

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Dawem.Translations;
-using Dawem.Enums.General;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.Entities.Provider;
+using Dawem.Enums.Generals;
 
 namespace Dawem.Domain.Entities.Ohters
 {

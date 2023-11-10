@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Employees.Attendance;
 using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
 
-namespace Dawem.Contract.BusinessLogic.WeekAttendances
+namespace Dawem.Contract.BusinessLogic.Attendances.Schedules
 {
     public interface IScheduleBL
     {

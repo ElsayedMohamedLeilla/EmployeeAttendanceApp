@@ -139,7 +139,7 @@ namespace Dawem.Data
         public DbSet<VacationsType> VacationsTypes { get; set; }
         public DbSet<PermissionsType> PermissionsTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
-
+        public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<Translation> Translations { get; set; }

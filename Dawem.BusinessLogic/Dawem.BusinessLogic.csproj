@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UserManagement\" />
+  </ItemGroup>
+
 </Project>

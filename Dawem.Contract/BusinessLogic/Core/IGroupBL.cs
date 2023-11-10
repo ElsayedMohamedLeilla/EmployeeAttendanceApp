@@ -1,18 +1,17 @@
-﻿using Dawem.Domain.Entities.Core;
-using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core;
-using Dawem.Models.Response;
-using Dawem.Models.Response.Core;
+﻿using Dawem.Models.Criteria.Core;
+using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Response.Core.Groups;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
     public interface IGroupBL
     {
-        Task<BaseResponseT<GroupDTO>> GetById(int Id);
-        Task<GetGroupsResponse> Get(GetGroupsCriteria criteria);
-        Task<GetGroupInfoResponse> GetInfo(GetGroupInfoCriteria criteria);
-        Task<BaseResponseT<Group>> Create(Group group);
-        Task<BaseResponseT<bool>> Update(Group group);
-        Task<BaseResponseT<bool>> Delete(int Id);
+        Task<int> Create(CreateGroupDTO model);
+        Task<bool> Update(UpdateGroupDTO model);
+        Task<GetGroupInfoResponseDTO> GetInfo(int GroupId);
+        Task<GetGroupByIdResponseDTO> GetById(int GroupId);
+        Task<GetGroupResponseDTO> Get(GetGroupCriteria model);
+        Task<GetGroupDropDownResponseDTO> GetForDropDown(GetGroupCriteria model);
+        Task<bool> Delete(int GroupId);
     }
 }

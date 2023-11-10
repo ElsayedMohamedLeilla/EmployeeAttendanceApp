@@ -20,7 +20,6 @@ namespace Dawem.Contract.Repository.Manager
         IUserTokenRepository UserTokenRepository { get; }
         IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }
-        IUserGroupRepository UserGroupRepository { get; }
         ITranslationRepository TranslationRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
         IDepartmentRepository DepartmentRepository { get; }
@@ -40,6 +39,8 @@ namespace Dawem.Contract.Repository.Manager
 
         IRoleRepository RoleRepository { get; }
         IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }
+        IGroupRepository GroupRepository { get; }
+
 
     }
 }

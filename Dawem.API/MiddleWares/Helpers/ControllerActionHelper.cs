@@ -30,7 +30,7 @@ namespace Dawem.API.MiddleWares.Helpers
 
                         break;
 
-                   
+
                     case nameof(UserController):
 
                         screen = ApplicationScreenType.UsersScreen;

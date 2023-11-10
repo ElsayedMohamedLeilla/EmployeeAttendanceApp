@@ -72,6 +72,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 0;
+
+    
 });
 
 builder.Services.Configure<IdentityOptions>(options =>

@@ -1,63 +1,83 @@
 ﻿using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Domain.Entities.Core;
 using Dawem.Models.Criteria.Core;
+using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Core
 {
+
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles = LeillaKeys.FullAccess)]
+    [Authorize]
     public class GroupController : BaseController
     {
         private readonly IGroupBL groupBL;
-
-        public GroupController(IGroupBL _groupBL)
+        public GroupController(IGroupBL _GroupBL)
         {
-            groupBL = _groupBL;
+            groupBL = _GroupBL;
+        }
+        [HttpPost]
+        public async Task<ActionResult> Create(CreateGroupDTO model)
+        {
+            var result = await groupBL.Create(model);
+            return Success(result, messageCode: AmgadKeys.DoneCreateGroupSuccessfully);
+        }
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateGroupDTO model)
+        {
+
+            var result = await groupBL.Update(model);
+            return Success(result, messageCode: AmgadKeys.DoneUpdateGroupSuccessfully);
+        }
+        [HttpGet]
+        public async Task<ActionResult> Get([FromQuery] GetGroupCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var result = await groupBL.Get(criteria);
+            return Success(result.Groups, result.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetGroupCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var result = await groupBL.GetForDropDown(criteria);
+            return Success(result.Groups, result.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetInfo([FromQuery] int groupId)
+        {
+            if (groupId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await groupBL.GetInfo(groupId));
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Get(GetGroupsCriteria criteria)
+        [HttpGet]
+        public async Task<ActionResult> GetById([FromQuery] int groupId)
         {
-            return Success(await groupBL.Get(criteria));
+            if (groupId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await groupBL.GetById(groupId));
         }
-
-        [HttpPost]
-        public async Task<ActionResult> GetInfo(GetGroupInfoCriteria criteria)
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int groupId)
         {
-            return Success(await groupBL.GetInfo(criteria));
-        }
-
-
-
-        [HttpPost]
-        public async Task<ActionResult> GetById([FromBody] int id)
-        {
-            return Success(await groupBL.GetById(id));
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult> Create(Group Group)
-        {
-            return Success(await groupBL.Create(Group));
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Update(Group Group)
-        {
-            var result = await groupBL.Update(Group);
-            return Success(result);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Delete([FromBody] int Id)
-        {
-            var result = await groupBL.Delete(Id);
-            return Success(result);
+            if (groupId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await groupBL.Delete(groupId));
         }
 
     }

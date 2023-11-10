@@ -22,7 +22,6 @@ namespace Dawem.Models.Dtos.Identity
         
         public List<string> UserRols { get; set; }
         public List<UserBranch> UserBranches { get; set; }
-        public List<UserGroup> UserGroups { get; set; }
     }
 
 

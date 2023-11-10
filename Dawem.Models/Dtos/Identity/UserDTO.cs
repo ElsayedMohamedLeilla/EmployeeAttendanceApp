@@ -28,7 +28,6 @@ namespace Dawem.Models.Dtos.Identity
         public List<SmartUserRoleDTO>? UserRols { get; set; }
 
         public List<UserBranchDTO>? UserBranches { get; set; }
-        public List<UserGroupDTO?>? UserGroups { get; set; }
 
     }
 

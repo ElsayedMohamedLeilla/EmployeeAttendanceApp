@@ -15,6 +15,7 @@ using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.ShiftWorkingTimes;
 using Dawem.Repository.Attendances.WeekAttendances;
 using Dawem.Repository.Core;
+using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
@@ -43,7 +44,6 @@ namespace Dawem.Repository.Manager
         private ICompanyRepository companyRepository;
         private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
-        private IUserGroupRepository userGroupRepository;
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
         private IDepartmentRepository departmentRepository;
@@ -58,6 +58,7 @@ namespace Dawem.Repository.Manager
         private IScheduleRepository weekAttendanceRepository;
         private IScheduleDayRepository weekAttendanceShiftRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
+        private IGroupRepository groupRepository;
 
 
 
@@ -84,8 +85,7 @@ namespace Dawem.Repository.Manager
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
-        public IUserGroupRepository UserGroupRepository =>
-        userGroupRepository ??= new UserGroupRepository(unitOfWork, generalSetting);
+       
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
@@ -122,6 +122,9 @@ namespace Dawem.Repository.Manager
         weekAttendanceRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
         public IScheduleDayRepository ScheduleDayRepository =>
         weekAttendanceShiftRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
+
+        public IGroupRepository GroupRepository =>
+        groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
 
     }
 }

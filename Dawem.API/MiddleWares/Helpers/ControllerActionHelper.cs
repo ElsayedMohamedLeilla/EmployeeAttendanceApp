@@ -1,7 +1,6 @@
 ﻿using Dawem.API.Controllers.Employees;
 using Dawem.API.Controllers.Others;
 using Dawem.API.Controllers.Provider;
-using Dawem.API.Controllers.UserManagement;
 using Dawem.Enums.General;
 using Dawem.Models.Response.Others;
 
@@ -30,7 +29,7 @@ namespace Dawem.API.MiddleWares.Helpers
 
                         break;
 
-                   
+
                     case nameof(UserController):
 
                         screen = ApplicationScreenType.UsersScreen;

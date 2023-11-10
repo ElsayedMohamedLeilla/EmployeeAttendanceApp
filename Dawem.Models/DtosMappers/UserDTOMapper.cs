@@ -12,7 +12,6 @@ namespace Dawem.Models.DtosMappers
         public static void InitUserContext(RequestInfo _userContext)
         {
             userContext = _userContext;
-            UserGroupDTOMapper.InitUserContext(userContext);
             UserBranchDTOMapper.InitUserContext(userContext);
         }
 
@@ -56,7 +55,6 @@ namespace Dawem.Models.DtosMappers
                 BranchId = user.BranchId ?? 0,
                 AddUserId = user.AddUserId,
                 UserBranches = UserBranchDTOMapper.Map(user.UserBranches),
-                UserGroups = UserGroupDTOMapper.Map(user.UserGroups)
 
             };
             return DTO;

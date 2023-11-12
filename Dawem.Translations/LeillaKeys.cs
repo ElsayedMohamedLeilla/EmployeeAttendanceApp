@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -250,7 +248,7 @@ namespace Dawem.Translations
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-        
+
         public const string SorryScheduleNameIsDuplicated = "Sorry!!ScheduleNameIsDuplicated!";
         public const string SorryYouMustEnterScheduleName = "Sorry!!YouMustEnterScheduleName!";
         public const string SorryScheduleNotFound = "Sorry!!ScheduleNotFound!";
@@ -262,10 +260,10 @@ namespace Dawem.Translations
 
         public const string SorryYouMustEnterValidWeekDay = "Sorry!!YouMustEnterValidWeekDay!";
         public const string SorryYouMustChooseValidShift = "Sorry!!YouChooseValidShift!";
-        public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";      
-        public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";       
+        public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";
+        public const string SorryWeekDayCannotBeRepeated = "Sorry!!WeekDayCannotBeRepeated!";
         public const string SorryYouMustSelectValidParent = "Sorry!!YouMustSelectValidParent!";
-        public const string SorryParentDepartmentMustNotEqualToCurrentDepartment = "Sorry!!ParentDepartmentMustNotEqualToCurrentDepartment!";       
+        public const string SorryParentDepartmentMustNotEqualToCurrentDepartment = "Sorry!!ParentDepartmentMustNotEqualToCurrentDepartment!";
         public const string SorryYouMustEnterShiftWorkingTimeName = "Sorry!!YouMustEnterShiftWorkingTimeName!";
         public const string SorryYouMustEnterEmployeeJoiningDate = "Sorry!!YouMustEnterEmployeeJoiningDate!";
         public const string SorryYouMustEnterShiftWorkingTimeCheckInTime = "Sorry!!YouMustEnterShiftWorkingTimeCheckInTime!";
@@ -278,7 +276,7 @@ namespace Dawem.Translations
         public const string DoneCreateShiftWorkingTimeSuccessfully = "DoneCreateShiftWorkingTimeSuccessfully";
         public const string DoneUpdateShiftWorkingTimeSuccessfully = "DoneUpdateShiftWorkingTimeSuccessfully";
         public const string SorryYouAreForbiddenToAccessRequestedData = "Sorry!!YouAreForbiddenToAccessRequestedData!";
-        public const string SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword = "Sorry!!YourAccessDataIsIncorrect.PleaseCheckYourUserNameAndPassword!";       
+        public const string SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword = "Sorry!!YourAccessDataIsIncorrect.PleaseCheckYourUserNameAndPassword!";
         public const string SorryYouMustEnterAttendanceType = "Sorry!!YouMustEnterAttendanceType!";
         public const string FullAttendance = "FullAttendance";
         public const string PartialAttendance = "PartialAttendance";
@@ -289,5 +287,21 @@ namespace Dawem.Translations
         public const string SorryJobTitleNotFound = "Sorry!!JobTitleNotFound!";
         public const string DoneCreateJobTitleSuccessfully = "DoneCreateJobTitleSuccessfully";
         public const string DoneUpdateJobTitleSuccessfully = "DoneUpdateJobTitleSuccessfully";
+
+
+        public const string SorryYouMustEnterValidSchedulePlanType = "Sorry!!YouMustEnterValidSchedulePlanType!";
+        public const string SorryYouMustChooseEmployeeWhenSchedulePlanTypeIsEmployee = "Sorry!YouMustChooseEmployeeWhenSchedulePlanTypeIsEmployee!";
+        public const string SorryYouMustChooseGroupWhenSchedulePlanTypeIsGroup = "Sorry!!YouMustChooseGroupWhenSchedulePlanTypeIsGroup!";
+        public const string SorryYouMustChooseDepartmentWhenSchedulePlanTypeIsDepartment = "Sorry!!YouMustChooseDepartmentWhenSchedulePlanTypeIsDepartment!";
+        public const string SorryYouMustChooseSchedule = "Sorry!!YouMustChooseSchedule!";
+        public const string SorryYouMustEnterAValidDateFrom = "Sorry!!YouMustEnterAValidDateFrom!";
+        public const string SorryYouMustEnterSchedulePlanId = "Sorry!!YouMustEnterSchedulePlanId!";
+        public const string SorrySchedulePlanIsDuplicatedWithSameDateAndSchedule = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndSchedule!";
+
+        public const string SorryDateFromMustBiggerThanToday = "Sorry!!DateFromMustBiggerThanTodaye!";
+        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";
+        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";
+        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";v
+
     }
 }

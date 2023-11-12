@@ -12,7 +12,6 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.Schedules;
-using Dawem.Repository.Core;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -55,8 +54,15 @@ namespace Dawem.Repository.Manager
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
 
-        private IScheduleRepository weekAttendanceRepository;
-        private IScheduleDayRepository weekAttendanceShiftRepository;
+        private IScheduleRepository scheduleRepository;
+
+        private ISchedulePlanRepository schedulePlanRepository;
+        private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
+        private ISchedulePlanGroupRepository schedulePlanGroupRepository;
+        private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
+
+
+        private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
 
@@ -85,7 +91,7 @@ namespace Dawem.Repository.Manager
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
-       
+
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
@@ -122,12 +128,22 @@ namespace Dawem.Repository.Manager
 
 
         public IScheduleRepository ScheduleRepository =>
-        weekAttendanceRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
+        scheduleRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
         public IScheduleDayRepository ScheduleDayRepository =>
-        weekAttendanceShiftRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
+        scheduleDayRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
 
         public IGroupRepository GroupRepository =>
         groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
+
+        public ISchedulePlanRepository SchedulePlanRepository =>
+         schedulePlanRepository ??= new SchedulePlanRepository(unitOfWork, generalSetting);
+        public ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository =>
+         schedulePlanEmployeeRepository ??= new SchedulePlanEmployeeRepository(unitOfWork, generalSetting);
+        public ISchedulePlanGroupRepository SchedulePlanGroupRepository =>
+        schedulePlanGroupRepository ??= new SchedulePlanGroupRepository(unitOfWork, generalSetting);
+        public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
+        schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
+
 
     }
 }

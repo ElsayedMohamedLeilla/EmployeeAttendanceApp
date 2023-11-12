@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
-using Dawem.Models.Response.Employees.Attendances.ShiftWorkingTimes;
+﻿using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
+using Dawem.Models.Response.Attendances.ShiftWorkingTimes;
 
 namespace Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime
 {

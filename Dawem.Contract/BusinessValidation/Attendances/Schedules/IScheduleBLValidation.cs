@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Attendance;
+﻿using Dawem.Models.Dtos.Attendances.Schedules;
 
 namespace Dawem.Contract.BusinessValidation.Attendances.Schedules
 {

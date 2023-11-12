@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.Attendance;
-using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
+﻿using Dawem.Models.Dtos.Attendances.Schedules;
+using Dawem.Models.Response.Attendances.Schedules;
 
 namespace Dawem.Contract.BusinessLogic.Attendances.Schedules
 {

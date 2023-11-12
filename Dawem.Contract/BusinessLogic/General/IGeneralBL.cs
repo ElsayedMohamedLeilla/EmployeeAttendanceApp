@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Response.Employees.Attendances.WeekDays;
+﻿using Dawem.Models.Response.Attendances.WeekDays;
 
 namespace Dawem.Contract.BusinessLogic.General
 {

@@ -1,5 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Attendances.Schedules;
-using Dawem.Models.Dtos.Employees.Attendance;
+using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

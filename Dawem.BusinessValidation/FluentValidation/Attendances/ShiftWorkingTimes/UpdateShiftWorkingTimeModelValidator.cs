@@ -1,7 +1,7 @@
 ﻿using Dawem.Translations;
 using FluentValidation;
 using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 
 namespace Dawem.Validation.FluentValidation.Attendances.ShiftWorkingTimes
 {

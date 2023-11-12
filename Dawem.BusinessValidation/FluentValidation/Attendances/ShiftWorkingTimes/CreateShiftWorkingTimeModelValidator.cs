@@ -1,5 +1,5 @@
 ﻿using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
 using FluentValidation;
 

@@ -1,7 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.Attendances.Schedules;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Attendance;
+using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

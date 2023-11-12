@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Attendance;
-using Dawem.Models.Dtos.Employees.Attendance;
+using Dawem.Models.Dtos.Attendances.Schedules;
 
 namespace Dawem.Contract.Repository.Attendances.Schedules
 {

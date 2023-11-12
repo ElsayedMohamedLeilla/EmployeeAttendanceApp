@@ -1,7 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.Attendances.ShiftWorkingTimes;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

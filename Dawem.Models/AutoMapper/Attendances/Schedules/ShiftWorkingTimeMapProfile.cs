@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Attendance;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 
 namespace Dawem.Models.AutoMapper.Attendances.Schedules
 {

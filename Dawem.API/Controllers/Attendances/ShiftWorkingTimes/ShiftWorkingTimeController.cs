@@ -1,5 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

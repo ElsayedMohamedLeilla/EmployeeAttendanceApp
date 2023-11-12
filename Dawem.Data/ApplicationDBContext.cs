@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Emit;
 
 namespace Dawem.Data
 {
@@ -113,6 +112,22 @@ namespace Dawem.Data
                 .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+            builder.Entity<SchedulePlanEmployee>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanEmployee)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SchedulePlanGroup>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanGroup)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SchedulePlanDepartment>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanDepartment)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<ShiftWorkingTime>()
            .Property(e => e.CheckInTime)
            .HasConversion(
@@ -127,6 +142,12 @@ namespace Dawem.Data
           );
 
         }
+
+
+        public DbSet<SchedulePlan> SchedulePlans { get; set; }
+        public DbSet<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
+        public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }
+        public DbSet<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
         public DbSet<Schedule> WeekAttendances { get; set; }
         public DbSet<ScheduleDay> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }

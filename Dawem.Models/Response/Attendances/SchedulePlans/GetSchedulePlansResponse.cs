@@ -2,7 +2,7 @@
 {
     public class GetSchedulePlansResponse
     {
-        public List<GetSchedulePlansResponseModel> Schedules { get; set; }
+        public List<GetSchedulePlansResponseModel> SchedulePlans { get; set; }
         public int TotalCount { get; set; }
     }
 }

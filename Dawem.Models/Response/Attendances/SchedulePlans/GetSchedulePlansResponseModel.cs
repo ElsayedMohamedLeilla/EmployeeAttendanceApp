@@ -6,7 +6,7 @@ namespace Dawem.Models.Response.Attendances.Schedules
     {
         public int Id { get; set; }
         public int Code { get; set; }
-        public int ScheduleName { get; set; }
+        public string ScheduleName { get; set; }
         public SchedulePlanType SchedulePlanType { get; set; }
         public DateTime DateFrom { get; set; }
         public bool IsActive { get; set; }

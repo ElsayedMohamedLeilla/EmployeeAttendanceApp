@@ -2,8 +2,8 @@
 {
     public enum SchedulePlanType
     {
-        Employee,
-        Group,
-        Department
+        Employees,
+        Groups,
+        Departments
     }
 }

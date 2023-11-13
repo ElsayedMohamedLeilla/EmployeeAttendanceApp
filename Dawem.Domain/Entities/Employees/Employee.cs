@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Attendance;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,9 @@ namespace Dawem.Domain.Entities.Employees
         public int? JobTitleId { get; set; }
         [ForeignKey(nameof(JobTitleId))]
         public JobTitle JobTitle { get; set; }
+        public int? ScheduleId { get; set; }
+        [ForeignKey(nameof(ScheduleId))]
+        public Schedule Schedule { get; set; }
         #endregion
         public int Code { get; set; }
         public string Name { get; set; }

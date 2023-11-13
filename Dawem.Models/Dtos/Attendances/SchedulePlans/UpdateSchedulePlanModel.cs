@@ -12,20 +12,20 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int ScheduleId { get; set; }
         public DateTime DateFrom { get; set; }
         public bool IsActive { get; set; }
-
+        public string Notes { get; set; }
         public void SetDefaults()
         {
             switch (SchedulePlanType)
             {
-                case SchedulePlanType.Employee:
+                case SchedulePlanType.Employees:
                     GroupId = null;
                     DepartmentId = null;
                     break;
-                case SchedulePlanType.Group:
+                case SchedulePlanType.Groups:
                     EmployeeId = null;
                     DepartmentId = null;
                     break;
-                case SchedulePlanType.Department:
+                case SchedulePlanType.Departments:
                     EmployeeId = null;
                     GroupId = null;
                     break;

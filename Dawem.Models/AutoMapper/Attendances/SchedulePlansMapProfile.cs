@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Attendance;
-using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Models.Dtos.Employees.Employees;
 
 namespace Dawem.Models.AutoMapper.Attendances.Schedules
@@ -10,22 +9,31 @@ namespace Dawem.Models.AutoMapper.Attendances.Schedules
         public SchedulePlansMapProfile()
         {
             CreateMap<CreateSchedulePlanModel, SchedulePlan>()
-                .ForMember(dest => dest.SchedulePlanEmployee, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.SchedulePlanGroup, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.SchedulePlanDepartment, opt => opt.MapFrom(src => src));
+                 .AfterMap(MapRelated);
 
             CreateMap<CreateSchedulePlanModel, SchedulePlanEmployee>();
             CreateMap<CreateSchedulePlanModel, SchedulePlanGroup>();
             CreateMap<CreateSchedulePlanModel, SchedulePlanDepartment>();
 
-            CreateMap<UpdateScheduleModel, SchedulePlan>()
-                .ForMember(dest => dest.SchedulePlanEmployee, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.SchedulePlanGroup, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.SchedulePlanDepartment, opt => opt.MapFrom(src => src));
+            CreateMap<UpdateSchedulePlanModel, SchedulePlan>()
+                .AfterMap(MapRelated);
 
-            CreateMap<UpdateScheduleModel, SchedulePlanEmployee>();
-            CreateMap<UpdateScheduleModel, SchedulePlanGroup>();
-            CreateMap<UpdateScheduleModel, SchedulePlanDepartment>();
+
+            CreateMap<UpdateSchedulePlanModel, SchedulePlanEmployee>();
+            CreateMap<UpdateSchedulePlanModel, SchedulePlanGroup>();
+            CreateMap<UpdateSchedulePlanModel, SchedulePlanDepartment>();
+        }
+        public void MapRelated(CreateSchedulePlanModel src, SchedulePlan dest, ResolutionContext context)
+        {
+            dest.SchedulePlanEmployee = src.EmployeeId > 0 ? context.Mapper.Map<SchedulePlanEmployee>(src) : null;
+            dest.SchedulePlanGroup = src.GroupId > 0 ? context.Mapper.Map<SchedulePlanGroup>(src) : null;
+            dest.SchedulePlanDepartment = src.DepartmentId > 0 ? context.Mapper.Map<SchedulePlanDepartment>(src) : null;
+        }
+        public void MapRelated(UpdateSchedulePlanModel src, SchedulePlan dest, ResolutionContext context)
+        {
+            dest.SchedulePlanEmployee = src.EmployeeId > 0 ? context.Mapper.Map<SchedulePlanEmployee>(src) : null;
+            dest.SchedulePlanGroup = src.GroupId > 0 ? context.Mapper.Map<SchedulePlanGroup>(src) : null;
+            dest.SchedulePlanDepartment = src.DepartmentId > 0 ? context.Mapper.Map<SchedulePlanDepartment>(src) : null;
         }
     }
 }

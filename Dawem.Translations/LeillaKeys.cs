@@ -297,11 +297,10 @@
         public const string SorryYouMustEnterAValidDateFrom = "Sorry!!YouMustEnterAValidDateFrom!";
         public const string SorryYouMustEnterSchedulePlanId = "Sorry!!YouMustEnterSchedulePlanId!";
         public const string SorrySchedulePlanIsDuplicatedWithSameDateAndSchedule = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndSchedule!";
-
-        public const string SorryDateFromMustBiggerThanToday = "Sorry!!DateFromMustBiggerThanTodaye!";
-        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";
-        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";
-        public const string SorryYouMustEnterValidSchedulePlanType1 = "Sorry!!YouMustEnterValidSchedulePlanType!";v
+        public const string SorryDateFromMustBiggerThanToday = "Sorry!!DateFromMustBiggerThanToday!";
+        public const string SorrySchedulePlanNotFound = "Sorry!!SchedulePlanNotFound!";
+        public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
+        public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
 
     }
 }

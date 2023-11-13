@@ -10,7 +10,6 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances.Schedules;
-using Dawem.Models.Response.Employees.Attendances.WeeksAttendances;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

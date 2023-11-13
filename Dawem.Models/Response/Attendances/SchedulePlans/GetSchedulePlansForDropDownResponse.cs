@@ -2,7 +2,7 @@
 {
     public class GetSchedulePlansForDropDownResponse
     {
-        public List<GetSchedulesForDropDownResponseModel> Schedules { get; set; }
+        public List<GetSchedulePlansForDropDownResponseModel> SchedulePlans { get; set; }
         public int TotalCount { get; set; }
     }
 }

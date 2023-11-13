@@ -7,6 +7,7 @@
         public string Name { get; set; }
         public string ProfileImagePath { get; set; }
         public string JobTitleName { get; set; }
+        public string SchedualName { get; set; }
         public string AttendanceTypeName { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public DateTime JoiningDate { get; set; }

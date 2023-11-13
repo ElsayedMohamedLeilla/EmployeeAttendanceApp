@@ -13,6 +13,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public DateTime JoiningDate { get; set; }
         public IFormFile ProfileImageFile { get; set; }
         public int? JobTitleId { get; set; }
+        public int? ScheduleId { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }

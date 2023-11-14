@@ -1,6 +1,6 @@
 ﻿using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Provider;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Dtos.Identity
 {

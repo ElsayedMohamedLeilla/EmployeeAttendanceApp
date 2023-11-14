@@ -1,5 +1,4 @@
-﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
-using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -12,6 +11,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
+using Dawem.Repository.Attendances.Schedules;
 using Dawem.Repository.Attendances.ShiftWorkingTimes;
 using Dawem.Repository.Attendances.WeekAttendances;
 using Dawem.Repository.Core.GroupEmployees;
@@ -49,14 +49,23 @@ namespace Dawem.Repository.Manager
         private IDepartmentRepository departmentRepository;
         private IAssignmentTypeRepository assignmentTypeRepository;
         private ITaskTypeRepository taskTypeRepository;
+        private IJobTitleRepository jobTitleRepository;
+
         private IHolidayTypeRepository holidayTypeRepository;
         private IJustificationsTypeRepository justificationsTypeRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
 
-        private IScheduleRepository weekAttendanceRepository;
-        private IScheduleDayRepository weekAttendanceShiftRepository;
+        private IScheduleRepository scheduleRepository;
+
+        private ISchedulePlanRepository schedulePlanRepository;
+        private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
+        private ISchedulePlanGroupRepository schedulePlanGroupRepository;
+        private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
+
+
+        private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
         private IGroupEmployeeRepository groupEmployeeRepository;
@@ -98,6 +107,9 @@ namespace Dawem.Repository.Manager
         assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting);
         public ITaskTypeRepository TaskTypeRepository =>
         taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting);
+
+        public IJobTitleRepository JobTitleRepository =>
+        jobTitleRepository ??= new JobTitleRepository(unitOfWork, generalSetting);
         public IHolidayTypeRepository HolidayTypeRepository =>
         holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
 
@@ -120,12 +132,22 @@ namespace Dawem.Repository.Manager
 
 
         public IScheduleRepository ScheduleRepository =>
-        weekAttendanceRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
+        scheduleRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
         public IScheduleDayRepository ScheduleDayRepository =>
-        weekAttendanceShiftRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
+        scheduleDayRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
 
         public IGroupRepository GroupRepository =>
         groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
+
+        public ISchedulePlanRepository SchedulePlanRepository =>
+         schedulePlanRepository ??= new SchedulePlanRepository(unitOfWork, generalSetting);
+        public ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository =>
+         schedulePlanEmployeeRepository ??= new SchedulePlanEmployeeRepository(unitOfWork, generalSetting);
+        public ISchedulePlanGroupRepository SchedulePlanGroupRepository =>
+        schedulePlanGroupRepository ??= new SchedulePlanGroupRepository(unitOfWork, generalSetting);
+        public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
+        schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
+
 
         public IGroupEmployeeRepository GroupEmployeeRepository =>
         groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);

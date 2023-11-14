@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances
+namespace Dawem.Validation.FluentValidation.Attendances.Schedules
 {
     public class CreateScheduleModelValidator : AbstractValidator<CreateScheduleModel>
     {

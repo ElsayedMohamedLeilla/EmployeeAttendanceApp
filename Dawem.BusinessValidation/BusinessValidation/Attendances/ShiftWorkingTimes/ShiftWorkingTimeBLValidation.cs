@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.BusinessValidation.Core;
+﻿using Dawem.Contract.BusinessValidation.Attendances.ShiftWorkingTimes;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.Core
+namespace Dawem.Validation.BusinessValidation.Attendances.ShiftWorkingTimes
 {
     public class ShiftWorkingTimeBLValidation : IShiftWorkingTimeBLValidation
     {

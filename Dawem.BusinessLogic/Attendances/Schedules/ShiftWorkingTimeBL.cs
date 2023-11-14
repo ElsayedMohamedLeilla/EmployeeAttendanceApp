@@ -1,22 +1,21 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessValidation.Core;
+using Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime;
+using Dawem.Contract.BusinessValidation.Attendances.ShiftWorkingTimes;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendance;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Core.ShiftWorkingTimes;
+using Dawem.Models.Response.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Core.ShiftWorkingTimes;
+using Dawem.Validation.FluentValidation.Attendances.ShiftWorkingTimes;
 using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Core.ShiftWorkingTimes
+namespace Dawem.BusinessLogic.Attendances.Schedules
 {
     public class ShiftWorkingTimeBL : IShiftWorkingTimeBL
     {

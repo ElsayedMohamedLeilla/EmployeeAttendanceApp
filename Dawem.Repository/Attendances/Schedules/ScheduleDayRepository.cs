@@ -1,10 +1,10 @@
-﻿using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendance;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Attendances.WeekAttendances
+namespace Dawem.Repository.Attendances.Schedules
 {
     public class ScheduleDayRepository : GenericRepository<ScheduleDay>, IScheduleDayRepository
     {

@@ -112,6 +112,22 @@ namespace Dawem.Data
                 .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+            builder.Entity<SchedulePlanEmployee>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanEmployee)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SchedulePlanGroup>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanGroup)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SchedulePlanDepartment>()
+               .HasOne(p => p.SchedulePlan)
+               .WithOne(b => b.SchedulePlanDepartment)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<GroupEmployee>()
                .HasOne(p => p.Group)
                .WithMany(b => b.GroupEmployees)
@@ -132,6 +148,12 @@ namespace Dawem.Data
           );
 
         }
+
+
+        public DbSet<SchedulePlan> SchedulePlans { get; set; }
+        public DbSet<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
+        public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }
+        public DbSet<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
         public DbSet<Schedule> WeekAttendances { get; set; }
         public DbSet<ScheduleDay> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -144,6 +166,7 @@ namespace Dawem.Data
         public DbSet<VacationsType> VacationsTypes { get; set; }
         public DbSet<PermissionsType> PermissionsTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
+        public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<Translation> Translations { get; set; }

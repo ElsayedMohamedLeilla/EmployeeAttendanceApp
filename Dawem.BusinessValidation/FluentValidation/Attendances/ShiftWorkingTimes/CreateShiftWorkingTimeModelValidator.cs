@@ -1,9 +1,9 @@
 ﻿using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Core.ShiftWorkingTimes
+namespace Dawem.Validation.FluentValidation.Attendances.ShiftWorkingTimes
 {
     public class CreateShiftWorkingTimeModelValidator : AbstractValidator<CreateShiftWorkingTimeModelDTO>
     {

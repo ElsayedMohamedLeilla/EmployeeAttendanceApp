@@ -1,5 +1,4 @@
-﻿using Dawem.Contract.Repository.Attendances.ShiftWorkingTimes;
-using Dawem.Contract.Repository.Attendances.WeekAttendances;
+﻿using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -7,6 +6,7 @@ using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
+using Dawem.Domain.Entities.Employees;
 
 namespace Dawem.Contract.Repository.Manager
 {
@@ -30,10 +30,17 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionsTypeRepository PermissionsTypeRepository { get; }
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
+        IJobTitleRepository JobTitleRepository { get; }
         IHolidayTypeRepository HolidayTypeRepository { get; }
-
+        
 
         IScheduleRepository ScheduleRepository { get; }
+
+        ISchedulePlanRepository SchedulePlanRepository { get; }
+        ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository { get; }
+        ISchedulePlanGroupRepository SchedulePlanGroupRepository { get; }
+        ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository { get; }
+
         IScheduleDayRepository ScheduleDayRepository { get; }
 
         IRoleRepository RoleRepository { get; }

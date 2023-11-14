@@ -1,18 +1,18 @@
-﻿using Dawem.Enums.General;
-using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Dtos.Attendances.Schedules;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.WeekAttendances.WeekAttendances
+namespace Dawem.Validation.FluentValidation.Attendances.Schedules
 {
     public class CreateScheduleDaysValidator : AbstractValidator<ScheduleDayCreateModel>
     {
         public CreateScheduleDaysValidator()
         {
-            var weekDaysList = Enum.GetValues(typeof(WeekDays)).Cast<WeekDays>().ToList();
+            var weekDaysList = Enum.GetValues(typeof(WeekDay)).Cast<WeekDay>().ToList();
 
             RuleFor(model => model.WeekDay)
-                .Must(weekDaysList.Contains)
+                .IsInEnum()
                 .WithMessage(LeillaKeys.SorryYouMustEnterValidWeekDay);
 
             RuleFor(model => model.ShiftId)

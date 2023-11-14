@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Dtos.Identity
 {

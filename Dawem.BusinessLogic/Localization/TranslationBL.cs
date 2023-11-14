@@ -2,7 +2,7 @@ using Dawem.Contract.BusinessLogic.Localization;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Response;

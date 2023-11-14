@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Exceptions;

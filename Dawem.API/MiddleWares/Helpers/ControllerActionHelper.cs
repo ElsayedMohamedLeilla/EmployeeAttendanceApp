@@ -1,7 +1,7 @@
 ﻿using Dawem.API.Controllers.Employees;
 using Dawem.API.Controllers.Others;
 using Dawem.API.Controllers.Provider;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Models.Response.Others;
 
 namespace Dawem.API.MiddleWares.Helpers

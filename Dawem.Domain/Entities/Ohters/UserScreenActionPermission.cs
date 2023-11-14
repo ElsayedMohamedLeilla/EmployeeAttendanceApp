@@ -1,6 +1,6 @@
 ﻿using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Enums.General;
+using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 

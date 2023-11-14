@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.General;
-
-namespace Dawem.Models.Response.Employees.Employee
+﻿namespace Dawem.Models.Response.Employees.Employee
 {
     public class GetEmployeeInfoResponseModel
     {
@@ -9,6 +7,7 @@ namespace Dawem.Models.Response.Employees.Employee
         public string Name { get; set; }
         public string ProfileImagePath { get; set; }
         public string JobTitleName { get; set; }
+        public string SchedualName { get; set; }
         public string AttendanceTypeName { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public DateTime JoiningDate { get; set; }

@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.General;
+﻿using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Response.Employees.Employee
 {
@@ -8,6 +8,7 @@ namespace Dawem.Models.Response.Employees.Employee
         public int Code { get; set; }
         public int DepartmentId { get; set; }
         public int? JobTitleId { get; set; }
+        public int? ScheduleId { get; set; }
         public string Name { get; set; }
         public string ProfileImageName { get; set; }
         public string ProfileImagePath { get; set; }

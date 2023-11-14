@@ -1,11 +1,10 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
-using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Core
+namespace Dawem.API.Controllers.Attendances.ShiftWorkingTimes
 {
 
     [Route(LeillaKeys.ApiControllerAction)]

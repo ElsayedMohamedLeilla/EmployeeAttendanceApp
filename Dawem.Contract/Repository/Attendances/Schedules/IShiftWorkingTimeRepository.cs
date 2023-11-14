@@ -1,8 +1,8 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Attendance;
-using Dawem.Models.Dtos.Employees.Attendance.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 
-namespace Dawem.Contract.Repository.Attendances.ShiftWorkingTimes
+namespace Dawem.Contract.Repository.Attendances.Schedules
 {
     public interface IShiftWorkingTimeRepository : IGenericRepository<ShiftWorkingTime>
     {

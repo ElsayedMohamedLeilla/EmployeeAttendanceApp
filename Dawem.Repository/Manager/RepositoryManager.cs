@@ -12,8 +12,6 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.Schedules;
-using Dawem.Repository.Attendances.ShiftWorkingTimes;
-using Dawem.Repository.Attendances.WeekAttendances;
 using Dawem.Repository.Core.GroupEmployees;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;

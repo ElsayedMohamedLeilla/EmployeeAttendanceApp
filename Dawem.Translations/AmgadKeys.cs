@@ -14,8 +14,11 @@
 
         public const string SorryGroupCantBeCreatedWithLessThan2Employee = "Sorry!!GroupCantBeCreatedWithLessThan2Employee!";
         public const string SorryThisEmployeeNotFound = "Sorry!!ThisEmployeeNotFound!";
+        public const string SorryThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan = "Sorry!!ThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan!";
 
         
+
+
 
 
 

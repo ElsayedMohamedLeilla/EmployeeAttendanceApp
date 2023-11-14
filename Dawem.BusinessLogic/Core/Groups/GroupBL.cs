@@ -95,10 +95,7 @@ namespace Dawem.BusinessLogic.Core.Groups
             {
 
                 List<GroupEmployee> ExistDbList = repositoryManager.GroupEmployeeRepository.GetByCondition(e => e.GroupId == getGroup.Id).ToList();
-                //List<int> ExistDbListEmployeesIdes = ExistDbList.Select(item => item.EmployeeId).ToList();
                 List<int> NewListEmployeesIdes = model.GroupEmployees.Select(item => item.EmployeeId).ToList();
-
-                List<int> employeesToAdd = new List<int>();
                 List<int> employeesToRemove = new List<int>();
                 List<GroupEmployee> addedGroupEmployees = new List<GroupEmployee>();
 
@@ -109,7 +106,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                     // Check if the employee ID is not present in the existing list, add it to employeesToAdd
                     if (!ExistDbList.Any(e => e.EmployeeId == employeeId))
                     {
-                        employeesToAdd.Add(employeeId);
+                        //employeesToAdd.Add(employeeId);
                         GroupEmployee temp = new GroupEmployee() {
                             GroupId = model.Id,
                             EmployeeId = employeeId,

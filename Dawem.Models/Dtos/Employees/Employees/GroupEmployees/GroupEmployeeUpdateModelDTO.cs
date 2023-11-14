@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.General;
-
-namespace Dawem.Models.Dtos.Employees.Employees
+﻿namespace Dawem.Models.Dtos.Employees.Employees
 {
     public class GroupEmployeeUpdateModelDTO
     {

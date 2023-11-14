@@ -26,6 +26,12 @@ namespace Dawem.Validation.BusinessValidation.Attendances.ShiftWorkingTimes
             {
                 throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNameIsDuplicated);
             }
+            var ChechInAndCheckOutIsExsists = await repositoryManager
+               .ShiftWorkingTimeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.CheckInTime == model.CheckInTime && c.CheckOutTime == model.CheckOutTime).AnyAsync();
+            if(ChechInAndCheckOutIsExsists)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan);
+            }
 
             return true;
         }

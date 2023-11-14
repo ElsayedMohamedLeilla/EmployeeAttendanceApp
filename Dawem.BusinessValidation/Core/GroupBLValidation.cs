@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Models.Exceptions;
@@ -26,7 +27,14 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNameIsDuplicated);
             }
-
+            if (model.GroupEmployees.Count < 2)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryGroupCantBeCreatedWithLessThan2Employee);
+            }
+            if (model.GroupEmployees.Any(item => item.EmployeeId == 0))
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
+            }
             return true;
         }
 
@@ -39,6 +47,14 @@ namespace Dawem.Validation.Core
             if (checkGroupDuplicate)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNameIsDuplicated);
+            }
+            if (model.GroupEmployees.Count < 2)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryGroupCantBeCreatedWithLessThan2Employee);
+            }
+            if (model.GroupEmployees.Any(item => item.EmployeeId == 0))
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
             }
 
             return true;

@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231111200415_AddEmployeeGroup")]
+    partial class AddEmployeeGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -526,6 +529,9 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -559,56 +565,9 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.GroupEmployee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupEmployees", "Dawem");
+                    b.ToTable("Employees", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.HolidayType", b =>
@@ -1561,27 +1520,14 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Core.Group", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Company");
 
                     b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.GroupEmployee", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
-                        .WithMany("GroupEmployees")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.HolidayType", b =>
@@ -1794,7 +1740,7 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Group", b =>
                 {
-                    b.Navigation("GroupEmployees");
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Department", b =>

@@ -8,10 +8,8 @@ namespace Dawem.Models.AutoMapper.Attendances.WeekAttendances
     {
         public SchedulesMapProfile()
         {
-            CreateMap<CreateScheduleModel, Schedule>()
-                .ForMember(dest => dest.ScheduleDays, opt => opt.MapFrom(src => src.ScheduleDays));
-            CreateMap<UpdateScheduleModel, Schedule>()
-                 .ForMember(dest => dest.ScheduleDays, opt => opt.MapFrom(src => src.ScheduleDays));
+            CreateMap<CreateScheduleModel, Schedule>().ForMember(dest => dest.ScheduleDays, opt => opt.MapFrom(src => src.ScheduleDays));
+            CreateMap<UpdateScheduleModel, Schedule>().ForMember(dest => dest.ScheduleDays, opt => opt.MapFrom(src => src.ScheduleDays));
 
             CreateMap<ScheduleDayCreateModel, ScheduleDay>();
         }

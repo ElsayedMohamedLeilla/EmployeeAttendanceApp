@@ -1,10 +1,7 @@
 ﻿using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.UserManagement;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Numerics;
 
 namespace Dawem.Data
 {
@@ -22,8 +19,8 @@ namespace Dawem.Data
                 new Role { Name = "EMPLOYEE", NormalizedName = "EMPLOYEE",ConcurrencyStamp =null},
                 new Role { Name = "USER", NormalizedName = "USER",ConcurrencyStamp =null},
                 new Role { Name = "MANAGER", NormalizedName = "MANAGER",ConcurrencyStamp =null},
-                new Role { Name = "DEVELOPER", NormalizedName = "DEVELOPER",ConcurrencyStamp =null}, 
-                new Role { Name = "SUPPORT", NormalizedName = "SUPPORT",ConcurrencyStamp =null}, 
+                new Role { Name = "DEVELOPER", NormalizedName = "DEVELOPER",ConcurrencyStamp =null},
+                new Role { Name = "SUPPORT", NormalizedName = "SUPPORT",ConcurrencyStamp =null},
                 new Role { Name = "CUSTOMER", NormalizedName = "CUSTOMER",ConcurrencyStamp =null},
                 new Role { Name = "VIEWER", NormalizedName = "VIEWER",ConcurrencyStamp =null},
                 new Role { Name = "DOCTOR", NormalizedName = "DOCTOR",ConcurrencyStamp =null},
@@ -33,7 +30,7 @@ namespace Dawem.Data
                 new Role { Name = "RECEPTIONIST", NormalizedName = "RECEPTIONIST",ConcurrencyStamp =null},
                 new Role { Name = "SECURITYOFFICER", NormalizedName = "SECURITYOFFICER",ConcurrencyStamp =null},
                 new Role { Name = "HOUSEKEEPING", NormalizedName = "HOUSEKEEPING",ConcurrencyStamp =null},
-                new Role { Name = "ITSUPPORT", NormalizedName = "ITSUPPORT",ConcurrencyStamp =null},  
+                new Role { Name = "ITSUPPORT", NormalizedName = "ITSUPPORT",ConcurrencyStamp =null},
 
             };
             if (!context.Roles.Any())

@@ -14,7 +14,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.ShiftWorkingTimes;
 using Dawem.Repository.Attendances.WeekAttendances;
-using Dawem.Repository.Core;
+using Dawem.Repository.Core.GroupEmployees;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -59,6 +59,7 @@ namespace Dawem.Repository.Manager
         private IScheduleDayRepository weekAttendanceShiftRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
+        private IGroupEmployeeRepository groupEmployeeRepository;
 
 
 
@@ -85,7 +86,7 @@ namespace Dawem.Repository.Manager
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
-       
+
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
@@ -125,6 +126,9 @@ namespace Dawem.Repository.Manager
 
         public IGroupRepository GroupRepository =>
         groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
+
+        public IGroupEmployeeRepository GroupEmployeeRepository =>
+        groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);
 
     }
 }

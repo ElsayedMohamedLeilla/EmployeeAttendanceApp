@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Emit;
 
 namespace Dawem.Data
 {
@@ -113,6 +112,12 @@ namespace Dawem.Data
                 .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<GroupEmployee>()
+               .HasOne(p => p.Group)
+               .WithMany(b => b.GroupEmployees)
+               .HasForeignKey(p => p.GroupId)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<ShiftWorkingTime>()
            .Property(e => e.CheckInTime)
            .HasConversion(
@@ -130,6 +135,7 @@ namespace Dawem.Data
         public DbSet<Schedule> WeekAttendances { get; set; }
         public DbSet<ScheduleDay> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }
         public DbSet<TaskType> TaskTypes { get; set; }
@@ -138,7 +144,6 @@ namespace Dawem.Data
         public DbSet<VacationsType> VacationsTypes { get; set; }
         public DbSet<PermissionsType> PermissionsTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
-
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<Translation> Translations { get; set; }
@@ -146,7 +151,10 @@ namespace Dawem.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }
+
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+
+
     }
 }

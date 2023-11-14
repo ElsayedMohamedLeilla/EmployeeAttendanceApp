@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Dtos.Employees.Employees;
 
 namespace Dawem.Models.AutoMapper.Core
 {
@@ -8,8 +10,12 @@ namespace Dawem.Models.AutoMapper.Core
     {
         public GroupMapProfile()
         {
-            CreateMap<CreateGroupDTO, Group>();
-            CreateMap<UpdateGroupDTO, Group>();
+            CreateMap<CreateGroupDTO, Group>().ForMember(dest => dest.GroupEmployees, opt => opt
+            .MapFrom(src => src.GroupEmployees));
+            CreateMap<UpdateGroupDTO, Group>().ForMember(dest => dest.GroupEmployees, opt => opt.MapFrom(src => src.GroupEmployees));
+
+            CreateMap<GroupEmployeeCreateModelDTO, GroupEmployee>();
+
         }
     }
 }

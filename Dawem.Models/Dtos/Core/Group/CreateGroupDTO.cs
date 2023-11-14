@@ -1,15 +1,12 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
 
-namespace Dawem.Models.Response.Core.Groups
+namespace Dawem.Models.Dtos.Core.Groups
 {
-    public class GetGroupByIdResponseDTO
+    public class CreateGroupDTO
     {
-        public int Id { get; set; }
-        public int Code { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public List<GroupEmployeeCreateModelDTO> GroupEmployees { get; set; }
-
 
     }
 }

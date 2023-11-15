@@ -1,48 +1,46 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Globalization;
 
 namespace Dawem.Helpers
 {
-    public class DateTimeConverter : DateTimeConverterBase
+    public class MultiFormatDateConverter : JsonConverter
     {
-        public DateTimeConverter(string v)
+        public string[] DateTimeFormats =
+            new string [] { "yyyyMMddTHHmmssZ",
+                "yyyy-MM-ddTHH:mm", "dd-MM-yyyy",
+                "MM-dd-yyyy", "dd/MM/yyyy",
+                "MM/dd/yyyy" , "yyyy-dd-MM",
+                "yyyy-MM-dd" };
+
+        public override bool CanConvert(Type objectType)
         {
+            return objectType == typeof(DateTime) || objectType == typeof(DateTime?);
         }
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var tt = reader.TokenType;
-            if (tt == JsonToken.String)
+            string dateString = (string)reader.Value;
+            if (dateString == null)
             {
-                DateTime date;
-                if (DateTime.TryParseExact((string)reader.Value, new[] { "yyyy/MM/dd", "yyyy-MM-dd" }, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out date)
-                    || DateTime.TryParseExact((string)reader.Value, "yyyy-MM-dd'T'HH:mm", System.Globalization.CultureInfo.InvariantCulture,
-                   System.Globalization.DateTimeStyles.None, out date))
-                {
-                    return date;
-                }
+                if (objectType == typeof(DateTime?))
+                    return null;
 
-                return reader.Value;
+                throw new JsonException("Unable to parse null as a date.");
             }
+            DateTime date;
+            if (DateTime.TryParseExact(dateString, DateTimeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                return date;
+            throw new JsonException("Unable to parse \"" + dateString + "\" as a date.");
+        }
 
-            return reader.Value;
-
-
+        public override bool CanWrite
+        {
+            get { return false; }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var myDt = DateTime.SpecifyKind((DateTime)value, DateTimeKind.Unspecified);
-            try
-            {
-                value = myDt;
-            }
-            catch (Exception ex)
-            {
-            }
-            writer.WriteValue(value);
-            return;
-
-
+            throw new NotImplementedException();
         }
     }
 }

@@ -73,7 +73,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 0;
 
-    
+
 });
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -105,7 +105,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
     options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
-    options.SerializerSettings.Converters.Add(new DateTimeConverter());
+    options.SerializerSettings.DateParseHandling = DateParseHandling.None;
+    options.SerializerSettings.Converters.Add(new MultiFormatDateConverter());
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();

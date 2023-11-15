@@ -5,7 +5,7 @@ namespace Dawem.Helpers
 {
     public class DateTimeConverter : DateTimeConverterBase
     {
-        public DateTimeConverter()
+        public DateTimeConverter(string v)
         {
         }
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

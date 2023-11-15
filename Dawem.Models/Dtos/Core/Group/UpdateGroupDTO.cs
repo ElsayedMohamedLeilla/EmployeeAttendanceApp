@@ -1,10 +1,10 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
 
-namespace Dawem.Models.Response.Core.Groups
+namespace Dawem.Models.Dtos.Core.Groups
 {
-    public class GetGroupInfoResponseDTO
+    public class UpdateGroupDTO
     {
-        public int Code { get; set; }
+        public int Id { get; set; }  
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public List<GroupEmployeeUpdateModelDTO> GroupEmployees { get; set; }

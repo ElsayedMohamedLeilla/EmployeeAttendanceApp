@@ -128,6 +128,12 @@ namespace Dawem.Data
                .WithOne(b => b.SchedulePlanDepartment)
                .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<GroupEmployee>()
+               .HasOne(p => p.Group)
+               .WithMany(b => b.GroupEmployees)
+               .HasForeignKey(p => p.GroupId)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<ShiftWorkingTime>()
            .Property(e => e.CheckInTime)
            .HasConversion(
@@ -151,6 +157,7 @@ namespace Dawem.Data
         public DbSet<Schedule> WeekAttendances { get; set; }
         public DbSet<ScheduleDay> WeekAttendanceShifts { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }
         public DbSet<TaskType> TaskTypes { get; set; }
@@ -167,7 +174,10 @@ namespace Dawem.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }
+
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+
+
     }
 }

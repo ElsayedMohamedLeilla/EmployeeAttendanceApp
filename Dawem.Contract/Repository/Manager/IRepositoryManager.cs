@@ -46,6 +46,10 @@ namespace Dawem.Contract.Repository.Manager
         IRoleRepository RoleRepository { get; }
         IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }
         IGroupRepository GroupRepository { get; }
+        IGroupEmployeeRepository GroupEmployeeRepository { get; }
+
+
+
 
 
     }

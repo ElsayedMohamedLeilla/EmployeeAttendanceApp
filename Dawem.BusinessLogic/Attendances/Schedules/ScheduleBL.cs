@@ -37,9 +37,7 @@ namespace Dawem.BusinessLogic.Attendances.Schedules
         public async Task<int> Create(CreateScheduleModel model)
         {
             #region Business Validation
-
             await scheduleBLValidation.CreateValidation(model);
-
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -84,7 +82,6 @@ namespace Dawem.BusinessLogic.Attendances.Schedules
             unitOfWork.CreateTransaction();
 
             #region Update Schedule
-
             var getSchedule = await repositoryManager.ScheduleRepository
                 .GetEntityByConditionWithTrackingAsync(schedule => !schedule.IsDeleted
             && schedule.Id == model.Id);

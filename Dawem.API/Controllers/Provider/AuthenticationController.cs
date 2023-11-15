@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +84,10 @@ namespace Dawem.API.Controllers.Provider
             var result = await authenticationBL.ChangePassword(resetPasswordModel);
             return Success(result, messageCode: LeillaKeys.DoneChangePasswordSuccessfully);
         }
+        
+
+
+
 
     }
 }

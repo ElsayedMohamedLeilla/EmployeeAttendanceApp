@@ -12,6 +12,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.Schedules;
+using Dawem.Repository.Core.GroupEmployees;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -65,6 +66,7 @@ namespace Dawem.Repository.Manager
         private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
+        private IGroupEmployeeRepository groupEmployeeRepository;
 
 
 
@@ -144,6 +146,9 @@ namespace Dawem.Repository.Manager
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
 
+
+        public IGroupEmployeeRepository GroupEmployeeRepository =>
+        groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);
 
     }
 }

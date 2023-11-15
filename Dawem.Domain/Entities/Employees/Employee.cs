@@ -3,6 +3,8 @@ using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 
 namespace Dawem.Domain.Entities.Employees
 {
@@ -29,5 +31,9 @@ namespace Dawem.Domain.Entities.Employees
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public int? AnnualVacationBalance { get; set; }
+
+        //public int GroupId { get; set; }
+        //[ForeignKey(nameof(GroupId))]
+        //public Group? Group { get; set; }
     }
 }

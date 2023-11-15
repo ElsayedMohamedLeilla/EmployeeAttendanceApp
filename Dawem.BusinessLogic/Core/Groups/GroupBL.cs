@@ -3,7 +3,6 @@ using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
-using Dawem.Data.Migrations;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
@@ -16,8 +15,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Entity;
-using System.Linq;
 
 namespace Dawem.BusinessLogic.Core.Groups
 {

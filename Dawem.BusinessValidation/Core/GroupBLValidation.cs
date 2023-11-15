@@ -1,6 +1,5 @@
 ﻿using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Models.Exceptions;

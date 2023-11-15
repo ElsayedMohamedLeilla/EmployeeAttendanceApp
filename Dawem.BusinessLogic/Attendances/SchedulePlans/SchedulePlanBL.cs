@@ -12,6 +12,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Dawem.BusinessLogic.Attendances.SchedulePlans
 {
@@ -204,6 +205,7 @@ namespace Dawem.BusinessLogic.Attendances.SchedulePlans
                 Id = schedulePlan.Id,
                 Code = schedulePlan.Code,
                 ScheduleName = schedulePlan.Schedule.Name,
+                SchedulePlanTypeName = TranslationHelper.GetTranslation(schedulePlan.SchedulePlanType.ToString(), requestInfo.Lang),
                 DateFrom = schedulePlan.DateFrom,
                 IsActive = schedulePlan.IsActive
             }).ToListAsync();

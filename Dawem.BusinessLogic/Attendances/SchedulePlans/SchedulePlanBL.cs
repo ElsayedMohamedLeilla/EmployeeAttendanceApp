@@ -204,6 +204,7 @@ namespace Dawem.BusinessLogic.Attendances.SchedulePlans
                 Id = schedulePlan.Id,
                 Code = schedulePlan.Code,
                 ScheduleName = schedulePlan.Schedule.Name,
+                DateFrom = schedulePlan.DateFrom,
                 IsActive = schedulePlan.IsActive
             }).ToListAsync();
 

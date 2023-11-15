@@ -293,7 +293,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<TokenDto> GetTokenModel(TokenModel criteria)
         {
-
             #region Create Token
 
             ClaimsIdentity claimsIdentity = new(new Claim[]
@@ -321,8 +320,10 @@ namespace Dawem.BusinessLogic.Provider
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = claimsIdentity,
-                Expires = criteria.RememberMe ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(10),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = criteria.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(12),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = jwt.Issuer,
+                Audience = jwt.Issuer
             };
 
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);

@@ -56,6 +56,10 @@ namespace Dawem.API
             _ = services.Configure<Jwt>(appSettingsSection);
             Jwt? appSettings = appSettingsSection.Get<Jwt>();
             byte[] key = Encoding.ASCII.GetBytes(appSettings.Key);
+            
+            var audience = appSettings.Issuer;
+            var issuer = appSettings.Issuer;
+
             _ = services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -63,14 +67,14 @@ namespace Dawem.API
 
             }).AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidAudience = audience,
+                    ValidIssuer = issuer,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };

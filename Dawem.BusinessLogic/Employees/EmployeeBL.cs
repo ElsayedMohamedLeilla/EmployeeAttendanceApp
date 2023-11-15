@@ -172,7 +172,7 @@ namespace Dawem.BusinessLogic.Employees
                 DapartmentName = e.Department.Name,
                 IsActive = e.IsActive,
                 JoiningDate = e.JoiningDate,
-                ProfileImagePath = e.ProfileImageName
+                ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
             }).ToListAsync();
 
             return new GetEmployeesResponse

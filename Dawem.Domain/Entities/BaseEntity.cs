@@ -21,6 +21,14 @@ namespace Dawem.Domain.Entities
             IsDeleted = true;
             DeletionDate = DateTime.UtcNow;
         }
+        public void Disable()
+        {
+            IsActive = false;
+        }
+        public void Enable()
+        {
+            IsActive = true;
+        }
 
     }
 }

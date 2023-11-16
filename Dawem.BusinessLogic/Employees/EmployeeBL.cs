@@ -12,8 +12,6 @@ using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees
@@ -127,8 +125,9 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.AttendanceType = model.AttendanceType;
             getEmployee.JobTitleId = model.JobTitleId;
+            getEmployee.DirectManagerId = model.DirectManagerId;
             getEmployee.ScheduleId = model.ScheduleId;
-            getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;          
+            getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             await unitOfWork.SaveAsync();
@@ -230,13 +229,18 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     DapartmentName = e.Department.Name,
+                    DirectManagerName = e.DirectManager.Name,
+                    Email = e.Email,
+                    MobileNumber = e.MobileNumber,
+                    Address = e.Address,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
                     AnnualVacationBalance = e.AnnualVacationBalance,
                     JobTitleName = e.JobTitle.Name,
                     SchedualName = e.Schedule.Name,
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    DisableReason = e.DisableReason
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
@@ -250,6 +254,10 @@ namespace Dawem.BusinessLogic.Employees
                     Code = e.Code,
                     Name = e.Name,
                     DepartmentId = e.DepartmentId,
+                    DirectManagerId = e.DirectManagerId,
+                    Email = e.Email,
+                    MobileNumber = e.MobileNumber,
+                    Address = e.Address,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
                     AnnualVacationBalance = e.AnnualVacationBalance,
@@ -257,18 +265,28 @@ namespace Dawem.BusinessLogic.Employees
                     ScheduleId = e.ScheduleId,
                     AttendanceType = e.AttendanceType,
                     ProfileImageName = e.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    DisableReason = e.DisableReason,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
 
         }
-        public async Task<bool> Delete(int employeeId)
+        public async Task<bool> Disable(DeleteEmployeeModel model)
         {
-            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
+            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
-
-            employee.Delete();
+            employee.Disable();
+            employee.DisableReason = model.DisableReason;
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Enable(int employeeId)
+        {
+            var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsActive && d.Id == employeeId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+            employee.Enable();
+            employee.DisableReason = null;
             await unitOfWork.SaveAsync();
             return true;
         }

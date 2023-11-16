@@ -25,15 +25,41 @@ namespace Dawem.Repository.Employees
 
                 inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
                 inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;
                 }
             }
-            if (criteria.IsActive != null)
+            if (criteria.IsActive is not null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
+            }
+            if (criteria.DepartmentId is not null)
+            {
+                predicate = predicate.And(e => e.DepartmentId == criteria.DepartmentId);
+            }
+            if (criteria.JobTitleId is not null)
+            {
+                predicate = predicate.And(e => e.JobTitleId == criteria.JobTitleId);
+            }
+            if (criteria.ScheduleId is not null)
+            {
+                predicate = predicate.And(e => e.ScheduleId == criteria.ScheduleId);
+            }
+            if (criteria.DirectManagerId is not null)
+            {
+                predicate = predicate.And(e => e.DirectManagerId == criteria.DirectManagerId);
             }
 
             predicate = predicate.And(inner);

@@ -7,6 +7,7 @@ namespace Dawem.Models.Response.Employees.Employee
         public int Id { get; set; }
         public int Code { get; set; }
         public int DepartmentId { get; set; }
+        public int? DirectManagerId { get; set; }
         public int? JobTitleId { get; set; }
         public int? ScheduleId { get; set; }
         public string Name { get; set; }
@@ -16,5 +17,9 @@ namespace Dawem.Models.Response.Employees.Employee
         public AttendanceType AttendanceType { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
+        public string Email { get; set; }
+        public string MobileNumber { get; set; }
+        public string Address { get; set; }
+        public string DisableReason { get; set; }
     }
 }

@@ -320,7 +320,7 @@ namespace Dawem.BusinessLogic.Provider
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = claimsIdentity,
-                Expires = criteria.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(12),
+                Expires = criteria.RememberMe ? DateTime.UtcNow.AddDays(3) : DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = jwt.Issuer,
                 Audience = jwt.Issuer

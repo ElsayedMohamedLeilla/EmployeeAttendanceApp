@@ -41,6 +41,17 @@ namespace Dawem.BusinessLogic.Core.Groups
         }
         public async Task<int> Create(CreateGroupDTO model)
         {
+            #region assign EmployeeIdes In GroupEmployees Object
+            List<GroupEmployeeCreateModelDTO> insertedList = new List<GroupEmployeeCreateModelDTO>();
+            foreach (var employee in model.EmployeeIdes)
+            {
+                GroupEmployeeCreateModelDTO temp = new GroupEmployeeCreateModelDTO();
+                temp.EmployeeId = employee;
+                insertedList.Add(temp);
+
+            }
+            model.GroupEmployees = insertedList;
+            #endregion
             #region Business Validation
             await GroupBLValidation.CreateValidation(model);
             #endregion
@@ -48,6 +59,7 @@ namespace Dawem.BusinessLogic.Core.Groups
             unitOfWork.CreateTransaction();
 
             #region Insert Group
+
             #region Set Group code
             var getNextCode = await repositoryManager.GroupRepository
                 .Get(e => e.CompanyId == requestInfo.CompanyId)
@@ -72,6 +84,17 @@ namespace Dawem.BusinessLogic.Core.Groups
         }
         public async Task<bool> Update(UpdateGroupDTO model)
         {
+            #region assign EmployeeIdes In GroupEmployees Object
+            List<GroupEmployeeUpdateModelDTO> insertedList = new List<GroupEmployeeUpdateModelDTO>();
+            foreach (var employee in model.EmployeeIdes)
+            {
+                GroupEmployeeUpdateModelDTO temp = new GroupEmployeeUpdateModelDTO();
+                temp.EmployeeId = employee;
+                insertedList.Add(temp);
+
+            }
+            model.GroupEmployees = insertedList;
+            #endregion
             #region Business Validation
 
             await GroupBLValidation.UpdateValidation(model);
@@ -85,6 +108,7 @@ namespace Dawem.BusinessLogic.Core.Groups
             getGroup.IsActive = model.IsActive;
             getGroup.ModifiedDate = DateTime.Now;
             getGroup.ModifyUserId = requestInfo.UserId;
+            await unitOfWork.SaveAsync();
             #endregion
 
             #region Update GroupEmployees
@@ -92,7 +116,6 @@ namespace Dawem.BusinessLogic.Core.Groups
             {
 
                 List<GroupEmployee> ExistDbList = repositoryManager.GroupEmployeeRepository.GetByCondition(e => e.GroupId == getGroup.Id).ToList();
-                List<int> NewListEmployeesIdes = model.GroupEmployees.Select(item => item.EmployeeId).ToList();
                 List<int> employeesToRemove = new List<int>();
                 List<GroupEmployee> addedGroupEmployees = new List<GroupEmployee>();
 
@@ -104,19 +127,20 @@ namespace Dawem.BusinessLogic.Core.Groups
                     if (!ExistDbList.Any(e => e.EmployeeId == employeeId))
                     {
                         //employeesToAdd.Add(employeeId);
-                        GroupEmployee temp = new GroupEmployee() {
+                        GroupEmployee temp = new GroupEmployee()
+                        {
                             GroupId = model.Id,
                             EmployeeId = employeeId,
                             ModifyUserId = requestInfo.UserId,
                             ModifiedDate = DateTime.UtcNow
                         };
-                        addedGroupEmployees.Add(temp);  
+                        addedGroupEmployees.Add(temp);
                     }
                 }
                 foreach (var groupEmployee in ExistDbList)
                 {
                     // Check if the employee ID in ExistDbList is not present in model.GroupEmployees
-                    if (!NewListEmployeesIdes.Contains(groupEmployee.EmployeeId))
+                    if (!model.EmployeeIdes.Contains(groupEmployee.EmployeeId))
                     {
                         employeesToRemove.Add(groupEmployee.EmployeeId);
                     }
@@ -171,10 +195,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-                GroupEmployees = group.GroupEmployees.Select(groupEmploee => new GroupEmployeeForGridDTO
-                {
-                    EmployeeName = groupEmploee.Employee != null ? groupEmploee.Employee.Name : null
-                }).ToList()
+               
 
 
             }).ToListAsync();
@@ -229,17 +250,18 @@ namespace Dawem.BusinessLogic.Core.Groups
         public async Task<GetGroupInfoResponseDTO> GetInfo(int GroupId)
         {
             var Group = await repositoryManager.GroupRepository.Get(e => e.Id == GroupId && !e.IsDeleted)
-                .Select(group => new GetGroupInfoResponseDTO
-                {
-                    Code = group.Code,
-                    Name = group.Name,
-                    IsActive = group.IsActive,
-                    GroupEmployees = group.GroupEmployees.Select(groupEmploee => new GroupEmployeeUpdateModelDTO
-                    {
-                        EmployeeId = groupEmploee.EmployeeId,
-                        GroupId = groupEmploee.GroupId,
-                    }).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+     .Select(group => new GetGroupInfoResponseDTO
+     {
+         Code = group.Code,
+         Name = group.Name,
+         IsActive = group.IsActive,
+         GroupEmployees = group.GroupEmployees
+             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+                 groupEmployee => groupEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Name) // Select employee names
+             .ToList()
+        }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             return Group;
         }
@@ -252,12 +274,12 @@ namespace Dawem.BusinessLogic.Core.Groups
                     Code = group.Code,
                     Name = group.Name,
                     IsActive = group.IsActive,
-                    GroupEmployees = group.GroupEmployees.Select(groupEmploee => new GroupEmployeeCreateModelDTO
-                    {
-                        EmployeeId = groupEmploee.EmployeeId,
-                        GroupId = groupEmploee.GroupId,
-                    }).ToList()
-
+                    EmployeeIdes = group.GroupEmployees
+             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+                 groupEmployee => groupEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Id) // Select employee names
+             .ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             return Group;

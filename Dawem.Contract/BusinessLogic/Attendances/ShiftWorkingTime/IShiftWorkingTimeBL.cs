@@ -12,5 +12,9 @@ namespace Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime
         Task<GetShiftWorkingTimeResponseDTO> Get(GetShiftWorkingTimesCriteria model);
         Task<GetShiftWorkingTimeDropDownResponseDTO> GetForDropDown(GetShiftWorkingTimesCriteria model);
         Task<bool> Delete(int ShiftWorkingTimeId);
+        Task<bool> Enable(int ShiftWorkingTimeId);
+
+        Task<bool> Disable(int ShiftWorkingTimeId);
+
     }
 }

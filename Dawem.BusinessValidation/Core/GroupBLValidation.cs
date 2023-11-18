@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Models.Exceptions;
@@ -34,6 +35,21 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
             }
+          
+            bool hasDuplicates = model.EmployeeIdes.Count != model.EmployeeIdes.Distinct().Count();
+            if(hasDuplicates)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
+
+            }
+            List<Employee> employees = repositoryManager.EmployeeRepository
+           .GetAll()
+           .Where(employee => model.EmployeeIdes.Contains(employee.Id))
+           .ToList();
+            if (employees.Count != model.EmployeeIdes.Count)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
+            }
             return true;
         }
 
@@ -54,6 +70,20 @@ namespace Dawem.Validation.Core
             if (model.GroupEmployees.Any(item => item.EmployeeId == 0))
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
+            }
+            bool hasDuplicates = model.EmployeeIdes.Count != model.EmployeeIdes.Distinct().Count();
+            if (hasDuplicates)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
+
+            }
+            List<Employee> employees = repositoryManager.EmployeeRepository
+           .GetAll()
+           .Where(employee => model.EmployeeIdes.Contains(employee.Id))
+           .ToList();
+            if (employees.Count != model.EmployeeIdes.Count)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
             }
 
             return true;

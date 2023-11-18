@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dawem.Enums.Generals;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace Dawem.Models.Response.Attendances.ShiftWorkingTimes
         public TimeOnly CheckInTime { get; set; }
         public TimeOnly CheckOutTime { get; set; }
         public double AllowedMinutes { get; set; }
+        public AmPm TimePeriod { get; set; }
+
 
         public bool IsActive { get; set; }
     }

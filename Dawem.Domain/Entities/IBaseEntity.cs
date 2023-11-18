@@ -9,6 +9,7 @@
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDate { get; set; }
-        
+        public string DisableReason { get; set; }
+
     }
 }

@@ -42,6 +42,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public bool Status { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }
+        public string DisableReason { get; set; }
         public void Delete()
         {
             IsDeleted = true;

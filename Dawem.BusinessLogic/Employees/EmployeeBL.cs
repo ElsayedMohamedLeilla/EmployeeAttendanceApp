@@ -278,16 +278,14 @@ namespace Dawem.BusinessLogic.Employees
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == employeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
             employee.Enable();
-            employee.DisableReason = null;
             await unitOfWork.SaveAsync();
             return true;
         }
-        public async Task<bool> Disable(DeleteEmployeeModel model)
+        public async Task<bool> Disable(DisableModelDTO model)
         {
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
-            employee.Disable();
-            employee.DisableReason = model.DisableReason;
+            employee.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;
         }

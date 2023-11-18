@@ -15,19 +15,22 @@ namespace Dawem.Domain.Entities
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }
+        public string DisableReason { get; set; }
         public string Notes { get; set; }
         public void Delete()
         {
             IsDeleted = true;
             DeletionDate = DateTime.UtcNow;
         }
-        public void Disable()
+        public void Disable(string disableReason = null)
         {
             IsActive = false;
+            DisableReason = disableReason;
         }
         public void Enable()
         {
             IsActive = true;
+            DisableReason = null;
         }
 
     }

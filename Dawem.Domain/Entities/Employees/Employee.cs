@@ -34,8 +34,7 @@ namespace Dawem.Domain.Entities.Employees
         public string ProfileImageName { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
-        public int? AnnualVacationBalance { get; set; }
-        public string DisableReason { get; set; }
+        public int? AnnualVacationBalance { get; set; }       
         public List<GroupEmployee> EmployeeGroups { get; set; }
 
     }

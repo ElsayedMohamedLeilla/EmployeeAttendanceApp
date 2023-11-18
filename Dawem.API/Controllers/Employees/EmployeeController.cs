@@ -97,7 +97,7 @@ namespace Dawem.API.Controllers.Employees
             return Success(await employeeBL.Enable(employeeId));
         }
         [HttpPut]
-        public async Task<ActionResult> Disable([FromQuery] DeleteEmployeeModel model)
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
         {
             if (model.Id < 1)
             {

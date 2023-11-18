@@ -21,6 +21,7 @@ namespace Dawem.Domain.Entities
             IsDeleted = true;
             DeletionDate = DateTime.UtcNow;
         }
+      
 
     }
 }

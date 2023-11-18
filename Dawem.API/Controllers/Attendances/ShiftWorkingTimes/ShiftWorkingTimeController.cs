@@ -78,6 +78,24 @@ namespace Dawem.API.Controllers.Attendances.ShiftWorkingTimes
             }
             return Success(await ShiftWorkingTimeBL.Delete(ShiftWorkingTimeId));
         }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int ShiftWorkingTimeId)
+        {
+            if (ShiftWorkingTimeId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await ShiftWorkingTimeBL.Enable(ShiftWorkingTimeId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable(int ShiftWorkingTimeId)
+        {
+            if (ShiftWorkingTimeId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await ShiftWorkingTimeBL.Disable(ShiftWorkingTimeId));
+        }
 
     }
 }

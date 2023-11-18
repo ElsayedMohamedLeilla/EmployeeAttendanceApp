@@ -10,13 +10,14 @@
         public const string SorryGroupNotFound = "Sorry!!GroupNotFound!";
         public const string DoneCreateGroupSuccessfully = "DoneCreateGroupSuccessfully";
         public const string DoneUpdateGroupSuccessfully = "DoneUpdateGroupSuccessfully";
-
-
         public const string SorryGroupCantBeCreatedWithLessThan2Employee = "Sorry!!GroupCantBeCreatedWithLessThan2Employee!";
         public const string SorryThisEmployeeNotFound = "Sorry!!ThisEmployeeNotFound!";
         public const string SorryThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan = "Sorry!!ThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan!";
+        public const string SorrySomeAddedEmployeeNotFound = "Sorry!!SomeAddedEmployeeNotFound!";
+        public const string SorryCantAddEmployeeInTheSameGroupTwice = "Sorry!!CantAddEmployeeInTheSameGroupTwice!";
 
         
+
 
 
 

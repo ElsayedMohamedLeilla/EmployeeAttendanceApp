@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Attendances.Schedules;
+﻿using Dawem.Contract.Repository.Attendances.SchedulePlans;
+using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -40,6 +41,8 @@ namespace Dawem.Contract.Repository.Manager
         ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository { get; }
         ISchedulePlanGroupRepository SchedulePlanGroupRepository { get; }
         ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository { get; }
+        ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository { get; }
+        ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository { get; }
 
         IScheduleDayRepository ScheduleDayRepository { get; }
 

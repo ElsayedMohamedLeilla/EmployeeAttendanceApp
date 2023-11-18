@@ -7,6 +7,7 @@ namespace Dawem.Models.Criteria
         public int? CompanyId { get; set; }
         public int? BranchId { get; set; }
         public string Lang { get; set; }
+        public int? Code { get; set; }
         public int? Id { get; set; }
         public bool PagingEnabled { get; set; }
         public int? PageSize { get; set; }

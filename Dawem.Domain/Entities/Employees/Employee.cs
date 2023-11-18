@@ -3,8 +3,6 @@ using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
-using System.Text.RegularExpressions;
 
 namespace Dawem.Domain.Entities.Employees
 {
@@ -24,16 +22,21 @@ namespace Dawem.Domain.Entities.Employees
         public int? ScheduleId { get; set; }
         [ForeignKey(nameof(ScheduleId))]
         public Schedule Schedule { get; set; }
+        public int? DirectManagerId { get; set; }
+        [ForeignKey(nameof(DirectManagerId))]
+        public Employee DirectManager { get; set; }
         #endregion
         public int Code { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
+        public string MobileNumber { get; set; }
+        public string Address { get; set; }
         public string ProfileImageName { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public int? AnnualVacationBalance { get; set; }
+        public string DisableReason { get; set; }
+        public List<GroupEmployee> EmployeeGroups { get; set; }
 
-        //public int GroupId { get; set; }
-        //[ForeignKey(nameof(GroupId))]
-        //public Group? Group { get; set; }
     }
 }

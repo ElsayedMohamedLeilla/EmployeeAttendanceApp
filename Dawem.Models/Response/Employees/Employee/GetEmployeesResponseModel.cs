@@ -8,6 +8,7 @@
         public string Name { get; set; }
         public string ProfileImagePath { get; set; }
         public DateTime JoiningDate { get; set; }
+        public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
     }
 }

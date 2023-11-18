@@ -97,7 +97,7 @@ builder.Services.ConfigureBusinessLogic();
 builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
-
+builder.Services.ConfigureBackGroundService();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.UseCamelCasing(true);

@@ -19,7 +19,7 @@ namespace Dawem.Helpers
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string dateString = (string)reader.Value;
+            string dateString = reader.Value.ToString();
             if (dateString == null)
             {
                 if (objectType == typeof(DateTime?))

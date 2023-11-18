@@ -296,11 +296,14 @@
         public const string SorryYouMustChooseSchedule = "Sorry!!YouMustChooseSchedule!";
         public const string SorryYouMustEnterAValidDateFrom = "Sorry!!YouMustEnterAValidDateFrom!";
         public const string SorryYouMustEnterSchedulePlanId = "Sorry!!YouMustEnterSchedulePlanId!";
-        public const string SorrySchedulePlanIsDuplicatedWithSameDateAndSchedule = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndSchedule!";
+        public const string SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndEmployee = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndScheduleAndEmployee!";
+        public const string SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndGroup = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndScheduleAndGroup!";
+        public const string SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndDepartment = "Sorry!!SchedulePlanIsDuplicatedWithSameDateAndScheduleAndDepartment!";
         public const string SorryDateFromMustBiggerThanToday = "Sorry!!DateFromMustBiggerThanToday!";
         public const string SorrySchedulePlanNotFound = "Sorry!!SchedulePlanNotFound!";
         public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
         public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
-
+        public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
+        
     }
 }

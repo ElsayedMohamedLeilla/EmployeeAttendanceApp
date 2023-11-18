@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Attendances.Schedules;
+﻿using Dawem.Contract.Repository.Attendances.SchedulePlans;
+using Dawem.Contract.Repository.Attendances.Schedules;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -9,6 +10,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Attendance;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository.Attendances.Schedules;
@@ -61,7 +63,8 @@ namespace Dawem.Repository.Manager
         private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
         private ISchedulePlanGroupRepository schedulePlanGroupRepository;
         private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
-
+        private ISchedulePlanBackgroundJobLogRepository schedulePlanBackgroundJobLogRepository;
+        private ISchedulePlanBackgroundJobLogEmployeeRepository schedulePlanBackgroundJobLogEmployeeRepository;
 
         private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
@@ -145,6 +148,10 @@ namespace Dawem.Repository.Manager
         schedulePlanGroupRepository ??= new SchedulePlanGroupRepository(unitOfWork, generalSetting);
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
+        public ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository =>
+         schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting);
+        public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository =>
+         schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
 
 
         public IGroupEmployeeRepository GroupEmployeeRepository =>

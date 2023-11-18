@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Helpers;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using FluentValidation;
 
@@ -16,6 +17,12 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                    WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
+            RuleFor(model => model.Email).NotNull().
+                WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+            RuleFor(model => model.MobileNumber).NotNull().
+                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+            RuleFor(model => model.Email).Must(EmailHelper.IsValidEmail).
+                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
         }

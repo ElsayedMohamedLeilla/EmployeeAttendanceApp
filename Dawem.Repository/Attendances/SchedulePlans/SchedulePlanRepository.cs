@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.Repository.Attendances.Schedules;
+﻿using Dawem.Contract.Repository.Attendances.SchedulePlans;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendance;

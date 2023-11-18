@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
 
-namespace Dawem.Contract.BusinessValidation.Attendances.Schedules
+namespace Dawem.Contract.BusinessValidation.Attendances.SchedulePlans
 {
     public interface ISchedulePlanBLValidation
     {

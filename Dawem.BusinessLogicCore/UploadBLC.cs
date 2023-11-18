@@ -76,7 +76,7 @@ namespace Dawem.BusinessLogicCore
             var path = generator.GetPathByAction(LeillaKeys.Browse, LeillaKeys.Browse, null);
             var browseLink = $"{protocol}://{host}{path}";
 
-            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return LeillaKeys.EmptyString;
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return null;
             return browseLink + LeillaKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
         }
         private static string GetUniqueFileName(string fileName)

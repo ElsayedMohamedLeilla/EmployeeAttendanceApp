@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Attendances.SchedulePlans;
-using Dawem.Contract.BusinessValidation.Attendances.Schedules;
+using Dawem.Contract.BusinessValidation.Attendances.SchedulePlans;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendance;
+using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -12,7 +14,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace Dawem.BusinessLogic.Attendances.SchedulePlans
 {
@@ -305,6 +306,111 @@ namespace Dawem.BusinessLogic.Attendances.SchedulePlans
             schedulePlan.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task HandleSchedulePlanBackgroundJob()
+        {
+            try
+            {
+                var utcDate = DateTime.UtcNow.Date;
+                var getNextSchedulePlans = await repositoryManager.SchedulePlanRepository.Get(p => !p.IsDeleted && p.IsActive &&
+                p.DateFrom.Date == utcDate)
+                    .Select(p => new GetSchedulePlanBackgroundJobLogModel
+                    {
+                        CompanyId = p.CompanyId,
+                        SchedulePlanId = p.Id,
+                        ScheduleId = p.ScheduleId,
+                        SchedulePlanType = p.SchedulePlanType,
+                        EmployeeId = p.SchedulePlanEmployee.EmployeeId,
+                        GroupId = p.SchedulePlanGroup.GroupId,
+                        DepartmentId = p.SchedulePlanDepartment.DepartmentId
+                    }).ToListAsync();
+
+
+                var getNextSchedulePlanssss = await repositoryManager.SchedulePlanRepository.GetByIdAsync(8);
+
+                if (getNextSchedulePlans is not null && getNextSchedulePlans.Count > 0)
+                {
+                    foreach (var nextSchedulePlan in getNextSchedulePlans)
+                    {
+                        var startDate = DateTime.UtcNow;
+                        switch (nextSchedulePlan.SchedulePlanType)
+                        {
+                            case SchedulePlanType.Employees:
+
+
+                                var employeeId = nextSchedulePlan.EmployeeId ?? 0;
+                                var getEmployee = await repositoryManager.EmployeeRepository
+                                    .GetEntityByConditionWithTrackingAsync(e => !e.IsDeleted && e.Id == employeeId);
+                                if (getEmployee != null)
+                                {
+                                    await HandleSchedulePlanBackgroundJobEmployee(new List<Employee> { getEmployee }, nextSchedulePlan, startDate);
+                                }
+
+                                break;
+                            case SchedulePlanType.Groups:
+
+                                var groupId = nextSchedulePlan.GroupId ?? 0;
+                                var getEmployeesByGroup = await repositoryManager.EmployeeRepository
+                                    .Get(e => !e.IsDeleted && e.EmployeeGroups != null &&
+                                    e.EmployeeGroups.Any(g => g.GroupId == nextSchedulePlan.GroupId))
+                                    .ToListAsync();
+                                if (getEmployeesByGroup != null && getEmployeesByGroup.Count > 0)
+                                {
+                                    await HandleSchedulePlanBackgroundJobEmployee(getEmployeesByGroup, nextSchedulePlan, startDate);
+                                }
+
+                                break;
+                            case SchedulePlanType.Departments:
+
+                                var departmentId = nextSchedulePlan.DepartmentId ?? 0;
+                                var getEmployeesByDepartment = await repositoryManager.EmployeeRepository
+                                    .Get(e => !e.IsDeleted && e.DepartmentId == departmentId)
+                                    .ToListAsync();
+                                if (getEmployeesByDepartment != null && getEmployeesByDepartment.Count > 0)
+                                {
+                                    await HandleSchedulePlanBackgroundJobEmployee(getEmployeesByDepartment, nextSchedulePlan, startDate);
+                                }
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        public async Task HandleSchedulePlanBackgroundJobEmployee(List<Employee> employees, GetSchedulePlanBackgroundJobLogModel model, DateTime startDate)
+        {
+            var schedulePlanBackgroundJobLog = new SchedulePlanBackgroundJobLog
+            {
+                CompanyId = model.CompanyId,
+                IsActive = true,
+                SchedulePlanId = model.SchedulePlanId,
+                SchedulePlanType = model.SchedulePlanType,
+                StartDate = startDate
+            };
+
+            foreach (var employee in employees)
+            {
+                schedulePlanBackgroundJobLog.SchedulePlanBackgroundJobLogEmployees.Add(new SchedulePlanBackgroundJobLogEmployee
+                {
+                    EmployeeId = employee.Id,
+                    OldScheduleId = employee.ScheduleId,
+                    NewScheduleId = model.ScheduleId,
+                    IsActive = true
+                });
+                employee.ScheduleId = model.ScheduleId;
+            }
+
+            schedulePlanBackgroundJobLog.FinishDate = DateTime.UtcNow;
+            repositoryManager.SchedulePlanBackgroundJobLogRepository.Insert(schedulePlanBackgroundJobLog);
+            await unitOfWork.SaveAsync();
         }
     }
 }

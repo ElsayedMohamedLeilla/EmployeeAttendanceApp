@@ -87,6 +87,24 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await employeeBL.GetById(employeeId));
         }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int employeeId)
+        {
+            if (employeeId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await employeeBL.Enable(employeeId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DeleteEmployeeModel model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await employeeBL.Disable(model));
+        }
         [HttpDelete]
         public async Task<ActionResult> Delete(int employeeId)
         {
@@ -96,6 +114,7 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await employeeBL.Delete(employeeId));
         }
+
 
     }
 }

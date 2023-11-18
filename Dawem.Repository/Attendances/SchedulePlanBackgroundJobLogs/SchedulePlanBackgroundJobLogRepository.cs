@@ -8,22 +8,22 @@ using LinqKit;
 
 namespace Dawem.Repository.Attendances.Schedules
 {
-    public class SchedulePlanRepository : GenericRepository<SchedulePlan>, ISchedulePlanRepository
+    public class SchedulePlanBackgroundJobLogRepository : GenericRepository<SchedulePlanBackgroundJobLog>, ISchedulePlanBackgroundJobLogRepository
     {
-        public SchedulePlanRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        public SchedulePlanBackgroundJobLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 
         }
-        public IQueryable<SchedulePlan> GetAsQueryable(GetSchedulePlansCriteria criteria)
+        public IQueryable<SchedulePlanBackgroundJobLog> GetAsQueryable(GetSchedulePlanBackgroundJobLogsCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<SchedulePlan>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<SchedulePlan>(true);
+            var predicate = PredicateBuilder.New<SchedulePlanBackgroundJobLog>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<SchedulePlanBackgroundJobLog>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.SchedulePlanEmployee != null && x.SchedulePlanEmployee.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.SchedulePlan.Schedule != null && x.SchedulePlan.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

@@ -12,5 +12,6 @@ namespace Dawem.Contract.BusinessLogic.Attendances.SchedulePlans
         Task<GetSchedulePlansResponse> Get(GetSchedulePlansCriteria model);
         Task<GetSchedulePlansForDropDownResponse> GetForDropDown(GetSchedulePlansCriteria model);
         Task<bool> Delete(int weekAttendanceId);
+        Task HandleSchedulePlanBackgroundJob();
     }
 }

@@ -2,7 +2,7 @@
 using Dawem.Domain.Entities.Attendance;
 using Dawem.Models.Dtos.Employees.Employees;
 
-namespace Dawem.Contract.Repository.Attendances.Schedules
+namespace Dawem.Contract.Repository.Attendances.SchedulePlans
 {
     public interface ISchedulePlanRepository : IGenericRepository<SchedulePlan>
     {

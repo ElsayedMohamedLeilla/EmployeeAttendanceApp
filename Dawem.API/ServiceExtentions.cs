@@ -6,6 +6,7 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Glamatek.BackgroundJobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,6 @@ namespace Dawem.API
 {
     public static class ServiceExtentions
     {
-
-        /*public static void dewe()
-        {
-
-            IConfiguration configuration = new ConfigurationBuilder()
-             .SetBasePath(Directory.GetCurrentDirectory())
-             .AddJsonFile(DawemKeys.AppsettingsFile)
-             .Build();
-
-            string? connectionString = configuration.GetConnectionString("local");
-            _ = new DbContextOptionsBuilder<ApplicationDBContext>()
-                             .UseSqlServer(new SqlConnection(connectionString))
-                             .Options;
-        }*/
         public static void ConfigureSQLContext(this IServiceCollection services, IConfiguration config)
         {
             _ = services.AddDbContext<ApplicationDBContext>(opts =>
@@ -49,7 +36,6 @@ namespace Dawem.API
             }
            );
         }
-
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
             IConfigurationSection appSettingsSection = config.GetSection(LeillaKeys.Jwt);
@@ -122,6 +108,12 @@ namespace Dawem.API
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
+        }
+
+        public static void ConfigureBackGroundService(this IServiceCollection services)
+        {
+            services.AddHostedService<SchedulePlanBackgroundJobHostedService>();
+            //services.AddSingleton<CancellationTokenSource>();
         }
 
     }

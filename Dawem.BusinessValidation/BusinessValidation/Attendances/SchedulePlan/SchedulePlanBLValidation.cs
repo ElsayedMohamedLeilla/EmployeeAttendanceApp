@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation.Attendances.Schedules;
+﻿using Dawem.Contract.BusinessValidation.Attendances.SchedulePlans;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;

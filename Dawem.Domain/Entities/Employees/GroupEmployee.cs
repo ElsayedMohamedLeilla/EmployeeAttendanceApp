@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Attendance;
-using Dawem.Domain.Entities.Core;
+﻿using Dawem.Domain.Entities.Core;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,9 +15,6 @@ namespace Dawem.Domain.Entities.Employees
         public int? GroupId { get; set; }
         [ForeignKey(nameof(GroupId))]
         public Group Group { get; set; }
-
-     
-
 
         #endregion
 

@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dawem.BackgroundJobs\Dawem.BackgroundJobs.csproj" />
     <ProjectReference Include="..\Dawem.BusinessLogicCore\Dawem.BusinessLogicCore.csproj" />
     <ProjectReference Include="..\Dawem.BusinessLogic\Dawem.BusinessLogic.csproj" />
     <ProjectReference Include="..\Dawem.Data\Dawem.Data.csproj" />

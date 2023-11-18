@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Attendance;
 
 namespace Dawem.Contract.Repository.Attendances.SchedulePlans
 {
-    public interface ISchedulePlanGroupRepository : IGenericRepository<SchedulePlanGroup>
+    public interface ISchedulePlanBackgroundJobLogEmployeeRepository : IGenericRepository<SchedulePlanBackgroundJobLogEmployee>
     {
     }
 }

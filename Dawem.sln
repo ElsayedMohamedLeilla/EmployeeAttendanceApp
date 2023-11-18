@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Translations", "Dawem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Contract", "Dawem.Contract\Dawem.Contract.csproj", "{F5E221C6-C1B1-49EF-8BCB-DA166522930C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.BusinessLogicCore", "Dawem.BusinessLogicCore\Dawem.BusinessLogicCore.csproj", "{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.BusinessLogicCore", "Dawem.BusinessLogicCore\Dawem.BusinessLogicCore.csproj", "{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.BackgroundJobs", "Dawem.BackgroundJobs\Dawem.BackgroundJobs.csproj", "{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

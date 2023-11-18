@@ -32,9 +32,9 @@ namespace Dawem.Repository.Employees
                 inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
                 inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
 
-                if (int.TryParse(criteria.FreeText, out int id))
+                if (int.TryParse(criteria.FreeText, out int code))
                 {
-                    criteria.Id = id;
+                    criteria.Code = code;
                 }
             }
             if (criteria.IsActive is not null)

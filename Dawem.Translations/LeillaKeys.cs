@@ -303,6 +303,7 @@
         public const string SorrySchedulePlanNotFound = "Sorry!!SchedulePlanNotFound!";
         public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
         public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
-
+        public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
+        
     }
 }

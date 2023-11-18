@@ -272,22 +272,22 @@ namespace Dawem.BusinessLogic.Attendances.Schedules
             await unitOfWork.SaveAsync();
             return true;
         }
-        public async Task<bool> Enable(int ShiftWorkingTimeId)
-        {
-            var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
-            ShiftWorkingTime.Enable();
-            await unitOfWork.SaveAsync();
-            return true;
-        }
-        public async Task<bool> Disable(int ShiftWorkingTimeId)
-        {
-            var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
-            ShiftWorkingTime.Disable();
-            await unitOfWork.SaveAsync();
-            return true;
-        }
+        //public async Task<bool> Enable(int ShiftWorkingTimeId)
+        //{
+        //    var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
+        //        throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
+        //    ShiftWorkingTime.Enable();
+        //    await unitOfWork.SaveAsync();
+        //    return true;
+        //}
+        //public async Task<bool> Disable(int ShiftWorkingTimeId)
+        //{
+        //    var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
+        //        throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
+        //    ShiftWorkingTime.Disable();
+        //    await unitOfWork.SaveAsync();
+        //    return true;
+        //}
 
     }
 }

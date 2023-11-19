@@ -12,6 +12,7 @@ using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
+using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees
@@ -40,6 +41,18 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
+            #region Model Validation
+
+            var createEmployeeModel = new CreateEmployeeModelValidator();
+            var createEmployeeModelResult = createEmployeeModel.Validate(model);
+            if (!createEmployeeModelResult.IsValid)
+            {
+                var error = createEmployeeModelResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
             #region Business Validation
 
             await employeeBLValidation.CreateValidation(model);
@@ -92,6 +105,18 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateEmployeeModel model)
         {
+            #region Model Validation
+
+            var updateEmployeeModelValidator = new UpdateEmployeeModelValidator();
+            var updateEmployeeModelValidatorResult = updateEmployeeModelValidator.Validate(model);
+            if (!updateEmployeeModelValidatorResult.IsValid)
+            {
+                var error = updateEmployeeModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
             #region Business Validation
 
             await employeeBLValidation.UpdateValidation(model);

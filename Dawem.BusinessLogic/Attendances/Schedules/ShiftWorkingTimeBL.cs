@@ -272,6 +272,16 @@ namespace Dawem.BusinessLogic.Attendances.Schedules
             await unitOfWork.SaveAsync();
             return true;
         }
+
+        public Task<bool> Enable(int ShiftWorkingTimeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Disable(int ShiftWorkingTimeId)
+        {
+            throw new NotImplementedException();
+        }
         //public async Task<bool> Enable(int ShiftWorkingTimeId)
         //{
         //    var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??

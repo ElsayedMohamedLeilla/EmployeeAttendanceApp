@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime;
 using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -88,13 +89,13 @@ namespace Dawem.API.Controllers.Attendances.ShiftWorkingTimes
             return Success(await ShiftWorkingTimeBL.Enable(ShiftWorkingTimeId));
         }
         [HttpPut]
-        public async Task<ActionResult> Disable(int ShiftWorkingTimeId)
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
         {
-            if (ShiftWorkingTimeId < 1)
+            if (model.Id < 1)
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.Disable(ShiftWorkingTimeId));
+            return Success(await ShiftWorkingTimeBL.Disable(model));
         }
 
     }

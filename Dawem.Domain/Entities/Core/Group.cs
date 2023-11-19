@@ -19,6 +19,10 @@ namespace Dawem.Domain.Entities.Core
 
         public List<GroupEmployee> GroupEmployees { get; set; }
 
+        public int GroupManagerId { get; set; }
+        public List<GroupManagerDelegator> GroupManagerDelegators { get; set; }
+
+
 
 
     }

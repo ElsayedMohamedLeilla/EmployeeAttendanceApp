@@ -13,6 +13,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.User;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Dawem.Validation.FluentValidation.Employees.User;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -45,6 +46,18 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateUserModel model)
         {
+            #region Model Validation
+
+            var createUserModel = new CreateUserModelValidator();
+            var createUserModelResult = createUserModel.Validate(model);
+            if (!createUserModelResult.IsValid)
+            {
+                var error = createUserModelResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
             #region Business Validation
 
             await userBLValidation.CreateValidation(model);
@@ -114,6 +127,18 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<bool> Update(UpdateUserModel model)
         {
+            #region Model Validation
+
+            var updateUserModelValidator = new UpdateUserModelValidator();
+            var updateUserModelValidatorResult = updateUserModelValidator.Validate(model);
+            if (!updateUserModelValidatorResult.IsValid)
+            {
+                var error = updateUserModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
             #region Business Validation
 
             await userBLValidation.UpdateValidation(model);

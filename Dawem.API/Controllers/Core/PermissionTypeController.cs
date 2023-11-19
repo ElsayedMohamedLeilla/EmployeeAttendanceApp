@@ -32,7 +32,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionsTypeSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetPermissionTypeCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetPermissionsTypesCriteria criteria)
         {
             if (criteria == null)
             {
@@ -42,7 +42,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result.PermissionsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetPermissionTypeCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetPermissionsTypesCriteria criteria)
         {
             if (criteria == null)
             {

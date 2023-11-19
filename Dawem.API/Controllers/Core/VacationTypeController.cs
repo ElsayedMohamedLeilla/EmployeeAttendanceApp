@@ -32,7 +32,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result, messageCode: LeillaKeys.DoneUpdateVacationsTypeSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetVacationTypeCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetVacationsTypesCriteria criteria)
         {
             if (criteria == null)
             {
@@ -42,7 +42,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result.VacationsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetVacationTypeCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetVacationsTypesCriteria criteria)
         {
             if (criteria == null)
             {

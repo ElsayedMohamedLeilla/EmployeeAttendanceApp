@@ -15,7 +15,7 @@ namespace Dawem.Repository.Core.PermissionsTypes
 
         }
 
-        public IQueryable<PermissionsType> GetAsQueryable(GetPermissionTypeCriteria criteria)
+        public IQueryable<PermissionsType> GetAsQueryable(GetPermissionsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<PermissionsType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<PermissionsType>(true);

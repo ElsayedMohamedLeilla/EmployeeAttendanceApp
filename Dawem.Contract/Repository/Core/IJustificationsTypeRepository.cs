@@ -6,6 +6,6 @@ namespace Dawem.Contract.Repository.Core
 {
     public interface IJustificationsTypeRepository : IGenericRepository<JustificationsType>
     {
-        IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypeCriteria criteria);
+        IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypesCriteria criteria);
     }
 }

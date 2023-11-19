@@ -15,7 +15,7 @@ namespace Dawem.Repository.Core.JustificationsTypes
 
         }
 
-        public IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypeCriteria criteria)
+        public IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<JustificationsType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<JustificationsType>(true);

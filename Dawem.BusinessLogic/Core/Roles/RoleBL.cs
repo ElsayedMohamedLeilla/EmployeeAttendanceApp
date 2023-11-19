@@ -34,7 +34,7 @@ namespace Dawem.BusinessLogic.Core.Roles
             mapper = _mapper;
         }
 
-        public async Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRoleCriteria criteria)
+        public async Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRolesCriteria criteria)
         {
             criteria.IsActive = true;
             var RoleRepository = repositoryManager.RoleRepository;

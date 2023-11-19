@@ -103,7 +103,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #endregion
         }
-        public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionTypeCriteria criteria)
+        public async Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypesCriteria criteria)
         {
             var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;
             var query = PermissionsTypeRepository.GetAsQueryable(criteria);
@@ -142,7 +142,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
             #endregion
 
         }
-        public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionTypeCriteria criteria)
+        public async Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypesCriteria criteria)
         {
             criteria.IsActive = true;
             var PermissionsTypeRepository = repositoryManager.PermissionsTypeRepository;

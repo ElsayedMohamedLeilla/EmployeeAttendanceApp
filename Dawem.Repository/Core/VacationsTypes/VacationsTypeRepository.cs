@@ -15,7 +15,7 @@ namespace Dawem.Repository.Core.VacationsTypes
 
         }
 
-        public IQueryable<VacationsType> GetAsQueryable(GetVacationTypeCriteria criteria)
+        public IQueryable<VacationsType> GetAsQueryable(GetVacationsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<VacationsType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<VacationsType>(true);

@@ -6,7 +6,7 @@ namespace Dawem.Contract.Repository.Core
 {
     public interface IRoleRepository : IGenericRepository<Role>
     {
-        IQueryable<Role> GetAsQueryable(GetRoleCriteria criteria);
+        IQueryable<Role> GetAsQueryable(GetRolesCriteria criteria);
 
     }
 }

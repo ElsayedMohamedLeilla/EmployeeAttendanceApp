@@ -325,9 +325,6 @@ namespace Dawem.BusinessLogic.Attendances.SchedulePlans
                         DepartmentId = p.SchedulePlanDepartment.DepartmentId
                     }).ToListAsync();
 
-
-                var getNextSchedulePlanssss = await repositoryManager.SchedulePlanRepository.GetByIdAsync(8);
-
                 if (getNextSchedulePlans is not null && getNextSchedulePlans.Count > 0)
                 {
                     foreach (var nextSchedulePlan in getNextSchedulePlans)

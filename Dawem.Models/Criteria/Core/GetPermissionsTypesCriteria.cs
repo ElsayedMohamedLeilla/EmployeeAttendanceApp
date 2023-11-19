@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Criteria.Core
 {
-    public class GetPermissionTypeCriteria : BaseCriteria
+    public class GetPermissionsTypesCriteria : BaseCriteria
     {
 
     }

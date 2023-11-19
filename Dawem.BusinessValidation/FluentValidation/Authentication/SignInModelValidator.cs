@@ -12,8 +12,8 @@ namespace Dawem.Validation.FluentValidation.Authentication
                     WithMessage(LeillaKeys.SorryYouMustEnterEmail);
             RuleFor(signInModel => signInModel.Password).NotNull().
                 WithMessage(LeillaKeys.SorryYouMustEnterPassword);
-            RuleFor(signInModel => (int)signInModel.ApplicationType)
-                .Must(applicationType => applicationType > 0 && applicationType < 4).
+            RuleFor(signInModel => signInModel.ApplicationType)
+                .IsInEnum().
                 WithMessage(LeillaKeys.SorryYouMustEnterApplicationType);
         }
     }

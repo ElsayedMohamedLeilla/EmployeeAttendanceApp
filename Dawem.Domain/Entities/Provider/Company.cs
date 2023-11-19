@@ -6,6 +6,7 @@ namespace Dawem.Domain.Entities.Provider
     [Table("Companies")]
     public class Company : BaseEntity
     {
+        public int Code { get; set; }
         public string Name { get; set; }
         public virtual List<Branch> Branches { get; set; }
         public int CountryId { get; set; }

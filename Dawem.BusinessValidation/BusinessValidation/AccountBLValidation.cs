@@ -47,9 +47,27 @@ namespace Dawem.Validation.BusinessValidation
         }
         public async Task<MyUser> SignInValidation(SignInModel model)
         {
+            #region Check Company code
+
+            if (!string.IsNullOrEmpty(model.CompanyCode))
+            {
+                var checkCompanyCode = await repositoryManager.CompanyRepository
+               .Get(c => !c.IsDeleted && c.Code.ToString() == model.CompanyCode)
+               .AnyAsync();
+
+                if (!checkCompanyCode)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryThereIsNoCompanyWithEnteredCode);
+                }
+            }
+           
+            #endregion
+
             #region Find User
 
-            var user = await userManagerRepository.FindByNameAsync(model.Email) ?? 
+            var user = await repositoryManager.UserRepository
+                .GetEntityByConditionAsync(u=> !u.IsDeleted && u.Email == model.Email && (model.CompanyCode == null || 
+                (u.Company != null && u.Company.Code.ToString() == model.CompanyCode ))) ?? 
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion

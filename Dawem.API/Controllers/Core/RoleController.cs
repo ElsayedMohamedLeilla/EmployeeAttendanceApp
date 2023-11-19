@@ -18,7 +18,7 @@ namespace Dawem.API.Controllers.Core
             RoleBL = _RoleBL;
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetRoleCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetRolesCriteria criteria)
         {
             if (criteria == null)
             {

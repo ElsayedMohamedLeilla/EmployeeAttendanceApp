@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Core;
-using Dawem.Domain.Entities.Employees;
+﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
@@ -43,6 +42,8 @@ namespace Dawem.Domain.Entities.UserManagement
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }
         public string DisableReason { get; set; }
+        public ApplicationType AddedApplicationType { get; set; }
+        public ApplicationType? ModifiedApplicationType { get; set; }
         public void Delete()
         {
             IsDeleted = true;

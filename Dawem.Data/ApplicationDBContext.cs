@@ -80,7 +80,9 @@ namespace Dawem.Data
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
 
-
+            builder.Entity<Company>()
+                .HasIndex(u => u.IdentityCode)
+                .IsUnique();
 
             builder.Entity<Translation>()
                 .Property(p => p.IsActive)

@@ -88,6 +88,7 @@ namespace Dawem.BusinessLogic.Employees
             var employee = mapper.Map<Employee>(model);
             employee.CompanyId = requestInfo.CompanyId;
             employee.AddUserId = requestInfo.UserId;
+            employee.AddedApplicationType = requestInfo.ApplicationType;
             employee.ProfileImageName = imageName;
             employee.Code = getNextCode;
             repositoryManager.EmployeeRepository.Insert(employee);
@@ -141,7 +142,7 @@ namespace Dawem.BusinessLogic.Employees
 
             var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
-
+            var poland = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, "Central European Standard Time");
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;
@@ -155,6 +156,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
+            getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
             await unitOfWork.SaveAsync();
 
             #endregion

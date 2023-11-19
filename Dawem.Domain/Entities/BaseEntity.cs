@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Dawem.Enums.Generals;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities
@@ -10,6 +11,8 @@ namespace Dawem.Domain.Entities
         public int Id { get; set; }
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDate { get; set; }
+        public ApplicationType AddedApplicationType { get; set; }
+        public ApplicationType? ModifiedApplicationType { get; set; }
         public int? AddUserId { get; set; }
         public int? ModifyUserId { get; set; }
         public bool IsActive { get; set; } = true;

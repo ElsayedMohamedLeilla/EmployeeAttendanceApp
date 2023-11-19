@@ -70,6 +70,7 @@ namespace Dawem.Repository.Manager
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
         private IGroupEmployeeRepository groupEmployeeRepository;
+        private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
 
 
 
@@ -153,9 +154,10 @@ namespace Dawem.Repository.Manager
         public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
 
-
         public IGroupEmployeeRepository GroupEmployeeRepository =>
         groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);
+        public IGroupManagerDelegatorRepository GroupManagerDelegatorRepository =>
+        groupManagerDelegatorRepository ??= new GroupManagerDelegatorRepository(unitOfWork, generalSetting);
 
     }
 }

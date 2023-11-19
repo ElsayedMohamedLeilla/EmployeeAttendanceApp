@@ -44,6 +44,9 @@ namespace Dawem.BusinessLogic.Core.Groups
             #region assign EmployeeIdes In GroupEmployees Object
             model.MapGroupEmployees();
             #endregion
+            #region assign DelegatorsIdes In GroupManagerDelegators Object
+            model.MapGroupManagarDelegators();
+            #endregion
             #region Business Validation
             await GroupBLValidation.CreateValidation(model);
             #endregion
@@ -78,6 +81,9 @@ namespace Dawem.BusinessLogic.Core.Groups
         {
             #region assign EmployeeIdes In GroupEmployees Object
             model.MapGroupEmployees();
+            #endregion
+            #region assign EmployeeIdes In GroupEmployees Object
+            model.MapGroupManagarDelegators();
             #endregion
             #region Business Validation
 
@@ -138,9 +144,51 @@ namespace Dawem.BusinessLogic.Core.Groups
                 repositoryManager.GroupEmployeeRepository.BulkInsert(addedGroupEmployees);
 
             }
+            #endregion
 
+            #region Update GroupManagerDelgators
+            if (getGroup != null)
+            {
 
+                List<GroupManagerDelegator> ExistDbList = repositoryManager.GroupManagerDelegatorRepository.GetByCondition(e => e.GroupId == getGroup.Id).ToList();
+                List<int> groupManagerDelegatorToRemove = new List<int>();
+                List<GroupManagerDelegator> addedGroupManagerDelegators = new List<GroupManagerDelegator>();
 
+                for (int i = 0; i < model.GroupManagerDelegators.Count; i++)
+                {
+                    int employeeId = model.GroupManagerDelegators[i].EmployeeId; // Assuming model.GroupEmployees contains employee IDs
+
+                    // Check if the employee ID is not present in the existing list, add it to employeesToAdd
+                    if (!ExistDbList.Any(e => e.EmployeeId == employeeId))
+                    {
+                        //employeesToAdd.Add(employeeId);
+                        GroupManagerDelegator temp = new GroupManagerDelegator()
+                        {
+                            GroupId = model.Id,
+                            EmployeeId = employeeId,
+                            ModifyUserId = requestInfo.UserId,
+                            ModifiedDate = DateTime.UtcNow
+                        };
+                        addedGroupManagerDelegators.Add(temp);
+                    }
+                }
+                foreach (var groupEmployee in ExistDbList)
+                {
+                    // Check if the employee ID in ExistDbList is not present in model.GroupEmployees
+                    if (!model.GroupManagerDelegatorIdes.Contains(groupEmployee.EmployeeId))
+                    {
+                        groupManagerDelegatorToRemove.Add(groupEmployee.EmployeeId);
+                    }
+                }
+                List<GroupManagerDelegator> removedgroupManagerDelegators = repositoryManager.GroupManagerDelegatorRepository
+               .GetByCondition(e => e.GroupId == model.Id && groupManagerDelegatorToRemove.Contains(e.EmployeeId))
+               .ToList();
+                // remove useless
+                repositoryManager.GroupManagerDelegatorRepository.BulkDeleteIfExist(removedgroupManagerDelegators);
+                //add new 
+                repositoryManager.GroupManagerDelegatorRepository.BulkInsert(addedGroupManagerDelegators);
+
+            }
             #endregion
             // await unitOfWork.SaveAsync();
 

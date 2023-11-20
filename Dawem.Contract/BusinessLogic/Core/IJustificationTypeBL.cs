@@ -10,8 +10,8 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Update(UpdateJustificationsTypeDTO model);
         Task<GetJustificationsTypeInfoResponseDTO> GetInfo(int justificationsTypeId);
         Task<GetJustificationsTypeByIdResponseDTO> GetById(int justificationsTypeId);
-        Task<GetJustificationsTypeResponseDTO> Get(GetJustificationsTypeCriteria model);
-        Task<GetJustificationsTypeDropDownResponseDTO> GetForDropDown(GetJustificationsTypeCriteria model);
+        Task<GetJustificationsTypeResponseDTO> Get(GetJustificationsTypesCriteria model);
+        Task<GetJustificationsTypeDropDownResponseDTO> GetForDropDown(GetJustificationsTypesCriteria model);
         Task<bool> Delete(int justificationsTypeId);
     }
 }

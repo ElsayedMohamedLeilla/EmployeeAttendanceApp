@@ -10,8 +10,8 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Update(UpdatePermissionTypeDTO model);
         Task<GetPermissionsTypeInfoResponseDTO> GetInfo(int PermissionsTypeId);
         Task<GetPermissionsTypeByIdResponseDTO> GetById(int PermissionsTypeId);
-        Task<GetPermissionsTypeResponseDTO> Get(GetPermissionTypeCriteria model);
-        Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionTypeCriteria model);
+        Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypesCriteria model);
+        Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypesCriteria model);
         Task<bool> Delete(int PermissionsTypeId);
     }
 }

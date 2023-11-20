@@ -103,7 +103,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #endregion
         }
-        public async Task<GetJustificationsTypeResponseDTO> Get(GetJustificationsTypeCriteria criteria)
+        public async Task<GetJustificationsTypeResponseDTO> Get(GetJustificationsTypesCriteria criteria)
         {
             var justificationsTypeRepository = repositoryManager.JustificationsTypeRepository;
             var query = justificationsTypeRepository.GetAsQueryable(criteria);
@@ -142,7 +142,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
             #endregion
 
         }
-        public async Task<GetJustificationsTypeDropDownResponseDTO> GetForDropDown(GetJustificationsTypeCriteria criteria)
+        public async Task<GetJustificationsTypeDropDownResponseDTO> GetForDropDown(GetJustificationsTypesCriteria criteria)
         {
             criteria.IsActive = true;
             var JustificationsTypeRepository = repositoryManager.JustificationsTypeRepository;

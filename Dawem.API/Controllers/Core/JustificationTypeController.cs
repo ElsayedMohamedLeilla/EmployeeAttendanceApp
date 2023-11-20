@@ -32,7 +32,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result, messageCode: LeillaKeys.DoneUpdateJustificationsTypeSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetJustificationsTypeCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetJustificationsTypesCriteria criteria)
         {
             if (criteria == null)
             {
@@ -42,7 +42,7 @@ namespace Dawem.API.Controllers.Core
             return Success(result.JustificationsTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetJustificationsTypeCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetJustificationsTypesCriteria criteria)
         {
             if (criteria == null)
             {

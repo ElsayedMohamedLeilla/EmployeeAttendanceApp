@@ -5,6 +5,6 @@ namespace Dawem.Contract.BusinessLogic.Core
 {
     public interface IRoleBL
     {
-        Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRoleCriteria model);
+        Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRolesCriteria model);
     }
 }

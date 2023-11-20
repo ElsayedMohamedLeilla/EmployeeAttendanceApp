@@ -103,7 +103,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #endregion
         }
-        public async Task<GetVacationsTypeResponseDTO> Get(GetVacationTypeCriteria criteria)
+        public async Task<GetVacationsTypeResponseDTO> Get(GetVacationsTypesCriteria criteria)
         {
             var VacationsTypeRepository = repositoryManager.VacationsTypeRepository;
             var query = VacationsTypeRepository.GetAsQueryable(criteria);
@@ -142,7 +142,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #endregion
 
         }
-        public async Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationTypeCriteria criteria)
+        public async Task<GetVacationsTypeDropDownResponseDTO> GetForDropDown(GetVacationsTypesCriteria criteria)
         {
             criteria.IsActive = true;
             var VacationsTypeRepository = repositoryManager.VacationsTypeRepository;

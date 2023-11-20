@@ -16,7 +16,7 @@ namespace Dawem.Repository.Core.Roles
 
         }
 
-        public IQueryable<Role> GetAsQueryable(GetRoleCriteria criteria)
+        public IQueryable<Role> GetAsQueryable(GetRolesCriteria criteria)
         {
             var inner = PredicateBuilder.New<Role>(true);
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

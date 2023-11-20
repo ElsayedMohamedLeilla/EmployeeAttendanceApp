@@ -17,10 +17,10 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -83,8 +83,19 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Insert Company
 
+            #region Set Employee code
+
+            var getNextCode = await repositoryManager.CompanyRepository
+                .Get(e => !e.IsDeleted)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
             var insertedCompany = repositoryManager.CompanyRepository.Insert(new Company()
             {
+                Code = getNextCode,
                 Name = signUpModel.CompanyName,
                 IsActive = true,
                 AddUserId = user.Id,

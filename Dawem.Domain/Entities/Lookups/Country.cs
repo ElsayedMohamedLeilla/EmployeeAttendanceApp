@@ -12,6 +12,6 @@ namespace Dawem.Domain.Entities.Lookups
         public string Dial { get; set; }
         public string Currency { get; set; }
         public string CurrencyName { get; set; }
-
+        public string TimeZoneId { get; set; }
     }
 }

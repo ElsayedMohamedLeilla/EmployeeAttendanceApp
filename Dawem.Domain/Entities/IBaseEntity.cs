@@ -1,4 +1,6 @@
-﻿namespace Dawem.Domain.Entities
+﻿using Dawem.Enums.Generals;
+
+namespace Dawem.Domain.Entities
 {
     public interface IBaseEntity
     {
@@ -10,6 +12,8 @@
         public bool IsDeleted { get; set; }
         public DateTime? DeletionDate { get; set; }
         public string DisableReason { get; set; }
+        public ApplicationType AddedApplicationType { get; set; }
+        public ApplicationType? ModifiedApplicationType { get; set; }
 
     }
 }

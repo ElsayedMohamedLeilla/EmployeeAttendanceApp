@@ -10,7 +10,7 @@ namespace Dawem.Models.Context
         public int UserId { get; set; }
         public int CompanyId { get; set; }
         public int? BranchId { get; set; }
-        public ApplicationType? ApplicationType { get; set; }
+        public ApplicationType ApplicationType { get; set; }
         public ApplicationType AddedByDevice { get; set; }
         public string RequestProtocol { get; set; }
         public string RequestHost { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using System.Security.Principal;
+
+namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -103,6 +105,7 @@
         public const string SorryErrorHappenWhileAddingUser = "Sorry!!ErrorHappenWhileAddingUser!";
         public const string SorryErrorHappenWhileUpdatingUser = "Sorry!!ErrorHappenWhileUpdatingUser!";
         public const string DoneSuccessfully = "DoneSuccessfully";
+        public const string DoneVerifyCompanyCodeSuccessfully = "DoneVerifyCompanyCodeSuccessfully";
         public const string DoneCreateUserSuccessfully = "DoneCreateUserSuccessfully";
         public const string DoneUpdateUserSuccessfully = "DoneUpdateUserSuccessfully";
         public const string DoneDeleteUserSuccessfully = "DoneDeleteUserSuccessfully";
@@ -113,6 +116,7 @@
         public const string SorryBranchNotFound = "Sorry!!BranchNotFound!";
         public const string ActionLogNotFound = "ActionLogNotFound!";
         public const string SorryYouMustEnterEmail = "Sorry!!YouMustEnterEmail!";
+        public const string SorryYouMustEnterCompanyId = "Sorry!!YouMustEnterCompanyId!";
         public const string SorryYouMustEnterMobileNumber = "Sorry!!YouMustEnterMobileNumber!";
         public const string SorryYouMustEnterPassword = "Sorry!!YouMustEnterPassword!";
         public const string SorryYouMustEnterApplicationType = "Sorry!!YouMustEnterApplicationType!";
@@ -169,7 +173,6 @@
         public const string SorryYouMustEnterPaginationSettings = "Sorry!!YouMustEnterPaginationSettings!";
         public const string SorryYouMustEnablePagination = "Sorry!!YouMustEnablePagination!";
         public const string SorryPageSizeMustLessThanOrEqual5 = "Sorry!!PageSizeMustLessThanOrEqual5!";
-        public const string SorryYouMustEnterCompanyId = "SorryYouMustEnterCompanyId!";
         public const string SorryEmployeeNameIsDuplicated = "Sorry!!EmployeeNameIsDuplicated!";
         public const string SorryYouMustEnterEmployeeId = "Sorry!!YouMustEnterEmployeeId!";
         public const string SorryEmployeeNotFound = "Sorry!!EmployeeNotFound!";
@@ -306,6 +309,8 @@
         public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
 
         public const string SorryThereIsNoCompanyWithEnteredCode = "Sorry!!ThereIsNoCompanyWithEnteredCode!";
-
+        public const string SorryCannotFindTheCompany = "Sorry!!CannotFindTheCompany!";
+        public const string SorryYouMustEnterCompanyCode = "Sorry!!YouMustEnterCompanyCode!";
+        
     }
 }

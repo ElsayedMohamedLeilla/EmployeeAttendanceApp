@@ -1,11 +1,12 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
+using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using System.Text.Json.Serialization;
 
-namespace Dawem.Models.Dtos.Core.Groups
+namespace Dawem.Models.Dtos.Core.Group
 {
     public class UpdateGroupDTO
     {
-        public int Id { get; set; }  
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public List<int> EmployeeIdes { get; set; }

@@ -1,20 +1,17 @@
-﻿using Dawem.Contract.Repository.Attendances.SchedulePlans;
-using Dawem.Contract.Repository.Attendances.Schedules;
-using Dawem.Contract.Repository.Core;
+﻿using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.Schedules.SchedulePlans;
+using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Attendance;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
-using Dawem.Repository.Attendances.Schedules;
-using Dawem.Repository.Core.GroupEmployees;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -25,6 +22,9 @@ using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
 using Dawem.Repository.Provider;
+using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Repository.Schedules.SchedulePlans;
+using Dawem.Repository.Schedules.Schedules;
 using Dawem.Repository.UserManagement;
 
 namespace Dawem.Repository.Manager

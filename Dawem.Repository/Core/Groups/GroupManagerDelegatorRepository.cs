@@ -1,10 +1,10 @@
 ﻿using Dawem.Contract.Repository.Core;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Core;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Core.GroupEmployees
+namespace Dawem.Repository.Core.Groups
 {
     public class GroupManagerDelegatorRepository : GenericRepository<GroupManagerDelegator>, IGroupManagerDelegatorRepository
     {

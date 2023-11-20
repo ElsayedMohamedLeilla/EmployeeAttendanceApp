@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees
+namespace Dawem.Validation.FluentValidation
 {
     public class GetGenaricValidator : AbstractValidator<BaseCriteria>
     {
@@ -15,5 +15,5 @@ namespace Dawem.Validation.FluentValidation.Employees
             RuleFor(model => model).Must(m => m.PageSize <= 5).
                     WithMessage(LeillaKeys.SorryPageSizeMustLessThanOrEqual5);
         }
-    }   
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Core.Groups;
+﻿using Dawem.Models.Dtos.Core.Group;
 
 namespace Dawem.Contract.BusinessValidation.Core
 {

@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Core.GroupEmployees
+namespace Dawem.Repository.Core.Groups
 {
     public class GroupEmployeeRepository : GenericRepository<GroupEmployee>, IGroupEmployeeRepository
     {

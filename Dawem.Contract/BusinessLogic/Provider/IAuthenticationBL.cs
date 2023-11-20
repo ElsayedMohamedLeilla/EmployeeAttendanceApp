@@ -5,6 +5,7 @@ namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface IAuthenticationBL
     {
+        Task<int> VerifyCompanyCode(string identityCode);
         Task<bool> RequestResetPassword(RequestResetPasswordModel model);
         Task<bool> ResetPassword(ResetPasswordModel model);
         Task<bool> SignUp(SignUpModel model);

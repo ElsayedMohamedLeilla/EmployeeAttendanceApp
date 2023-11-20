@@ -49,15 +49,15 @@ namespace Dawem.Validation.BusinessValidation
         {
             #region Check Company code
 
-            if (!string.IsNullOrEmpty(model.CompanyCode))
+            if (model.CompanyId > 0)
             {
                 var checkCompanyCode = await repositoryManager.CompanyRepository
-               .Get(c => !c.IsDeleted && c.Code.ToString() == model.CompanyCode)
+               .Get(c => !c.IsDeleted && c.Id == model.CompanyId)
                .AnyAsync();
 
                 if (!checkCompanyCode)
                 {
-                    throw new BusinessValidationException(LeillaKeys.SorryThereIsNoCompanyWithEnteredCode);
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotFindTheCompany);
                 }
             }
            
@@ -66,8 +66,8 @@ namespace Dawem.Validation.BusinessValidation
             #region Find User
 
             var user = await repositoryManager.UserRepository
-                .GetEntityByConditionAsync(u=> !u.IsDeleted && u.Email == model.Email && (model.CompanyCode == null || 
-                (u.Company != null && u.Company.Code.ToString() == model.CompanyCode ))) ?? 
+                .GetEntityByConditionAsync(u=> !u.IsDeleted && u.Email == model.Email && (model.CompanyId <= 0 || 
+                (u.Company != null && u.Company.Id == model.CompanyId))) ?? 
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion

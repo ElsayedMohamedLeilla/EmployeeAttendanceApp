@@ -1,6 +1,5 @@
 ﻿using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Attendances.Schedules;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Schedules.Schedules

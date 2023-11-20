@@ -10,11 +10,8 @@ using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Attendance;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
-using Dawem.Repository.Attendances.Schedules;
-using Dawem.Repository.Core.GroupEmployees;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -25,6 +22,9 @@ using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
 using Dawem.Repository.Provider;
+using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Repository.Schedules.SchedulePlans;
+using Dawem.Repository.Schedules.Schedules;
 using Dawem.Repository.UserManagement;
 
 namespace Dawem.Repository.Manager

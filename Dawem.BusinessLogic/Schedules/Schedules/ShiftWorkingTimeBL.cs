@@ -12,8 +12,8 @@ using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Attendances.ShiftWorkingTimes;
-using Dawem.Validation.FluentValidation.Employees;
+using Dawem.Validation.FluentValidation;
+using Dawem.Validation.FluentValidation.Schedules.ShiftWorkingTimes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Schedules.Schedules

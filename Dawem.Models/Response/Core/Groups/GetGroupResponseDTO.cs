@@ -1,8 +1,10 @@
-﻿namespace Dawem.Models.Response.Core.Groups
+﻿using Dawem.Models.Dtos.Employees.Employees;
+
+namespace Dawem.Models.Response.Core.Groups
 {
     public class GetGroupResponseDTO
     {
-        public List<GetGroupResponseModelDTO> Groups { get; set; }
+        public List<GroupEmployeeForGridDTO> Groups { get; set; }
         public int TotalCount { get; set; }
     }
 }

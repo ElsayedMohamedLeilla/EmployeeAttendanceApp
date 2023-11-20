@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogicCore;
 using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -25,6 +27,7 @@ namespace Dawem.BusinessLogic.Core.Groups
         private readonly IGroupBLValidation GroupBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IUploadBLC uploadBLC;
 
 
         public GroupBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
@@ -202,14 +205,21 @@ namespace Dawem.BusinessLogic.Core.Groups
             #endregion
 
             #region Handle Response
+           
 
-            var GroupsList = await queryPaged.Select(group => new GetGroupResponseModelDTO
+            var GroupsList = await queryPaged.Select(group => new GroupEmployeeForGridDTO
             {
+
                 Id = group.Id,
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-               
+                GroupManager = repositoryManager.EmployeeRepository
+                       .GetByID(group.GroupManagerId).Select(e => new GroupManagarForGridDTO {
+                    GroupManagerName = e.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                }).FirstOrDefault()
+
             }).ToListAsync();
 
             return new GetGroupResponseDTO
@@ -272,8 +282,17 @@ namespace Dawem.BusinessLogic.Core.Groups
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
-             .ToList()
-        }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+             .ToList(),
+         GroupManagerDelegators = group.GroupManagerDelegators
+             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+                 groupEmployee => groupEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Name) // Select employee names
+             .ToList(),
+         GroupManager = repositoryManager.EmployeeRepository
+                       .GetByID(group.GroupManagerId).Name
+                       
+     }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             return Group;
         }

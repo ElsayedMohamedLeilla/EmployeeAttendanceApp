@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Dtos.Shared;
@@ -6,6 +7,7 @@ using Dawem.Models.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace Dawem.API.Controllers.Provider
 {
@@ -22,7 +24,15 @@ namespace Dawem.API.Controllers.Provider
             authenticationBL = _authenticationBL;
             mailBL = _mailBL;
         }
-
+        [HttpGet]
+        public async Task<ActionResult> VerifyIdentityCode([FromQuery] string identityCode)
+        {
+            if (identityCode is null)
+            {
+                return BadRequest();
+            }
+            return Success(await authenticationBL.VerifyIdentityCode(identityCode), messageCode: LeillaKeys.DoneVerifyCompanyCodeSuccessfully);
+        }
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {

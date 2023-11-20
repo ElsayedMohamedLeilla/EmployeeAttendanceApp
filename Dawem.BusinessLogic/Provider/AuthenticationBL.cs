@@ -83,7 +83,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Insert Company
 
-            #region Set Employee code
+            #region Set Company Code
 
             var getNextCode = await repositoryManager.CompanyRepository
                 .Get(e => !e.IsDeleted)
@@ -93,8 +93,26 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
+            #region Set Company Identity Code
+
+            var identityCode = StringHelper.RandomString(10);
+            var checkForRandomString = await repositoryManager.CompanyRepository
+                .Get(e => !e.IsDeleted && e.IdentityCode == identityCode)
+                .AnyAsync();
+
+            while (checkForRandomString)
+            {
+                identityCode = StringHelper.RandomString(10);
+                checkForRandomString = await repositoryManager.CompanyRepository
+                .Get(e => !e.IsDeleted && e.IdentityCode == identityCode)
+                .AnyAsync();
+            }
+
+            #endregion
+
             var insertedCompany = repositoryManager.CompanyRepository.Insert(new Company()
             {
+                IdentityCode = identityCode,
                 Code = getNextCode,
                 Name = signUpModel.CompanyName,
                 IsActive = true,
@@ -456,7 +474,25 @@ namespace Dawem.BusinessLogic.Provider
 
             return true;
         }
+        public async Task<int> VerifyIdentityCode(string identityCode)
+        {
+            if (string.IsNullOrEmpty(identityCode) || string.IsNullOrWhiteSpace(identityCode))
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterCompanyCode);
+            }
 
+            var companyId = await repositoryManager.CompanyRepository.Get(c => !c.IsDeleted && c.IdentityCode == identityCode)
+                .Select(c => c.Id)
+                .FirstOrDefaultAsync();
+
+            if (companyId <= 0)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoCompanyWithEnteredCode);
+            }
+
+            return companyId;
+
+        }
     }
 }
 

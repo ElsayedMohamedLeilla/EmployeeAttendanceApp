@@ -15,12 +15,12 @@ namespace Dawem.Domain.Entities.Employees
         public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }
-        public int ScheduleDayId { get; set; }
-        [ForeignKey(nameof(ScheduleDayId))]
-        public ScheduleDay ScheduleDay { get; set; }
         public int ScheduleId { get; set; }
         [ForeignKey(nameof(ScheduleId))]
         public Schedule Schedule { get; set; }
+        public int ScheduleDayId { get; set; }
+        [ForeignKey(nameof(ScheduleDayId))]
+        public ScheduleDay ScheduleDay { get; set; }
         public int ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }

@@ -66,6 +66,7 @@ namespace Dawem.BusinessLogic.Core.Groups
             var Group = mapper.Map<Group>(model);
             Group.CompanyId = requestInfo.CompanyId;
             Group.AddUserId = requestInfo.UserId;
+            Group.AddedApplicationType = requestInfo.ApplicationType;
             Group.Code = getNextCode;
             repositoryManager.GroupRepository.Insert(Group);
             await unitOfWork.SaveAsync();
@@ -98,99 +99,80 @@ namespace Dawem.BusinessLogic.Core.Groups
             getGroup.IsActive = model.IsActive;
             getGroup.ModifiedDate = DateTime.Now;
             getGroup.ModifyUserId = requestInfo.UserId;
+            getGroup.GroupManagerId = model.GroupManagerId;
+            getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
             await unitOfWork.SaveAsync();
             #endregion
 
             #region Update GroupEmployees
             if (getGroup != null)
             {
+                List<GroupEmployee> existDbList = repositoryManager.GroupEmployeeRepository
+                    .GetByCondition(e => e.GroupId == getGroup.Id)
+                    .ToList();
 
-                List<GroupEmployee> ExistDbList = repositoryManager.GroupEmployeeRepository.GetByCondition(e => e.GroupId == getGroup.Id).ToList();
-                List<int> employeesToRemove = new List<int>();
-                List<GroupEmployee> addedGroupEmployees = new List<GroupEmployee>();
+                List<int> existingEmployeeIds = existDbList.Select(e => e.EmployeeId).ToList();
 
-                for (int i = 0; i < model.GroupEmployees.Count; i++)
-                {
-                    int employeeId = model.GroupEmployees[i].EmployeeId; // Assuming model.GroupEmployees contains employee IDs
-
-                    // Check if the employee ID is not present in the existing list, add it to employeesToAdd
-                    if (!ExistDbList.Any(e => e.EmployeeId == employeeId))
+                List<GroupEmployee> addedGroupEmployees = model.GroupEmployees
+                    .Where(ge => !existingEmployeeIds.Contains(ge.EmployeeId))
+                    .Select(ge => new GroupEmployee
                     {
-                        //employeesToAdd.Add(employeeId);
-                        GroupEmployee temp = new GroupEmployee()
-                        {
-                            GroupId = model.Id,
-                            EmployeeId = employeeId,
-                            ModifyUserId = requestInfo.UserId,
-                            ModifiedDate = DateTime.UtcNow
-                        };
-                        addedGroupEmployees.Add(temp);
-                    }
-                }
-                foreach (var groupEmployee in ExistDbList)
-                {
-                    // Check if the employee ID in ExistDbList is not present in model.GroupEmployees
-                    if (!model.EmployeeIdes.Contains(groupEmployee.EmployeeId))
-                    {
-                        employeesToRemove.Add(groupEmployee.EmployeeId);
-                    }
-                }
-                List<GroupEmployee> removedgroupEmployees = repositoryManager.GroupEmployeeRepository
-               .GetByCondition(e => e.GroupId == model.Id && employeesToRemove.Contains(e.EmployeeId))
-               .ToList();
-                // remove useless
-                repositoryManager.GroupEmployeeRepository.BulkDeleteIfExist(removedgroupEmployees);
-                //add new 
-                repositoryManager.GroupEmployeeRepository.BulkInsert(addedGroupEmployees);
+                        GroupId = model.Id,
+                        EmployeeId = ge.EmployeeId,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    })
+                    .ToList();
 
+                List<int> employeesToRemove = existDbList
+                    .Where(ge => !model.EmployeeIdes.Contains(ge.EmployeeId))
+                    .Select(ge => ge.EmployeeId)
+                    .ToList();
+
+                List<GroupEmployee> removedGroupEmployees = repositoryManager.GroupEmployeeRepository
+                    .GetByCondition(e => e.GroupId == model.Id && employeesToRemove.Contains(e.EmployeeId))
+                    .ToList();
+
+                if (removedGroupEmployees.Count > 0)
+                    repositoryManager.GroupEmployeeRepository.BulkDeleteIfExist(removedGroupEmployees);
+                if (addedGroupEmployees.Count > 0)
+                    repositoryManager.GroupEmployeeRepository.BulkInsert(addedGroupEmployees);
             }
             #endregion
 
             #region Update GroupManagerDelgators
             if (getGroup != null)
             {
+                List<GroupManagerDelegator> ExistDbList = repositoryManager.GroupManagerDelegatorRepository
+                    .GetByCondition(e => e.GroupId == getGroup.Id)
+                    .ToList();
 
-                List<GroupManagerDelegator> ExistDbList = repositoryManager.GroupManagerDelegatorRepository.GetByCondition(e => e.GroupId == getGroup.Id).ToList();
-                List<int> groupManagerDelegatorToRemove = new List<int>();
-                List<GroupManagerDelegator> addedGroupManagerDelegators = new List<GroupManagerDelegator>();
+                List<int> existingEmployeeIds = ExistDbList.Select(e => e.EmployeeId).ToList();
 
-                for (int i = 0; i < model.GroupManagerDelegators.Count; i++)
-                {
-                    int employeeId = model.GroupManagerDelegators[i].EmployeeId; // Assuming model.GroupEmployees contains employee IDs
-
-                    // Check if the employee ID is not present in the existing list, add it to employeesToAdd
-                    if (!ExistDbList.Any(e => e.EmployeeId == employeeId))
+                List<GroupManagerDelegator> addedGroupManagerDelegators = model.GroupManagerDelegators
+                    .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
+                    .Select(gmd => new GroupManagerDelegator
                     {
-                        //employeesToAdd.Add(employeeId);
-                        GroupManagerDelegator temp = new GroupManagerDelegator()
-                        {
-                            GroupId = model.Id,
-                            EmployeeId = employeeId,
-                            ModifyUserId = requestInfo.UserId,
-                            ModifiedDate = DateTime.UtcNow
-                        };
-                        addedGroupManagerDelegators.Add(temp);
-                    }
-                }
-                foreach (var groupEmployee in ExistDbList)
-                {
-                    // Check if the employee ID in ExistDbList is not present in model.GroupEmployees
-                    if (!model.GroupManagerDelegatorIdes.Contains(groupEmployee.EmployeeId))
-                    {
-                        groupManagerDelegatorToRemove.Add(groupEmployee.EmployeeId);
-                    }
-                }
+                        GroupId = model.Id,
+                        EmployeeId = gmd.EmployeeId,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    }).ToList();
+
+                List<int> groupManagerDelegatorToRemove = ExistDbList
+                    .Where(gmd => !model.GroupManagerDelegatorIdes.Contains(gmd.EmployeeId))
+                    .Select(gmd => gmd.EmployeeId)
+                    .ToList();
+
                 List<GroupManagerDelegator> removedgroupManagerDelegators = repositoryManager.GroupManagerDelegatorRepository
-               .GetByCondition(e => e.GroupId == model.Id && groupManagerDelegatorToRemove.Contains(e.EmployeeId))
-               .ToList();
-                // remove useless
-                repositoryManager.GroupManagerDelegatorRepository.BulkDeleteIfExist(removedgroupManagerDelegators);
-                //add new 
-                repositoryManager.GroupManagerDelegatorRepository.BulkInsert(addedGroupManagerDelegators);
-
+                    .GetByCondition(e => e.GroupId == model.Id && groupManagerDelegatorToRemove.Contains(e.EmployeeId))
+                    .ToList();
+                if (removedgroupManagerDelegators.Count > 0)
+                    repositoryManager.GroupManagerDelegatorRepository.BulkDeleteIfExist(removedgroupManagerDelegators);
+                if (addedGroupManagerDelegators.Count > 0)
+                    repositoryManager.GroupManagerDelegatorRepository.BulkInsert(addedGroupManagerDelegators);
             }
             #endregion
-            // await unitOfWork.SaveAsync();
 
             #region Handle Response
 
@@ -228,8 +210,6 @@ namespace Dawem.BusinessLogic.Core.Groups
                 Name = group.Name,
                 IsActive = group.IsActive,
                
-
-
             }).ToListAsync();
 
             return new GetGroupResponseDTO
@@ -306,11 +286,18 @@ namespace Dawem.BusinessLogic.Core.Groups
                     Code = group.Code,
                     Name = group.Name,
                     IsActive = group.IsActive,
+                    GroupManagerId=group.GroupManagerId,
                     EmployeeIdes = group.GroupEmployees
-             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+             .Join(repositoryManager.EmployeeRepository.GetAll(), 
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
-                 (groupEmployee, employee) => employee.Id) // Select employee names
+                 (groupEmployee, employee) => employee.Id)
+             .ToList(),
+                    GroupManagerDelegatorIdes = group.GroupManagerDelegators
+             .Join(repositoryManager.EmployeeRepository.GetAll(),
+                 groupEmployee => groupEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Id)
              .ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
@@ -324,6 +311,23 @@ namespace Dawem.BusinessLogic.Core.Groups
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             Group.Delete();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task<bool> Enable(int GroupId)
+        {
+            var group = await repositoryManager.GroupRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == GroupId) ??
+                throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+            group.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var group = await repositoryManager.GroupRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+            group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;
         }

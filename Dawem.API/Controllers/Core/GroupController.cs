@@ -1,6 +1,8 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Attendances.Schedules;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +80,25 @@ namespace Dawem.API.Controllers.Core
                 return BadRequest();
             }
             return Success(await groupBL.Delete(groupId));
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Enable(int GroupId)
+        {
+            if (GroupId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await groupBL.Enable(GroupId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await groupBL.Disable(model));
         }
 
     }

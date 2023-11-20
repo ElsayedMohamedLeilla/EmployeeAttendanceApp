@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Groups;
 
 namespace Dawem.Contract.BusinessLogic.Core
@@ -13,5 +14,7 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<GetGroupResponseDTO> Get(GetGroupCriteria model);
         Task<GetGroupDropDownResponseDTO> GetForDropDown(GetGroupCriteria model);
         Task<bool> Delete(int GroupId);
+        Task<bool> Enable(int GroupId);
+        Task<bool> Disable(DisableModelDTO model);
     }
 }

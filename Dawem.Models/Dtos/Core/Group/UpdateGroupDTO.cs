@@ -11,6 +11,11 @@ namespace Dawem.Models.Dtos.Core.Groups
         public List<int> EmployeeIdes { get; set; }
         [JsonIgnore]
         public List<GroupEmployeeUpdateModelDTO> GroupEmployees { get; set; }
-
+        public void MapGroupEmployees()
+        {
+            GroupEmployees = EmployeeIdes
+                .Select(employeeId => new GroupEmployeeUpdateModelDTO { EmployeeId = employeeId })
+                .ToList();
+        }
     }
 }

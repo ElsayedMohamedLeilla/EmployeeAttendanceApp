@@ -8,6 +8,7 @@ using Dawem.Domain.Entities.Attendance;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances.ShiftWorkingTimes;
 using Dawem.Translations;
@@ -272,32 +273,22 @@ namespace Dawem.BusinessLogic.Attendances.Schedules
             await unitOfWork.SaveAsync();
             return true;
         }
-
-        public Task<bool> Enable(int ShiftWorkingTimeId)
+        public async Task<bool> Enable(int ShiftWorkingTimeId)
         {
-            throw new NotImplementedException();
+            var employee = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == ShiftWorkingTimeId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
+            employee.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
         }
-
-        public Task<bool> Disable(int ShiftWorkingTimeId)
+        public async Task<bool> Disable(DisableModelDTO model)
         {
-            throw new NotImplementedException();
+            var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
+            ShiftWorkingTime.Disable(model.DisableReason);
+            await unitOfWork.SaveAsync();
+            return true;
         }
-        //public async Task<bool> Enable(int ShiftWorkingTimeId)
-        //{
-        //    var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
-        //        throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
-        //    ShiftWorkingTime.Enable();
-        //    await unitOfWork.SaveAsync();
-        //    return true;
-        //}
-        //public async Task<bool> Disable(int ShiftWorkingTimeId)
-        //{
-        //    var ShiftWorkingTime = await repositoryManager.ShiftWorkingTimeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftWorkingTimeId) ??
-        //        throw new BusinessValidationException(LeillaKeys.SorryShiftWorkingTimeNotFound);
-        //    ShiftWorkingTime.Disable();
-        //    await unitOfWork.SaveAsync();
-        //    return true;
-        //}
 
     }
 }

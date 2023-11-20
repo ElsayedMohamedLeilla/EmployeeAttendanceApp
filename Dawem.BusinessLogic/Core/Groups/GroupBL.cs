@@ -42,15 +42,7 @@ namespace Dawem.BusinessLogic.Core.Groups
         public async Task<int> Create(CreateGroupDTO model)
         {
             #region assign EmployeeIdes In GroupEmployees Object
-            List<GroupEmployeeCreateModelDTO> insertedList = new List<GroupEmployeeCreateModelDTO>();
-            foreach (var employee in model.EmployeeIdes)
-            {
-                GroupEmployeeCreateModelDTO temp = new GroupEmployeeCreateModelDTO();
-                temp.EmployeeId = employee;
-                insertedList.Add(temp);
-
-            }
-            model.GroupEmployees = insertedList;
+            model.MapGroupEmployees();
             #endregion
             #region Business Validation
             await GroupBLValidation.CreateValidation(model);
@@ -85,15 +77,7 @@ namespace Dawem.BusinessLogic.Core.Groups
         public async Task<bool> Update(UpdateGroupDTO model)
         {
             #region assign EmployeeIdes In GroupEmployees Object
-            List<GroupEmployeeUpdateModelDTO> insertedList = new List<GroupEmployeeUpdateModelDTO>();
-            foreach (var employee in model.EmployeeIdes)
-            {
-                GroupEmployeeUpdateModelDTO temp = new GroupEmployeeUpdateModelDTO();
-                temp.EmployeeId = employee;
-                insertedList.Add(temp);
-
-            }
-            model.GroupEmployees = insertedList;
+            model.MapGroupEmployees();
             #endregion
             #region Business Validation
 

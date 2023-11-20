@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Dtos.Employees.Employees;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json.Serialization;
 
@@ -12,5 +13,15 @@ namespace Dawem.Models.Dtos.Core.Groups
         [JsonIgnore] // This property will be excluded from JSON serialization
         public List<GroupEmployeeCreateModelDTO> GroupEmployees { get; set; }
 
-}
+       // public int GroupManagerId { get; set; }
+       // public List<GroupManagerDelegator> GroupManagerDelegators { get; set; }
+
+        public void MapGroupEmployees()
+        {
+            GroupEmployees = EmployeeIdes
+                .Select(employeeId => new GroupEmployeeCreateModelDTO { EmployeeId = employeeId })
+                .ToList();
+        }
+
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Attendances.ShiftWorkingTimes;
 
 namespace Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime
@@ -13,7 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Attendances.ShiftWorkingTime
         Task<GetShiftWorkingTimeDropDownResponseDTO> GetForDropDown(GetShiftWorkingTimesCriteria model);
         Task<bool> Delete(int ShiftWorkingTimeId);
         Task<bool> Enable(int ShiftWorkingTimeId);
-        Task<bool> Disable(int ShiftWorkingTimeId);
-
+        Task<bool> Disable(DisableModelDTO model);
     }
 }

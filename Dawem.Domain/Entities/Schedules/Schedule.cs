@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,5 +18,6 @@ namespace Dawem.Domain.Entities.Schedules
         public int Code { get; set; }
         public string Name { get; set; }
         public List<ScheduleDay> ScheduleDays { get; set; }
+        public List<Employee> Employees { get; set; }
     }
 }

@@ -145,6 +145,8 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 Id = schedule.Id,
                 Code = schedule.Code,
                 Name = schedule.Name,
+                EmployeesNumber = schedule.Employees != null 
+                && schedule.Employees.Count > 0 ? schedule.Employees.Count : null,
                 IsActive = schedule.IsActive
             }).ToListAsync();
 

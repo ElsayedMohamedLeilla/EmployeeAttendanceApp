@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 
 namespace Dawem.Models.Response.Core.Groups
 {

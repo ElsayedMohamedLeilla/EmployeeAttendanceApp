@@ -13,7 +13,7 @@ namespace Dawem.Models.Dtos.Core.Group
         [JsonIgnore]
         public List<GroupEmployeeUpdateModelDTO> GroupEmployees { get; set; }
 
-        public int GroupManagerId { get; set; }
+        public int? GroupManagerId { get; set; }
 
         public List<int> GroupManagerDelegatorIdes { get; set; }
 

@@ -13,10 +13,12 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace Dawem.BusinessLogic.Core.Groups
 {
@@ -34,6 +36,7 @@ namespace Dawem.BusinessLogic.Core.Groups
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
         RequestInfo _requestHeaderContext,
+         IUploadBLC _uploadBLC,
         IGroupBLValidation _GroupBLValidation)
         {
             unitOfWork = _unitOfWork;
@@ -41,6 +44,8 @@ namespace Dawem.BusinessLogic.Core.Groups
             repositoryManager = _repositoryManager;
             GroupBLValidation = _GroupBLValidation;
             mapper = _mapper;
+            uploadBLC = _uploadBLC;
+
         }
         public async Task<int> Create(CreateGroupDTO model)
         {
@@ -205,22 +210,23 @@ namespace Dawem.BusinessLogic.Core.Groups
             #endregion
 
             #region Handle Response
-           
+
 
             var GroupsList = await queryPaged.Select(group => new GroupEmployeeForGridDTO
             {
-
                 Id = group.Id,
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-                GroupManager = repositoryManager.EmployeeRepository
-                       .GetByID(group.GroupManagerId).Select(e => new GroupManagarForGridDTO {
-                    GroupManagerName = e.Name,
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
-                }).FirstOrDefault()
+                GroupManager = new GroupManagarForGridDTO
+                {
+                    GroupManagerName = group.GroupManager != null ? group.GroupManager.Name : null,
+                    ProfileImagePath = group.GroupManager != null ? uploadBLC.GetFilePath(group.GroupManager.ProfileImageName, LeillaKeys.Employees) : null ,
+                }
 
             }).ToListAsync();
+
+          
 
             return new GetGroupResponseDTO
             {
@@ -289,8 +295,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
              .ToList(),
-         GroupManager = repositoryManager.EmployeeRepository
-                       .GetByID(group.GroupManagerId).Name
+         GroupManager = group.GroupManager.Name
                        
      }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 

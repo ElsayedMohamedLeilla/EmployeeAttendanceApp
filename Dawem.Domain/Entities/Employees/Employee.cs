@@ -1,5 +1,5 @@
-﻿using Dawem.Domain.Entities.Attendance;
-using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;

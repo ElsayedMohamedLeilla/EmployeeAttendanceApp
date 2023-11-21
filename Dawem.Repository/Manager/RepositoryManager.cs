@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.Repository.Attendances.SchedulePlans;
-using Dawem.Contract.Repository.Attendances.Schedules;
-using Dawem.Contract.Repository.Core;
+﻿using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.Schedules.SchedulePlans;
+using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;

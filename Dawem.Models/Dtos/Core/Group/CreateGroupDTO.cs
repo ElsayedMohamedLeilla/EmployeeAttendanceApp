@@ -1,9 +1,10 @@
 ﻿using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
+using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text.Json.Serialization;
 
-namespace Dawem.Models.Dtos.Core.Groups
+namespace Dawem.Models.Dtos.Core.Group
 {
     public class CreateGroupDTO
     {

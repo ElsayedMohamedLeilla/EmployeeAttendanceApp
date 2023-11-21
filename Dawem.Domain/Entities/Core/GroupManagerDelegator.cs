@@ -1,8 +1,8 @@
-﻿using Dawem.Domain.Entities.Core;
+﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Employees
+namespace Dawem.Domain.Entities.Core
 {
     [Table(nameof(GroupManagerDelegator) + LeillaKeys.S)]
     public class GroupManagerDelegator : BaseEntity

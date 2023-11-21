@@ -1,7 +1,7 @@
 ﻿using Dawem.BusinessLogic.Attendances.Schedules;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

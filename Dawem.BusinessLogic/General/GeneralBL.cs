@@ -2,7 +2,7 @@
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Response.Attendances.WeekDays;
+using Dawem.Models.Response.Schedules.WeekDays;
 
 namespace Dawem.BusinessLogic.General
 {

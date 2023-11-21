@@ -1,4 +1,5 @@
-﻿using Dawem.BusinessLogic.Lookups;
+﻿using Dawem.BackgroundJobs;
+using Dawem.BusinessLogic.Lookups;
 using Dawem.Contract.BusinessLogic.Lookups;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -6,7 +7,6 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
-using Glamatek.BackgroundJobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

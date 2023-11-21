@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core.Groups;
+using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Groups;
 

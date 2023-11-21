@@ -1,9 +1,9 @@
-﻿using Dawem.Contract.BusinessLogic.Attendances.SchedulePlans;
+﻿using Dawem.Contract.BusinessLogic.Schedules.SchedulePlans;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NCrontab;
 
-namespace Glamatek.BackgroundJobs
+namespace Dawem.BackgroundJobs
 {
     public class SchedulePlanBackgroundJobHostedService : BackgroundService
     {

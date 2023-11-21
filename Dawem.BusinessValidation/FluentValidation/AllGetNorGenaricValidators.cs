@@ -1,8 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Criteria.Others;
-using Dawem.Models.Dtos.Attendances.Schedules;
-using Dawem.Models.Dtos.Attendances.ShiftWorkingTimes;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -10,9 +8,13 @@ using Dawem.Models.Dtos.Employees.HolidayType;
 using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Models.Dtos.Schedules.SchedulePlans;
+using Dawem.Models.Dtos.Schedules.Schedules;
+using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees
+namespace Dawem.Validation.FluentValidation
 {
     public class GetDepartmentsCriteriaValidator : AbstractValidator<GetDepartmentsCriteria>
     {

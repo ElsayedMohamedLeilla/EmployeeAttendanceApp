@@ -1,11 +1,11 @@
 ﻿using Dawem.Domain.Entities;
-using Dawem.Domain.Entities.Attendance;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Ohters;
 using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Generic;
 using Dawem.Translations;

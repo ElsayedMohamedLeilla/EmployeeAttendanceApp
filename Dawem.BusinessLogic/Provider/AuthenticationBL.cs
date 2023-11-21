@@ -474,7 +474,7 @@ namespace Dawem.BusinessLogic.Provider
 
             return true;
         }
-        public async Task<int> VerifyIdentityCode(string identityCode)
+        public async Task<int> VerifyCompanyCode(string identityCode)
         {
             if (string.IsNullOrEmpty(identityCode) || string.IsNullOrWhiteSpace(identityCode))
             {

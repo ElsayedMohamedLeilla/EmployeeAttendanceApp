@@ -25,13 +25,13 @@ namespace Dawem.API.Controllers.Provider
             mailBL = _mailBL;
         }
         [HttpGet]
-        public async Task<ActionResult> VerifyIdentityCode([FromQuery] string identityCode)
+        public async Task<ActionResult> VerifyCompanyCode([FromQuery] string identityCode)
         {
             if (identityCode is null)
             {
                 return BadRequest();
             }
-            return Success(await authenticationBL.VerifyIdentityCode(identityCode), messageCode: LeillaKeys.DoneVerifyCompanyCodeSuccessfully);
+            return Success(await authenticationBL.VerifyCompanyCode(identityCode), messageCode: LeillaKeys.DoneVerifyCompanyCodeSuccessfully);
         }
         [HttpPost]
         public async Task<ActionResult> SignUp(SignUpModel model)

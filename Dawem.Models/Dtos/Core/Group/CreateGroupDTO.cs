@@ -13,13 +13,23 @@ namespace Dawem.Models.Dtos.Core.Groups
         [JsonIgnore] // This property will be excluded from JSON serialization
         public List<GroupEmployeeCreateModelDTO> GroupEmployees { get; set; }
 
-       // public int GroupManagerId { get; set; }
-       // public List<GroupManagerDelegator> GroupManagerDelegators { get; set; }
+        public int GroupManagerId { get; set; }
+
+        public List<int> GroupManagerDelegatorIdes { get; set; }
+
+        [JsonIgnore]
+        public List<GroupManagarDelegatorCreateModelDTO> GroupManagerDelegators { get; set; }
 
         public void MapGroupEmployees()
         {
             GroupEmployees = EmployeeIdes
                 .Select(employeeId => new GroupEmployeeCreateModelDTO { EmployeeId = employeeId })
+                .ToList();
+        }
+        public void MapGroupManagarDelegators()
+        {
+            GroupManagerDelegators = GroupManagerDelegatorIdes
+                .Select(employeeId => new GroupManagarDelegatorCreateModelDTO { EmployeeId = employeeId })
                 .ToList();
         }
 

@@ -9,6 +9,10 @@ namespace Dawem.Models.Response.Core.Groups
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public List<int> EmployeeIdes { get; set; }
+        public List<int> GroupManagerDelegatorIdes { get; set; }
+        public int GroupManagerId { get; set; }
+
+
 
 
 

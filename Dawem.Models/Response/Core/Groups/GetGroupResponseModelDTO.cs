@@ -9,5 +9,7 @@ namespace Dawem.Models.Response.Core.Groups
         public string Name { get; set; }
         public bool IsActive { get; set; }
 
+      
+
     }
 }

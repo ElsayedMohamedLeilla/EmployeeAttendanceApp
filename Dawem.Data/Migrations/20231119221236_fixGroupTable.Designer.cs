@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231119221236_fixGroupTable")]
+    partial class fixGroupTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +35,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -59,9 +59,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -93,9 +90,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -112,9 +106,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -154,9 +145,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -182,9 +170,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -221,9 +206,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -249,9 +231,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -291,9 +270,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -313,9 +289,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -359,9 +332,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -381,9 +351,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -418,9 +385,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -440,9 +404,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -477,9 +438,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -499,9 +457,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -536,9 +491,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -570,9 +522,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -607,9 +556,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -635,9 +581,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -669,9 +612,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -694,9 +634,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -728,9 +665,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -753,9 +687,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -787,9 +718,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -812,9 +740,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -846,9 +771,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -871,9 +793,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -905,9 +824,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -930,9 +846,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -967,9 +880,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1022,9 +932,6 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("MobileNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -1069,9 +976,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1094,9 +998,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1127,9 +1028,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1152,9 +1050,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1185,9 +1080,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1210,9 +1102,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1244,9 +1133,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1269,9 +1155,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1303,9 +1186,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1328,9 +1208,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1362,9 +1239,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1392,9 +1266,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<string>("Lang")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1426,9 +1297,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1463,9 +1331,6 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Iso3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -1479,9 +1344,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TimeZoneId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1498,9 +1360,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1525,9 +1384,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1571,9 +1427,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1596,9 +1449,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1641,9 +1491,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1663,9 +1510,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1697,9 +1541,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1740,9 +1581,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("MainBranchId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -1780,9 +1618,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("AddUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("AddedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1803,17 +1638,11 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("IdentityCode")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1831,10 +1660,6 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("IdentityCode")
-                        .IsUnique()
-                        .HasFilter("[IdentityCode] IS NOT NULL");
-
                     b.ToTable("Companies", "Dawem");
                 });
 
@@ -1847,9 +1672,6 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1871,9 +1693,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -1908,9 +1727,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("AddedDate")
@@ -1970,9 +1786,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<string>("MobileNumber")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");

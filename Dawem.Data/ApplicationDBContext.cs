@@ -78,8 +78,8 @@ namespace Dawem.Data
             builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
-
-
+            
+            
             builder.Entity<Company>()
                 .HasIndex(u => u.IdentityCode)
                 .IsUnique();
@@ -184,7 +184,7 @@ namespace Dawem.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }
-
+        public DbSet<EmployeeAttendance> EmployeeAttendances { get; set; }
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
 

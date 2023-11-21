@@ -61,6 +61,7 @@ namespace Dawem.Translations
         public const string RememberMe = "RememberMe";
         public const string True = "true";
         public const string Space = " ";
+        public const string SpaceThenDashThenSpace = " - ";
         public const string QuestionMark = "?";
         public const string Email = "Email";
         public const string EmailConfirmationToken = "Email Confirmation Token";
@@ -311,6 +312,20 @@ namespace Dawem.Translations
         public const string SorryThereIsNoCompanyWithEnteredCode = "Sorry!!ThereIsNoCompanyWithEnteredCode!";
         public const string SorryCannotFindTheCompany = "Sorry!!CannotFindTheCompany!";
         public const string SorryYouMustEnterCompanyCode = "Sorry!!YouMustEnterCompanyCode!";
+
+        public const string SorryYouMustEnterTheMonth = "Sorry!!YouMustEnterTheMonth!";
+        public const string SorryYouMustEnterTheYear = "Sorry!!YouMustEnterTheYear!";
+
+        public const string SorryCurrentUserNotEmployee = "Sorry!!CurrentUserNotEmployee!";
+        public const string SorryEmployeeDoNotHaveSchedule = "Sorry!!EmployeeDoNotHaveSchedule!";
+        public const string SorryTimeZoneNotFound = "Sorry!!TimeZoneNotFound!";
+        public const string SorryYouDoNotHaveScheduleToday = "Sorry!!YouDoNotHaveScheduleToday!";
+
+
+        public const string SorryCurrentAttendanceInformationNotFound = "Sorry!!CurrentAttendanceInformationNotFound!";
+        public const string SorryThereIsNoAttendancesInSelectedYearAndMonth = "Sorry!!ThereIsNoAttendancesInSelectedYearAndMonth!";
+        public const string EndOfWeekVacations = "EndOfWeekVacations:";
+
         
     }
 }

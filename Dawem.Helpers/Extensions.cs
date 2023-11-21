@@ -62,7 +62,7 @@ namespace Dawem.Helpers
             return number;
         }
 
-
+        
         public static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
         {
             if (includeInherited || type.BaseType == null)

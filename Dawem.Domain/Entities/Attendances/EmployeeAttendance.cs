@@ -18,16 +18,16 @@ namespace Dawem.Domain.Entities.Employees
         public int ScheduleId { get; set; }
         [ForeignKey(nameof(ScheduleId))]
         public Schedule Schedule { get; set; }
-        public int ScheduleDayId { get; set; }
-        [ForeignKey(nameof(ScheduleDayId))]
-        public ScheduleDay ScheduleDay { get; set; }
         public int ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }
         
         #endregion
         public int Code { get; set; }
-        public DateTime CheckInTime { get; set; }
-        public DateTime? CheckOutTime { get; set; }
+        public DateTime LocalDate { get; set; }
+        public TimeOnly CheckInTime { get; set; }
+        public TimeOnly? CheckOutTime { get; set; }
+        public TimeOnly ShiftCheckInTime { get; set; }
+        public TimeOnly ShiftCheckOutTime { get; set; }
     }
 }

@@ -2,7 +2,13 @@
 {
     public class GroupEmployeeForGridDTO
     {
-        public string EmployeeName { get; set; }
+        public int Id { get; set; }
+        public int Code { get; set; }
+        public string Name { get; set; }
+        public bool IsActive { get; set; }
+
+        public GroupManagarForGridDTO GroupManager { get; set; } = null;
+        public List<GroupManagarForGridDTO> GroupManagerDelegators { get; set; }
 
     }
 }

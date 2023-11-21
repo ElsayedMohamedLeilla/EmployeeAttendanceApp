@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogicCore;
 using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -11,10 +13,12 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 
 namespace Dawem.BusinessLogic.Core.Groups
 {
@@ -25,12 +29,14 @@ namespace Dawem.BusinessLogic.Core.Groups
         private readonly IGroupBLValidation GroupBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IUploadBLC uploadBLC;
 
 
         public GroupBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
         RequestInfo _requestHeaderContext,
+         IUploadBLC _uploadBLC,
         IGroupBLValidation _GroupBLValidation)
         {
             unitOfWork = _unitOfWork;
@@ -38,6 +44,8 @@ namespace Dawem.BusinessLogic.Core.Groups
             repositoryManager = _repositoryManager;
             GroupBLValidation = _GroupBLValidation;
             mapper = _mapper;
+            uploadBLC = _uploadBLC;
+
         }
         public async Task<int> Create(CreateGroupDTO model)
         {
@@ -203,14 +211,22 @@ namespace Dawem.BusinessLogic.Core.Groups
 
             #region Handle Response
 
-            var GroupsList = await queryPaged.Select(group => new GetGroupResponseModelDTO
+
+            var GroupsList = await queryPaged.Select(group => new GroupEmployeeForGridDTO
             {
                 Id = group.Id,
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-               
+                GroupManager = new GroupManagarForGridDTO
+                {
+                    GroupManagerName = group.GroupManager != null ? group.GroupManager.Name : null,
+                    ProfileImagePath = group.GroupManager != null ? uploadBLC.GetFilePath(group.GroupManager.ProfileImageName, LeillaKeys.Employees) : null ,
+                }
+
             }).ToListAsync();
+
+          
 
             return new GetGroupResponseDTO
             {
@@ -272,8 +288,16 @@ namespace Dawem.BusinessLogic.Core.Groups
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
-             .ToList()
-        }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+             .ToList(),
+         GroupManagerDelegators = group.GroupManagerDelegators
+             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+                 groupEmployee => groupEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Name) // Select employee names
+             .ToList(),
+         GroupManager = group.GroupManager.Name
+                       
+     }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             return Group;
         }

@@ -40,7 +40,6 @@ namespace Dawem.Validation.Core
             if(hasDuplicates)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
-
             }
             List<Employee> employees = repositoryManager.EmployeeRepository
            .GetAll()
@@ -50,6 +49,7 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
             }
+          
             return true;
         }
 

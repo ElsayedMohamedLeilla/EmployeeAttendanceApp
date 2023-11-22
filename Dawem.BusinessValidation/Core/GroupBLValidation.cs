@@ -27,25 +27,25 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNameIsDuplicated);
             }
-            if (model.GroupEmployees.Count < 2)
+            if (model.Employees.Count < 2)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupCantBeCreatedWithLessThan2Employee);
             }
-            if (model.GroupEmployees.Any(item => item.EmployeeId == 0))
+            if (model.Employees.Any(item => item.EmployeeId == 0))
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
             }
           
-            bool hasDuplicates = model.EmployeeIdes.Count != model.EmployeeIdes.Distinct().Count();
+            bool hasDuplicates = model.EmployeeIds.Count != model.EmployeeIds.Distinct().Count();
             if(hasDuplicates)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
             }
             List<Employee> employees = repositoryManager.EmployeeRepository
            .GetAll()
-           .Where(employee => model.EmployeeIdes.Contains(employee.Id))
+           .Where(employee => model.EmployeeIds.Contains(employee.Id))
            .ToList();
-            if (employees.Count != model.EmployeeIdes.Count)
+            if (employees.Count != model.EmployeeIds.Count)
             {
                 throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
             }
@@ -63,15 +63,15 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNameIsDuplicated);
             }
-            if (model.GroupEmployees.Count < 2)
+            if (model.Employees.Count < 2)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryGroupCantBeCreatedWithLessThan2Employee);
             }
-            if (model.GroupEmployees.Any(item => item.EmployeeId == 0))
+            if (model.Employees.Any(item => item.EmployeeId == 0))
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
             }
-            bool hasDuplicates = model.EmployeeIdes.Count != model.EmployeeIdes.Distinct().Count();
+            bool hasDuplicates = model.EmployeeIds.Count != model.EmployeeIds.Distinct().Count();
             if (hasDuplicates)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
@@ -79,9 +79,9 @@ namespace Dawem.Validation.Core
             }
             List<Employee> employees = repositoryManager.EmployeeRepository
            .GetAll()
-           .Where(employee => model.EmployeeIdes.Contains(employee.Id))
+           .Where(employee => model.EmployeeIds.Contains(employee.Id))
            .ToList();
-            if (employees.Count != model.EmployeeIdes.Count)
+            if (employees.Count != model.EmployeeIds.Count)
             {
                 throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
             }

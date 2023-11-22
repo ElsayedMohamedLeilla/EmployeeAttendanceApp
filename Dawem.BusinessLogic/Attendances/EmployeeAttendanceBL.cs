@@ -37,7 +37,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
         }
         public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
         {
-            var response = FingerPrintType.Attendance;
+            var response = FingerPrintType.CheckIn;
 
             #region Business Validation
 
@@ -62,14 +62,14 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getAttandanceId,
-                    FingerPrintType = FingerPrintType.Departure,
+                    FingerPrintType = FingerPrintType.CheckOut,
                     IsActive = true,
                     Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress
                 });
-                response = FingerPrintType.Departure;
+                response = FingerPrintType.CheckOut;
             }
             //checkin
             else
@@ -101,7 +101,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                     EmployeeId = result.EmployeeId,
                     IsActive = true,
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
-                        FingerPrintType = FingerPrintType.Attendance,
+                        FingerPrintType = FingerPrintType.CheckIn,
                         IsActive = true,
                         Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                         Latitude = model.Latitude,

@@ -28,10 +28,16 @@ namespace Dawem.API.Controllers.Others
                 imgPath = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, fileName);
             if (System.IO.File.Exists(imgPath))
             {
-                var image = System.IO.File.OpenRead(imgPath);
-                return File(image, "image/jpeg");
-            }
+                var svgContentType = "image/svg+xml; charset=utf-8";
+                var pdfContentType = "application/pdf";
+                var imageContentType = "image/jpeg";
 
+                var contentType = fileName.Contains(".svg") ? svgContentType :
+                    fileName.Contains(".pdf") ? pdfContentType : imageContentType;
+
+                var imageFile = System.IO.File.OpenRead(imgPath);
+                return File(imageFile, contentType);
+            }
 
             return BadRequest();
 

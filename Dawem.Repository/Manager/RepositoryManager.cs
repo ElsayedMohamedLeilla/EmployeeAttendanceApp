@@ -31,11 +31,9 @@ namespace Dawem.Repository.Manager
 {
     public class RepositoryManager : IRepositoryManager
     {
-
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
-
         private IUserRepository userRepository;
         private IActionLogRepository actionLogRepository;
         private IUserBranchRepository userBranchRepository;
@@ -50,30 +48,26 @@ namespace Dawem.Repository.Manager
         private IAssignmentTypeRepository assignmentTypeRepository;
         private ITaskTypeRepository taskTypeRepository;
         private IJobTitleRepository jobTitleRepository;
-
         private IHolidayTypeRepository holidayTypeRepository;
         private IJustificationsTypeRepository justificationsTypeRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
-
         private IScheduleRepository scheduleRepository;
-
         private ISchedulePlanRepository schedulePlanRepository;
         private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
         private ISchedulePlanGroupRepository schedulePlanGroupRepository;
         private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
         private ISchedulePlanBackgroundJobLogRepository schedulePlanBackgroundJobLogRepository;
         private ISchedulePlanBackgroundJobLogEmployeeRepository schedulePlanBackgroundJobLogEmployeeRepository;
-
         private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
         private IGroupRepository groupRepository;
         private IGroupEmployeeRepository groupEmployeeRepository;
         private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
-
-
-
+        private IEmployeeAttendanceRepository employeeAttendanceRepository;
+        private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
+        
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
@@ -97,50 +91,36 @@ namespace Dawem.Repository.Manager
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
-
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
         employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
-
         public IAssignmentTypeRepository AssignmentTypeRepository =>
         assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting);
         public ITaskTypeRepository TaskTypeRepository =>
         taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting);
-
         public IJobTitleRepository JobTitleRepository =>
         jobTitleRepository ??= new JobTitleRepository(unitOfWork, generalSetting);
         public IHolidayTypeRepository HolidayTypeRepository =>
         holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
-
-
         public IJustificationsTypeRepository JustificationsTypeRepository =>
         justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
-
         public IVacationsTypeRepository VacationsTypeRepository =>
         vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting);
-
         public IPermissionsTypeRepository PermissionsTypeRepository =>
         permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
-
         public IRoleRepository RoleRepository =>
         roleRepository ??= new RoleRepository(unitOfWork, generalSetting);
-
         public IShiftWorkingTimeRepository ShiftWorkingTimeRepository =>
         shiftWorkingTimeRepository ??= new ShiftWorkingTimeRepository(unitOfWork, generalSetting);
-
-
-
         public IScheduleRepository ScheduleRepository =>
         scheduleRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
         public IScheduleDayRepository ScheduleDayRepository =>
         scheduleDayRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
-
         public IGroupRepository GroupRepository =>
         groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
-
         public ISchedulePlanRepository SchedulePlanRepository =>
          schedulePlanRepository ??= new SchedulePlanRepository(unitOfWork, generalSetting);
         public ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository =>
@@ -153,11 +133,13 @@ namespace Dawem.Repository.Manager
          schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting);
         public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
-
         public IGroupEmployeeRepository GroupEmployeeRepository =>
         groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);
         public IGroupManagerDelegatorRepository GroupManagerDelegatorRepository =>
         groupManagerDelegatorRepository ??= new GroupManagerDelegatorRepository(unitOfWork, generalSetting);
-
+        public IEmployeeAttendanceRepository EmployeeAttendanceRepository =>
+        employeeAttendanceRepository ??= new EmployeeAttendanceRepository(unitOfWork, generalSetting, requestInfo);
+        public IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository =>
+        employeeAttendanceCheckRepository ??= new EmployeeAttendanceCheckRepository(unitOfWork, generalSetting, requestInfo);
     }
 }

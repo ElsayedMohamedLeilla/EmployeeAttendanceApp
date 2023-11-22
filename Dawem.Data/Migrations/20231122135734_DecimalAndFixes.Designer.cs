@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231122135734_DecimalAndFixes")]
+    partial class DecimalAndFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -564,8 +567,9 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("AllowedMinutes")
-                        .HasColumnType("int");
+                    b.Property<decimal>("AllowedMinutes")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
                     b.Property<int>("Code")
                         .HasColumnType("int");
@@ -668,11 +672,13 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -1997,8 +2003,9 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("AllowedMinutes")
-                        .HasColumnType("int");
+                    b.Property<decimal>("AllowedMinutes")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
                     b.Property<TimeSpan>("CheckInTime")
                         .HasColumnType("time");
@@ -2499,7 +2506,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Employees.EmployeeAttendance", "EmployeeAttendance")
                         .WithMany("EmployeeAttendanceChecks")
                         .HasForeignKey("EmployeeAttendanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EmployeeAttendance");

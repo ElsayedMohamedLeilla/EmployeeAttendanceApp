@@ -7,7 +7,6 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
-using Dawem.Domain.Entities.Employees;
 
 namespace Dawem.Contract.Repository.Manager
 {
@@ -25,36 +24,26 @@ namespace Dawem.Contract.Repository.Manager
         IEmployeeRepository EmployeeRepository { get; }
         IDepartmentRepository DepartmentRepository { get; }
         IJustificationsTypeRepository JustificationsTypeRepository { get; }
-
         IVacationsTypeRepository VacationsTypeRepository { get; }
-
         IPermissionsTypeRepository PermissionsTypeRepository { get; }
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
         IJobTitleRepository JobTitleRepository { get; }
         IHolidayTypeRepository HolidayTypeRepository { get; }
-        
-
         IScheduleRepository ScheduleRepository { get; }
-
         ISchedulePlanRepository SchedulePlanRepository { get; }
         ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository { get; }
         ISchedulePlanGroupRepository SchedulePlanGroupRepository { get; }
         ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository { get; }
         ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository { get; }
         ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository { get; }
-
+        IEmployeeAttendanceRepository EmployeeAttendanceRepository { get; }
+        IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository { get; }        
         IScheduleDayRepository ScheduleDayRepository { get; }
-
         IRoleRepository RoleRepository { get; }
         IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }
         IGroupRepository GroupRepository { get; }
         IGroupEmployeeRepository GroupEmployeeRepository { get; }
         IGroupManagerDelegatorRepository GroupManagerDelegatorRepository { get; }
-
-
-
-
-
     }
 }

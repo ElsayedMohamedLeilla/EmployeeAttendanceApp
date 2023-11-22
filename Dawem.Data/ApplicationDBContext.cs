@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities;
+﻿
+using Dawem.Domain.Entities;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
@@ -69,6 +70,20 @@ namespace Dawem.Data
                 }
             }
 
+            #region Handle All decimal Precisions
+
+            var allDecimalProperties = builder.Model.GetEntityTypes()
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
+
+            foreach (var property in allDecimalProperties)
+            {
+                property.SetPrecision(30);
+                property.SetScale(20);
+            }
+
+            #endregion
+
             builder.Entity<Translation>().HasIndex(x => new { x.KeyWord, x.Lang }).IsUnique();
             builder.Entity<MyUser>(entity => { entity.ToTable(name: nameof(MyUser) + LeillaKeys.S).HasKey(x => x.Id); });
             builder.Entity<UserRole>(entity => { entity.ToTable(name: nameof(UserRole) + LeillaKeys.S); });
@@ -108,12 +123,17 @@ namespace Dawem.Data
             .IsRequired();
 
 
+            builder.Entity<EmployeeAttendanceCheck>()
+           .HasOne(p => p.EmployeeAttendance)
+           .WithMany(b => b.EmployeeAttendanceChecks)
+           .HasForeignKey(p => p.EmployeeAttendanceId)
+           .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<ScheduleDay>()
                 .HasOne(p => p.Schedule)
                 .WithMany(b => b.ScheduleDays)
                 .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
-
 
             builder.Entity<SchedulePlanEmployee>()
                .HasOne(p => p.SchedulePlan)
@@ -145,14 +165,36 @@ namespace Dawem.Data
             builder.Entity<ShiftWorkingTime>()
            .Property(e => e.CheckInTime)
            .HasConversion(
-               v => v.ToTimeSpan(),     // Convert TimeOnly to TimeSpan when saving to the database
-               v => TimeOnly.FromTimeSpan(v)  // Convert TimeSpan to TimeOnly when reading from the database
+               v => v.ToTimeSpan(),
+               v => TimeOnly.FromTimeSpan(v)
            );
             builder.Entity<ShiftWorkingTime>()
           .Property(e => e.CheckOutTime)
           .HasConversion(
-              v => v.ToTimeSpan(),     // Convert TimeOnly to TimeSpan when saving to the database
-              v => TimeOnly.FromTimeSpan(v)  // Convert TimeSpan to TimeOnly when reading from the database
+              v => v.ToTimeSpan(),
+              v => TimeOnly.FromTimeSpan(v)
+
+          );
+
+            builder.Entity<EmployeeAttendanceCheck>()
+          .Property(e => e.Time)
+          .HasConversion(
+              v => v.ToTimeSpan(),
+              v => TimeOnly.FromTimeSpan(v)
+          );
+
+            builder.Entity<EmployeeAttendance>()
+         .Property(e => e.ShiftCheckInTime)
+         .HasConversion(
+             v => v.ToTimeSpan(),
+             v => TimeOnly.FromTimeSpan(v)
+         );
+            builder.Entity<EmployeeAttendance>()
+          .Property(e => e.ShiftCheckOutTime)
+          .HasConversion(
+              v => v.ToTimeSpan(),
+              v => TimeOnly.FromTimeSpan(v)
+
           );
 
         }
@@ -184,7 +226,8 @@ namespace Dawem.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }
-
+        public DbSet<EmployeeAttendance> EmployeeAttendances { get; set; }
+        public DbSet<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
 

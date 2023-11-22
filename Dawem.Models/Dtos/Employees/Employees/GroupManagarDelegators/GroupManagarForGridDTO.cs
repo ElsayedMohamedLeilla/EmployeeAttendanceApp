@@ -2,7 +2,7 @@
 {
     public class GroupManagarForGridDTO
     {
-        public string GroupManagerName { get; set; }
+        public string ManagerName { get; set; }
         public string ProfileImagePath { get; set; }
 
     }

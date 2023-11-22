@@ -105,9 +105,9 @@ namespace Dawem.BusinessLogic.Core.Groups
             var getGroup = await repositoryManager.GroupRepository.GetByIdAsync(model.Id);
             getGroup.Name = model.Name;
             getGroup.IsActive = model.IsActive;
-            getGroup.ModifiedDate = DateTime.Now;
+            getGroup.ModifiedDate = DateTime.UtcNow;
             getGroup.ModifyUserId = requestInfo.UserId;
-            getGroup.GroupManagerId = model.GroupManagerId;
+            getGroup.GroupManagerId = model.ManagerId;
             getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
             await unitOfWork.SaveAsync();
             #endregion
@@ -121,7 +121,7 @@ namespace Dawem.BusinessLogic.Core.Groups
 
                 List<int> existingEmployeeIds = existDbList.Select(e => e.EmployeeId).ToList();
 
-                List<GroupEmployee> addedGroupEmployees = model.GroupEmployees
+                List<GroupEmployee> addedGroupEmployees = model.Employees
                     .Where(ge => !existingEmployeeIds.Contains(ge.EmployeeId))
                     .Select(ge => new GroupEmployee
                     {
@@ -133,7 +133,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                     .ToList();
 
                 List<int> employeesToRemove = existDbList
-                    .Where(ge => !model.EmployeeIdes.Contains(ge.EmployeeId))
+                    .Where(ge => !model.EmployeeIds.Contains(ge.EmployeeId))
                     .Select(ge => ge.EmployeeId)
                     .ToList();
 
@@ -157,7 +157,7 @@ namespace Dawem.BusinessLogic.Core.Groups
 
                 List<int> existingEmployeeIds = ExistDbList.Select(e => e.EmployeeId).ToList();
 
-                List<GroupManagerDelegator> addedGroupManagerDelegators = model.GroupManagerDelegators
+                List<GroupManagerDelegator> addedGroupManagerDelegators = model.ManagerDelegators
                     .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
                     .Select(gmd => new GroupManagerDelegator
                     {
@@ -168,7 +168,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                     }).ToList();
 
                 List<int> groupManagerDelegatorToRemove = ExistDbList
-                    .Where(gmd => !model.GroupManagerDelegatorIdes.Contains(gmd.EmployeeId))
+                    .Where(gmd => !model.ManagerDelegatorIds.Contains(gmd.EmployeeId))
                     .Select(gmd => gmd.EmployeeId)
                     .ToList();
 
@@ -218,11 +218,12 @@ namespace Dawem.BusinessLogic.Core.Groups
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-                GroupManager = new GroupManagarForGridDTO
+                EmployeeCount = group.GroupEmployees.Count,
+                Manager = group.GroupManagerId != null ? new GroupManagarForGridDTO
                 {
-                    GroupManagerName = group.GroupManager != null ? group.GroupManager.Name : null,
-                    ProfileImagePath = group.GroupManager != null ? uploadBLC.GetFilePath(group.GroupManager.ProfileImageName, LeillaKeys.Employees) : null ,
-                }
+                    ManagerName = group.GroupManager.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(group.GroupManager.ProfileImageName, LeillaKeys.Employees),
+                } : null
 
             }).ToListAsync();
 
@@ -283,19 +284,19 @@ namespace Dawem.BusinessLogic.Core.Groups
          Code = group.Code,
          Name = group.Name,
          IsActive = group.IsActive,
-         GroupEmployees = group.GroupEmployees
+         Employees = group.GroupEmployees
              .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
              .ToList(),
-         GroupManagerDelegators = group.GroupManagerDelegators
+         ManagerDelegators = group.GroupManagerDelegators
              .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
              .ToList(),
-         GroupManager = group.GroupManager.Name
+         Manager = group.GroupManager.Name
                        
      }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
@@ -310,14 +311,14 @@ namespace Dawem.BusinessLogic.Core.Groups
                     Code = group.Code,
                     Name = group.Name,
                     IsActive = group.IsActive,
-                    GroupManagerId=group.GroupManagerId,
-                    EmployeeIdes = group.GroupEmployees
+                    ManagerId=group.GroupManagerId,
+                    EmployeeIds = group.GroupEmployees
              .Join(repositoryManager.EmployeeRepository.GetAll(), 
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Id)
              .ToList(),
-                    GroupManagerDelegatorIdes = group.GroupManagerDelegators
+                    ManagerDelegatorIds = group.GroupManagerDelegators
              .Join(repositoryManager.EmployeeRepository.GetAll(),
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,

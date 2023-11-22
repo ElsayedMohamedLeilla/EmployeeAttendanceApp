@@ -12,11 +12,11 @@ namespace Dawem.Models.AutoMapper.Core
         public GroupMapProfile()
         {
             CreateMap<CreateGroupDTO, Group>()
-                .ForMember(dest => dest.GroupEmployees, opt => opt.MapFrom(src => src.GroupEmployees))
-                .ForMember(dest => dest.GroupManagerDelegators, opt => opt.MapFrom(src => src.GroupManagerDelegators));
+                .ForMember(dest => dest.GroupEmployees, opt => opt.MapFrom(src => src.Employees))
+                .ForMember(dest => dest.GroupManagerDelegators, opt => opt.MapFrom(src => src.ManagerDelegators));
             CreateMap<UpdateGroupDTO, Group>()
-                .ForMember(dest => dest.GroupEmployees, opt => opt.MapFrom(src => src.GroupEmployees))
-                .ForMember(dest => dest.GroupManagerDelegators, opt => opt.MapFrom(src => src.GroupManagerDelegators));
+                .ForMember(dest => dest.GroupEmployees, opt => opt.MapFrom(src => src.Employees))
+                .ForMember(dest => dest.GroupManagerDelegators, opt => opt.MapFrom(src => src.ManagerDelegators));
 
 
             CreateMap<GroupEmployeeCreateModelDTO, GroupEmployee>();

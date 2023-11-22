@@ -9,25 +9,25 @@ namespace Dawem.Models.Dtos.Core.Group
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-        public List<int> EmployeeIdes { get; set; }
+        public List<int> EmployeeIds { get; set; }
         [JsonIgnore]
-        public List<GroupEmployeeUpdateModelDTO> GroupEmployees { get; set; }
+        public List<GroupEmployeeUpdateModelDTO> Employees { get; set; }
 
-        public int? GroupManagerId { get; set; }
+        public int? ManagerId { get; set; }
 
-        public List<int> GroupManagerDelegatorIdes { get; set; }
+        public List<int> ManagerDelegatorIds { get; set; }
 
         [JsonIgnore]
-        public List<GroupManagarDelegatorUpdateModelDTO> GroupManagerDelegators { get; set; }
+        public List<GroupManagarDelegatorUpdateModelDTO> ManagerDelegators { get; set; }
         public void MapGroupEmployees()
         {
-            GroupEmployees = EmployeeIdes
+            Employees = EmployeeIds
                 .Select(employeeId => new GroupEmployeeUpdateModelDTO { EmployeeId = employeeId })
                 .ToList();
         }
         public void MapGroupManagarDelegators()
         {
-            GroupManagerDelegators = GroupManagerDelegatorIdes
+            ManagerDelegators = ManagerDelegatorIds
                 .Select(employeeId => new GroupManagarDelegatorUpdateModelDTO { EmployeeId = employeeId })
                 .ToList();
         }

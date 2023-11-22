@@ -8,9 +8,9 @@ namespace Dawem.Models.Response.Core.Groups
         public int Code { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-        public List<int> EmployeeIdes { get; set; }
-        public List<int> GroupManagerDelegatorIdes { get; set; }
-        public int? GroupManagerId { get; set; }
+        public List<int> EmployeeIds { get; set; }
+        public List<int> ManagerDelegatorIds { get; set; }
+        public int? ManagerId { get; set; }
 
 
 

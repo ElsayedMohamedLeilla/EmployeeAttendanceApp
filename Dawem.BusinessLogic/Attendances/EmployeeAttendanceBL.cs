@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -34,11 +35,13 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
             employeeAttendanceBLValidation = _employeeAttendanceBLValidation;
             mapper = _mapper;
         }
-        public async Task<bool> FingerPrint()
+        public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
         {
+            var response = FingerPrintType.Attendance;
+
             #region Business Validation
 
-            var result = await employeeAttendanceBLValidation.FingerPrintValidation();
+            var result = await employeeAttendanceBLValidation.FingerPrintValidation(model);
 
             #endregion
 
@@ -46,15 +49,27 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
 
             #region Hanlde FingerPrint
 
-            var getAttandance = await repositoryManager
+            var getAttandanceId = await repositoryManager
                 .EmployeeAttendanceRepository
-                .GetEntityByConditionWithTrackingAsync(e => !e.IsDeleted && e.EmployeeId == result.EmployeeId
-                && e.LocalDate.Date == result.LocalDate.Date);
+                .Get(e => !e.IsDeleted && e.EmployeeId == result.EmployeeId
+                && e.LocalDate.Date == result.LocalDate.Date)
+                .Select(a => a.Id)
+                .FirstOrDefaultAsync();
 
             //checkout
-            if (getAttandance != null)
+            if (getAttandanceId > 0)
             {
-                getAttandance.CheckOutTime = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay);
+                repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
+                {
+                    EmployeeAttendanceId = getAttandanceId,
+                    FingerPrintType = FingerPrintType.Departure,
+                    IsActive = true,
+                    Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude,
+                    IpAddress = requestInfo.RemoteIpAddress
+                });
+                response = FingerPrintType.Departure;
             }
             //checkin
             else
@@ -79,44 +94,53 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                     ShiftId = result.ShiftId,
                     ShiftCheckInTime = result.ShiftCheckInTime,
                     ShiftCheckOutTime = result.ShiftCheckOutTime,
+                    AllowedMinutes = result.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,
-                    CheckInTime = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                     LocalDate = result.LocalDate,
                     EmployeeId = result.EmployeeId,
-                    IsActive = true
+                    IsActive = true,
+                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
+                        FingerPrintType = FingerPrintType.Attendance,
+                        IsActive = true,
+                        Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
+                        Latitude = model.Latitude,
+                        Longitude = model.Longitude,
+                        IpAddress = requestInfo.RemoteIpAddress
+                    } }
                 };
 
                 repositoryManager.EmployeeAttendanceRepository.Insert(employeeAttendance);
-                await unitOfWork.SaveAsync();
 
                 #endregion
             }
+
+            await unitOfWork.SaveAsync();
 
             #endregion
 
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return true;
+            return response;
 
             #endregion
         }
-        public async Task<GetCurrentAttendanceInfoResponseModel> GetCurrentAttendanceInfo()
+        public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfo()
         {
             #region Business Validation
 
-            return await employeeAttendanceBLValidation.GetCurrentAttendanceInfoValidation();
+            return await employeeAttendanceBLValidation.GetCurrentFingerPrintInfoValidation();
 
             #endregion
         }
-        public async Task<List<GetEmployeeAttendancesResponseModel>> GetCurrentEmployeeAttendances(GetEmployeeAttendancesCriteria model)
+        public async Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria model)
         {
             var resonse = new List<GetEmployeeAttendancesResponseModel>();
 
             #region Business Validation
 
-            var result = await employeeAttendanceBLValidation.GetCurrentEmployeeAttendancesValidation(model);
+            var result = await employeeAttendanceBLValidation.GetEmployeeAttendancesValidation(model);
 
             #endregion
 
@@ -126,18 +150,70 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
                 && a.LocalDate.Date.Month == model.Month
                 && a.LocalDate.Date.Year == model.Year)
-                .ToListAsync();
+                .Select(a => new EmployeeAttendance
+                {
+                    Id = a.Id,
+                    LocalDate = a.LocalDate,
+                    ShiftCheckInTime = a.ShiftCheckInTime,
+                    ShiftCheckOutTime = a.ShiftCheckOutTime,
+                    AllowedMinutes = a.AllowedMinutes,
+                    EmployeeAttendanceChecks = a.EmployeeAttendanceChecks != null ?
+                    a.EmployeeAttendanceChecks.Select(c => new EmployeeAttendanceCheck
+                    {
+                        Id = c.Id,
+                        Time = c.Time,
+                    }).ToList() : null
+                }).ToListAsync();
 
             var allDatesInMonth = OthersHelper.AllDatesInMonth(model.Year, model.Month).ToList();
+            var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
+
+            var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&
+                ((s.SchedulePlanEmployee != null && s.SchedulePlanEmployee.EmployeeId == getEmployeeId) ||
+                (s.SchedulePlanGroup != null && s.SchedulePlanGroup.Group.GroupEmployees != null && s.SchedulePlanGroup.Group.GroupEmployees.Any(g => g.EmployeeId == getEmployeeId)) ||
+                (s.SchedulePlanDepartment != null && s.SchedulePlanDepartment.Department.Employees != null && s.SchedulePlanDepartment.Department.Employees.Any(g => g.Id == getEmployeeId))))
+                .Select(s => new SchedulePlan
+                {
+                    DateFrom = s.DateFrom,
+                    ScheduleId = s.ScheduleId
+                }).ToListAsync();
+
+            var employeePlansIds = employeePlans.Select(e => e.ScheduleId).ToList();
+
+            var shifts = employeePlans != null ? await repositoryManager
+                         .ScheduleDayRepository.Get(s => !s.IsDeleted && employeePlansIds.Contains(s.ScheduleId))
+                         .Select(s => new
+                         {
+                             s.WeekDay,
+                             s.ScheduleId,
+                             s.ShiftId
+                         }).ToListAsync() : null;
 
             var weekVacationDays = new List<DayAndWeekDayModel>();
 
-            foreach (DateTime date in allDatesInMonth)
+            foreach (var date in allDatesInMonth)
             {
                 var employeeAttendance = employeeAttendances
                         .FirstOrDefault(e => e.LocalDate.Date == date.Date);
 
-                if (employeeAttendance == null)
+                var checkInTime = employeeAttendance?.EmployeeAttendanceChecks?.FirstOrDefault()?.Time;
+                var checkOutTime = employeeAttendance?.EmployeeAttendanceChecks?.OrderByDescending(c => c.Id)?.FirstOrDefault()?.Time;
+
+                #region Check For Vacation
+
+                var scheduleId = employeePlans.Where(s => s.DateFrom.Date <= date.Date)
+                    .OrderByDescending(c => c.DateFrom.Date)?.FirstOrDefault()?.ScheduleId;
+
+                int? shiftId = null;
+                if (scheduleId != null)
+                {
+                    shiftId = shifts.FirstOrDefault(s => s.ScheduleId == scheduleId && s.WeekDay == (WeekDay)date.DayOfWeek)
+                         .ShiftId;
+                }
+
+                #endregion
+
+                if (scheduleId != null && shiftId == null)
                 {
                     weekVacationDays.Add(new DayAndWeekDayModel()
                     {
@@ -147,23 +223,26 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 }
                 else
                 {
+                           
                     var employeeAttendanceModel = new GetEmployeeAttendancesResponseModel
                     {
                         Attendance = new GetEmployeeAttendanceModel
                         {
-                            Id = employeeAttendance.Id,
+                            Id = employeeAttendance?.Id,
                             Day = date.Day,
-                            WeekDay = (WeekDay)employeeAttendance.LocalDate.DayOfWeek,
-                            WeekDayName = TranslationHelper.GetTranslation(((WeekDay)employeeAttendance.LocalDate.DayOfWeek).ToString(), requestInfo.Lang),
-                            CheckInTime = employeeAttendance.CheckInTime,
-                            CheckOutTime = employeeAttendance.CheckOutTime,
-                            CheckInStatus = employeeAttendance.CheckInTime >
-                            employeeAttendance.ShiftCheckInTime ? EmployeeAttendanceStatus.Warning : EmployeeAttendanceStatus.Success,
-                            CheckOutStatus = employeeAttendance.CheckOutTime == null ? EmployeeAttendanceStatus.Error :
-                            employeeAttendance.CheckOutTime < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
+                            WeekDay = (WeekDay)date.DayOfWeek,
+                            WeekDayName = TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
+                            CheckInTime = checkInTime != null ?
+                            checkInTime.Value.ToString("HH:mm:ss") : null,
+                            CheckOutTime = checkOutTime != null ?
+                            checkOutTime.Value.ToString("HH:mm:ss") : null,
+                            CheckInStatus = employeeAttendance != null && checkInTime != null ? ((decimal)(checkInTime.Value -
+                            employeeAttendance.ShiftCheckInTime).TotalMinutes > employeeAttendance.AllowedMinutes ? EmployeeAttendanceStatus.Warning : EmployeeAttendanceStatus.Success) : EmployeeAttendanceStatus.Error,
+                            CheckOutStatus = checkOutTime == null ? EmployeeAttendanceStatus.Error :
+                            checkOutTime < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,
-                            TotalTime = employeeAttendance.CheckOutTime != null ?
-                            TimeOnly.FromTimeSpan(employeeAttendance.CheckOutTime.Value - employeeAttendance.CheckInTime) : null
+                            TotalTime = checkOutTime != null ?
+                            TimeOnly.FromTimeSpan(checkOutTime.Value - checkInTime.Value).ToString("HH:mm:ss") : null
                         }
                     };
                     employeeAttendanceModel.Attendance.AttendanceStatus =
@@ -178,13 +257,13 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
 
                 if (date.DayOfWeek == (DayOfWeek)WeekDay.Friday && weekVacationDays.Count > 0)
                 {
-                    var allVacationsText = "";
+                    var allVacationsText = LeillaKeys.EmptyString;
 
                     for (int i = 0; i < weekVacationDays.Count; i++)
                     {
                         var item = weekVacationDays[i];
-                        allVacationsText += item.Day + TranslationHelper.GetTranslation(item.WeekDay.ToString(), requestInfo.Lang) +
-                            (i - weekVacationDays.Count > 1 ? LeillaKeys.SpaceThenDashThenSpace : null);
+                        allVacationsText += item.Day + LeillaKeys.Space + TranslationHelper.GetTranslation(item.WeekDay.ToString(), requestInfo.Lang) +
+                            (weekVacationDays.Count - i > 1 ? LeillaKeys.SpaceThenDashThenSpace : null);
                     }
                     resonse.Add(new GetEmployeeAttendancesResponseModel()
                     {
@@ -196,7 +275,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 }
             }
 
-            return null;
+            return resonse;
         }
     }
 }

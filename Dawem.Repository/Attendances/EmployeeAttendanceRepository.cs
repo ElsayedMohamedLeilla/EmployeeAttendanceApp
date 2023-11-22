@@ -40,7 +40,6 @@ namespace Dawem.Repository.Employees
 
             var Query = Get(predicate);
             return Query;
-
         }
     }
 }

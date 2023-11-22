@@ -5,8 +5,8 @@ namespace Dawem.Contract.BusinessValidation.Schedules.Schedules
 {
     public interface IEmployeeAttendanceBLValidation
     {
-        Task<FingerPrintValidationResponseModel> FingerPrintValidation();
-        Task<GetCurrentAttendanceInfoResponseModel> GetCurrentAttendanceInfoValidation();
-        Task<bool> GetCurrentEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model);
+        Task<FingerPrintValidationResponseModel> FingerPrintValidation(FingerprintModel model);
+        Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation();
+        Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model);
     }
 }

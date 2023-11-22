@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231121021222_EmployeeAttendance")]
+    partial class EmployeeAttendance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -564,8 +567,11 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("AllowedMinutes")
-                        .HasColumnType("int");
+                    b.Property<TimeSpan>("CheckInTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan?>("CheckOutTime")
+                        .HasColumnType("time");
 
                     b.Property<int>("Code")
                         .HasColumnType("int");
@@ -626,74 +632,6 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("ShiftId");
 
                     b.ToTable("EmployeeAttendances", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.EmployeeAttendanceCheck", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeAttendanceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FingerPrintType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeAttendanceId");
-
-                    b.ToTable("EmployeeAttendanceChecks", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.GroupEmployee", b =>
@@ -1997,8 +1935,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("AllowedMinutes")
-                        .HasColumnType("int");
+                    b.Property<double>("AllowedMinutes")
+                        .HasColumnType("float");
 
                     b.Property<TimeSpan>("CheckInTime")
                         .HasColumnType("time");
@@ -2494,17 +2432,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Shift");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.EmployeeAttendanceCheck", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Employees.EmployeeAttendance", "EmployeeAttendance")
-                        .WithMany("EmployeeAttendanceChecks")
-                        .HasForeignKey("EmployeeAttendanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EmployeeAttendance");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.GroupEmployee", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
@@ -2921,11 +2848,6 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
                 {
                     b.Navigation("EmployeeGroups");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.EmployeeAttendance", b =>
-                {
-                    b.Navigation("EmployeeAttendanceChecks");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Provider.Branch", b =>

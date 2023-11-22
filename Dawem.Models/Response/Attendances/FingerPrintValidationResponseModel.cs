@@ -8,5 +8,6 @@
         public DateTime LocalDate { get; set; }
         public TimeOnly ShiftCheckInTime { get; set; }
         public TimeOnly ShiftCheckOutTime { get; set; }
+        public int AllowedMinutes { get; set; }
     }
 }

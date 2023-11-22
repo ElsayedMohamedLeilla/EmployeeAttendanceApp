@@ -9,7 +9,7 @@ namespace Dawem.Models.Dtos.Schedules.ShiftWorkingTimes
         public AmPm TimePeriod { get; set; }
         public TimeOnly CheckInTime { get; set; }
         public TimeOnly CheckOutTime { get; set; }
-        public double AllowedMinutes { get; set; }
+        public int AllowedMinutes { get; set; }
         public bool IsActive { get; set; }
 
     }

@@ -13,6 +13,7 @@ namespace Dawem.Models.Context
         public ApplicationType ApplicationType { get; set; }
         public ApplicationType AddedByDevice { get; set; }
         public string RequestProtocol { get; set; }
+        public string RemoteIpAddress { get; set; }
         public string RequestHost { get; set; }
         public string RequestPath { get; set; }
         public int? RequestPort { get; set; }

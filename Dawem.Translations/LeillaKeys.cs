@@ -291,8 +291,6 @@ namespace Dawem.Translations
         public const string SorryJobTitleNotFound = "Sorry!!JobTitleNotFound!";
         public const string DoneCreateJobTitleSuccessfully = "DoneCreateJobTitleSuccessfully";
         public const string DoneUpdateJobTitleSuccessfully = "DoneUpdateJobTitleSuccessfully";
-
-
         public const string SorryYouMustEnterValidSchedulePlanType = "Sorry!!YouMustEnterValidSchedulePlanType!";
         public const string SorryYouMustChooseEmployeeWhenSchedulePlanTypeIsEmployee = "Sorry!YouMustChooseEmployeeWhenSchedulePlanTypeIsEmployee!";
         public const string SorryYouMustChooseGroupWhenSchedulePlanTypeIsGroup = "Sorry!!YouMustChooseGroupWhenSchedulePlanTypeIsGroup!";
@@ -308,24 +306,24 @@ namespace Dawem.Translations
         public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
         public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
         public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
-
         public const string SorryThereIsNoCompanyWithEnteredCode = "Sorry!!ThereIsNoCompanyWithEnteredCode!";
         public const string SorryCannotFindTheCompany = "Sorry!!CannotFindTheCompany!";
         public const string SorryYouMustEnterCompanyCode = "Sorry!!YouMustEnterCompanyCode!";
-
         public const string SorryYouMustEnterTheMonth = "Sorry!!YouMustEnterTheMonth!";
         public const string SorryYouMustEnterTheYear = "Sorry!!YouMustEnterTheYear!";
-
         public const string SorryCurrentUserNotEmployee = "Sorry!!CurrentUserNotEmployee!";
         public const string SorryEmployeeDoNotHaveSchedule = "Sorry!!EmployeeDoNotHaveSchedule!";
         public const string SorryTimeZoneNotFound = "Sorry!!TimeZoneNotFound!";
         public const string SorryYouDoNotHaveScheduleToday = "Sorry!!YouDoNotHaveScheduleToday!";
-
-
         public const string SorryCurrentAttendanceInformationNotFound = "Sorry!!CurrentAttendanceInformationNotFound!";
         public const string SorryThereIsNoAttendancesInSelectedYearAndMonth = "Sorry!!ThereIsNoAttendancesInSelectedYearAndMonth!";
         public const string EndOfWeekVacations = "EndOfWeekVacations:";
+        public const string DoneCheckInSuccessfully = "DoneCheckInSuccessfully";
+        public const string DoneCheckOutSuccessfully = "DoneCheckOutSuccessfully";
+        public const string SorryYouMustEnterTheLatitude = "Sorry!!YouMustEnterTheLatitude!";
+        public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
+        public const string SorryYouMustEnterCorrectLatitude = "Sorry!!YouMustEnterCorrectLatitude!";
+        public const string SorryYouMustEnterCorrectLongitude = "Sorry!!YouMustEnterCorrectLongitude!";
 
-        
     }
 }

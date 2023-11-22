@@ -20,11 +20,10 @@ namespace Dawem.Validation.BusinessValidation.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
-
-
-        public async Task<FingerPrintValidationResponseModel> FingerPrintValidation()
+        public async Task<FingerPrintValidationResponseModel> FingerPrintValidation(FingerprintModel model)
         {
-            var getEmployeeId = (requestInfo?.User?.EmployeeId) ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ?? 
+                throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
             var getScheduleId = await repositoryManager.EmployeeRepository
                 .Get(e => e.Id == getEmployeeId && !e.IsDeleted)
@@ -61,7 +60,8 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 .Select(s => new
                 {
                     s.CheckInTime,
-                    s.CheckOutTime
+                    s.CheckOutTime,
+                    s.AllowedMinutes
                 }).FirstOrDefaultAsync();
 
             return new FingerPrintValidationResponseModel
@@ -71,11 +71,11 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 ShiftId = shiftId,
                 LocalDate = clientLocalDate,
                 ShiftCheckInTime = shiftInfo.CheckInTime,
-                ShiftCheckOutTime = shiftInfo.CheckOutTime
+                ShiftCheckOutTime = shiftInfo.CheckOutTime,
+                AllowedMinutes = shiftInfo.AllowedMinutes
             };
         }
-
-        public async Task<GetCurrentAttendanceInfoResponseModel> GetCurrentAttendanceInfoValidation()
+        public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation()
         {
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
@@ -90,18 +90,20 @@ namespace Dawem.Validation.BusinessValidation.Employees
             var response = await repositoryManager.EmployeeAttendanceRepository
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
                 && a.LocalDate.Date == clientLocalDate.Date)
-                .Select(a => new GetCurrentAttendanceInfoResponseModel
+                .Select(a => new GetCurrentFingerPrintInfoResponseModel
                 {
                     Code = a.Code,
-                    CheckInTime = a.CheckInTime,
-                    CheckOutTime = a.CheckOutTime,
-                    LocalDate = a.LocalDate
+                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null ?
+                     a.EmployeeAttendanceChecks.FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null && a.EmployeeAttendanceChecks.Count > 1 ?
+                     a.EmployeeAttendanceChecks.OrderByDescending(c=>c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    LocalDate = clientLocalDate
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentAttendanceInformationNotFound);
 
             return response;
         }
 
-        public async Task<bool> GetCurrentEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model)
+        public async Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model)
         {
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                  throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);

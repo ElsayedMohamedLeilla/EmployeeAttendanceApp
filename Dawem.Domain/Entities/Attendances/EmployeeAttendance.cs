@@ -25,9 +25,9 @@ namespace Dawem.Domain.Entities.Employees
         #endregion
         public int Code { get; set; }
         public DateTime LocalDate { get; set; }
-        public TimeOnly CheckInTime { get; set; }
-        public TimeOnly? CheckOutTime { get; set; }
         public TimeOnly ShiftCheckInTime { get; set; }
         public TimeOnly ShiftCheckOutTime { get; set; }
+        public int AllowedMinutes { get; set; }
+        public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
     }
 }

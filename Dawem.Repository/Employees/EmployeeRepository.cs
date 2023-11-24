@@ -37,6 +37,10 @@ namespace Dawem.Repository.Employees
                     criteria.Code = code;
                 }
             }
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));

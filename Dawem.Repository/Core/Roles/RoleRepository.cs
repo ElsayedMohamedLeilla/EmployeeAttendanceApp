@@ -28,6 +28,11 @@ namespace Dawem.Repository.Core.Roles
                     criteria.Id = id;
                 }
             }
+            if (criteria.Id != null)
+            {
+
+                inner = inner.And(e => e.Id == criteria.Id);
+            }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 inner = inner.And(e => criteria.Ids.Contains(e.Id));

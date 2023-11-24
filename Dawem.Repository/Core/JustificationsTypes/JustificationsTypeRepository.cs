@@ -29,6 +29,11 @@ namespace Dawem.Repository.Core.JustificationsTypes
                     criteria.Id = id;
                 }
             }
+            if (criteria.Id != null)
+            {
+
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);

@@ -36,6 +36,10 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

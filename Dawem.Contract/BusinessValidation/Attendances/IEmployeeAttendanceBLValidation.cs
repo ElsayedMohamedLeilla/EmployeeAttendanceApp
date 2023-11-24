@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Employees.HolidayType;
-using Dawem.Models.Response.Schedules.Schedules;
+﻿using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Response.Attendances;
 
-namespace Dawem.Contract.BusinessValidation.Schedules.Schedules
+namespace Dawem.Contract.BusinessValidation.Attendances
 {
     public interface IEmployeeAttendanceBLValidation
     {

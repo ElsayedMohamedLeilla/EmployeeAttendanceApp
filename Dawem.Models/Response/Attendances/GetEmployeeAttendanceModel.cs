@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Schedules.Schedules
+namespace Dawem.Models.Response.Attendances
 {
     public class GetEmployeeAttendanceModel
     {

@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.HolidayType;
+﻿using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation
+namespace Dawem.Validation.FluentValidation.Attendances
 {
     public class GetEmployeeAttendancesCriteriaValidator : AbstractValidator<GetEmployeeAttendancesCriteria>
     {

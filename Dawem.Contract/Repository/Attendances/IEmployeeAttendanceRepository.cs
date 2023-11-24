@@ -1,8 +1,8 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Domain.Entities.Attendances;
+using Dawem.Models.Dtos.Attendances;
 
-namespace Dawem.Contract.Repository.Employees
+namespace Dawem.Contract.Repository.Attendances
 {
     public interface IEmployeeAttendanceRepository : IGenericRepository<EmployeeAttendance>
     {

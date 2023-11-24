@@ -1,13 +1,13 @@
-﻿using Dawem.Contract.Repository.Employees;
+﻿using Dawem.Contract.Repository.Attendances;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Attendances;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Employees
+namespace Dawem.Repository.Attendances
 {
     public class EmployeeAttendanceRepository : GenericRepository<EmployeeAttendance>, IEmployeeAttendanceRepository
     {

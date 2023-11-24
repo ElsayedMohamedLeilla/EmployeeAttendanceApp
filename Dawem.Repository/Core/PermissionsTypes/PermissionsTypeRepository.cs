@@ -8,17 +8,17 @@ using LinqKit;
 
 namespace Dawem.Repository.Core.PermissionsTypes
 {
-    public class PermissionsTypeRepository : GenericRepository<PermissionsType>, IPermissionsTypeRepository
+    public class PermissionsTypeRepository : GenericRepository<PermissionType>, IPermissionsTypeRepository
     {
         public PermissionsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 
         }
 
-        public IQueryable<PermissionsType> GetAsQueryable(GetPermissionsTypesCriteria criteria)
+        public IQueryable<PermissionType> GetAsQueryable(GetPermissionsTypesCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<PermissionsType>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<PermissionsType>(true);
+            var predicate = PredicateBuilder.New<PermissionType>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<PermissionType>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

@@ -61,7 +61,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #endregion
 
-            var justificationsType = mapper.Map<JustificationsType>(model);
+            var justificationsType = mapper.Map<JustificationType>(model);
             justificationsType.CompanyId = requestInfo.CompanyId;
             justificationsType.AddUserId = requestInfo.UserId;
             justificationsType.Code = getNextCode;
@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region sorting
 
-            var queryOrdered = justificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), LeillaKeys.Desc);
+            var queryOrdered = justificationsTypeRepository.OrderBy(query, nameof(JustificationType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
 
             #region sorting
 
-            var queryOrdered = JustificationsTypeRepository.OrderBy(query, nameof(JustificationsType.Id), LeillaKeys.Desc);
+            var queryOrdered = JustificationsTypeRepository.OrderBy(query, nameof(JustificationType.Id), LeillaKeys.Desc);
 
             #endregion
 

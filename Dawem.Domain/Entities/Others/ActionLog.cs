@@ -4,10 +4,10 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
 
-namespace Dawem.Domain.Entities.Ohters
+namespace Dawem.Domain.Entities.Others
 {
     [Table(nameof(ActionLog) + LeillaKeys.S)]
-    public class ActionLog:BaseEntity
+    public class ActionLog : BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public int BranchId { get; set; }

@@ -8,8 +8,8 @@ namespace Dawem.Models.AutoMapper.Core
     {
         public JustificationsTypeMapProfile()
         {
-            CreateMap<CreateJustificationsTypeDTO, JustificationsType>();
-            CreateMap<UpdateJustificationsTypeDTO, JustificationsType>();
+            CreateMap<CreateJustificationsTypeDTO, JustificationType>();
+            CreateMap<UpdateJustificationsTypeDTO, JustificationType>();
         }
     }
 }

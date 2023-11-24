@@ -1,11 +1,13 @@
 ﻿
 using Dawem.Domain.Entities;
+using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
-using Dawem.Domain.Entities.Ohters;
+using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Generic;
@@ -93,6 +95,48 @@ namespace Dawem.Data
             builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<RequestAttachment>()
+         .HasOne(p => p.Request)
+         .WithMany(b => b.RequestAttachments)
+         .HasForeignKey(p => p.RequestId)
+         .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<RequestAssignment>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestAssignment)
+         .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<RequestTask>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestTask)
+         .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<RequestTaskEmployee>()
+        .HasOne(p => p.RequestTask)
+        .WithMany(b => b.TaskEmployees)
+        .HasForeignKey(p => p.RequestTaskId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<RequestJustification>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestJustification)
+         .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<RequestPermission>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestPermission)
+         .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<RequestVacation>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestVacation)
+         .OnDelete(DeleteBehavior.Cascade);
 
 
             builder.Entity<Company>()
@@ -214,9 +258,9 @@ namespace Dawem.Data
         public DbSet<AssignmentType> AssignmentTypes { get; set; }
         public DbSet<TaskType> TaskTypes { get; set; }
         public DbSet<HolidayType> HolidayTypes { get; set; }
-        public DbSet<JustificationsType> JustificationsTypes { get; set; }
-        public DbSet<VacationsType> VacationsTypes { get; set; }
-        public DbSet<PermissionsType> PermissionsTypes { get; set; }
+        public DbSet<JustificationType> JustificationsTypes { get; set; }
+        public DbSet<VacationType> VacationsTypes { get; set; }
+        public DbSet<PermissionType> PermissionsTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
@@ -230,7 +274,13 @@ namespace Dawem.Data
         public DbSet<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-
-
+        public DbSet<Request> Orders { get; set; }
+        public DbSet<RequestAssignment> OrderAssignments { get; set; }
+        public DbSet<RequestJustification> OrderJustifications { get; set; }
+        public DbSet<RequestPermission> OrderPermissions { get; set; }
+        public DbSet<RequestVacation> OrderVacations { get; set; }
+        public DbSet<RequestTask> OrderTasks { get; set; }
+        public DbSet<RequestTaskEmployee> OrderTaskEmployees { get; set; }
+        public DbSet<RequestAttachment> OrderAttachments { get; set; }
     }
 }

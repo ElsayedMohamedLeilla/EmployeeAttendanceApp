@@ -1,4 +1,4 @@
-﻿using Dawem.Domain.Entities.Ohters;
+﻿using Dawem.Domain.Entities.Others;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
 

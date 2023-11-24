@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.Employees.GroupEmployees
+﻿using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
+
+namespace Dawem.Models.Dtos.Employees.Employees.GroupEmployees
 {
     public class GroupEmployeeForGridDTO
     {

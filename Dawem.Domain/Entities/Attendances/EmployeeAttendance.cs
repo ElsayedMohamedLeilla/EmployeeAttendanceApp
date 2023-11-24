@@ -1,9 +1,10 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Employees
+namespace Dawem.Domain.Entities.Attendances
 {
     [Table(nameof(EmployeeAttendance) + LeillaKeys.S)]
     public class EmployeeAttendance : BaseEntity
@@ -21,7 +22,7 @@ namespace Dawem.Domain.Entities.Employees
         public int ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }
-        
+
         #endregion
         public int Code { get; set; }
         public DateTime LocalDate { get; set; }

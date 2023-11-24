@@ -4,8 +4,8 @@ using Dawem.Models.Criteria.Core;
 
 namespace Dawem.Contract.Repository.Core
 {
-    public interface IJustificationsTypeRepository : IGenericRepository<JustificationsType>
+    public interface IJustificationsTypeRepository : IGenericRepository<JustificationType>
     {
-        IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypesCriteria criteria);
+        IQueryable<JustificationType> GetAsQueryable(GetJustificationsTypesCriteria criteria);
     }
 }

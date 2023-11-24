@@ -1,10 +1,10 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.Schedules;
-using Dawem.Models.Dtos.Employees.HolidayType;
+﻿using Dawem.Contract.BusinessLogic.Attendances;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Schedules.Schedules
+namespace Dawem.API.Controllers.Attendances
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

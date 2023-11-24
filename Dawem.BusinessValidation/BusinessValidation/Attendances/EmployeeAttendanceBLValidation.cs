@@ -1,14 +1,15 @@
-﻿using Dawem.Contract.BusinessValidation.Schedules.Schedules;
+﻿using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Attendances
 {
 
     public class EmployeeAttendanceBLValidation : IEmployeeAttendanceBLValidation
@@ -22,7 +23,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
         }
         public async Task<FingerPrintValidationResponseModel> FingerPrintValidation(FingerprintModel model)
         {
-            var getEmployeeId = (requestInfo?.User?.EmployeeId) ?? 
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
             var getScheduleId = await repositoryManager.EmployeeRepository
@@ -96,7 +97,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
                     CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null ?
                      a.EmployeeAttendanceChecks.FirstOrDefault().Time.ToString("HH:mm:ss") : null,
                     CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null && a.EmployeeAttendanceChecks.Count > 1 ?
-                     a.EmployeeAttendanceChecks.OrderByDescending(c=>c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                     a.EmployeeAttendanceChecks.OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
                     LocalDate = clientLocalDate
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentAttendanceInformationNotFound);
 

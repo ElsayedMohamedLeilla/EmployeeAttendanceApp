@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Core;
+﻿using Dawem.Contract.Repository.Attendances;
+using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
@@ -12,6 +13,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
+using Dawem.Repository.Attendances;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
@@ -67,7 +69,7 @@ namespace Dawem.Repository.Manager
         private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
         private IEmployeeAttendanceRepository employeeAttendanceRepository;
         private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
-        
+
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;

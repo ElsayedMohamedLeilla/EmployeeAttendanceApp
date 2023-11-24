@@ -8,8 +8,8 @@ namespace Dawem.Models.AutoMapper.Core
     {
         public VacationsTypeMapProfile()
         {
-            CreateMap<CreateVacationsTypeDTO, VacationsType>();
-            CreateMap<UpdateVacationsTypeDTO, VacationsType>();
+            CreateMap<CreateVacationsTypeDTO, VacationType>();
+            CreateMap<UpdateVacationsTypeDTO, VacationType>();
         }
     }
 }

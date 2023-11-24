@@ -8,8 +8,8 @@ namespace Dawem.Models.AutoMapper.Core
     {
         public PermissionsTypeMapProfile()
         {
-            CreateMap<CreatePermissionTypeDTO, PermissionsType>();
-            CreateMap<UpdatePermissionTypeDTO, PermissionsType>();
+            CreateMap<CreatePermissionTypeDTO, PermissionType>();
+            CreateMap<UpdatePermissionTypeDTO, PermissionType>();
         }
     }
 }

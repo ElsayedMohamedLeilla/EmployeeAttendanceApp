@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.HolidayType
+﻿namespace Dawem.Models.Dtos.Attendances
 {
     public class FingerprintModel
     {

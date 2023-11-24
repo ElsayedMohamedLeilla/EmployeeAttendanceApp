@@ -33,6 +33,10 @@ namespace Dawem.Repository.Core.PermissionsTypes
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

@@ -39,7 +39,10 @@ namespace Dawem.Repository.UserManagement
             {
                 userPredicate = userPredicate.And(x => x.Id == criteria.Id);
             }
-
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                userPredicate = userPredicate.And(e => criteria.Ids.Contains(e.Id));
+            }
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();

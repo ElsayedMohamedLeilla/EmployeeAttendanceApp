@@ -274,13 +274,13 @@ namespace Dawem.Data
         public DbSet<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-        public DbSet<Request> Orders { get; set; }
-        public DbSet<RequestAssignment> OrderAssignments { get; set; }
-        public DbSet<RequestJustification> OrderJustifications { get; set; }
-        public DbSet<RequestPermission> OrderPermissions { get; set; }
-        public DbSet<RequestVacation> OrderVacations { get; set; }
-        public DbSet<RequestTask> OrderTasks { get; set; }
-        public DbSet<RequestTaskEmployee> OrderTaskEmployees { get; set; }
-        public DbSet<RequestAttachment> OrderAttachments { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<RequestAssignment> RequestAssignments { get; set; }
+        public DbSet<RequestJustification> RequestJustifications { get; set; }
+        public DbSet<RequestPermission> RequestPermissions { get; set; }
+        public DbSet<RequestVacation> RequestVacations { get; set; }
+        public DbSet<RequestTask> RequestTasks { get; set; }
+        public DbSet<RequestTaskEmployee> RequestTaskEmployees { get; set; }
+        public DbSet<RequestAttachment> RequestAttachments { get; set; }
     }
 }

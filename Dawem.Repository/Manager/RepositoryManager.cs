@@ -6,6 +6,7 @@ using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
@@ -69,6 +70,15 @@ namespace Dawem.Repository.Manager
         private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
         private IEmployeeAttendanceRepository employeeAttendanceRepository;
         private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
+
+        private IRequestRepository requestRepository;
+        private IRequestTaskRepository requestTaskRepository;
+        private IRequestVacationRepository requestVacationRepository;
+        private IRequestAssignmentRepository requestAssignmentRepository;
+        private IRequestPermissionRepository requestPermissionRepository;
+        private IRequestAttachmentRepository requestAttachmentRepository;
+        private IRequestJustificationRepository requestJustificationRepository;
+        private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -143,5 +153,29 @@ namespace Dawem.Repository.Manager
         employeeAttendanceRepository ??= new EmployeeAttendanceRepository(unitOfWork, generalSetting, requestInfo);
         public IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository =>
         employeeAttendanceCheckRepository ??= new EmployeeAttendanceCheckRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IRequestRepository RequestRepository =>
+             requestRepository ??= new RequestRepository(unitOfWork, generalSetting);
+
+        public IRequestTaskRepository RequestTaskRepository =>
+            requestTaskRepository ??= new RequestTaskRepository(unitOfWork, generalSetting);
+
+        public IRequestTaskEmployeeRepository RequestTaskEmployeeRepository =>
+             requestTaskEmployeeRepository ??= new RequestTaskEmployeeRepository(unitOfWork, generalSetting);
+
+        public IRequestAssignmentRepository RequestAssignmentRepository =>
+            requestAssignmentRepository ??= new RequestAssignmentRepository(unitOfWork, generalSetting);
+
+        public IRequestAttachmentRepository RequestAttachmentRepository =>
+            requestAttachmentRepository ??= new RequestAttachmentRepository(unitOfWork, generalSetting);
+
+        public IRequestPermissionRepository RequestPermissionRepository =>
+            requestPermissionRepository ??= new RequestPermissionRepository(unitOfWork, generalSetting);
+
+        public IRequestVacationRepository RequestVacationRepository =>
+             requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting);
+
+        public IRequestJustificationRepository RequestJustificationRepository =>
+            requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting);
     }
 }

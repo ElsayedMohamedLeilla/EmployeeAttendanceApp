@@ -13,8 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BusinessLogic\Requests\" />
     <Folder Include="BusinessLogic\UserManagement\" />
     <Folder Include="BusinessValidation\Lookups\" />
+    <Folder Include="BusinessValidation\Requests\" />
   </ItemGroup>
 
 </Project>

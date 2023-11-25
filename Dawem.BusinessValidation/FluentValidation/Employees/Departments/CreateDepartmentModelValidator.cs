@@ -12,6 +12,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterDepartmentName);
 
+            
         }
     }
 }

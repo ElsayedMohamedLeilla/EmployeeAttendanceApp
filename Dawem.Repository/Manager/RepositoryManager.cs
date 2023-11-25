@@ -67,7 +67,9 @@ namespace Dawem.Repository.Manager
         private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
         private IEmployeeAttendanceRepository employeeAttendanceRepository;
         private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
-        
+        private IDepartmentManagerDelegatorRepository departmentManagerDelegatorRepository;
+        private IDepartmentZoneRepository departmentZoneRepository;
+
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
@@ -141,5 +143,10 @@ namespace Dawem.Repository.Manager
         employeeAttendanceRepository ??= new EmployeeAttendanceRepository(unitOfWork, generalSetting, requestInfo);
         public IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository =>
         employeeAttendanceCheckRepository ??= new EmployeeAttendanceCheckRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository =>
+        departmentManagerDelegatorRepository ??= new DepartmentManagerDelegatorRepository(unitOfWork, generalSetting);
+        public IDepartmentZoneRepository DepartmentZoneRepository =>
+        departmentZoneRepository ??= new DepartmentZoneRepository(unitOfWork, generalSetting);
     }
 }

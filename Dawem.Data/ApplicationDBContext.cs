@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Reflection.Emit;
 
 namespace Dawem.Data
 {
@@ -162,6 +163,25 @@ namespace Dawem.Data
                .HasForeignKey(p => p.GroupId)
                .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<DepartmentZone>()
+              .HasOne(p => p.Department)
+              .WithMany(b => b.Zones)
+              .HasForeignKey(p => p.DepartmentId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<DepartmentManagerDelegator>()
+           .HasOne(p => p.Department)
+           .WithMany(b => b.ManagerDelegators)
+           .HasForeignKey(p => p.DepartmentId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Department>()
+           .HasMany(d => d.Employees)      
+           .WithOne(e => e.Department)       
+           .HasForeignKey(e => e.DepartmentId);
+
+
+
             builder.Entity<ShiftWorkingTime>()
            .Property(e => e.CheckInTime)
            .HasConversion(
@@ -230,6 +250,11 @@ namespace Dawem.Data
         public DbSet<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
+
+        public DbSet<DepartmentManagerDelegator> DepartmentManagerDelegators { get; set; }
+        public DbSet<DepartmentZone> DepartmentZones { get; set; }
+        public DbSet<Zone> Zones { get; set; }
+
 
 
     }

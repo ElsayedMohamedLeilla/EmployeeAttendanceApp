@@ -15,6 +15,7 @@
         public const string SorryThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan = "Sorry!!ThereIsAnotherShiftUserTheTimeSpanPleaseUseItOrChangeTimeSpan!";
         public const string SorrySomeAddedEmployeeNotFound = "Sorry!!SomeAddedEmployeeNotFound!";
         public const string SorryCantAddEmployeeInTheSameGroupTwice = "Sorry!!CantAddEmployeeInTheSameGroupTwice!";
+        public const string SorryYouMustSelectDepartmentManager = "Sorry!!YouMustSelectDepartmentManager!";
 
         
 

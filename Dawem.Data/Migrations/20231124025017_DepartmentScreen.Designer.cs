@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231124025017_DepartmentScreen")]
+    partial class DepartmentScreen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -577,6 +580,64 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Departments", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentEmployee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DisableReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("DepartmentEmployees", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentZone", b =>
@@ -2518,7 +2579,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
                         .WithMany("ManagerDelegators")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
@@ -2632,7 +2693,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Manager")
                         .WithMany()
-                        .HasForeignKey("ManagerId");
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Parent")
                         .WithMany()
@@ -2646,12 +2708,30 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentEmployee", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentZone", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
                         .WithMany("Zones")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
@@ -2673,9 +2753,9 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "DirectManager")

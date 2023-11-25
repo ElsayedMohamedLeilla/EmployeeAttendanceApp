@@ -61,7 +61,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #endregion
 
-            var VacationsType = mapper.Map<VacationsType>(model);
+            var VacationsType = mapper.Map<VacationType>(model);
             VacationsType.CompanyId = requestInfo.CompanyId;
             VacationsType.AddUserId = requestInfo.UserId;
             VacationsType.Code = getNextCode;
@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), LeillaKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationsType.Id), LeillaKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationType.Id), LeillaKeys.Desc);
 
             #endregion
 

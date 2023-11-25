@@ -8,5 +8,6 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int? JobTitleId { get; set; }
         public int? ScheduleId { get; set; }
         public int? DirectManagerId { get; set; }
+        public bool? WithoutCurrentEmployee { get; set; }
     }
 }

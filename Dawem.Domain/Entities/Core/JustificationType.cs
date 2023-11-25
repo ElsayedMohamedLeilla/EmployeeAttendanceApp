@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(PermissionsType) + LeillaKeys.S)]
-    public class PermissionsType : BaseEntity
+    [Table(nameof(JustificationType) + LeillaKeys.S)]
+    public class JustificationType : BaseEntity
     {
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]

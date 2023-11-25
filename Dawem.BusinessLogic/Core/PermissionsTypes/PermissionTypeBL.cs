@@ -61,7 +61,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #endregion
 
-            var PermissionsType = mapper.Map<PermissionsType>(model);
+            var PermissionsType = mapper.Map<PermissionType>(model);
             PermissionsType.CompanyId = requestInfo.CompanyId;
             PermissionsType.AddUserId = requestInfo.UserId;
             PermissionsType.Code = getNextCode;
@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region sorting
 
-            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), LeillaKeys.Desc);
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
 
             #region sorting
 
-            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionsType.Id), LeillaKeys.Desc);
+            var queryOrdered = PermissionsTypeRepository.OrderBy(query, nameof(PermissionType.Id), LeillaKeys.Desc);
 
             #endregion
 

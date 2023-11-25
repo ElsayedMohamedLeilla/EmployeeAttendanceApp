@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Schedules.Schedules;
-using Dawem.Contract.BusinessValidation.Schedules.Schedules;
+using Dawem.Contract.BusinessLogic.Attendances;
+using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Schedules.Schedules
+namespace Dawem.BusinessLogic.Attendances
 {
     public class EmployeeAttendanceBL : IEmployeeAttendanceBL
     {
@@ -37,7 +38,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
         }
         public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
         {
-            var response = FingerPrintType.Attendance;
+            var response = FingerPrintType.CheckIn;
 
             #region Business Validation
 
@@ -62,14 +63,14 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getAttandanceId,
-                    FingerPrintType = FingerPrintType.Departure,
+                    FingerPrintType = FingerPrintType.CheckOut,
                     IsActive = true,
                     Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress
                 });
-                response = FingerPrintType.Departure;
+                response = FingerPrintType.CheckOut;
             }
             //checkin
             else
@@ -101,7 +102,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                     EmployeeId = result.EmployeeId,
                     IsActive = true,
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
-                        FingerPrintType = FingerPrintType.Attendance,
+                        FingerPrintType = FingerPrintType.CheckIn,
                         IsActive = true,
                         Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                         Latitude = model.Latitude,
@@ -169,9 +170,9 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
             var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
 
             var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&
-                ((s.SchedulePlanEmployee != null && s.SchedulePlanEmployee.EmployeeId == getEmployeeId) ||
-                (s.SchedulePlanGroup != null && s.SchedulePlanGroup.Group.GroupEmployees != null && s.SchedulePlanGroup.Group.GroupEmployees.Any(g => g.EmployeeId == getEmployeeId)) ||
-                (s.SchedulePlanDepartment != null && s.SchedulePlanDepartment.Department.Employees != null && s.SchedulePlanDepartment.Department.Employees.Any(g => g.Id == getEmployeeId))))
+                (s.SchedulePlanEmployee != null && s.SchedulePlanEmployee.EmployeeId == getEmployeeId ||
+                s.SchedulePlanGroup != null && s.SchedulePlanGroup.Group.GroupEmployees != null && s.SchedulePlanGroup.Group.GroupEmployees.Any(g => g.EmployeeId == getEmployeeId) ||
+                s.SchedulePlanDepartment != null && s.SchedulePlanDepartment.Department.Employees != null && s.SchedulePlanDepartment.Department.Employees.Any(g => g.Id == getEmployeeId)))
                 .Select(s => new SchedulePlan
                 {
                     DateFrom = s.DateFrom,
@@ -223,7 +224,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 }
                 else
                 {
-                           
+
                     var employeeAttendanceModel = new GetEmployeeAttendancesResponseModel
                     {
                         Attendance = new GetEmployeeAttendanceModel
@@ -236,8 +237,8 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                             checkInTime.Value.ToString("HH:mm:ss") : null,
                             CheckOutTime = checkOutTime != null ?
                             checkOutTime.Value.ToString("HH:mm:ss") : null,
-                            CheckInStatus = employeeAttendance != null && checkInTime != null ? ((decimal)(checkInTime.Value -
-                            employeeAttendance.ShiftCheckInTime).TotalMinutes > employeeAttendance.AllowedMinutes ? EmployeeAttendanceStatus.Warning : EmployeeAttendanceStatus.Success) : EmployeeAttendanceStatus.Error,
+                            CheckInStatus = employeeAttendance != null && checkInTime != null ? (decimal)(checkInTime.Value -
+                            employeeAttendance.ShiftCheckInTime).TotalMinutes > employeeAttendance.AllowedMinutes ? EmployeeAttendanceStatus.Warning : EmployeeAttendanceStatus.Success : EmployeeAttendanceStatus.Error,
                             CheckOutStatus = checkOutTime == null ? EmployeeAttendanceStatus.Error :
                             checkOutTime < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,

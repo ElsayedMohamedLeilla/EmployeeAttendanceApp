@@ -8,17 +8,17 @@ using LinqKit;
 
 namespace Dawem.Repository.Core.VacationsTypes
 {
-    public class VacationsTypeRepository : GenericRepository<VacationsType>, IVacationsTypeRepository
+    public class VacationsTypeRepository : GenericRepository<VacationType>, IVacationsTypeRepository
     {
         public VacationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 
         }
 
-        public IQueryable<VacationsType> GetAsQueryable(GetVacationsTypesCriteria criteria)
+        public IQueryable<VacationType> GetAsQueryable(GetVacationsTypesCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<VacationsType>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<VacationsType>(true);
+            var predicate = PredicateBuilder.New<VacationType>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<VacationType>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -28,6 +28,14 @@ namespace Dawem.Repository.Core.VacationsTypes
                 {
                     criteria.Id = id;
                 }
+            }
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
             if (criteria.IsActive != null)
             {

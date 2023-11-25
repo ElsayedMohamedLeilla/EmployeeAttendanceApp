@@ -1,5 +1,5 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Ohters;
+using Dawem.Domain.Entities.Others;
 using Dawem.Models.Criteria.Others;
 using Dawem.Translations;
 

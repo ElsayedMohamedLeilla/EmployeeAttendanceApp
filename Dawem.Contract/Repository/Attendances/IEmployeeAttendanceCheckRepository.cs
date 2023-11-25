@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Attendances;
 
-namespace Dawem.Contract.Repository.Employees
+namespace Dawem.Contract.Repository.Attendances
 {
     public interface IEmployeeAttendanceCheckRepository : IGenericRepository<EmployeeAttendanceCheck>
     {

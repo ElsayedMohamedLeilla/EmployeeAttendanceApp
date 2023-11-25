@@ -1,8 +1,8 @@
 ﻿using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Employees.HolidayType;
-using Dawem.Models.Response.Schedules.Schedules;
+using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Response.Attendances;
 
-namespace Dawem.Contract.BusinessLogic.Schedules.Schedules
+namespace Dawem.Contract.BusinessLogic.Attendances
 {
     public interface IEmployeeAttendanceBL
     {

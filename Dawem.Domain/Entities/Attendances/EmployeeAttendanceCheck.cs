@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Employees
+namespace Dawem.Domain.Entities.Attendances
 {
     [Table(nameof(EmployeeAttendanceCheck) + LeillaKeys.S)]
     public class EmployeeAttendanceCheck : BaseEntity

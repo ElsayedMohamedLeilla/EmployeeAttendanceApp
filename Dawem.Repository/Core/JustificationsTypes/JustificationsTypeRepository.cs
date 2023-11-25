@@ -8,17 +8,17 @@ using LinqKit;
 
 namespace Dawem.Repository.Core.JustificationsTypes
 {
-    public class JustificationsTypeRepository : GenericRepository<JustificationsType>, IJustificationsTypeRepository
+    public class JustificationsTypeRepository : GenericRepository<JustificationType>, IJustificationsTypeRepository
     {
         public JustificationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
 
         }
 
-        public IQueryable<JustificationsType> GetAsQueryable(GetJustificationsTypesCriteria criteria)
+        public IQueryable<JustificationType> GetAsQueryable(GetJustificationsTypesCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<JustificationsType>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<JustificationsType>(true);
+            var predicate = PredicateBuilder.New<JustificationType>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<JustificationType>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -29,9 +29,18 @@ namespace Dawem.Repository.Core.JustificationsTypes
                     criteria.Id = id;
                 }
             }
+            if (criteria.Id != null)
+            {
+
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
 
             predicate = predicate.And(inner);

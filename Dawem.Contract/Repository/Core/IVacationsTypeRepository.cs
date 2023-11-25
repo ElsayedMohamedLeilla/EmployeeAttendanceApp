@@ -4,8 +4,8 @@ using Dawem.Models.Criteria.Core;
 
 namespace Dawem.Contract.Repository.Core
 {
-    public interface IVacationsTypeRepository : IGenericRepository<VacationsType>
+    public interface IVacationsTypeRepository : IGenericRepository<VacationType>
     {
-        IQueryable<VacationsType> GetAsQueryable(GetVacationsTypesCriteria criteria);
+        IQueryable<VacationType> GetAsQueryable(GetVacationsTypesCriteria criteria);
     }
 }

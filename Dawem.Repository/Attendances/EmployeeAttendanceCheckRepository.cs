@@ -1,11 +1,11 @@
-﻿using Dawem.Contract.Repository.Employees;
+﻿using Dawem.Contract.Repository.Attendances;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Attendances;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Employees
+namespace Dawem.Repository.Attendances
 {
     public class EmployeeAttendanceCheckRepository : GenericRepository<EmployeeAttendanceCheck>, IEmployeeAttendanceCheckRepository
     {

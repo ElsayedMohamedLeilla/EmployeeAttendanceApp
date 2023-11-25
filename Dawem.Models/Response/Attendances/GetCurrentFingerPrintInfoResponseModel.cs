@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Schedules.Schedules
+﻿namespace Dawem.Models.Response.Attendances
 {
     public class GetCurrentFingerPrintInfoResponseModel
     {

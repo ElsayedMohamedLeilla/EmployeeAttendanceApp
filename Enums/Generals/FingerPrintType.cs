@@ -2,8 +2,8 @@
 {
     public enum FingerPrintType
     {
-        Attendance,
-        Departure
+        CheckIn,
+        CheckOut
     }
 
 }

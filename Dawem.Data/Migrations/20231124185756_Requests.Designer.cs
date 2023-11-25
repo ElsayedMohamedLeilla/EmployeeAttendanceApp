@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231124185756_Requests")]
+    partial class Requests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,65 +26,7 @@ namespace Dawem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.DepartmentManagerDelegator", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("DepartmentManagerDelegators", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.Group", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -413,78 +358,6 @@ namespace Dawem.Data.Migrations
                     b.ToTable("JustificationTypes", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.Zone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Latitude")
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)");
-
-                    b.Property<decimal>("Longitude")
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Radius")
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("Zones", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
             modelBuilder.Entity("Dawem.Domain.Entities.Core.PermissionType", b =>
                 {
                     b.Property<int>("Id")
@@ -581,9 +454,6 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ManagerId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
 
@@ -604,72 +474,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("VacationTypes", "Dawem");
-                    b.HasIndex("ManagerId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Departments", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentZone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ZoneId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("ZoneId");
-
-                    b.ToTable("DepartmentZones", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
                 {
                     b.Property<int>("Id")
@@ -3071,24 +2877,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("EmployeeAttendance");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.DepartmentManagerDelegator", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
-                        .WithMany("ManagerDelegators")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Group", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Provider.Company", "Company")
@@ -3158,17 +2946,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.Zone", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Provider.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Provider.Company", "Company")
@@ -3188,10 +2965,6 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId");
-
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Parent")
                         .WithMany()
                         .HasForeignKey("ParentId")
@@ -3199,27 +2972,7 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("Manager");
-
                     b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Employees.DepartmentZone", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
-                        .WithMany("Zones")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
-                        .WithMany()
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
@@ -3233,7 +2986,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "DirectManager")
@@ -3837,10 +3590,6 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Department", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("ManagerDelegators");
-
-                    b.Navigation("Zones");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>

@@ -4,8 +4,8 @@ using Dawem.Models.Criteria.Core;
 
 namespace Dawem.Contract.Repository.Core
 {
-    public interface IPermissionsTypeRepository : IGenericRepository<PermissionsType>
+    public interface IPermissionsTypeRepository : IGenericRepository<PermissionType>
     {
-        IQueryable<PermissionsType> GetAsQueryable(GetPermissionsTypesCriteria criteria);
+        IQueryable<PermissionType> GetAsQueryable(GetPermissionsTypesCriteria criteria);
     }
 }

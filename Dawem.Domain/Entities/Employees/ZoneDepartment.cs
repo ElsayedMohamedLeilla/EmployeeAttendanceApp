@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
 {
-    [Table(nameof(DepartmentZone) + LeillaKeys.S)]
-    public class DepartmentZone : BaseEntity
+    [Table(nameof(ZoneDepartment) + LeillaKeys.S)]
+    public class ZoneDepartment : BaseEntity
     {
         #region Foregn Keys
         public int? DepartmentId { get; set; }

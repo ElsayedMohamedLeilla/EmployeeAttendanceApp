@@ -18,7 +18,7 @@ namespace Dawem.Models.AutoMapper
 
 
             CreateMap<DepartmentManagarDelegatorCreateModelDTO, DepartmentManagerDelegator>();
-            CreateMap<DepartmentZonesCreateModelDTO, DepartmentZone>();
+            CreateMap<DepartmentZonesCreateModelDTO, ZoneDepartment>();
 
         }
     }

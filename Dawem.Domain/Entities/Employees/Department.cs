@@ -24,7 +24,7 @@ namespace Dawem.Domain.Entities.Employees
         public int Code { get; set; }
         public string Name { get; set; }
         public List<Employee> Employees { get; set; }
-        public List<DepartmentZone> Zones { get; set; }
+        public List<ZoneDepartment> Zones { get; set; }
         public List<DepartmentManagerDelegator> ManagerDelegators { get; set; }
     }
 }

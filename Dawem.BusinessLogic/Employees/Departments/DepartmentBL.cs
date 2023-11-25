@@ -106,19 +106,20 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.IsActive = model.IsActive;
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;
+                getDepartment.ManagerId = model.ManagerId;
                 await unitOfWork.SaveAsync();
 
                 #region Update DepartmentZones
          
-                    List<DepartmentZone> existDbList = repositoryManager.DepartmentZoneRepository
+                    List<ZoneDepartment> existDbList = repositoryManager.DepartmentZoneRepository
                         .GetByCondition(e => e.DepartmentId == getDepartment.Id)
                         .ToList();
 
                     List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-                    List<DepartmentZone> addedDepartmentZones = model.Zones
+                    List<ZoneDepartment> addedDepartmentZones = model.Zones
                         .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
-                        .Select(ge => new DepartmentZone
+                        .Select(ge => new ZoneDepartment
                         {
                             DepartmentId = model.Id,
                             ZoneId = ge.ZoneId,
@@ -132,7 +133,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                         .Select(ge => ge.ZoneId)
                         .ToList();
 
-                    List<DepartmentZone> removedDepartmentZones = repositoryManager.DepartmentZoneRepository
+                    List<ZoneDepartment> removedDepartmentZones = repositoryManager.DepartmentZoneRepository
                         .GetByCondition(e => e.DepartmentId == model.Id && ZonesToRemove.Contains(e.ZoneId))
                         .ToList();
 

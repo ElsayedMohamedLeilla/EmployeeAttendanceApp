@@ -72,6 +72,10 @@ namespace Dawem.Repository.Manager
 
         private IDepartmentManagerDelegatorRepository departmentManagerDelegatorRepository;
         private IDepartmentZoneRepository departmentZoneRepository;
+        private IEmployeeZoneRepository employeeZoneRepository;
+        private IGroupZoneRepository groupZoneRepository;
+
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -151,5 +155,10 @@ namespace Dawem.Repository.Manager
         departmentManagerDelegatorRepository ??= new DepartmentManagerDelegatorRepository(unitOfWork, generalSetting);
         public IDepartmentZoneRepository DepartmentZoneRepository =>
         departmentZoneRepository ??= new DepartmentZoneRepository(unitOfWork, generalSetting);
+
+        public IEmployeeZoneRepository EmployeeZoneRepository =>
+        employeeZoneRepository ??= new EmployeeZoneRepository(unitOfWork, generalSetting);
+        public IGroupZoneRepository GroupZoneRepository =>
+        groupZoneRepository ??= new GroupZoneRepository(unitOfWork, generalSetting);
     }
 }

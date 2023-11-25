@@ -207,7 +207,7 @@ namespace Dawem.Data
                .HasForeignKey(p => p.GroupId)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<DepartmentZone>()
+            builder.Entity<ZoneDepartment>()
               .HasOne(p => p.Department)
               .WithMany(b => b.Zones)
               .HasForeignKey(p => p.DepartmentId)
@@ -302,9 +302,10 @@ namespace Dawem.Data
         public DbSet<RequestTask> RequestTasks { get; set; }
         public DbSet<RequestTaskEmployee> RequestTaskEmployees { get; set; }
         public DbSet<RequestAttachment> RequestAttachments { get; set; }
-
         public DbSet<DepartmentManagerDelegator> DepartmentManagerDelegators { get; set; }
-        public DbSet<DepartmentZone> DepartmentZones { get; set; }
+        public DbSet<ZoneDepartment> ZoneDepartments  { get; set; }
+        public DbSet<ZoneGroup> ZoneGroups { get; set; }
+        public DbSet<ZoneEmployee> ZoneEmployees  { get; set; }
         public DbSet<Zone> Zones { get; set; }
 
 

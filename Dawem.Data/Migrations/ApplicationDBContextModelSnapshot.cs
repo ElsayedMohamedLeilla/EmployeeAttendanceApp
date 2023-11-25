@@ -542,7 +542,7 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("PermissionTypes", "Dawem");
-                });
+                }));
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.VacationType", b =>
                 {
@@ -727,8 +727,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("AssignmentTypes", "Dawem");
-                });
-
+                }));
+        
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Department", b =>
                 {
                     b.Property<int>("Id")

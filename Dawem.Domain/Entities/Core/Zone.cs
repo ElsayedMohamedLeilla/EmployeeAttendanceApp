@@ -15,13 +15,13 @@ namespace Dawem.Domain.Entities.Core
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
         #endregion
+
+
         public int Code { get; set; }
         public string Name { get; set; }
-
         public  decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public decimal? Radius { get; set; }
-
         
     }
 }

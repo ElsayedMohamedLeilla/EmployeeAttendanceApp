@@ -4,6 +4,7 @@ using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -38,6 +39,12 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<int> Create(CreateDepartmentModel model)
         {
+            #region assign Delegatos In DepartmentZones Object
+            model.MapDepartmentZones();
+            #endregion
+            #region assign DelegatorsIdes In DepartmentManagerDelegators Object
+            model.MapDepartmentManagarDelegators();
+            #endregion
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
@@ -58,7 +65,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             var department = mapper.Map<Department>(model);
             department.CompanyId = requestInfo.CompanyId;
             department.AddUserId = requestInfo.UserId;
-
+            department.AddedApplicationType = requestInfo.ApplicationType;
             department.Code = getNextCode;
             repositoryManager.DepartmentRepository.Insert(department);
             await unitOfWork.SaveAsync();
@@ -75,6 +82,12 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<bool> Update(UpdateDepartmentModel model)
         {
+            #region assign Delegatos In DepartmentZones Object
+            model.MapDepartmentZones();
+            #endregion
+            #region assign DelegatorsIdes In DepartmentManagerDelegators Object
+            model.MapDepartmentManagarDelegators();
+            #endregion
             #region Business Validation
             await departmentBLValidation.UpdateValidation(model);
             #endregion
@@ -93,7 +106,75 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.IsActive = model.IsActive;
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;
+                getDepartment.ManagerId = model.ManagerId;
                 await unitOfWork.SaveAsync();
+
+                #region Update DepartmentZones
+         
+                    List<ZoneDepartment> existDbList = repositoryManager.DepartmentZoneRepository
+                        .GetByCondition(e => e.DepartmentId == getDepartment.Id)
+                        .ToList();
+
+                    List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
+
+                    List<ZoneDepartment> addedDepartmentZones = model.Zones
+                        .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
+                        .Select(ge => new ZoneDepartment
+                        {
+                            DepartmentId = model.Id,
+                            ZoneId = ge.ZoneId,
+                            ModifyUserId = requestInfo.UserId,
+                            ModifiedDate = DateTime.UtcNow
+                        })
+                        .ToList();
+
+                    List<int> ZonesToRemove = existDbList
+                        .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                        .Select(ge => ge.ZoneId)
+                        .ToList();
+
+                    List<ZoneDepartment> removedDepartmentZones = repositoryManager.DepartmentZoneRepository
+                        .GetByCondition(e => e.DepartmentId == model.Id && ZonesToRemove.Contains(e.ZoneId))
+                        .ToList();
+
+                    if (removedDepartmentZones.Count > 0)
+                        repositoryManager.DepartmentZoneRepository.BulkDeleteIfExist(removedDepartmentZones);
+                    if (addedDepartmentZones.Count > 0)
+                        repositoryManager.DepartmentZoneRepository.BulkInsert(addedDepartmentZones);
+
+                #endregion
+                #region Update DepartmentManagerDelgators
+               
+                    List<DepartmentManagerDelegator> ExistDbList = repositoryManager.DepartmentManagerDelegatorRepository
+                        .GetByCondition(e => e.DepartmentId == getDepartment.Id)
+                        .ToList();
+
+                    List<int> existingEmployeeIds = ExistDbList.Select(e => e.EmployeeId).ToList();
+
+                    List<DepartmentManagerDelegator> addedDepartmentManagerDelegators = model.ManagerDelegators
+                        .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
+                        .Select(gmd => new DepartmentManagerDelegator
+                        {
+                            DepartmentId = model.Id,
+                            EmployeeId = gmd.EmployeeId,
+                            ModifyUserId = requestInfo.UserId,
+                            ModifiedDate = DateTime.UtcNow
+                        }).ToList();
+
+                    List<int> DepartmentManagerDelegatorToRemove = ExistDbList
+                        .Where(gmd => !model.ManagerDelegatorIds.Contains(gmd.EmployeeId))
+                        .Select(gmd => gmd.EmployeeId)
+                        .ToList();
+
+                    List<DepartmentManagerDelegator> removedDepartmentManagerDelegators = repositoryManager.DepartmentManagerDelegatorRepository
+                        .GetByCondition(e => e.DepartmentId == model.Id && DepartmentManagerDelegatorToRemove.Contains(e.EmployeeId))
+                        .ToList();
+                    if (removedDepartmentManagerDelegators.Count > 0)
+                        repositoryManager.DepartmentManagerDelegatorRepository.BulkDeleteIfExist(removedDepartmentManagerDelegators);
+                    if (addedDepartmentManagerDelegators.Count > 0)
+                        repositoryManager.DepartmentManagerDelegatorRepository.BulkInsert(addedDepartmentManagerDelegators);
+                
+                #endregion
                 #region Handle Response
                 await unitOfWork.CommitAsync();
                 return true;

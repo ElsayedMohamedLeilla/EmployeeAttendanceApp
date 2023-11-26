@@ -8,7 +8,7 @@ namespace Dawem.Models.Dtos.Employees.Employees.GroupEmployees
         public int Code { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-        public int EmployeeCount { get; set; }
+        public int NumberOfEmployees { get; set; }
         public GroupManagarForGridDTO Manager { get; set; } = null;
 
     }

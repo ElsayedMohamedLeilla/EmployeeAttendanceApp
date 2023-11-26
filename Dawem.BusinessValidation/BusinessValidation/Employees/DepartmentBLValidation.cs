@@ -35,6 +35,12 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);
             }
 
+            if((model.ManagerId == 0))
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryYouMustSelectDepartmentManager);
+            }
+           
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateDepartmentModel model)

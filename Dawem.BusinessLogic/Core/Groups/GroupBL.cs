@@ -103,14 +103,17 @@ namespace Dawem.BusinessLogic.Core.Groups
 
             unitOfWork.CreateTransaction();
             #region Update Group
-            var getGroup = await repositoryManager.GroupRepository.GetByIdAsync(model.Id);
-            getGroup.Name = model.Name;
-            getGroup.IsActive = model.IsActive;
-            getGroup.ModifiedDate = DateTime.UtcNow;
-            getGroup.ModifyUserId = requestInfo.UserId;
-            getGroup.GroupManagerId = model.ManagerId;
-            getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
-            await unitOfWork.SaveAsync();
+            var getGroup = await repositoryManager.GroupRepository.GetEntityByConditionWithTrackingAsync(grp => !grp.IsDeleted
+            && grp.Id == model.Id);
+            if (getGroup != null)
+            {
+                getGroup.IsActive = model.IsActive;
+                getGroup.ModifiedDate = DateTime.UtcNow;
+                getGroup.ModifyUserId = requestInfo.UserId;
+                getGroup.GroupManagerId = model.ManagerId;
+                getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
+                await unitOfWork.SaveAsync();
+            }
             #endregion
 
             #region Update GroupEmployees
@@ -189,6 +192,7 @@ namespace Dawem.BusinessLogic.Core.Groups
             return true;
 
             #endregion
+
         }
         public async Task<GetGroupResponseDTO> Get(GetGroupCriteria criteria)
         {
@@ -219,7 +223,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                 Code = group.Code,
                 Name = group.Name,
                 IsActive = group.IsActive,
-                EmployeeCount = group.GroupEmployees.Count,
+                NumberOfEmployees = group.GroupEmployees.Count,
                 Manager = group.GroupManagerId != null ? new GroupManagarForGridDTO
                 {
                     ManagerName = group.GroupManager.Name,

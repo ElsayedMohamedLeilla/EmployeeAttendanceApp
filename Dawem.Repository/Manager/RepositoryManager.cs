@@ -80,6 +80,13 @@ namespace Dawem.Repository.Manager
         private IRequestJustificationRepository requestJustificationRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
 
+        private IDepartmentManagerDelegatorRepository departmentManagerDelegatorRepository;
+        private IDepartmentZoneRepository departmentZoneRepository;
+        private IEmployeeZoneRepository employeeZoneRepository;
+        private IGroupZoneRepository groupZoneRepository;
+
+
+
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
@@ -177,5 +184,15 @@ namespace Dawem.Repository.Manager
 
         public IRequestJustificationRepository RequestJustificationRepository =>
             requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting);
+
+        public IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository =>
+        departmentManagerDelegatorRepository ??= new DepartmentManagerDelegatorRepository(unitOfWork, generalSetting);
+        public IDepartmentZoneRepository DepartmentZoneRepository =>
+        departmentZoneRepository ??= new DepartmentZoneRepository(unitOfWork, generalSetting);
+
+        public IEmployeeZoneRepository EmployeeZoneRepository =>
+        employeeZoneRepository ??= new EmployeeZoneRepository(unitOfWork, generalSetting);
+        public IGroupZoneRepository GroupZoneRepository =>
+        groupZoneRepository ??= new GroupZoneRepository(unitOfWork, generalSetting);
     }
 }

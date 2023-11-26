@@ -44,10 +44,17 @@ namespace Dawem.Data.UnitOfWork
             await _objTran.CommitAsync();
         }
         public void Rollback()
-        {
-            if (_objTran == null) return;
-            _objTran.Rollback();
-            _objTran.Dispose();
+        {   
+            try
+            {
+                if (_objTran == null) return;
+                _objTran.Rollback();
+                _objTran.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // do nothing
+            }
         }
         public async Task RollbackAsync()
         {

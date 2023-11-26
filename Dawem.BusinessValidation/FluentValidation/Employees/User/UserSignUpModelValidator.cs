@@ -9,6 +9,9 @@ namespace Dawem.Validation.FluentValidation.Employees.User
     {
         public UserSignUpModelValidator()
         {
+            RuleFor(user => user.CompanyId).GreaterThan(0).
+                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyId);
+
             RuleFor(user => user.Name).NotNull().
                   WithMessage(LeillaKeys.SorryYouMustEnterUserName);
             RuleFor(user => user.Email).NotNull().

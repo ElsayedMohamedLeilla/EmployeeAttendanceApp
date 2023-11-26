@@ -24,7 +24,7 @@ namespace Dawem.API.Controllers.Employees
         {
             return Success(await userBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }
-        [HttpPost]
+        [HttpPut]
         [AllowAnonymous]
         public async Task<ActionResult> VerifyEmail(UserVerifyEmailModel model)
         {

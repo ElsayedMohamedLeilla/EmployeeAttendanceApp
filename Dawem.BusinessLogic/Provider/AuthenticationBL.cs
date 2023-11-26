@@ -284,19 +284,10 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            #region Handle User Role
+            #region Get User Role
 
             var roles = await userManagerRepository.GetRolesAsync(user);
-            if (roles.FirstOrDefault(r => r == LeillaKeys.RoleFULLACCESS) == null)
-            {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.RoleFULLACCESS);
-
-                if (addingToRoleResult.Succeeded)
-                {
-                    roles.Add(LeillaKeys.RoleFULLACCESS);
-                }
-            }
-
+           
             #endregion
 
             #region Get Token Model

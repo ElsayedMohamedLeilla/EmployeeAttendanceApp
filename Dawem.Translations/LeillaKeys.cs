@@ -326,6 +326,8 @@ namespace Dawem.Translations
         public const string YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn = "YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn";
         public const string DoneVerifyYourEmailSuccessfullyYouCanLogInNow = "DoneVerifyYourEmailSuccessfullyYouCanLogInNow";
         public const string SorryYouMustEnterFingerPrintType = "Sorry!!YouMustEnterFingerPrintType!";
+        public const string SorryEmailAlreadyConfirmed = "Sorry!!EmailAlreadyConfirmed!";
         
+
     }
 }

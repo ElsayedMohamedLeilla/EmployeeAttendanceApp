@@ -59,18 +59,25 @@ namespace Dawem.Validation.BusinessValidation.Employees
         }
         public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
         {
-            var checkUserDuplicate = await repositoryManager
+            var checkUser = await repositoryManager
                 .UserRepository.Get(c => c.Id == model.UserId).AnyAsync();
-            if (checkUserDuplicate)
+            if (!checkUser)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             }
 
             #region Validate Verification Code
 
+            var checkUserEmailConfirmed = await repositoryManager
+                .UserRepository.Get(c => c.Id == model.UserId && c.EmailConfirmed).AnyAsync();
+            if (checkUserEmailConfirmed)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryEmailAlreadyConfirmed);
+            }
+
             var checkVerificationCode = await repositoryManager
                 .UserRepository.Get(c => c.Id == model.UserId && c.VerificationCode == model.VerificationCode).AnyAsync();
-            if (checkVerificationCode)
+            if (!checkVerificationCode)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEnteredVerificationCodeIsNotCorrect);
             }

@@ -53,18 +53,6 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> SignUp(UserSignUpModel model)
         {
-            #region Model Validation
-
-            /*var createUserModel = new UserSignUpModelValidator();
-            var createUserModelResult = createUserModel.Validate(model);
-            if (!createUserModelResult.IsValid)
-            {
-                var error = createUserModelResult.Errors.FirstOrDefault();
-                throw new BusinessValidationException(error.ErrorMessage);
-            }*/
-
-            #endregion
-
             #region Business Validation
 
             await userBLValidation.SignUpValidation(model);
@@ -145,8 +133,8 @@ namespace Dawem.BusinessLogic.Employees
             var verifyEmail = new VerifyEmailModel
             {
                 Email = user.Email,
-                Subject = LeillaKeys.ThanksForRegistrationOnDawem,
-                Body = LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn
+                Subject = TranslationHelper.GetTranslation(LeillaKeys.ThanksForRegistrationOnDawem, requestInfo?.Lang),
+                Body = TranslationHelper.GetTranslation(LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn, requestInfo?.Lang)
                 + getNewVerificationCode
             };
 

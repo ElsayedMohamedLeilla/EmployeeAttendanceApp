@@ -13,7 +13,7 @@ namespace Dawem.Domain.Entities.Employees
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
         [ForeignKey(nameof(DepartmentId))]
         public Department Department { get; set; }
         public int? JobTitleId { get; set; }

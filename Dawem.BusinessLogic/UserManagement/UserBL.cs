@@ -1,14 +1,19 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.User;
 using Dawem.Repository.UserManagement;
@@ -26,11 +31,13 @@ namespace Dawem.BusinessLogic.Employees
         private readonly IUserBLValidation userBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IMailBL mailBL;
         private readonly IUploadBLC uploadBLC;
         private readonly UserManagerRepository userManagerRepository;
         public UserBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
+             IMailBL _mailBL,
             IUploadBLC _uploadBLC,
             UserManagerRepository _userManagerRepository,
            RequestInfo _requestHeaderContext,
@@ -41,8 +48,156 @@ namespace Dawem.BusinessLogic.Employees
             repositoryManager = _repositoryManager;
             userBLValidation = _userBLValidation;
             mapper = _mapper;
+            mailBL = _mailBL;
             uploadBLC = _uploadBLC;
             userManagerRepository = _userManagerRepository;
+        }
+        public async Task<int> SignUp(UserSignUpModel model)
+        {
+            #region Model Validation
+
+            var createUserModel = new UserSignUpModelValidator();
+            var createUserModelResult = createUserModel.Validate(model);
+            if (!createUserModelResult.IsValid)
+            {
+                var error = createUserModelResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await userBLValidation.SignUpValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Configure User Employee
+
+            #region Set Employee code
+
+            var getNextEmployeeCode = await repositoryManager.EmployeeRepository
+                .Get(e => e.CompanyId == model.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
+            var employee = mapper.Map<Employee>(model);
+            employee.CompanyId = model.CompanyId;
+            employee.AttendanceType = AttendanceType.FullAttendance;
+            employee.JoiningDate = DateTime.UtcNow;
+            employee.Code = getNextEmployeeCode;
+
+            #endregion
+
+            #region Insert User And Employee
+
+            #region Set User code And Verification Code
+
+            var getNextCode = await repositoryManager.UserRepository
+                .Get(e => e.CompanyId == model.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            var isVerificationCodeRepeated = false;
+            var getNewVerificationCode = StringHelper.RandomNumber(6);
+            do
+            {
+                isVerificationCodeRepeated = await repositoryManager.UserRepository
+               .Get(e => e.CompanyId == model.CompanyId && e.VerificationCode == getNewVerificationCode)
+               .AnyAsync();
+            } while (isVerificationCodeRepeated);
+
+            #endregion
+
+            var user = mapper.Map<MyUser>(model);
+            user.UserName = model.Email;
+            user.Code = getNextCode;
+            user.Employee = employee;
+            user.VerificationCode = getNewVerificationCode;
+
+            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
+            if (!createUserResponse.Succeeded)
+            {
+                unitOfWork.Rollback();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+            }
+
+            var Roles = new List<string>() { LeillaKeys.RoleEMPLOYEE, LeillaKeys.RoleUSER };
+            var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, Roles);
+            if (!assignRolesResult.Succeeded)
+            {
+                unitOfWork.Rollback();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+            }
+            await unitOfWork.SaveAsync();
+
+
+            #endregion
+
+            #region Send Verification Code In Email
+
+            var verifyEmail = new VerifyEmailModel
+            {
+                Email = user.Email,
+                Subject = LeillaKeys.ThanksForRegistrationOnDawem,
+                Body = LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn 
+                + getNewVerificationCode
+            };
+
+            await mailBL.SendEmail(verifyEmail);
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return user.Id;
+
+            #endregion
+
+        }
+        public async Task<bool> VerifyEmail(UserVerifyEmailModel model)
+        {
+            #region Business Validation
+
+            await userBLValidation.VerifyEmailValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Verify Email
+
+            var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
+              && user.Id == model.UserId && user.VerificationCode == model.VerificationCode);
+
+            getUser.EmailConfirmed = true;
+
+            var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
+
+            if (!updateUserResponse.Succeeded)
+            {
+                await unitOfWork.RollbackAsync();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
+            }
+
+            await unitOfWork.SaveAsync(); 
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
+
         }
         public async Task<int> Create(CreateUserModel model)
         {

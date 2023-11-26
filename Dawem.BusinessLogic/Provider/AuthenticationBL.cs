@@ -251,7 +251,7 @@ namespace Dawem.BusinessLogic.Provider
         private async Task<MyUser> CreateUser(SignUpModel model)
         {
 
-            string RoleName = LeillaKeys.Admin;
+            string RoleName = LeillaKeys.RoleADMIN;
             var user = new MyUser()
             {
                 UserName = model.UserEmail,
@@ -290,13 +290,13 @@ namespace Dawem.BusinessLogic.Provider
             #region Handle User Role
 
             var roles = await userManagerRepository.GetRolesAsync(user);
-            if (roles.FirstOrDefault(r => r == LeillaKeys.FullAccess) == null)
+            if (roles.FirstOrDefault(r => r == LeillaKeys.RoleFULLACCESS) == null)
             {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.FullAccess);
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.RoleFULLACCESS);
 
                 if (addingToRoleResult.Succeeded)
                 {
-                    roles.Add(LeillaKeys.FullAccess);
+                    roles.Add(LeillaKeys.RoleFULLACCESS);
                 }
             }
 

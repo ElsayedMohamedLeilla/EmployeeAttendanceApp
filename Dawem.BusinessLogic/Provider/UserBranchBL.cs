@@ -63,13 +63,13 @@ namespace Dawem.BusinessLogic.Provider
 
             var roles = await userManagerRepository.GetRolesAsync(user);
 
-            if (roles.FirstOrDefault(r => r == LeillaKeys.FullAccess) == null)
+            if (roles.FirstOrDefault(r => r == LeillaKeys.RoleFULLACCESS) == null)
             {
-                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.FullAccess);
+                var addingToRoleResult = await userManagerRepository.AddToRoleAsync(user, LeillaKeys.RoleFULLACCESS);
 
                 if (addingToRoleResult.Succeeded)
                 {
-                    roles.Add(LeillaKeys.FullAccess);
+                    roles.Add(LeillaKeys.RoleFULLACCESS);
                 }
             }
 

@@ -8,7 +8,7 @@ namespace Dawem.API.Controllers.Others
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles = LeillaKeys.FullAccess)]
+    [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
     public class ActionLogController : BaseController
     {
         private readonly IActionLogBL actionLogBL;

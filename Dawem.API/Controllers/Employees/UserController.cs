@@ -1,5 +1,7 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Provider;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Provider;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,16 @@ namespace Dawem.API.Controllers.Employees
         {
             userBL = _userBL;
         }
-
+        [HttpPost]
+        public async Task<ActionResult> SignUp(UserSignUpModel model)
+        {
+            return Success(await userBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+        }
+        [HttpPost]
+        public async Task<ActionResult> VerifyEmail(UserVerifyEmailModel model)
+        {
+            return Success(await userBL.VerifyEmail(model), messageCode: LeillaKeys.DoneVerifyYourEmailSuccessfullyYouCanLogInNow);
+        }
         [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult> Create([FromForm] CreateUserWithImageModel formData)
         {
@@ -32,7 +43,6 @@ namespace Dawem.API.Controllers.Employees
             var result = await userBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateUserSuccessfully);
         }
-
         [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> Update([FromForm] UpdateUserWithImageModel formData)
         {

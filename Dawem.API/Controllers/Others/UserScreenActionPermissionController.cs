@@ -7,7 +7,7 @@ namespace Dawem.API.Controllers.Others
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    [Authorize(Roles = LeillaKeys.FullAccess)]
+    [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
     public class UserScreenActionPermissionController : BaseController
     {
         private readonly IUserScreenActionPermissionBL userScreenActionPermissionBL;

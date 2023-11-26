@@ -8,7 +8,7 @@ namespace Dawem.Helpers
 
         public static string RandomString(int length)
         {
-            const string chars = LeillaKeys.ForRandomString;
+            const string chars = LeillaKeys.ForRandomStringAndNumber;
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }

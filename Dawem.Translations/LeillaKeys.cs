@@ -27,7 +27,7 @@ namespace Dawem.Translations
         public const string Desc = "desc";
         public const string OrderBy = "OrderBy";
         public const string OrderByDescending = "OrderByDescending";
-        public const string ForRandomString = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+        public const string ForRandomStringAndNumber = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
         public const string AllNumbers = "0123456789";
         public const string ArTrans = "ar_trans";
         public const string EnTrans = "en_trans";
@@ -74,11 +74,6 @@ namespace Dawem.Translations
         public const string BLC = "BLC";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
-        public const string FullAccess = "FULLACCESS";
-        public const string Admin = "ADMIN";
-        public const string Manager = "MANAGER";
-        public const string Employee = "EMPLOYEE";
-        public const string User = "USER";
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string Dot = ".";
@@ -192,23 +187,23 @@ namespace Dawem.Translations
         public const string Wednesday = "Wednesday";
         public const string Thursday = "Thursday";
         public const string Friday = "Friday";
-        public const string FULLACCESS = "FULLACCESS";
-        public const string ADMIN = "ADMIN";
-        public const string EMPLOYEE = "EMPLOYEE";
-        public const string USER = "USER";
-        public const string MANAGER = "MANAGER";
-        public const string DEVELOPER = "DEVELOPER";
-        public const string SUPPORT = "SUPPORT";
-        public const string CUSTOMER = "CUSTOMER";
-        public const string VIEWER = "VIEWER";
-        public const string DOCTOR = "DOCTOR";
-        public const string NURSE = "NURSE";
-        public const string MEDICALASSISTANT = "MEDICALASSISTANT";
-        public const string PHARMACIST = "PHARMACIST";
-        public const string RECEPTIONIST = "RECEPTIONIST";
-        public const string SECURITYOFFICER = "SECURITYOFFICER";
-        public const string HOUSEKEEPING = "HOUSEKEEPING";
-        public const string ITSUPPORT = "ITSUPPORT";
+        public const string RoleFULLACCESS = "FULLACCESS";
+        public const string RoleADMIN = "ADMIN";
+        public const string RoleEMPLOYEE = "EMPLOYEE";
+        public const string RoleUSER = "USER";
+        public const string RoleMANAGER = "MANAGER";
+        public const string RoleDEVELOPER = "DEVELOPER";
+        public const string RoleSUPPORT = "SUPPORT";
+        public const string RoleCUSTOMER = "CUSTOMER";
+        public const string RoleVIEWER = "VIEWER";
+        public const string RoleDOCTOR = "DOCTOR";
+        public const string RoleNURSE = "NURSE";
+        public const string RoleMEDICALASSISTANT = "MEDICALASSISTANT";
+        public const string RolePHARMACIST = "PHARMACIST";
+        public const string RoleRECEPTIONIST = "RECEPTIONIST";
+        public const string RoleSECURITYOFFICER = "SECURITYOFFICER";
+        public const string RoleHOUSEKEEPING = "HOUSEKEEPING";
+        public const string RoleITSUPPORT = "ITSUPPORT";
         public const string SorryJustificationsTypeNameIsDuplicated = "Sorry!!JustificationsTypeNameIsDuplicated!";
         public const string SorryYouMustEnterJustificationsTypeName = "Sorry!!YouMustEnterJustificationsTypeName!";
         public const string SorryYouMustEnterJustificationsTypeId = "Sorry!!YouMustEnterJustificationsTypeId!";
@@ -324,6 +319,13 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
         public const string SorryYouMustEnterCorrectLatitude = "Sorry!!YouMustEnterCorrectLatitude!";
         public const string SorryYouMustEnterCorrectLongitude = "Sorry!!YouMustEnterCorrectLongitude!";
+
+        public const string SorryEnteredVerificationCodeIsNotCorrect = "Sorry!!EnteredVerificationCodeIsNotCorrect!";
+        public const string SorryYouMustEnterUserId = "Sorry!!YouMustEnterUserId!";
+        public const string SorryYouMustEnterVerificationCode = "Sorry!!YouMustEnterVerificationCode!";
+        public const string ThanksForRegistrationOnDawem = "ThanksForRegistrationOnDawem";
+        public const string YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn = "YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn";
+        public const string DoneVerifyYourEmailSuccessfullyYouCanLogInNow = "DoneVerifyYourEmailSuccessfullyYouCanLogInNow";
 
     }
 }

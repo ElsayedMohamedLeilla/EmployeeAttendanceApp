@@ -10,6 +10,8 @@ namespace Dawem.Models.AutoMapper
         {
             CreateMap<CreateUserModel, MyUser>();
             CreateMap<UpdateUserModel, MyUser>();
+            CreateMap<UserSignUpModel, MyUser>();
+
         }
     }
 }

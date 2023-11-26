@@ -18,6 +18,67 @@ namespace Dawem.Validation.BusinessValidation.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
+        public async Task<bool> SignUpValidation(UserSignUpModel model)
+        {
+            var checkUserDuplicate = await repositoryManager
+                .UserRepository.Get(c => c.CompanyId == model.CompanyId &&
+                c.Name == model.Name).AnyAsync();
+            if (checkUserDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
+            }
+
+            #region Validate Email
+
+            var checkEmailDuplicate = await repositoryManager.UserRepository
+            .Get(u => u.CompanyId == model.CompanyId &&
+            u.Email == model.Email.Trim()).AnyAsync();
+
+            if (checkEmailDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            }
+
+            #endregion
+
+            #region Validate Mobile Number
+
+            var checkMobileDuplicate = await repositoryManager.UserRepository
+            .Get(u => u.CompanyId == model.CompanyId &&
+            u.MobileNumber == model.MobileNumber.Trim())
+            .AnyAsync();
+
+            if (checkMobileDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+            }
+
+            #endregion
+
+            return true;
+        }
+        public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
+        {
+            var checkUserDuplicate = await repositoryManager
+                .UserRepository.Get(c => c.Id == model.UserId).AnyAsync();
+            if (checkUserDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+            }
+
+            #region Validate Verification Code
+
+            var checkVerificationCode = await repositoryManager
+                .UserRepository.Get(c => c.Id == model.UserId && c.VerificationCode == model.VerificationCode).AnyAsync();
+            if (checkVerificationCode)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryEnteredVerificationCodeIsNotCorrect);
+            }
+
+            #endregion
+
+            return true;
+        }
         public async Task<bool> CreateValidation(CreateUserModel model)
         {
             var checkUserDuplicate = await repositoryManager

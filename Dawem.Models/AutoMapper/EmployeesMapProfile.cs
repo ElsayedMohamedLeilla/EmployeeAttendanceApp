@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.User;
 
 namespace Dawem.Models.AutoMapper
 {
@@ -10,6 +11,7 @@ namespace Dawem.Models.AutoMapper
         {
             CreateMap<CreateEmployeeModel, Employee>();
             CreateMap<UpdateEmployeeModel, Employee>();
+            CreateMap<UserSignUpModel, Employee>();
         }
     }
 }

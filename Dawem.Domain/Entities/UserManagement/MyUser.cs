@@ -44,6 +44,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public string DisableReason { get; set; }
         public ApplicationType AddedApplicationType { get; set; }
         public ApplicationType? ModifiedApplicationType { get; set; }
+        public string VerificationCode { get; set; }
         public void Delete()
         {
             IsDeleted = true;

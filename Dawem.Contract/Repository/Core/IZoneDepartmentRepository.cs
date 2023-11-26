@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Employees;
 
 namespace Dawem.Contract.Repository.Core
 {
-    public interface IEmployeeZoneRepository : IGenericRepository<ZoneEmployee>
+    public interface IZoneDepartmentRepository : IGenericRepository<ZoneDepartment>
     {
 
     }

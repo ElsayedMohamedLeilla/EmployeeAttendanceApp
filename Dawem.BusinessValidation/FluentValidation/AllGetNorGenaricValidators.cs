@@ -58,7 +58,7 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetGroupCriteriaValidator : AbstractValidator<GetGroupCriteria>
+    public class GetGroupCriteriaValidator : AbstractValidator<GetZoneCriteria>
     {
         public GetGroupCriteriaValidator()
         {

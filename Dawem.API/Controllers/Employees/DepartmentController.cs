@@ -1,5 +1,7 @@
-﻿using Dawem.Contract.BusinessLogic.Employees.Department;
+﻿using Dawem.BusinessLogic.Core.Groups;
+using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -79,6 +81,25 @@ namespace Dawem.API.Controllers.Employees
                 return BadRequest();
             }
             return Success(await departmentBL.Delete(departmentId));
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Enable(int departmentId)
+        {
+            if (departmentId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.Enable(departmentId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await departmentBL.Disable(model));
         }
 
     }

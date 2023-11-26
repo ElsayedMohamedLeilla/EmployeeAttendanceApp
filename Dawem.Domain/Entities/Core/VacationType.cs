@@ -12,7 +12,5 @@ namespace Dawem.Domain.Entities.Core
         public Company Company { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
-
-
     }
 }

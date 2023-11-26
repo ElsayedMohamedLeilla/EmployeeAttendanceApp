@@ -3,7 +3,9 @@
     public enum FingerPrintType
     {
         CheckIn,
-        CheckOut
+        CheckOut,
+        BreakCheckIn,
+        BreakCheckOut
     }
 
 }

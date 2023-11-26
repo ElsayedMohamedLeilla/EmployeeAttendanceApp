@@ -1,5 +1,4 @@
 ﻿using Dawem.Domain.Entities.Core;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 

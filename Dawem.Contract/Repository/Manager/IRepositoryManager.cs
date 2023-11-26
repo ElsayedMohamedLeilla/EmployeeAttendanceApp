@@ -51,9 +51,6 @@ namespace Dawem.Contract.Repository.Manager
         IDepartmentZoneRepository DepartmentZoneRepository { get; }
         IEmployeeZoneRepository EmployeeZoneRepository { get; }
         IGroupZoneRepository GroupZoneRepository { get; }
-
-
-
         IRequestRepository RequestRepository { get; }
         IRequestTaskRepository RequestTaskRepository { get; }
         IRequestTaskEmployeeRepository RequestTaskEmployeeRepository { get; }

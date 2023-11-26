@@ -278,9 +278,9 @@ namespace Dawem.Data
         public DbSet<AssignmentType> AssignmentTypes { get; set; }
         public DbSet<TaskType> TaskTypes { get; set; }
         public DbSet<HolidayType> HolidayTypes { get; set; }
-        public DbSet<JustificationType> JustificationsTypes { get; set; }
-        public DbSet<VacationType> VacationsTypes { get; set; }
-        public DbSet<PermissionType> PermissionsTypes { get; set; }
+        public DbSet<JustificationType> JustificationTypes { get; set; }
+        public DbSet<VacationType> VacationTypes { get; set; }
+        public DbSet<PermissionType> PermissionTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }

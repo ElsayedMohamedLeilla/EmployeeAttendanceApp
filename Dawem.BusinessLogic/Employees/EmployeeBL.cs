@@ -298,7 +298,6 @@ namespace Dawem.BusinessLogic.Employees
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
-
         }
         public async Task<bool> Enable(int employeeId)
         {

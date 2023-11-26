@@ -39,10 +39,8 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
         private readonly IAccountBLValidation accountBLValidation;
-        private readonly IBranchBLValidation branchValidatorBL;
         private readonly IRepositoryManager repositoryManager;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-           IBranchBLValidation _branchValidatorBL,
             IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
@@ -55,7 +53,6 @@ namespace Dawem.BusinessLogic.Provider
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
             repositoryManager = _repositoryManager;
-            branchValidatorBL = _branchValidatorBL;
             mailBL = _mailBL;
             accessor = _accessor;
             generator = _generator;

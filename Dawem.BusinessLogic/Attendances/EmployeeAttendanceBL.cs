@@ -63,7 +63,7 @@ namespace Dawem.BusinessLogic.Attendances
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getAttandanceId,
-                    FingerPrintType = FingerPrintType.CheckOut,
+                    FingerPrintType = model.Type,
                     IsActive = true,
                     Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,
@@ -102,7 +102,7 @@ namespace Dawem.BusinessLogic.Attendances
                     EmployeeId = result.EmployeeId,
                     IsActive = true,
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
-                        FingerPrintType = FingerPrintType.CheckIn,
+                        FingerPrintType = model.Type,
                         IsActive = true,
                         Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
                         Latitude = model.Latitude,

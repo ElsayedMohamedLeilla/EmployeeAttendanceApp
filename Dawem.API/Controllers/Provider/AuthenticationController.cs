@@ -1,13 +1,10 @@
-﻿using Dawem.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Dtos.Identity;
 using Dawem.Models.Dtos.Provider;
 using Dawem.Models.Dtos.Shared;
-using Dawem.Models.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Principal;
 
 namespace Dawem.API.Controllers.Provider
 {
@@ -94,7 +91,7 @@ namespace Dawem.API.Controllers.Provider
             var result = await authenticationBL.ChangePassword(resetPasswordModel);
             return Success(result, messageCode: LeillaKeys.DoneChangePasswordSuccessfully);
         }
-        
+
 
 
 

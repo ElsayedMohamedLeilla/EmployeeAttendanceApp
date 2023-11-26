@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogicCore;
@@ -56,13 +55,13 @@ namespace Dawem.BusinessLogic.Employees
         {
             #region Model Validation
 
-            var createUserModel = new UserSignUpModelValidator();
+            /*var createUserModel = new UserSignUpModelValidator();
             var createUserModelResult = createUserModel.Validate(model);
             if (!createUserModelResult.IsValid)
             {
                 var error = createUserModelResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
-            }
+            }*/
 
             #endregion
 
@@ -120,6 +119,7 @@ namespace Dawem.BusinessLogic.Employees
             user.Code = getNextCode;
             user.Employee = employee;
             user.VerificationCode = getNewVerificationCode;
+            user.IsActive = true;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -146,7 +146,7 @@ namespace Dawem.BusinessLogic.Employees
             {
                 Email = user.Email,
                 Subject = LeillaKeys.ThanksForRegistrationOnDawem,
-                Body = LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn 
+                Body = LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn
                 + getNewVerificationCode
             };
 
@@ -187,7 +187,7 @@ namespace Dawem.BusinessLogic.Employees
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
             }
 
-            await unitOfWork.SaveAsync(); 
+            await unitOfWork.SaveAsync();
 
             #endregion
 

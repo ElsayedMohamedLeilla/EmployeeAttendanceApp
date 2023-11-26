@@ -319,13 +319,13 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
         public const string SorryYouMustEnterCorrectLatitude = "Sorry!!YouMustEnterCorrectLatitude!";
         public const string SorryYouMustEnterCorrectLongitude = "Sorry!!YouMustEnterCorrectLongitude!";
-
         public const string SorryEnteredVerificationCodeIsNotCorrect = "Sorry!!EnteredVerificationCodeIsNotCorrect!";
         public const string SorryYouMustEnterUserId = "Sorry!!YouMustEnterUserId!";
         public const string SorryYouMustEnterVerificationCode = "Sorry!!YouMustEnterVerificationCode!";
         public const string ThanksForRegistrationOnDawem = "ThanksForRegistrationOnDawem";
         public const string YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn = "YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn";
         public const string DoneVerifyYourEmailSuccessfullyYouCanLogInNow = "DoneVerifyYourEmailSuccessfullyYouCanLogInNow";
-
+        public const string SorryYouMustEnterFingerPrintType = "Sorry!!YouMustEnterFingerPrintType!";
+        
     }
 }

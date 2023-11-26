@@ -17,6 +17,10 @@ namespace Dawem.Validation.FluentValidation.Attendances
                    WithMessage(LeillaKeys.SorryYouMustEnterCorrectLatitude);
             RuleFor(model => model).Must(lat => lat.Longitude.IsValidLongitude()).
                    WithMessage(LeillaKeys.SorryYouMustEnterCorrectLongitude);
+            RuleFor(model => model.Type)
+                .IsInEnum()
+                .WithMessage(LeillaKeys.SorryYouMustEnterFingerPrintType);
+            
         }
     }
 }

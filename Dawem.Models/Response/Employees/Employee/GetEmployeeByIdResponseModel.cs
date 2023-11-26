@@ -6,7 +6,7 @@ namespace Dawem.Models.Response.Employees.Employee
     {
         public int Id { get; set; }
         public int Code { get; set; }
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
         public int? DirectManagerId { get; set; }
         public int? JobTitleId { get; set; }
         public int? ScheduleId { get; set; }

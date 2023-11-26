@@ -11,7 +11,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Response.Attendances;
-using Dawem.Models.Response.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -166,7 +165,7 @@ namespace Dawem.BusinessLogic.Attendances
                     }).ToList() : null
                 }).ToListAsync();
 
-            var allDatesInMonth = OthersHelper.AllDatesInMonth(model.Year, model.Month).ToList();
+            var allDatesInMonth = OthersHelper.AllDatesInMonth(model.Year, model.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
             var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
 
             var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&

@@ -37,5 +37,8 @@ namespace Dawem.Domain.Entities.Employees
         public int? AnnualVacationBalance { get; set; }       
         public List<GroupEmployee> EmployeeGroups { get; set; }
 
+        public List<ZoneEmployee> Zones { get; set; }
+
+
     }
 }

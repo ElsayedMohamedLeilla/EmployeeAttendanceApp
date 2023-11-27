@@ -1,15 +1,15 @@
 ﻿using Dawem.Domain.Entities.Core;
 using Dawem.Helpers;
-using Dawem.Models.Dtos.Core.Group;
 using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Core.Groups
 {
-    public class UpdateGroupModelValidator : AbstractValidator<Zone>
+    public class CreateZoneModelValidator : AbstractValidator<Zone>
     {
-        public UpdateGroupModelValidator()
+        public CreateZoneModelValidator()
         {
+
             RuleFor(model => model.Name).NotNull().
                    WithMessage(AmgadKeys.SorryYouMustEnterZoneName);
 

@@ -14,6 +14,7 @@ using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Dawem.BusinessLogic.Employees
 {
@@ -41,6 +42,9 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
+            #region assign Delegatos In DepartmentZones Object
+            model.MapEmployeeZones();
+            #endregion
             #region Model Validation
 
             var createEmployeeModel = new CreateEmployeeModelValidator();
@@ -281,7 +285,7 @@ namespace Dawem.BusinessLogic.Employees
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
-                    DepartmentId = e.DepartmentId,
+                    DepartmentId = e.DepartmentId  ,
                     DirectManagerId = e.DirectManagerId,
                     Email = e.Email,
                     MobileNumber = e.MobileNumber,
@@ -295,6 +299,12 @@ namespace Dawem.BusinessLogic.Employees
                     ProfileImageName = e.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
+                    ZoneIds = e.Zones
+                    .Join(repositoryManager.ZoneRepository.GetAll(),
+                    zoneDepartment => zoneDepartment.ZoneId,
+                    zone => zone.Id,
+                    (zoneDepartment, zone) => zone.Id)
+                    .ToList(),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;

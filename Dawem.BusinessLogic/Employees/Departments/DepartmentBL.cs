@@ -118,11 +118,10 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;
                 getDepartment.ManagerId = model.ManagerId;
-                await unitOfWork.SaveAsync();
 
                 #region Update ZoneDepartment
 
-                List<ZoneDepartment> existDbList = repositoryManager.DepartmentZoneRepository
+                List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
                         .GetByCondition(e => e.DepartmentId == getDepartment.Id)
                         .ToList();
 
@@ -144,14 +143,14 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     .Select(ge => ge.ZoneId)
                     .ToList();
 
-                List<ZoneDepartment> removedDepartmentZones = repositoryManager.DepartmentZoneRepository
+                List<ZoneDepartment> removedDepartmentZones = repositoryManager.ZoneDepartmentRepository
                     .GetByCondition(e => e.DepartmentId == model.Id && ZonesToRemove.Contains(e.ZoneId))
                     .ToList();
 
                 if (removedDepartmentZones.Count > 0)
-                    repositoryManager.DepartmentZoneRepository.BulkDeleteIfExist(removedDepartmentZones);
+                    repositoryManager.ZoneDepartmentRepository.BulkDeleteIfExist(removedDepartmentZones);
                 if (addedDepartmentZones.Count > 0)
-                    repositoryManager.DepartmentZoneRepository.BulkInsert(addedDepartmentZones);
+                    repositoryManager.ZoneDepartmentRepository.BulkInsert(addedDepartmentZones);
 
                 #endregion
                 #region Update DepartmentManagerDelgators
@@ -186,6 +185,8 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     repositoryManager.DepartmentManagerDelegatorRepository.BulkInsert(addedDepartmentManagerDelegators);
 
                 #endregion
+                await unitOfWork.SaveAsync();
+
                 #region Handle Response
                 await unitOfWork.CommitAsync();
                 return true;

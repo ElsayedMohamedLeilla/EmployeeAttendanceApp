@@ -47,7 +47,7 @@ namespace Dawem.Contract.Repository.Manager
         IGroupEmployeeRepository GroupEmployeeRepository { get; }
         IGroupManagerDelegatorRepository GroupManagerDelegatorRepository { get; }
         IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository { get; }
-        IZoneDepartmentRepository DepartmentZoneRepository { get; }
+        IZoneDepartmentRepository ZoneDepartmentRepository { get; }
         IZoneEmployeeRepository EmployeeZoneRepository { get; }
         IZoneGroupRepository ZoneGroupRepository { get; }
         IZoneRepository ZoneRepository { get; }

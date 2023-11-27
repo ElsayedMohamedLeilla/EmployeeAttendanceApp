@@ -120,7 +120,6 @@ namespace Dawem.BusinessLogic.Core.Groups
                 getGroup.ModifyUserId = requestInfo.UserId;
                 getGroup.GroupManagerId = model.ManagerId;
                 getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
-                await unitOfWork.SaveAsync();
             #endregion
 
             #region Update GroupEmployees
@@ -168,7 +167,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                 List<int> existingManagerIds = ExistDbList.Select(e => e.EmployeeId).ToList();
 
                 List<GroupManagerDelegator> addedGroupManagerDelegators = model.ManagerDelegators
-                    .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
+                    .Where(gmd => !existingManagerIds.Contains(gmd.EmployeeId))
                     .Select(gmd => new GroupManagerDelegator
                     {
                         GroupId = model.Id,
@@ -229,6 +228,8 @@ namespace Dawem.BusinessLogic.Core.Groups
 
             else
                 throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
+
+            await unitOfWork.SaveAsync();
             #region Handle Response
 
             await unitOfWork.CommitAsync();
@@ -349,7 +350,7 @@ namespace Dawem.BusinessLogic.Core.Groups
              .Join(repositoryManager.ZoneRepository.GetAll(), // Assuming access to Employee repository
                  depZone => depZone.ZoneId,
                  zone => zone.Id,
-                 (zoneGroup, zone) => zone.Name) // Select employee names
+                 (zoneGroup, zone) => zone.Name) // Select Zone names
              .ToList()
 
      }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);

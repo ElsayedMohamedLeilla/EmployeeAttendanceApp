@@ -156,7 +156,7 @@ namespace Dawem.Repository.Manager
 
         public IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository =>
         departmentManagerDelegatorRepository ??= new DepartmentManagerDelegatorRepository(unitOfWork, generalSetting);
-        public IZoneDepartmentRepository DepartmentZoneRepository =>
+        public IZoneDepartmentRepository ZoneDepartmentRepository =>
         departmentZoneRepository ??= new ZoneDepartmentRepository(unitOfWork, generalSetting);
 
         public IZoneEmployeeRepository EmployeeZoneRepository =>

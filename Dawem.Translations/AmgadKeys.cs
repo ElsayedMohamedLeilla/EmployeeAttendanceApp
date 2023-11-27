@@ -16,11 +16,18 @@
         public const string SorrySomeAddedEmployeeNotFound = "Sorry!!SomeAddedEmployeeNotFound!";
         public const string SorryCantAddEmployeeInTheSameGroupTwice = "Sorry!!CantAddEmployeeInTheSameGroupTwice!";
         public const string SorryYouMustSelectDepartmentManager = "Sorry!!YouMustSelectDepartmentManager!";
+        
+        public const string SorryZoneNameIsDuplicated = "Sorry!!ZoneNameIsDuplicated!";
+        public const string SorryZoneNotFound = "Sorry!!ZoneNotFound!";
+        public const string SorryLatitudeIsUsedInAnotherZone = "Sorry!!LatitudeIsUsedInAnotherZone!";
+        public const string SorryLongitudeIsUsedInAnotherZone = "Sorry!!LongitudeIsUsedInAnotherZone!";
+        public const string SorryYouMustEnterZoneName = "Sorry!!YouMustEnterZoneName!";
+        public const string DoneCreateZoneSuccessfully = "DoneCreateZoneSuccessfully";
+        public const string DoneUpdateZoneSuccessfully = "DoneUpdateZoneSuccessfully";
+
+
 
         
-
-
-
 
 
 

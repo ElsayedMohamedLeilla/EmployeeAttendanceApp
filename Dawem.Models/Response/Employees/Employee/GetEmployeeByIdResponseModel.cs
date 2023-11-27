@@ -21,5 +21,8 @@ namespace Dawem.Models.Response.Employees.Employee
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public string DisableReason { get; set; }
+
+        public List<int> ZoneIds { get; set; }
+
     }
 }

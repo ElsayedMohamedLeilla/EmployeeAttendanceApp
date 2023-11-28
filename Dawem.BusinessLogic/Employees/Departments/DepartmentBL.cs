@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogicCore;
 using Dawem.Contract.BusinessLogic.Employees.Department;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -9,12 +11,15 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.Departments;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace Dawem.BusinessLogic.Employees.Departments
 {
@@ -25,10 +30,14 @@ namespace Dawem.BusinessLogic.Employees.Departments
         private readonly IDepartmentBLValidation departmentBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IUploadBLC uploadBLC;
+
         public DepartmentBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
+           IUploadBLC _uploadBLC,
+
            IDepartmentBLValidation _departmentBLValidation)
         {
             unitOfWork = _unitOfWork;
@@ -36,6 +45,8 @@ namespace Dawem.BusinessLogic.Employees.Departments
             repositoryManager = _repositoryManager;
             departmentBLValidation = _departmentBLValidation;
             mapper = _mapper;
+            uploadBLC = _uploadBLC;
+
         }
         public async Task<int> Create(CreateDepartmentModel model)
         {
@@ -107,74 +118,75 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;
                 getDepartment.ManagerId = model.ManagerId;
-                await unitOfWork.SaveAsync();
 
-                #region Update DepartmentZones
-         
-                    List<ZoneDepartment> existDbList = repositoryManager.DepartmentZoneRepository
+                #region Update ZoneDepartment
+
+                List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
                         .GetByCondition(e => e.DepartmentId == getDepartment.Id)
                         .ToList();
 
-                    List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
+                List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-                    List<ZoneDepartment> addedDepartmentZones = model.Zones
-                        .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
-                        .Select(ge => new ZoneDepartment
-                        {
-                            DepartmentId = model.Id,
-                            ZoneId = ge.ZoneId,
-                            ModifyUserId = requestInfo.UserId,
-                            ModifiedDate = DateTime.UtcNow
-                        })
-                        .ToList();
+                List<ZoneDepartment> addedDepartmentZones = model.Zones
+                    .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
+                    .Select(ge => new ZoneDepartment
+                    {
+                        DepartmentId = model.Id,
+                        ZoneId = ge.ZoneId,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    })
+                    .ToList();
 
-                    List<int> ZonesToRemove = existDbList
-                        .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
-                        .Select(ge => ge.ZoneId)
-                        .ToList();
+                List<int> ZonesToRemove = existDbList
+                    .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                    .Select(ge => ge.ZoneId)
+                    .ToList();
 
-                    List<ZoneDepartment> removedDepartmentZones = repositoryManager.DepartmentZoneRepository
-                        .GetByCondition(e => e.DepartmentId == model.Id && ZonesToRemove.Contains(e.ZoneId))
-                        .ToList();
+                List<ZoneDepartment> removedDepartmentZones = repositoryManager.ZoneDepartmentRepository
+                    .GetByCondition(e => e.DepartmentId == model.Id && ZonesToRemove.Contains(e.ZoneId))
+                    .ToList();
 
-                    if (removedDepartmentZones.Count > 0)
-                        repositoryManager.DepartmentZoneRepository.BulkDeleteIfExist(removedDepartmentZones);
-                    if (addedDepartmentZones.Count > 0)
-                        repositoryManager.DepartmentZoneRepository.BulkInsert(addedDepartmentZones);
+                if (removedDepartmentZones.Count > 0)
+                    repositoryManager.ZoneDepartmentRepository.BulkDeleteIfExist(removedDepartmentZones);
+                if (addedDepartmentZones.Count > 0)
+                    repositoryManager.ZoneDepartmentRepository.BulkInsert(addedDepartmentZones);
 
                 #endregion
                 #region Update DepartmentManagerDelgators
-               
-                    List<DepartmentManagerDelegator> ExistDbList = repositoryManager.DepartmentManagerDelegatorRepository
-                        .GetByCondition(e => e.DepartmentId == getDepartment.Id)
-                        .ToList();
 
-                    List<int> existingEmployeeIds = ExistDbList.Select(e => e.EmployeeId).ToList();
+                List<DepartmentManagerDelegator> ExistDbList = repositoryManager.DepartmentManagerDelegatorRepository
+                    .GetByCondition(e => e.DepartmentId == getDepartment.Id)
+                    .ToList();
 
-                    List<DepartmentManagerDelegator> addedDepartmentManagerDelegators = model.ManagerDelegators
-                        .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
-                        .Select(gmd => new DepartmentManagerDelegator
-                        {
-                            DepartmentId = model.Id,
-                            EmployeeId = gmd.EmployeeId,
-                            ModifyUserId = requestInfo.UserId,
-                            ModifiedDate = DateTime.UtcNow
-                        }).ToList();
+                List<int> existingEmployeeIds = ExistDbList.Select(e => e.EmployeeId).ToList();
 
-                    List<int> DepartmentManagerDelegatorToRemove = ExistDbList
-                        .Where(gmd => !model.ManagerDelegatorIds.Contains(gmd.EmployeeId))
-                        .Select(gmd => gmd.EmployeeId)
-                        .ToList();
+                List<DepartmentManagerDelegator> addedDepartmentManagerDelegators = model.ManagerDelegators
+                    .Where(gmd => !existingEmployeeIds.Contains(gmd.EmployeeId))
+                    .Select(gmd => new DepartmentManagerDelegator
+                    {
+                        DepartmentId = model.Id,
+                        EmployeeId = gmd.EmployeeId,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    }).ToList();
 
-                    List<DepartmentManagerDelegator> removedDepartmentManagerDelegators = repositoryManager.DepartmentManagerDelegatorRepository
-                        .GetByCondition(e => e.DepartmentId == model.Id && DepartmentManagerDelegatorToRemove.Contains(e.EmployeeId))
-                        .ToList();
-                    if (removedDepartmentManagerDelegators.Count > 0)
-                        repositoryManager.DepartmentManagerDelegatorRepository.BulkDeleteIfExist(removedDepartmentManagerDelegators);
-                    if (addedDepartmentManagerDelegators.Count > 0)
-                        repositoryManager.DepartmentManagerDelegatorRepository.BulkInsert(addedDepartmentManagerDelegators);
-                
+                List<int> DepartmentManagerDelegatorToRemove = ExistDbList
+                    .Where(gmd => !model.ManagerDelegatorIds.Contains(gmd.EmployeeId))
+                    .Select(gmd => gmd.EmployeeId)
+                    .ToList();
+
+                List<DepartmentManagerDelegator> removedDepartmentManagerDelegators = repositoryManager.DepartmentManagerDelegatorRepository
+                    .GetByCondition(e => e.DepartmentId == model.Id && DepartmentManagerDelegatorToRemove.Contains(e.EmployeeId))
+                    .ToList();
+                if (removedDepartmentManagerDelegators.Count > 0)
+                    repositoryManager.DepartmentManagerDelegatorRepository.BulkDeleteIfExist(removedDepartmentManagerDelegators);
+                if (addedDepartmentManagerDelegators.Count > 0)
+                    repositoryManager.DepartmentManagerDelegatorRepository.BulkInsert(addedDepartmentManagerDelegators);
+
                 #endregion
+                await unitOfWork.SaveAsync();
+
                 #region Handle Response
                 await unitOfWork.CommitAsync();
                 return true;
@@ -202,13 +214,18 @@ namespace Dawem.BusinessLogic.Employees.Departments
 
             #region Handle Response
 
-            var departmentsList = await queryPaged.Select(e => new GetDepartmentsResponseModel
+            var departmentsList = await queryPaged.Select(dep => new GetDepartmentsResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                NumberOfEmployees = e.Employees != null ? e.Employees.Count : 0,
-                IsActive = e.IsActive,
+                Id = dep.Id,
+                Code = dep.Code,
+                Name = dep.Name,
+                NumberOfEmployees = dep.Employees != null ? dep.Employees.Count : 0,
+                IsActive = dep.IsActive,
+                Manager = dep.ManagerId != null ? new DepartmentManagarForGridDTO
+                {
+                    ManagerName = dep.Manager.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(dep.Manager.ProfileImageName, LeillaKeys.Employees),
+                } : null
             }).ToListAsync();
 
             return new GetDepartmentsResponse
@@ -258,12 +275,25 @@ namespace Dawem.BusinessLogic.Employees.Departments
         public async Task<GetDepartmentInfoResponseModel> GetInfo(int DepartmentId)
         {
             var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
-                .Select(e => new GetDepartmentInfoResponseModel
+                .Select(dep => new GetDepartmentInfoResponseModel
                 {
-                    Code = e.Code,
-                    Name = e.Name,
-                    ParentName = e.Parent != null ? e.Parent.Name : null,
-                    IsActive = e.IsActive,
+                    Code = dep.Code,
+                    Name = dep.Name,
+                    ParentName = dep.Parent != null ? dep.Parent.Name : null,
+                    IsActive = dep.IsActive,
+                    ManagerDelegators = dep.ManagerDelegators
+             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
+                 depEmployee => depEmployee.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Name) // Select employee names
+             .ToList(),
+                    Manager = dep.Manager.Name,
+                    Zones = dep.Zones
+             .Join(repositoryManager.ZoneRepository.GetAll(), // Assuming access to Employee repository
+                 depZone => depZone.ZoneId,
+                 zone => zone.Id,
+                 (zoneDepartment, zone) => zone.Name) // Select employee names
+             .ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
             return department;
@@ -271,13 +301,26 @@ namespace Dawem.BusinessLogic.Employees.Departments
         public async Task<GetDepartmentByIdResponseModel> GetById(int DepartmentId)
         {
             var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
-                .Select(e => new GetDepartmentByIdResponseModel
+                .Select(dep => new GetDepartmentByIdResponseModel
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = e.Name,
-                    ParentId = e.Parent != null ? e.ParentId : null,
-                    IsActive = e.IsActive,
+                    Id = dep.Id,
+                    Code = dep.Code,
+                    Name = dep.Name,
+                    ParentId = dep.Parent != null ? dep.ParentId : null,
+                    IsActive = dep.IsActive,
+                    ManagerDelegatorIds = dep.ManagerDelegators
+                 .Join(repositoryManager.EmployeeRepository.GetAll(),
+                 depManagerDelegator => depManagerDelegator.EmployeeId,
+                 employee => employee.Id,
+                 (groupEmployee, employee) => employee.Id)
+                 .ToList(),
+                    ZoneIds = dep.Zones
+                 .Join(repositoryManager.ZoneRepository.GetAll(),
+                 zoneDepartment => zoneDepartment.ZoneId,
+                 zone => zone.Id,
+                 (zoneDepartment, zone) => zone.Id)
+                 .ToList(),
+                    ManagerId = dep.Manager.Id
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
             return department;
@@ -288,6 +331,23 @@ namespace Dawem.BusinessLogic.Employees.Departments
             var department = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
             department.Delete();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+
+        public async Task<bool> Enable(int departmentId)
+        {
+            var department = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == departmentId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
+            department.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var group = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
+            group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;
         }

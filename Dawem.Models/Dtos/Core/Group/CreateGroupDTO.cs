@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -21,6 +22,9 @@ namespace Dawem.Models.Dtos.Core.Group
         [JsonIgnore]
         public List<GroupManagarDelegatorCreateModelDTO> ManagerDelegators { get; set; }
 
+        public List<int> ZoneIds { get; set; }
+        [JsonIgnore]
+        public List<ZoneGroupCreateModelDTO> Zones { get; set; }
         public void MapGroupEmployees()
         {
             Employees = EmployeeIds
@@ -31,6 +35,13 @@ namespace Dawem.Models.Dtos.Core.Group
         {
             ManagerDelegators = ManagerDelegatorIds
                 .Select(employeeId => new GroupManagarDelegatorCreateModelDTO { EmployeeId = employeeId })
+                .ToList();
+        }
+
+        public void MapGroupZones()
+        {
+            Zones = ZoneIds
+                .Select(zoneId => new ZoneGroupCreateModelDTO { ZoneId = zoneId })
                 .ToList();
         }
 

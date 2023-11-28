@@ -23,6 +23,8 @@ namespace Dawem.Domain.Entities.Core
         public List<GroupEmployee> GroupEmployees { get; set; }
        
         public List<GroupManagerDelegator> GroupManagerDelegators { get; set; }
+        public List<ZoneGroup> Zones { get; set; }
+
 
 
 

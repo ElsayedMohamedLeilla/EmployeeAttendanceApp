@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Employees.Departments;
 
 namespace Dawem.Contract.BusinessLogic.Employees.Department
@@ -12,5 +13,7 @@ namespace Dawem.Contract.BusinessLogic.Employees.Department
         Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria model);
         Task<GetDepartmentsForDropDownResponse> GetForDropDown(GetDepartmentsCriteria model);
         Task<bool> Delete(int DepartmentId);
+        Task<bool> Enable(int GroupId);
+        Task<bool> Disable(DisableModelDTO model);
     }
 }

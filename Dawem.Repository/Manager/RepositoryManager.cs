@@ -6,7 +6,6 @@ using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
@@ -20,6 +19,7 @@ using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
+using Dawem.Repository.Core.Zones;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localization;
 using Dawem.Repository.Lookups;
@@ -71,19 +71,12 @@ namespace Dawem.Repository.Manager
         private IEmployeeAttendanceRepository employeeAttendanceRepository;
         private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
 
-        private IRequestRepository requestRepository;
-        private IRequestTaskRepository requestTaskRepository;
-        private IRequestVacationRepository requestVacationRepository;
-        private IRequestAssignmentRepository requestAssignmentRepository;
-        private IRequestPermissionRepository requestPermissionRepository;
-        private IRequestAttachmentRepository requestAttachmentRepository;
-        private IRequestJustificationRepository requestJustificationRepository;
-        private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
-
         private IDepartmentManagerDelegatorRepository departmentManagerDelegatorRepository;
-        private IDepartmentZoneRepository departmentZoneRepository;
-        private IEmployeeZoneRepository employeeZoneRepository;
-        private IGroupZoneRepository groupZoneRepository;
+        private IZoneDepartmentRepository departmentZoneRepository;
+        private IZoneEmployeeRepository employeeZoneRepository;
+        private IZoneGroupRepository groupZoneRepository;
+        private IZoneRepository zoneRepository;
+
 
 
 
@@ -161,38 +154,17 @@ namespace Dawem.Repository.Manager
         public IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository =>
         employeeAttendanceCheckRepository ??= new EmployeeAttendanceCheckRepository(unitOfWork, generalSetting, requestInfo);
 
-        public IRequestRepository RequestRepository =>
-             requestRepository ??= new RequestRepository(unitOfWork, generalSetting);
-
-        public IRequestTaskRepository RequestTaskRepository =>
-            requestTaskRepository ??= new RequestTaskRepository(unitOfWork, generalSetting);
-
-        public IRequestTaskEmployeeRepository RequestTaskEmployeeRepository =>
-             requestTaskEmployeeRepository ??= new RequestTaskEmployeeRepository(unitOfWork, generalSetting);
-
-        public IRequestAssignmentRepository RequestAssignmentRepository =>
-            requestAssignmentRepository ??= new RequestAssignmentRepository(unitOfWork, generalSetting);
-
-        public IRequestAttachmentRepository RequestAttachmentRepository =>
-            requestAttachmentRepository ??= new RequestAttachmentRepository(unitOfWork, generalSetting);
-
-        public IRequestPermissionRepository RequestPermissionRepository =>
-            requestPermissionRepository ??= new RequestPermissionRepository(unitOfWork, generalSetting);
-
-        public IRequestVacationRepository RequestVacationRepository =>
-             requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting);
-
-        public IRequestJustificationRepository RequestJustificationRepository =>
-            requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting);
-
         public IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository =>
         departmentManagerDelegatorRepository ??= new DepartmentManagerDelegatorRepository(unitOfWork, generalSetting);
-        public IDepartmentZoneRepository DepartmentZoneRepository =>
-        departmentZoneRepository ??= new DepartmentZoneRepository(unitOfWork, generalSetting);
+        public IZoneDepartmentRepository ZoneDepartmentRepository =>
+        departmentZoneRepository ??= new ZoneDepartmentRepository(unitOfWork, generalSetting);
 
-        public IEmployeeZoneRepository EmployeeZoneRepository =>
+        public IZoneEmployeeRepository EmployeeZoneRepository =>
         employeeZoneRepository ??= new EmployeeZoneRepository(unitOfWork, generalSetting);
-        public IGroupZoneRepository GroupZoneRepository =>
+        public IZoneGroupRepository ZoneGroupRepository =>
         groupZoneRepository ??= new GroupZoneRepository(unitOfWork, generalSetting);
+
+        public IZoneRepository ZoneRepository =>
+        zoneRepository ??= new ZoneRepository(unitOfWork, generalSetting);
     }
 }

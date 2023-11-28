@@ -5,7 +5,6 @@ using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
@@ -48,16 +47,12 @@ namespace Dawem.Contract.Repository.Manager
         IGroupEmployeeRepository GroupEmployeeRepository { get; }
         IGroupManagerDelegatorRepository GroupManagerDelegatorRepository { get; }
         IDepartmentManagerDelegatorRepository DepartmentManagerDelegatorRepository { get; }
-        IDepartmentZoneRepository DepartmentZoneRepository { get; }
-        IEmployeeZoneRepository EmployeeZoneRepository { get; }
-        IGroupZoneRepository GroupZoneRepository { get; }
-        IRequestRepository RequestRepository { get; }
-        IRequestTaskRepository RequestTaskRepository { get; }
-        IRequestTaskEmployeeRepository RequestTaskEmployeeRepository { get; }
-        IRequestAssignmentRepository RequestAssignmentRepository { get; }
-        IRequestAttachmentRepository RequestAttachmentRepository { get; }
-        IRequestPermissionRepository RequestPermissionRepository { get; }
-        IRequestVacationRepository RequestVacationRepository { get; }
-        IRequestJustificationRepository RequestJustificationRepository { get; }
+        IZoneDepartmentRepository ZoneDepartmentRepository { get; }
+        IZoneEmployeeRepository EmployeeZoneRepository { get; }
+        IZoneGroupRepository ZoneGroupRepository { get; }
+        IZoneRepository ZoneRepository { get; }
+
+
+
     }
 }

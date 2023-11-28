@@ -12,6 +12,8 @@ namespace Dawem.Models.Response.Core.Groups
         public List<int> ManagerDelegatorIds { get; set; }
         public int? ManagerId { get; set; }
 
+        public List<int> ZoneIds { get; set; }
+
 
 
 

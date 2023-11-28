@@ -9,7 +9,7 @@ namespace Dawem.Models.Criteria
         public string Lang { get; set; }
         public int? Code { get; set; }
         public int? Id { get; set; }
-        public List<int> Ids { get; set; }
+        public List<int?> Ids { get; set; }
         public bool PagingEnabled { get; set; }
         public int? PageSize { get; set; }
         public int? PageNumber { get; set; }

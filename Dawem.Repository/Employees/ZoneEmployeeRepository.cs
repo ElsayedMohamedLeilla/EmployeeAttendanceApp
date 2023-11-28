@@ -6,7 +6,7 @@ using Dawem.Models.Generic;
 
 namespace Dawem.Repository.Employees
 {
-    public class EmployeeZoneRepository : GenericRepository<ZoneEmployee>, IEmployeeZoneRepository
+    public class EmployeeZoneRepository : GenericRepository<ZoneEmployee>, IZoneEmployeeRepository
     {
         public EmployeeZoneRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {

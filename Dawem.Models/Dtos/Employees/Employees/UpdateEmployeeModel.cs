@@ -1,5 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace Dawem.Models.Dtos.Employees.Employees
 {
@@ -21,5 +22,16 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public AttendanceType AttendanceType { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
+
+        public List<int> ZoneIds { get; set; }
+        [JsonIgnore]
+        public List<EmployeeZonesUpdateModelDTO> Zones { get; set; }
+
+        public void MapEmployeeZones()
+        {
+            Zones = ZoneIds
+                .Select(zoneId => new EmployeeZonesUpdateModelDTO { ZoneId = zoneId })
+                .ToList();
+        }
     }
 }

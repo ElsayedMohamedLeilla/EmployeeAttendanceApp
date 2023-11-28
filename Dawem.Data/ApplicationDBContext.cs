@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Reflection.Emit;
 
 namespace Dawem.Data
 {
@@ -220,8 +219,8 @@ namespace Dawem.Data
            .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Department>()
-           .HasMany(d => d.Employees)      
-           .WithOne(e => e.Department)       
+           .HasMany(d => d.Employees)
+           .WithOne(e => e.Department)
            .HasForeignKey(e => e.DepartmentId);
 
 
@@ -303,9 +302,9 @@ namespace Dawem.Data
         public DbSet<RequestTaskEmployee> RequestTaskEmployees { get; set; }
         public DbSet<RequestAttachment> RequestAttachments { get; set; }
         public DbSet<DepartmentManagerDelegator> DepartmentManagerDelegators { get; set; }
-        public DbSet<ZoneDepartment> ZoneDepartments  { get; set; }
+        public DbSet<ZoneDepartment> ZoneDepartments { get; set; }
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
-        public DbSet<ZoneEmployee> ZoneEmployees  { get; set; }
+        public DbSet<ZoneEmployee> ZoneEmployees { get; set; }
         public DbSet<Zone> Zones { get; set; }
 
 

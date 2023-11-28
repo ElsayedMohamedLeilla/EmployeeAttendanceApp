@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Response.Employees.Departments
+﻿using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
+
+namespace Dawem.Models.Response.Employees.Departments
 {
     public class GetDepartmentsResponseModel
     {
@@ -7,5 +9,7 @@
         public string Name { get; set; }
         public int NumberOfEmployees { get; set; }
         public bool IsActive { get; set; }
+        public DepartmentManagarForGridDTO Manager { get; set; } = null;
+
     }
 }

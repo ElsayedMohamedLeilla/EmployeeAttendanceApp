@@ -1,4 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
+﻿using Dawem.Domain.Entities.Core;
+using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using System.Text.Json.Serialization;
 
@@ -19,6 +21,10 @@ namespace Dawem.Models.Dtos.Core.Group
 
         [JsonIgnore]
         public List<GroupManagarDelegatorUpdateModelDTO> ManagerDelegators { get; set; }
+
+        public List<int> ZoneIds { get; set; }
+        [JsonIgnore]
+        public List<ZoneGroupUpdateModelDTO> Zones { get; set; }
         public void MapGroupEmployees()
         {
             Employees = EmployeeIds
@@ -29,6 +35,12 @@ namespace Dawem.Models.Dtos.Core.Group
         {
             ManagerDelegators = ManagerDelegatorIds
                 .Select(employeeId => new GroupManagarDelegatorUpdateModelDTO { EmployeeId = employeeId })
+                .ToList();
+        }
+        public void MapGroupZones()
+        {
+            Zones = ZoneIds
+                .Select(zoneId => new ZoneGroupUpdateModelDTO { ZoneId = zoneId })
                 .ToList();
         }
     }

@@ -22,11 +22,17 @@ namespace Dawem.Validation.BusinessValidation.Employees
         {
             var checkEmployeeDuplicate = await repositoryManager
                 .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
+
             if (checkEmployeeDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNameIsDuplicated);
             }
-
+            var checkEmployeeNumberDuplicate = await repositoryManager
+               .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.EmployeeNumber == model.EmployeeNumber).AnyAsync();
+            if (checkEmployeeNumberDuplicate)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryEmployeeNumberIsDuplicated);
+            }
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateEmployeeModel model)
@@ -37,6 +43,12 @@ namespace Dawem.Validation.BusinessValidation.Employees
             if (checkEmployeeDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNameIsDuplicated);
+            }
+            var checkEmployeeNumberDuplicate = await repositoryManager
+              .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.EmployeeNumber == model.EmployeeNumber && c.Id != model.Id).AnyAsync();
+            if (checkEmployeeNumberDuplicate)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryEmployeeNumberIsDuplicated);
             }
 
             return true;

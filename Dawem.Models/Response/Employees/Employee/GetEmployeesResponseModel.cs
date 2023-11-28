@@ -10,5 +10,7 @@
         public DateTime JoiningDate { get; set; }
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
+
+        public int EmployeeNumber { get; set; }
     }
 }

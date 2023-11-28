@@ -159,7 +159,7 @@ namespace Dawem.Repository.Manager
         public IZoneDepartmentRepository ZoneDepartmentRepository =>
         departmentZoneRepository ??= new ZoneDepartmentRepository(unitOfWork, generalSetting);
 
-        public IZoneEmployeeRepository EmployeeZoneRepository =>
+        public IZoneEmployeeRepository ZoneEmployeeRepository =>
         employeeZoneRepository ??= new EmployeeZoneRepository(unitOfWork, generalSetting);
         public IZoneGroupRepository ZoneGroupRepository =>
         groupZoneRepository ??= new GroupZoneRepository(unitOfWork, generalSetting);

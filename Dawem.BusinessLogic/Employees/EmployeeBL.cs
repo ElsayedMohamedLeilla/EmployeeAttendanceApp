@@ -133,7 +133,9 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
             unitOfWork.CreateTransaction();
-
+            #region assign Delegatos In DepartmentZones Object
+            model.MapEmployeeZones();
+            #endregion
             #region Upload Profile Image
 
             string imageName = null;
@@ -162,10 +164,47 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.JobTitleId = model.JobTitleId;
             getEmployee.DirectManagerId = model.DirectManagerId;
             getEmployee.ScheduleId = model.ScheduleId;
+            getEmployee.EmployeeNumber = model.EmployeeNumber; 
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
+
+            #region Update ZoneEmployee
+
+            List<ZoneEmployee> existDbList = repositoryManager.ZoneEmployeeRepository
+                    .GetByCondition(e => e.EmployeeId == getEmployee.Id)
+                    .ToList();
+
+            List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
+
+            List<ZoneEmployee> addedEmployeeZones = model.Zones
+                .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
+                .Select(ge => new ZoneEmployee
+                {
+                    EmployeeId = model.Id,
+                    ZoneId = ge.ZoneId,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                })
+                .ToList();
+
+            List<int> ZonesToRemove = existDbList
+                .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                .Select(ge => ge.ZoneId)
+                .ToList();
+
+            List<ZoneEmployee> removedEmployeeZones = repositoryManager.ZoneEmployeeRepository
+                .GetByCondition(e => e.EmployeeId == model.Id && ZonesToRemove.Contains(e.ZoneId))
+                .ToList();
+
+            if (removedEmployeeZones.Count > 0)
+                repositoryManager.ZoneEmployeeRepository.BulkDeleteIfExist(removedEmployeeZones);
+            if (addedEmployeeZones.Count > 0)
+                repositoryManager.ZoneEmployeeRepository.BulkInsert(addedEmployeeZones);
+
+            #endregion
+
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -207,6 +246,7 @@ namespace Dawem.BusinessLogic.Employees
                 DapartmentName = e.Department.Name,
                 IsActive = e.IsActive,
                 JoiningDate = e.JoiningDate,
+                EmployeeNumber = e.EmployeeNumber,
                 AnnualVacationBalance = e.AnnualVacationBalance,
                 ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
             }).ToListAsync();
@@ -275,6 +315,7 @@ namespace Dawem.BusinessLogic.Employees
                     AnnualVacationBalance = e.AnnualVacationBalance,
                     JobTitleName = e.JobTitle.Name,
                     ScheduleName = e.Schedule.Name,
+                    EmployeeNumber = e.EmployeeNumber,
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
@@ -303,6 +344,7 @@ namespace Dawem.BusinessLogic.Employees
                     ScheduleId = e.ScheduleId,
                     AttendanceType = e.AttendanceType,
                     EmployeeType = e.EmployeeType,
+                    EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,

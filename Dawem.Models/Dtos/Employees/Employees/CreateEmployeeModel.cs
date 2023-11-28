@@ -21,6 +21,9 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
 
+        public int EmployeeNumber { get; set; }
+
+
         public List<int> ZoneIds { get; set; }
         [JsonIgnore]
         public List<EmployeeZonesCreateModelDTO> Zones { get; set; }

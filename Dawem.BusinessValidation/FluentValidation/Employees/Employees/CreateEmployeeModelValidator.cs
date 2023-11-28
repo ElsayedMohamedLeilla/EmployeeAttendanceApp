@@ -25,7 +25,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                    WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);
 
             RuleFor(model => model.ProfileImageFile)
-                  .Must(file => file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
+                  .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
                   .When(file => file != null)
                   .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
         }

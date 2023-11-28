@@ -327,7 +327,12 @@ namespace Dawem.Translations
         public const string DoneVerifyYourEmailSuccessfullyYouCanLogInNow = "DoneVerifyYourEmailSuccessfullyYouCanLogInNow";
         public const string SorryYouMustEnterFingerPrintType = "Sorry!!YouMustEnterFingerPrintType!";
         public const string SorryEmailAlreadyConfirmed = "Sorry!!EmailAlreadyConfirmed!";
-        
+        public const string SorryEnteredVerificationCodeIsExpiredYouMustSendAnotherOne = "Sorry!!EnteredVerificationCodeIsExpired.YouMustSendAnotherOne!";
+        public const string SorryYouCanNotSendAnotherCodeUnlessOneMinutePassed = "Sorry!!YouCanNotSendAnotherCodeUnlessOneMinutePassed!";
+        public const string SorryErrorHappenWhileSendVerificationCode = "Sorry!!ErrorHappenWhileSendVerificationCode!";
+        public const string DoneSendVerificationCodeSuccessfully = "DoneSendVerificationCodeSuccessfully";
+        public const string SorryYouMustChooseAttendanceType = "Sorry!!YouMustChooseAttendanceType!";
+        public const string SorryYouMustChooseEmployeeType = "Sorry!!YouMustChooseEmployeeType!";
 
     }
 }

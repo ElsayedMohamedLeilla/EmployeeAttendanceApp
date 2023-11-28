@@ -158,6 +158,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.ModifiedDate = DateTime.Now;
             getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.AttendanceType = model.AttendanceType;
+            getEmployee.EmployeeType = model.EmployeeType;
             getEmployee.JobTitleId = model.JobTitleId;
             getEmployee.DirectManagerId = model.DirectManagerId;
             getEmployee.ScheduleId = model.ScheduleId;
@@ -275,6 +276,7 @@ namespace Dawem.BusinessLogic.Employees
                     JobTitleName = e.JobTitle.Name,
                     ScheduleName = e.Schedule.Name,
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
+                    EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
@@ -300,6 +302,7 @@ namespace Dawem.BusinessLogic.Employees
                     JobTitleId = e.JobTitleId,
                     ScheduleId = e.ScheduleId,
                     AttendanceType = e.AttendanceType,
+                    EmployeeType = e.EmployeeType,
                     ProfileImageName = e.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,

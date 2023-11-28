@@ -30,6 +30,12 @@ namespace Dawem.API.Controllers.Employees
         {
             return Success(await userBL.VerifyEmail(model), messageCode: LeillaKeys.DoneVerifyYourEmailSuccessfullyYouCanLogInNow);
         }
+        [HttpPut]
+        [AllowAnonymous]
+        public async Task<ActionResult> SendVerificationCode(SendVerificationCodeModel model)
+        {
+            return Success(await userBL.SendVerificationCode(model), messageCode: LeillaKeys.DoneSendVerificationCodeSuccessfully);
+        }
         [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult> Create([FromForm] CreateUserWithImageModel formData)
         {

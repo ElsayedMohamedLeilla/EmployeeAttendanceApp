@@ -59,27 +59,68 @@ namespace Dawem.Validation.BusinessValidation.Employees
         }
         public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
         {
-            var checkUser = await repositoryManager
-                .UserRepository.Get(c => c.Id == model.UserId).AnyAsync();
-            if (!checkUser)
+            var getUser = await repositoryManager.UserRepository.Get(c => c.Id == model.UserId)
+                .Select(u => new
+                {
+                    u.VerificationCode,
+                    u.EmailConfirmed,
+                    u.VerificationCodeSendDate
+                }).FirstOrDefaultAsync();
+
+            if (getUser == null)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             }
 
             #region Validate Verification Code
 
-            var checkUserEmailConfirmed = await repositoryManager
-                .UserRepository.Get(c => c.Id == model.UserId && c.EmailConfirmed).AnyAsync();
-            if (checkUserEmailConfirmed)
+            if (getUser.EmailConfirmed)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEmailAlreadyConfirmed);
             }
 
-            var checkVerificationCode = await repositoryManager
-                .UserRepository.Get(c => c.Id == model.UserId && c.VerificationCode == model.VerificationCode).AnyAsync();
-            if (!checkVerificationCode)
+            if (getUser.VerificationCode != model.VerificationCode)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEnteredVerificationCodeIsNotCorrect);
+            }
+
+            var getLifeTime = (DateTime.UtcNow - getUser.VerificationCodeSendDate).TotalMinutes;
+            if (getLifeTime > 30)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryEnteredVerificationCodeIsExpiredYouMustSendAnotherOne);
+            }
+
+
+            #endregion
+
+            return true;
+        }
+        public async Task<bool> SendVerificationCodeValidation(SendVerificationCodeModel model)
+        {
+            var getUser = await repositoryManager
+                .UserRepository.Get(c => c.Id == model.UserId)
+                .Select(u => new
+                {
+                    u.EmailConfirmed,
+                    u.VerificationCodeSendDate
+                }).FirstOrDefaultAsync();
+
+            if (getUser is null)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+            }
+
+            #region Send Validate Verification Code
+
+            if (getUser.EmailConfirmed)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryEmailAlreadyConfirmed);
+            }
+
+            var getLifeTime = (DateTime.UtcNow - getUser.VerificationCodeSendDate).TotalSeconds;
+            if (getLifeTime < 60)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouCanNotSendAnotherCodeUnlessOneMinutePassed);
             }
 
             #endregion

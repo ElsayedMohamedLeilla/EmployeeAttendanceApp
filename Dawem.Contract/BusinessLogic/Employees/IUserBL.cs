@@ -8,6 +8,7 @@ namespace Dawem.Contract.BusinessLogic.Employees
     {
         Task<int> SignUp(UserSignUpModel model);
         Task<bool> VerifyEmail(UserVerifyEmailModel model);
+        Task<bool> SendVerificationCode(SendVerificationCodeModel model);
         Task<int> Create(CreateUserModel model);
         Task<bool> Update(UpdateUserModel model);
         Task<GetUserInfoResponseModel> GetInfo(int userId);

@@ -25,6 +25,10 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
             RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
+            RuleFor(model => model.AttendanceType).IsInEnum().
+                    WithMessage(LeillaKeys.SorryYouMustChooseAttendanceType);
+            RuleFor(model => model.EmployeeType).IsInEnum().
+                    WithMessage(LeillaKeys.SorryYouMustChooseEmployeeType);
         }
     }
 }

@@ -91,14 +91,7 @@ namespace Dawem.BusinessLogic.Employees
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
 
-            var isVerificationCodeRepeated = false;
-            var getNewVerificationCode = StringHelper.RandomNumber(6);
-            do
-            {
-                isVerificationCodeRepeated = await repositoryManager.UserRepository
-               .Get(e => e.CompanyId == model.CompanyId && e.VerificationCode == getNewVerificationCode)
-               .AnyAsync();
-            } while (isVerificationCodeRepeated);
+            string getNewVerificationCode = await GetVerificationCode(model.CompanyId);
 
             #endregion
 
@@ -107,6 +100,7 @@ namespace Dawem.BusinessLogic.Employees
             user.Code = getNextCode;
             user.Employee = employee;
             user.VerificationCode = getNewVerificationCode;
+            user.VerificationCodeSendDate = DateTime.UtcNow;
             user.IsActive = true;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
@@ -187,6 +181,60 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
         }
+        public async Task<bool> SendVerificationCode(SendVerificationCodeModel model)
+        {
+            #region Business Validation
+
+            await userBLValidation.SendVerificationCodeValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Send
+
+            #region Get Code
+
+            var getUser = await repositoryManager.UserRepository.GetByIdAsync(model.UserId);
+            string getNewVerificationCode = await GetVerificationCode(getUser.CompanyId ?? 0);
+
+            #endregion
+
+
+            getUser.VerificationCode = getNewVerificationCode;
+            getUser.VerificationCodeSendDate = DateTime.UtcNow;
+
+            var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
+
+            if (!updateUserResponse.Succeeded)
+            {
+                await unitOfWork.RollbackAsync();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileSendVerificationCode);
+            }
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
+
+        }
+        private async Task<string> GetVerificationCode(int companyId)
+        {
+            var isVerificationCodeRepeated = false;
+            var getNewVerificationCode = StringHelper.RandomNumber(6);
+            do
+            {
+                isVerificationCodeRepeated = await repositoryManager.UserRepository
+               .Get(e => e.CompanyId == companyId && e.VerificationCode == getNewVerificationCode)
+               .AnyAsync();
+            } while (isVerificationCodeRepeated);
+            return getNewVerificationCode;
+        }
+
         public async Task<int> Create(CreateUserModel model)
         {
             #region Model Validation

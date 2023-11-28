@@ -331,6 +331,8 @@ namespace Dawem.Translations
         public const string SorryYouCanNotSendAnotherCodeUnlessOneMinutePassed = "Sorry!!YouCanNotSendAnotherCodeUnlessOneMinutePassed!";
         public const string SorryErrorHappenWhileSendVerificationCode = "Sorry!!ErrorHappenWhileSendVerificationCode!";
         public const string DoneSendVerificationCodeSuccessfully = "DoneSendVerificationCodeSuccessfully";
-        
+        public const string SorryYouMustChooseAttendanceType = "Sorry!!YouMustChooseAttendanceType!";
+        public const string SorryYouMustChooseEmployeeType = "Sorry!!YouMustChooseEmployeeType!";
+
     }
 }

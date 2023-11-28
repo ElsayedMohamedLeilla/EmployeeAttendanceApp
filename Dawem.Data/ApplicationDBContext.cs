@@ -284,6 +284,7 @@ namespace Dawem.Data
         public DbSet<JobTitle> JobTitles { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
+        public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Company> Companies { get; set; }

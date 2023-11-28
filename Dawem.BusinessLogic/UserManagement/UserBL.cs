@@ -76,6 +76,7 @@ namespace Dawem.BusinessLogic.Employees
             var employee = mapper.Map<Employee>(model);
             employee.CompanyId = model.CompanyId;
             employee.AttendanceType = AttendanceType.FullAttendance;
+            employee.EmployeeType = EmployeeType.Contract;
             employee.JoiningDate = DateTime.UtcNow;
             employee.Code = getNextEmployeeCode;
 

@@ -23,11 +23,14 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
             RuleFor(model => model.AttendanceType).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);
-
             RuleFor(model => model.ProfileImageFile)
                   .Must(file => file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
                   .When(file => file != null)
                   .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
+            RuleFor(model => model.AttendanceType).IsInEnum().
+                    WithMessage(LeillaKeys.SorryYouMustChooseAttendanceType);
+            RuleFor(model => model.EmployeeType).IsInEnum().
+                    WithMessage(LeillaKeys.SorryYouMustChooseEmployeeType);
         }
     }
 }

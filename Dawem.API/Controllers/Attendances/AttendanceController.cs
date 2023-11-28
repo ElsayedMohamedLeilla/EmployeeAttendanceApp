@@ -25,10 +25,9 @@ namespace Dawem.API.Controllers.Attendances
             {
                 return BadRequest();
             }
-            var result = await employeeAttendanceBL.FingerPrint(model);
-            var messageCode = result == Enums.Generals.FingerPrintType.CheckIn ?
+            var messageCode = model.Type == Enums.Generals.FingerPrintType.CheckIn ?
                  LeillaKeys.DoneCheckInSuccessfully : LeillaKeys.DoneCheckOutSuccessfully;
-            return Success(result, messageCode: messageCode);
+            return Success(await employeeAttendanceBL.FingerPrint(model), messageCode: messageCode);
         }
         [HttpGet]
         public async Task<ActionResult> GetCurrentFingerPrintInfo()

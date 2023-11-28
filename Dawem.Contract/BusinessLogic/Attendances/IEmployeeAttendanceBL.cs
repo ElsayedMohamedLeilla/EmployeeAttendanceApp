@@ -6,7 +6,7 @@ namespace Dawem.Contract.BusinessLogic.Attendances
 {
     public interface IEmployeeAttendanceBL
     {
-        Task<FingerPrintType> FingerPrint(FingerprintModel model);
+        Task<bool> FingerPrint(FingerprintModel model);
         Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfo();
         Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria model);
     }

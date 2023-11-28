@@ -35,7 +35,7 @@ namespace Dawem.BusinessLogic.Attendances
             employeeAttendanceBLValidation = _employeeAttendanceBLValidation;
             mapper = _mapper;
         }
-        public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
+        public async Task<bool> FingerPrint(FingerprintModel model)
         {
             var response = FingerPrintType.CheckIn;
 
@@ -122,7 +122,7 @@ namespace Dawem.BusinessLogic.Attendances
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return response;
+            return true;
 
             #endregion
         }

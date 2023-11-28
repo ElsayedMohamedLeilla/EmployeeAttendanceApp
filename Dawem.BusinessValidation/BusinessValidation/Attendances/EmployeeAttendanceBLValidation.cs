@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Schedules.Schedules;
@@ -88,20 +89,30 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
 
-            var response = await repositoryManager.EmployeeAttendanceRepository
+            var getAttendance = await repositoryManager.EmployeeAttendanceRepository
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
                 && a.LocalDate.Date == clientLocalDate.Date)
                 .Select(a => new GetCurrentFingerPrintInfoResponseModel
                 {
                     Code = a.Code,
-                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null ?
-                     a.EmployeeAttendanceChecks.FirstOrDefault().Time.ToString("HH:mm:ss") : null,
-                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault() != null && a.EmployeeAttendanceChecks.Count > 1 ?
-                     a.EmployeeAttendanceChecks.OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
+                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     a.EmployeeAttendanceChecks.Where(c => c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
                     LocalDate = clientLocalDate
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentAttendanceInformationNotFound);
+                }).FirstOrDefaultAsync();
 
-            return response;
+            return new GetCurrentFingerPrintInfoResponseModel
+            {
+                Code = getAttendance?.Code,
+                CheckInTime = getAttendance?.CheckInTime,
+                CheckOutTime = getAttendance?.CheckOutTime,
+                EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet : 
+                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? EmployeeStatus.AttendThenLeaved :
+                getAttendance?.CheckInTime != null ? EmployeeStatus.AtWork :
+                EmployeeStatus.LeavedOnly,
+                LocalDate = clientLocalDate
+            };
         }
 
         public async Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model)

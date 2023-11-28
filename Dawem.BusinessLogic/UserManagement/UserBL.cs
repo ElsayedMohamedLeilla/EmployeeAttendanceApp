@@ -192,9 +192,9 @@ namespace Dawem.BusinessLogic.Employees
 
             unitOfWork.CreateTransaction();
 
-            #region Send
+            #region Send Verification Code
 
-            #region Get Code
+            #region Get Verification Code
 
             var getUser = await repositoryManager.UserRepository.GetByIdAsync(model.UserId);
             string getNewVerificationCode = await GetVerificationCode(getUser.CompanyId ?? 0);
@@ -212,6 +212,20 @@ namespace Dawem.BusinessLogic.Employees
                 await unitOfWork.RollbackAsync();
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileSendVerificationCode);
             }
+
+            #region Send New Verification Code In Email
+
+            var verifyEmail = new VerifyEmailModel
+            {
+                Email = getUser.Email,
+                Subject = TranslationHelper.GetTranslation(LeillaKeys.ThanksForRegistrationOnDawem, requestInfo?.Lang),
+                Body = TranslationHelper.GetTranslation(LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn, requestInfo?.Lang)
+                + getNewVerificationCode
+            };
+
+            await mailBL.SendEmail(verifyEmail);
+
+            #endregion
 
             #endregion
 

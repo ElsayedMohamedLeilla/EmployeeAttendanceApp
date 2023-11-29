@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Employees.HolidayTypes
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Employees.HolidayTypes
 {
-    public class GetHolidayTypesForDropDownResponseModel
+    public class GetHolidayTypesForDropDownResponseModel : BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

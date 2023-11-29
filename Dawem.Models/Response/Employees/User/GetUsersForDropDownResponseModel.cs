@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Employees.User
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Employees.User
 {
-    public class GetUsersForDropDownResponseModel
+    public class GetUsersForDropDownResponseModel : BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

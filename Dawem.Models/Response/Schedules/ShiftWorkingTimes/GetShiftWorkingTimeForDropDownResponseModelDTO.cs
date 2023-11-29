@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Schedules.ShiftWorkingTimes
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Schedules.ShiftWorkingTimes
 {
-    public class GetShiftWorkingTimeForDropDownResponseModelDTO
+    public class GetShiftWorkingTimeForDropDownResponseModelDTO : BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

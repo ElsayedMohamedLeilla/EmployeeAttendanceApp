@@ -333,6 +333,18 @@ namespace Dawem.Translations
         public const string DoneSendVerificationCodeSuccessfully = "DoneSendVerificationCodeSuccessfully";
         public const string SorryYouMustChooseAttendanceType = "Sorry!!YouMustChooseAttendanceType!";
         public const string SorryYouMustChooseEmployeeType = "Sorry!!YouMustChooseEmployeeType!";
+        public const string SorryFingerprintDeviceNameIsDuplicated = "Sorry!!FingerprintDeviceNameIsDuplicated!";
+        public const string SorryYouMustEnterFingerprintDeviceName = "Sorry!!YouMustEnterFingerprintDeviceName!";
+        public const string SorryYouMustEnterFingerprintDeviceIpAddress = "Sorry!!YouMustEnterFingerprintDeviceIpAddress!";
+        public const string SorryYouMustEnterFingerprintDevicePortNumber = "Sorry!!YouMustEnterFingerprintDevicePortNumber!";
+        public const string SorryYouMustEnterFingerprintDeviceModel = "Sorry!!YouMustEnterFingerprintDeviceModel!";
+        public const string SorryYouMustEnterFingerprintDeviceSerialNumber = "Sorry!!YouMustEnterFingerprintDeviceSerialNumber!";
+        public const string SorryYouMustEnterId = "Sorry!!YouMustEnterId!";
+        public const string SorryFingerprintDeviceSerialNumberIsDuplicated = "Sorry!!FingerprintDeviceSerialNumberIsDuplicated!";
+        public const string SorryFingerprintDeviceIpAddressIsDuplicated = "Sorry!!FingerprintDeviceIpAddressIsDuplicated!";
+        public const string SorryFingerprintDeviceNotFound = "Sorry!!FingerprintDeviceNotFound!";
+        public const string DoneCreateFingerprintDeviceSuccessfully = "DoneCreateFingerprintDeviceSuccessfully";
+        public const string DoneUpdateFingerprintDeviceSuccessfully = "DoneUpdateFingerprintDeviceSuccessfully";
 
     }
 }

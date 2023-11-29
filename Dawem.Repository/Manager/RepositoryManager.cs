@@ -76,8 +76,8 @@ namespace Dawem.Repository.Manager
         private IZoneEmployeeRepository employeeZoneRepository;
         private IZoneGroupRepository groupZoneRepository;
         private IZoneRepository zoneRepository;
-
-
+        private IFingerprintDeviceRepository fingerprintDeviceRepository;
+        
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
@@ -166,5 +166,9 @@ namespace Dawem.Repository.Manager
 
         public IZoneRepository ZoneRepository =>
         zoneRepository ??= new ZoneRepository(unitOfWork, generalSetting);
+
+        public IFingerprintDeviceRepository FingerprintDeviceRepository =>
+        fingerprintDeviceRepository ??= new FingerprintDeviceRepository(unitOfWork, generalSetting, requestInfo);
+        
     }
 }

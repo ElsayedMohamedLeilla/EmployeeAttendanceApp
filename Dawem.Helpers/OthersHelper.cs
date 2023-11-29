@@ -27,5 +27,23 @@ namespace Dawem.Helpers
         public static bool IsValidLongitude(this decimal longitude)
             => decimal.TryParse(longitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
                 && -180 <= l && l <= 180;
+
+        public static bool ValidateIPv4(string ipString)
+        {
+            if (string.IsNullOrWhiteSpace(ipString))
+            {
+                return false;
+            }
+
+            string[] splitValues = ipString.Split('.');
+            if (splitValues.Length != 4)
+            {
+                return false;
+            }
+
+            byte tempForParsing;
+
+            return splitValues.All(r => byte.TryParse(r, out tempForParsing));
+        }
     }
 }

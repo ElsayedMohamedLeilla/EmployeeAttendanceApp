@@ -35,10 +35,10 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }
 
             var checkFingerprintDeviceIpAddressDuplicate = await repositoryManager
-                .FingerprintDeviceRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.IpAddress == model.IpAddress).AnyAsync();
+                .FingerprintDeviceRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.IpAddress == model.IpAddress && c.PortNumber == model.PortNumber).AnyAsync();
             if (checkFingerprintDeviceIpAddressDuplicate)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceIpAddressIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceIpAddressIsDuplicatedWithTheSamePortNumber);
             }
 
             return true;
@@ -61,10 +61,10 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }
 
             var checkFingerprintDeviceIpAddressDuplicate = await repositoryManager
-                .FingerprintDeviceRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.IpAddress == model.IpAddress && c.Id != model.Id).AnyAsync();
+                .FingerprintDeviceRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.IpAddress == model.IpAddress && c.Id != model.Id && c.PortNumber == model.PortNumber).AnyAsync();
             if (checkFingerprintDeviceIpAddressDuplicate)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceIpAddressIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceIpAddressIsDuplicatedWithTheSamePortNumber);
             }
 
             return true;

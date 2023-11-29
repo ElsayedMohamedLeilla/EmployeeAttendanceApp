@@ -341,10 +341,12 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterFingerprintDeviceSerialNumber = "Sorry!!YouMustEnterFingerprintDeviceSerialNumber!";
         public const string SorryYouMustEnterId = "Sorry!!YouMustEnterId!";
         public const string SorryFingerprintDeviceSerialNumberIsDuplicated = "Sorry!!FingerprintDeviceSerialNumberIsDuplicated!";
-        public const string SorryFingerprintDeviceIpAddressIsDuplicated = "Sorry!!FingerprintDeviceIpAddressIsDuplicated!";
+        public const string SorryFingerprintDeviceIpAddressIsDuplicatedWithTheSamePortNumber = "Sorry!!FingerprintDeviceIpAddressIsDuplicatedWithTheSamePortNumber!";
         public const string SorryFingerprintDeviceNotFound = "Sorry!!FingerprintDeviceNotFound!";
         public const string DoneCreateFingerprintDeviceSuccessfully = "DoneCreateFingerprintDeviceSuccessfully";
         public const string DoneUpdateFingerprintDeviceSuccessfully = "DoneUpdateFingerprintDeviceSuccessfully";
+        public const string SorryEnteredIpAddressIsNotValid = "Sorry!!EnteredIpAddressIsNotValid!";
+        public const string SorryEnteredPortNumberIsNotValid = "Sorry!!EnteredPortNumberIsNotValid!";
 
     }
 }

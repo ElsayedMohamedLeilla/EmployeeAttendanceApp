@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+﻿using Dawem.Helpers;
+using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Translations;
 using FluentValidation;
 
@@ -18,6 +19,10 @@ namespace Dawem.Validation.FluentValidation.Employees.TaskTypes
                    WithMessage(LeillaKeys.SorryYouMustEnterFingerprintDeviceModel);
             RuleFor(model => model.SerialNumber).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterFingerprintDeviceSerialNumber);
+            RuleFor(model => model.IpAddress).Must(OthersHelper.ValidateIPv4).
+                   WithMessage(LeillaKeys.SorryEnteredIpAddressIsNotValid);
+            RuleFor(model => model.PortNumber).Must(x => int.TryParse(x, out var val) && val > 0).
+                   WithMessage(LeillaKeys.SorryEnteredPortNumberIsNotValid);
 
         }
     }

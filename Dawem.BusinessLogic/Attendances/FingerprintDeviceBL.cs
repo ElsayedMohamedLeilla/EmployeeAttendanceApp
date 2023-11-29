@@ -90,7 +90,7 @@ namespace Dawem.BusinessLogic.Employees
             {
                 getFingerprintDevice.Name = model.Name;
                 getFingerprintDevice.IpAddress = model.IpAddress;
-                getFingerprintDevice.SerialNumber  = model.SerialNumber;
+                getFingerprintDevice.SerialNumber = model.SerialNumber;
                 getFingerprintDevice.Model = model.Model;
                 getFingerprintDevice.PortNumber = model.PortNumber;
                 getFingerprintDevice.IsActive = model.IsActive;
@@ -129,6 +129,10 @@ namespace Dawem.BusinessLogic.Employees
                 Id = e.Id,
                 Code = e.Code,
                 Name = e.Name,
+                IpAddress = e.IpAddress,
+                PortNumber = e.PortNumber,
+                Model = e.Model,
+                SerialNumber = e.SerialNumber,
                 IsActive = e.IsActive,
             }).ToListAsync();
             return new GetFingerprintDevicesResponse
@@ -160,7 +164,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Handle Response
 
-            var fingerprintDevicesList = await queryPaged.Select(e => new GetFingerprintDeviceForDropDownResponseModel
+            var fingerprintDevicesList = await queryPaged.Select(e => new BaseGetForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name

@@ -4,6 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Generic;
 using LinqKit;
 

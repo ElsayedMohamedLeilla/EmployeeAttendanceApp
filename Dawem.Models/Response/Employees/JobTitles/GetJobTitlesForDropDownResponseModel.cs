@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Employees.JobTitles
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Employees.JobTitles
 {
-    public class GetJobTitlesForDropDownResponseModel
+    public class GetJobTitlesForDropDownResponseModel : BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

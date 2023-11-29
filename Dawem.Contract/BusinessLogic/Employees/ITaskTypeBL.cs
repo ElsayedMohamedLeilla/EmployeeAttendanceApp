@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.TaskType;
+﻿using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Response.Employees.TaskTypes;
 
 namespace Dawem.Contract.BusinessLogic.Employees

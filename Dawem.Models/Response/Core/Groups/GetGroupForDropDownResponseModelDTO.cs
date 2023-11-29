@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Core.Groups
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Core.Groups
 {
-    public class GetGroupForDropDownResponseModelDTO
+    public class GetGroupForDropDownResponseModelDTO : BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

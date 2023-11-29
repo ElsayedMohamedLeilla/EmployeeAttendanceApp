@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

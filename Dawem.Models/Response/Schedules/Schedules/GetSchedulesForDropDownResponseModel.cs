@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Schedules.Schedules
+﻿using Dawem.Models.Response.Employees.TaskTypes;
+
+namespace Dawem.Models.Response.Schedules.Schedules
 {
-    public class GetSchedulesForDropDownResponseModel
+    public class GetSchedulesForDropDownResponseModel: BaseGetForDropDownResponseModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

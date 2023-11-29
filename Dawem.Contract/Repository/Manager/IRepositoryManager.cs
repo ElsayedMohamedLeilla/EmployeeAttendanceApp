@@ -51,8 +51,8 @@ namespace Dawem.Contract.Repository.Manager
         IZoneEmployeeRepository ZoneEmployeeRepository { get; }
         IZoneGroupRepository ZoneGroupRepository { get; }
         IZoneRepository ZoneRepository { get; }
-
-
+        IFingerprintDeviceRepository FingerprintDeviceRepository  { get; }
+        
 
     }
 }

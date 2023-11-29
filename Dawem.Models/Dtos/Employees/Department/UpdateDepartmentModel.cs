@@ -8,6 +8,7 @@ namespace Dawem.Models.Dtos.Employees.Department
         public string Name { get; set; }
         public int? ParentId { get; set; }
         public bool IsActive { get; set; }
+        public string Notes { get; set; }
 
         public int ManagerId { get; set; }
 

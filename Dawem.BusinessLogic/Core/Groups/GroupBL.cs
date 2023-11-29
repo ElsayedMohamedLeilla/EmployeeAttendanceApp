@@ -52,13 +52,16 @@ namespace Dawem.BusinessLogic.Core.Groups
         public async Task<int> Create(CreateGroupDTO model)
         {
             #region assign ZoneIds In GroupZones Object
-            model.MapGroupZones();
+            if (model.ZoneIds != null && model.ZoneIds.Count > 0)
+                model.MapGroupZones();
             #endregion
             #region assign EmployeeIdes In GroupEmployees Object
-            model.MapGroupEmployees();
+            if (model.EmployeeIds != null && model.EmployeeIds.Count > 0)
+                model.MapGroupEmployees();
             #endregion
             #region assign DelegatorsIdes In GroupManagerDelegators Object
-            model.MapGroupManagarDelegators();
+            if (model.ManagerDelegatorIds != null && model.ManagerDelegatorIds.Count > 0)
+                model.MapGroupManagarDelegators();
             #endregion
             #region Business Validation
             await GroupBLValidation.CreateValidation(model);

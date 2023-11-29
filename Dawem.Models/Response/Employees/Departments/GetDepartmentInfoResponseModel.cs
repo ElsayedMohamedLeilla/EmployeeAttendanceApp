@@ -9,6 +9,8 @@
         public string Manager { get; set; }
         public List<string> ManagerDelegators { get; set; }
         public List<string> Zones { get; set; }
+        public string Notes { get; set; }
+
 
     }
 }

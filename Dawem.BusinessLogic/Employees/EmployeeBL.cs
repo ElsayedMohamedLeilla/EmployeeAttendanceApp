@@ -43,10 +43,8 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<int> Create(CreateEmployeeModel model)
         {
             #region assign Delegatos In DepartmentZones Object
-            if(model.ZoneIds != null)
-            {
+            if(model.ZoneIds != null && model.ZoneIds.Count > 0)
                 model.MapEmployeeZones();
-            }
            
             #endregion
             #region Model Validation

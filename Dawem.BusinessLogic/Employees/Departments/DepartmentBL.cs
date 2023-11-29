@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogicCore;
 using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
@@ -16,10 +15,7 @@ using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.Departments;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.InteropServices;
 
 namespace Dawem.BusinessLogic.Employees.Departments
 {
@@ -50,16 +46,19 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<int> Create(CreateDepartmentModel model)
         {
-            #region assign Delegatos In DepartmentZones Object
-            model.MapDepartmentZones();
-            #endregion
-            #region assign DelegatorsIdes In DepartmentManagerDelegators Object
-            model.MapDepartmentManagarDelegators();
-            #endregion
+
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);
 
+            #endregion
+            #region assign Delegatos In DepartmentZones Object
+            if (model.ZoneIds != null && model.ZoneIds.Count > 0)
+                model.MapDepartmentZones();
+            #endregion
+            #region assign DelegatorsIdes In DepartmentManagerDelegators Object
+            if (model.ManagerDelegatorIds != null && model.ManagerDelegatorIds.Count > 0)
+                model.MapDepartmentManagarDelegators();
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -118,10 +117,13 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.ModifiedDate = DateTime.Now;
                 getDepartment.ModifyUserId = requestInfo.UserId;
                 getDepartment.ManagerId = model.ManagerId;
+                getDepartment.Notes = model.Notes;
+
+
 
                 #region Update ZoneDepartment
 
-                List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
+        List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
                         .GetByCondition(e => e.DepartmentId == getDepartment.Id)
                         .ToList();
 
@@ -219,6 +221,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 Id = dep.Id,
                 Code = dep.Code,
                 Name = dep.Name,
+                Notes = dep.Notes,
                 NumberOfEmployees = dep.Employees != null ? dep.Employees.Count : 0,
                 IsActive = dep.IsActive,
                 Manager = dep.ManagerId != null ? new DepartmentManagarForGridDTO
@@ -281,6 +284,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Name = dep.Name,
                     ParentName = dep.Parent != null ? dep.Parent.Name : null,
                     IsActive = dep.IsActive,
+                    Notes = dep.Notes,
                     ManagerDelegators = dep.ManagerDelegators
              .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
                  depEmployee => depEmployee.EmployeeId,
@@ -308,6 +312,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     Name = dep.Name,
                     ParentId = dep.Parent != null ? dep.ParentId : null,
                     IsActive = dep.IsActive,
+                    Notes = dep.Notes,
                     ManagerDelegatorIds = dep.ManagerDelegators
                  .Join(repositoryManager.EmployeeRepository.GetAll(),
                  depManagerDelegator => depManagerDelegator.EmployeeId,

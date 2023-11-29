@@ -9,6 +9,8 @@ namespace Dawem.Models.Response.Employees.Departments
         public string Name { get; set; }
         public int NumberOfEmployees { get; set; }
         public bool IsActive { get; set; }
+        public string Notes { get; set; }
+
         public DepartmentManagarForGridDTO Manager { get; set; } = null;
 
     }

@@ -11,5 +11,7 @@
         public int? ManagerId { get; set; }
 
         public List<int> ZoneIds { get; set; }
+        public string Notes { get; set; }
+
     }
 }

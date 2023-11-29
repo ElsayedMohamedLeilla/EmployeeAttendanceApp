@@ -221,7 +221,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 Id = dep.Id,
                 Code = dep.Code,
                 Name = dep.Name,
-                Notes = dep.Notes,
+                //Notes = dep.Notes,
                 NumberOfEmployees = dep.Employees != null ? dep.Employees.Count : 0,
                 IsActive = dep.IsActive,
                 Manager = dep.ManagerId != null ? new DepartmentManagarForGridDTO

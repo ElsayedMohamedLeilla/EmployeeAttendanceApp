@@ -52,16 +52,19 @@ namespace Dawem.BusinessLogic.Employees.Departments
             await departmentBLValidation.CreateValidation(model);
 
             #endregion
+
             #region assign Delegatos In DepartmentZones Object
             if (model.ZoneIds != null && model.ZoneIds.Count > 0)
                 model.MapDepartmentZones();
             #endregion
+
             #region assign DelegatorsIdes In DepartmentManagerDelegators Object
             if (model.ManagerDelegatorIds != null && model.ManagerDelegatorIds.Count > 0)
                 model.MapDepartmentManagarDelegators();
             #endregion
 
             unitOfWork.CreateTransaction();
+
             #region Insert Department
 
             #region Set Department code
@@ -275,7 +278,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             #endregion
 
         }
-        public async Task<GetDepartmentsForTreeResponse> GetForTree(GetDepartmentsCriteria criteria)
+        public async Task<GetDepartmentsForTreeResponse> GetForTree(GetDepartmentsForTreeCriteria criteria)
         {
             criteria.IsActive = true;
             var departmentRepository = repositoryManager.DepartmentRepository;
@@ -302,7 +305,8 @@ namespace Dawem.BusinessLogic.Employees.Departments
             {
                 Id = e.Id,
                 Name = e.Name,
-                HasChildren = e.Children.Any()
+                HasChildren = e.Children.Any(),
+                ChildrenCount = e.Children.Count()
             }).ToListAsync();
 
             return new GetDepartmentsForTreeResponse

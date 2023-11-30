@@ -22,31 +22,31 @@ namespace Dawem.Validation.BusinessValidation.Employees
         public async Task<bool> CreateValidation(CreateDepartmentModel model)
         {
             var checkDepartmentDuplicate = await repositoryManager
-                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
+                .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
             if (checkDepartmentDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNameIsDuplicated);
             }
-
-            var checkDepartmentParent = await repositoryManager
-                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
-            if (!checkDepartmentParent)
+            if (model.ParentId is not null)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);
-            }
-
-            if((model.ManagerId == 0))
+                var checkDepartmentParent = await repositoryManager
+              .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.Id == model.ParentId).AnyAsync();
+                if (!checkDepartmentParent)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);
+                }
+            }        
+            if(model.ManagerId == 0)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryYouMustSelectDepartmentManager);
             }
            
-
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateDepartmentModel model)
         {
             var checkDepartmentDuplicate = await repositoryManager
-                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkDepartmentDuplicate)
             {
@@ -54,7 +54,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }
 
             var checkDepartmentParent = await repositoryManager
-                .DepartmentRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
+                .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
             if (!checkDepartmentParent)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);

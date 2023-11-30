@@ -12,6 +12,7 @@ using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation
@@ -21,6 +22,18 @@ namespace Dawem.Validation.FluentValidation
         public GetDepartmentsCriteriaValidator()
         {
             Include(new GetGenaricValidator());
+        }
+    }
+    public class GetDepartmentsForTreeCriteriaValidator : AbstractValidator<GetDepartmentsForTreeCriteria>
+    {
+        public GetDepartmentsForTreeCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+
+            RuleFor(model => model.ParentId)
+                .NotNull()
+                .When(m => !m.IsBaseParent)
+                .WithMessage(LeillaKeys.SorryYouMustEnterParentId);
         }
     }
     public class GetEmployeesCriteriaValidator : AbstractValidator<GetEmployeesCriteria>

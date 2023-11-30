@@ -23,6 +23,7 @@ namespace Dawem.Domain.Entities
         public void Delete()
         {
             IsDeleted = true;
+            IsActive = false;
             DeletionDate = DateTime.UtcNow;
         }
         public void Disable(string disableReason = null)

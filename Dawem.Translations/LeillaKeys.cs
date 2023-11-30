@@ -348,5 +348,8 @@ namespace Dawem.Translations
         public const string SorryEnteredIpAddressIsNotValid = "Sorry!!EnteredIpAddressIsNotValid!";
         public const string SorryEnteredPortNumberIsNotValid = "Sorry!!EnteredPortNumberIsNotValid!";
 
+        public const string SorryYouMustEnterParentId = "Sorry!!YouMustEnterParentId!";
+        
+
     }
 }

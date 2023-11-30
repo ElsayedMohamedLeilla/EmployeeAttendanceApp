@@ -1,7 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Criteria.Others;
-using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -150,4 +149,12 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetZoneCriteriaValidator : AbstractValidator<GetZoneCriteria>
+    {
+        public GetZoneCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+
 }

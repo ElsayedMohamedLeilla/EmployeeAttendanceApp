@@ -28,17 +28,28 @@ namespace Dawem.Repository.Employees
                     criteria.Id = id;
                 }
             }
-            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            else if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            else
+            {
+                if (criteria.IsBaseParent) // get base parents
+                {
+                    predicate = predicate.And(e => e.ParentId == null);
+                }
+                else if (criteria.ParentId is not null) // get all parent children
+                {
+                    predicate = predicate.And(e => e.ParentId == criteria.ParentId);
+                }
             }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
-            }
-            if (criteria.Id != null)
-            {
-                predicate = predicate.And(e => e.Id == criteria.Id);
             }
 
             predicate = predicate.And(inner);

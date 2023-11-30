@@ -8,6 +8,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.TaskTypes;
 using Dawem.Translations;
@@ -212,6 +213,24 @@ namespace Dawem.BusinessLogic.Employees
 
             return fingerprintDevice;
 
+        }
+        public async Task<bool> Enable(int fingerprintDeviceId)
+        {
+            var fingerprintDevice = await repositoryManager.FingerprintDeviceRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == fingerprintDeviceId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceNotFound);
+            fingerprintDevice.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var fingerprintDevice = await repositoryManager.FingerprintDeviceRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceNotFound);
+            fingerprintDevice.Disable(model.DisableReason);
+            await unitOfWork.SaveAsync();
+            return true;
         }
         public async Task<bool> Delete(int fingerprintDeviced)
         {

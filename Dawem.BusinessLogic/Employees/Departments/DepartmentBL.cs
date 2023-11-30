@@ -275,6 +275,45 @@ namespace Dawem.BusinessLogic.Employees.Departments
             #endregion
 
         }
+        public async Task<GetDepartmentsForTreeResponse> GetForTree(GetDepartmentsCriteria criteria)
+        {
+            criteria.IsActive = true;
+            var departmentRepository = repositoryManager.DepartmentRepository;
+            var query = departmentRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = departmentRepository.OrderBy(query, nameof(Department.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var departmentsList = await queryPaged.Select(e => new GetDepartmentsForTreeResponseModel
+            {
+                Id = e.Id,
+                Name = e.Name,
+                HasChildren = e.Children.Any()
+            }).ToListAsync();
+
+            return new GetDepartmentsForTreeResponse
+            {
+                Departments = departmentsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
         public async Task<GetDepartmentInfoResponseModel> GetInfo(int DepartmentId)
         {
             var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)

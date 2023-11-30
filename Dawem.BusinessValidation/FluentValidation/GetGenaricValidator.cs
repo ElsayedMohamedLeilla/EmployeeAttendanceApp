@@ -1,5 +1,4 @@
 ﻿using Dawem.Models.Criteria;
-using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Translations;
 using FluentValidation;
 

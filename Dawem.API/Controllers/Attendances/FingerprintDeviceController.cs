@@ -1,5 +1,7 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Core.Zones;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +73,24 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await fingerprintDeviceBL.GetById(fingerprintDeviceId));
         }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int fingerprintDeviceId)
+        {
+            if (fingerprintDeviceId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await fingerprintDeviceBL.Enable(fingerprintDeviceId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await fingerprintDeviceBL.Disable(model));
+        }
         [HttpDelete]
         public async Task<ActionResult> Delete(int fingerprintDeviceId)
         {
@@ -80,6 +100,5 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await fingerprintDeviceBL.Delete(fingerprintDeviceId));
         }
-
     }
 }

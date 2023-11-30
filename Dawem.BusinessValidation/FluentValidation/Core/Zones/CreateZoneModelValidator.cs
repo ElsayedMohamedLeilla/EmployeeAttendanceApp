@@ -1,11 +1,11 @@
-﻿using Dawem.Domain.Entities.Core;
-using Dawem.Helpers;
+﻿using Dawem.Helpers;
+using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Core.Groups
 {
-    public class CreateZoneModelValidator : AbstractValidator<Zone>
+    public class CreateZoneModelValidator : AbstractValidator<CreateZoneDTO>
     {
         public CreateZoneModelValidator()
         {

@@ -13,8 +13,8 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<GetZoneByIdResponseDTO> GetById(int ZoneId);
         Task<GetZoneResponseDTO> Get(GetZoneCriteria model);
         Task<GetZoneDropDownResponseDTO> GetForDropDown(GetZoneCriteria model);
-        Task<bool> Delete(int ZoneId);
         Task<bool> Enable(int ZoneId);
         Task<bool> Disable(DisableModelDTO model);
+        Task<bool> Delete(int ZoneId);
     }
 }

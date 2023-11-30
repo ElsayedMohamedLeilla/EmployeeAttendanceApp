@@ -12,6 +12,7 @@ namespace Dawem.Contract.BusinessLogic.Employees.Department
         Task<GetDepartmentByIdResponseModel> GetById(int DepartmentId);
         Task<GetDepartmentsResponse> Get(GetDepartmentsCriteria model);
         Task<GetDepartmentsForDropDownResponse> GetForDropDown(GetDepartmentsCriteria model);
+        Task<GetDepartmentsForTreeResponse> GetForTree(GetDepartmentsCriteria model);
         Task<bool> Delete(int DepartmentId);
         Task<bool> Enable(int GroupId);
         Task<bool> Disable(DisableModelDTO model);

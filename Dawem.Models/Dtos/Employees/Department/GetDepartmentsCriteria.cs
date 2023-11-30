@@ -4,5 +4,7 @@ namespace Dawem.Models.Dtos.Employees.Department
 {
     public class GetDepartmentsCriteria : BaseCriteria
     {
+        public bool IsBaseParent { get; set; }
+        public int? ParentId { get; set; }
     }
 }

@@ -56,6 +56,17 @@ namespace Dawem.API.Controllers.Employees
             return Success(departmensresponse.Departments, departmensresponse.TotalCount);
         }
         [HttpGet]
+        public async Task<ActionResult> GetForTree([FromQuery] GetDepartmentsCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var departmensresponse = await departmentBL.GetForTree(criteria);
+
+            return Success(departmensresponse.Departments, departmensresponse.TotalCount);
+        }
+        [HttpGet]
         public async Task<ActionResult> GetInfo([FromQuery] int departmentId)
         {
             if (departmentId < 1)

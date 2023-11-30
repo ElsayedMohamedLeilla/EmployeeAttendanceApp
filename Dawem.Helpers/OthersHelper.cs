@@ -21,8 +21,10 @@ namespace Dawem.Helpers
                 && -180 <= l && l <= 180;
 
         public static bool IsValidLatitude(this decimal latitude)
-          => decimal.TryParse(latitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
-      && -90 <= l && l <= 90;
+        {
+            return decimal.TryParse(latitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
+          && -90 <= l && l <= 90;
+        }
 
         public static bool IsValidLongitude(this decimal longitude)
             => decimal.TryParse(longitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)

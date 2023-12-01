@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Attendances
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
                 && a.LocalDate.Date.Month == model.Month
                 && a.LocalDate.Date.Year == model.Year)
-                .Select(a => new EmployeeAttendance
+                .Select(a => new EmployeeAttendance  
                 {
                     Id = a.Id,
                     LocalDate = a.LocalDate,
@@ -277,5 +277,130 @@ namespace Dawem.BusinessLogic.Attendances
 
             return resonse;
         }
+
+        public async Task<List<GetEmployeeAttendancesResponseForWebAdminModelDTO>> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria model)
+        {
+            var resonse = await repositoryManager.EmployeeAttendanceRepository
+                .Get(a=> !a.IsDeleted && a.IsActive)
+                .GroupBy(att => new { att.Id,att.LocalDate, att.EmployeeId })
+                .Select(group => new GetEmployeeAttendancesResponseForWebAdminModelDTO { 
+                    id = group.Key.Id,
+                    EmployeeId = group.Key.EmployeeId,
+                    EmployeeName = group.Select(e => e.Employee.Name).FirstOrDefault(),
+                    Date = DateOnly.FromDateTime(group.Key.LocalDate),
+                    CheckInTime = group
+                   .SelectMany(att => att.EmployeeAttendanceChecks)
+                   .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                   .Min(check => check.Time),
+                    CheckOutTime = group
+                   .SelectMany(att => att.EmployeeAttendanceChecks)
+                   .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                   .Max(check => check.Time),
+                    WayOfRecognition = GetWayOfRecognition(
+                       group
+                        .SelectMany(att => att.EmployeeAttendanceChecks)
+                        .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                        .OrderBy(check => check.Time)
+                        .Select(check => check.WayOfRecognition)
+                        .FirstOrDefault(),
+                       group
+                        .SelectMany(att => att.EmployeeAttendanceChecks)
+                        .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                        .OrderByDescending(check => check.Time)
+                        .Select(check => check.WayOfRecognition)
+                        .FirstOrDefault()),
+                    Status = DetermineAttendanceStatus(group.Select(att => att.ShiftCheckInTime).FirstOrDefault(), group.Select(att => att.AllowedMinutes).FirstOrDefault(), group.Key.LocalDate),
+                    TimeGap = CalculateTimeGap(
+                      group.Select(att => att.ShiftCheckInTime).FirstOrDefault(),
+                      group.Select(att => att.AllowedMinutes).FirstOrDefault(),
+                      group.Key.LocalDate.Date.Add(
+                      group
+                              .SelectMany(att => att.EmployeeAttendanceChecks)
+                              .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                              .OrderBy(check => check.Time)
+                              .Select(check => check.Time)
+                              .FirstOrDefault()
+                              .ToTimeSpan())),
+                    ZoneName = "Zone Name" 
+
+
+
+                }).ToListAsync();
+            return resonse;
+        }
+
+        public string GetWayOfRecognition(RecognitionWay MinCheckinRecognitionWay, RecognitionWay MaxCheckOutRecognitionWay)
+        {
+            string checkInMethod = GetRecognitionMethodName(MinCheckinRecognitionWay);
+            string checkOutMethod = GetRecognitionMethodName(MaxCheckOutRecognitionWay);
+
+            if (checkInMethod == checkOutMethod)
+            {
+                return checkInMethod;
+            }
+            else
+            {
+                return checkInMethod + " / " + checkOutMethod;
+            }
+        }
+        private string GetRecognitionMethodName(RecognitionWay way)
+        {
+            switch (way)
+            {
+                case RecognitionWay.FaceRecognition:
+                    return TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang);
+                case RecognitionWay.FingerPrint:
+                    return TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang);
+                case RecognitionWay.VoiceRecognition:
+                    return TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang);
+                case RecognitionWay.PinRecognition:
+                    return TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang);
+                case RecognitionWay.PaternRecognition:
+                    return TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang);
+                case RecognitionWay.PasswordRecognition:
+                    return TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang);
+                default:
+                    return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang);
+            }
+        }
+
+        public string DetermineAttendanceStatus(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime localDateTime)
+        {
+            TimeSpan allowedTimeSpan = TimeSpan.FromMinutes(allowedMinutes);
+            DateTime checkInLimit = localDateTime.Date.Add(shiftCheckInTime.ToTimeSpan());
+
+            if (localDateTime <= checkInLimit.Add(allowedTimeSpan))
+            {
+                return TranslationHelper.GetTranslation(AmgadKeys.OnTime, requestInfo.Lang); ;
+            }
+            else if (localDateTime > checkInLimit.Add(allowedTimeSpan))
+            {
+                return TranslationHelper.GetTranslation(AmgadKeys.Late, requestInfo.Lang); ;
+            }
+            else
+            {
+                return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang); ;
+            }
+        }
+
+        public double CalculateTimeGap(TimeOnly shiftCheckInTime,int allowedMinutes,DateTime actualCheckInTime)
+        {
+            DateTime scheduledCheckIn = actualCheckInTime.Date.Add(shiftCheckInTime.ToTimeSpan());
+
+            DateTime scheduledCheckInAfterAddAllowedminute = scheduledCheckIn.AddMinutes(allowedMinutes);
+
+            // Calculate the time gap in hours
+            TimeSpan timeGap = actualCheckInTime - scheduledCheckInAfterAddAllowedminute;
+
+            // Ensure the time gap is non-negative
+            double hoursLate = Math.Max(timeGap.TotalHours, 0);
+
+            return hoursLate;
+        }
+
+
+
+
+
     }
 }

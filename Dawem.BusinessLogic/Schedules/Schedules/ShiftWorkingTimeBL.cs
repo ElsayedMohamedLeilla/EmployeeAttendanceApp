@@ -167,7 +167,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
                 CheckInTime = e.CheckInTime,
                 CheckOutTime = e.CheckOutTime,
                 AllowedMinutes = e.AllowedMinutes,
-                TimePeriod = e.TimePeriod,
+                TimePeriod = e.TimePeriod ,
                 IsActive = e.IsActive,
             }).ToListAsync();
 

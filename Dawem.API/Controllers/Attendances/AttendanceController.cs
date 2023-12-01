@@ -1,8 +1,10 @@
 ﻿using Dawem.Contract.BusinessLogic.Attendances;
+using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace Dawem.API.Controllers.Attendances
 {
@@ -38,13 +40,28 @@ namespace Dawem.API.Controllers.Attendances
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetEmployeeAttendancesCriteria model)
         {
+            
+                if (model == null)
+                {
+                    return BadRequest();
+                }
+                var response = await employeeAttendanceBL.GetEmployeeAttendances(model);
+                return Success(response);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetForWebAdmin([FromQuery] GetEmployeeAttendancesForWebAdminCriteria model) // name will be change
+        {
+
             if (model == null)
             {
                 return BadRequest();
             }
-            var response = await employeeAttendanceBL.GetEmployeeAttendances(model);
+            var response = await employeeAttendanceBL.GetEmployeeAttendancesForWebAdmin(model);
             return Success(response);
         }
+
+
+
 
     }
 }

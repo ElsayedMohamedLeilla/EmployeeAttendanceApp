@@ -8,8 +8,5 @@
         public decimal Longitude { get; set; }
         public decimal? Radius { get; set; }
 
-
-
-
     }
 }

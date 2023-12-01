@@ -61,6 +61,8 @@ namespace Dawem.Translations
         public const string RememberMe = "RememberMe";
         public const string True = "true";
         public const string Space = " ";
+        public const string LeftBracket = "(";
+        public const string RightBracket = ")";
         public const string SpaceThenDashThenSpace = " - ";
         public const string QuestionMark = "?";
         public const string Email = "Email";
@@ -76,6 +78,7 @@ namespace Dawem.Translations
         public const string BLValidation = "BLValidation";
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
+        public const string CommaThenSpace = ", ";
         public const string Dot = ".";
         public const string Slash = "/";
         public const string BackSlash = @"\";
@@ -347,9 +350,21 @@ namespace Dawem.Translations
         public const string DoneUpdateFingerprintDeviceSuccessfully = "DoneUpdateFingerprintDeviceSuccessfully";
         public const string SorryEnteredIpAddressIsNotValid = "Sorry!!EnteredIpAddressIsNotValid!";
         public const string SorryEnteredPortNumberIsNotValid = "Sorry!!EnteredPortNumberIsNotValid!";
-
         public const string SorryYouMustEnterParentId = "Sorry!!YouMustEnterParentId!";
-        
 
+        public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
+        public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";
+
+        public const string SorryYouMustEnterDateFromForTaskRequest = "Sorry!!YouMustEnterDateFromForTaskRequest!";
+        public const string SorryYouMustEnterDateToForTaskRequest = "Sorry!!YouMustEnterDateToForTaskRequest!";
+        public const string SorryYouMustChooseTeamForTaskRequest = "Sorry!!YouMustChooseTeamForTaskRequest!";
+        public const string SorryYouMustEnterRequestTaskId = "Sorry!!YouMustEnterRequestTaskId!";
+        public const string SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate!";
+        public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";
+        
+        public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
+        public const string EmployeesNames = "EmployeesNames:";
+        public const string SorryYouMustChooseTaskTypes = "Sorry!!YouMustChooseTaskType!";
+        
     }
 }

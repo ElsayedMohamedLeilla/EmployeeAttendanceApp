@@ -17,10 +17,6 @@ namespace Dawem.Domain.Entities.Requests
         [ForeignKey(nameof(AssignmentTypeId))]
         public AssignmentType AssignmentType { get; set; }
 
-        public int EmployeeId { get; set; }
-        [ForeignKey(nameof(EmployeeId))]
-        public Employee Employee { get; set; }
-
         #endregion
 
         public DateTime DateTo { get; set; }

@@ -8,6 +8,7 @@ using Dawem.Models.Dtos.Employees.HolidayType;
 using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Requests.Task;
 using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
@@ -169,5 +170,18 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-
+    public class GetRequestsCriteriaValidator : AbstractValidator<GetRequestsCriteria>
+    {
+        public GetRequestsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetRequestTasksCriteriaValidator : AbstractValidator<GetRequestTasksCriteria>
+    {
+        public GetRequestTasksCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

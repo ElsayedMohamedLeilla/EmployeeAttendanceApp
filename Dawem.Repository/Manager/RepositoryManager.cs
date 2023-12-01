@@ -6,6 +6,7 @@ using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Provider;
+using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
@@ -77,8 +78,15 @@ namespace Dawem.Repository.Manager
         private IZoneGroupRepository groupZoneRepository;
         private IZoneRepository zoneRepository;
         private IFingerprintDeviceRepository fingerprintDeviceRepository;
-        
 
+        private IRequestRepository requestRepository;
+        private IRequestAssignmentRepository requestAssignmentRepository;
+        private IRequestJustificationRepository requestJustificationRepository;
+        private IRequestTaskRepository requestTaskRepository;
+        private IRequestPermissionRepository requestPermissionRepository;
+        private IRequestVacationRepository requestVacationRepository;
+        private IRequestAttachmentRepository requestAttachmentRepository;
+        private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -169,6 +177,29 @@ namespace Dawem.Repository.Manager
 
         public IFingerprintDeviceRepository FingerprintDeviceRepository =>
         fingerprintDeviceRepository ??= new FingerprintDeviceRepository(unitOfWork, generalSetting, requestInfo);
-        
+
+        public IRequestRepository RequestRepository =>
+            requestRepository ??= new RequestRepository(unitOfWork, generalSetting);
+
+        public IRequestAssignmentRepository RequestAssignmentRepository =>
+            requestAssignmentRepository ??= new RequestAssignmentRepository(unitOfWork, generalSetting);
+
+        public IRequestAttachmentRepository RequestAttachmentRepository =>
+            requestAttachmentRepository ??= new RequestAttachmentRepository(unitOfWork, generalSetting);
+
+        public IRequestJustificationRepository RequestJustificationRepository =>
+            requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting);
+
+        public IRequestPermissionRepository RequestPermissionRepository =>
+            requestPermissionRepository ??= new RequestPermissionRepository(unitOfWork, generalSetting);
+
+        public IRequestTaskRepository RequestTaskRepository =>
+            requestTaskRepository ??= new RequestTaskRepository(unitOfWork, generalSetting);
+
+        public IRequestTaskEmployeeRepository RequestTaskEmployeeRepository =>
+            requestTaskEmployeeRepository ??= new RequestTaskEmployeeRepository(unitOfWork, generalSetting);
+
+        public IRequestVacationRepository RequestVacationRepository =>
+            requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting);
     }
 }

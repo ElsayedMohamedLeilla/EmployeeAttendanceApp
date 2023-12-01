@@ -8,7 +8,9 @@ using Dawem.Models.Generic;
 using Dawem.Translations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Globalization;
 using System.Net;
+using System.Security.Cryptography;
 
 namespace Dawem.API.MiddleWares
 {

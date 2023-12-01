@@ -46,6 +46,10 @@ namespace Dawem.Repository.Core.Zones
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
+            if (criteria.Longitude != 0 && criteria.Latitude != 0)
+            {
+                predicate = predicate.And(e => e.Longitude == criteria.Longitude && e.Latitude == criteria.Latitude);
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

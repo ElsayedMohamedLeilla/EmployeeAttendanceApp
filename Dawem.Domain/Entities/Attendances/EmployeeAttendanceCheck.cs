@@ -17,5 +17,7 @@ namespace Dawem.Domain.Entities.Attendances
         public double Longitude { get; set; }
         public string IpAddress { get; set; }
         public FingerPrintType FingerPrintType { get; set; }
+        public RecognitionWay WayOfRecognition { get; set; }
+
     }
 }

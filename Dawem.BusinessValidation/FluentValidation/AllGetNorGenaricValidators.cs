@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -169,5 +170,15 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+
+    public class GetEmployeeAttendancesForWebAdminCriteriaValidator : AbstractValidator<GetEmployeeAttendancesForWebAdminCriteria>
+    {
+        public GetEmployeeAttendancesForWebAdminCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+
+
 
 }

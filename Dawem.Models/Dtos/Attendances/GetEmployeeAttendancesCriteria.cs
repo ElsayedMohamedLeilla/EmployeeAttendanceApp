@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Criteria;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Criteria;
 
 namespace Dawem.Models.Dtos.Attendances
 {
@@ -6,5 +7,6 @@ namespace Dawem.Models.Dtos.Attendances
     {
         public int Month { get; set; }
         public int Year { get; set; }
+
     }
 }

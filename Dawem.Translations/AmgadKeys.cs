@@ -23,12 +23,28 @@
         public const string SorryYouMustEnterZoneName = "Sorry!!YouMustEnterZoneName!";
         public const string DoneCreateZoneSuccessfully = "DoneCreateZoneSuccessfully";
         public const string DoneUpdateZoneSuccessfully = "DoneUpdateZoneSuccessfully";
-
-
-
         public const string SorryEmployeeNumberIsDuplicated = "Sorry!!EmployeeNumberIsDuplicated!";
+        public const string FingerPrint = "FingerPrint";
+        public const string FaceRecognition = "FaceRecognition";
+        public const string VoiceRecognition = "VoiceRecognition";
+        public const string PaternRecognition = "PaternRecognition";
+        public const string PinRecognition = "PinRecognition";
+        public const string PasswordRecognition = "PasswordRecognition";
+        public const string Unknown = "Unknown";
+        public const string OnTime = "OnTime";
+        public const string Late = "Late";
 
-        
+
+
+
+
+
+
+
+
+
+
+
 
 
 

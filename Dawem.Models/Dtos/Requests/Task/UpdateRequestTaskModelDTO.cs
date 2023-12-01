@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.JobTitle
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Dawem.Models.Dtos.Employees.JobTitle
 {
     public class UpdateRequestTaskModelDTO
     {
@@ -11,5 +13,6 @@
         public DateTime DateTo { get; set; }
         public List<int> TaskEmployeeIds { get; set; }
         public bool IsActive { get; set; }
+        public List<IFormFile> Attachments { get; set; }
     }
 }

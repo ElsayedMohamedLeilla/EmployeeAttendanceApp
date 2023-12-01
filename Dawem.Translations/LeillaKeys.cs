@@ -354,14 +354,12 @@ namespace Dawem.Translations
 
         public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
         public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";
-
         public const string SorryYouMustEnterDateFromForTaskRequest = "Sorry!!YouMustEnterDateFromForTaskRequest!";
         public const string SorryYouMustEnterDateToForTaskRequest = "Sorry!!YouMustEnterDateToForTaskRequest!";
         public const string SorryYouMustChooseTeamForTaskRequest = "Sorry!!YouMustChooseTeamForTaskRequest!";
         public const string SorryYouMustEnterRequestTaskId = "Sorry!!YouMustEnterRequestTaskId!";
         public const string SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate!";
-        public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";
-        
+        public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";   
         public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
         public const string EmployeesNames = "EmployeesNames:";
         public const string SorryYouMustChooseTaskTypes = "Sorry!!YouMustChooseTaskType!";

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogicCore;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
@@ -19,8 +18,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
-using System.Runtime.Intrinsics.Arm;
 
 namespace Dawem.BusinessLogic.Core.Groups
 {
@@ -123,10 +120,10 @@ namespace Dawem.BusinessLogic.Core.Groups
                 getGroup.ModifyUserId = requestInfo.UserId;
                 getGroup.GroupManagerId = model.ManagerId;
                 getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
-            #endregion
+                #endregion
 
-            #region Update GroupEmployees
-            
+                #region Update GroupEmployees
+
                 List<GroupEmployee> existDbList = repositoryManager.GroupEmployeeRepository
                     .GetByCondition(e => e.GroupId == getGroup.Id)
                     .ToList();
@@ -159,10 +156,10 @@ namespace Dawem.BusinessLogic.Core.Groups
                     repositoryManager.GroupEmployeeRepository.BulkInsert(addedGroupEmployees);
 
                 #endregion
-           
 
-            #region Update GroupManagerDelgators
-           
+
+                #region Update GroupManagerDelgators
+
                 List<GroupManagerDelegator> ExistDbList = repositoryManager.GroupManagerDelegatorRepository
                     .GetByCondition(e => e.GroupId == getGroup.Id)
                     .ToList();
@@ -191,40 +188,40 @@ namespace Dawem.BusinessLogic.Core.Groups
                     repositoryManager.GroupManagerDelegatorRepository.BulkDeleteIfExist(removedgroupManagerDelegators);
                 if (addedGroupManagerDelegators.Count > 0)
                     repositoryManager.GroupManagerDelegatorRepository.BulkInsert(addedGroupManagerDelegators);
-            
-            #endregion
-            #region Update ZoneGroup
 
-            List<ZoneGroup> existZDbList = repositoryManager.ZoneGroupRepository
-                    .GetByCondition(e => e.GroupId == getGroup.Id)
+                #endregion
+                #region Update ZoneGroup
+
+                List<ZoneGroup> existZDbList = repositoryManager.ZoneGroupRepository
+                        .GetByCondition(e => e.GroupId == getGroup.Id)
+                        .ToList();
+
+                List<int> existingZoneIds = existZDbList.Select(e => e.ZoneId).ToList();
+
+                List<ZoneGroup> addedGroupZones = model.Zones
+                    .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
+                    .Select(ge => new ZoneGroup
+                    {
+                        GroupId = model.Id,
+                        ZoneId = ge.ZoneId,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    })
                     .ToList();
 
-            List<int> existingZoneIds = existZDbList.Select(e => e.ZoneId).ToList();
+                List<int> ZonesToRemove = existZDbList
+                    .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                    .Select(ge => ge.ZoneId)
+                    .ToList();
 
-            List<ZoneGroup> addedGroupZones = model.Zones
-                .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
-                .Select(ge => new ZoneGroup
-                {
-                    GroupId = model.Id,
-                    ZoneId = ge.ZoneId,
-                    ModifyUserId = requestInfo.UserId,
-                    ModifiedDate = DateTime.UtcNow
-                })
-                .ToList();
+                List<ZoneGroup> removedGroupZones = repositoryManager.ZoneGroupRepository
+                    .GetByCondition(e => e.GroupId == model.Id && ZonesToRemove.Contains(e.ZoneId))
+                    .ToList();
 
-            List<int> ZonesToRemove = existZDbList
-                .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
-                .Select(ge => ge.ZoneId)
-                .ToList();
-
-            List<ZoneGroup> removedGroupZones = repositoryManager.ZoneGroupRepository
-                .GetByCondition(e => e.GroupId == model.Id && ZonesToRemove.Contains(e.ZoneId))
-                .ToList();
-
-            if (removedGroupZones.Count > 0)
-                repositoryManager.ZoneGroupRepository.BulkDeleteIfExist(removedGroupZones);
-            if (addedGroupZones.Count > 0)
-                repositoryManager.ZoneGroupRepository.BulkInsert(addedGroupZones);
+                if (removedGroupZones.Count > 0)
+                    repositoryManager.ZoneGroupRepository.BulkDeleteIfExist(removedGroupZones);
+                if (addedGroupZones.Count > 0)
+                    repositoryManager.ZoneGroupRepository.BulkInsert(addedGroupZones);
 
                 #endregion
             }
@@ -279,7 +276,7 @@ namespace Dawem.BusinessLogic.Core.Groups
 
             }).ToListAsync();
 
-          
+
 
             return new GetGroupResponseDTO
             {
@@ -369,9 +366,9 @@ namespace Dawem.BusinessLogic.Core.Groups
                     Code = group.Code,
                     Name = group.Name,
                     IsActive = group.IsActive,
-                    ManagerId=group.GroupManagerId,
+                    ManagerId = group.GroupManagerId,
                     EmployeeIds = group.GroupEmployees
-             .Join(repositoryManager.EmployeeRepository.GetAll(), 
+             .Join(repositoryManager.EmployeeRepository.GetAll(),
                  groupEmployee => groupEmployee.EmployeeId,
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Id)

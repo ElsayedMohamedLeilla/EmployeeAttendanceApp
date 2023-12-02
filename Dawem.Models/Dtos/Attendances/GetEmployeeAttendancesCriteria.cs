@@ -1,5 +1,4 @@
-﻿using Dawem.Enums.Generals;
-using Dawem.Models.Criteria;
+﻿using Dawem.Models.Criteria;
 
 namespace Dawem.Models.Dtos.Attendances
 {

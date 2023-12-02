@@ -351,6 +351,8 @@ namespace Dawem.Translations
         public const string SorryEnteredIpAddressIsNotValid = "Sorry!!EnteredIpAddressIsNotValid!";
         public const string SorryEnteredPortNumberIsNotValid = "Sorry!!EnteredPortNumberIsNotValid!";
         public const string SorryYouMustEnterParentId = "Sorry!!YouMustEnterParentId!";
+        public const string AM = "AM";
+        public const string PM = "PM";
 
         public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
         public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";

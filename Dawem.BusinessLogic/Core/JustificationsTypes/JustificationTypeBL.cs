@@ -12,8 +12,6 @@ using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.JustificationsTypes;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Core.JustificationsTypes;
-using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.JustificationsTypes

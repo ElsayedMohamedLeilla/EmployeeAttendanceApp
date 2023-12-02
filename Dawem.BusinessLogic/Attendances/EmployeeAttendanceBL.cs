@@ -134,13 +134,13 @@ namespace Dawem.BusinessLogic.Attendances
 
             #endregion
         }
-        public async Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria model)
+        public async Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria criteria)
         {
             var resonse = new List<GetEmployeeAttendancesResponseModel>();
 
             #region Business Validation
 
-            var result = await employeeAttendanceBLValidation.GetEmployeeAttendancesValidation(model);
+            var result = await employeeAttendanceBLValidation.GetEmployeeAttendancesValidation(criteria);
 
             #endregion
 
@@ -148,9 +148,9 @@ namespace Dawem.BusinessLogic.Attendances
 
             var employeeAttendances = await repositoryManager.EmployeeAttendanceRepository
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
-                && a.LocalDate.Date.Month == model.Month
-                && a.LocalDate.Date.Year == model.Year)
-                .Select(a => new EmployeeAttendance  
+                && a.LocalDate.Date.Month == criteria.Month
+                && a.LocalDate.Date.Year == criteria.Year)
+                .Select(a => new EmployeeAttendance
                 {
                     Id = a.Id,
                     LocalDate = a.LocalDate,
@@ -162,10 +162,11 @@ namespace Dawem.BusinessLogic.Attendances
                     {
                         Id = c.Id,
                         Time = c.Time,
+                        FingerPrintType = c.FingerPrintType
                     }).ToList() : null
                 }).ToListAsync();
 
-            var allDatesInMonth = OthersHelper.AllDatesInMonth(model.Year, model.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
+            var allDatesInMonth = OthersHelper.AllDatesInMonth(criteria.Year, criteria.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
             var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
 
             var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&
@@ -196,8 +197,11 @@ namespace Dawem.BusinessLogic.Attendances
                 var employeeAttendance = employeeAttendances
                         .FirstOrDefault(e => e.LocalDate.Date == date.Date);
 
-                var checkInTime = employeeAttendance?.EmployeeAttendanceChecks?.FirstOrDefault()?.Time;
-                var checkOutTime = employeeAttendance?.EmployeeAttendanceChecks?.OrderByDescending(c => c.Id)?.FirstOrDefault()?.Time;
+                var checkInTime = employeeAttendance?.EmployeeAttendanceChecks?
+                    .FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckIn)?.Time;
+                var checkOutTime = employeeAttendance?.EmployeeAttendanceChecks?
+                    .Where(c => c.FingerPrintType == FingerPrintType.CheckOut)?
+                    .OrderByDescending(c => c.Id)?.FirstOrDefault()?.Time;
 
                 #region Check For Vacation
 
@@ -277,62 +281,107 @@ namespace Dawem.BusinessLogic.Attendances
 
             return resonse;
         }
-
-        public async Task<List<GetEmployeeAttendancesResponseForWebAdminModelDTO>> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria model)
+        public async Task<List<GetEmployeeAttendancesResponseForWebAdminModelDTO>> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria criteria)
         {
-            var resonse = await repositoryManager.EmployeeAttendanceRepository
-                .Get(a=> !a.IsDeleted && a.IsActive)
-                .GroupBy(att => new { att.Id,att.LocalDate, att.EmployeeId })
-                .Select(group => new GetEmployeeAttendancesResponseForWebAdminModelDTO { 
-                    id = group.Key.Id,
-                    EmployeeId = group.Key.EmployeeId,
-                    EmployeeName = group.Select(e => e.Employee.Name).FirstOrDefault(),
-                    Date = DateOnly.FromDateTime(group.Key.LocalDate),
-                    CheckInTime = group
-                   .SelectMany(att => att.EmployeeAttendanceChecks)
-                   .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                   .Min(check => check.Time),
-                    CheckOutTime = group
-                   .SelectMany(att => att.EmployeeAttendanceChecks)
-                   .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                   .Max(check => check.Time),
-                    WayOfRecognition = GetWayOfRecognition(
-                       group
-                        .SelectMany(att => att.EmployeeAttendanceChecks)
-                        .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                        .OrderBy(check => check.Time)
-                        .Select(check => check.WayOfRecognition)
-                        .FirstOrDefault(),
-                       group
-                        .SelectMany(att => att.EmployeeAttendanceChecks)
-                        .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                        .OrderByDescending(check => check.Time)
-                        .Select(check => check.WayOfRecognition)
-                        .FirstOrDefault()),
-                    Status = DetermineAttendanceStatus(group.Select(att => att.ShiftCheckInTime).FirstOrDefault(), group.Select(att => att.AllowedMinutes).FirstOrDefault(), group.Key.LocalDate),
-                    TimeGap = CalculateTimeGap(
-                      group.Select(att => att.ShiftCheckInTime).FirstOrDefault(),
-                      group.Select(att => att.AllowedMinutes).FirstOrDefault(),
-                      group.Key.LocalDate.Date.Add(
-                      group
-                              .SelectMany(att => att.EmployeeAttendanceChecks)
-                              .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                              .OrderBy(check => check.Time)
-                              .Select(check => check.Time)
-                              .FirstOrDefault()
-                              .ToTimeSpan())),
-                    ZoneName = "Zone Name" 
+            var employeeAttendanceRepository = repositoryManager.EmployeeAttendanceRepository;
+            var query = employeeAttendanceRepository.GetAsQueryable(criteria);
 
+            #region paging
 
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
 
-                }).ToListAsync();
-            return resonse;
+            #region sorting
+
+            var queryOrdered = employeeAttendanceRepository.OrderBy(query, nameof(EmployeeAttendance.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            /* var justificationsTypesList = await queryPaged.Select(e => new GetJustificationsTypeResponseModelDTO
+             {
+                 Id = e.Id,
+                 Code = e.Code,
+                 Name = e.Name,
+                 IsActive = e.IsActive,
+             }).ToListAsync();
+
+             return new GetJustificationsTypeResponseDTO
+             {
+                 JustificationsTypes = justificationsTypesList,
+                 TotalCount = await query.CountAsync()
+             };*/
+
+            #endregion
+
+            var resonseTest = await queryPaged
+               .Select(empAttendance => new GetEmployeeAttendancesResponseForWebAdminModelDTO
+               {
+                   Id = empAttendance.Id,
+                   EmployeeName = empAttendance.Employee.Name,
+                   Date = empAttendance.LocalDate.Date,
+
+                   CheckInTime =
+                   empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                    .Min(check => check.Time).ToString("hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                    .Min(check => check.Time).ToString("tt") , requestInfo.Lang) : null,
+
+                   CheckOutTime =
+                   empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                    .Max(check => check.Time).ToString("hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                    .Max(check => check.Time).ToString("tt"), requestInfo.Lang) : null,
+
+                   WayOfRecognition = GetWayOfRecognition(
+                      empAttendance.EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                       .OrderBy(check => check.Time)
+                       .Select(check => check.RecognitionWay)
+                       .FirstOrDefault(),
+                      empAttendance
+                      .EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                       .OrderByDescending(check => check.Time)
+                       .Select(check => check.RecognitionWay)
+                       .FirstOrDefault(), requestInfo.Lang),
+                   Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.LocalDate, requestInfo.Lang),
+                   TimeGap = CalculateTimeGap(
+                     empAttendance.ShiftCheckInTime,
+                     empAttendance.AllowedMinutes,
+                     empAttendance.LocalDate.Date.Add(
+                     empAttendance
+                            .EmployeeAttendanceChecks
+                             .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                             .OrderBy(check => check.Time)
+                             .Select(check => check.Time)
+                             .FirstOrDefault()
+                             .ToTimeSpan())),
+                   ZoneName = "Zone Name"
+
+               }).ToListAsync();
+
+            return resonseTest;
         }
-
-        public string GetWayOfRecognition(RecognitionWay MinCheckinRecognitionWay, RecognitionWay MaxCheckOutRecognitionWay)
+        public static string TranslateAmAndPm(string AmOrPm, string lang)
         {
-            string checkInMethod = GetRecognitionMethodName(MinCheckinRecognitionWay);
-            string checkOutMethod = GetRecognitionMethodName(MaxCheckOutRecognitionWay);
+            return LeillaKeys.Space + TranslationHelper.GetTranslation(AmOrPm, lang);
+        }
+        public static string GetWayOfRecognition(RecognitionWay MinCheckinRecognitionWay, RecognitionWay MaxCheckOutRecognitionWay, string lang)
+        {
+            string checkInMethod = GetRecognitionMethodName(MinCheckinRecognitionWay, lang);
+            string checkOutMethod = GetRecognitionMethodName(MaxCheckOutRecognitionWay, lang);
 
             if (checkInMethod == checkOutMethod)
             {
@@ -343,47 +392,38 @@ namespace Dawem.BusinessLogic.Attendances
                 return checkInMethod + " / " + checkOutMethod;
             }
         }
-        private string GetRecognitionMethodName(RecognitionWay way)
+        private static string GetRecognitionMethodName(RecognitionWay way, string lang)
         {
-            switch (way)
+            return way switch
             {
-                case RecognitionWay.FaceRecognition:
-                    return TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang);
-                case RecognitionWay.FingerPrint:
-                    return TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang);
-                case RecognitionWay.VoiceRecognition:
-                    return TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang);
-                case RecognitionWay.PinRecognition:
-                    return TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang);
-                case RecognitionWay.PaternRecognition:
-                    return TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang);
-                case RecognitionWay.PasswordRecognition:
-                    return TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang);
-                default:
-                    return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang);
-            }
+                RecognitionWay.FaceRecognition => TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, lang),
+                RecognitionWay.FingerPrint => TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, lang),
+                RecognitionWay.VoiceRecognition => TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, lang),
+                RecognitionWay.PinRecognition => TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, lang),
+                RecognitionWay.PaternRecognition => TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, lang),
+                RecognitionWay.PasswordRecognition => TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, lang),
+                _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
+            };
         }
-
-        public string DetermineAttendanceStatus(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime localDateTime)
+        public static string DetermineAttendanceStatus(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime localDateTime, string lang)
         {
             TimeSpan allowedTimeSpan = TimeSpan.FromMinutes(allowedMinutes);
             DateTime checkInLimit = localDateTime.Date.Add(shiftCheckInTime.ToTimeSpan());
 
             if (localDateTime <= checkInLimit.Add(allowedTimeSpan))
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.OnTime, requestInfo.Lang); 
+                return TranslationHelper.GetTranslation(AmgadKeys.OnTime, lang); ;
             }
             else if (localDateTime > checkInLimit.Add(allowedTimeSpan))
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.Late, requestInfo.Lang); 
+                return TranslationHelper.GetTranslation(AmgadKeys.Late, lang); ;
             }
             else
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang);
+                return TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang); ;
             }
         }
-
-        public double CalculateTimeGap(TimeOnly shiftCheckInTime,int allowedMinutes,DateTime actualCheckInTime)
+        public static double CalculateTimeGap(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime actualCheckInTime)
         {
             DateTime scheduledCheckIn = actualCheckInTime.Date.Add(shiftCheckInTime.ToTimeSpan());
 
@@ -397,10 +437,5 @@ namespace Dawem.BusinessLogic.Attendances
 
             return hoursLate;
         }
-
-
-
-
-
     }
 }

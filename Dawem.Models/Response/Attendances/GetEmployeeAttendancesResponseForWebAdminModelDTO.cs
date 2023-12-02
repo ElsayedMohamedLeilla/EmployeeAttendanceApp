@@ -1,16 +1,12 @@
-﻿using Dawem.Domain.Entities.Employees;
-using Dawem.Enums.Generals;
-
-namespace Dawem.Models.Response.Attendances
+﻿namespace Dawem.Models.Response.Attendances
 {
     public class GetEmployeeAttendancesResponseForWebAdminModelDTO
     {
-        public int id { get; set; } //employeeAteendance Id
-        public int EmployeeId { get; set; }
+        public int Id { get; set; } //employeeAteendance Id
         public string EmployeeName { get; set; }
-        public DateOnly Date { get; set; } // ateendance Date
-        public TimeOnly CheckInTime { get; set; }
-        public TimeOnly CheckOutTime { get; set; }
+        public DateTime Date { get; set; } // ateendance Date
+        public string CheckInTime { get; set; }
+        public string CheckOutTime { get; set; }
         public string Status { get; set; }
         public double TimeGap { get; set; }
         public string WayOfRecognition { get; set; }

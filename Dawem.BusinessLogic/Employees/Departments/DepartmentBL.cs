@@ -126,9 +126,9 @@ namespace Dawem.BusinessLogic.Employees.Departments
 
                 #region Update ZoneDepartment
 
-        List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
-                        .GetByCondition(e => e.DepartmentId == getDepartment.Id)
-                        .ToList();
+                List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
+                                .GetByCondition(e => e.DepartmentId == getDepartment.Id)
+                                .ToList();
 
                 List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
@@ -318,9 +318,9 @@ namespace Dawem.BusinessLogic.Employees.Departments
             #endregion
 
         }
-        public async Task<GetDepartmentInfoResponseModel> GetInfo(int DepartmentId)
+        public async Task<GetDepartmentInfoResponseModel> GetInfo(int departmentId)
         {
-            var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == DepartmentId && !e.IsDeleted)
+            var department = await repositoryManager.DepartmentRepository.Get(e => e.Id == departmentId && !e.IsDeleted)
                 .Select(dep => new GetDepartmentInfoResponseModel
                 {
                     Code = dep.Code,
@@ -329,18 +329,12 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     IsActive = dep.IsActive,
                     Notes = dep.Notes,
                     ManagerDelegators = dep.ManagerDelegators
-             .Join(repositoryManager.EmployeeRepository.GetAll(), // Assuming access to Employee repository
-                 depEmployee => depEmployee.EmployeeId,
-                 employee => employee.Id,
-                 (groupEmployee, employee) => employee.Name) // Select employee names
-             .ToList(),
+                    .Select(d => d.Employee.Name)
+                    .ToList(),
                     Manager = dep.Manager.Name,
                     Zones = dep.Zones
-             .Join(repositoryManager.ZoneRepository.GetAll(), // Assuming access to Employee repository
-                 depZone => depZone.ZoneId,
-                 zone => zone.Id,
-                 (zoneDepartment, zone) => zone.Name) // Select employee names
-             .ToList()
+                    .Select(d => d.Zone.Name)
+                    .ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 
             return department;
@@ -357,17 +351,11 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     IsActive = dep.IsActive,
                     Notes = dep.Notes,
                     ManagerDelegatorIds = dep.ManagerDelegators
-                 .Join(repositoryManager.EmployeeRepository.GetAll(),
-                 depManagerDelegator => depManagerDelegator.EmployeeId,
-                 employee => employee.Id,
-                 (groupEmployee, employee) => employee.Id)
-                 .ToList(),
+                    .Select(d => d.EmployeeId)
+                    .ToList(),
                     ZoneIds = dep.Zones
-                 .Join(repositoryManager.ZoneRepository.GetAll(),
-                 zoneDepartment => zoneDepartment.ZoneId,
-                 zone => zone.Id,
-                 (zoneDepartment, zone) => zone.Id)
-                 .ToList(),
+                    .Select(z => z.ZoneId)
+                    .ToList(),
                     ManagerId = dep.Manager.Id
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
 

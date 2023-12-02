@@ -33,26 +33,5 @@
         public const string Unknown = "Unknown";
         public const string OnTime = "OnTime";
         public const string Late = "Late";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

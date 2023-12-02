@@ -6,6 +6,6 @@ namespace Dawem.Contract.Repository.Attendances
 {
     public interface IEmployeeAttendanceRepository : IGenericRepository<EmployeeAttendance>
     {
-        IQueryable<EmployeeAttendance> GetAsQueryable(GetEmployeeAttendancesCriteria criteria);
+        IQueryable<EmployeeAttendance> GetAsQueryable(GetEmployeeAttendancesForWebAdminCriteria criteria);
     }
 }

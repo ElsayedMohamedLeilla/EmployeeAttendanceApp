@@ -16,7 +16,7 @@ namespace Dawem.Repository.Attendances
         {
             requestInfo = _requestInfo;
         }
-        public IQueryable<EmployeeAttendance> GetAsQueryable(GetEmployeeAttendancesCriteria criteria)
+        public IQueryable<EmployeeAttendance> GetAsQueryable(GetEmployeeAttendancesForWebAdminCriteria criteria)
         {
             var predicate = PredicateBuilder.New<EmployeeAttendance>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<EmployeeAttendance>(true);
@@ -25,10 +25,22 @@ namespace Dawem.Repository.Attendances
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
                 inner = inner.And(x => x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                if (int.TryParse(criteria.FreeText, out int id))
+                if (int.TryParse(criteria.FreeText, out int employeeNumber))
                 {
-                    criteria.Id = id;
+                    criteria.EmployeeNumber = employeeNumber;
                 }
+            }
+            if (criteria.EmployeeNumber != null)
+            {
+                predicate = predicate.And(e => e.Employee.EmployeeNumber == criteria.EmployeeNumber);
+            }
+            if (criteria.EmployeeId != null)
+            {
+                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId );
+            }
+            if (criteria.Date != null)
+            {
+                predicate = predicate.And(e => e.LocalDate.Date == criteria.Date.Value.Date);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {

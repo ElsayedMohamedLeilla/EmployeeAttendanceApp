@@ -43,10 +43,12 @@ namespace Dawem.BusinessLogic.Employees
         public async Task<int> Create(CreateEmployeeModel model)
         {
             #region assign Delegatos In DepartmentZones Object
+
             if(model.ZoneIds != null && model.ZoneIds.Count > 0)
                 model.MapEmployeeZones();
            
             #endregion
+
             #region Model Validation
 
             var createEmployeeModel = new CreateEmployeeModelValidator();
@@ -298,6 +300,36 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
+            var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
+                .Select(e => new GetEmployeeInfoResponseModel
+                {
+                    Code = e.Code,
+                    Name = e.Name,
+                    DapartmentName = e.Department.Name,
+                    DirectManagerName = e.DirectManager.Name,
+                    Email = e.Email,
+                    MobileNumber = e.MobileNumber,
+                    Address = e.Address,
+                    IsActive = e.IsActive,
+                    JoiningDate = e.JoiningDate,
+                    AnnualVacationBalance = e.AnnualVacationBalance,
+                    JobTitleName = e.JobTitle.Name,
+                    ScheduleName = e.Schedule.Name,
+                    EmployeeNumber = e.EmployeeNumber,
+                    AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
+                    EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    DisableReason = e.DisableReason
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
+            return employee;
+        }
+        public async Task<GetEmployeeInfoResponseModel> GetCurrentInfo()
+        {
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
+                .Select(u => u.EmployeeId)
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeInfoResponseModel
                 {

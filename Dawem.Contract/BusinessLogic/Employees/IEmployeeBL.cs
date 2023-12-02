@@ -14,5 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Enable(int employeeId);
         Task<bool> Delete(int employeeId);
+        Task<GetEmployeeInfoResponseModel> GetCurrentInfo();
     }
 }

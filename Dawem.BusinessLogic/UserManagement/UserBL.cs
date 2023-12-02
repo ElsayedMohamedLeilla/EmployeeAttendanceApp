@@ -73,12 +73,19 @@ namespace Dawem.BusinessLogic.Employees
 
             #endregion
 
+            int? getDefaultScheduleId = await repositoryManager.ScheduleRepository
+                .Get(s => !s.IsDeleted && s.CompanyId == model.CompanyId).AnyAsync() ? await repositoryManager.ScheduleRepository
+                .Get(s => !s.IsDeleted && s.CompanyId == model.CompanyId)
+                .Select(s => s.Id)
+                .FirstOrDefaultAsync() : null;
+
             var employee = mapper.Map<Employee>(model);
             employee.CompanyId = model.CompanyId;
             employee.AttendanceType = AttendanceType.FullAttendance;
             employee.EmployeeType = EmployeeType.Contract;
             employee.JoiningDate = DateTime.UtcNow;
             employee.Code = getNextEmployeeCode;
+            employee.ScheduleId = getDefaultScheduleId;
 
             #endregion
 

@@ -29,6 +29,10 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                     WithMessage(LeillaKeys.SorryYouMustChooseAttendanceType);
             RuleFor(model => model.EmployeeType).IsInEnum().
                     WithMessage(LeillaKeys.SorryYouMustChooseEmployeeType);
+            RuleFor(model => model.ProfileImageFile)
+                 .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
+                 .When(model => model.ProfileImageFile != null)
+                 .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
         }
     }
 }

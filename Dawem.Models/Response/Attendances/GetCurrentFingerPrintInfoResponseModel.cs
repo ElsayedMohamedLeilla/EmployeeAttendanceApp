@@ -1,4 +1,5 @@
 ﻿using Dawem.Enums.Generals;
+using Dawem.Models.Response.Core.Zones;
 
 namespace Dawem.Models.Response.Attendances
 {
@@ -9,5 +10,6 @@ namespace Dawem.Models.Response.Attendances
         public string CheckOutTime { get; set; }
         public DateTime LocalDate { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
+        public List<AvailableZoneDTO> AvailableZones { get; set; }
     }
 }

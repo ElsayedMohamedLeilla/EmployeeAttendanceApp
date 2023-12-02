@@ -130,9 +130,11 @@ namespace Dawem.BusinessLogic.Attendances
         {
             #region Business Validation
 
-            return await employeeAttendanceBLValidation.GetCurrentFingerPrintInfoValidation();
+            var result =  await employeeAttendanceBLValidation.GetCurrentFingerPrintInfoValidation();
 
             #endregion
+
+            return result;
         }
         public async Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria criteria)
         {
@@ -303,19 +305,7 @@ namespace Dawem.BusinessLogic.Attendances
 
             #region Handle Response
 
-            /* var justificationsTypesList = await queryPaged.Select(e => new GetJustificationsTypeResponseModelDTO
-             {
-                 Id = e.Id,
-                 Code = e.Code,
-                 Name = e.Name,
-                 IsActive = e.IsActive,
-             }).ToListAsync();
-
-             return new GetJustificationsTypeResponseDTO
-             {
-                 JustificationsTypes = justificationsTypesList,
-                 TotalCount = await query.CountAsync()
-             };*/
+           
 
             #endregion
 
@@ -371,6 +361,20 @@ namespace Dawem.BusinessLogic.Attendances
                    ZoneName = "Zone Name"
 
                }).ToListAsync();
+
+            /* var justificationsTypesList = await queryPaged.Select(e => new GetJustificationsTypeResponseModelDTO
+            {
+                Id = e.Id,
+                Code = e.Code,
+                Name = e.Name,
+                IsActive = e.IsActive,
+            }).ToListAsync();
+
+            return new GetJustificationsTypeResponseDTO
+            {
+                JustificationsTypes = justificationsTypesList,
+                TotalCount = await query.CountAsync()
+            };*/
 
             return resonseTest;
         }

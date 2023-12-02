@@ -371,15 +371,15 @@ namespace Dawem.BusinessLogic.Attendances
 
             if (localDateTime <= checkInLimit.Add(allowedTimeSpan))
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.OnTime, requestInfo.Lang); ;
+                return TranslationHelper.GetTranslation(AmgadKeys.OnTime, requestInfo.Lang); 
             }
             else if (localDateTime > checkInLimit.Add(allowedTimeSpan))
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.Late, requestInfo.Lang); ;
+                return TranslationHelper.GetTranslation(AmgadKeys.Late, requestInfo.Lang); 
             }
             else
             {
-                return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang); ;
+                return TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang);
             }
         }
 

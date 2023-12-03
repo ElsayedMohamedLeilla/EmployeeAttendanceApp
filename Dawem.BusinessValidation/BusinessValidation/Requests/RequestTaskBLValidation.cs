@@ -131,7 +131,6 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 throw new BusinessValidationException(LeillaKeys.SorryRequestIsRejectedEditNotAllowed);
             }
 
-
             var getEmployeesThatOverlaped = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
                 c.RequestTask.Request.Id != model.Id &&

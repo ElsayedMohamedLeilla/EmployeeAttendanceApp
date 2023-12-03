@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.Employees
                 }).ToList();
 
             var removedFileNames = existAttachementsDbList
-                .Where(ge => !model.AttachmentsNames.Contains(ge.FileName))
+                .Where(ge => model.AttachmentsNames == null || !model.AttachmentsNames.Contains(ge.FileName))
                 .Select(ge => ge.FileName)
                 .ToList();
 

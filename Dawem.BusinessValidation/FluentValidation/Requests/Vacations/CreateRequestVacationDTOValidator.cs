@@ -8,7 +8,7 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
     {
         public CreateRequestVacationDTOValidator()
         {
-            RuleFor(model => model.EmployeeId).NotNull()
+            /*RuleFor(model => model.EmployeeId).NotNull()
                 .When(m => m.ForEmployee)
                 .WithMessage(LeillaKeys.SorryYouMustChooseEmployeeForRequestVacation);
 
@@ -22,7 +22,7 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
                .WithMessage(LeillaKeys.SorryYouMustEnterDateToForVacationRequest);
 
             RuleFor(model => model).Must(d => d.DateTo >= d.DateFrom)
-               .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
+               .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);*/
 
           
 

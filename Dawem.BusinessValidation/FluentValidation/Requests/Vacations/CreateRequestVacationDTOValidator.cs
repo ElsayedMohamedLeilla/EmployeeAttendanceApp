@@ -1,5 +1,4 @@
 ﻿using Dawem.Models.Dtos.Requests.Vacation;
-using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Requests.Vacation
@@ -24,7 +23,7 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
             RuleFor(model => model).Must(d => d.DateTo >= d.DateFrom)
                .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);*/
 
-          
+
 
         }
     }

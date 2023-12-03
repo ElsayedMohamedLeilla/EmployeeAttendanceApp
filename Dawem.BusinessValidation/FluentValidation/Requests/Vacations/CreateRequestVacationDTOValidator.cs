@@ -1,5 +1,4 @@
 ﻿using Dawem.Models.Dtos.Requests.Vacation;
-using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Requests.Vacation
@@ -8,7 +7,7 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
     {
         public CreateRequestVacationDTOValidator()
         {
-            RuleFor(model => model.EmployeeId).NotNull()
+            /*RuleFor(model => model.EmployeeId).NotNull()
                 .When(m => m.ForEmployee)
                 .WithMessage(AmgadKeys.SorryYouMustChooseEmployeeForRequestVacation);
 
@@ -24,7 +23,7 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
             RuleFor(model => model).Must(d => d.DateTo >= d.DateFrom)
                .WithMessage(AmgadKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
 
-          
+
 
         }
     }

@@ -16,7 +16,7 @@ using Dawem.Models.Response.Core.Zones;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Core.Zone
+namespace Dawem.BusinessLogic.Core.Zones
 {
     public class ZoneBL : IZoneBL
     {

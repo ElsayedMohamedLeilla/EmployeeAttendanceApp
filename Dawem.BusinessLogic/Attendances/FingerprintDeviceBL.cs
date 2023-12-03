@@ -10,6 +10,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response;
 using Dawem.Models.Response.Attendances.FingerprintDevices;
 using Dawem.Models.Response.Employees.TaskTypes;
 using Dawem.Translations;

@@ -46,8 +46,11 @@ namespace Dawem.Validation.BusinessValidation.Employees
             {
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNameIsDuplicated);
             }
+
             var checkEmployeeNumberDuplicate = await repositoryManager
-              .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.EmployeeNumber == model.EmployeeNumber && c.Id != model.Id).AnyAsync();
+              .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+              c.EmployeeNumber == model.EmployeeNumber && 
+              c.Id != model.Id).AnyAsync();
             if (checkEmployeeNumberDuplicate)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryEmployeeNumberIsDuplicated);

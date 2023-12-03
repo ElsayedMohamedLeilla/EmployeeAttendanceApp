@@ -8,12 +8,12 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<int> Create(CreateEmployeeModel model);
         Task<bool> Update(UpdateEmployeeModel model);
         Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId);
+        Task<GetCurrentEmployeeInfoResponseModel> GetCurrentEmployeeInfo();
         Task<GetEmployeeByIdResponseModel> GetById(int employeeId);
         Task<GetEmployeesResponse> Get(GetEmployeesCriteria model);
         Task<GetEmployeesForDropDownResponse> GetForDropDown(GetEmployeesCriteria model);
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Enable(int employeeId);
         Task<bool> Delete(int employeeId);
-        Task<GetEmployeeInfoResponseModel> GetCurrentInfo();
     }
 }

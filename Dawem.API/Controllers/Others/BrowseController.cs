@@ -31,12 +31,19 @@ namespace Dawem.API.Controllers.Others
                 var svgContentType = "image/svg+xml; charset=utf-8";
                 var pdfContentType = "application/pdf";
                 var imageContentType = "image/jpeg";
+                var sheetContentType = "application/vnd.ms-excel";
+                var wordContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                var txtContentType = "text/plain";
 
                 var contentType = fileName.Contains(".svg") ? svgContentType :
-                    fileName.Contains(".pdf") ? pdfContentType : imageContentType;
+                    fileName.Contains(".pdf") ? pdfContentType :
+                    fileName.Contains(".docx") ? wordContentType :
+                    fileName.Contains(".txt") ? txtContentType :
+                    fileName.Contains(".xlsx") || fileName.Contains(".xls") || fileName.Contains(".csv") ? sheetContentType :
+                    imageContentType;
 
                 var imageFile = System.IO.File.OpenRead(imgPath);
-                return File(imageFile, contentType);
+                return File(imageFile, contentType, fileName);
             }
 
             return BadRequest();

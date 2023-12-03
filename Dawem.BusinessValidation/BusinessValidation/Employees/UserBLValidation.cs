@@ -18,7 +18,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
-        public async Task<bool> SignUpValidation(UserSignUpModel model)
+        public async Task<int?> SignUpValidation(UserSignUpModel model)
         {
             var checkUserDuplicate = await repositoryManager
                 .UserRepository.Get(c => c.CompanyId == model.CompanyId &&
@@ -55,7 +55,23 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             #endregion
 
-            return true;
+            #region Employee Number Validation
+
+            int? getEmployeeId = await repositoryManager.EmployeeRepository
+                .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber).AnyAsync() ?
+                await repositoryManager.EmployeeRepository
+                .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber)
+                .Select(e=>e.Id)
+                .FirstOrDefaultAsync() : null;
+
+            if (getEmployeeId == null)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryCannotFindEmployeeWithEnteredEmployeeNumber);
+            }
+
+            #endregion
+
+            return getEmployeeId;
         }
         public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
         {

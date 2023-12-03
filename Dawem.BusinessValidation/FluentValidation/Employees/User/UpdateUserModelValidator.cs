@@ -21,6 +21,11 @@ namespace Dawem.Validation.FluentValidation.Employees.User
             RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
                WithMessage(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
 
+            RuleFor(model => model.ProfileImageFile)
+                  .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
+                  .When(model => model.ProfileImageFile != null)
+                  .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
+
             /*RuleFor(user => user.Password).Length(6, 50)
                  .When(user => user.Password != null)
                  .WithMessage(DawemKeys.SorryYouMustEnterPasswordWithMinimumLengthOf6Charachters);

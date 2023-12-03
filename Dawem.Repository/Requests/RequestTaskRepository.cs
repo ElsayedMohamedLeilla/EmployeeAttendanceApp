@@ -31,11 +31,11 @@ namespace Dawem.Repository.Employees
             }
             if (criteria.Id != null)
             {
-                predicate = predicate.And(e => e.Id == criteria.Id);
+                predicate = predicate.And(e => e.Request.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Request.Id));
             }
             if (criteria.IsActive is not null)
             {

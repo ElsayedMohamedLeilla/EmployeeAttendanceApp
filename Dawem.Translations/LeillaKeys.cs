@@ -1,6 +1,4 @@
-﻿using System.Security.Principal;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -36,6 +34,8 @@ namespace Dawem.Translations
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string TaskRequests = "TaskRequests";
+        public const string VacationRequests = "VacationRequests";
         public const string Users = "Users";
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
@@ -250,7 +250,6 @@ namespace Dawem.Translations
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
         public const string SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber = "Sorry!!UserMobileNumberIsDuplicated.YouMustEnterUniqueMobileNumber!";
-
         public const string SorryScheduleNameIsDuplicated = "Sorry!!ScheduleNameIsDuplicated!";
         public const string SorryYouMustEnterScheduleName = "Sorry!!YouMustEnterScheduleName!";
         public const string SorryScheduleNotFound = "Sorry!!ScheduleNotFound!";
@@ -259,7 +258,6 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterSchedules = "Sorry!!YouMustEnterSchedules!";
         public const string SorryYouMustEnterScheduleDays = "Sorry!!YouMustEnterScheduleDays!";
         public const string SorryYouMustEnterAll7WeekDaysInScheduleDays = "Sorry!!YouMustEnterAll7WeekDaysInScheduleDays!";
-
         public const string SorryYouMustEnterValidWeekDay = "Sorry!!YouMustEnterValidWeekDay!";
         public const string SorryYouMustChooseValidShift = "Sorry!!YouChooseValidShift!";
         public const string SorryYouMustEnterValidId = "Sorry!!YouMustEnterValidId!";
@@ -353,18 +351,28 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterParentId = "Sorry!!YouMustEnterParentId!";
         public const string AM = "AM";
         public const string PM = "PM";
-
-        public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
+        public const string SorryYouMustEnterEmployeeNumber = "Sorry!!YouMustEnterEmployeeNumber!";
+        public const string SorryCannotFindEmployeeWithEnteredEmployeeNumber = "Sorry!!CannotFindEmployeeWithEnteredEmployeeNumber!";
+        public const string Pending = "Pending";
+        public const string Accepted = "Accepted";
+        public const string Rejected = "Rejected";
+        public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseEmployeeForRequestTask!";
         public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";
         public const string SorryYouMustEnterDateFromForTaskRequest = "Sorry!!YouMustEnterDateFromForTaskRequest!";
         public const string SorryYouMustEnterDateToForTaskRequest = "Sorry!!YouMustEnterDateToForTaskRequest!";
         public const string SorryYouMustChooseTeamForTaskRequest = "Sorry!!YouMustChooseTeamForTaskRequest!";
-        public const string SorryYouMustEnterRequestTaskId = "Sorry!!YouMustEnterRequestTaskId!";
+        public const string SorryYouMustEnterRequestId = "Sorry!!YouMustEnterRequestId!";
         public const string SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate!";
-        public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";   
+        public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";
         public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
         public const string EmployeesNames = "EmployeesNames:";
-        public const string SorryYouMustChooseTaskTypes = "Sorry!!YouMustChooseTaskType!";
-        
+        public const string SorryErrorHappenWhileUploadRequestAttachements = "Sorry!!ErrorHappenWhileUploadRequestAttachements!";
+        public const string SorryCannotFindRequest = "Sorry!!CannotFindRequest!";
+        public const string SorryRequestIsAcceptedEditNotAllowed = "Sorry!!RequestIsAcceptedEditNotAllowed!";
+        public const string SorryRequestIsRejectedEditNotAllowed = "Sorry!!RequestIsRejectedEditNotAllowed!";
+        public const string SorryRequestAlreadyAccepted = "Sorry!!RequestAlreadyAccepted!";
+        public const string SorryRequestAlreadyRejected = "Sorry!!RequestAlreadyRejected!";
+        public const string DoneCreateTaskRequestSuccessfully = "DoneCreateTaskRequestSuccessfully";
+        public const string DoneUpdateTaskRequestSuccessfully = "DoneUpdateTaskRequestSuccessfully";
     }
 }

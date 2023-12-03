@@ -20,7 +20,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
-        public async Task<bool> CreateValidation(CreateRequestTaskModelDTO model)
+        public async Task<int?> CreateValidation(CreateRequestTaskModelDTO model)
         {
             var getEmployeesThatOverlaped = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
@@ -91,11 +91,46 @@ namespace Dawem.Validation.BusinessValidation.Employees
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
             }
 
+            int? getCurrentEmployeeId = null;
 
-            return true;
+            if (!model.ForEmployee)
+            {
+                getCurrentEmployeeId = await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null).AnyAsync() ?
+                 await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null)
+               .Select(e => e.EmployeeId)
+               .FirstOrDefaultAsync() : null;
+
+                if (getCurrentEmployeeId == null)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+                }
+            }
+            else
+            {
+                getCurrentEmployeeId = model.EmployeeId;
+            }
+
+            return getCurrentEmployeeId;
         }
-        public async Task<bool> UpdateValidation(UpdateRequestTaskModelDTO model)
+        public async Task<int?> UpdateValidation(UpdateRequestTaskModelDTO model)
         {
+            var getRequest = await repositoryManager.RequestRepository.Get(r=> !r.IsDeleted && r.Id == model.Id)
+                .Select(r=> new
+                {
+                    r.Status
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            if (getRequest.Status == RequestStatus.Accepted)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestIsAcceptedEditNotAllowed);
+            }
+            else if(getRequest.Status == RequestStatus.Rejected)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestIsRejectedEditNotAllowed);
+            }
+
 
             var getEmployeesThatOverlaped = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
@@ -167,7 +202,28 @@ namespace Dawem.Validation.BusinessValidation.Employees
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
             }
 
-            return true;
+            int? getCurrentEmployeeId = null;
+
+            if (!model.ForEmployee)
+            {
+                getCurrentEmployeeId = await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null).AnyAsync() ?
+                 await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null)
+               .Select(e => e.EmployeeId)
+               .FirstOrDefaultAsync() : null;
+
+                if (getCurrentEmployeeId == null)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+                }
+            }
+            else
+            {
+                getCurrentEmployeeId = model.EmployeeId;
+            }
+
+            return getCurrentEmployeeId;
         }
     }
 }

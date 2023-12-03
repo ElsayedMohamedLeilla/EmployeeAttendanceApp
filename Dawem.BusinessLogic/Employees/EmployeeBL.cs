@@ -14,7 +14,6 @@ using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.Intrinsics.Arm;
 
 namespace Dawem.BusinessLogic.Employees
 {
@@ -42,14 +41,14 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
-            #region assign Delegatos In DepartmentZones Object
-
-            if(model.ZoneIds != null && model.ZoneIds.Count > 0)
-                model.MapEmployeeZones();
-           
-            #endregion
-
             #region Model Validation
+
+            #region Assign Delegatos In DepartmentZones Object
+
+            if (model.ZoneIds != null && model.ZoneIds.Count > 0)
+                model.MapEmployeeZones();
+
+            #endregion
 
             var createEmployeeModel = new CreateEmployeeModelValidator();
             var createEmployeeModelResult = createEmployeeModel.Validate(model);
@@ -74,7 +73,7 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Employees)
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
                 imageName = result.FileName;
             }
@@ -133,15 +132,17 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
             unitOfWork.CreateTransaction();
+
             #region assign Delegatos In DepartmentZones Object
             model.MapEmployeeZones();
             #endregion
+
             #region Upload Profile Image
 
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Employees)
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }
@@ -152,7 +153,6 @@ namespace Dawem.BusinessLogic.Employees
 
             var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
-            var poland = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, "Central European Standard Time");
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;
@@ -164,7 +164,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.JobTitleId = model.JobTitleId;
             getEmployee.DirectManagerId = model.DirectManagerId;
             getEmployee.ScheduleId = model.ScheduleId;
-            getEmployee.EmployeeNumber = model.EmployeeNumber; 
+            getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
@@ -324,32 +324,23 @@ namespace Dawem.BusinessLogic.Employees
 
             return employee;
         }
-        public async Task<GetEmployeeInfoResponseModel> GetCurrentInfo()
+        public async Task<GetCurrentEmployeeInfoResponseModel> GetCurrentEmployeeInfo()
         {
             var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
                 .Select(u => u.EmployeeId)
                 .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
-                .Select(e => new GetEmployeeInfoResponseModel
+                .Select(e => new GetCurrentEmployeeInfoResponseModel
                 {
-                    Code = e.Code,
                     Name = e.Name,
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
-                    IsActive = e.IsActive,
-                    JoiningDate = e.JoiningDate,
-                    AnnualVacationBalance = e.AnnualVacationBalance,
                     JobTitleName = e.JobTitle.Name,
-                    ScheduleName = e.Schedule.Name,
-                    EmployeeNumber = e.EmployeeNumber,
-                    AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
-                    EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
-                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
-                    DisableReason = e.DisableReason
+                    ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;
@@ -362,7 +353,7 @@ namespace Dawem.BusinessLogic.Employees
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
-                    DepartmentId = e.DepartmentId  ,
+                    DepartmentId = e.DepartmentId,
                     DirectManagerId = e.DirectManagerId,
                     Email = e.Email,
                     MobileNumber = e.MobileNumber,

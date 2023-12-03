@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace Dawem.Models.Dtos.Employees.JobTitle
 {
@@ -11,7 +12,8 @@ namespace Dawem.Models.Dtos.Employees.JobTitle
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<int> TaskEmployeeIds { get; set; }
-        public bool IsActive { get; set; }
         public List<IFormFile> Attachments { get; set; }
+        [JsonIgnore]
+        public List<string> AttachmentsNames { get; set; }
     }
 }

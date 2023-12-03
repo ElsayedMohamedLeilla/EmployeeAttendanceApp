@@ -15,7 +15,7 @@ using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests.Task;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Requests.Task;
+using Dawem.Validation.FluentValidation.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Requests

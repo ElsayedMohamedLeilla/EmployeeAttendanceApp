@@ -69,6 +69,10 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => e.DirectManagerId == criteria.DirectManagerId);
             }
+            if (criteria.EmployeeNumber is not null)
+            {
+                predicate = predicate.And(e => e.EmployeeNumber == criteria.EmployeeNumber);
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

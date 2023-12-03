@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.Employees
+﻿namespace Dawem.Models.Dtos.Requests
 {
     public class RejectModelDTO
     {

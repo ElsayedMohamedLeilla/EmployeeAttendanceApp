@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
-using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.BusinessValidation.Requests;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -9,17 +9,16 @@ using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Dtos.Others;
-using Dawem.Models.Dtos.Requests.Task;
+using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Requests.Task;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Task;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.Requests
 {
     public class RequestTaskBL : IRequestTaskBL
     {

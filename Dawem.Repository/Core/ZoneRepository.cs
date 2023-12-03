@@ -6,7 +6,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Core.Zones
+namespace Dawem.Repository.Core
 {
     public class ZoneRepository : GenericRepository<Zone>, IZoneRepository
     {

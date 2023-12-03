@@ -1,8 +1,8 @@
 ﻿using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Attendances.FingerprintDevices;
 
-namespace Dawem.Contract.BusinessLogic.Core
+namespace Dawem.Contract.BusinessLogic.Attendances
 {
     public interface IFingerprintDeviceBL
     {

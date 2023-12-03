@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Core.Groups
+namespace Dawem.Validation.FluentValidation.Core.Zones
 {
     public class CreateZoneModelValidator : AbstractValidator<CreateZoneDTO>
     {

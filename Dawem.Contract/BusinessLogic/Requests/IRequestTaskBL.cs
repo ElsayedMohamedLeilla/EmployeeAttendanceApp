@@ -1,9 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Employees.JobTitle;
-using Dawem.Models.Dtos.Requests.Task;
-using Dawem.Models.Response.Employees.TaskTypes;
+﻿using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Tasks;
+using Dawem.Models.Response.Requests.Task;
 
-namespace Dawem.Contract.BusinessLogic.Employees
+namespace Dawem.Contract.BusinessLogic.Requests
 {
     public interface IRequestTaskBL
     {

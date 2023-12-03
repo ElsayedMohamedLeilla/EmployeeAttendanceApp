@@ -1,14 +1,14 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidation.Requests;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.JobTitle;
+using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Requests
 {
 
     public class RequestTaskBLValidation : IRequestTaskBLValidation
@@ -27,9 +27,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.RequestTask.Request.Status == RequestStatus.Pending || c.RequestTask.Request.Status == RequestStatus.Accepted) &&
                 c.RequestTask.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.EmployeeId) &&
-                ((model.DateFrom.Date >= c.RequestTask.Request.Date.Date && model.DateFrom.Date <= c.RequestTask.DateTo.Date) ||
-                (model.DateTo.Date >= c.RequestTask.Request.Date.Date && model.DateTo.Date <= c.RequestTask.DateTo.Date) ||
-                (model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date)))
+                (model.DateFrom.Date >= c.RequestTask.Request.Date.Date && model.DateFrom.Date <= c.RequestTask.DateTo.Date ||
+                model.DateTo.Date >= c.RequestTask.Request.Date.Date && model.DateTo.Date <= c.RequestTask.DateTo.Date ||
+                model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date))
                 .Select(t => t.Employee.Name)
                 .Distinct()
                 .Take(5)
@@ -50,9 +50,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.Request.EmployeeId) &&
-                ((model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date) ||
-                (model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date) ||
-                (model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date)))
+                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
+                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .Select(t => t.Request.Employee.Name)
                 .Distinct()
                 .Take(5)
@@ -73,9 +73,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.Request.EmployeeId) &&
-                ((model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date) ||
-                (model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date) ||
-                (model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date)))
+                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
+                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .Select(t => t.Request.Employee.Name)
                 .Distinct()
                 .Take(5)
@@ -116,8 +116,8 @@ namespace Dawem.Validation.BusinessValidation.Employees
         }
         public async Task<int?> UpdateValidation(UpdateRequestTaskModelDTO model)
         {
-            var getRequest = await repositoryManager.RequestRepository.Get(r=> !r.IsDeleted && r.Id == model.Id)
-                .Select(r=> new
+            var getRequest = await repositoryManager.RequestRepository.Get(r => !r.IsDeleted && r.Id == model.Id)
+                .Select(r => new
                 {
                     r.Status
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
@@ -126,7 +126,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestIsAcceptedEditNotAllowed);
             }
-            else if(getRequest.Status == RequestStatus.Rejected)
+            else if (getRequest.Status == RequestStatus.Rejected)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestIsRejectedEditNotAllowed);
             }
@@ -137,9 +137,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.RequestTask.Request.Status == RequestStatus.Pending || c.RequestTask.Request.Status == RequestStatus.Accepted) &&
                 c.RequestTask.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.EmployeeId) &&
-                ((model.DateFrom.Date >= c.RequestTask.Request.Date.Date && model.DateFrom.Date <= c.RequestTask.DateTo.Date) ||
-                (model.DateTo.Date >= c.RequestTask.Request.Date.Date && model.DateTo.Date <= c.RequestTask.DateTo.Date) ||
-                (model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date)))
+                (model.DateFrom.Date >= c.RequestTask.Request.Date.Date && model.DateFrom.Date <= c.RequestTask.DateTo.Date ||
+                model.DateTo.Date >= c.RequestTask.Request.Date.Date && model.DateTo.Date <= c.RequestTask.DateTo.Date ||
+                model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date))
                 .Select(t => t.Employee.Name)
                 .Distinct()
                 .Take(5)
@@ -160,9 +160,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.Request.EmployeeId) &&
-                ((model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date) ||
-                (model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date) ||
-                (model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date)))
+                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
+                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .Select(t => t.Request.Employee.Name)
                 .Distinct()
                 .Take(5)
@@ -183,9 +183,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
                 model.TaskEmployeeIds.Contains(c.Request.EmployeeId) &&
-                ((model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date) ||
-                (model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date) ||
-                (model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date)))
+                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
+                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .Select(t => t.Request.Employee.Name)
                 .Distinct()
                 .Take(5)

@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.TaskTypes
+namespace Dawem.Validation.FluentValidation.Attendances.FingerprintDevices
 {
     public class CreateFingerprintDeviceModelValidator : AbstractValidator<CreateFingerprintDeviceModel>
     {

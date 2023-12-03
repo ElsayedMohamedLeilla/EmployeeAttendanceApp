@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Employees.Employees
+namespace Dawem.Models.Dtos.Requests
 {
     public class GetRequestsCriteria : BaseCriteria
     {

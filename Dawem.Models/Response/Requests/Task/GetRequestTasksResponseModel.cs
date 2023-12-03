@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Employees.TaskTypes
+namespace Dawem.Models.Response.Requests.Task
 {
     public class GetRequestTasksResponseModel
     {

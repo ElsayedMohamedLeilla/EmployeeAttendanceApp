@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation.Core;
+﻿using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
@@ -6,7 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Attendances
 {
 
     public class FingerprintDeviceBLValidation : IFingerprintDeviceBLValidation

@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessValidation.Core;
+using Dawem.Contract.BusinessLogic.Attendances;
+using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Core;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Attendances.FingerprintDevices;
 using Dawem.Models.Response.Employees.TaskTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.Attendances
 {
     public class FingerprintDeviceBL : IFingerprintDeviceBL
     {

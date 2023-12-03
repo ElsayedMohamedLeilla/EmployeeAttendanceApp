@@ -1,5 +1,4 @@
 ﻿using Dawem.Domain.Entities.Core;
-using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using System.Text.Json.Serialization;

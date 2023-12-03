@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators
+﻿namespace Dawem.Models.Dtos.Employees.Department
 {
-    public class DepartmentManagarForGridDTO 
+    public class DepartmentManagarForGridDTO
     {
         public string ManagerName { get; set; }
         public string ProfileImagePath { get; set; }

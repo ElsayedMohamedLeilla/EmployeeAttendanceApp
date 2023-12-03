@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Employees
+namespace Dawem.Domain.Entities.Core
 {
     [Table(nameof(FingerprintDevice) + LeillaKeys.S)]
     public class FingerprintDevice : BaseEntity

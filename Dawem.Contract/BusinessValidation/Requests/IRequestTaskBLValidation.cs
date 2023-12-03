@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.JobTitle;
+﻿using Dawem.Models.Dtos.Requests.Tasks;
 
-namespace Dawem.Contract.BusinessValidation.Employees
+namespace Dawem.Contract.BusinessValidation.Requests
 {
     public interface IRequestTaskBLValidation
     {

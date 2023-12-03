@@ -1,13 +1,12 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Employees.JobTitle;
-using Dawem.Models.Dtos.Requests.Task;
+﻿using Dawem.Contract.BusinessLogic.Requests;
+using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.RequestTasks
+namespace Dawem.API.Controllers.Requests
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

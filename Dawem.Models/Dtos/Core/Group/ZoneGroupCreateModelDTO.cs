@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.Department
+﻿namespace Dawem.Models.Dtos.Core.Group
 {
     public class ZoneGroupCreateModelDTO
     {

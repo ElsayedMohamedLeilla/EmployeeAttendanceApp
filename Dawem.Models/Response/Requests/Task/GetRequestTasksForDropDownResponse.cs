@@ -1,8 +1,8 @@
-﻿namespace Dawem.Models.Response.Employees.TaskTypes
+﻿namespace Dawem.Models.Response.Requests.Task
 {
     public class GetRequestTasksForDropDownResponse
     {
-        public List<GetRequestTasksForDropDownResponseModel> TaskRequests  { get; set; }
+        public List<GetRequestTasksForDropDownResponseModel> TaskRequests { get; set; }
         public int TotalCount { get; set; }
     }
 }

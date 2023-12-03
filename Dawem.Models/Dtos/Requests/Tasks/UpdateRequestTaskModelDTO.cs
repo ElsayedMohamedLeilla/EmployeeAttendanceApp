@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Dawem.Models.Dtos.Employees.JobTitle
+namespace Dawem.Models.Dtos.Requests.Tasks
 {
     public class UpdateRequestTaskModelDTO
     {

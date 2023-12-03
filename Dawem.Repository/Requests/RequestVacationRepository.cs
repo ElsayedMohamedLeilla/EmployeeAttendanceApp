@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Employees
+namespace Dawem.Repository.Requests
 {
     public class RequestVacationRepository : GenericRepository<RequestVacation>, IRequestVacationRepository
     {

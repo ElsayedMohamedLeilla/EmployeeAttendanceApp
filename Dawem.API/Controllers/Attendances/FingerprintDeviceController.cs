@@ -1,12 +1,12 @@
 ﻿using Dawem.BusinessLogic.Core.Zones;
-using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Employees
+namespace Dawem.API.Controllers.Attendances
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

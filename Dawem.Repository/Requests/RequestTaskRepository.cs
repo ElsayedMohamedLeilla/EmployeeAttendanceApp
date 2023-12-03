@@ -2,11 +2,11 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Requests.Task;
+using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Employees
+namespace Dawem.Repository.Requests
 {
     public class RequestTaskRepository : GenericRepository<RequestTask>, IRequestTaskRepository
     {

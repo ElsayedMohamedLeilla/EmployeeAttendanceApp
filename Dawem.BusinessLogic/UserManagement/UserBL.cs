@@ -19,7 +19,7 @@ using Dawem.Validation.FluentValidation.Employees.User;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.UserManagement
 {
     public class UserBL : IUserBL
     {

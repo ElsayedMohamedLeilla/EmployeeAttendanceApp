@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Employees.JobTitle;
+using Dawem.Models.Dtos.Requests.Tasks;
 
-namespace Dawem.Models.AutoMapper
+namespace Dawem.Models.AutoMapper.Requests
 {
     public class RequestTaskMapProfile : Profile
     {

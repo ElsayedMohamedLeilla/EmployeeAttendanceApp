@@ -2,7 +2,7 @@
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Dtos.Core.Zones;
 
-namespace Dawem.Models.AutoMapper
+namespace Dawem.Models.AutoMapper.Core
 {
     public class ZoneMapProfile : Profile
     {

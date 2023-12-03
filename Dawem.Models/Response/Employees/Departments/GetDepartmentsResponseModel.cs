@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
+﻿using Dawem.Models.Dtos.Employees.Department;
 
 namespace Dawem.Models.Response.Employees.Departments
 {

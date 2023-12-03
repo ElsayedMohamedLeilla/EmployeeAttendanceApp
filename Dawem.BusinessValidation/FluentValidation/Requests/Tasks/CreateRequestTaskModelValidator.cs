@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.JobTitle;
+﻿using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Requests.Task
+namespace Dawem.Validation.FluentValidation.Requests.Tasks
 {
     public class CreateRequestTaskModelDTOValidator : AbstractValidator<CreateRequestTaskModelDTO>
     {

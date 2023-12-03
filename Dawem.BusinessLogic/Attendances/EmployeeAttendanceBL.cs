@@ -37,8 +37,6 @@ namespace Dawem.BusinessLogic.Attendances
         }
         public async Task<bool> FingerPrint(FingerprintModel model)
         {
-            var response = FingerPrintType.CheckIn;
-
             #region Business Validation
 
             var result = await employeeAttendanceBLValidation.FingerPrintValidation(model);
@@ -69,7 +67,6 @@ namespace Dawem.BusinessLogic.Attendances
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress
                 });
-                response = FingerPrintType.CheckOut;
             }
             //checkin
             else

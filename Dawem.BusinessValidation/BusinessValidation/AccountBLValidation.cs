@@ -63,7 +63,7 @@ namespace Dawem.Validation.BusinessValidation
            
             #endregion
 
-            #region Find User
+            #region Try Find User
 
             var user = await repositoryManager.UserRepository
                 .GetEntityByConditionAsync(u=> !u.IsDeleted && u.Email == model.Email && (model.CompanyId <= 0 || 
@@ -84,8 +84,9 @@ namespace Dawem.Validation.BusinessValidation
 
             if (!user.EmailConfirmed)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail);
+                throw new BusinessValidationExceptionGenaric<int>(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail) { Data = user.Id};
             }    
+
             return user;
         }
     }

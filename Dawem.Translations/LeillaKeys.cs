@@ -353,6 +353,8 @@ namespace Dawem.Translations
         public const string SorryYouMustEnterParentId = "Sorry!!YouMustEnterParentId!";
         public const string AM = "AM";
         public const string PM = "PM";
+        public const string SorryYouMustEnterEmployeeNumber = "Sorry!!YouMustEnterEmployeeNumber!";
+        public const string SorryCannotFindEmployeeWithEnteredEmployeeNumber = "Sorry!!CannotFindEmployeeWithEnteredEmployeeNumber!";
 
         public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
         public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";
@@ -366,5 +368,7 @@ namespace Dawem.Translations
         public const string EmployeesNames = "EmployeesNames:";
         public const string SorryYouMustChooseTaskTypes = "Sorry!!YouMustChooseTaskType!";
         
+        
+
     }
 }

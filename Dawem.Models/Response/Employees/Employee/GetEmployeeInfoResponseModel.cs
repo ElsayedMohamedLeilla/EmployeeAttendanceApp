@@ -4,7 +4,6 @@
     {
         public int Code { get; set; }
         public int EmployeeNumber { get; set; }
-
         public string DapartmentName { get; set; }
         public string DirectManagerName { get; set; }
         public string Name { get; set; }

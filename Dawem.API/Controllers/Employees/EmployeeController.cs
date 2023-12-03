@@ -79,6 +79,11 @@ namespace Dawem.API.Controllers.Employees
             return Success(await employeeBL.GetInfo(employeeId));
         }
         [HttpGet]
+        public async Task<ActionResult> GetCurrentEmployeeInfo()
+        {
+            return Success(await employeeBL.GetCurrentEmployeeInfo());
+        }
+        [HttpGet]
         public async Task<ActionResult> GetById([FromQuery] int employeeId)
         {
             if (employeeId < 1)

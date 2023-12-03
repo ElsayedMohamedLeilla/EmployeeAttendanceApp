@@ -8,9 +8,7 @@ using Dawem.Models.Generic;
 using Dawem.Translations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Globalization;
 using System.Net;
-using System.Security.Cryptography;
 
 namespace Dawem.API.MiddleWares
 {
@@ -24,8 +22,8 @@ namespace Dawem.API.MiddleWares
         public Task Invoke(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
         async Task InvokeAsync(HttpContext context, RequestInfo requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
-
             var response = new ErrorResponse();
+            var responseGenaric = new ErrorResponseGenaric<int>();
             int statusCode = 500;
 
             try
@@ -39,6 +37,15 @@ namespace Dawem.API.MiddleWares
                 response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
                      TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
                 await Return(unitOfWork, context, statusCode, response);
+            }
+            catch (BusinessValidationExceptionGenaric<int> ex)
+            {
+                statusCode = (int)HttpStatusCode.UnprocessableEntity;
+                responseGenaric.State = ResponseStatus.ValidationError;
+                responseGenaric.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
+                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
+                responseGenaric.Data = ex.Data;
+                await Return(unitOfWork, context, statusCode, responseGenaric);
             }
             catch (ActionNotAllowedValidationError ex)
             {
@@ -73,6 +80,17 @@ namespace Dawem.API.MiddleWares
             }
         }
         private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
+        {
+            unitOfWork.Rollback();
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = LeillaKeys.ApplicationJson;
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
+        }
+        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponseGenaric<int> response)
         {
             unitOfWork.Rollback();
             context.Response.StatusCode = statusCode;

@@ -6,9 +6,7 @@ using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.User;
@@ -55,41 +53,13 @@ namespace Dawem.BusinessLogic.Employees
         {
             #region Business Validation
 
-            await userBLValidation.SignUpValidation(model);
+            var employeeId = await userBLValidation.SignUpValidation(model);
 
             #endregion
 
             unitOfWork.CreateTransaction();
 
-            #region Configure User Employee
-
-            #region Set Employee code
-
-            var getNextEmployeeCode = await repositoryManager.EmployeeRepository
-                .Get(e => e.CompanyId == model.CompanyId)
-                .Select(e => e.Code)
-                .DefaultIfEmpty()
-                .MaxAsync() + 1;
-
-            #endregion
-
-            int? getDefaultScheduleId = await repositoryManager.ScheduleRepository
-                .Get(s => !s.IsDeleted && s.CompanyId == model.CompanyId).AnyAsync() ? await repositoryManager.ScheduleRepository
-                .Get(s => !s.IsDeleted && s.CompanyId == model.CompanyId)
-                .Select(s => s.Id)
-                .FirstOrDefaultAsync() : null;
-
-            var employee = mapper.Map<Employee>(model);
-            employee.CompanyId = model.CompanyId;
-            employee.AttendanceType = AttendanceType.FullAttendance;
-            employee.EmployeeType = EmployeeType.Contract;
-            employee.JoiningDate = DateTime.UtcNow;
-            employee.Code = getNextEmployeeCode;
-            employee.ScheduleId = getDefaultScheduleId;
-
-            #endregion
-
-            #region Insert User And Employee
+            #region Insert User
 
             #region Set User code And Verification Code
 
@@ -106,7 +76,7 @@ namespace Dawem.BusinessLogic.Employees
             var user = mapper.Map<MyUser>(model);
             user.UserName = model.Email;
             user.Code = getNextCode;
-            user.Employee = employee;
+            user.EmployeeId = employeeId;
             user.VerificationCode = getNewVerificationCode;
             user.VerificationCodeSendDate = DateTime.UtcNow;
             user.IsActive = true;
@@ -256,7 +226,6 @@ namespace Dawem.BusinessLogic.Employees
             } while (isVerificationCodeRepeated);
             return getNewVerificationCode;
         }
-
         public async Task<int> Create(CreateUserModel model)
         {
             #region Model Validation

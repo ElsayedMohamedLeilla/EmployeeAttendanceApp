@@ -9,12 +9,12 @@ namespace Dawem.Contract.BusinessLogic.Employees
     {
         Task<int> Create(CreateRequestTaskModelDTO model);
         Task<bool> Update(UpdateRequestTaskModelDTO model);
-        Task<GetRequestTaskInfoResponseModel> GetInfo(int requestTaskId);
-        Task<GetRequestTaskByIdResponseModel> GetById(int requestTaskId);
+        Task<GetRequestTaskInfoResponseModel> GetInfo(int requestId);
+        Task<GetRequestTaskByIdResponseModel> GetById(int requestId);
         Task<GetRequestTasksResponse> Get(GetRequestTasksCriteria model);
         Task<GetRequestTasksForDropDownResponse> GetForDropDown(GetRequestTasksCriteria model);
-        Task<bool> Accept(int requestTaskId);
+        Task<bool> Accept(int requestId);
         Task<bool> Refuse(RefuseModelDTO refuseModelDTO);
-        Task<bool> Delete(int requestTaskId);
+        Task<bool> Delete(int requestId);
     }
 }

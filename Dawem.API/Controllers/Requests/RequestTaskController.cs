@@ -33,7 +33,7 @@ namespace Dawem.API.Controllers.RequestTasks
             var model = JsonConvert.DeserializeObject<CreateRequestTaskModelDTO>(formData.CreateRequestTaskModelString);
             model.Attachments = formData.Attachments;
             var result = await requestTaskBL.Create(model);
-            return Success(result, messageCode: LeillaKeys.DoneCreateRequestTaskSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateTaskRequestSuccessfully);
         }
 
         [HttpPut, DisableRequestSizeLimit]
@@ -47,7 +47,7 @@ namespace Dawem.API.Controllers.RequestTasks
             var model = JsonConvert.DeserializeObject<UpdateRequestTaskModelDTO>(formData.UpdateRequestTaskModelString);
             model.Attachments = formData.Attachments;
             var result = await requestTaskBL.Update(model);
-            return Success(result, messageCode: LeillaKeys.DoneUpdateRequestTaskSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateTaskRequestSuccessfully);
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetRequestTasksCriteria criteria)
@@ -108,13 +108,13 @@ namespace Dawem.API.Controllers.RequestTasks
             return Success(await requestTaskBL.Refuse(refuseModelDTO));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int requestTaskId)
+        public async Task<ActionResult> Delete(int requestId)
         {
-            if (requestTaskId < 1)
+            if (requestId < 1)
             {
                 return BadRequest();
             }
-            return Success(await requestTaskBL.Delete(requestTaskId));
+            return Success(await requestTaskBL.Delete(requestId));
         }
 
 

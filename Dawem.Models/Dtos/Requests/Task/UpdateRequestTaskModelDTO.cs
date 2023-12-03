@@ -13,7 +13,6 @@ namespace Dawem.Models.Dtos.Employees.JobTitle
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<int> TaskEmployeeIds { get; set; }
-        public bool IsActive { get; set; }
         public List<IFormFile> Attachments { get; set; }
         public List<string> AttachmentsNames { get; set; }
     }

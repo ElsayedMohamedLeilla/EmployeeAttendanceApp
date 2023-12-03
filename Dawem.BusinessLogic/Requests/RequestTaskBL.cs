@@ -78,11 +78,12 @@ namespace Dawem.BusinessLogic.Employees
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadImageFile(attachment, LeillaKeys.TaskRequests)
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.TaskRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         fileNames.Add(result.FileName);
                     }
                 }
+                model.AttachmentsNames = fileNames;
             }
 
             #endregion
@@ -105,6 +106,8 @@ namespace Dawem.BusinessLogic.Employees
             requestTask.EmployeeId = employeeId ?? 0;
             requestTask.Code = getNextCode;
             requestTask.Status = RequestStatus.Pending;
+            requestTask.IsActive = true;
+            requestTask.RequestTask.IsActive = true;
 
             repositoryManager.RequestRepository.Insert(requestTask);
             await unitOfWork.SaveAsync();
@@ -154,7 +157,7 @@ namespace Dawem.BusinessLogic.Employees
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadImageFile(attachment, LeillaKeys.TaskRequests)
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.TaskRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         newFileNames.Add(result.FileName);
                     }
@@ -178,7 +181,6 @@ namespace Dawem.BusinessLogic.Employees
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
-            getRequest.IsActive = model.IsActive;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
 
@@ -347,9 +349,9 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
         }
-        public async Task<GetRequestTaskInfoResponseModel> GetInfo(int requestTaskId)
+        public async Task<GetRequestTaskInfoResponseModel> GetInfo(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestTaskId && !e.Request.IsDeleted)
+            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
                 .Select(requestTask => new GetRequestTaskInfoResponseModel
                 {
                     Code = requestTask.Request.Code,
@@ -399,20 +401,20 @@ namespace Dawem.BusinessLogic.Employees
             return requestTask;
 
         }
-        public async Task<bool> Delete(int requestTaskd)
+        public async Task<bool> Delete(int requestId)
         {
             var requestTask = await repositoryManager.RequestRepository
-                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestTaskd) ??
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
             requestTask.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }
 
-        public async Task<bool> Accept(int requestTaskId)
+        public async Task<bool> Accept(int requestId)
         {
             var request = await repositoryManager.RequestRepository
-                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestTaskId) ??
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             if (request.Status == RequestStatus.Accepted)

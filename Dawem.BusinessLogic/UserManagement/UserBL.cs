@@ -253,7 +253,7 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Users)
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
                 imageName = result.FileName;
             }
@@ -334,7 +334,7 @@ namespace Dawem.BusinessLogic.Employees
             string imageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
-                var result = await uploadBLC.UploadImageFile(model.ProfileImageFile, LeillaKeys.Users)
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }

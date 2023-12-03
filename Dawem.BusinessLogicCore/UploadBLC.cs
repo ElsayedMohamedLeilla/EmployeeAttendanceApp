@@ -23,12 +23,12 @@ namespace Dawem.BusinessLogicCore
             webHostEnvironment = _webHostEnvironment;
         }
 
-        public async Task<UploadResult> UploadImageFile(IFormFile imageFile, string FolderName)
+        public async Task<UploadResult> UploadFile(IFormFile file, string FolderName)
         {
             UploadResult uploadResult;
             try
             {
-                var uniqueFileName = GetUniqueFileName(imageFile.FileName);
+                var uniqueFileName = GetUniqueFileName(file.FileName);
                 var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);
 
@@ -42,16 +42,16 @@ namespace Dawem.BusinessLogicCore
                 }
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    if (imageFile.Length > 300000)
+                    if (file.ContentType.Contains(LeillaKeys.Image) && file.Length > 300000)
                     {
-                        await imageFile.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                         var img = Image.FromStream(stream);
                         var resizedimg = ImageHelper.ResizeImage(img, 300, 300);
                         resizedimg.Save(uniqueFileName);
                     }
                     else
                     {
-                        await imageFile.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
                 }
                 uploadResult = new()

@@ -283,7 +283,7 @@ namespace Dawem.BusinessLogic.Attendances
 
             return resonse;
         }
-        public async Task<List<GetEmployeeAttendancesResponseForWebAdminModelDTO>> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria criteria)
+        public async Task<GetEmployeeAttendancesResponseForWebDTO> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria criteria)
         {
             var employeeAttendanceRepository = repositoryManager.EmployeeAttendanceRepository;
             var query = employeeAttendanceRepository.GetAsQueryable(criteria);
@@ -309,7 +309,7 @@ namespace Dawem.BusinessLogic.Attendances
 
             #endregion
 
-            var resonseTest = await queryPaged
+            var response = await queryPaged
                .Select(empAttendance => new GetEmployeeAttendancesResponseForWebAdminModelDTO
                {
                    Id = empAttendance.Id,
@@ -362,21 +362,12 @@ namespace Dawem.BusinessLogic.Attendances
 
                }).ToListAsync();
 
-            /* var justificationsTypesList = await queryPaged.Select(e => new GetJustificationsTypeResponseModelDTO
+            return new GetEmployeeAttendancesResponseForWebDTO
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                IsActive = e.IsActive,
-            }).ToListAsync();
-
-            return new GetJustificationsTypeResponseDTO
-            {
-                JustificationsTypes = justificationsTypesList,
+                EmployeeAttendances = response,
                 TotalCount = await query.CountAsync()
-            };*/
+            };
 
-            return resonseTest;
         }
         public static string TranslateAmAndPm(string AmOrPm, string lang)
         {
@@ -427,19 +418,21 @@ namespace Dawem.BusinessLogic.Attendances
                 return TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang); ;
             }
         }
-        public static double CalculateTimeGap(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime actualCheckInTime)
+        public static string CalculateTimeGap(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime actualCheckInTime)
         {
             DateTime scheduledCheckIn = actualCheckInTime.Date.Add(shiftCheckInTime.ToTimeSpan());
-
-            DateTime scheduledCheckInAfterAddAllowedminute = scheduledCheckIn.AddMinutes(allowedMinutes);
-
-            // Calculate the time gap in hours
-            TimeSpan timeGap = actualCheckInTime - scheduledCheckInAfterAddAllowedminute;
-
+            DateTime scheduledCheckInAfterAddAllowedMinute = scheduledCheckIn.AddMinutes(allowedMinutes);
+            // Calculate the time gap in minutes
+            TimeSpan timeGap = actualCheckInTime - scheduledCheckInAfterAddAllowedMinute;
             // Ensure the time gap is non-negative
-            double hoursLate = Math.Max(timeGap.TotalHours, 0);
+            TimeSpan nonNegativeTimeGap = TimeSpan.FromMinutes(Math.Max(timeGap.TotalMinutes, 0));
+            // Format the non-negative time gap into HH:mm
+            return nonNegativeTimeGap.ToString(@"hh\:mm");
+        }
 
-            return hoursLate;
+        public Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

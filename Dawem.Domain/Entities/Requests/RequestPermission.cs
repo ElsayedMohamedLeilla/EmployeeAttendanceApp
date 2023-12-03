@@ -18,5 +18,7 @@ namespace Dawem.Domain.Entities.Requests
         public PermissionType PermissionType { get; set; }
 
         #endregion
+
+        public int Code { get; set; }
     }
 }

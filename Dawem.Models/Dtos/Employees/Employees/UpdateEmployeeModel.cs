@@ -16,9 +16,9 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public string Email { get; set; }
         public string MobileNumber { get; set; }
         public string Address { get; set; }
-        public string ProfileImageName { get; set; }
-        public DateTime JoiningDate { get; set; }
         public IFormFile ProfileImageFile { get; set; }
+        public string ProfileImageName { get; set; }
+        public DateTime JoiningDate { get; set; }    
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
         public int? AnnualVacationBalance { get; set; }

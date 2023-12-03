@@ -18,5 +18,7 @@ namespace Dawem.Domain.Entities.Requests
         public JustificationType JustificatioType { get; set; }
 
         #endregion
+
+        public int Code { get; set; }
     }
 }

@@ -99,13 +99,13 @@ namespace Dawem.API.Controllers.RequestTasks
             return Success(await requestTaskBL.Accept(requestId));
         }
         [HttpPut]
-        public async Task<ActionResult> Refuse([FromQuery] RefuseModelDTO refuseModelDTO)
+        public async Task<ActionResult> Reject([FromQuery] RejectModelDTO rejectModelDTO)
         {
-            if (refuseModelDTO.Id < 1)
+            if (rejectModelDTO.Id < 1)
             {
                 return BadRequest();
             }
-            return Success(await requestTaskBL.Refuse(refuseModelDTO));
+            return Success(await requestTaskBL.Reject(rejectModelDTO));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int requestId)

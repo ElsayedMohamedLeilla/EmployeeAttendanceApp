@@ -31,35 +31,35 @@ namespace Dawem.Repository.Employees
             }
             if (criteria.Id != null)
             {
-                predicate = predicate.And(e => e.Request.Id == criteria.Id);
+                predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                predicate = predicate.And(e => criteria.Ids.Contains(e.Request.Id));
+                predicate = predicate.And(requestTask => criteria.Ids.Contains(requestTask.Request.Id));
             }
             if (criteria.IsActive is not null)
             {
-                predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+                predicate = predicate.And(requestTask => requestTask.Request.IsActive == criteria.IsActive);
             }
             if (criteria.Code is not null)
             {
-                predicate = predicate.And(e => e.Request.Code == criteria.Code);
+                predicate = predicate.And(requestTask => requestTask.Request.Code == criteria.Code);
             }
             if (criteria.EmployeeId is not null)
             {
-                predicate = predicate.And(e => e.Request.EmployeeId == criteria.EmployeeId);
+                predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == criteria.EmployeeId);
             }
             if (criteria.TaskTypeId is not null)
             {
-                predicate = predicate.And(e => e.TaskTypeId == criteria.TaskTypeId);
+                predicate = predicate.And(requestTask => requestTask.TaskTypeId == criteria.TaskTypeId);
             }
             if (criteria.Status is not null)
             {
-                predicate = predicate.And(e => e.Request.Status == criteria.Status);
+                predicate = predicate.And(requestTask => requestTask.Request.Status == criteria.Status);
             }
             if (criteria.Date is not null)
             {
-                predicate = predicate.And(e => criteria.Date.Value.Date >= e.Request.Date.Date && criteria.Date.Value.Date <= e.DateTo.Date);
+                predicate = predicate.And(requestTask => criteria.Date.Value.Date >= requestTask.Request.Date.Date && criteria.Date.Value.Date <= requestTask.DateTo.Date);
             }
 
             predicate = predicate.And(inner);

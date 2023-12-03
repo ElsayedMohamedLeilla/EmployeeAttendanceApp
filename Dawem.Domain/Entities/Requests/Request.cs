@@ -36,7 +36,7 @@ namespace Dawem.Domain.Entities.Requests
         public RequestStatus Status { get; set; }
         public DateTime? DecisionDate { get; set; }
         public DateTime Date { get; set; }
-        public string RefuseReason { get; set; }
+        public string RejectReason { get; set; }
         public List<RequestAttachment> RequestAttachments { get; set; }
 
        

@@ -374,5 +374,7 @@
         public const string SorryRequestAlreadyRejected = "Sorry!!RequestAlreadyRejected!";
         public const string DoneCreateTaskRequestSuccessfully = "DoneCreateTaskRequestSuccessfully";
         public const string DoneUpdateTaskRequestSuccessfully = "DoneUpdateTaskRequestSuccessfully";
+
+        public const string SorryYouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate!";
     }
 }

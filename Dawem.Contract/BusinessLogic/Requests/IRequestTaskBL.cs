@@ -14,7 +14,7 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<GetRequestTasksResponse> Get(GetRequestTasksCriteria model);
         Task<GetRequestTasksForDropDownResponse> GetForDropDown(GetRequestTasksCriteria model);
         Task<bool> Accept(int requestId);
-        Task<bool> Refuse(RefuseModelDTO refuseModelDTO);
+        Task<bool> Reject(RejectModelDTO rejectModelDTO);
         Task<bool> Delete(int requestId);
     }
 }

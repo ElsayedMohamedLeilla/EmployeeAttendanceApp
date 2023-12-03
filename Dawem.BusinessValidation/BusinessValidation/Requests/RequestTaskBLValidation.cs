@@ -85,7 +85,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
-                    .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate, requestInfo.Lang)
+                    .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);

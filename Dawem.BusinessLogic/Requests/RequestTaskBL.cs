@@ -92,7 +92,13 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Set Request Task Code
 
-            var getNextCode = await repositoryManager.RequestRepository
+            var getRequestNextCode = await repositoryManager.RequestRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            var getRequestTaskNextCode = await repositoryManager.RequestRepository
                 .Get(e => e.CompanyId == requestInfo.CompanyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
@@ -100,16 +106,17 @@ namespace Dawem.BusinessLogic.Employees
 
             #endregion
 
-            var requestTask = mapper.Map<Request>(model);
-            requestTask.CompanyId = requestInfo.CompanyId;
-            requestTask.AddUserId = requestInfo.UserId;
-            requestTask.EmployeeId = employeeId ?? 0;
-            requestTask.Code = getNextCode;
-            requestTask.Status = RequestStatus.Pending;
-            requestTask.IsActive = true;
-            requestTask.RequestTask.IsActive = true;
+            var request = mapper.Map<Request>(model);
+            request.CompanyId = requestInfo.CompanyId;
+            request.AddUserId = requestInfo.UserId;
+            request.EmployeeId = employeeId ?? 0;
+            request.Code = getRequestNextCode;
+            request.RequestTask.Code = getRequestTaskNextCode;
+            request.Status = RequestStatus.Pending;
+            request.IsActive = true;
+            request.RequestTask.IsActive = true;
 
-            repositoryManager.RequestRepository.Insert(requestTask);
+            repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -117,7 +124,7 @@ namespace Dawem.BusinessLogic.Employees
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return requestTask.Id;
+            return request.Id;
 
             #endregion
 
@@ -144,7 +151,6 @@ namespace Dawem.BusinessLogic.Employees
 
             unitOfWork.CreateTransaction();
 
-
             #region Upload Files
 
             var newFileNames = new List<string>();
@@ -165,7 +171,6 @@ namespace Dawem.BusinessLogic.Employees
             }
 
             #endregion
-
 
             #region Update Request Task
 
@@ -394,7 +399,7 @@ namespace Dawem.BusinessLogic.Employees
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests),
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests)
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
@@ -410,7 +415,6 @@ namespace Dawem.BusinessLogic.Employees
             await unitOfWork.SaveAsync();
             return true;
         }
-
         public async Task<bool> Accept(int requestId)
         {
             var request = await repositoryManager.RequestRepository
@@ -433,11 +437,10 @@ namespace Dawem.BusinessLogic.Employees
             await unitOfWork.SaveAsync();
             return true;
         }
-
-        public async Task<bool> Refuse(RefuseModelDTO refuseModelDTO)
+        public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
         {
             var request = await repositoryManager.RequestRepository
-                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == refuseModelDTO.Id) ??
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == rejectModelDTO.Id) ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             if (request.Status == RequestStatus.Accepted)
@@ -452,6 +455,7 @@ namespace Dawem.BusinessLogic.Employees
             request.Status = RequestStatus.Rejected;
             request.DecisionUserId = requestInfo.UserId;
             request.DecisionDate = DateTime.UtcNow;
+            request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
             return true;

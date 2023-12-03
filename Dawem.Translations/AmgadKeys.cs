@@ -33,5 +33,12 @@
         public const string Unknown = "Unknown";
         public const string OnTime = "OnTime";
         public const string Late = "Late";
+
+        public const string SorryYouMustChooseEmployeeForRequestVacation = "Sorry!!YouMustChooseEmployeeForRequestVacation!";
+        public const string SorryYouMustChooseVacationType = "Sorry!!YouMustChooseVacationType!";
+        public const string SorryYouMustEnterDateFromForVacationRequest = "Sorry!!YouMustEnterDateFromForVacationRequest!";
+        public const string SorryYouMustEnterDateToForVacationRequest = "Sorry!!YouMustEnterDateToForVacationRequest!";
+        public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
+
     }
 }

@@ -10,19 +10,19 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacation
         {
             RuleFor(model => model.EmployeeId).NotNull()
                 .When(m => m.ForEmployee)
-                .WithMessage(LeillaKeys.SorryYouMustChooseEmployeeForRequestVacation);
+                .WithMessage(AmgadKeys.SorryYouMustChooseEmployeeForRequestVacation);
 
             RuleFor(model => model.VacationTypeId).GreaterThan(0)
-               .WithMessage(LeillaKeys.SorryYouMustChooseVacationType);
+               .WithMessage(AmgadKeys.SorryYouMustChooseVacationType);
 
             RuleFor(model => model.DateFrom).Must(d => d != default)
-               .WithMessage(LeillaKeys.SorryYouMustEnterDateFromForVacationRequest);
+               .WithMessage(AmgadKeys.SorryYouMustEnterDateFromForVacationRequest);
 
             RuleFor(model => model.DateTo).Must(d => d != default)
-               .WithMessage(LeillaKeys.SorryYouMustEnterDateToForVacationRequest);
+               .WithMessage(AmgadKeys.SorryYouMustEnterDateToForVacationRequest);
 
             RuleFor(model => model).Must(d => d.DateTo >= d.DateFrom)
-               .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
+               .WithMessage(AmgadKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
 
           
 

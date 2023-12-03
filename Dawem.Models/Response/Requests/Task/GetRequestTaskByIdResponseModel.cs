@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
+﻿using Dawem.Models.Dtos.Others;
 
-namespace Dawem.Models.Dtos.Employees.JobTitle
+namespace Dawem.Models.Response.Employees.TaskTypes
 {
-    public class UpdateRequestTaskModelDTO
+    public class GetRequestTaskByIdResponseModel
     {
         public int Id { get; set; }
+        public int Code { get; set; }
         public bool IsNecessary { get; set; }
         public bool ForEmployee { get; set; }
         public int? EmployeeId { get; set; }
@@ -13,8 +13,7 @@ namespace Dawem.Models.Dtos.Employees.JobTitle
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<int> TaskEmployeeIds { get; set; }
+        public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
-        public List<IFormFile> Attachments { get; set; }
-        public List<string> AttachmentsNames { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
@@ -79,10 +78,14 @@ namespace Dawem.BusinessLogic.Core.Zones
             await ZoneBLValidation.UpdateValidation(model);
 
             #endregion
+
             unitOfWork.CreateTransaction();
+
             #region Update Zone
+
             var getZone = await repositoryManager.ZoneRepository.GetEntityByConditionWithTrackingAsync(grp => !grp.IsDeleted
             && grp.Id == model.Id);
+
             if (getZone != null)
             {
                 getZone.Name = model.Name;
@@ -96,10 +99,15 @@ namespace Dawem.BusinessLogic.Core.Zones
             }
             else
                 throw new BusinessValidationException(AmgadKeys.SorryZoneNotFound);
+
             #endregion
+
             await unitOfWork.SaveAsync();
+
             #region Handle Response
+
             await unitOfWork.CommitAsync();
+
             return true;
 
             #endregion
@@ -133,7 +141,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                 IsActive = Zone.IsActive,
                 Latitude = Zone.Latitude,
                 Longitude = Zone.Longitude,
-                Radius =Zone.Radius
+                Radius = Zone.Radius
             }).ToListAsync();
 
 
@@ -207,7 +215,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                     Name = Zone.Name,
                     IsActive = Zone.IsActive,
                     Longitude = Zone.Longitude,
-                    Latitude   = Zone.Latitude,
+                    Latitude = Zone.Latitude,
                     Radius = Zone.Radius
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryZoneNotFound);
 

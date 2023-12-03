@@ -41,14 +41,14 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
+            #region Model Validation
+
             #region Assign Delegatos In DepartmentZones Object
 
             if (model.ZoneIds != null && model.ZoneIds.Count > 0)
                 model.MapEmployeeZones();
 
             #endregion
-
-            #region Model Validation
 
             var createEmployeeModel = new CreateEmployeeModelValidator();
             var createEmployeeModelResult = createEmployeeModel.Validate(model);
@@ -132,9 +132,11 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
             unitOfWork.CreateTransaction();
+
             #region assign Delegatos In DepartmentZones Object
             model.MapEmployeeZones();
             #endregion
+
             #region Upload Profile Image
 
             string imageName = null;
@@ -151,7 +153,6 @@ namespace Dawem.BusinessLogic.Employees
 
             var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
-            var poland = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, "Central European Standard Time");
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;

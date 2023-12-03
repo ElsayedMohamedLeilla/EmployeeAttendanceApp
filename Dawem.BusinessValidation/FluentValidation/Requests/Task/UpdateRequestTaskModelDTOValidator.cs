@@ -4,12 +4,12 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Requests.Task
 {
-    public class UpdateRequestTaskModelValidator : AbstractValidator<UpdateRequestTaskModelDTO>
+    public class UpdateRequestTaskModelDTOValidator : AbstractValidator<UpdateRequestTaskModelDTO>
     {
-        public UpdateRequestTaskModelValidator()
+        public UpdateRequestTaskModelDTOValidator()
         {
             RuleFor(model => model.Id).GreaterThan(0).
-                    WithMessage(LeillaKeys.SorryYouMustEnterRequestTaskId);
+                    WithMessage(LeillaKeys.SorryYouMustEnterRequestId);
 
             RuleFor(model => model.EmployeeId).NotNull()
                 .When(m => m.ForEmployee)

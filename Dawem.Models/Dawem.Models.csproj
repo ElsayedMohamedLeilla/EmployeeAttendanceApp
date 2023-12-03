@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="AutoMapper\Lookups\" />
-    <Folder Include="Response\Requests\" />
   </ItemGroup>
 
 </Project>

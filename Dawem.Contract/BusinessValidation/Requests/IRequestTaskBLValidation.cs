@@ -4,7 +4,7 @@ namespace Dawem.Contract.BusinessValidation.Employees
 {
     public interface IRequestTaskBLValidation
     {
-        Task<bool> CreateValidation(CreateRequestTaskModelDTO model);
-        Task<bool> UpdateValidation(UpdateRequestTaskModelDTO model);
+        Task<int?> CreateValidation(CreateRequestTaskModelDTO model);
+        Task<int?> UpdateValidation(UpdateRequestTaskModelDTO model);
     }
 }

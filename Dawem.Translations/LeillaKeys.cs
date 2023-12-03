@@ -36,6 +36,8 @@ namespace Dawem.Translations
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string TaskRequests = "TaskRequests";
+        public const string VacationRequests = "VacationRequests";
         public const string Users = "Users";
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
@@ -355,20 +357,29 @@ namespace Dawem.Translations
         public const string PM = "PM";
         public const string SorryYouMustEnterEmployeeNumber = "Sorry!!YouMustEnterEmployeeNumber!";
         public const string SorryCannotFindEmployeeWithEnteredEmployeeNumber = "Sorry!!CannotFindEmployeeWithEnteredEmployeeNumber!";
+        public const string Pending = "Pending";
+        public const string Accepted = "Accepted";
+        public const string Rejected = "Rejected";
+
 
         public const string SorryYouMustChooseEmployeeForRequestTask = "Sorry!!YouMustChooseRequestTaskEmployee!";
         public const string SorryYouMustChooseTaskType = "Sorry!!YouMustChooseTaskType!";
         public const string SorryYouMustEnterDateFromForTaskRequest = "Sorry!!YouMustEnterDateFromForTaskRequest!";
         public const string SorryYouMustEnterDateToForTaskRequest = "Sorry!!YouMustEnterDateToForTaskRequest!";
         public const string SorryYouMustChooseTeamForTaskRequest = "Sorry!!YouMustChooseTeamForTaskRequest!";
-        public const string SorryYouMustEnterRequestTaskId = "Sorry!!YouMustEnterRequestTaskId!";
+        public const string SorryYouMustEnterRequestId = "Sorry!!YouMustEnterRequestId!";
         public const string SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate!";
         public const string SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasVacationRequestThatOverlappedInDate!";   
         public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
         public const string EmployeesNames = "EmployeesNames:";
         public const string SorryYouMustChooseTaskTypes = "Sorry!!YouMustChooseTaskType!";
-        
-        
-
+        public const string SorryErrorHappenWhileUploadRequestAttachements = "Sorry!!ErrorHappenWhileUploadRequestAttachements!";
+        public const string SorryCannotFindRequest = "Sorry!!CannotFindRequest!";
+        public const string SorryRequestIsAcceptedEditNotAllowed = "Sorry!!RequestIsAcceptedEditNotAllowed!";
+        public const string SorryRequestIsRejectedEditNotAllowed = "Sorry!!RequestIsRejectedEditNotAllowed!";
+        public const string SorryRequestAlreadyAccepted = "Sorry!!RequestAlreadyAccepted!";
+        public const string SorryRequestAlreadyRejected = "Sorry!!RequestAlreadyRejected!";
+        public const string DoneCreateRequestTaskSuccessfully = "DoneCreateRequestTaskSuccessfully";
+        public const string DoneUpdateRequestTaskSuccessfully = "DoneUpdateRequestTaskSuccessfully";
     }
 }

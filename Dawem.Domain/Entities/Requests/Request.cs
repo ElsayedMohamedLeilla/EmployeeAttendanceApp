@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Core;
-using Dawem.Domain.Entities.Employees;
+﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
@@ -39,6 +38,6 @@ namespace Dawem.Domain.Entities.Requests
         public string RejectReason { get; set; }
         public List<RequestAttachment> RequestAttachments { get; set; }
 
-       
+
     }
 }

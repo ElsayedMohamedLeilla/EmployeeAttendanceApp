@@ -15,5 +15,6 @@ namespace Dawem.Models.Response.Requests.Task
         public List<int> TaskEmployeeIds { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
+        public string Notes { get; set; }
     }
 }

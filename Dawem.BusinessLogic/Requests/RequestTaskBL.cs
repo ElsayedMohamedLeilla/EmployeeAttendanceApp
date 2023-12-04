@@ -64,7 +64,6 @@ namespace Dawem.BusinessLogic.Requests
 
             unitOfWork.CreateTransaction();
 
-
             #region Upload Files
 
             List<string> fileNames = null;
@@ -183,6 +182,7 @@ namespace Dawem.BusinessLogic.Requests
 
             getRequest.EmployeeId = model.EmployeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
+            getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
@@ -299,7 +299,12 @@ namespace Dawem.BusinessLogic.Requests
             {
                 Id = requestTask.Request.Id,
                 Code = requestTask.Request.Code,
-                EmployeeName = requestTask.Request.Employee.Name,
+                Employee = new RequestEmployeeModel
+                {
+                    Code = requestTask.Request.Employee.Code,
+                    Name = requestTask.Request.Employee.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(requestTask.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                },
                 TaskTypeName = requestTask.TaskType.Name,
                 DateFrom = requestTask.Request.Date,
                 DateTo = requestTask.DateTo,
@@ -359,7 +364,12 @@ namespace Dawem.BusinessLogic.Requests
                 .Select(requestTask => new GetRequestTaskInfoResponseModel
                 {
                     Code = requestTask.Request.Code,
-                    EmployeeName = requestTask.Request.Employee.Name,
+                    Employee = new RequestEmployeeModel
+                    {
+                        Code = requestTask.Request.Employee.Code,
+                        Name = requestTask.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestTask.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    },
                     TaskTypeName = requestTask.TaskType.Name,
                     DateFrom = requestTask.Request.Date,
                     DateTo = requestTask.DateTo,
@@ -374,7 +384,8 @@ namespace Dawem.BusinessLogic.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests),
                     }).ToList(),
                     Status = requestTask.Request.Status,
-                    StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang)
+                    StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestTask.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestTask;
@@ -399,7 +410,8 @@ namespace Dawem.BusinessLogic.Requests
                     {
                         FileName = a.FileName,
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests)
-                    }).ToList()
+                    }).ToList(),
+                    Notes = requestTask.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestTask;

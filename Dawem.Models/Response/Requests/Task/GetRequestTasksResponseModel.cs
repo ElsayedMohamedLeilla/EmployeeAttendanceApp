@@ -1,4 +1,5 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Response.Requests.Task
 {
@@ -6,7 +7,7 @@ namespace Dawem.Models.Response.Requests.Task
     {
         public int Id { get; set; }
         public int Code { get; set; }
-        public string EmployeeName { get; set; }
+        public RequestEmployeeModel Employee { get; set; }
         public string TaskTypeName { get; set; }
         public string StatusName { get; set; }
         public RequestStatus Status { get; set; }

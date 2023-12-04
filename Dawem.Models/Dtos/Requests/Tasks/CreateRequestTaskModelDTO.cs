@@ -15,5 +15,6 @@ namespace Dawem.Models.Dtos.Requests.Tasks
         public List<IFormFile> Attachments { get; set; }
         [JsonIgnore]
         public List<string> AttachmentsNames { get; set; }
+        public string Notes { get; set; }
     }
 }

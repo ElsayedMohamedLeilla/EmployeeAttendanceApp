@@ -2,10 +2,10 @@
 {
     public enum RequestType
     {
-        Assignment,
+        Assignments,
         Justifications,
         Permissions,
-        Task,           
+        Tasks,           
         Vacations
     }
 }

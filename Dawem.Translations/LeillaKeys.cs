@@ -35,6 +35,8 @@
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
         public const string TaskRequests = "TaskRequests";
+        public const string PermissionRequests = "PermissionRequests";
+        public const string AssignmentRequests = "AssignmentRequests";
         public const string VacationRequests = "VacationRequests";
         public const string Users = "Users";
         public const string GetDateSQL = "getdate()";
@@ -376,5 +378,21 @@
         public const string DoneUpdateTaskRequestSuccessfully = "DoneUpdateTaskRequestSuccessfully";
 
         public const string SorryYouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate!";
+        public const string SorryYouMustChooseEmployeeForRequestPermission = "Sorry!!YouMustChooseEmployeeForRequestPermission!";
+        public const string SorryYouMustChoosePermissionType = "Sorry!!YouMustChoosePermissionType!";
+        public const string SorryYouMustEnterDateAndTimeFromForPermissionRequest = "Sorry!!YouMustEnterDateAndTimeFromForPermissionRequest!";
+        public const string SorryYouMustEnterDateAndTimeToForPermissionRequest = "Sorry!!YouMustEnterDateAndTimeToForPermissionRequest!";
+        public const string SorryYouMustChooseEmployeeForRequestAssignment = "Sorry!!YouMustChooseEmployeeForRequestAssignment!";
+        public const string SorryYouMustChooseAssignmentType = "Sorry!!YouMustChooseAssignmentType!";
+        public const string SorryYouMustEnterDateFromForAssignmentRequest = "Sorry!!YouMustEnterDateFromForAssignmentRequest!";
+        public const string SorryYouMustEnterDateToForAssignmentRequest = "Sorry!!YouMustEnterDateToForAssignmentRequest!";
+        public const string SorryCannotMakePermissionRequestEmployeeHasVacationRequestInTheSameDate = "Sorry!!CannotMakePermissionRequestEmployeeHasVacationRequestInTheSameDate!";
+        public const string SorryCannotMakeAssignmentRequestEmployeeHasVacationRequestInTheSameDate = "Sorry!!CannotMakeAssignmentRequestEmployeeHasVacationRequestInTheSameDate!";
+        public const string SorryCannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate = "Sorry!!CannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate!";
+        public const string DoneCreatePermissionRequestSuccessfully = "DoneCreatePermissionRequestSuccessfully";
+        public const string DoneUpdatePermissionRequestSuccessfully = "DoneUpdatePermissionRequestSuccessfully";
+        public const string DoneCreateAssignmentRequestSuccessfully = "DoneCreateAssignmentRequestSuccessfully";
+        public const string DoneUpdateAssignmentRequestSuccessfully = "DoneUpdateAssignmentRequestSuccessfully";
+        
     }
 }

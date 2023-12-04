@@ -346,7 +346,7 @@ namespace Dawem.BusinessLogic.Requests
         }
         public async Task<GetRequestJustificationByIdResponseDTO> GetById(int RequestJustificationId)
         {
-            var requestJustification = await repositoryManager.RequestJustificationRepository.Get(e => e.Id == RequestJustificationId && !e.IsDeleted)
+            var requestJustification = await repositoryManager.RequestJustificationRepository.Get(e => e.Request.Id == RequestJustificationId && !e.IsDeleted)
                 .Select(requestJustification => new GetRequestJustificationByIdResponseDTO
                 {
                     Id = requestJustification.Request.Id,

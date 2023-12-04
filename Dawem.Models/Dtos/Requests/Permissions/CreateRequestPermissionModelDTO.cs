@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 
-namespace Dawem.Models.Dtos.Requests.Tasks
+namespace Dawem.Models.Dtos.Requests.Permissions
 {
     public class CreateRequestPermissionModelDTO
     {

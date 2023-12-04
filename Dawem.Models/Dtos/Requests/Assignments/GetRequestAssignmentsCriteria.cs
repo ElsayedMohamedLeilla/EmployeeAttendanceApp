@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Requests.Tasks
+namespace Dawem.Models.Dtos.Requests.Assignments
 {
     public class GetRequestAssignmentsCriteria : BaseCriteria
     {

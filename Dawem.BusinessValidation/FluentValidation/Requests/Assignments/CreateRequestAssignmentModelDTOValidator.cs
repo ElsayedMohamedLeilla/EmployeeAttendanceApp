@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Requests.Tasks;
+﻿using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Translations;
 using FluentValidation;
 

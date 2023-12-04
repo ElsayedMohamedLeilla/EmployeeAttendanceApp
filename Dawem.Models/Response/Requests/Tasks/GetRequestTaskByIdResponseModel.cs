@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Others;
 
-namespace Dawem.Models.Response.Requests.Task
+namespace Dawem.Models.Response.Requests.Tasks
 {
     public class GetRequestTaskByIdResponseModel
     {

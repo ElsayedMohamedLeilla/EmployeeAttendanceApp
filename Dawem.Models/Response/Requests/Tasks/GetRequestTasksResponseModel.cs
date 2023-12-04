@@ -1,7 +1,7 @@
 ﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Requests.Task
+namespace Dawem.Models.Response.Requests.Tasks
 {
     public class GetRequestTasksResponseModel
     {

@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Others;
 
-namespace Dawem.Models.Response.Requests.Task
+namespace Dawem.Models.Response.Requests.Permissions
 {
     public class GetRequestPermissionInfoResponseModel
     {

@@ -15,7 +15,6 @@ using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Requests.Vacation;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
 using Microsoft.EntityFrameworkCore;
 
@@ -196,7 +195,7 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
 
-            
+
 
             #region Update Attachements 
 

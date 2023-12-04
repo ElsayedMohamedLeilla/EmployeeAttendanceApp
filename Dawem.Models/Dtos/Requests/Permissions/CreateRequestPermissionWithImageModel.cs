@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Dawem.Models.Dtos.Requests.Tasks
+namespace Dawem.Models.Dtos.Requests.Permissions
 {
     public class CreateRequestPermissionWithImageModel
     {

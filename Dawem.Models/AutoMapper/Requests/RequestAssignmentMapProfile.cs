@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Requests.Tasks;
+using Dawem.Models.Dtos.Requests.Assignments;
 
 namespace Dawem.Models.AutoMapper.Requests
 {

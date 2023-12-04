@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Requests.Tasks;
+using Dawem.Models.Dtos.Requests.Permissions;
 using Dawem.Models.Generic;
 using LinqKit;
 

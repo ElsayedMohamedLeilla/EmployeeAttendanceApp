@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Requests;
-using Dawem.Models.Dtos.Requests.Tasks;
-using Dawem.Models.Response.Requests.Task;
+using Dawem.Models.Dtos.Requests.Permissions;
+using Dawem.Models.Response.Requests.Permissions;
 
 namespace Dawem.Contract.BusinessLogic.Requests
 {

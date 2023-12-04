@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Requests.Task
+﻿namespace Dawem.Models.Response.Requests.Assignments
 {
     public class GetRequestAssignmentsForDropDownResponse
     {

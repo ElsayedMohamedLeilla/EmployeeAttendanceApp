@@ -78,7 +78,7 @@ namespace Dawem.BusinessLogic.Requests
                     if (attachment != null && attachment.Length > 0)
                     {
                         var result = await uploadBLC.UploadFile(attachment, LeillaKeys.PermissionRequests)
-                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements);
                         fileNames.Add(result.FileName);
                     }
                 }

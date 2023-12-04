@@ -393,6 +393,8 @@
         public const string DoneUpdatePermissionRequestSuccessfully = "DoneUpdatePermissionRequestSuccessfully";
         public const string DoneCreateAssignmentRequestSuccessfully = "DoneCreateAssignmentRequestSuccessfully";
         public const string DoneUpdateAssignmentRequestSuccessfully = "DoneUpdateAssignmentRequestSuccessfully";
+        public const string SorryEnterCorrectFileName = "Sorry!!EnterCorrectFileName!";
         
+
     }
 }

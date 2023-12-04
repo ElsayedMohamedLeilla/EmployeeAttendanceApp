@@ -1,4 +1,5 @@
-﻿using Dawem.Translations;
+﻿using Dawem.Models.Exceptions;
+using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Others
@@ -19,6 +20,9 @@ namespace Dawem.API.Controllers.Others
         {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
                 return BadRequest();
+
+            if (fileName.Contains('#'))
+                throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
 
             string imgPath;
             if (!string.IsNullOrEmpty(folderName))

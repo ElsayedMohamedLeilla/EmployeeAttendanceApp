@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogicCore;
 using Dawem.Helpers;
 using Dawem.Models.Dtos.Others;
+using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,9 @@ namespace Dawem.BusinessLogicCore
             UploadResult uploadResult;
             try
             {
+                if (file.FileName.Contains('#'))
+                    throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
+
                 var uniqueFileName = GetUniqueFileName(file.FileName);
                 var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);

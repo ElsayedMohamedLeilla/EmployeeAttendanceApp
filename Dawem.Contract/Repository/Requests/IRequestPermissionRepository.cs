@@ -1,9 +1,11 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Requests;
+using Dawem.Models.Dtos.Requests.Tasks;
 
 namespace Dawem.Contract.Repository.Requests
 {
     public interface IRequestPermissionRepository : IGenericRepository<RequestPermission>
     {
+        IQueryable<RequestPermission> GetAsQueryable(GetRequestPermissionsCriteria criteria);
     }
 }

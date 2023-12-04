@@ -15,38 +15,38 @@ using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests.Task;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Requests.Tasks;
+using Dawem.Validation.FluentValidation.Requests.Assignments;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Requests
 {
-    public class RequestTaskBL : IRequestTaskBL
+    public class RequestAssignmentBL : IRequestAssignmentBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IRequestTaskBLValidation requestTaskBLValidation;
+        private readonly IRequestAssignmentBLValidation requestAssignmentBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        public RequestTaskBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public RequestAssignmentBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestTaskBLValidation _requestTaskBLValidation)
+           IRequestAssignmentBLValidation _requestAssignmentBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            requestTaskBLValidation = _requestTaskBLValidation;
+            requestAssignmentBLValidation = _requestAssignmentBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
         }
-        public async Task<int> Create(CreateRequestTaskModelDTO model)
+        public async Task<int> Create(CreateRequestAssignmentModelDTO model)
         {
             #region Model Validation
 
-            var validator = new CreateRequestTaskModelDTOValidator();
+            var validator = new CreateRequestAssignmentModelDTOValidator();
             var validatorResult = validator.Validate(model);
             if (!validatorResult.IsValid)
             {
@@ -58,7 +58,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Business Validation
 
-            var employeeId = await requestTaskBLValidation.CreateValidation(model);
+            var employeeId = await requestAssignmentBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -76,7 +76,7 @@ namespace Dawem.BusinessLogic.Requests
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.TaskRequests)
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.AssignmentRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         fileNames.Add(result.FileName);
                     }
@@ -86,9 +86,9 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            #region Insert Request Task
+            #region Insert Request Assignment
 
-            #region Set Request Task Code
+            #region Set Request Assignment Code
 
             var getRequestNextCode = await repositoryManager.RequestRepository
                 .Get(e => e.CompanyId == requestInfo.CompanyId)
@@ -96,7 +96,7 @@ namespace Dawem.BusinessLogic.Requests
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
 
-            var getRequestTaskNextCode = await repositoryManager.RequestRepository
+            var getRequestAssignmentNextCode = await repositoryManager.RequestRepository
                 .Get(e => e.CompanyId == requestInfo.CompanyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
@@ -109,10 +109,10 @@ namespace Dawem.BusinessLogic.Requests
             request.AddUserId = requestInfo.UserId;
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
-            request.RequestTask.Code = getRequestTaskNextCode;
+            request.RequestAssignment.Code = getRequestAssignmentNextCode;
             request.Status = RequestStatus.Pending;
             request.IsActive = true;
-            request.RequestTask.IsActive = true;
+            request.RequestAssignment.IsActive = true;
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
@@ -127,11 +127,11 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
         }
-        public async Task<bool> Update(UpdateRequestTaskModelDTO model)
+        public async Task<bool> Update(UpdateRequestAssignmentModelDTO model)
         {
             #region Model Validation
 
-            var validator = new UpdateRequestTaskModelDTOValidator();
+            var validator = new UpdateRequestAssignmentModelDTOValidator();
             var validatorResult = validator.Validate(model);
             if (!validatorResult.IsValid)
             {
@@ -143,7 +143,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Business Validation
 
-            var employeeId = await requestTaskBLValidation.UpdateValidation(model);
+            var employeeId = await requestAssignmentBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -161,7 +161,7 @@ namespace Dawem.BusinessLogic.Requests
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.TaskRequests)
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.AssignmentRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         newFileNames.Add(result.FileName);
                     }
@@ -170,15 +170,15 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            #region Update Request Task
+            #region Update Request Assignment
 
             var getRequest = await repositoryManager.RequestRepository
                  .GetEntityByConditionWithTrackingAsync(request => !request.IsDeleted
                  && request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            var getRequestTask = await repositoryManager.RequestTaskRepository
-                 .GetEntityByConditionWithTrackingAsync(requestTask => !requestTask.Request.IsDeleted
-                 && requestTask.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+            var getRequestAssignment = await repositoryManager.RequestAssignmentRepository
+                 .GetEntityByConditionWithTrackingAsync(requestAssignment => !requestAssignment.Request.IsDeleted
+                 && requestAssignment.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             getRequest.EmployeeId = model.EmployeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
@@ -189,47 +189,11 @@ namespace Dawem.BusinessLogic.Requests
             getRequest.ModifyUserId = requestInfo.UserId;
 
 
-            getRequestTask.ModifiedDate = DateTime.Now;
-            getRequestTask.ModifyUserId = requestInfo.UserId;
-            getRequestTask.DateTo = model.DateTo;
+            getRequestAssignment.ModifiedDate = DateTime.Now;
+            getRequestAssignment.ModifyUserId = requestInfo.UserId;
+            getRequestAssignment.DateTo = model.DateTo;
 
             await unitOfWork.SaveAsync();
-
-            #region Update Task Employees 
-
-            var existDbList = await repositoryManager.RequestTaskEmployeeRepository
-                    .Get(e => e.RequestTaskId == getRequestTask.Id)
-                    .ToListAsync();
-
-            var existingEmployeeIds = existDbList.Select(e => e.EmployeeId).ToList();
-
-            var addedTaskEmployees = model.TaskEmployeeIds
-                .Where(employeeId => !existingEmployeeIds.Contains(employeeId))
-                .Select(employeeId => new RequestTaskEmployee
-                {
-                    RequestTaskId = getRequestTask.Id,
-                    EmployeeId = employeeId,
-                    ModifyUserId = requestInfo.UserId,
-                    ModifiedDate = DateTime.UtcNow
-                }).ToList();
-
-            var removedTaskEmployeeIds = existDbList
-                .Where(ge => !model.TaskEmployeeIds.Contains(ge.EmployeeId))
-                .Select(ge => ge.EmployeeId)
-                .ToList();
-
-            var removedTaskEmployees = await repositoryManager.RequestTaskEmployeeRepository
-                .Get(e => e.EmployeeId == model.Id && removedTaskEmployeeIds.Contains(e.EmployeeId))
-                .ToListAsync();
-
-            if (removedTaskEmployees.Count > 0)
-                repositoryManager.RequestTaskEmployeeRepository.BulkDeleteIfExist(removedTaskEmployees);
-            if (addedTaskEmployees.Count > 0)
-                repositoryManager.RequestTaskEmployeeRepository.BulkInsert(addedTaskEmployees);
-
-            await unitOfWork.SaveAsync();
-
-            #endregion
 
             #region Update Attachements 
 
@@ -276,17 +240,17 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
         }
-        public async Task<GetRequestTasksResponse> Get(GetRequestTasksCriteria criteria)
+        public async Task<GetRequestAssignmentsResponse> Get(GetRequestAssignmentsCriteria criteria)
         {
-            var requestTaskRepository = repositoryManager.RequestTaskRepository;
-            var query = requestTaskRepository.GetAsQueryable(criteria);
+            var requestAssignmentRepository = repositoryManager.RequestAssignmentRepository;
+            var query = requestAssignmentRepository.GetAsQueryable(criteria);
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = requestTaskRepository.OrderBy(query, nameof(RequestTask.Id), LeillaKeys.Desc);
+            var queryOrdered = requestAssignmentRepository.OrderBy(query, nameof(RequestAssignment.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -295,38 +259,38 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Handle Response
 
-            var requestTasksList = await queryPaged.Select(requestTask => new GetRequestTasksResponseModel
+            var requestAssignmentsList = await queryPaged.Select(requestAssignment => new GetRequestAssignmentsResponseModel
             {
-                Id = requestTask.Request.Id,
-                Code = requestTask.Request.Code,
+                Id = requestAssignment.Request.Id,
+                Code = requestAssignment.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = requestTask.Request.Employee.Code,
-                    Name = requestTask.Request.Employee.Name,
-                    ProfileImagePath = uploadBLC.GetFilePath(requestTask.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    Code = requestAssignment.Request.Employee.Code,
+                    Name = requestAssignment.Request.Employee.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
-                TaskTypeName = requestTask.TaskType.Name,
-                DateFrom = requestTask.Request.Date,
-                DateTo = requestTask.DateTo,
-                Status = requestTask.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang)
+                AssignmentTypeName = requestAssignment.AssignmentType.Name,
+                DateFrom = requestAssignment.Request.Date,
+                DateTo = requestAssignment.DateTo,
+                Status = requestAssignment.Request.Status,
+                StatusName = TranslationHelper.GetTranslation(requestAssignment.Request.Status.ToString(), requestInfo.Lang)
 
             }).ToListAsync();
 
-            return new GetRequestTasksResponse
+            return new GetRequestAssignmentsResponse
             {
-                TaskRequests = requestTasksList,
+                AssignmentRequests = requestAssignmentsList,
                 TotalCount = await query.CountAsync()
             };
 
             #endregion
 
         }
-        public async Task<GetRequestTasksForDropDownResponse> GetForDropDown(GetRequestTasksCriteria criteria)
+        public async Task<GetRequestAssignmentsForDropDownResponse> GetForDropDown(GetRequestAssignmentsCriteria criteria)
         {
             criteria.IsActive = true;
-            var requestTaskRepository = repositoryManager.RequestTaskRepository;
-            var query = requestTaskRepository.GetAsQueryable(criteria);
+            var requestAssignmentRepository = repositoryManager.RequestAssignmentRepository;
+            var query = requestAssignmentRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -334,7 +298,7 @@ namespace Dawem.BusinessLogic.Requests
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = requestTaskRepository.OrderBy(query, nameof(RequestTask.Id), LeillaKeys.Desc);
+            var queryOrdered = requestAssignmentRepository.OrderBy(query, nameof(RequestAssignment.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -343,86 +307,84 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Handle Response
 
-            var requestTasksList = await queryPaged.Select(e => new GetRequestTasksForDropDownResponseModel
+            var requestAssignmentsList = await queryPaged.Select(e => new GetRequestAssignmentsForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Request.Employee.Name
             }).ToListAsync();
 
-            return new GetRequestTasksForDropDownResponse
+            return new GetRequestAssignmentsForDropDownResponse
             {
-                TaskRequests = requestTasksList,
+                AssignmentRequests = requestAssignmentsList,
                 TotalCount = await query.CountAsync()
             };
 
             #endregion
 
         }
-        public async Task<GetRequestTaskInfoResponseModel> GetInfo(int requestId)
+        public async Task<GetRequestAssignmentInfoResponseModel> GetInfo(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
-                .Select(requestTask => new GetRequestTaskInfoResponseModel
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+                .Select(requestAssignment => new GetRequestAssignmentInfoResponseModel
                 {
-                    Code = requestTask.Request.Code,
+                    Code = requestAssignment.Request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = requestTask.Request.Employee.Code,
-                        Name = requestTask.Request.Employee.Name,
-                        ProfileImagePath = uploadBLC.GetFilePath(requestTask.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                        Code = requestAssignment.Request.Employee.Code,
+                        Name = requestAssignment.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
-                    TaskTypeName = requestTask.TaskType.Name,
-                    DateFrom = requestTask.Request.Date,
-                    DateTo = requestTask.DateTo,
-                    IsActive = requestTask.Request.IsActive,
-                    IsNecessary = requestTask.Request.IsNecessary,
-                    ForEmployee = requestTask.Request.ForEmployee,
-                    TaskEmployees = requestTask.TaskEmployees.Select(te => te.Employee.Name).ToList(),
-                    Attachments = requestTask.Request.RequestAttachments
+                    AssignmentTypeName = requestAssignment.AssignmentType.Name,
+                    DateFrom = requestAssignment.Request.Date,
+                    DateTo = requestAssignment.DateTo,
+                    IsActive = requestAssignment.Request.IsActive,
+                    IsNecessary = requestAssignment.Request.IsNecessary,
+                    ForEmployee = requestAssignment.Request.ForEmployee,
+                    Attachments = requestAssignment.Request.RequestAttachments
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests),
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.AssignmentRequests),
                     }).ToList(),
-                    Status = requestTask.Request.Status,
-                    StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang),
-                    Notes = requestTask.Request.Notes
+                    Status = requestAssignment.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestAssignment.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestAssignment.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            return requestTask;
+            return requestAssignment;
         }
-        public async Task<GetRequestTaskByIdResponseModel> GetById(int RequestTaskId)
+        public async Task<GetRequestAssignmentByIdResponseModel> GetById(int RequestAssignmentId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == RequestTaskId && !e.IsDeleted)
-                .Select(requestTask => new GetRequestTaskByIdResponseModel
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == RequestAssignmentId && !e.IsDeleted)
+                .Select(requestAssignment => new GetRequestAssignmentByIdResponseModel
                 {
-                    Id = requestTask.Request.Id,
-                    Code = requestTask.Request.Code,
-                    EmployeeId = requestTask.Request.EmployeeId,
-                    TaskTypeId = requestTask.TaskTypeId,
-                    DateFrom = requestTask.Request.Date,
-                    DateTo = requestTask.DateTo,
-                    IsActive = requestTask.Request.IsActive,
-                    IsNecessary = requestTask.Request.IsNecessary,
-                    ForEmployee = requestTask.Request.ForEmployee,
-                    TaskEmployeeIds = requestTask.TaskEmployees.Select(te => te.EmployeeId).ToList(),
-                    Attachments = requestTask.Request.RequestAttachments
+                    Id = requestAssignment.Request.Id,
+                    Code = requestAssignment.Request.Code,
+                    EmployeeId = requestAssignment.Request.EmployeeId,
+                    AssignmentTypeId = requestAssignment.AssignmentTypeId,
+                    DateFrom = requestAssignment.Request.Date,
+                    DateTo = requestAssignment.DateTo,
+                    IsActive = requestAssignment.Request.IsActive,
+                    IsNecessary = requestAssignment.Request.IsNecessary,
+                    ForEmployee = requestAssignment.Request.ForEmployee,
+                    Attachments = requestAssignment.Request.RequestAttachments
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.TaskRequests)
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.AssignmentRequests)
                     }).ToList(),
-                    Notes = requestTask.Request.Notes
+                    Notes = requestAssignment.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            return requestTask;
+            return requestAssignment;
 
         }
         public async Task<bool> Delete(int requestId)
         {
-            var requestTask = await repositoryManager.RequestRepository
+            var requestAssignment = await repositoryManager.RequestRepository
                 .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
-            requestTask.Delete();
+            requestAssignment.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }

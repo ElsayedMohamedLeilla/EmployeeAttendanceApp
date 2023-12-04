@@ -21,9 +21,6 @@ namespace Dawem.API.Controllers.Others
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
                 return BadRequest();
 
-            if (fileName.Contains('#'))
-                throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
-
             string imgPath;
             if (!string.IsNullOrEmpty(folderName))
                 imgPath = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, folderName, fileName);

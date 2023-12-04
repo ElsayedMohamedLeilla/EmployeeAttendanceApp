@@ -27,11 +27,12 @@ namespace Dawem.BusinessLogicCore
         public async Task<UploadResult> UploadFile(IFormFile file, string FolderName)
         {
             UploadResult uploadResult;
+
+            if (file.FileName.Contains('#'))
+                throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
+
             try
             {
-                if (file.FileName.Contains('#'))
-                    throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
-
                 var uniqueFileName = GetUniqueFileName(file.FileName);
                 var uploadsDirectory = Path.Combine(webHostEnvironment.WebRootPath, LeillaKeys.Uploads, FolderName);
                 var filePath = Path.Combine(uploadsDirectory, uniqueFileName);

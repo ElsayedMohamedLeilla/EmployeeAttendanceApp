@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Dawem.Models.Dtos.Others;
 
-namespace Dawem.Models.Dtos.Requests.Vacations
+namespace Dawem.Models.Response.Requests.Vacations
 {
-    public class UpdateRequestVacationDTO
+    public class GetRequestVacationByIdResponseDTO
     {
         public int Id { get; set; }
+        public int Code { get; set; }
         public bool IsNecessary { get; set; }
         public bool ForEmployee { get; set; }
         public int? EmployeeId { get; set; }
         public int VacationTypeId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public List<IFormFile> Attachments { get; set; }
-        public List<string> AttachmentsNames { get; set; }
+        public List<FileDTO> Attachments { get; set; }
+        public bool IsActive { get; set; }
     }
 }

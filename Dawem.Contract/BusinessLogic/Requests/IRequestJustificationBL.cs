@@ -1,0 +1,19 @@
+﻿using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Justifications;
+using Dawem.Models.Response.Requests.Justifications;
+
+namespace Dawem.Contract.BusinessLogic.Requests
+{
+    public interface IRequestJustificationBL
+    {
+        Task<int> Create(CreateRequestJustificationDTO model);
+        Task<bool> Update(UpdateRequestJustificationDTO model);
+        Task<GetRequestJustificationInfoResponseDTO> GetInfo(int requestId);
+        Task<GetRequestJustificationByIdResponseDTO> GetById(int requestId);
+        Task<GetRequestJustificationsResponseDTO> Get(GetRequestJustificationCriteria model);
+        Task<GetRequestJustificationsForDropDownResponseDTO> GetForDropDown(GetRequestJustificationCriteria model);
+        Task<bool> Accept(int requestId);
+        Task<bool> Reject(RejectModelDTO rejectModelDTO);
+        Task<bool> Delete(int requestId);
+    }
+}

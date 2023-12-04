@@ -1,11 +1,11 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Requests.Vacations
+namespace Dawem.Models.Dtos.Requests.Justifications
 {
-    public class GetRequestVacationCriteria : BaseCriteria
+    public class GetRequestJustificationCriteria : BaseCriteria
     {
-        public int? VacationTypeId { get; set; }
+        public int? JustificationTypeId { get; set; }
         public int? EmployeeId { get; set; }
         public RequestStatus? Status { get; set; }
         public DateTime? Date { get; set; }

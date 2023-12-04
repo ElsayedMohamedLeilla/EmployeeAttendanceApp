@@ -1,0 +1,429 @@
+﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogicCore;
+using Dawem.Contract.BusinessValidation.Requests;
+using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Requests;
+using Dawem.Enums.Generals;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Dtos.Others;
+using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Vacations;
+using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests.Vacations;
+using Dawem.Translations;
+using Dawem.Validation.FluentValidation.Requests.Vacation;
+using Dawem.Validation.FluentValidation.Requests.Vacations;
+using Microsoft.EntityFrameworkCore;
+
+namespace Dawem.BusinessLogic.Requests
+{
+    public class RequestVacationBL : IRequestVacationBL
+    {
+        private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
+        private readonly RequestInfo requestInfo;
+        private readonly IRequestVacationBLValidation requestVacationBLValidation;
+        private readonly IRepositoryManager repositoryManager;
+        private readonly IMapper mapper;
+        private readonly IUploadBLC uploadBLC;
+        public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+            IRepositoryManager _repositoryManager,
+            IMapper _mapper,
+            IUploadBLC _uploadBLC,
+           RequestInfo _requestHeaderContext,
+           IRequestVacationBLValidation _requestVacationBLValidation)
+        {
+            unitOfWork = _unitOfWork;
+            requestInfo = _requestHeaderContext;
+            repositoryManager = _repositoryManager;
+            requestVacationBLValidation = _requestVacationBLValidation;
+            mapper = _mapper;
+            uploadBLC = _uploadBLC;
+        }
+        public async Task<int> Create(CreateRequestVacationDTO model)
+        {
+            #region Model Validation
+
+            var validator = new CreateRequestVacationDTOValidator();
+            var validatorResult = validator.Validate(model);
+            if (!validatorResult.IsValid)
+            {
+                var error = validatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            var employeeId = await requestVacationBLValidation.CreateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+
+            #region Upload Files
+
+            List<string> fileNames = null;
+
+            if (model.Attachments != null && model.Attachments.Count > 0)
+            {
+                fileNames = new List<string>();
+
+                foreach (var attachment in model.Attachments)
+                {
+                    if (attachment != null && attachment.Length > 0)
+                    {
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.VacationRequests)
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
+                        fileNames.Add(result.FileName);
+                    }
+                }
+                model.AttachmentsNames = fileNames;
+            }
+
+            #endregion
+
+            #region Insert Request Vacation
+
+            #region Set Request Vacation Code
+
+            var getRequestNextCode = await repositoryManager.RequestRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            var getRequestVacationNextCode = await repositoryManager.RequestRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
+            var request = mapper.Map<Request>(model);
+            request.CompanyId = requestInfo.CompanyId;
+            request.AddUserId = requestInfo.UserId;
+            request.EmployeeId = employeeId ?? 0;
+            request.Code = getRequestNextCode;
+            request.RequestVacation.Code = getRequestVacationNextCode;
+            request.Status = RequestStatus.Pending;
+            request.IsActive = true;
+            request.RequestVacation.IsActive = true;
+
+            repositoryManager.RequestRepository.Insert(request);
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return request.Id;
+
+            #endregion
+
+        }
+        public async Task<bool> Update(UpdateRequestVacationDTO model)
+        {
+            #region Model Validation
+
+            var validator = new UpdateRequestVacationModelDTOValidator();
+            var validatorResult = validator.Validate(model);
+            if (!validatorResult.IsValid)
+            {
+                var error = validatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            var employeeId = await requestVacationBLValidation.UpdateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Upload Files
+
+            var newFileNames = new List<string>();
+
+            if (model.Attachments != null && model.Attachments.Count > 0)
+            {
+                newFileNames = new List<string>();
+
+                foreach (var attachment in model.Attachments)
+                {
+                    if (attachment != null && attachment.Length > 0)
+                    {
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.VacationRequests)
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
+                        newFileNames.Add(result.FileName);
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Update Request Vacation
+
+            var getRequest = await repositoryManager.RequestRepository
+                 .GetEntityByConditionWithTrackingAsync(request => !request.IsDeleted
+                 && request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            var getRequestVacation = await repositoryManager.RequestVacationRepository
+                 .GetEntityByConditionWithTrackingAsync(requestVacation => !requestVacation.Request.IsDeleted
+                 && requestVacation.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.ForEmployee = model.ForEmployee;
+            getRequest.IsNecessary = model.IsNecessary;
+            getRequest.Date = model.DateFrom;
+            getRequest.ModifiedDate = DateTime.Now;
+            getRequest.ModifyUserId = requestInfo.UserId;
+
+
+            getRequestVacation.ModifiedDate = DateTime.Now;
+            getRequestVacation.ModifyUserId = requestInfo.UserId;
+            getRequestVacation.DateTo = model.DateTo;
+
+            await unitOfWork.SaveAsync();
+
+            
+
+            #region Update Attachements 
+
+            var existAttachementsDbList = await repositoryManager.RequestAttachmentRepository
+                    .Get(e => e.RequestId == getRequest.Id)
+                    .ToListAsync();
+
+            var existingFileNames = existAttachementsDbList.Select(e => e.FileName).ToList();
+
+            var addedAttachements = newFileNames
+                .Select(fileName => new RequestAttachment
+                {
+                    RequestId = getRequest.Id,
+                    FileName = fileName,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList();
+
+            var removedFileNames = existAttachementsDbList
+                .Where(ge => model.AttachmentsNames == null || !model.AttachmentsNames.Contains(ge.FileName))
+                .Select(ge => ge.FileName)
+                .ToList();
+
+            var removedAttachments = await repositoryManager.RequestAttachmentRepository
+                .Get(e => e.RequestId == getRequest.Id && removedFileNames.Contains(e.FileName))
+                .ToListAsync();
+
+            if (removedAttachments.Count > 0)
+                repositoryManager.RequestAttachmentRepository.BulkDeleteIfExist(removedAttachments);
+            if (addedAttachements.Count > 0)
+                repositoryManager.RequestAttachmentRepository.BulkInsert(addedAttachements);
+
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+
+            return true;
+
+            #endregion
+        }
+        public async Task<GetRequestVacationsResponseDTO> Get(GetRequestVacationCriteria criteria)
+        {
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var query = requestVacationRepository.GetAsQueryable(criteria);
+
+            #region paging
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+            var queryOrdered = requestVacationRepository.OrderBy(query, nameof(RequestVacation.Id), LeillaKeys.Desc);
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestVacationsList = await queryPaged.Select(requestVacation => new GetRequestVacationsResponseModelDTO
+            {
+                Id = requestVacation.Request.Id,
+                Code = requestVacation.Request.Code,
+                EmployeeName = requestVacation.Request.Employee.Name,
+                VacationTypeName = requestVacation.VacationType.Name,
+                DateFrom = requestVacation.Request.Date,
+                DateTo = requestVacation.DateTo,
+                Status = requestVacation.Request.Status,
+                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+
+            }).ToListAsync();
+
+            return new GetRequestVacationsResponseDTO
+            {
+                VacationRequests = requestVacationsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<GetRequestVacationsForDropDownResponseDTO> GetForDropDown(GetRequestVacationCriteria criteria)
+        {
+            criteria.IsActive = true;
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var query = requestVacationRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+            var queryOrdered = requestVacationRepository.OrderBy(query, nameof(RequestVacation.Id), LeillaKeys.Desc);
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestVacationsList = await queryPaged.Select(e => new GetRequestVacationsForDropDownResponseModelDTO
+            {
+                Id = e.Id,
+                Name = e.Request.Employee.Name
+            }).ToListAsync();
+
+            return new GetRequestVacationsForDropDownResponseDTO
+            {
+                VacationRequests = requestVacationsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<GetRequestVacationInfoResponseDTO> GetInfo(int requestId)
+        {
+            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+                .Select(requestVacation => new GetRequestVacationInfoResponseDTO
+                {
+                    Code = requestVacation.Request.Code,
+                    EmployeeName = requestVacation.Request.Employee.Name,
+                    VacationTypeName = requestVacation.VacationType.Name,
+                    DateFrom = requestVacation.Request.Date,
+                    DateTo = requestVacation.DateTo,
+                    IsActive = requestVacation.Request.IsActive,
+                    IsNecessary = requestVacation.Request.IsNecessary,
+                    ForEmployee = requestVacation.Request.ForEmployee,
+                    Attachments = requestVacation.Request.RequestAttachments
+                    .Select(a => new FileDTO
+                    {
+                        FileName = a.FileName,
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests),
+                    }).ToList(),
+                    Status = requestVacation.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            return requestVacation;
+        }
+        public async Task<GetRequestVacationByIdResponseDTO> GetById(int RequestVacationId)
+        {
+            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Id == RequestVacationId && !e.IsDeleted)
+                .Select(requestVacation => new GetRequestVacationByIdResponseDTO
+                {
+                    Id = requestVacation.Request.Id,
+                    Code = requestVacation.Request.Code,
+                    EmployeeId = requestVacation.Request.EmployeeId,
+                    VacationTypeId = requestVacation.VacationTypeId,
+                    DateFrom = requestVacation.Request.Date,
+                    DateTo = requestVacation.DateTo,
+                    IsActive = requestVacation.Request.IsActive,
+                    IsNecessary = requestVacation.Request.IsNecessary,
+                    ForEmployee = requestVacation.Request.ForEmployee,
+                    Attachments = requestVacation.Request.RequestAttachments
+                    .Select(a => new FileDTO
+                    {
+                        FileName = a.FileName,
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests)
+                    }).ToList()
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            return requestVacation;
+
+        }
+        public async Task<bool> Delete(int requestId)
+        {
+            var requestVacation = await repositoryManager.RequestRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+            requestVacation.Delete();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Accept(int requestId)
+        {
+            var request = await repositoryManager.RequestRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
+               throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            if (request.Status == RequestStatus.Accepted)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyAccepted);
+            }
+            else if (request.Status == RequestStatus.Rejected)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyRejected);
+            }
+
+            request.Status = RequestStatus.Accepted;
+            request.DecisionUserId = requestInfo.UserId;
+            request.DecisionDate = DateTime.UtcNow;
+
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
+        {
+            var request = await repositoryManager.RequestRepository
+                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == rejectModelDTO.Id) ??
+               throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            if (request.Status == RequestStatus.Accepted)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyAccepted);
+            }
+            else if (request.Status == RequestStatus.Rejected)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyRejected);
+            }
+
+            request.Status = RequestStatus.Rejected;
+            request.DecisionUserId = requestInfo.UserId;
+            request.DecisionDate = DateTime.UtcNow;
+            request.RejectReason = rejectModelDTO.RejectReason;
+
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+    }
+}
+

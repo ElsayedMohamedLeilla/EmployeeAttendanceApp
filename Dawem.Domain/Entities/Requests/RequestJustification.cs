@@ -20,5 +20,6 @@ namespace Dawem.Domain.Entities.Requests
         #endregion
 
         public int Code { get; set; }
+        public DateTime DateTo { get; set; }
     }
 }

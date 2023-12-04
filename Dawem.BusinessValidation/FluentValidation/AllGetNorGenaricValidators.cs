@@ -10,7 +10,9 @@ using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Dtos.Requests.Tasks;
+using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
@@ -187,6 +189,20 @@ namespace Dawem.Validation.FluentValidation
         }
     }
 
+    public class GetRequestVacationCriteriaValidator : AbstractValidator<GetRequestVacationCriteria>
+    {
+        public GetRequestVacationCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetRequestJustificationCriteriaValidator : AbstractValidator<GetRequestJustificationCriteria>
+    {
+        public GetRequestJustificationCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
     public class GetEmployeeAttendancesForWebAdminCriteriaValidator : AbstractValidator<GetEmployeeAttendancesForWebAdminCriteria>
     {
         public GetEmployeeAttendancesForWebAdminCriteriaValidator()

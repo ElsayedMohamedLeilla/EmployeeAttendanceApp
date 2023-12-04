@@ -2,12 +2,15 @@
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Requests.Vacations
+namespace Dawem.Validation.FluentValidation.Requests.Vacation
 {
-    public class CreateRequestVacationDTOValidator : AbstractValidator<CreateRequestVacationDTO>
+    public class UpdateRequestVacationModelDTOValidator : AbstractValidator<UpdateRequestVacationDTO>
     {
-        public CreateRequestVacationDTOValidator()
+        public UpdateRequestVacationModelDTOValidator()
         {
+            RuleFor(model => model.Id).GreaterThan(0).
+                    WithMessage(LeillaKeys.SorryYouMustEnterRequestId);
+
             RuleFor(model => model.EmployeeId).NotNull()
                 .When(m => m.ForEmployee)
                 .WithMessage(AmgadKeys.SorryYouMustChooseEmployeeForRequestVacation);
@@ -22,7 +25,9 @@ namespace Dawem.Validation.FluentValidation.Requests.Vacations
                .WithMessage(AmgadKeys.SorryYouMustEnterDateToForVacationRequest);
 
             RuleFor(model => model).Must(d => d.DateTo >= d.DateFrom)
-               .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
+              .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
+
+           
 
         }
     }

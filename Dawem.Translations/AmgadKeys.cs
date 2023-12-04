@@ -2,6 +2,12 @@
 {
     public static class AmgadKeys
     {
+        public const string justificationRequests = "justificationRequests";
+
+
+
+
+
         public const string SorryYouMustChooseValidTimePeriod0Or1 = "Sorry!!YouMustChooseValidTimePeriod0Or1!";
         public const string SorryThisTimeFormatNotValid = "Sorry!!ThisTimeFormatNotValid!";
         public const string SorryGroupNameIsDuplicated = "Sorry!!GroupNameIsDuplicated!";
@@ -38,7 +44,19 @@
         public const string SorryYouMustChooseVacationType = "Sorry!!YouMustChooseVacationType!";
         public const string SorryYouMustEnterDateFromForVacationRequest = "Sorry!!YouMustEnterDateFromForVacationRequest!";
         public const string SorryYouMustEnterDateToForVacationRequest = "Sorry!!YouMustEnterDateToForVacationRequest!";
-        public const string SorryDateToMustGreaterThanOrEqualDateFrom = "Sorry!!DateToMustGreaterThanOrEqualDateFrom!";
+
+        public const string SorryYouMustChooseEmployeeForRequestJustification = "Sorry!!YouMustChooseEmployeeForRequestJustification!";
+        public const string SorryYouMustChooseJustificationType = "Sorry!!YouMustChooseJustificationType!";
+        public const string SorryYouMustEnterDateFromForJustificationRequest = "Sorry!!YouMustEnterDateFromForJustificationRequest!";
+        public const string SorryYouMustEnterDateToForJustificationRequest = "Sorry!!YouMustEnterDateToForJustificationRequest!";
+        public const string SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod!";
+        public const string SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod!";
+        public const string SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod!";
+
+        public const string DoneCreateVacationRequestSuccessfully = "DoneCreateVacationRequestSuccessfully";
+        public const string DoneUpdateVacationRequestSuccessfully = "DoneUpdateVacationRequestSuccessfully";
+        public const string DoneCreateJustificationRequestSuccessfully = "DoneCreateJustificationRequestSuccessfully";
+        public const string DoneUpdateJustificationRequestSuccessfully = "DoneUpdateJustificationRequestSuccessfully";
 
     }
 }

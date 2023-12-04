@@ -347,7 +347,7 @@ namespace Dawem.BusinessLogic.Requests
         }
         public async Task<GetRequestVacationByIdResponseDTO> GetById(int RequestVacationId)
         {
-            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Id == RequestVacationId && !e.IsDeleted)
+            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Request.Id == RequestVacationId && !e.IsDeleted)
                 .Select(requestVacation => new GetRequestVacationByIdResponseDTO
                 {
                     Id = requestVacation.Request.Id,

@@ -13,6 +13,7 @@ using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
@@ -264,7 +265,12 @@ namespace Dawem.BusinessLogic.Requests
             {
                 Id = requestVacation.Request.Id,
                 Code = requestVacation.Request.Code,
-                EmployeeName = requestVacation.Request.Employee.Name,
+                Employee = new RequestEmployeeModel
+                {
+                    Code = requestVacation.Request.Employee.Code,
+                    Name = requestVacation.Request.Employee.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(requestVacation.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                },
                 VacationTypeName = requestVacation.VacationType.Name,
                 DateFrom = requestVacation.Request.Date,
                 DateTo = requestVacation.DateTo,
@@ -324,7 +330,12 @@ namespace Dawem.BusinessLogic.Requests
                 .Select(requestVacation => new GetRequestVacationInfoResponseDTO
                 {
                     Code = requestVacation.Request.Code,
-                    EmployeeName = requestVacation.Request.Employee.Name,
+                    Employee = new RequestEmployeeModel
+                    {
+                        Code = requestVacation.Request.Employee.Code,
+                        Name = requestVacation.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestVacation.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    },
                     VacationTypeName = requestVacation.VacationType.Name,
                     DateFrom = requestVacation.Request.Date,
                     DateTo = requestVacation.DateTo,

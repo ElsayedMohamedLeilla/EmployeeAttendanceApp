@@ -8,7 +8,7 @@ namespace Dawem.Models.Response.Requests.Vacations
         public int Code { get; set; }
         public bool IsNecessary { get; set; }
         public bool ForEmployee { get; set; }
-        public string EmployeeName { get; set; }
+        public RequestEmployeeModel Employee { get; set; }
         public string VacationTypeName { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }

@@ -8,7 +8,7 @@ namespace Dawem.Models.Response.Requests.Justifications
         public int Code { get; set; }
         public bool IsNecessary { get; set; }
         public bool ForEmployee { get; set; }
-        public string EmployeeName { get; set; }
+        public RequestEmployeeModel Employee { get; set; }
         public string JustificationTypeName { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }

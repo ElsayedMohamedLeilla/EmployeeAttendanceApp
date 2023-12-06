@@ -157,11 +157,6 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             return true;
         }
-
-
-
-      
-
         #region Get All AvailableZones
         public List<AvailableZoneWithoutRadiusDTO> GetAvailableLatLongForEmployee(List<AvailableZoneDTO> employeeZones)
         {

@@ -1,11 +1,14 @@
 ﻿using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
+using Dawem.Models.Response.Core.Zones;
 using Dawem.Models.Response.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -79,9 +82,31 @@ namespace Dawem.Validation.BusinessValidation.Attendances
         }
         public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation()
         {
-            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
+             throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+            #region Get Availble Zones ForFingerprint
+            var availableZones = new List<AvailableZoneWithoutRadiusDTO>();
+            // Retrieve all zone IDs associated with the employee
+            var employeeZones = await repositoryManager.ZoneEmployeeRepository
+                               .Get(e => e.EmployeeId == getEmployeeId)
+                               .Select(s=> new AvailableZoneDTO { 
+                               Latitude = s.Zone.Latitude,
+                               Longitude =s.Zone.Longitude,
+                               Radius = s.Zone.Radius
+                               })
+                               .ToListAsync();
+            if (employeeZones != null)
+            {
+                availableZones = GetAvailableLatLongForEmployee(employeeZones);
+            }
+            else
+            {
+                // here will implment if the user connected to group i will get the zoneGroup Lat Long
+                // also if no Group i will check if his deparment connected to zone
+            }
+
+            #endregion
             var getTimeZoneId = await repositoryManager.CompanyRepository
                 .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
                 .Select(c => c.Country.TimeZoneId)
@@ -107,11 +132,12 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 Code = getAttendance?.Code,
                 CheckInTime = getAttendance?.CheckInTime,
                 CheckOutTime = getAttendance?.CheckOutTime,
-                EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet : 
+                EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :
                 getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? EmployeeStatus.AttendThenLeaved :
                 getAttendance?.CheckInTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
-                LocalDate = clientLocalDate
+                LocalDate = clientLocalDate,
+                AvailableZones = availableZones
             };
         }
 
@@ -131,5 +157,71 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             return true;
         }
+
+
+
+      
+
+        #region Get All AvailableZones
+        public List<AvailableZoneWithoutRadiusDTO> GetAvailableLatLongForEmployee(List<AvailableZoneDTO> employeeZones)
+        {
+            var availableLatLongList = new List<AvailableZoneWithoutRadiusDTO>();
+            double stepSize = 0.10; // Adjust the step size for performance 
+
+            foreach (var employeeZone in employeeZones)
+            {
+                double employeeLatitude = employeeZone.Latitude;
+                double employeeLongitude = employeeZone.Longitude;
+                double? radius = employeeZone.Radius;
+
+                if (radius.HasValue)
+                {
+                    // Calculate borders around the zone
+                    double northBorder = employeeLatitude + (double)radius / 111; // 1 degree latitude is approximately 111 km
+                    double southBorder = employeeLatitude - (double)radius / 111;
+                    double eastBorder = employeeLongitude + (double)radius / (111 * Math.Cos(Math.Abs(employeeLatitude) * (Math.PI / 180)));
+                    double westBorder = employeeLongitude - (double)radius / (111 * Math.Cos(Math.Abs(employeeLatitude) * (Math.PI / 180)));
+
+                    // Iterate through the grid within the borders
+                    for (double lat = southBorder; lat <= northBorder; lat += stepSize)
+                    {
+                        for (double lon = westBorder; lon <= eastBorder; lon += stepSize)
+                        {
+                            var distance = CalculateDistance(employeeLatitude, employeeLongitude, lat, lon);
+
+                            if (distance <= (double)radius)
+                            {
+                                availableLatLongList.Add(new AvailableZoneWithoutRadiusDTO { Latitude = lat, Longitude = lon });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return availableLatLongList;
+        }
+
+        public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double EarthRadius = 6371; // Earth's radius in kilometers
+
+            // Convert latitude and longitude from degrees to radians
+            double dLat = ToRadians(lat2 - lat1);
+            double dLon = ToRadians(lon2 - lon1);
+
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            double distance = EarthRadius * c;
+
+            return distance; // Distance between the two coordinates in kilometers
+        }
+        private static double ToRadians(double angle)
+        {
+            return Math.PI * angle / 180.0;
+        }
+        #endregion
     }
 }

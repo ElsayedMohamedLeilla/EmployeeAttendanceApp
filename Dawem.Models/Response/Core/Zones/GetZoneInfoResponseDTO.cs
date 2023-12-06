@@ -9,7 +9,7 @@ namespace Dawem.Models.Response.Core.Zones
         public bool IsActive { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public decimal? Radius { get; set; }
+        public double? Radius { get; set; }
 
 
 

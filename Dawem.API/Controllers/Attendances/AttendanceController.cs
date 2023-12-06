@@ -9,11 +9,11 @@ namespace Dawem.API.Controllers.Attendances
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class AttendanceController : BaseController
+    public class EmployeeAttendanceController : BaseController
     {
         private readonly IEmployeeAttendanceBL employeeAttendanceBL;
 
-        public AttendanceController(IEmployeeAttendanceBL _employeeAttendanceBL)
+        public EmployeeAttendanceController(IEmployeeAttendanceBL _employeeAttendanceBL)
         {
             employeeAttendanceBL = _employeeAttendanceBL;
         }

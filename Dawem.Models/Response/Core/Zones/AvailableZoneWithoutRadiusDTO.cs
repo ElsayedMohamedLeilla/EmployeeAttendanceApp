@@ -1,9 +1,8 @@
 ﻿namespace Dawem.Models.Response.Core.Zones
 {
-    public class AvailableZoneDTO
+    public class AvailableZoneWithoutRadiusDTO
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public double? Radius { get; set; }
     }
 }

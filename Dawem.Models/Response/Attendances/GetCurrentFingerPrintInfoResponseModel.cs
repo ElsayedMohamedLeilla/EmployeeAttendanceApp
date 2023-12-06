@@ -10,6 +10,6 @@ namespace Dawem.Models.Response.Attendances
         public string CheckOutTime { get; set; }
         public DateTime LocalDate { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
-        public List<AvailableZoneDTO> AvailableZones { get; set; }
+        public List<AvailableZoneWithoutRadiusDTO> AvailableZones { get; set; }
     }
 }

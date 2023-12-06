@@ -6,7 +6,7 @@ namespace Dawem.Models.Response.Requests.Justifications
     {
         public int Id { get; set; }
         public int Code { get; set; }
-        public string EmployeeName { get; set; }
+        public RequestEmployeeModel Employee { get; set; }
         public string JustificationTypeName { get; set; }
         public string StatusName { get; set; }
         public RequestStatus Status { get; set; }

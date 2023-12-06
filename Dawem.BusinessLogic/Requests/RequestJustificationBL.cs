@@ -13,6 +13,7 @@ using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Justifications;
@@ -265,7 +266,12 @@ namespace Dawem.BusinessLogic.Requests
             {
                 Id = requestJustification.Request.Id,
                 Code = requestJustification.Request.Code,
-                EmployeeName = requestJustification.Request.Employee.Name,
+                Employee = new RequestEmployeeModel
+                {
+                    Code = requestJustification.Request.Employee.Code,
+                    Name = requestJustification.Request.Employee.Name,
+                    ProfileImagePath = uploadBLC.GetFilePath(requestJustification.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                },
                 JustificationTypeName = requestJustification.JustificatioType.Name,
                 DateFrom = requestJustification.Request.Date,
                 DateTo = requestJustification.DateTo,
@@ -325,7 +331,12 @@ namespace Dawem.BusinessLogic.Requests
                 .Select(requestJustification => new GetRequestJustificationInfoResponseDTO
                 {
                     Code = requestJustification.Request.Code,
-                    EmployeeName = requestJustification.Request.Employee.Name,
+                    Employee = new RequestEmployeeModel
+                    {
+                        Code = requestJustification.Request.Employee.Code,
+                        Name = requestJustification.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestJustification.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    },
                     JustificationTypeName = requestJustification.JustificatioType.Name,
                     DateFrom = requestJustification.Request.Date,
                     DateTo = requestJustification.DateTo,

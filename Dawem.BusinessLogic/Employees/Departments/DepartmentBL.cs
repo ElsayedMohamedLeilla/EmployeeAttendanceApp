@@ -11,7 +11,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
@@ -306,7 +305,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 Id = e.Id,
                 Name = e.Name,
                 HasChildren = e.Children.Any(),
-                ChildrenCount = e.Children.Count()
+                ChildrenCount = e.Children.Count(c => !c.IsDeleted && c.IsActive)
             }).ToListAsync();
 
             return new GetDepartmentsForTreeResponse

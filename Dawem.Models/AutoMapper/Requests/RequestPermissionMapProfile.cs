@@ -11,14 +11,14 @@ namespace Dawem.Models.AutoMapper.Requests
         {
             CreateMap<CreateRequestPermissionModelDTO, Request>()
                  .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Permissions))
+                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Permission))
                 .AfterMap(MapRequestPermission);
 
             CreateMap<CreateRequestPermissionModelDTO, RequestPermission>();
 
             CreateMap<UpdateRequestPermissionModelDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Permissions))
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Permission))
                 .AfterMap(MapRequestPermission);
         }
         private void MapRequestPermission(CreateRequestPermissionModelDTO source, Request destination, ResolutionContext context)

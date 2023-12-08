@@ -78,7 +78,7 @@ namespace Dawem.BusinessLogic.Requests
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadFile(attachment, AmgadKeys.justificationRequests)
+                        var result = await uploadBLC.UploadFile(attachment, AmgadKeys.JustificationRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         fileNames.Add(result.FileName);
                     }
@@ -163,7 +163,7 @@ namespace Dawem.BusinessLogic.Requests
                 {
                     if (attachment != null && attachment.Length > 0)
                     {
-                        var result = await uploadBLC.UploadFile(attachment, AmgadKeys.justificationRequests)
+                        var result = await uploadBLC.UploadFile(attachment, AmgadKeys.JustificationRequests)
                             ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
                         newFileNames.Add(result.FileName);
                     }
@@ -347,7 +347,7 @@ namespace Dawem.BusinessLogic.Requests
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.justificationRequests),
+                        FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.JustificationRequests),
                     }).ToList(),
                     Status = requestJustification.Request.Status,
                     StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
@@ -373,7 +373,7 @@ namespace Dawem.BusinessLogic.Requests
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.justificationRequests)
+                        FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.JustificationRequests)
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 

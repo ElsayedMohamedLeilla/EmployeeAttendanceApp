@@ -11,14 +11,14 @@ namespace Dawem.Models.AutoMapper.Requests
         {
             CreateMap<CreateRequestTaskModelDTO, Request>()
                  .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Tasks))
+                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Task))
                 .AfterMap(MapRequestTask);
 
             CreateMap<CreateRequestTaskModelDTO, RequestTask>();
 
             CreateMap<UpdateRequestTaskModelDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Tasks))
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Task))
                 .AfterMap(MapRequestTask);
         }
         private void MapRequestTask(CreateRequestTaskModelDTO source, Request destination, ResolutionContext context)

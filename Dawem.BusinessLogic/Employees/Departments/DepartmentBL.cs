@@ -304,7 +304,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             {
                 Id = e.Id,
                 Name = e.Name,
-                HasChildren = e.Children.Any(),
+                HasChildren = e.Children.Any(c => !c.IsDeleted && c.IsActive),
                 ChildrenCount = e.Children.Count(c => !c.IsDeleted && c.IsActive)
             }).ToListAsync();
 

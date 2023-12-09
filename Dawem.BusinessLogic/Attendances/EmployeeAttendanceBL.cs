@@ -126,9 +126,7 @@ namespace Dawem.BusinessLogic.Attendances
         public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfo()
         {
             #region Business Validation
-
             var result =  await employeeAttendanceBLValidation.GetCurrentFingerPrintInfoValidation();
-
             #endregion
 
             return result;
@@ -427,9 +425,31 @@ namespace Dawem.BusinessLogic.Attendances
             return nonNegativeTimeGap.ToString(@"hh\:mm");
         }
 
-        public Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId)
+        public async Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
-            throw new NotImplementedException();
+            var result = await repositoryManager.EmployeeAttendanceCheckRepository.Get(s => s.EmployeeAttendanceId == employeeAttendanceId)
+                .Select(r => new GetEmployeeAttendanceInfoDTO
+            {
+                EmployeeName = r.EmployeeAttendance.Employee.Name,
+                LocalDate = r.EmployeeAttendance.LocalDate,
+                Time = r.Time.ToString(),
+                Type = r.FingerPrintType == FingerPrintType.CheckIn ? AmgadKeys.AttendanceRegistration :
+                r.FingerPrintType == FingerPrintType.CheckOut ? AmgadKeys.DismissalRegistration :
+                r.FingerPrintType == FingerPrintType.BreakOut ? AmgadKeys.StartABreak :
+                r.FingerPrintType == FingerPrintType.BreakIn ? AmgadKeys.FinishABreak :
+                AmgadKeys.Unknown,
+                RecognitionWay = r.RecognitionWay == RecognitionWay.FingerPrint ? AmgadKeys.FingerPrint :
+                r.RecognitionWay == RecognitionWay.NotSet ? AmgadKeys.NotSet :
+                r.RecognitionWay == RecognitionWay.FaceRecognition ? AmgadKeys.FaceRecognition :
+                r.RecognitionWay == RecognitionWay.PinRecognition ? AmgadKeys.PinRecognition :
+                r.RecognitionWay == RecognitionWay.VoiceRecognition ? AmgadKeys.VoiceRecognition :
+                r.RecognitionWay == RecognitionWay.PaternRecognition ? AmgadKeys.PaternRecognition :
+                r.RecognitionWay == RecognitionWay.PasswordRecognition ? AmgadKeys.PasswordRecognition :
+
+                AmgadKeys.Unknown,
+
+                }).ToListAsync();
+            return result;
         }
     }
 }

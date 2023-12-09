@@ -9,6 +9,6 @@ namespace Dawem.Contract.BusinessLogic.Attendances
         Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfo();
         Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria model);
         Task<GetEmployeeAttendancesResponseForWebDTO> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria model);
-        Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId);
+        Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId);
     }
 }

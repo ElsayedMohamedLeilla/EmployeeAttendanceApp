@@ -2,6 +2,7 @@
 {
     public enum RecognitionWay
     {
+        NotSet,
         FingerPrint,
         FaceRecognition,
         VoiceRecognition,

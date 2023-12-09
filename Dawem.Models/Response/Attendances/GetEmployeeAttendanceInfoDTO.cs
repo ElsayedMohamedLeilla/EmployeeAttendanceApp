@@ -6,11 +6,12 @@ namespace Dawem.Models.Response.Attendances
     {
         // will implement
         public string EmployeeName { get; set; }
-        public int EmployeeAttendanceId { get; set; }
 
-        public string CheckInTime { get; set; }
-        public string CheckOutTime { get; set; }
+        public string Time { get; set; }
         public DateTime LocalDate { get; set; }
-        public EmployeeStatus EmployeeStatus { get; set; }
+        public string Type { get; set; }
+        public string RecognitionWay { get; set; }
+
+
     }
 }

@@ -4,8 +4,8 @@
     {
         CheckIn,
         CheckOut,
-        BreakCheckIn,
-        BreakCheckOut
+        BreakOut,
+        BreakIn
     }
 
 }

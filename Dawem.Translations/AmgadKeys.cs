@@ -52,11 +52,20 @@
         public const string SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod!";
-
         public const string DoneCreateVacationRequestSuccessfully = "DoneCreateVacationRequestSuccessfully";
         public const string DoneUpdateVacationRequestSuccessfully = "DoneUpdateVacationRequestSuccessfully";
         public const string DoneCreateJustificationRequestSuccessfully = "DoneCreateJustificationRequestSuccessfully";
         public const string DoneUpdateJustificationRequestSuccessfully = "DoneUpdateJustificationRequestSuccessfully";
+        public const string SorryFingerprintingIsNotAllowedInThisArea = "Sorry!!FingerprintingIsNotAllowedInThisArea!";
+
+        public const string AttendanceRegistration = "AttendanceRegistration";
+        public const string DismissalRegistration = "DismissalRegistration";
+        public const string StartABreak = "StartABreak";
+        public const string FinishABreak = "FinishABreak";
+        public const string NotSet = "NotSet";
+
+
+
 
     }
 }

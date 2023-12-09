@@ -9,10 +9,11 @@ namespace Dawem.Validation.FluentValidation.Attendances
     {
         public FingerprintModelValidator()
         {
-            RuleFor(model => model.Latitude).GreaterThan(0).
-                   WithMessage(LeillaKeys.SorryYouMustEnterTheLatitude);
-            RuleFor(model => model.Longitude).GreaterThan(0).
-                   WithMessage(LeillaKeys.SorryYouMustEnterTheLongitude);
+            //RuleFor(model => model.Latitude).NotNull().
+            //       WithMessage(LeillaKeys.SorryYouMustEnterTheLatitude);
+            //RuleFor(model => model.Longitude).NotNull().
+            //       WithMessage(LeillaKeys.SorryYouMustEnterTheLongitude);
+
             RuleFor(model => model).Must(lat => lat.Latitude.IsValidLatitude()).
                    WithMessage(LeillaKeys.SorryYouMustEnterCorrectLatitude);
             RuleFor(model => model).Must(lat => lat.Longitude.IsValidLongitude()).

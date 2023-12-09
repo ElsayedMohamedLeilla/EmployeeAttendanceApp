@@ -6,9 +6,5 @@
       public int TotalCount { get; set; }
 
 
-
-
-
-
     }
 }

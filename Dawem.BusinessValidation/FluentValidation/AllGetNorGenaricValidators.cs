@@ -10,7 +10,9 @@ using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Dtos.Requests;
+using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Dtos.Requests.Justifications;
+using Dawem.Models.Dtos.Requests.Permissions;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
@@ -189,7 +191,7 @@ namespace Dawem.Validation.FluentValidation
         }
     }
 
-    public class GetRequestVacationCriteriaValidator : AbstractValidator<GetRequestVacationCriteria>
+    public class GetRequestVacationCriteriaValidator : AbstractValidator<GetRequestVacationsCriteria>
     {
         public GetRequestVacationCriteriaValidator()
         {
@@ -199,6 +201,41 @@ namespace Dawem.Validation.FluentValidation
     public class GetRequestJustificationCriteriaValidator : AbstractValidator<GetRequestJustificationCriteria>
     {
         public GetRequestJustificationCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class EmployeeGetRequestJustificationCriteriaValidator : AbstractValidator<EmployeeGetRequestJustificationCriteria>
+    {
+        public EmployeeGetRequestJustificationCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class EmployeeGetRequestAssignmentCriteriaValidator : AbstractValidator<EmployeeGetRequestAssignmentsCriteria>
+    {
+        public EmployeeGetRequestAssignmentCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class EmployeeGetRequestPermissionCriteriaValidator : AbstractValidator<EmployeeGetRequestPermissionsCriteria>
+    {
+        public EmployeeGetRequestPermissionCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class EmployeeGetRequestVacationCriteriaValidator : AbstractValidator<EmployeeGetRequestVacationsCriteria>
+    {
+        public EmployeeGetRequestVacationCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class EmployeeGetRequestTaskCriteriaValidator : AbstractValidator<EmployeeGetRequestTasksCriteria>
+    {
+        public EmployeeGetRequestTaskCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

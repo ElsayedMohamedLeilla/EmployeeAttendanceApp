@@ -14,6 +14,7 @@ using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Permissions;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
+using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Permissions;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Permissions;
@@ -27,10 +28,12 @@ namespace Dawem.BusinessLogic.Requests
         private readonly RequestInfo requestInfo;
         private readonly IRequestPermissionBLValidation requestPermissionBLValidation;
         private readonly IRepositoryManager repositoryManager;
+        private readonly IRequestBLValidation requestBLValidation;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         public RequestPermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
+            IRequestBLValidation _requestBLValidation,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
@@ -41,6 +44,7 @@ namespace Dawem.BusinessLogic.Requests
             repositoryManager = _repositoryManager;
             requestPermissionBLValidation = _requestPermissionBLValidation;
             mapper = _mapper;
+            requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
         }
         public async Task<int> Create(CreateRequestPermissionModelDTO model)
@@ -279,6 +283,57 @@ namespace Dawem.BusinessLogic.Requests
             }).ToListAsync();
 
             return new GetRequestPermissionsResponse
+            {
+                PermissionRequests = requestPermissionsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<EmployeeGetRequestPermissionsResponseDTO> EmployeeGet(EmployeeGetRequestPermissionsCriteria criteria)
+        {
+            #region Is Employee Validation
+
+            await requestBLValidation.IsEmployeeValidation();
+
+            #endregion
+
+            var requestPermissionRepository = repositoryManager.RequestPermissionRepository;
+            var query = requestPermissionRepository.EmployeeGetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = requestPermissionRepository.OrderBy(query, nameof(RequestPermission.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestPermissionsList = await queryPaged.Select(requestPermission => new EmployeeGetRequestPermissionsResponseModelDTO
+            {
+                Id = requestPermission.Request.Id,
+                Code = requestPermission.Request.Code,
+                AddedDate = requestPermission.Request.AddedDate,
+                DirectManagerName = requestPermission.Request.Employee.DirectManager != null ?
+                requestPermission.Request.Employee.DirectManager.Name : null,
+                PermissionTypeName = requestPermission.PermissionType.Name,
+                DateFrom = requestPermission.Request.Date,
+                DateTo = requestPermission.DateTo,
+                Status = requestPermission.Request.Status,
+                StatusName = TranslationHelper.GetTranslation(requestPermission.Request.Status.ToString(), requestInfo.Lang)
+            }).ToListAsync();
+
+            return new EmployeeGetRequestPermissionsResponseDTO
             {
                 PermissionRequests = requestPermissionsList,
                 TotalCount = await query.CountAsync()

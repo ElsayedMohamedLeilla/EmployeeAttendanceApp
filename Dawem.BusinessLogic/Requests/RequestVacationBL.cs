@@ -12,10 +12,13 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
+using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
+using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
+using Dawem.Validation.BusinessValidation.Requests;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,9 +32,11 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly IRequestBLValidation requestBLValidation;
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
+            IRequestBLValidation _requestBLValidation,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestVacationBLValidation _requestVacationBLValidation)
@@ -41,6 +46,7 @@ namespace Dawem.BusinessLogic.Requests
             repositoryManager = _repositoryManager;
             requestVacationBLValidation = _requestVacationBLValidation;
             mapper = _mapper;
+            requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
         }
         public async Task<int> Create(CreateRequestVacationDTO model)
@@ -242,7 +248,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
         }
-        public async Task<GetRequestVacationsResponseDTO> Get(GetRequestVacationCriteria criteria)
+        public async Task<GetRequestVacationsResponseDTO> Get(GetRequestVacationsCriteria criteria)
         {
             var requestVacationRepository = repositoryManager.RequestVacationRepository;
             var query = requestVacationRepository.GetAsQueryable(criteria);
@@ -288,7 +294,59 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
         }
-        public async Task<GetRequestVacationsForDropDownResponseDTO> GetForDropDown(GetRequestVacationCriteria criteria)
+        public async Task<EmployeeGetRequestVacationsResponseDTO> EmployeeGet(EmployeeGetRequestVacationsCriteria criteria)
+        {
+            #region Is Employee Validation
+
+            await requestBLValidation.IsEmployeeValidation();
+
+            #endregion
+
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var query = requestVacationRepository.EmployeeGetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = requestVacationRepository.OrderBy(query, nameof(RequestVacation.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestVacationsList = await queryPaged.Select(requestVacation => new EmployeeGetRequestVacationsResponseModelDTO
+            {
+                Id = requestVacation.Request.Id,
+                Code = requestVacation.Request.Code,
+                AddedDate = requestVacation.Request.AddedDate,
+                DirectManagerName = requestVacation.Request.Employee.DirectManager != null ?
+                requestVacation.Request.Employee.DirectManager.Name : null,
+                VacationTypeName = requestVacation.VacationType.Name,
+                DateFrom = requestVacation.Request.Date,
+                DateTo = requestVacation.DateTo,
+                Status = requestVacation.Request.Status,
+                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
+                NumberOfDays = (requestVacation.Request.Date.Date - requestVacation.DateTo.Date).Days
+            }).ToListAsync();
+
+            return new EmployeeGetRequestVacationsResponseDTO
+            {
+                VacationRequests = requestVacationsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<GetRequestVacationsForDropDownResponseDTO> GetForDropDown(GetRequestVacationsCriteria criteria)
         {
             criteria.IsActive = true;
             var requestVacationRepository = repositoryManager.RequestVacationRepository;
@@ -349,6 +407,7 @@ namespace Dawem.BusinessLogic.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests),
                     }).ToList(),
                     Status = requestVacation.Request.Status,
+                    NumberOfDays = (requestVacation.Request.Date.Date - requestVacation.DateTo.Date).Days,
                     StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 

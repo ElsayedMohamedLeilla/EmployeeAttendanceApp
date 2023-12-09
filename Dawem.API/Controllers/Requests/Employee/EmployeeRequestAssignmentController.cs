@@ -11,12 +11,12 @@ namespace Dawem.API.Controllers.Requests
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class RequestAssignmentController : BaseController
+    public class EmployeeRequestAssignmentController : BaseController
     {
         private readonly IRequestAssignmentBL requestAssignmentBL;
 
 
-        public RequestAssignmentController(IRequestAssignmentBL _requestAssignmentBL)
+        public EmployeeRequestAssignmentController(IRequestAssignmentBL _requestAssignmentBL)
         {
             requestAssignmentBL = _requestAssignmentBL;
         }

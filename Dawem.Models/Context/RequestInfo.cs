@@ -8,6 +8,7 @@ namespace Dawem.Models.Context
         public MyUser User { get; set; }
         public string Lang { get; set; }
         public int UserId { get; set; }
+        public int EmployeeId { get; set; }
         public int CompanyId { get; set; }
         public int? BranchId { get; set; }
         public ApplicationType ApplicationType { get; set; }

@@ -11,14 +11,14 @@ namespace Dawem.Models.AutoMapper.Requests
         {
             CreateMap<CreateRequestJustificationDTO, Request>()
                  .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Justifications))
+                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Justification))
                 .AfterMap(MapRequestJustification);
 
             CreateMap<CreateRequestJustificationDTO, RequestJustification>();
 
             CreateMap<UpdateRequestJustificationDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Justifications))
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Justification))
                 .AfterMap(MapRequestJustification);
         }
         private void MapRequestJustification(CreateRequestJustificationDTO source, Request destination, ResolutionContext context)

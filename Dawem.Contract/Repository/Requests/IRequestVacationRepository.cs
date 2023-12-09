@@ -6,7 +6,7 @@ namespace Dawem.Contract.Repository.Requests
 {
     public interface IRequestVacationRepository : IGenericRepository<RequestVacation>
     {
-        IQueryable<RequestVacation> GetAsQueryable(GetRequestVacationCriteria criteria);
-
+        IQueryable<RequestVacation> GetAsQueryable(GetRequestVacationsCriteria criteria);
+        IQueryable<RequestVacation> EmployeeGetAsQueryable(EmployeeGetRequestVacationsCriteria criteria);
     }
 }

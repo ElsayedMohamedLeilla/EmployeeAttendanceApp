@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Permissions;
+using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Permissions;
 
 namespace Dawem.Contract.BusinessLogic.Requests
@@ -11,6 +12,7 @@ namespace Dawem.Contract.BusinessLogic.Requests
         Task<GetRequestPermissionInfoResponseModel> GetInfo(int requestId);
         Task<GetRequestPermissionByIdResponseModel> GetById(int requestId);
         Task<GetRequestPermissionsResponse> Get(GetRequestPermissionsCriteria model);
+        Task<EmployeeGetRequestPermissionsResponseDTO> EmployeeGet(EmployeeGetRequestPermissionsCriteria model);
         Task<GetRequestPermissionsForDropDownResponse> GetForDropDown(GetRequestPermissionsCriteria model);
         Task<bool> Accept(int requestId);
         Task<bool> Reject(RejectModelDTO rejectModelDTO);

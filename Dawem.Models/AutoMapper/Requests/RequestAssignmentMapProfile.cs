@@ -11,14 +11,14 @@ namespace Dawem.Models.AutoMapper.Requests
         {
             CreateMap<CreateRequestAssignmentModelDTO, Request>()
                  .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Assignments))
+                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Assignment))
                 .AfterMap(MapRequestAssignment);
 
             CreateMap<CreateRequestAssignmentModelDTO, RequestAssignment>();
 
             CreateMap<UpdateRequestAssignmentModelDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Assignments))
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Assignment))
                 .AfterMap(MapRequestAssignment);
         }
         private void MapRequestAssignment(CreateRequestAssignmentModelDTO source, Request destination, ResolutionContext context)

@@ -11,14 +11,14 @@ namespace Dawem.Models.AutoMapper.Requests
         {
             CreateMap<CreateRequestVacationDTO, Request>()
                  .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Vacations))
+                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Vacation))
                 .AfterMap(MapRequestVacation);
 
             CreateMap<CreateRequestVacationDTO, RequestVacation>();
 
             CreateMap<UpdateRequestVacationDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
-                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Vacations))
+                .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Vacation))
                 .AfterMap(MapRequestVacation);
         }
         private void MapRequestVacation(CreateRequestVacationDTO source, Request destination, ResolutionContext context)

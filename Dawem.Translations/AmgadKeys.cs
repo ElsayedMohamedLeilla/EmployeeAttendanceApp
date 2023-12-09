@@ -2,7 +2,7 @@
 {
     public static class AmgadKeys
     {
-        public const string justificationRequests = "justificationRequests";
+        public const string JustificationRequests = "justificationRequests";
 
 
 

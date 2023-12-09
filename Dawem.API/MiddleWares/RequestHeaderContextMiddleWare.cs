@@ -62,7 +62,7 @@ namespace Dawem.API.MiddleWares
             if (userId > 0)
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
-
+                requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
             }
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))

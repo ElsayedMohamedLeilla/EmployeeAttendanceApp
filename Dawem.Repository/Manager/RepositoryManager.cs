@@ -180,27 +180,27 @@ namespace Dawem.Repository.Manager
         fingerprintDeviceRepository ??= new FingerprintDeviceRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestRepository RequestRepository =>
-            requestRepository ??= new RequestRepository(unitOfWork, generalSetting);
+            requestRepository ??= new RequestRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestAssignmentRepository RequestAssignmentRepository =>
-            requestAssignmentRepository ??= new RequestAssignmentRepository(unitOfWork, generalSetting);
+            requestAssignmentRepository ??= new RequestAssignmentRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestAttachmentRepository RequestAttachmentRepository =>
             requestAttachmentRepository ??= new RequestAttachmentRepository(unitOfWork, generalSetting);
 
         public IRequestJustificationRepository RequestJustificationRepository =>
-            requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting);
+            requestJustificationRepository ??= new RequestJustificationRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestPermissionRepository RequestPermissionRepository =>
-            requestPermissionRepository ??= new RequestPermissionRepository(unitOfWork, generalSetting);
+            requestPermissionRepository ??= new RequestPermissionRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestTaskRepository RequestTaskRepository =>
-            requestTaskRepository ??= new RequestTaskRepository(unitOfWork, generalSetting);
+            requestTaskRepository ??= new RequestTaskRepository(unitOfWork, generalSetting, requestInfo);
 
         public IRequestTaskEmployeeRepository RequestTaskEmployeeRepository =>
             requestTaskEmployeeRepository ??= new RequestTaskEmployeeRepository(unitOfWork, generalSetting);
 
         public IRequestVacationRepository RequestVacationRepository =>
-            requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting);
+            requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting, requestInfo);
     }
 }

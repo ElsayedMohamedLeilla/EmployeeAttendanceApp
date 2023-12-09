@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Requests
+namespace Dawem.API.Controllers.Requests.Admin
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
@@ -49,7 +49,7 @@ namespace Dawem.API.Controllers.Requests
             return Success(result, messageCode: AmgadKeys.DoneUpdateVacationRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestVacationCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetRequestVacationsCriteria criteria)
         {
             if (criteria == null)
             {
@@ -60,7 +60,7 @@ namespace Dawem.API.Controllers.Requests
             return Success(requestVacationsresponse.VacationRequests, requestVacationsresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestVacationCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestVacationsCriteria criteria)
         {
             if (criteria == null)
             {

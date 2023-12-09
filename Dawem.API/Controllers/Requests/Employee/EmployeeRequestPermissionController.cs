@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Requests
+namespace Dawem.API.Controllers.Requests.Admin
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize]
-    public class RequestPermissionController : BaseController
+    public class EmployeeRequestPermissionController : BaseController
     {
         private readonly IRequestPermissionBL requestPermissionBL;
 
 
-        public RequestPermissionController(IRequestPermissionBL _requestPermissionBL)
+        public EmployeeRequestPermissionController(IRequestPermissionBL _requestPermissionBL)
         {
             requestPermissionBL = _requestPermissionBL;
         }
@@ -49,13 +49,13 @@ namespace Dawem.API.Controllers.Requests
             return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestPermissionsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestPermissionsCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var requestPermissionsresponse = await requestPermissionBL.Get(criteria);
+            var requestPermissionsresponse = await requestPermissionBL.EmployeeGet(criteria);
 
             return Success(requestPermissionsresponse.PermissionRequests, requestPermissionsresponse.TotalCount);
         }

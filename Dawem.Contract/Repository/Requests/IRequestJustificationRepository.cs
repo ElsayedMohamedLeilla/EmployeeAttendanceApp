@@ -7,6 +7,6 @@ namespace Dawem.Contract.Repository.Requests
     public interface IRequestJustificationRepository : IGenericRepository<RequestJustification>
     {
         IQueryable<RequestJustification> GetAsQueryable(GetRequestJustificationCriteria criteria);
-
+        IQueryable<RequestJustification> EmployeeGetAsQueryable(EmployeeGetRequestJustificationCriteria criteria);
     }
 }

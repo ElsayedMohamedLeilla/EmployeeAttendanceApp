@@ -49,13 +49,13 @@ namespace Dawem.API.Controllers.Requests.Admin
             return Success(result, messageCode: AmgadKeys.DoneUpdateJustificationRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestJustificationCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestJustificationCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var requestJustificationsresponse = await requestJustificationBL.Get(criteria);
+            var requestJustificationsresponse = await requestJustificationBL.EmployeeGet(criteria);
 
             return Success(requestJustificationsresponse.JustificationRequests, requestJustificationsresponse.TotalCount);
         }

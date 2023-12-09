@@ -11,6 +11,7 @@ namespace Dawem.Contract.BusinessLogic.Requests
         Task<GetRequestJustificationInfoResponseDTO> GetInfo(int requestId);
         Task<GetRequestJustificationByIdResponseDTO> GetById(int requestId);
         Task<GetRequestJustificationsResponseDTO> Get(GetRequestJustificationCriteria model);
+        Task<EmployeeGetRequestJustificationsResponseDTO> EmployeeGet(EmployeeGetRequestJustificationCriteria model);
         Task<GetRequestJustificationsForDropDownResponseDTO> GetForDropDown(GetRequestJustificationCriteria model);
         Task<bool> Accept(int requestId);
         Task<bool> Reject(RejectModelDTO rejectModelDTO);

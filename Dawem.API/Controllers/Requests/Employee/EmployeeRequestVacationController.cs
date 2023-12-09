@@ -49,18 +49,18 @@ namespace Dawem.API.Controllers.Requests.Admin
             return Success(result, messageCode: AmgadKeys.DoneUpdateVacationRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestVacationCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestVacationsCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var requestVacationsresponse = await requestVacationBL.Get(criteria);
+            var requestVacationsresponse = await requestVacationBL.EmployeeGet(criteria);
 
             return Success(requestVacationsresponse.VacationRequests, requestVacationsresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestVacationCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestVacationsCriteria criteria)
         {
             if (criteria == null)
             {

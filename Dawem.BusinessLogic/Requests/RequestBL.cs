@@ -79,6 +79,49 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
         }
+        public async Task<EmployeeGetRequestsResponse> EmployeeGet(EmployeeGetRequestsCriteria criteria)
+        {
+            var requestRepository = repositoryManager.RequestRepository;
+            var query = requestRepository.EmployeeGetAsQueryable(criteria);
+
+            #region paging
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+            var queryOrdered = requestRepository.OrderBy(query, nameof(Request.Id), LeillaKeys.Desc);
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestsList = await queryPaged.Select(request => new EmployeeGetRequestsResponseModel
+            {
+                Id = request.Id,
+                Code = request.Code,
+                DirectManagerName = request.Employee.DirectManager != null ?
+                request.Employee.DirectManager.Name : null,
+                RequestType = request.Type,
+                RequestTypeName = TranslationHelper.GetTranslation(request.Type.ToString(), requestInfo.Lang),
+                Date = request.Date,
+                Status = request.Status,
+                StatusName = TranslationHelper.GetTranslation(request.Status.ToString(), requestInfo.Lang),
+                AddedDate = request.AddedDate
+
+            }).ToListAsync();
+
+            return new EmployeeGetRequestsResponse
+            {
+                Requests = requestsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
         public async Task<GetRequestInfoResponseModel> GetInfo(int requestId)
         {
             var request = await repositoryManager.RequestRepository.Get(e => e.Id == requestId && !e.IsDeleted)

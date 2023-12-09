@@ -3,10 +3,9 @@ using Dawem.Models.Criteria;
 
 namespace Dawem.Models.Dtos.Requests.Vacations
 {
-    public class GetRequestVacationCriteria : BaseCriteria
+    public class EmployeeGetRequestVacationsCriteria : BaseCriteria
     {
         public int? VacationTypeId { get; set; }
-        public int? EmployeeId { get; set; }
         public RequestStatus? Status { get; set; }
         public DateTime? Date { get; set; }
     }

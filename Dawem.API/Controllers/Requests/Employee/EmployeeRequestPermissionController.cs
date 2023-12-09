@@ -49,13 +49,13 @@ namespace Dawem.API.Controllers.Requests.Admin
             return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestPermissionsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestPermissionsCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var requestPermissionsresponse = await requestPermissionBL.Get(criteria);
+            var requestPermissionsresponse = await requestPermissionBL.EmployeeGet(criteria);
 
             return Success(requestPermissionsresponse.PermissionRequests, requestPermissionsresponse.TotalCount);
         }

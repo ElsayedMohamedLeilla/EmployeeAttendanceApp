@@ -7,5 +7,6 @@ namespace Dawem.Contract.Repository.Requests
     public interface IRequestAssignmentRepository : IGenericRepository<RequestAssignment>
     {
         IQueryable<RequestAssignment> GetAsQueryable(GetRequestAssignmentsCriteria criteria);
+        IQueryable<RequestAssignment> EmployeeGetAsQueryable(EmployeeGetRequestAssignmentsCriteria criteria);
     }
 }

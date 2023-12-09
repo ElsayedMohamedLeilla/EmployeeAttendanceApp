@@ -26,17 +26,20 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
         private readonly IRequestJustificationBLValidation requestJustificationBLValidation;
+        private readonly IRequestBLValidation requestBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         public RequestJustificationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
+            IRequestBLValidation _requestBLValidation,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestJustificationBLValidation _requestJustificationBLValidation)
         {
             unitOfWork = _unitOfWork;
+            requestBLValidation = _requestBLValidation;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
             requestJustificationBLValidation = _requestJustificationBLValidation;
@@ -281,6 +284,57 @@ namespace Dawem.BusinessLogic.Requests
             }).ToListAsync();
 
             return new GetRequestJustificationsResponseDTO
+            {
+                JustificationRequests = requestJustificationsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        public async Task<EmployeeGetRequestJustificationsResponseDTO> EmployeeGet(EmployeeGetRequestJustificationCriteria criteria)
+        {
+            #region Is Employee Validation
+
+            await requestBLValidation.IsEmployeeValidation();
+
+            #endregion
+
+            var requestJustificationRepository = repositoryManager.RequestJustificationRepository;
+            var query = requestJustificationRepository.EmployeeGetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = requestJustificationRepository.OrderBy(query, nameof(RequestJustification.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var requestJustificationsList = await queryPaged.Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
+            {
+                Id = requestJustification.Request.Id,
+                Code = requestJustification.Request.Code,
+                AddedDate = requestJustification.Request.AddedDate,
+                DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
+                requestJustification.Request.Employee.DirectManager.Name : null,
+                JustificationTypeName = requestJustification.JustificatioType.Name,
+                DateFrom = requestJustification.Request.Date,
+                DateTo = requestJustification.DateTo,
+                Status = requestJustification.Request.Status,
+                StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
+            }).ToListAsync();
+
+            return new EmployeeGetRequestJustificationsResponseDTO
             {
                 JustificationRequests = requestJustificationsList,
                 TotalCount = await query.CountAsync()

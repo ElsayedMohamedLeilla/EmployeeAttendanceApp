@@ -10,6 +10,7 @@ namespace Dawem.Models.Response.Requests.Vacations
         public bool ForEmployee { get; set; }
         public RequestEmployeeModel Employee { get; set; }
         public string VacationTypeName { get; set; }
+        public int NumberOfDays { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public string StatusName { get; set; }

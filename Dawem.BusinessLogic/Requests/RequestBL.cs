@@ -107,7 +107,7 @@ namespace Dawem.BusinessLogic.Requests
 
             return request;
         }
-        private string GetFolderName(RequestType type)
+        private static string GetFolderName(RequestType type)
         {
             return type switch
             {

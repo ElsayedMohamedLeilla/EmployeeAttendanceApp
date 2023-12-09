@@ -432,19 +432,19 @@ namespace Dawem.BusinessLogic.Attendances
             {
                 EmployeeName = r.EmployeeAttendance.Employee.Name,
                 LocalDate = r.EmployeeAttendance.LocalDate,
-                Time = r.Time.ToString(),
-                Type = r.FingerPrintType == FingerPrintType.CheckIn ? AmgadKeys.AttendanceRegistration :
-                r.FingerPrintType == FingerPrintType.CheckOut ? AmgadKeys.DismissalRegistration :
-                r.FingerPrintType == FingerPrintType.BreakOut ? AmgadKeys.StartABreak :
-                r.FingerPrintType == FingerPrintType.BreakIn ? AmgadKeys.FinishABreak :
+                Time = r.Time.ToString("hh:mm") + TranslateAmAndPm(r.Time.ToString("tt"), requestInfo.Lang),
+                Type = r.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration,requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
                 AmgadKeys.Unknown,
-                RecognitionWay = r.RecognitionWay == RecognitionWay.FingerPrint ? AmgadKeys.FingerPrint :
-                r.RecognitionWay == RecognitionWay.NotSet ? AmgadKeys.NotSet :
-                r.RecognitionWay == RecognitionWay.FaceRecognition ? AmgadKeys.FaceRecognition :
-                r.RecognitionWay == RecognitionWay.PinRecognition ? AmgadKeys.PinRecognition :
-                r.RecognitionWay == RecognitionWay.VoiceRecognition ? AmgadKeys.VoiceRecognition :
-                r.RecognitionWay == RecognitionWay.PaternRecognition ? AmgadKeys.PaternRecognition :
-                r.RecognitionWay == RecognitionWay.PasswordRecognition ? AmgadKeys.PasswordRecognition :
+                RecognitionWay = r.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PinRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
 
                 AmgadKeys.Unknown,
 

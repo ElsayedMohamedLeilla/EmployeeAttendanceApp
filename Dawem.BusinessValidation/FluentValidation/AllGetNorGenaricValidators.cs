@@ -218,7 +218,7 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class EmployeeGetRequestAssignmentCriteriaValidator : AbstractValidator<EmployeeGetRequestAssignmentsCriteria>
+    public class EmployeeGetRequestAssignmentCriteriaValidator : AbstractValidator<Employee2GetRequestAssignmentsCriteria>
     {
         public EmployeeGetRequestAssignmentCriteriaValidator()
         {
@@ -239,9 +239,9 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class EmployeeGetRequestTaskCriteriaValidator : AbstractValidator<EmployeeGetRequestTasksCriteria>
+    public class Employee2GetRequestTaskCriteriaValidator : AbstractValidator<Employee2GetRequestTasksCriteria>
     {
-        public EmployeeGetRequestTaskCriteriaValidator()
+        public Employee2GetRequestTaskCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

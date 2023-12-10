@@ -6,18 +6,22 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Tasks;
 using Dawem.Models.Response.Requests.Tasks;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
+using Dawem.Validation.BusinessValidation.Requests;
 using Dawem.Validation.FluentValidation.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -324,6 +328,142 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
+        }
+        public async Task<List<EmployeeGetRequestTasksResponseModel>> EmployeeGet(EmployeeGetRequestTasksCriteria criteria)
+        {
+            var resonse = new List<EmployeeGetRequestTasksResponseModel>();
+
+            #region Business Validation
+
+            var result = await requestTaskBLValidation.GetEmployeeTasksValidation(criteria);
+
+            #endregion
+
+            var getEmployeeId = requestInfo?.EmployeeId;
+
+            var employeeTasks = await repositoryManager.RequestTaskRepository
+                .Get(a => !a.Request.IsDeleted && a.TaskEmployees.Any(e=> e.EmployeeId == getEmployeeId)
+                && a.Request.Date.Month == criteria.Month
+                && a.Request.Date.Year == criteria.Year)
+                .Select(requestTask => new
+                {
+                    Id = requestTask.Id,
+                    Code = requestTask.Request.Code,
+                    Date = requestTask.Request.Date,
+                    DateTo = requestTask.DateTo,
+                    Status = requestTask.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang),
+                    TaskTypeName = requestTask.TaskType.Name,
+                    Employees = requestTask.TaskEmployees.Select(e=> new RequestEmployeeModel()
+                    {
+                        Code = e.Employee.Code,
+                        Name = e.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(e.Employee.ProfileImageName, LeillaKeys.Employees)
+                    }).ToList() 
+                }).ToListAsync();
+
+            var allDatesInMonth = OthersHelper.AllDatesInMonth(criteria.Year, criteria.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
+            var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
+
+            var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&
+                (s.SchedulePlanEmployee != null && s.SchedulePlanEmployee.EmployeeId == getEmployeeId ||
+                s.SchedulePlanGroup != null && s.SchedulePlanGroup.Group.GroupEmployees != null && s.SchedulePlanGroup.Group.GroupEmployees.Any(g => g.EmployeeId == getEmployeeId) ||
+                s.SchedulePlanDepartment != null && s.SchedulePlanDepartment.Department.Employees != null && s.SchedulePlanDepartment.Department.Employees.Any(g => g.Id == getEmployeeId)))
+                .Select(s => new SchedulePlan
+                {
+                    DateFrom = s.DateFrom,
+                    ScheduleId = s.ScheduleId
+                }).ToListAsync();
+
+            var employeePlansIds = employeePlans.Select(e => e.ScheduleId).ToList();
+
+            var shifts = employeePlans != null ? await repositoryManager
+                         .ScheduleDayRepository.Get(s => !s.IsDeleted && employeePlansIds.Contains(s.ScheduleId))
+                         .Select(s => new
+                         {
+                             s.WeekDay,
+                             s.ScheduleId,
+                             s.ShiftId
+                         }).ToListAsync() : null;
+
+            var weekVacationDays = new List<DayAndWeekDayModel>();
+
+            foreach (var date in allDatesInMonth)
+            {
+                var dayTasks = employeeTasks
+                         .Where(e => e.Date.Date == date.Date)
+                         .ToList();
+
+                #region Check For Vacation
+
+                var scheduleId = employeePlans.Where(s => s.DateFrom.Date <= date.Date)
+                    .OrderByDescending(c => c.DateFrom.Date)?.FirstOrDefault()?.ScheduleId;
+
+                int? shiftId = null;
+                if (scheduleId != null)
+                {
+                    shiftId = shifts.FirstOrDefault(s => s.ScheduleId == scheduleId && s.WeekDay == (WeekDay)date.DayOfWeek)
+                         .ShiftId;
+                }
+
+                #endregion
+
+                if (scheduleId != null && shiftId == null)
+                {
+                    weekVacationDays.Add(new DayAndWeekDayModel()
+                    {
+                        Day = date.Day,
+                        WeekDay = (WeekDay)date.DayOfWeek
+                    });
+                }
+                else
+                {
+
+                    var employeeGetRequestTasksResponseModel = new EmployeeGetRequestTasksResponseModel
+                    {
+                        DayTasks = new GetTaskDayModel
+                        {
+                            Day = date.Day,
+                            WeekDay = (WeekDay)date.DayOfWeek,
+                            WeekDayName = TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
+                            Tasks = dayTasks.Select(ds => new GetTaskModel
+                            {
+                                Id = ds.Id,
+                                TaskTypeName = ds.TaskTypeName,
+                                Code = ds.Code,
+                                DateFrom = ds.Date,
+                                DateTo = ds.DateTo,
+                                Status = ds.Status,
+                                StatusName = ds.StatusName,
+                                Employees = ds.Employees
+                            }).ToList()
+                        }
+                    };
+
+                    resonse.Add(employeeGetRequestTasksResponseModel);
+                }
+
+                if (date.DayOfWeek == (DayOfWeek)WeekDay.Friday && weekVacationDays.Count > 0)
+                {
+                    var allVacationsText = LeillaKeys.EmptyString;
+
+                    for (int i = 0; i < weekVacationDays.Count; i++)
+                    {
+                        var item = weekVacationDays[i];
+                        allVacationsText += item.Day + LeillaKeys.Space + TranslationHelper.GetTranslation(item.WeekDay.ToString(), requestInfo.Lang) +
+                            (weekVacationDays.Count - i > 1 ? LeillaKeys.SpaceThenDashThenSpace : null);
+                    }
+                    resonse.Add(new EmployeeGetRequestTasksResponseModel()
+                    {
+                        DayTasks = null,
+                        Informations = TranslationHelper.GetTranslation(LeillaKeys.EndOfWeekVacations, requestInfo.Lang) + allVacationsText
+                    });
+
+                    weekVacationDays = new List<DayAndWeekDayModel>();
+                }
+            }
+
+            return resonse;
         }
         public async Task<GetRequestTasksForDropDownResponse> GetForDropDown(GetRequestTasksCriteria criteria)
         {

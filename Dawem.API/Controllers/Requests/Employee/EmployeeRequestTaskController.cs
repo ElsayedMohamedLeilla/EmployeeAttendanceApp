@@ -1,4 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Requests;
+﻿using Dawem.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogic.Requests;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Translations;
@@ -49,15 +51,14 @@ namespace Dawem.API.Controllers.Requests.Admin
             return Success(result, messageCode: LeillaKeys.DoneUpdateTaskRequestSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestTasksCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestTasksCriteria model)
         {
-            if (criteria == null)
+            if (model == null)
             {
                 return BadRequest();
             }
-            var requestTasksresponse = await requestTaskBL.Get(criteria);
-
-            return Success(requestTasksresponse.TaskRequests, requestTasksresponse.TotalCount);
+            var response = await requestTaskBL.EmployeeGet(model);
+            return Success(response);
         }
         [HttpGet]
         public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestTasksCriteria criteria)

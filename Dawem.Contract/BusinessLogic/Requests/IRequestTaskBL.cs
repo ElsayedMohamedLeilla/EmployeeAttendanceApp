@@ -1,5 +1,7 @@
-﻿using Dawem.Models.Dtos.Requests;
+﻿using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
+using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Requests.Tasks;
 using Dawem.Models.Response.Requests.Vacations;
 
@@ -12,6 +14,7 @@ namespace Dawem.Contract.BusinessLogic.Requests
         Task<GetRequestTaskInfoResponseModel> GetInfo(int requestId);
         Task<GetRequestTaskByIdResponseModel> GetById(int requestId);
         Task<GetRequestTasksResponse> Get(GetRequestTasksCriteria model);
+        Task<List<EmployeeGetRequestTasksResponseModel>> EmployeeGet(EmployeeGetRequestTasksCriteria model);
         Task<GetRequestTasksForDropDownResponse> GetForDropDown(GetRequestTasksCriteria model);
         Task<bool> Accept(int requestId);
         Task<bool> Reject(RejectModelDTO rejectModelDTO);

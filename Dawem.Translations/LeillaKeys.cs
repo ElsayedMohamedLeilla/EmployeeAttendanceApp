@@ -376,7 +376,6 @@
         public const string SorryRequestAlreadyRejected = "Sorry!!RequestAlreadyRejected!";
         public const string DoneCreateTaskRequestSuccessfully = "DoneCreateTaskRequestSuccessfully";
         public const string DoneUpdateTaskRequestSuccessfully = "DoneUpdateTaskRequestSuccessfully";
-
         public const string SorryYouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate = "Sorry!!YouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate!";
         public const string SorryYouMustChooseEmployeeForRequestPermission = "Sorry!!YouMustChooseEmployeeForRequestPermission!";
         public const string SorryYouMustChoosePermissionType = "Sorry!!YouMustChoosePermissionType!";
@@ -394,7 +393,7 @@
         public const string DoneCreateAssignmentRequestSuccessfully = "DoneCreateAssignmentRequestSuccessfully";
         public const string DoneUpdateAssignmentRequestSuccessfully = "DoneUpdateAssignmentRequestSuccessfully";
         public const string SorryEnterCorrectFileName = "Sorry!!EnterCorrectFileName!";
-        
-
+        public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
+        public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
     }
 }

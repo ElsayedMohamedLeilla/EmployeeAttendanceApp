@@ -1,5 +1,7 @@
-﻿using Dawem.BusinessLogic.Requests;
+﻿using Dawem.BusinessLogic.Attendances;
+using Dawem.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogic.Requests;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Translations;
@@ -48,17 +50,16 @@ namespace Dawem.API.Controllers.Requests
             model.Attachments = formData.Attachments;
             var result = await requestAssignmentBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateAssignmentRequestSuccessfully);
-        }
+        }        
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestAssignmentsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestAssignmentsCriteria model)
         {
-            if (criteria == null)
+            if (model == null)
             {
                 return BadRequest();
             }
-            var requestAssignmentsresponse = await requestAssignmentBL.Get(criteria);
-
-            return Success(requestAssignmentsresponse.AssignmentRequests, requestAssignmentsresponse.TotalCount);
+            var response = await requestAssignmentBL.EmployeeGet(model);
+            return Success(response);
         }
         [HttpGet]
         public async Task<ActionResult> GetForDropDown([FromQuery] GetRequestAssignmentsCriteria criteria)

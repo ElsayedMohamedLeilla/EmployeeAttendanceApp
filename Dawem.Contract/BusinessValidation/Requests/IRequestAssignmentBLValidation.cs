@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Requests.Assignments;
+﻿using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Requests.Assignments;
 
 namespace Dawem.Contract.BusinessValidation.Requests
 {
@@ -6,5 +7,6 @@ namespace Dawem.Contract.BusinessValidation.Requests
     {
         Task<int?> CreateValidation(CreateRequestAssignmentModelDTO model);
         Task<int?> UpdateValidation(UpdateRequestAssignmentModelDTO model);
+        Task<bool> GetEmployeeAssignmentsValidation(EmployeeGetRequestAssignmentsCriteria model);
     }
 }

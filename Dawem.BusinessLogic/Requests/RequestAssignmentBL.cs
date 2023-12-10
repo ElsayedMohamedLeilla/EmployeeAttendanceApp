@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
@@ -6,13 +7,16 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Assignments;
 using Dawem.Models.Response.Requests.Vacations;
@@ -106,7 +110,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            var request = mapper.Map<Request>(model);
+            var request = mapper.Map<Domain.Entities.Requests.Request>(model);
             request.CompanyId = requestInfo.CompanyId;
             request.AddUserId = requestInfo.UserId;
             request.EmployeeId = employeeId ?? 0;
@@ -288,6 +292,145 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
         }
+        public async Task<List<EmployeeGetRequestAssignmentsResponseModel>> EmployeeGet(EmployeeGetRequestAssignmentsCriteria criteria)
+        {
+            var resonse = new List<EmployeeGetRequestAssignmentsResponseModel>();
+
+            #region Business Validation
+
+            var result = await requestAssignmentBLValidation.GetEmployeeAssignmentsValidation(criteria);
+
+            #endregion
+
+            var getEmployeeId = requestInfo?.EmployeeId;
+
+            var employeeAssignments = await repositoryManager.RequestAssignmentRepository
+                .Get(a => !a.Request.IsDeleted && a.Request.EmployeeId == getEmployeeId
+                && a.Request.Date.Month == criteria.Month
+                && a.Request.Date.Year == criteria.Year)
+                .Select(requestAssignment => new
+                {
+                    Id = requestAssignment.Id,
+                    Code = requestAssignment.Request.Code,
+                    Date = requestAssignment.Request.Date,
+                    DateTo = requestAssignment.DateTo,
+                    Status = requestAssignment.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestAssignment.Request.Status.ToString(), requestInfo.Lang),
+                    AssignmentTypeName = requestAssignment.AssignmentType.Name,
+                    Employees = new List<RequestEmployeeModel>
+                    {
+                        new RequestEmployeeModel()
+                        {
+                            Code = requestAssignment.Request.Employee.Code,
+                            Name = requestAssignment.Request.Employee.Name,
+                            ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                        }
+                    }
+                }).ToListAsync();
+
+            var allDatesInMonth = OthersHelper.AllDatesInMonth(criteria.Year, criteria.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
+            var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
+
+            var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&
+                (s.SchedulePlanEmployee != null && s.SchedulePlanEmployee.EmployeeId == getEmployeeId ||
+                s.SchedulePlanGroup != null && s.SchedulePlanGroup.Group.GroupEmployees != null && s.SchedulePlanGroup.Group.GroupEmployees.Any(g => g.EmployeeId == getEmployeeId) ||
+                s.SchedulePlanDepartment != null && s.SchedulePlanDepartment.Department.Employees != null && s.SchedulePlanDepartment.Department.Employees.Any(g => g.Id == getEmployeeId)))
+                .Select(s => new SchedulePlan
+                {
+                    DateFrom = s.DateFrom,
+                    ScheduleId = s.ScheduleId
+                }).ToListAsync();
+
+            var employeePlansIds = employeePlans.Select(e => e.ScheduleId).ToList();
+
+            var shifts = employeePlans != null ? await repositoryManager
+                         .ScheduleDayRepository.Get(s => !s.IsDeleted && employeePlansIds.Contains(s.ScheduleId))
+                         .Select(s => new
+                         {
+                             s.WeekDay,
+                             s.ScheduleId,
+                             s.ShiftId
+                         }).ToListAsync() : null;
+
+            var weekVacationDays = new List<DayAndWeekDayModel>();
+
+            foreach (var date in allDatesInMonth)
+            {
+                var dayAssignments = employeeAssignments
+                         .Where(e => e.Date.Date == date.Date)
+                         .ToList();
+
+                #region Check For Vacation
+
+                var scheduleId = employeePlans.Where(s => s.DateFrom.Date <= date.Date)
+                    .OrderByDescending(c => c.DateFrom.Date)?.FirstOrDefault()?.ScheduleId;
+
+                int? shiftId = null;
+                if (scheduleId != null)
+                {
+                    shiftId = shifts.FirstOrDefault(s => s.ScheduleId == scheduleId && s.WeekDay == (WeekDay)date.DayOfWeek)
+                         .ShiftId;
+                }
+
+                #endregion
+
+                if (scheduleId != null && shiftId == null)
+                {
+                    weekVacationDays.Add(new DayAndWeekDayModel()
+                    {
+                        Day = date.Day,
+                        WeekDay = (WeekDay)date.DayOfWeek
+                    });
+                }
+                else
+                {
+
+                    var employeeGetRequestAssignmentsResponseModel = new EmployeeGetRequestAssignmentsResponseModel
+                    {
+                        DayAssignments = new GetAssignmentDayModel
+                        {
+                            Day = date.Day,
+                            WeekDay = (WeekDay)date.DayOfWeek,
+                            WeekDayName = TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
+                            Assignments = dayAssignments.Select(ds => new GetAssignmentModel
+                            {
+                                Id = ds.Id,
+                                AssignmentTypeName = ds.AssignmentTypeName,
+                                Code = ds.Code,
+                                DateFrom = ds.Date,
+                                DateTo = ds.DateTo,
+                                Status = ds.Status,
+                                StatusName = ds.StatusName,
+                                Employees = ds.Employees
+                            }).ToList()
+                        }
+                    };
+
+                    resonse.Add(employeeGetRequestAssignmentsResponseModel);
+                }
+
+                if (date.DayOfWeek == (DayOfWeek)WeekDay.Friday && weekVacationDays.Count > 0)
+                {
+                    var allVacationsText = LeillaKeys.EmptyString;
+
+                    for (int i = 0; i < weekVacationDays.Count; i++)
+                    {
+                        var item = weekVacationDays[i];
+                        allVacationsText += item.Day + LeillaKeys.Space + TranslationHelper.GetTranslation(item.WeekDay.ToString(), requestInfo.Lang) +
+                            (weekVacationDays.Count - i > 1 ? LeillaKeys.SpaceThenDashThenSpace : null);
+                    }
+                    resonse.Add(new EmployeeGetRequestAssignmentsResponseModel()
+                    {
+                        DayAssignments = null,
+                        Informations = TranslationHelper.GetTranslation(LeillaKeys.EndOfWeekVacations, requestInfo.Lang) + allVacationsText
+                    });
+
+                    weekVacationDays = new List<DayAndWeekDayModel>();
+                }
+            }
+
+            return resonse;
+        }        
         public async Task<GetRequestAssignmentsForDropDownResponse> GetForDropDown(GetRequestAssignmentsCriteria criteria)
         {
             criteria.IsActive = true;

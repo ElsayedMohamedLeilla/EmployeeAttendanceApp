@@ -151,6 +151,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
              throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
             #region Get Availble Zones ForFingerprint
             var availableZonesOutput = new List<AvailableZoneDTO>();
 
@@ -215,6 +216,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             }
 
             #endregion
+
             var getTimeZoneId = await repositoryManager.CompanyRepository
                 .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
                 .Select(c => c.Country.TimeZoneId)

@@ -3,6 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
@@ -223,6 +224,25 @@ namespace Dawem.Validation.BusinessValidation.Requests
             }
 
             return getCurrentEmployeeId;
+        }
+        public async Task<bool> GetEmployeeTasksValidation(EmployeeGetRequestTasksCriteria model)
+        {
+            var getEmployeeId = requestInfo?.EmployeeId;
+            if (getEmployeeId <= 0)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+            }
+
+            var checkIfHasAttendances = await repositoryManager.RequestTaskEmployeeRepository
+                .Get(a => !a.RequestTask.Request.IsDeleted && a.EmployeeId == getEmployeeId
+                && a.RequestTask.Request.Date.Month == model.Month
+                && a.RequestTask.Request.Date.Year == model.Year)
+                .AnyAsync();
+
+            if (!checkIfHasAttendances)
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoTasksRequestsInSelectedYearAndMonth);
+
+            return true;
         }
     }
 }

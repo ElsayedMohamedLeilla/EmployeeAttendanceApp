@@ -20,14 +20,6 @@ namespace Dawem.Validation.BusinessValidation.Employees
         }
         public async Task<int?> SignUpValidation(UserSignUpModel model)
         {
-            var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => c.CompanyId == model.CompanyId &&
-                c.Name == model.Name).AnyAsync();
-            if (checkUserDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
-            }
-
             #region Validate Email
 
             var checkEmailDuplicate = await repositoryManager.UserRepository

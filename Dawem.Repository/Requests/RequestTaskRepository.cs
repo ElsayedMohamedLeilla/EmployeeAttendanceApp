@@ -72,7 +72,7 @@ namespace Dawem.Repository.Requests
             return Query;
 
         }
-        public IQueryable<RequestTask> EmployeeGetAsQueryable(EmployeeGetRequestTasksCriteria criteria)
+        public IQueryable<RequestTask> EmployeeGetAsQueryable(Employee2GetRequestTasksCriteria criteria)
         {
             var predicate = PredicateBuilder.New<RequestTask>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<RequestTask>(true);

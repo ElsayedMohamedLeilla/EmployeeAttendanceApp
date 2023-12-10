@@ -7,6 +7,6 @@ namespace Dawem.Contract.Repository.Requests
     public interface IRequestTaskRepository : IGenericRepository<RequestTask>
     {
         IQueryable<RequestTask> GetAsQueryable(GetRequestTasksCriteria criteria);
-        IQueryable<RequestTask> EmployeeGetAsQueryable(EmployeeGetRequestTasksCriteria criteria);
+        IQueryable<RequestTask> EmployeeGetAsQueryable(Employee2GetRequestTasksCriteria criteria);
     }
 }

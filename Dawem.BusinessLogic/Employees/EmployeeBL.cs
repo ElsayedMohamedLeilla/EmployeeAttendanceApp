@@ -14,6 +14,7 @@ using Dawem.Models.Response.Employees.Employee;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Dawem.BusinessLogic.Employees
 {
@@ -319,7 +320,10 @@ namespace Dawem.BusinessLogic.Employees
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
-                    DisableReason = e.DisableReason
+                    DisableReason = e.DisableReason,
+                    Zones = e.Zones
+                    .Select(d => d.Zone.Name)
+                    .ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             return employee;

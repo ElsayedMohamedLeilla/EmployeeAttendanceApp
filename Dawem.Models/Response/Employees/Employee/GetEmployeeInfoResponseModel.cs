@@ -19,5 +19,7 @@
         public string Address { get; set; }
         public string DisableReason { get; set; }
         public bool IsActive { get; set; }
+        public List<string> Zones { get; set; }
+
     }
 }

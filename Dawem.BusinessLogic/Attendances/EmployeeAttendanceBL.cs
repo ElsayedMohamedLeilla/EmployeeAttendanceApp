@@ -126,9 +126,7 @@ namespace Dawem.BusinessLogic.Attendances
         public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfo()
         {
             #region Business Validation
-
             var result =  await employeeAttendanceBLValidation.GetCurrentFingerPrintInfoValidation();
-
             #endregion
 
             return result;
@@ -427,9 +425,31 @@ namespace Dawem.BusinessLogic.Attendances
             return nonNegativeTimeGap.ToString(@"hh\:mm");
         }
 
-        public Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId)
+        public async Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
-            throw new NotImplementedException();
+            var result = await repositoryManager.EmployeeAttendanceCheckRepository.Get(s => s.EmployeeAttendanceId == employeeAttendanceId)
+                .Select(r => new GetEmployeeAttendanceInfoDTO
+            {
+                EmployeeName = r.EmployeeAttendance.Employee.Name,
+                LocalDate = r.EmployeeAttendance.LocalDate,
+                Time = r.Time.ToString("hh:mm") + TranslateAmAndPm(r.Time.ToString("tt"), requestInfo.Lang),
+                Type = r.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration,requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
+                r.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
+                AmgadKeys.Unknown,
+                RecognitionWay = r.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PinRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
+                r.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
+
+                AmgadKeys.Unknown,
+
+                }).ToListAsync();
+            return result;
         }
     }
 }

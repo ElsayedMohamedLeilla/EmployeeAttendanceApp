@@ -56,5 +56,16 @@ namespace Dawem.API.Controllers.Attendances
             var response = await employeeAttendanceBL.GetEmployeeAttendancesForWebAdmin(model);
             return Success(response);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetInfo([FromQuery]  int employeeAttendanceId) 
+        {
+            if (employeeAttendanceId == 0)
+            {
+                return BadRequest();
+            }
+            var response = await employeeAttendanceBL.GetEmployeeAttendancesInfo(employeeAttendanceId);
+            return Success(response);
+        }
     }
 }

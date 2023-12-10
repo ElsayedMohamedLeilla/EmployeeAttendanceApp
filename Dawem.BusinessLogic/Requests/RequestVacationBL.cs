@@ -334,7 +334,7 @@ namespace Dawem.BusinessLogic.Requests
                 DateTo = requestVacation.DateTo,
                 Status = requestVacation.Request.Status,
                 StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
-                NumberOfDays = (requestVacation.Request.Date.Date - requestVacation.DateTo.Date).Days
+                NumberOfDays = (requestVacation.DateTo.Date - requestVacation.Request.Date.Date).Days
             }).ToListAsync();
 
             return new EmployeeGetRequestVacationsResponseDTO
@@ -407,7 +407,7 @@ namespace Dawem.BusinessLogic.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests),
                     }).ToList(),
                     Status = requestVacation.Request.Status,
-                    NumberOfDays = (requestVacation.Request.Date.Date - requestVacation.DateTo.Date).Days,
+                    NumberOfDays = (requestVacation.DateTo.Date - requestVacation.Request.Date.Date).Days,
                     StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
@@ -491,6 +491,49 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetVacationsInformationsResponseDTO> GetVacationsInformations()
+        {
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted && 
+            request.Request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetVacationsInformationsResponseDTO
+            {
+                TotalVacationsCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
+        }
+        public async Task<EmployeeGetVacationsInformationsResponseDTO> EmployeeGetVacationsInformations()
+        {
+            #region Is Employee Validation
+
+            await requestBLValidation.IsEmployeeValidation();
+
+            #endregion
+
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted &&
+            request.Request.CompanyId == requestInfo.CompanyId &&
+            request.Request.EmployeeId == requestInfo.EmployeeId);
+
+            #region Handle Response
+
+            return new EmployeeGetVacationsInformationsResponseDTO
+            {
+                VacationsBalance = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

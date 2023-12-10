@@ -13,6 +13,8 @@ namespace Dawem.Contract.BusinessLogic.Requests
         Task<GetRequestVacationByIdResponseDTO> GetById(int requestId);
         Task<GetRequestVacationsResponseDTO> Get(GetRequestVacationsCriteria model);
         Task<EmployeeGetRequestVacationsResponseDTO> EmployeeGet(EmployeeGetRequestVacationsCriteria model);
+        Task<GetVacationsInformationsResponseDTO> GetVacationsInformations();
+        Task<EmployeeGetVacationsInformationsResponseDTO> EmployeeGetVacationsInformations();
         Task<GetRequestVacationsForDropDownResponseDTO> GetForDropDown(GetRequestVacationsCriteria model);
         Task<bool> Accept(int requestId);
         Task<bool> Reject(RejectModelDTO rejectModelDTO);

@@ -31,6 +31,9 @@ namespace Dawem.Repository.Requests
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestVacation => requestVacation.Request.CompanyId == requestInfo.CompanyId);
+
             if (criteria.Id != null)
             {
                 predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);
@@ -84,6 +87,8 @@ namespace Dawem.Repository.Requests
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestAssignment => requestAssignment.Request.CompanyId == requestInfo.CompanyId);
 
             predicate = predicate.And(requestAssignment => requestAssignment.Request.EmployeeId == requestInfo.EmployeeId);
 

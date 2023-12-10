@@ -31,37 +31,40 @@ namespace Dawem.Repository.Requests
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestPermission => requestPermission.Request.CompanyId == requestInfo.CompanyId);
+
             if (criteria.Id != null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                predicate = predicate.And(requestTask => criteria.Ids.Contains(requestTask.Request.Id));
+                predicate = predicate.And(requestPermission => criteria.Ids.Contains(requestPermission.Request.Id));
             }
             if (criteria.IsActive is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.IsActive == criteria.IsActive);
+                predicate = predicate.And(requestPermission => requestPermission.Request.IsActive == criteria.IsActive);
             }
             if (criteria.Code is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Code == criteria.Code);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Code == criteria.Code);
             }
             if (criteria.EmployeeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == criteria.EmployeeId);
+                predicate = predicate.And(requestPermission => requestPermission.Request.EmployeeId == criteria.EmployeeId);
             }
             if (criteria.PermissionTypeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.PermissionTypeId == criteria.PermissionTypeId);
+                predicate = predicate.And(requestPermission => requestPermission.PermissionTypeId == criteria.PermissionTypeId);
             }
             if (criteria.Status is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Status == criteria.Status);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Status == criteria.Status);
             }
             if (criteria.Date is not null)
             {
-                predicate = predicate.And(requestTask => criteria.Date.Value.Date >= requestTask.Request.Date.Date && criteria.Date.Value.Date <= requestTask.DateTo.Date);
+                predicate = predicate.And(requestPermission => criteria.Date.Value.Date >= requestPermission.Request.Date.Date && criteria.Date.Value.Date <= requestPermission.DateTo.Date);
             }
 
             predicate = predicate.And(inner);
@@ -85,35 +88,37 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId);
+            predicate = predicate.And(requestPermission => requestPermission.Request.CompanyId == requestInfo.CompanyId);
+
+            predicate = predicate.And(requestPermission => requestPermission.Request.EmployeeId == requestInfo.EmployeeId);
 
             if (criteria.Id != null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                predicate = predicate.And(requestTask => criteria.Ids.Contains(requestTask.Request.Id));
+                predicate = predicate.And(requestPermission => criteria.Ids.Contains(requestPermission.Request.Id));
             }
             if (criteria.IsActive is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.IsActive == criteria.IsActive);
+                predicate = predicate.And(requestPermission => requestPermission.Request.IsActive == criteria.IsActive);
             }
             if (criteria.Code is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Code == criteria.Code);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Code == criteria.Code);
             }
             if (criteria.PermissionTypeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.PermissionTypeId == criteria.PermissionTypeId);
+                predicate = predicate.And(requestPermission => requestPermission.PermissionTypeId == criteria.PermissionTypeId);
             }
             if (criteria.Status is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Status == criteria.Status);
+                predicate = predicate.And(requestPermission => requestPermission.Request.Status == criteria.Status);
             }
             if (criteria.Date is not null)
             {
-                predicate = predicate.And(requestTask => criteria.Date.Value.Date >= requestTask.Request.Date.Date && criteria.Date.Value.Date <= requestTask.DateTo.Date);
+                predicate = predicate.And(requestPermission => criteria.Date.Value.Date >= requestPermission.Request.Date.Date && criteria.Date.Value.Date <= requestPermission.DateTo.Date);
             }
 
             predicate = predicate.And(inner);

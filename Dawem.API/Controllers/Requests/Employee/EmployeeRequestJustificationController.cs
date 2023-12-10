@@ -115,7 +115,5 @@ namespace Dawem.API.Controllers.Requests.Admin
             }
             return Success(await requestJustificationBL.Delete(requestId));
         }
-
-
     }
 }

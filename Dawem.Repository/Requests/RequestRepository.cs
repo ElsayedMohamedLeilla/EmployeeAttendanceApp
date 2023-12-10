@@ -85,7 +85,9 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestTask => requestTask.EmployeeId == requestInfo.EmployeeId);
+            predicate = predicate.And(request => request.CompanyId == requestInfo.CompanyId);
+
+            predicate = predicate.And(request => request.EmployeeId == requestInfo.EmployeeId);
 
             if (criteria.Id != null)
             {

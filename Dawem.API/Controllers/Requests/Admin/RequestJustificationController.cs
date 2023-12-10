@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Requests;
+﻿using Dawem.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Translations;
@@ -115,7 +116,13 @@ namespace Dawem.API.Controllers.Requests.Admin
             }
             return Success(await requestJustificationBL.Delete(requestId));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetJustificationsInformations()
+        {
+            var response = await requestJustificationBL.GetJustificationsInformations();
 
+            return Success(response);
+        }
 
     }
 }

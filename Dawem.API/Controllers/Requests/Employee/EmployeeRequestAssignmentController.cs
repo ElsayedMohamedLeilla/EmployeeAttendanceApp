@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Requests;
+﻿using Dawem.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Translations;
@@ -115,7 +116,5 @@ namespace Dawem.API.Controllers.Requests
             }
             return Success(await requestAssignmentBL.Delete(requestId));
         }
-
-
     }
 }

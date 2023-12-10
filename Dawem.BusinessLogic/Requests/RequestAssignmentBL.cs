@@ -15,6 +15,7 @@ using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Assignments;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Assignments;
 using Microsoft.EntityFrameworkCore;
@@ -433,6 +434,24 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetAssignmentsInformationsResponseDTO> GetAssignmentsInformations()
+        {
+            var requestAssignmentRepository = repositoryManager.RequestAssignmentRepository;
+            var query = requestAssignmentRepository.Get(request => !request.Request.IsDeleted &&
+            request.Request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetAssignmentsInformationsResponseDTO
+            {
+                TotalAssignmentsCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

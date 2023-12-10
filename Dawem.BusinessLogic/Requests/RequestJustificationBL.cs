@@ -15,6 +15,7 @@ using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Justifications;
 using Microsoft.EntityFrameworkCore;
@@ -487,6 +488,24 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetJustificationsInformationsResponseDTO> GetJustificationsInformations()
+        {
+            var requestJustificationRepository = repositoryManager.RequestJustificationRepository;
+            var query = requestJustificationRepository.Get(request => !request.Request.IsDeleted &&
+            request.Request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetJustificationsInformationsResponseDTO
+            {
+                TotalJustificationsCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

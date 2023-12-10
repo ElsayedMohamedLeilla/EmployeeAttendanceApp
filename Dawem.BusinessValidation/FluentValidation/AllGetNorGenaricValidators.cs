@@ -190,7 +190,13 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-
+    public class GetRequestAssignmentsCriteriaValidator : AbstractValidator<GetRequestAssignmentsCriteria>
+    {
+        public GetRequestAssignmentsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
     public class GetRequestVacationCriteriaValidator : AbstractValidator<GetRequestVacationsCriteria>
     {
         public GetRequestVacationCriteriaValidator()

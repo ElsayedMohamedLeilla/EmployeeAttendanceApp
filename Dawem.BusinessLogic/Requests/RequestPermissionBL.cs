@@ -16,6 +16,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Permissions;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Permissions;
 using Microsoft.EntityFrameworkCore;
@@ -488,6 +489,24 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations()
+        {
+            var requestPermissionRepository = repositoryManager.RequestPermissionRepository;
+            var query = requestPermissionRepository.Get(request => !request.Request.IsDeleted &&
+            request.Request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetPermissionsInformationsResponseDTO
+            {
+                TotalPermissionsCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

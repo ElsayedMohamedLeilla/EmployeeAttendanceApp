@@ -12,6 +12,7 @@ using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Requests;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -215,6 +216,24 @@ namespace Dawem.BusinessLogic.Requests
             request.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetRequestsInformationsResponseDTO> GetRequestsInformations()
+        {
+            var requestRepository = repositoryManager.RequestRepository;
+            var query = requestRepository.Get(request => !request.IsDeleted &&
+            request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetRequestsInformationsResponseDTO
+            {
+                TotalRequestsCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

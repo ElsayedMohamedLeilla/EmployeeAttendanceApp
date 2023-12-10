@@ -115,7 +115,12 @@ namespace Dawem.API.Controllers.Requests.Admin
             }
             return Success(await requestVacationBL.Delete(requestId));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetVacationsInformations()
+        {
+            var response = await requestVacationBL.GetVacationsInformations();
 
-
+            return Success(response);
+        }
     }
 }

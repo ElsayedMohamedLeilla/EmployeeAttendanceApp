@@ -15,6 +15,8 @@ using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Tasks;
+using Dawem.Models.Response.Requests.Tasks;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -471,6 +473,24 @@ namespace Dawem.BusinessLogic.Requests
 
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetTasksInformationsResponseDTO> GetTasksInformations()
+        {
+            var requestTaskRepository = repositoryManager.RequestTaskRepository;
+            var query = requestTaskRepository.Get(request => !request.Request.IsDeleted &&
+            request.Request.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetTasksInformationsResponseDTO
+            {
+                TotalTasksCount = await query.CountAsync(),
+                AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
+                RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
+                PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Requests;
+﻿using Dawem.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -65,7 +66,13 @@ namespace Dawem.API.Controllers.Requests.Admin
             }
             return Success(await requestBL.Delete(requestId));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetRequestsInformations()
+        {
+            var response = await requestBL.GetRequestsInformations();
 
+            return Success(response);
+        }
 
     }
 }

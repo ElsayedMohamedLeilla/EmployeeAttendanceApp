@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Response.Requests.Tasks;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Requests
 {
@@ -15,5 +16,6 @@ namespace Dawem.Contract.BusinessLogic.Requests
         Task<bool> Accept(int requestId);
         Task<bool> Reject(RejectModelDTO rejectModelDTO);
         Task<bool> Delete(int requestId);
+        Task<GetTasksInformationsResponseDTO> GetTasksInformations();
     }
 }

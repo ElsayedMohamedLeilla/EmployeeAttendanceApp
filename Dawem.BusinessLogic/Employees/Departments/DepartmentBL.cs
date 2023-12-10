@@ -97,11 +97,15 @@ namespace Dawem.BusinessLogic.Employees.Departments
             #region assign Delegatos In DepartmentZones Object
             model.MapDepartmentZones();
             #endregion
+
             #region assign DelegatorsIdes In DepartmentManagerDelegators Object
             model.MapDepartmentManagarDelegators();
             #endregion
+
             #region Business Validation
+
             await departmentBLValidation.UpdateValidation(model);
+
             #endregion
 
             unitOfWork.CreateTransaction();

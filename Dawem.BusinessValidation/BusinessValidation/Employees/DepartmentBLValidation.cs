@@ -54,7 +54,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }
 
             var checkDepartmentParent = await repositoryManager
-                .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.ParentId == model.ParentId).AnyAsync();
+                .DepartmentRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.Id == model.ParentId).AnyAsync();
             if (!checkDepartmentParent)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustSelectValidParent);

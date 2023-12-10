@@ -166,6 +166,9 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.ScheduleId = model.ScheduleId;
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
+            getEmployee.Email = model.Email;
+            getEmployee.MobileNumber = model.MobileNumber;
+            getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
@@ -333,6 +336,7 @@ namespace Dawem.BusinessLogic.Employees
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetCurrentEmployeeInfoResponseModel
                 {
+                    EmployeeNumber = e.EmployeeNumber,
                     Name = e.Name,
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,

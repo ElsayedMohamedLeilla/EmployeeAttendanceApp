@@ -395,5 +395,7 @@
         public const string SorryEnterCorrectFileName = "Sorry!!EnterCorrectFileName!";
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
+        public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";
+        
     }
 }

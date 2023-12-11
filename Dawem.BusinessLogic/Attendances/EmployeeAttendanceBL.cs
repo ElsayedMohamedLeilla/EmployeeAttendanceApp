@@ -35,11 +35,11 @@ namespace Dawem.BusinessLogic.Attendances
             employeeAttendanceBLValidation = _employeeAttendanceBLValidation;
             mapper = _mapper;
         }
-        public async Task<bool> FingerPrint(FingerprintModel model)
+        public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
         {
             #region Business Validation
 
-            var result = await employeeAttendanceBLValidation.FingerPrintValidation(model);
+            var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
 
             #endregion
 
@@ -49,8 +49,8 @@ namespace Dawem.BusinessLogic.Attendances
 
             var getAttandanceId = await repositoryManager
                 .EmployeeAttendanceRepository
-                .Get(e => !e.IsDeleted && e.EmployeeId == result.EmployeeId
-                && e.LocalDate.Date == result.LocalDate.Date)
+                .Get(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
+                && e.LocalDate.Date == validationResult.LocalDate.Date)
                 .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
@@ -60,9 +60,9 @@ namespace Dawem.BusinessLogic.Attendances
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getAttandanceId,
-                    FingerPrintType = model.Type,
+                    FingerPrintType = validationResult.FingerPrintType,
                     IsActive = true,
-                    Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
+                    Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress
@@ -87,20 +87,20 @@ namespace Dawem.BusinessLogic.Attendances
                 {
                     Code = getNextCode,
                     CompanyId = requestInfo.CompanyId,
-                    ScheduleId = result.ScheduleId,
-                    ShiftId = result.ShiftId,
-                    ShiftCheckInTime = result.ShiftCheckInTime,
-                    ShiftCheckOutTime = result.ShiftCheckOutTime,
-                    AllowedMinutes = result.AllowedMinutes,
+                    ScheduleId = validationResult.ScheduleId,
+                    ShiftId = validationResult.ShiftId,
+                    ShiftCheckInTime = validationResult.ShiftCheckInTime,
+                    ShiftCheckOutTime = validationResult.ShiftCheckOutTime,
+                    AllowedMinutes = validationResult.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,
-                    LocalDate = result.LocalDate,
-                    EmployeeId = result.EmployeeId,
+                    LocalDate = validationResult.LocalDate,
+                    EmployeeId = validationResult.EmployeeId,
                     IsActive = true,
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
-                        FingerPrintType = model.Type,
+                        FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
-                        Time = TimeOnly.FromTimeSpan(result.LocalDate.TimeOfDay),
+                        Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
                         Latitude = model.Latitude,
                         Longitude = model.Longitude,
                         IpAddress = requestInfo.RemoteIpAddress
@@ -119,7 +119,7 @@ namespace Dawem.BusinessLogic.Attendances
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return true;
+            return validationResult.FingerPrintType;
 
             #endregion
         }

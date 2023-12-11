@@ -28,7 +28,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
-            #region Validate Lat Long 
+            #region Validate Latitude And Longitude 
+
             var availableZonesOutput = new List<AvailableZoneDTO>();
 
             var employeeZones = await repositoryManager.ZoneEmployeeRepository
@@ -135,6 +136,32 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                     s.AllowedMinutes
                 }).FirstOrDefaultAsync();
 
+            #region Validate Checks
+
+            var fingerPrintTypes = await repositoryManager
+                .EmployeeAttendanceCheckRepository
+                .Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == getEmployeeId
+                && e.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date)
+                .Select(a => a.FingerPrintType)
+                .ToListAsync();
+
+            var fingerPrintType = FingerPrintType.CheckIn;
+
+            if (fingerPrintTypes == null || fingerPrintTypes.Count <= 0)
+            {
+                fingerPrintType = FingerPrintType.CheckIn;
+            }
+            else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn) && fingerPrintTypes.Contains(FingerPrintType.CheckOut))
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay);
+            }
+            else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn))
+            {
+                fingerPrintType = FingerPrintType.CheckOut;
+            }
+
+            #endregion
+
             return new FingerPrintValidationResponseModel
             {
                 EmployeeId = getEmployeeId,
@@ -143,7 +170,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 LocalDate = clientLocalDate,
                 ShiftCheckInTime = shiftInfo.CheckInTime,
                 ShiftCheckOutTime = shiftInfo.CheckOutTime,
-                AllowedMinutes = shiftInfo.AllowedMinutes
+                AllowedMinutes = shiftInfo.AllowedMinutes,
+                FingerPrintType = fingerPrintType
             };
         }
         public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation()

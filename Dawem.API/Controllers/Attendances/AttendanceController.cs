@@ -25,9 +25,10 @@ namespace Dawem.API.Controllers.Attendances
             {
                 return BadRequest();
             }
-            var messageCode = model.Type == Enums.Generals.FingerPrintType.CheckIn ?
+            var fingerPrintType = await employeeAttendanceBL.FingerPrint(model);
+            var messageCode = fingerPrintType == Enums.Generals.FingerPrintType.CheckIn ?
                  LeillaKeys.DoneCheckInSuccessfully : LeillaKeys.DoneCheckOutSuccessfully;
-            return Success(await employeeAttendanceBL.FingerPrint(model), messageCode: messageCode);
+            return Success(fingerPrintType, messageCode: messageCode);
         }
         [HttpGet]
         public async Task<ActionResult> GetCurrentFingerPrintInfo()
@@ -58,7 +59,7 @@ namespace Dawem.API.Controllers.Attendances
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery]  int employeeAttendanceId) 
+        public async Task<ActionResult> GetInfo([FromQuery] int employeeAttendanceId)
         {
             if (employeeAttendanceId == 0)
             {

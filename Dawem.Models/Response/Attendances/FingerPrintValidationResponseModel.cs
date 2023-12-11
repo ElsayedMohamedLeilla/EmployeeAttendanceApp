@@ -1,4 +1,6 @@
-﻿namespace Dawem.Models.Response.Attendances
+﻿using Dawem.Enums.Generals;
+
+namespace Dawem.Models.Response.Attendances
 {
     public class FingerPrintValidationResponseModel
     {
@@ -9,5 +11,6 @@
         public TimeOnly ShiftCheckInTime { get; set; }
         public TimeOnly ShiftCheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
+        public FingerPrintType FingerPrintType { get; set; }
     }
 }

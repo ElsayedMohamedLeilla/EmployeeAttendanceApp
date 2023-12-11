@@ -1,7 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Response.Attendances;
-using NuGet.Packaging.Core;
 
 namespace Dawem.Contract.BusinessLogic.Attendances
 {
@@ -12,5 +11,7 @@ namespace Dawem.Contract.BusinessLogic.Attendances
         Task<List<GetEmployeeAttendancesResponseModel>> GetEmployeeAttendances(GetEmployeeAttendancesCriteria model);
         Task<GetEmployeeAttendancesResponseForWebDTO> GetEmployeeAttendancesForWebAdmin(GetEmployeeAttendancesForWebAdminCriteria model);
         Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId);
+        Task<bool> Delete(DeleteEmployeeAttendanceModel model);
+
     }
 }

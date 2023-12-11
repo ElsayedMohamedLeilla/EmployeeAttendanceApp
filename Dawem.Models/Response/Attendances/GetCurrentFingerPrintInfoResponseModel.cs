@@ -5,6 +5,7 @@ namespace Dawem.Models.Response.Attendances
 {
     public class GetCurrentFingerPrintInfoResponseModel
     {
+        public int? Id { get; set; }
         public int? Code { get; set; }
         public string CheckInTime { get; set; }
         public string CheckOutTime { get; set; }

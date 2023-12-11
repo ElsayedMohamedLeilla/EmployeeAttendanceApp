@@ -396,6 +396,12 @@
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
         public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";
+
+        public const string SorryCannotFindChecksForEnteredId = "Sorry!!CannotFindChecksForEnteredId!";
+        public const string SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord = "Sorry!!CannotDeleteCheckIfBecauseThereIsCheckOutRecord!";
+        public const string SorryCannotFindCheckInRecord = "Sorry!!CannotFindCheckInRecord!";
+        public const string SorryCannotFindCheckOutRecord = "Sorry!!CannotFindCheckOutRecord!";
         
+
     }
 }

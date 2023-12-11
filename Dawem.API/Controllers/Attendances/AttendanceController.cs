@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Attendances;
+﻿using Dawem.BusinessLogic.Attendances;
+using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -67,6 +68,15 @@ namespace Dawem.API.Controllers.Attendances
             }
             var response = await employeeAttendanceBL.GetEmployeeAttendancesInfo(employeeAttendanceId);
             return Success(response);
+        }
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromQuery] DeleteEmployeeAttendanceModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            return Success(await employeeAttendanceBL.Delete(model));
         }
     }
 }

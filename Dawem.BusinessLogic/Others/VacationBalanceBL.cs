@@ -127,6 +127,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
             unitOfWork.CreateTransaction();
 
             #region Update VacationBalance
+
             var getVacationBalance = await repositoryManager.VacationBalanceRepository
                 .GetEntityByConditionWithTrackingAsync(vacationBalance => !vacationBalance.IsDeleted
             && vacationBalance.Id == model.Id);

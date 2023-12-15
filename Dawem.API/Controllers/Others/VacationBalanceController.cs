@@ -29,7 +29,7 @@ namespace Dawem.API.Controllers.Schedules
             }
 
             var result = await schedulePlanBL.Create(model);
-            return Success(result, messageCode: LeillaKeys.DoneCreateVacationBalanceSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateVacationBalancesSuccessfully);
         }
 
         [HttpPut, DisableRequestSizeLimit]

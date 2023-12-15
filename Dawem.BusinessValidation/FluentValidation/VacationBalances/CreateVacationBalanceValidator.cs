@@ -34,11 +34,11 @@ namespace Dawem.Validation.FluentValidation.Schedules.VacationBalances
 
             RuleFor(model => model.VacationType)
                 .IsInEnum()
-                .WithMessage(LeillaKeys.SorryYouMustChooseVacationType);
+                .WithMessage(AmgadKeys.SorryYouMustChooseVacationType);
 
             RuleFor(model => model.Balance)
                 .Must(d => d > 0)
-                .WithMessage(LeillaKeys.SorryYouMustEnterBalance);
+                .WithMessage(LeillaKeys.SorryYouMustEnterVacationBalance);
         }
     }
 

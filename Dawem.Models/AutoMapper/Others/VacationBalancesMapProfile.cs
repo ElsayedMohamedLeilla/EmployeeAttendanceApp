@@ -8,8 +8,12 @@ namespace Dawem.Models.AutoMapper
     {
         public VacationBalancesMapProfile()
         {
-            CreateMap<CreateVacationBalanceModel, VacationBalance>();
-            CreateMap<UpdateVacationBalanceModel, VacationBalance>();
+            CreateMap<CreateVacationBalanceModel, VacationBalance>()
+                .ForMember(dest => dest.RemainingBalance, opts => opts.MapFrom(src => src.Balance))
+                .ForMember(dest => dest.ExpirationDate, opts => opts.MapFrom(src => new DateTime(src.Year, 12, 31)));
+            CreateMap<UpdateVacationBalanceModel, VacationBalance>()
+                 .ForMember(dest => dest.RemainingBalance, opts => opts.MapFrom(src => src.Balance))
+                 .ForMember(dest => dest.ExpirationDate, opts => opts.MapFrom(src => new DateTime(src.Year, 12, 31)));
 
         }
     }

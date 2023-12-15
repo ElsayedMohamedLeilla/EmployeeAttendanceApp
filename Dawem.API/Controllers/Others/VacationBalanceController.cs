@@ -12,12 +12,12 @@ namespace Dawem.API.Controllers.Schedules
     [Authorize]
     public class VacationBalanceController : BaseController
     {
-        private readonly IVacationBalanceBL schedulePlanBL;
+        private readonly IVacationBalanceBL vacationBalanceBL;
 
 
-        public VacationBalanceController(IVacationBalanceBL _schedulePlanBL)
+        public VacationBalanceController(IVacationBalanceBL _vacationBalanceBL)
         {
-            schedulePlanBL = _schedulePlanBL;
+            vacationBalanceBL = _vacationBalanceBL;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -28,7 +28,7 @@ namespace Dawem.API.Controllers.Schedules
                 return BadRequest();
             }
 
-            var result = await schedulePlanBL.Create(model);
+            var result = await vacationBalanceBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateVacationBalancesSuccessfully);
         }
 
@@ -39,7 +39,7 @@ namespace Dawem.API.Controllers.Schedules
             {
                 return BadRequest();
             }
-            var result = await schedulePlanBL.Update(model);
+            var result = await vacationBalanceBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateVacationBalanceSuccessfully);
         }
         [HttpGet]
@@ -49,36 +49,36 @@ namespace Dawem.API.Controllers.Schedules
             {
                 return BadRequest();
             }
-            var schedulePlansresponse = await schedulePlanBL.Get(criteria);
+            var vacationBalancesresponse = await vacationBalanceBL.Get(criteria);
 
-            return Success(schedulePlansresponse.VacationBalances, schedulePlansresponse.TotalCount);
+            return Success(vacationBalancesresponse.VacationBalances, vacationBalancesresponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int schedulePlanId)
+        public async Task<ActionResult> GetInfo([FromQuery] int vacationBalanceId)
         {
-            if (schedulePlanId < 1)
+            if (vacationBalanceId < 1)
             {
                 return BadRequest();
             }
-            return Success(await schedulePlanBL.GetInfo(schedulePlanId));
+            return Success(await vacationBalanceBL.GetInfo(vacationBalanceId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int schedulePlanId)
+        public async Task<ActionResult> GetById([FromQuery] int vacationBalanceId)
         {
-            if (schedulePlanId < 1)
+            if (vacationBalanceId < 1)
             {
                 return BadRequest();
             }
-            return Success(await schedulePlanBL.GetById(schedulePlanId));
+            return Success(await vacationBalanceBL.GetById(vacationBalanceId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int schedulePlanId)
+        public async Task<ActionResult> Delete(int vacationBalanceId)
         {
-            if (schedulePlanId < 1)
+            if (vacationBalanceId < 1)
             {
                 return BadRequest();
             }
-            return Success(await schedulePlanBL.Delete(schedulePlanId));
+            return Success(await vacationBalanceBL.Delete(vacationBalanceId));
         }
 
     }

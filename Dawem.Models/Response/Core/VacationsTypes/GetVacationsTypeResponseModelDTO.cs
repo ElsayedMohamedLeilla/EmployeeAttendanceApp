@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Response.Core.VacationsTypes
 {
@@ -11,6 +7,8 @@ namespace Dawem.Models.Response.Core.VacationsTypes
         public int Id { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
+        public VacationType Type { get; set; }
+        public string TypeName { get; set; }
         public bool IsActive { get; set; }
     }
 }

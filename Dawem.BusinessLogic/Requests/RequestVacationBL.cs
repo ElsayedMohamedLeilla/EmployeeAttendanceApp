@@ -196,7 +196,7 @@ namespace Dawem.BusinessLogic.Requests
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
-            getRequestVacation.NumberOfDays = (model.DateTo - model.DateFrom).Days;
+            getRequestVacation.NumberOfDays = (model.DateTo - model.DateFrom).Days + 1;
             
 
             await unitOfWork.SaveAsync();
@@ -408,6 +408,8 @@ namespace Dawem.BusinessLogic.Requests
                     }).ToList(),
                     Status = requestVacation.Request.Status,
                     NumberOfDays = requestVacation.NumberOfDays,
+                    BalanceBeforeRequest = requestVacation.BalanceBeforeRequest,
+                    BalanceAfterRequest = requestVacation.BalanceAfterRequest,
                     StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 

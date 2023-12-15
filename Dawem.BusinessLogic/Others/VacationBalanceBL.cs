@@ -182,6 +182,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                 EmployeeName = vacationBalance.Employee.Name,
                 VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
                 Balance = vacationBalance.Balance,
+                RemainingBalance = vacationBalance.RemainingBalance,
                 Year = vacationBalance.Year,
                 IsActive = vacationBalance.IsActive
             }).ToListAsync();
@@ -205,6 +206,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                     VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
                     VacationType = vacationBalance.VacationType,
                     Balance = vacationBalance.Balance,
+                    RemainingBalance = vacationBalance.RemainingBalance,
                     Year = vacationBalance.Year,
                     IsActive = vacationBalance.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationBalanceNotFound);

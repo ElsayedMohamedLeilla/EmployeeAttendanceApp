@@ -253,7 +253,13 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-
+    public class GetHolidayCriteriaValidator : AbstractValidator<GetHolidayCriteria>
+    {
+        public GetHolidayCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 
 
 }

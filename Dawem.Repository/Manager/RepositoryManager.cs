@@ -17,6 +17,7 @@ using Dawem.Models.Generic;
 using Dawem.Repository.Attendances;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.Groups;
+using Dawem.Repository.Core.Holidaies;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
@@ -89,6 +90,9 @@ namespace Dawem.Repository.Manager
         private IRequestVacationRepository requestVacationRepository;
         private IRequestAttachmentRepository requestAttachmentRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
+        private IHolidayRepository holidayRepository;
+
+
         private IVacationBalanceRepository vacationBalanceRepository;
         
 
@@ -209,5 +213,8 @@ namespace Dawem.Repository.Manager
         public IVacationBalanceRepository VacationBalanceRepository =>
             vacationBalanceRepository ??= new VacationBalanceRepository(unitOfWork, generalSetting);
         
+
+        public IHolidayRepository HolidayRepository =>
+          holidayRepository ??= new HolidayRepository(unitOfWork, generalSetting);
     }
 }

@@ -61,6 +61,8 @@ namespace Dawem.Contract.Repository.Manager
         IRequestTaskRepository RequestTaskRepository { get; }
         IRequestTaskEmployeeRepository RequestTaskEmployeeRepository { get; }
         IRequestVacationRepository RequestVacationRepository { get; }
+        IHolidayRepository HolidayRepository { get; }
+
         IVacationBalanceRepository VacationBalanceRepository { get; }     
     }
 }

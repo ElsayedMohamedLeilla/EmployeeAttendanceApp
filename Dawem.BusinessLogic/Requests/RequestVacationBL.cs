@@ -12,13 +12,11 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
-using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
-using Dawem.Validation.BusinessValidation.Requests;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
 using Microsoft.EntityFrameworkCore;
 
@@ -531,7 +529,7 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<GetVacationsInformationsResponseDTO> GetVacationsInformations()
         {
             var requestVacationRepository = repositoryManager.RequestVacationRepository;
-            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted && 
+            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted &&
             request.Request.CompanyId == requestInfo.CompanyId);
 
             #region Handle Response

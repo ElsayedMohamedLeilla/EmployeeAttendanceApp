@@ -30,6 +30,7 @@ using Dawem.Repository.Requests;
 using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Repository.Schedules.SchedulePlans;
 using Dawem.Repository.Schedules.Schedules;
+using Dawem.Repository.Schedules.VacationBalances;
 using Dawem.Repository.UserManagement;
 
 namespace Dawem.Repository.Manager
@@ -88,6 +89,8 @@ namespace Dawem.Repository.Manager
         private IRequestVacationRepository requestVacationRepository;
         private IRequestAttachmentRepository requestAttachmentRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
+        private IVacationBalanceRepository vacationBalanceRepository;
+        
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -202,5 +205,9 @@ namespace Dawem.Repository.Manager
 
         public IRequestVacationRepository RequestVacationRepository =>
             requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IVacationBalanceRepository VacationBalanceRepository =>
+            vacationBalanceRepository ??= new VacationBalanceRepository(unitOfWork, generalSetting);
+        
     }
 }

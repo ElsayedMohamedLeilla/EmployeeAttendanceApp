@@ -4,7 +4,7 @@ namespace Dawem.Models.Dtos.Schedules.SchedulePlans
 {
     public class CreateSchedulePlanModel
     {
-        public SchedulePlanType SchedulePlanType { get; set; }
+        public ForType SchedulePlanType { get; set; }
         public int? EmployeeId { get; set; }
         public int? GroupId { get; set; }
         public int? DepartmentId { get; set; }
@@ -16,15 +16,15 @@ namespace Dawem.Models.Dtos.Schedules.SchedulePlans
         {
             switch (SchedulePlanType)
             {
-                case SchedulePlanType.Employees:
+                case ForType.Employees:
                     GroupId = null;
                     DepartmentId = null;
                     break;
-                case SchedulePlanType.Groups:
+                case ForType.Groups:
                     EmployeeId = null;
                     DepartmentId = null;
                     break;
-                case SchedulePlanType.Departments:
+                case ForType.Departments:
                     EmployeeId = null;
                     GroupId = null;
                     break;

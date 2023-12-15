@@ -5,7 +5,7 @@ namespace Dawem.Models.Dtos.Schedules.SchedulePlans
     public class UpdateSchedulePlanModel
     {
         public int Id { get; set; }
-        public SchedulePlanType SchedulePlanType { get; set; }
+        public ForType SchedulePlanType { get; set; }
         public int? EmployeeId { get; set; }
         public int? GroupId { get; set; }
         public int? DepartmentId { get; set; }

@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Requests
 {
-    [Table(nameof(VacationsBalance) + LeillaKeys.S)]
-    public class VacationsBalance : BaseEntity
+    [Table(nameof(VacationBalance) + LeillaKeys.S)]
+    public class VacationBalance : BaseEntity
     {
         #region Foregn Keys
 
@@ -20,11 +20,11 @@ namespace Dawem.Domain.Entities.Requests
         public Employee Employee { get; set; }
 
         #endregion
-
+        public int Code { get; set; }
         public int Year { get; set; }
         public DateTime ExpirationDate { get; set; }
         public VacationType VacationType { get; set; }
         public float Balance { get; set; }
-        public float RemainingBalance { get; set; }
+        public float RemainingBalance { get; set; }        
     }
 }

@@ -54,15 +54,15 @@ namespace Dawem.Validation.BusinessValidation.Schedules.SchedulePlan
 
             return true;
         }
-        private void HandleDuplicateThrow(SchedulePlanType schedulePlanType)
+        private void HandleDuplicateThrow(ForType schedulePlanType)
         {
             switch (schedulePlanType)
             {
-                case SchedulePlanType.Employees:
+                case ForType.Employees:
                     throw new BusinessValidationException(LeillaKeys.SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndEmployee);
-                case SchedulePlanType.Groups:
+                case ForType.Groups:
                     throw new BusinessValidationException(LeillaKeys.SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndGroup);
-                case SchedulePlanType.Departments:
+                case ForType.Departments:
                     throw new BusinessValidationException(LeillaKeys.SorrySchedulePlanIsDuplicatedWithSameDateAndScheduleAndDepartment);
                 default:
                     break;

@@ -1,0 +1,15 @@
+﻿using Dawem.Enums.Generals;
+
+namespace Dawem.Models.Dtos.Schedules.SchedulePlans
+{
+    public class UpdateVacationBalanceModel
+    {
+        public int Id { get; set; }
+        public int EmployeeId { get; set; }
+        public int Year { get; set; }
+        public VacationType VacationType { get; set; }
+        public float Balance { get; set; }
+        public string Notes { get; set; }
+        public bool IsActive { get; set; }
+    }
+}

@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Enums.Generals
 {
-    public enum SchedulePlanType
+    public enum ForType
     {
         Employees,
         Groups,

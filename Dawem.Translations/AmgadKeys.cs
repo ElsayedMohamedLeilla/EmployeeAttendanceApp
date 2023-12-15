@@ -57,12 +57,38 @@
         public const string DoneCreateJustificationRequestSuccessfully = "DoneCreateJustificationRequestSuccessfully";
         public const string DoneUpdateJustificationRequestSuccessfully = "DoneUpdateJustificationRequestSuccessfully";
         public const string SorryFingerprintingIsNotAllowedInThisArea = "Sorry!!FingerprintingIsNotAllowedInThisArea!";
-
         public const string AttendanceRegistration = "AttendanceRegistration";
         public const string DismissalRegistration = "DismissalRegistration";
         public const string StartABreak = "StartABreak";
         public const string FinishABreak = "FinishABreak";
         public const string NotSet = "NotSet";
+
+
+        public const string SorryYouMustEnterHolidayName = "Sorry!!YouMustEnterHolidayName!";
+        public const string SorryDateTypeMustBe0ForGregorianDateOr1HijriDate = "Sorry!!DateTypeMustBe0ForGregorianDateOr1HijriDate!";
+        public const string SorryYouMustEnterStartDateForHoliday = "Sorry!!YouMustEnterStartDateForHoliday!";
+        public const string SorryYouMustEnterEndDateForHoliday = "Sorry!!YouMustEnterEndDateForHoliday!";
+        public const string SorryHolidayNameIsDuplicated = "Sorry!!HolidayNameIsDuplicated!";
+        public const string SorryThereisAnotherHolidayUseThisPeriod = "Sorry!!ThereisAnotherHolidayUseThisPeriod!";
+        public const string SorryPleaseEnterAvalidDate = "Sorry!!PleaseEnterAvalidDate!";
+        public const string SorryFebrauryMonthCantBeMoreThan29Day = "Sorry!!FebrauryMonthCantBeMoreThan29Day!";
+        public const string SorryMonthCantLessThanOneAndGreaterThanTwelve = "Sorry!!MonthCantLessThanOneAndGreaterThanTwelve!";
+        public const string SorryDayCantBeLessThanOne = "Sorry!!DayCantBeLessThanOne!";
+        public const string Gregorian = "Gregorian";
+        public const string Hijri = "Hijri";
+        public const string SorryHolidayNotFound = "Sorry!!HolidayNotFound!";
+
+        
+
+
+
+
+
+
+
+
+
+
 
 
 

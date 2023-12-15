@@ -221,7 +221,7 @@
         public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId!";
         public const string DoneCreatePermissionsTypeSuccessfully = "DoneCreatePermissionsTypeSuccessfully";
         public const string DoneUpdatePermissionsTypeSuccessfully = "DoneUpdatePermissionsTypeSuccessfully";
-        public const string SorryVacationsTypeNotFound = "Sorry!!VacationsTypeNotFound!";
+        public const string SorryVacationTypeNotFound = "Sorry!!VacationTypeNotFound!";
         public const string SorryVacationsTypeNameIsDuplicated = "Sorry!!VacationsTypeNameIsDuplicated!";
         public const string SorryYouMustEnterVacationsTypeName = "Sorry!!YouMustEnterVacationsTypeName!";
         public const string SorryYouMustEnterVacationsTypeId = "Sorry!!YouMustEnterVacationsTypeId!";
@@ -400,7 +400,6 @@
         public const string SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord = "Sorry!!CannotDeleteCheckIfBecauseThereIsCheckOutRecord!";
         public const string SorryCannotFindCheckInRecord = "Sorry!!CannotFindCheckInRecord!";
         public const string SorryCannotFindCheckOutRecord = "Sorry!!CannotFindCheckOutRecord!";
-
         public const string SorryYouMustEnterForType = "Sorry!!YouMustEnterForType!";
         public const string SorryYouMustChooseEmployeeWhenForTypeIsEmployee = "Sorry!!YouMustChooseEmployeeWhenForTypeIsEmployee!";
         public const string SorryYouMustChooseGroupWhenForTypeIsGroup = "Sorry!!YouMustChooseGroupWhenForTypeIsGroup!";
@@ -419,6 +418,9 @@
         public const string FemaleVacation = "FemaleVacation";
         public const string Other = "Other";
 
+        public const string SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee = "Sorry!!ThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee!";
+        public const string SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee = "Sorry!!ThereIsNoSufficientBalanceForSelectedTypeForEmployee!";
+        public const string CurrentBalanceForEmployee = "CurrentBalanceForEmployee:";
 
     }
 }

@@ -20,6 +20,9 @@ namespace Dawem.Domain.Entities.Requests
         #endregion
 
         public int Code { get; set; }
-        public DateTime DateTo { get; set; }
+        public int NumberOfDays { get; set; }
+        public float BalanceBeforeRequest { get; set; }
+        public float BalanceAfterRequest { get; set; }
+        public DateTime DateTo { get; set; }        
     }
 }

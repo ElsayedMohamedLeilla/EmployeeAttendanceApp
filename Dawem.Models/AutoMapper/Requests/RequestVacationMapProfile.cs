@@ -14,7 +14,8 @@ namespace Dawem.Models.AutoMapper.Requests
                  .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Vacation))
                 .AfterMap(MapRequestVacation);
 
-            CreateMap<CreateRequestVacationDTO, RequestVacation>();
+            CreateMap<CreateRequestVacationDTO, RequestVacation>()
+                .ForMember(dest => dest.NumberOfDays, opts => opts.MapFrom(src => (src.DateTo - src.DateFrom).Days));
 
             CreateMap<UpdateRequestVacationDTO, Request>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))

@@ -193,11 +193,13 @@ namespace Dawem.BusinessLogic.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
-
+            
 
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
+            getRequestVacation.NumberOfDays = (model.DateTo - model.DateFrom).Days;
+            
 
             await unitOfWork.SaveAsync();
 
@@ -334,7 +336,7 @@ namespace Dawem.BusinessLogic.Requests
                 DateTo = requestVacation.DateTo,
                 Status = requestVacation.Request.Status,
                 StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
-                NumberOfDays = (requestVacation.DateTo.Date - requestVacation.Request.Date.Date).Days
+                NumberOfDays = requestVacation.NumberOfDays
             }).ToListAsync();
 
             return new EmployeeGetRequestVacationsResponseDTO
@@ -407,7 +409,7 @@ namespace Dawem.BusinessLogic.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests),
                     }).ToList(),
                     Status = requestVacation.Request.Status,
-                    NumberOfDays = (requestVacation.DateTo.Date - requestVacation.Request.Date.Date).Days,
+                    NumberOfDays = requestVacation.NumberOfDays,
                     StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
@@ -450,8 +452,11 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<bool> Accept(int requestId)
         {
             var request = await repositoryManager.RequestRepository
-                .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
+                .GetWithTracking(d => !d.IsDeleted && d.Id == requestId)
+                .Include(r=>r.RequestVacation).FirstOrDefaultAsync() ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
+
+            #region Validation
 
             if (request.Status == RequestStatus.Accepted)
             {
@@ -461,6 +466,37 @@ namespace Dawem.BusinessLogic.Requests
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyRejected);
             }
+
+            #region Validate And Set Balance
+
+            var getVacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
+                c.CompanyId == requestInfo.CompanyId && c.Id == request.RequestVacation.VacationTypeId) ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+
+            var type = getVacationsType.Type;
+
+            var currentYear = DateTime.UtcNow.Year;
+
+            var checkTypeBalance = await repositoryManager.VacationBalanceRepository.GetEntityByConditionWithTrackingAsync(c => !c.IsDeleted &&
+                c.CompanyId == requestInfo.CompanyId && c.EmployeeId == request.EmployeeId
+                && c.VacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
+
+            var requiredDays = request.RequestVacation.NumberOfDays;
+            if (requiredDays > checkTypeBalance.RemainingBalance)
+            {
+                throw new BusinessValidationException(null,
+                    LeillaKeys.SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee +
+                    LeillaKeys.Space +
+                    LeillaKeys.CurrentBalanceForEmployee +
+                    checkTypeBalance.RemainingBalance +
+                    LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.VacationType.ToString(), requestInfo.Lang) +
+                    LeillaKeys.RightBracket);
+            }
+
+            checkTypeBalance.RemainingBalance -= requiredDays;
+
+            #endregion
+
+            #endregion
 
             request.Status = RequestStatus.Accepted;
             request.DecisionUserId = requestInfo.UserId;

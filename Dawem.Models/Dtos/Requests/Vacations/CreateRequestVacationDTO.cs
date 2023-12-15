@@ -14,5 +14,9 @@ namespace Dawem.Models.Dtos.Requests.Vacations
         public List<IFormFile> Attachments { get; set; }
         [JsonIgnore]
         public List<string> AttachmentsNames { get; set; }
+        [JsonIgnore]
+        public float BalanceBeforeRequest { get; set; }
+        [JsonIgnore]
+        public float BalanceAfterRequest { get; set; }
     }
 }

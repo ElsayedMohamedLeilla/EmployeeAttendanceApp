@@ -188,7 +188,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                     Code = e.Code,
                     Name = e.Name,
                     IsActive = e.IsActive,
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
             return VacationsType;
         }
@@ -202,7 +202,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                     Name = e.Name,
                     IsActive = e.IsActive,
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
             return VacationsType;
 
@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         public async Task<bool> Delete(int VacationsTypeId)
         {
             var vacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryVacationsTypeNotFound);
+                throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
             vacationsType.Delete();
 
             await unitOfWork.SaveAsync();

@@ -417,7 +417,6 @@
         public const string Sick = "Sick";
         public const string FemaleVacation = "FemaleVacation";
         public const string Other = "Other";
-
         public const string SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee = "Sorry!!ThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee!";
         public const string SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee = "Sorry!!ThereIsNoSufficientBalanceForSelectedTypeForEmployee!";
         public const string CurrentBalanceForEmployee = "CurrentBalanceForEmployee:";

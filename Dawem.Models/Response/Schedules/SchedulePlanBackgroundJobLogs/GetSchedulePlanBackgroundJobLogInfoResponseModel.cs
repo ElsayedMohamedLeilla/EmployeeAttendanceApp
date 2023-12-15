@@ -11,7 +11,7 @@ namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
         public string DepartmentName { get; set; }
         public string Notes { get; set; }
         public string SchedulePlanTypeName { get; set; }
-        public SchedulePlanType SchedulePlanType { get; set; }
+        public ForType SchedulePlanType { get; set; }
         public DateTime DateFrom { get; set; }
         public int EmployeesNumberAppliedOn { get; set; }
         public List<GetSchedulePlanBackgroundJobLogEmployeeInfoModel> EmployeesAppliedOn { get; set; }

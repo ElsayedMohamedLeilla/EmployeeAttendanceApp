@@ -333,7 +333,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                         var startDate = DateTime.UtcNow;
                         switch (nextSchedulePlan.SchedulePlanType)
                         {
-                            case SchedulePlanType.Employees:
+                            case ForType.Employees:
 
 
                                 var employeeId = nextSchedulePlan.EmployeeId ?? 0;
@@ -345,7 +345,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                                 }
 
                                 break;
-                            case SchedulePlanType.Groups:
+                            case ForType.Groups:
 
                                 var groupId = nextSchedulePlan.GroupId ?? 0;
                                 var getEmployeesByGroup = await repositoryManager.EmployeeRepository
@@ -358,7 +358,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                                 }
 
                                 break;
-                            case SchedulePlanType.Departments:
+                            case ForType.Departments:
 
                                 var departmentId = nextSchedulePlan.DepartmentId ?? 0;
                                 var getEmployeesByDepartment = await repositoryManager.EmployeeRepository

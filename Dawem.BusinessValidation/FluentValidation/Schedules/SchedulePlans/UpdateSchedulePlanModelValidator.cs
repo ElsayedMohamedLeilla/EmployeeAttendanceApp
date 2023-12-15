@@ -19,17 +19,17 @@ namespace Dawem.Validation.FluentValidation.Schedules.SchedulePlans
 
             RuleFor(model => model.EmployeeId)
                 .Must(s => s > 0)
-                .When(s => s.SchedulePlanType == SchedulePlanType.Employees)
+                .When(s => s.SchedulePlanType == ForType.Employees)
                 .WithMessage(LeillaKeys.SorryYouMustChooseEmployeeWhenSchedulePlanTypeIsEmployee);
 
             RuleFor(model => model.GroupId)
                .Must(s => s > 0)
-               .When(s => s.SchedulePlanType == SchedulePlanType.Groups)
+               .When(s => s.SchedulePlanType == ForType.Groups)
                .WithMessage(LeillaKeys.SorryYouMustChooseGroupWhenSchedulePlanTypeIsGroup);
 
             RuleFor(model => model.DepartmentId)
                .Must(s => s > 0)
-               .When(s => s.SchedulePlanType == SchedulePlanType.Departments)
+               .When(s => s.SchedulePlanType == ForType.Departments)
                .WithMessage(LeillaKeys.SorryYouMustChooseDepartmentWhenSchedulePlanTypeIsDepartment);
 
             RuleFor(model => model.ScheduleId)

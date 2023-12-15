@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Attendances;
+﻿using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -10,6 +9,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +22,8 @@ namespace Dawem.BusinessLogic.Attendances
         private readonly RequestInfo requestInfo;
         private readonly IEmployeeAttendanceBLValidation employeeAttendanceBLValidation;
         private readonly IRepositoryManager repositoryManager;
-        private readonly IMapper mapper;
         public EmployeeAttendanceBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
            RequestInfo _requestHeaderContext,
            IEmployeeAttendanceBLValidation _employeeAttendanceBLValidation)
         {
@@ -33,13 +31,14 @@ namespace Dawem.BusinessLogic.Attendances
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
             employeeAttendanceBLValidation = _employeeAttendanceBLValidation;
-            mapper = _mapper;
         }
         public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
         {
             #region Business Validation
 
             var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
+
+            var dddd = model.Latitude.IsValidLatitude();
 
             #endregion
 
@@ -450,6 +449,68 @@ namespace Dawem.BusinessLogic.Attendances
 
                 }).ToListAsync();
             return result;
+        }
+        public async Task<bool> Delete(DeleteEmployeeAttendanceModel model)
+        {
+            #region Validation
+
+            var getTimeZoneId = await repositoryManager.CompanyRepository
+                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
+                .Select(c => c.Country.TimeZoneId)
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
+
+            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+
+            var getChecks = await repositoryManager.EmployeeAttendanceCheckRepository
+                .GetWithTracking(c => !c.IsDeleted && c.EmployeeAttendanceId == model.Id &&
+                !c.EmployeeAttendance.IsDeleted && c.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date &&
+                ((model.Type == DeleteEmployeeAttendanceType.CheckIn && c.FingerPrintType == FingerPrintType.CheckIn) ||
+                (model.Type == DeleteEmployeeAttendanceType.CheckOut && c.FingerPrintType == FingerPrintType.CheckOut) ||
+                model.Type == DeleteEmployeeAttendanceType.Both))
+                .ToListAsync();
+
+            if (getChecks == null || getChecks.Count == 0)
+            {
+                switch (model.Type)
+                {
+                    case DeleteEmployeeAttendanceType.CheckIn:
+                        throw new BusinessValidationException(LeillaKeys.SorryCannotFindCheckInRecord);
+                    case DeleteEmployeeAttendanceType.CheckOut:
+                        throw new BusinessValidationException(LeillaKeys.SorryCannotFindCheckOutRecord);
+                    case DeleteEmployeeAttendanceType.Both:
+                        throw new BusinessValidationException(LeillaKeys.SorryCannotFindChecksForEnteredId);
+                    default:
+                        break;
+                }
+            }
+            else if (model.Type == DeleteEmployeeAttendanceType.CheckIn)
+            {
+                var getCheckOut = await repositoryManager.EmployeeAttendanceCheckRepository
+                .GetWithTracking(c => !c.IsDeleted && c.EmployeeAttendanceId == model.Id &&
+                !c.EmployeeAttendance.IsDeleted && c.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date &&
+                c.FingerPrintType == FingerPrintType.CheckOut)
+                .AnyAsync();
+
+                if (getCheckOut)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord);
+                }
+            }
+
+
+
+
+            #endregion
+
+
+            foreach (var item in getChecks)
+            {
+                item.Delete();
+            }
+
+            await unitOfWork.SaveAsync();
+
+            return true;
         }
     }
 }

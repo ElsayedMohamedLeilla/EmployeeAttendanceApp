@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231214004526_DataBalanceAndVacations")]
+    partial class DataBalanceAndVacations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2390,7 +2393,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("RequestVacations", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Requests.VacationBalance", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Requests.VacationsBalance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2411,9 +2414,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<float>("Balance")
                         .HasColumnType("real");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
@@ -2463,7 +2463,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("VacationBalances", "Dawem");
+                    b.ToTable("VacationsBalances", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.Schedule", b =>
@@ -3903,7 +3903,7 @@ namespace Dawem.Data.Migrations
                     b.Navigation("VacationType");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Requests.VacationBalance", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Requests.VacationsBalance", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Provider.Company", "Company")
                         .WithMany()

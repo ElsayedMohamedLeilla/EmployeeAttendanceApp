@@ -12,7 +12,7 @@ namespace Dawem.Models.Response.Schedules.SchedulePlans
         public int Code { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }
-        public SchedulePlanType SchedulePlanType { get; set; }
+        public ForType SchedulePlanType { get; set; }
         public DateTime DateFrom { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                .Get(e => e.EmployeeId == getEmployeeId)
                                .Select(s => new AvailableZoneDTO
                                {
+                                   Name = s.Zone.Name,
                                    Latitude = s.Zone.Latitude,
                                    Longitude = s.Zone.Longitude,
                                    Radius = s.Zone.Radius
@@ -59,6 +60,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                     .Get(gz => employeeGroups.Contains(gz.GroupId))
                                     .Select(gz => new AvailableZoneDTO
                                     {
+                                        Name = gz.Zone.Name,
                                         Latitude = gz.Zone.Latitude,
                                         Longitude = gz.Zone.Longitude,
                                         Radius = gz.Zone.Radius,
@@ -79,6 +81,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                       .Get(gz => gz.DepartmentId == employeeDepartmentId)
                                       .Select(gz => new AvailableZoneDTO
                                       {
+                                          Name = gz.Zone.Name,
                                           Latitude = gz.Zone.Latitude,
                                           Longitude = gz.Zone.Longitude,
                                           Radius = gz.Zone.Radius,
@@ -180,13 +183,15 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
              throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
-            #region Get Availble Zones ForFingerprint
+            #region Get Availble Zones For Fingerprint
+
             var availableZonesOutput = new List<AvailableZoneDTO>();
 
             var employeeZones = await repositoryManager.ZoneEmployeeRepository
                                .Get(e => e.EmployeeId == getEmployeeId)
                                .Select(s => new AvailableZoneDTO
                                {
+                                   Name = s.Zone.Name,
                                    Latitude = s.Zone.Latitude,
                                    Longitude = s.Zone.Longitude,
                                    Radius = s.Zone.Radius
@@ -209,6 +214,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                     .Get(gz => employeeGroups.Contains(gz.GroupId))
                                     .Select(gz => new AvailableZoneDTO
                                     {
+                                        Name = gz.Zone.Name,
                                         Latitude = gz.Zone.Latitude,
                                         Longitude = gz.Zone.Longitude,
                                         Radius = gz.Zone.Radius,
@@ -228,6 +234,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                   .Get(gz => gz.DepartmentId == employeeDepartmentId)
                                   .Select(gz => new AvailableZoneDTO
                                   {
+                                      Name = gz.Zone.Name,
                                       Latitude = gz.Zone.Latitude,
                                       Longitude = gz.Zone.Longitude,
                                       Radius = gz.Zone.Radius,
@@ -257,16 +264,18 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 && a.LocalDate.Date == clientLocalDate.Date)
                 .Select(a => new GetCurrentFingerPrintInfoResponseModel
                 {
+                    Id = a.Id,
                     Code = a.Code,
-                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckIn) != null ?
-                     a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
-                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => c.FingerPrintType == FingerPrintType.CheckOut) != null ?
-                     a.EmployeeAttendanceChecks.Where(c => c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
+                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
                     LocalDate = clientLocalDate
                 }).FirstOrDefaultAsync();
 
             return new GetCurrentFingerPrintInfoResponseModel
             {
+                Id = getAttendance?.Id,
                 Code = getAttendance?.Code,
                 CheckInTime = getAttendance?.CheckInTime,
                 CheckOutTime = getAttendance?.CheckOutTime,

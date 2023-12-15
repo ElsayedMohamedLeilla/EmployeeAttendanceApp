@@ -13,22 +13,18 @@ namespace Dawem.Helpers
             }
         }
         public static bool IsValidLatitude(this double latitude)
-            => double.TryParse(latitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
-        && -90 <= l && l <= 90;
+            => -90 <= latitude && latitude <= 90;
 
         public static bool IsValidLongitude(this double longitude)
-            => double.TryParse(longitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
-                && -180 <= l && l <= 180;
+            => -180 <= longitude && longitude <= 180;
 
         public static bool IsValidLatitude(this decimal latitude)
         {
-            return decimal.TryParse(latitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
-          && -90 <= l && l <= 90;
+            return -90 <= latitude && latitude <= 90;
         }
 
         public static bool IsValidLongitude(this decimal longitude)
-            => decimal.TryParse(longitude.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var l)
-                && -180 <= l && l <= 180;
+            =>  -180 <= longitude && longitude <= 180;
 
         public static bool ValidateIPv4(string ipString)
         {

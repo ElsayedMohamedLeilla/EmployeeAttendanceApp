@@ -24,7 +24,7 @@ namespace Dawem.Domain.Entities.Schedules
 
         #endregion
         public int Code { get; set; }
-        public SchedulePlanType SchedulePlanType { get; set; }
+        public ForType SchedulePlanType { get; set; }
         public DateTime DateFrom { get; set; }
 
     }

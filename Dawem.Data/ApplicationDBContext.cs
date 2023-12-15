@@ -1,5 +1,4 @@
-﻿
-using Dawem.Domain.Entities;
+﻿using Dawem.Domain.Entities;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
@@ -295,6 +294,7 @@ namespace Dawem.Data
         public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Request> Requests { get; set; }
+        public DbSet<VacationBalance> VacationsBalances { get; set; }
         public DbSet<RequestAssignment> RequestAssignments { get; set; }
         public DbSet<RequestJustification> RequestJustifications { get; set; }
         public DbSet<RequestPermission> RequestPermissions { get; set; }

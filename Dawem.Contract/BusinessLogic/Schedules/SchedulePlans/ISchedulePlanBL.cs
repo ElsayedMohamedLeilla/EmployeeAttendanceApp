@@ -7,11 +7,11 @@ namespace Dawem.Contract.BusinessLogic.Schedules.SchedulePlans
     {
         Task<int> Create(CreateSchedulePlanModel model);
         Task<bool> Update(UpdateSchedulePlanModel model);
-        Task<GetSchedulePlanInfoResponseModel> GetInfo(int weekAttendanceId);
-        Task<GetSchedulePlanByIdResponseModel> GetById(int weekAttendanceId);
+        Task<GetSchedulePlanInfoResponseModel> GetInfo(int schedulePlanId);
+        Task<GetSchedulePlanByIdResponseModel> GetById(int schedulePlanId);
         Task<GetSchedulePlansResponse> Get(GetSchedulePlansCriteria model);
         Task<GetSchedulePlansForDropDownResponse> GetForDropDown(GetSchedulePlansCriteria model);
-        Task<bool> Delete(int weekAttendanceId);
+        Task<bool> Delete(int schedulePlanId);
         Task HandleSchedulePlanBackgroundJob();
     }
 }

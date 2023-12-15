@@ -396,6 +396,29 @@
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
         public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";
-        
+        public const string SorryCannotFindChecksForEnteredId = "Sorry!!CannotFindChecksForEnteredId!";
+        public const string SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord = "Sorry!!CannotDeleteCheckIfBecauseThereIsCheckOutRecord!";
+        public const string SorryCannotFindCheckInRecord = "Sorry!!CannotFindCheckInRecord!";
+        public const string SorryCannotFindCheckOutRecord = "Sorry!!CannotFindCheckOutRecord!";
+
+        public const string SorryYouMustEnterForType = "Sorry!!YouMustEnterForType!";
+        public const string SorryYouMustChooseEmployeeWhenForTypeIsEmployee = "Sorry!!YouMustChooseEmployeeWhenForTypeIsEmployee!";
+        public const string SorryYouMustChooseGroupWhenForTypeIsGroup = "Sorry!!YouMustChooseGroupWhenForTypeIsGroup!";
+        public const string SorryYouMustChooseDepartmentWhenForTypeIsDepartment = "Sorry!!YouMustChooseDepartmentWhenForTypeIsDepartment!";
+        public const string SorryYouMustChooseYear = "Sorry!!YouMustChooseYear!";
+        public const string SorryYouMustEnterVacationBalance = "Sorry!!YouMustEnterVacationBalance!";
+        public const string SorryYouMustEnterVacationBalanceId = "Sorry!!YouMustEnterVacationBalanceId!";
+        public const string SorryVacationBalanceIsDuplicatedWithSameEmployeeAndYearAndVacationType = "Sorry!!VacationBalanceIsDuplicatedWithSameEmployeeAndYearAndVacationType!";
+        public const string DoneCreateVacationBalancesSuccessfully = "DoneCreateVacationBalance/sSuccessfully";
+        public const string DoneUpdateVacationBalanceSuccessfully = "DoneUpdateVacationBalanceSuccessfully";
+        public const string SorryVacationBalanceNotFound = "Sorry!!VacationBalanceNotFound!";
+        public const string SorryYouMustChooseEmployee = "Sorry!!YouMustChooseEmployee!";
+        public const string Ordinary = "Ordinary";
+        public const string Emergency = "Emergency";
+        public const string Sick = "Sick";
+        public const string FemaleVacation = "FemaleVacation";
+        public const string Other = "Other";
+
+
     }
 }

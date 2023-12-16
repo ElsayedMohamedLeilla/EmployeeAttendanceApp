@@ -63,6 +63,9 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                 {
                     checkForVacationBalance.Balance = model.Balance;
                     checkForVacationBalance.RemainingBalance = model.Balance;
+                    checkForVacationBalance.ExpirationDate = new DateTime(model.Year, 12, 31);
+                    checkForVacationBalance.ModifiedDate = DateTime.UtcNow;
+                    checkForVacationBalance.ModifyUserId = requestInfo.UserId;
                 }
                 else
                 {
@@ -79,6 +82,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                     var vacationBalance = mapper.Map<VacationBalance>(model);
                     vacationBalance.CompanyId = requestInfo.CompanyId;
                     vacationBalance.AddUserId = requestInfo.UserId;
+                    vacationBalance.EmployeeId = employeeId;
                     vacationBalance.Code = getNextCode;
 
                     repositoryManager.VacationBalanceRepository.Insert(vacationBalance);

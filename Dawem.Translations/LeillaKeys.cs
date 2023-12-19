@@ -85,7 +85,7 @@
         public const string Slash = "/";
         public const string BackSlash = @"\";
         public const string UnderScore = "_";
-        public const string Account = "Account";
+        public const string Authentication = "Authentication";
         public const string VerifyEmail = "VerifyEmail";
         public const string Browse = "Browse";
         public const string Http = "http";

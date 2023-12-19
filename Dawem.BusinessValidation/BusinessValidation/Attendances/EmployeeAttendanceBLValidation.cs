@@ -123,7 +123,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var getTimeZoneId = await repositoryManager.CompanyRepository
                 .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
                 .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
 
             var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
 

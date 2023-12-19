@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Provider;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
@@ -41,5 +42,6 @@ namespace Dawem.Domain.Entities.Employees
         public List<GroupEmployee> EmployeeGroups { get; set; }
         public List<ZoneEmployee> Zones { get; set; }
         public List<VacationBalance> VacationBalances { get; set; }
+        public List<EmployeeAttendance> EmployeeAttendances { get; set; }
     }
 }

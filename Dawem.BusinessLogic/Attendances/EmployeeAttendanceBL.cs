@@ -423,7 +423,6 @@ namespace Dawem.BusinessLogic.Attendances
             // Format the non-negative time gap into HH:mm
             return nonNegativeTimeGap.ToString(@"hh\:mm");
         }
-
         public async Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
             var result = await repositoryManager.EmployeeAttendanceCheckRepository.Get(s => s.EmployeeAttendanceId == employeeAttendanceId)

@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Response.Employees.JobTitles;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Employees
 {
@@ -12,5 +13,6 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<GetJobTitlesResponse> Get(GetJobTitlesCriteria model);
         Task<GetJobTitlesForDropDownResponse> GetForDropDown(GetJobTitlesCriteria model);
         Task<bool> Delete(int jobTitleId);
+        Task<GetJobTitlesInformationsResponseDTO> GetJobTitlesInformations();
     }
 }

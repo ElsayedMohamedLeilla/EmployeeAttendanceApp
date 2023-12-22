@@ -1,6 +1,7 @@
 ﻿
 using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Response.Employees.User;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Employees
 {
@@ -16,5 +17,6 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<GetUsersResponse> Get(GetUsersCriteria model);
         Task<GetUsersForDropDownResponse> GetForDropDown(GetUsersCriteria model);
         Task<bool> Delete(int userId);
+        Task<GetUsersInformationsResponseDTO> GetUsersInformations();
     }
 }

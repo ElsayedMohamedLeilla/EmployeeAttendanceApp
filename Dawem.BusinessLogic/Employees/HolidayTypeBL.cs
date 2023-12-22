@@ -10,6 +10,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.HolidayType;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.HolidayTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.HolidayTypes;
@@ -207,6 +208,23 @@ namespace Dawem.BusinessLogic.Employees
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetHolidayTypesInformationsResponseDTO> GetHolidayTypesInformations()
+        {
+            var holidayTypeRepository = repositoryManager.HolidayTypeRepository;
+            var query = holidayTypeRepository.Get(holidayType => holidayType.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetHolidayTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(holidayType => !holidayType.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(holidayType => !holidayType.IsDeleted && holidayType.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(holidayType => !holidayType.IsDeleted && !holidayType.IsActive).CountAsync(),
+                DeletedCount = await query.Where(holidayType => holidayType.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

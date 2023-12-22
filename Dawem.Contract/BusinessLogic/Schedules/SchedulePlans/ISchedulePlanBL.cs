@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Dtos.Schedules.SchedulePlans;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.SchedulePlans;
 
 namespace Dawem.Contract.BusinessLogic.Schedules.SchedulePlans
@@ -13,5 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Schedules.SchedulePlans
         Task<GetSchedulePlansForDropDownResponse> GetForDropDown(GetSchedulePlansCriteria model);
         Task<bool> Delete(int schedulePlanId);
         Task HandleSchedulePlanBackgroundJob();
+        Task<GetSchedulePlansInformationsResponseDTO> GetSchedulePlansInformations();
     }
 }

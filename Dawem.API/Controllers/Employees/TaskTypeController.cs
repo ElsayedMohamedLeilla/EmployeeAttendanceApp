@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Translations;
@@ -81,6 +82,10 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await taskTypeBL.Delete(taskTypeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetTaskTypesInformations()
+        {
+            return Success(await taskTypeBL.GetTaskTypesInformations());
+        }
     }
 }

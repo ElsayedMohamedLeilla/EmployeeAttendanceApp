@@ -11,6 +11,7 @@ using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.JobTitles;
 using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -206,6 +207,23 @@ namespace Dawem.BusinessLogic.Employees
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetJobTitlesInformationsResponseDTO> GetJobTitlesInformations()
+        {
+            var jobTitleRepository = repositoryManager.JobTitleRepository;
+            var query = jobTitleRepository.Get(jobTitle => jobTitle.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetJobTitlesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(jobTitle => !jobTitle.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(jobTitle => !jobTitle.IsDeleted && jobTitle.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(jobTitle => !jobTitle.IsDeleted && !jobTitle.IsActive).CountAsync(),
+                DeletedCount = await query.Where(jobTitle => jobTitle.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

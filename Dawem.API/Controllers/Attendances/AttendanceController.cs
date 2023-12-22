@@ -1,4 +1,5 @@
 ﻿using Dawem.BusinessLogic.Attendances;
+using Dawem.BusinessLogic.Employees;
 using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
@@ -77,6 +78,12 @@ namespace Dawem.API.Controllers.Attendances
                 return BadRequest();
             }
             return Success(await employeeAttendanceBL.Delete(model));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetEmployeesAttendancesInformations()
+        {
+            var response = await employeeAttendanceBL.GetEmployeesAttendancesInformations();
+            return Success(response);
         }
     }
 }

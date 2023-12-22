@@ -8,6 +8,7 @@
         public int Year { get; set; }
         public string VacationTypeName { get; set; }
         public float Balance { get; set; }
+        public float RemainingBalance { get; set; }
         public bool IsActive { get; set; }
     }
 }

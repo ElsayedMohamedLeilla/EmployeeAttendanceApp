@@ -63,6 +63,9 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                 {
                     checkForVacationBalance.Balance = model.Balance;
                     checkForVacationBalance.RemainingBalance = model.Balance;
+                    checkForVacationBalance.ExpirationDate = new DateTime(model.Year, 12, 31);
+                    checkForVacationBalance.ModifiedDate = DateTime.UtcNow;
+                    checkForVacationBalance.ModifyUserId = requestInfo.UserId;
                 }
                 else
                 {
@@ -79,6 +82,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                     var vacationBalance = mapper.Map<VacationBalance>(model);
                     vacationBalance.CompanyId = requestInfo.CompanyId;
                     vacationBalance.AddUserId = requestInfo.UserId;
+                    vacationBalance.EmployeeId = employeeId;
                     vacationBalance.Code = getNextCode;
 
                     repositoryManager.VacationBalanceRepository.Insert(vacationBalance);
@@ -182,6 +186,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                 EmployeeName = vacationBalance.Employee.Name,
                 VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
                 Balance = vacationBalance.Balance,
+                RemainingBalance = vacationBalance.RemainingBalance,
                 Year = vacationBalance.Year,
                 IsActive = vacationBalance.IsActive
             }).ToListAsync();
@@ -205,6 +210,7 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
                     VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
                     VacationType = vacationBalance.VacationType,
                     Balance = vacationBalance.Balance,
+                    RemainingBalance = vacationBalance.RemainingBalance,
                     Year = vacationBalance.Year,
                     IsActive = vacationBalance.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationBalanceNotFound);

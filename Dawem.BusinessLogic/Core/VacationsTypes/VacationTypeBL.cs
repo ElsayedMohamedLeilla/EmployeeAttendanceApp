@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
@@ -12,8 +13,6 @@ using Dawem.Models.Dtos.Core.VacationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.VacationsTypes;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Core.VacationsTypes;
-using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.VacationsTypes
@@ -61,7 +60,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #endregion
 
-            var VacationsType = mapper.Map<VacationType>(model);
+            var VacationsType = mapper.Map<Domain.Entities.Core.VacationType>(model);
             VacationsType.CompanyId = requestInfo.CompanyId;
             VacationsType.AddUserId = requestInfo.UserId;
             VacationsType.Code = getNextCode;
@@ -87,6 +86,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #endregion
 
             unitOfWork.CreateTransaction();
+
             #region Update VacationsType
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetByIdAsync(model.Id);
             getVacationsType.Name = model.Name;
@@ -115,7 +115,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationType.Id), LeillaKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(Domain.Entities.Core.VacationType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -125,12 +125,14 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region Handle Response
 
-            var VacationsTypesList = await queryPaged.Select(e => new GetVacationsTypeResponseModelDTO
+            var VacationsTypesList = await queryPaged.Select(vacationType => new GetVacationsTypeResponseModelDTO
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                IsActive = e.IsActive,
+                Id = vacationType.Id,
+                Code = vacationType.Code,
+                Name = vacationType.Name,
+                Type = vacationType.Type,
+                TypeName = TranslationHelper.GetTranslation(vacationType.Type.ToString(), requestInfo.Lang),
+                IsActive = vacationType.IsActive,
             }).ToListAsync();
 
             return new GetVacationsTypeResponseDTO
@@ -155,7 +157,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(VacationType.Id), LeillaKeys.Desc);
+            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(Domain.Entities.Core.VacationType.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -183,11 +185,13 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         public async Task<GetVacationsTypeInfoResponseDTO> GetInfo(int VacationsTypeId)
         {
             var VacationsType = await repositoryManager.VacationsTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
-                .Select(e => new GetVacationsTypeInfoResponseDTO
+                .Select(vacationType => new GetVacationsTypeInfoResponseDTO
                 {
-                    Code = e.Code,
-                    Name = e.Name,
-                    IsActive = e.IsActive,
+                    Code = vacationType.Code,
+                    Name = vacationType.Name,
+                    Type = vacationType.Type,
+                    TypeName = TranslationHelper.GetTranslation(vacationType.Type.ToString(), requestInfo.Lang),
+                    IsActive = vacationType.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
             return VacationsType;
@@ -195,12 +199,13 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
         public async Task<GetVacationsTypeByIdResponseDTO> GetById(int VacationsTypeId)
         {
             var VacationsType = await repositoryManager.VacationsTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
-                .Select(e => new GetVacationsTypeByIdResponseDTO
+                .Select(vacationType => new GetVacationsTypeByIdResponseDTO
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = e.Name,
-                    IsActive = e.IsActive,
+                    Id = vacationType.Id,
+                    Code = vacationType.Code,
+                    Name = vacationType.Name,
+                    Type = vacationType.Type,
+                    IsActive = vacationType.IsActive,
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 

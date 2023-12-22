@@ -56,7 +56,7 @@ namespace Dawem.API.Controllers.Provider
                 return Redirect("https://www.google.com");
             }
 
-            return Redirect("https://www.youtube.com");
+            return Redirect("https://stage.dawem.app/#/login");
         }
         [HttpPost]
         public async Task<ActionResult> RequestResetPassword(RequestResetPasswordModel forgetPasswordBindingModel)

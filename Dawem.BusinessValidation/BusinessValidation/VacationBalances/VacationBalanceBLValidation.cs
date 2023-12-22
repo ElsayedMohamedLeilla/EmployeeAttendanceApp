@@ -21,7 +21,8 @@ namespace Dawem.Validation.BusinessValidation.Schedules.VacationBalance
         public async Task<bool> CreateValidation(CreateVacationBalanceModel model)
         {
             var checkVacationBalanceDuplicate = await repositoryManager
-                .VacationBalanceRepository.Get(c => model.EmployeeId != null && c.IsDeleted && c.CompanyId == requestInfo.CompanyId
+                .VacationBalanceRepository.Get(c => model.EmployeeId != null && !c.IsDeleted && 
+                c.CompanyId == requestInfo.CompanyId
                 && c.EmployeeId == model.EmployeeId
                 && c.Year == model.Year
                 && c.VacationType == model.VacationType).AnyAsync();
@@ -36,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Schedules.VacationBalance
         public async Task<bool> UpdateValidation(UpdateVacationBalanceModel model)
         {
             var checkVacationBalanceDuplicate = await repositoryManager
-               .VacationBalanceRepository.Get(c => c.IsDeleted &&
+               .VacationBalanceRepository.Get(c => !c.IsDeleted &&
                 c.Id != model.Id &&
                c.CompanyId == requestInfo.CompanyId
                && c.EmployeeId == model.EmployeeId

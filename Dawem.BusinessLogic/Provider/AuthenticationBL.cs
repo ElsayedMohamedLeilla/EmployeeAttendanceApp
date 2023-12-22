@@ -370,7 +370,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         private string GenerateConfirmEmailLink(object emailToken)
         {
-            var path = generator.GetPathByAction(LeillaKeys.VerifyEmail, LeillaKeys.Account, emailToken);
+            var path = generator.GetPathByAction(LeillaKeys.VerifyEmail, LeillaKeys.Authentication, emailToken);
             var protocol = accessor.HttpContext.Request.IsHttps ? LeillaKeys.Https : LeillaKeys.Http;
             var host = accessor.HttpContext.Request.Host.Value;
             var confirmEmailLink = $"{protocol}://{host}{path}";

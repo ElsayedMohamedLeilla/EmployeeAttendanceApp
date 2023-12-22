@@ -11,6 +11,8 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
+using Dawem.Models.Response.Employees.Employee;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,8 +39,6 @@ namespace Dawem.BusinessLogic.Attendances
             #region Business Validation
 
             var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
-
-            var dddd = model.Latitude.IsValidLatitude();
 
             #endregion
 
@@ -423,7 +423,6 @@ namespace Dawem.BusinessLogic.Attendances
             // Format the non-negative time gap into HH:mm
             return nonNegativeTimeGap.ToString(@"hh\:mm");
         }
-
         public async Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
             var result = await repositoryManager.EmployeeAttendanceCheckRepository.Get(s => s.EmployeeAttendanceId == employeeAttendanceId)
@@ -511,6 +510,98 @@ namespace Dawem.BusinessLogic.Attendances
             await unitOfWork.SaveAsync();
 
             return true;
+        }
+        public async Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations()
+        {
+            var currentCompanyId = requestInfo.CompanyId;
+
+            var getTimeZoneId = await repositoryManager.CompanyRepository
+                .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
+                .Select(c => c.Country.TimeZoneId)
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
+
+            var clientLocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDate = clientLocalDateTime.Date;
+            var clientLocalDateWeekDay = (WeekDay)clientLocalDateTime.DayOfWeek;
+            var clientLocalTimeOnly = TimeOnly.FromTimeSpan(clientLocalDateTime.TimeOfDay);
+            var newDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
+
+            var employeeAttendanceRepository = repositoryManager.EmployeeAttendanceRepository;
+            var requestVacationRepository = repositoryManager.RequestVacationRepository;
+            var employeeRepository = repositoryManager.EmployeeRepository;
+
+            #region Attendances
+
+            var dayTotalAttendanceCount = await employeeAttendanceRepository.Get(c => !c.IsDeleted &&
+            c.CompanyId == currentCompanyId &&
+            c.EmployeeAttendanceChecks.Count() > 0 &&
+            c.LocalDate.Date == clientLocalDate)
+                .CountAsync();
+
+            #endregion
+
+            #region Vacations
+
+            var dayTotalVacationsCount = await requestVacationRepository.Get(c => !c.Request.IsDeleted &&
+            c.Request.CompanyId == currentCompanyId &&
+            clientLocalDate >= c.Request.Date && clientLocalDate <= c.DateTo)
+                .CountAsync() + await employeeRepository.Get(employee => !employee.IsDeleted &&
+            employee.CompanyId == currentCompanyId &&
+            employee.ScheduleId != null &&
+            employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) == null)
+                .CountAsync();
+
+            #endregion
+
+            #region Absences
+
+            var dayTotalAbsencesCount = await employeeRepository.Get(employee => !employee.IsDeleted &&
+            employee.CompanyId == currentCompanyId &&
+            employee.ScheduleId != null &&
+            employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
+            clientLocalTimeOnly > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
+            (employee.EmployeeAttendances == null || employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) == null))
+                .CountAsync();
+
+            #endregion
+
+            #region Delays
+
+            var dayTotalDelaysCount = await employeeRepository.Get(employee => !employee.IsDeleted &&
+            employee.CompanyId == currentCompanyId &&
+            employee.ScheduleId != null &&
+            employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
+            clientLocalTimeOnly >= employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
+            employee.EmployeeAttendances != null &&
+            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) != null &&
+            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks != null &&
+            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks.FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn) != null &&
+
+            (EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
+            (DateTime)(object)employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
+            .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).Time)
+            > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes))
+                .CountAsync();
+
+            #endregion
+
+            #region Handle Response
+
+            return new GetEmployeesAttendancesInformationsResponseModel
+            {
+                DayTotalAttendanceCount = dayTotalAttendanceCount,
+                DayTotalVacationsCount = dayTotalVacationsCount,
+                DayTotalAbsencesCount = dayTotalAbsencesCount,
+                DayTotalDelaysCount = dayTotalDelaysCount
+            };
+
+            #endregion
+
         }
     }
 }

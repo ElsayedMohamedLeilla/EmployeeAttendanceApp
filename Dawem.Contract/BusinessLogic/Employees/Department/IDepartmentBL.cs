@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Employees.Department
 {
@@ -16,5 +17,6 @@ namespace Dawem.Contract.BusinessLogic.Employees.Department
         Task<bool> Delete(int DepartmentId);
         Task<bool> Enable(int GroupId);
         Task<bool> Disable(DisableModelDTO model);
+        Task<GetDepartmentsInformationsResponseDTO> GetDepartmentsInformations();
     }
 }

@@ -102,7 +102,8 @@ namespace Dawem.Validation.BusinessValidation.Requests
             #region Validate And Set Balance
 
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
-                c.CompanyId == requestInfo.CompanyId && c.Id == model.VacationTypeId) ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+                c.CompanyId == requestInfo.CompanyId && c.Id == model.VacationTypeId) ?? 
+                throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
             var type = getVacationsType.Type;
 
@@ -112,7 +113,7 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 c.CompanyId == requestInfo.CompanyId && c.EmployeeId == getCurrentEmployeeId
                 && c.VacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
 
-            var requiredDays = (model.DateTo - model.DateFrom).Days;
+            var requiredDays = (model.DateTo - model.DateFrom).Days + 1;
             if (requiredDays > checkTypeBalance.RemainingBalance)
             {
                 throw new BusinessValidationException(null,
@@ -151,7 +152,7 @@ namespace Dawem.Validation.BusinessValidation.Requests
 
 
             var CheckIfVacationEmployeesHasAnotherRequestVacation = await repositoryManager
-     .RequestVacationRepository.Get(c =>
+          .RequestVacationRepository.Get(c =>
          !c.Request.IsDeleted &&
          (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
          c.Request.CompanyId == requestInfo.CompanyId &&
@@ -224,7 +225,7 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 c.CompanyId == requestInfo.CompanyId && c.EmployeeId == getCurrentEmployeeId
                 && c.VacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
 
-            var requiredDays = (model.DateTo - model.DateFrom).Days;
+            var requiredDays = (model.DateTo - model.DateFrom).Days + 1;
             if (requiredDays > checkTypeBalance.RemainingBalance)
             {
                 throw new BusinessValidationException(null,

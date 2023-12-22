@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime;
+﻿using Dawem.BusinessLogic.Employees.Departments;
+using Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
@@ -13,22 +14,22 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
     [Authorize]
     public class ShiftWorkingTimeController : BaseController
     {
-        private readonly IShiftWorkingTimeBL ShiftWorkingTimeBL;
+        private readonly IShiftWorkingTimeBL shiftWorkingTimeBL;
         public ShiftWorkingTimeController(IShiftWorkingTimeBL _ShiftWorkingTimeBL)
         {
-            ShiftWorkingTimeBL = _ShiftWorkingTimeBL;
+            shiftWorkingTimeBL = _ShiftWorkingTimeBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreateShiftWorkingTimeModelDTO model)
         {
-            var result = await ShiftWorkingTimeBL.Create(model);
+            var result = await shiftWorkingTimeBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateShiftWorkingTimeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateShiftWorkingTimeModelDTO model)
         {
 
-            var result = await ShiftWorkingTimeBL.Update(model);
+            var result = await shiftWorkingTimeBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateShiftWorkingTimeSuccessfully);
         }
         [HttpGet]
@@ -38,7 +39,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            var result = await ShiftWorkingTimeBL.Get(criteria);
+            var result = await shiftWorkingTimeBL.Get(criteria);
             return Success(result.ShiftWorkingTimes, result.TotalCount);
         }
         [HttpGet]
@@ -48,7 +49,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            var result = await ShiftWorkingTimeBL.GetForDropDown(criteria);
+            var result = await shiftWorkingTimeBL.GetForDropDown(criteria);
             return Success(result.ShiftWorkingTimes, result.TotalCount);
         }
         [HttpGet]
@@ -58,7 +59,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.GetInfo(ShiftWorkingTimeId));
+            return Success(await shiftWorkingTimeBL.GetInfo(ShiftWorkingTimeId));
         }
 
         [HttpGet]
@@ -68,7 +69,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.GetById(ShiftWorkingTimeId));
+            return Success(await shiftWorkingTimeBL.GetById(ShiftWorkingTimeId));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int ShiftWorkingTimeId)
@@ -77,7 +78,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.Delete(ShiftWorkingTimeId));
+            return Success(await shiftWorkingTimeBL.Delete(ShiftWorkingTimeId));
         }
         [HttpPut]
         public async Task<ActionResult> Enable(int ShiftWorkingTimeId)
@@ -86,7 +87,7 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.Enable(ShiftWorkingTimeId));
+            return Success(await shiftWorkingTimeBL.Enable(ShiftWorkingTimeId));
         }
         [HttpPut]
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
@@ -95,7 +96,12 @@ namespace Dawem.API.Controllers.Schedules.ShiftWorkingTimes
             {
                 return BadRequest();
             }
-            return Success(await ShiftWorkingTimeBL.Disable(model));
+            return Success(await shiftWorkingTimeBL.Disable(model));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetShiftWorkingTimesInformations()
+        {
+            return Success(await shiftWorkingTimeBL.GetShiftWorkingTimesInformations());
         }
 
     }

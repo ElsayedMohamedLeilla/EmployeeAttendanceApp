@@ -7,12 +7,14 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -373,7 +375,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
             await unitOfWork.SaveAsync();
             return true;
         }
-
         public async Task<bool> Enable(int departmentId)
         {
             var department = await repositoryManager.DepartmentRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == departmentId) ??
@@ -389,6 +390,23 @@ namespace Dawem.BusinessLogic.Employees.Departments
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetDepartmentsInformationsResponseDTO> GetDepartmentsInformations()
+        {
+            var departmentRepository = repositoryManager.DepartmentRepository;
+            var query = departmentRepository.Get(department => department.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetDepartmentsInformationsResponseDTO
+            {
+                TotalCount = await query.Where(department=> !department.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(department => department.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(department => !department.IsActive ).CountAsync(),
+                DeletedCount = await query.Where(department => department.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

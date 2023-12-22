@@ -56,12 +56,12 @@ namespace Dawem.BusinessLogic.Employees
                 .MaxAsync() + 1;
             #endregion
 
-            var department = mapper.Map<AssignmentType>(model);
-            department.CompanyId = requestInfo.CompanyId;
-            department.AddUserId = requestInfo.UserId;
+            var assignmentType = mapper.Map<AssignmentType>(model);
+            assignmentType.CompanyId = requestInfo.CompanyId;
+            assignmentType.AddUserId = requestInfo.UserId;
 
-            department.Code = getNextCode;
-            repositoryManager.AssignmentTypeRepository.Insert(department);
+            assignmentType.Code = getNextCode;
+            repositoryManager.AssignmentTypeRepository.Insert(assignmentType);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -69,7 +69,7 @@ namespace Dawem.BusinessLogic.Employees
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return department.Id;
+            return assignmentType.Id;
 
             #endregion
 

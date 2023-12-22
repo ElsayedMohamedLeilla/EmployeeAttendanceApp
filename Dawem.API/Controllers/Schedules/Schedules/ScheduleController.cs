@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.Schedules;
+﻿using Dawem.BusinessLogic.Schedules.SchedulePlans;
+using Dawem.Contract.BusinessLogic.Schedules.Schedules;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -89,6 +90,11 @@ namespace Dawem.API.Controllers.Schedules.Schedules
                 return BadRequest();
             }
             return Success(await scheduleBL.Delete(scheduleId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetSchedulesInformations()
+        {
+            return Success(await scheduleBL.GetSchedulesInformations());
         }
 
     }

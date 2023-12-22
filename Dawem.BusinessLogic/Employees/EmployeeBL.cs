@@ -6,11 +6,13 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employee;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
@@ -410,6 +412,60 @@ namespace Dawem.BusinessLogic.Employees
             employee.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetEmployeesInformationsResponseDTO> GetEmployeesInformations()
+        {
+            var employeeRepository = repositoryManager.EmployeeRepository;
+            var employeeAttendanceRepository = repositoryManager.EmployeeAttendanceRepository;
+
+            var currentCompanyId = requestInfo.CompanyId;
+            var getTimeZoneId = await repositoryManager.CompanyRepository
+               .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
+               .Select(c => c.Country.TimeZoneId)
+               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
+
+            var clientLocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDate = clientLocalDateTime.Date;
+            var clientLocalDateWeekDay = (WeekDay)clientLocalDateTime.DayOfWeek;
+            var clientLocalTimeOnly = TimeOnly.FromTimeSpan(clientLocalDateTime.TimeOfDay);
+
+            var query = employeeRepository.Get(employee => !employee.IsDeleted && employee.CompanyId == currentCompanyId);
+
+
+            var dayTotalAbsencesCount = await employeeRepository.Get(employee => !employee.IsDeleted &&
+             employee.CompanyId == currentCompanyId &&
+             employee.ScheduleId != null &&
+             employee.Schedule.ScheduleDays != null &&
+             employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
+             employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
+             clientLocalTimeOnly > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
+             (employee.EmployeeAttendances == null || employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) == null))
+            .CountAsync();
+
+
+            var dayTotalVacationsCount = await repositoryManager.RequestVacationRepository.Get(c => !c.Request.IsDeleted &&
+            c.Request.CompanyId == currentCompanyId &&
+            clientLocalDate >= c.Request.Date && clientLocalDate <= c.DateTo)
+                .CountAsync() + await employeeRepository.Get(employee => !employee.IsDeleted &&
+            employee.CompanyId == currentCompanyId &&
+            employee.ScheduleId != null &&
+            employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) == null)
+                .CountAsync();
+
+            #region Handle Response
+
+            return new GetEmployeesInformationsResponseDTO
+            {
+                TotalCount = await query.CountAsync(),
+                TotalAttendances = await employeeAttendanceRepository.Get(c => !c.IsDeleted && c.CompanyId == currentCompanyId &&
+                c.EmployeeAttendanceChecks.Count() > 0 &&
+                c.LocalDate.Date == clientLocalDate).CountAsync(),
+                TotalAbsences = dayTotalAbsencesCount,
+                TotalVacations = dayTotalVacationsCount
+            };
+
+            #endregion
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Schedules.Schedules;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -119,7 +120,11 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await employeeBL.Delete(employeeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetEmployeesInformations()
+        {
+            return Success(await employeeBL.GetEmployeesInformations());
+        }
 
     }
 }

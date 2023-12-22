@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.ShiftWorkingTimes;
 
 namespace Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime
@@ -15,5 +16,6 @@ namespace Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime
         Task<bool> Delete(int ShiftWorkingTimeId);
         Task<bool> Enable(int ShiftWorkingTimeId);
         Task<bool> Disable(DisableModelDTO model);
+        Task<GetShiftWorkingTimesInformationsResponseDTO> GetShiftWorkingTimesInformations();
     }
 }

@@ -9,6 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -243,6 +244,23 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
             schedule.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetSchedulesInformationsResponseDTO> GetSchedulesInformations()
+        {
+            var scheduleRepository = repositoryManager.ScheduleRepository;
+            var query = scheduleRepository.Get(schedule => schedule.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetSchedulesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(schedule => !schedule.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(schedule => schedule.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(schedule => !schedule.IsActive).CountAsync(),
+                DeletedCount = await query.Where(schedule => schedule.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

@@ -112,6 +112,11 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await departmentBL.Disable(model));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetDepartmentsInformations()
+        {
+            return Success(await departmentBL.GetDepartmentsInformations());
+        }
 
     }
 }

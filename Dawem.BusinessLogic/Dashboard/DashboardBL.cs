@@ -20,10 +20,6 @@ namespace Dawem.BusinessLogic.Employees
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
         }
-        private static int getsec(TimeOnly timeOnly)
-        {
-            return timeOnly.Second;
-        }
         public async Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations()
         {
             var currentCompanyId = requestInfo.CompanyId;

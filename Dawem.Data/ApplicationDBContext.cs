@@ -307,7 +307,7 @@ namespace Dawem.Data
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
         public DbSet<ZoneEmployee> ZoneEmployees { get; set; }
         public DbSet<Zone> Zones { get; set; }
-        public DbSet<Holiday> Holidaies { get; set; }
+        public DbSet<Holiday> Holidaies  { get; set; }
 
 
 

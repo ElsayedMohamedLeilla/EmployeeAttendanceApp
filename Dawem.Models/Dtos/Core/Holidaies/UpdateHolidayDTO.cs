@@ -10,8 +10,8 @@ namespace Dawem.Models.Dtos.Core.Holidaies
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public DateType DateType { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public string Notes { get; set; }
 
         [JsonIgnore]

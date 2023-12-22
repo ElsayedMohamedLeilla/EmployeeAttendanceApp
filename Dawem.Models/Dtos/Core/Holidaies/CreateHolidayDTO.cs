@@ -1,5 +1,5 @@
 ﻿using Dawem.Enums.Generals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Globalization;
 
 namespace Dawem.Models.Dtos.Core.Holidaies
@@ -7,11 +7,10 @@ namespace Dawem.Models.Dtos.Core.Holidaies
     public class CreateHolidayDTO
     {
         public string Name { get; set; }
-        public int Type { get; set; }
         public bool IsActive { get; set; }
         public DateType DateType { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public string Notes { get; set; }
 
         [JsonIgnore]

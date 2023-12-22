@@ -82,7 +82,7 @@ namespace Dawem.Validation.Core
             var checkHolidayDuplicateDate = await repositoryManager
                 .HolidayRepository.Get(c => c.CompanyId == requestInfo.CompanyId
                 && c.StartDay == model.StartDay && c.EndDay == model.EndDay
-                && c.StartMonth == model.StartMonth && c.EndMonth == model.EndMonth).AnyAsync();
+                && c.StartMonth == model.StartMonth && c.EndMonth == model.EndMonth && c.Id != model.Id).AnyAsync();
             if (checkHolidayDuplicateDate)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThereisAnotherHolidayUseThisPeriod);

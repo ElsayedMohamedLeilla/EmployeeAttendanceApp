@@ -15,6 +15,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Holidaies;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using System.Globalization;
 
 namespace Dawem.BusinessLogic.Core.holidays
@@ -96,8 +97,8 @@ namespace Dawem.BusinessLogic.Core.holidays
             getholiday.EndMonth = model.EndMonth;
             if (model.DateType == DateType.Hijri) //ignore year in Hijri Data
             {
-                getholiday.StartYear = 0;
-                getholiday.EndYear = 0;
+                getholiday.StartYear = null;
+                getholiday.EndYear = null;
             }
             else
             {
@@ -141,8 +142,8 @@ namespace Dawem.BusinessLogic.Core.holidays
                 IsActive = e.IsActive,
                 DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                 Notes = e.Notes,
-                StartDate = e.GetStartDate(),
-                EndDate = e.GetEndDate()
+                StartDate = e.GetStartDateAsString(criteria.Year ?? DateTime.UtcNow.Year),
+                EndDate = e.GetEndDateAsString(criteria.Year ?? DateTime.UtcNow.Year)
             }).ToListAsync();
 
             return new GetHolidayResponseDTO
@@ -194,6 +195,7 @@ namespace Dawem.BusinessLogic.Core.holidays
         }
         public async Task<GetHolidayInfoResponseDTO> GetInfo(int holidayId)
         {
+            
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
                 .Select(e => new GetHolidayInfoResponseDTO
                 {
@@ -202,8 +204,8 @@ namespace Dawem.BusinessLogic.Core.holidays
                     IsActive = e.IsActive,
                     DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                     Notes = e.Notes,
-                    StartDate = e.GetStartDate(),
-                    EndDate = e.GetEndDate()
+                    StartDate = e.GetStartDateAsString(null),
+                    EndDate = e.GetEndDateAsString(null)
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -211,8 +213,9 @@ namespace Dawem.BusinessLogic.Core.holidays
         }
         public async Task<GetHolidayByIdResponseDTO> GetById(int holidayId)
         {
+            HijriCalendar hijriCalendar = new HijriCalendar();
+            int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
-
                 .Select(e => new GetHolidayByIdResponseDTO
                 {
                     Id = e.Id,
@@ -220,13 +223,9 @@ namespace Dawem.BusinessLogic.Core.holidays
                     Name = e.Name,
                     IsActive = e.IsActive,
                     DateType = e.DateType,
-                    StartDate = e.DateType ==
-                    DateType.Hijri ? new HijriCalendar().ToDateTime(DateTime.Now.Year, e.StartMonth, e.StartDay, 0, 0, 0, 0).Date
-                     : new DateTime(e.StartYear ?? DateTime.Now.Year, e.StartMonth, e.StartDay).Date,
-                    EndDate = e.DateType == DateType.Hijri
-                     ? new HijriCalendar().ToDateTime(DateTime.Now.Year, e.EndMonth, e.EndDay, 0, 0, 0, 0).Date
-                     : new DateTime(e.EndYear ?? DateTime.Now.Year, e.EndMonth, e.EndDay).Date
-
+                    Notes = e.Notes,
+                    StartDate = e.DateType ==DateType.Hijri ?  e.GetHijriDate(currentHijriYear, e.StartMonth,e.StartDay) : new LocalDate(e.StartYear ?? DateTime.UtcNow.Year, e.StartMonth, e.StartDay),
+                    EndDate = e.DateType == DateType.Hijri ? e.GetHijriDate(currentHijriYear, e.EndMonth, e.EndDay) : new LocalDate(e.EndYear ?? DateTime.UtcNow.Year, e.EndMonth, e.EndDay),
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 

@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Requests;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Holidaies;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -98,6 +99,13 @@ namespace Dawem.API.Controllers.Core
                 return BadRequest();
             }
             return Success(await holidayBL.Disable(model));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetHolidaiesInformations() 
+        {
+            var response = await holidayBL.GetHolidaiesInformation();
+            return Success(response);
         }
 
     }

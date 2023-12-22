@@ -13,9 +13,11 @@ using Dawem.Models.Dtos.Core.Holidaies;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Holidaies;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Calendars;
 using System.Globalization;
 
 namespace Dawem.BusinessLogic.Core.holidays
@@ -256,6 +258,84 @@ namespace Dawem.BusinessLogic.Core.holidays
             await unitOfWork.SaveAsync();
             return true;
         }
+
+        public async Task<GetHolidaiesInformationsResponseDTO> GetHolidaiesInformation()
+        {
+            var leapYearPattern = IslamicLeapYearPattern.Base15;
+            var epoch = IslamicEpoch.Astronomical;
+            var holidayRepository = repositoryManager.HolidayRepository;
+            var allHolidays = await holidayRepository
+                .Get(holiday => !holiday.IsDeleted && holiday.CompanyId == requestInfo.CompanyId)
+                .ToListAsync();
+
+            var totalHolidayCount = allHolidays.Count;
+
+            // Calculate Gregorian date counts
+            var (upcomingGregorianCount, pastGregorianCount) = CalculateGregorianCounts(allHolidays.Where(h => h.DateType == DateType.Gregorian).ToList());
+
+            // Calculate Hijri date counts
+            var (upcomingHijriCount, pastHijriCount) = CalculateHijriCounts(allHolidays.Where(h=> h.DateType == DateType.Hijri).ToList(), leapYearPattern, epoch);
+
+            return new GetHolidaiesInformationsResponseDTO
+            {
+                TotalHolidayCount = totalHolidayCount,
+                UpcomingHolidaiesCount = upcomingGregorianCount + upcomingHijriCount,
+                PastHolidaiesCount = pastGregorianCount + pastHijriCount
+            };
+        }
+
+
+
+        #region calculate HolidayCout for Hijri and gerogian date
+        private (int, int) CalculateGregorianCounts(List<Holiday> holidays)
+        {
+            var today = DateTime.Today;
+
+            var upcomingCount = holidays
+                .Count(h =>
+                    h.StartYear > today.Year ||
+                    (h.StartYear == today.Year && h.StartMonth > today.Month) ||
+                    (h.StartYear == today.Year && h.StartMonth == today.Month && h.StartDay > today.Day));
+                    
+
+            var pastCount = holidays
+                .Count(h =>
+                    h.EndYear < today.Year ||
+                    (h.EndYear == today.Year && h.EndMonth < today.Month) ||
+                    (h.EndYear == today.Year && h.EndMonth == today.Month && h.EndDay < today.Day));
+                    
+
+            return (upcomingCount, pastCount);
+        }
+
+        private (int, int) CalculateHijriCounts(List<Holiday> holidays, IslamicLeapYearPattern leapYearPattern, IslamicEpoch epoch)
+        {
+            var todayHijri = LocalDate.FromDateTime(DateTime.Today, CalendarSystem.GetIslamicCalendar(leapYearPattern, epoch));
+
+            var upcomingCount = holidays
+                .Count(h =>
+                    (h.StartMonth > todayHijri.Month ||
+                    (h.StartMonth == todayHijri.Month && h.StartDay > todayHijri.Day)));
+
+            var pastCount = holidays
+                .Count(h =>
+                    (h.EndMonth < todayHijri.Month ||
+                    (h.EndMonth == todayHijri.Month && h.EndDay < todayHijri.Day)));
+
+            return (upcomingCount, pastCount);
+        }
+
+        #endregion
+
+
+
+        // get holiday for mobile
+        //public async Task<GetHolidayResponseDTO> GetForEmployee()
+        //{
+        //}
+
+
+
 
     }
 }

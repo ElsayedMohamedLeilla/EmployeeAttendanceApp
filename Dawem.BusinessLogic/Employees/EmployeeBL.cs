@@ -16,7 +16,6 @@ using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.Intrinsics.Arm;
 
 namespace Dawem.BusinessLogic.Employees
 {

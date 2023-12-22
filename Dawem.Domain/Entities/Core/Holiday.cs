@@ -49,10 +49,10 @@ namespace Dawem.Domain.Entities.Core
 
                 HijriCalendar hijriCalendar = new HijriCalendar();
                 int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-                if(year == null)
+                //if(year == null)
                 return currentHijriYear + "-" + StartMonth + "-" + StartDay;
-                else
-                    return year + "-" + StartMonth + "-" + StartDay;
+                //else
+                //    return year + "-" + StartMonth + "-" + StartDay;
 
             }
             else
@@ -69,10 +69,10 @@ namespace Dawem.Domain.Entities.Core
             {
                 HijriCalendar hijriCalendar = new HijriCalendar();
                 int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-                if (year == null)
+               // if (year == null)
                     return currentHijriYear + "-" + EndMonth + "-" + EndDay;
-                else
-                    return year + "-" + EndMonth + "-" + EndDay;
+               // else
+                   // return year + "-" + EndMonth + "-" + EndDay;
             }
             else
             {

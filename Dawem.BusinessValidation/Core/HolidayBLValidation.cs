@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Core.Holidaies;
 using Dawem.Models.Exceptions;
@@ -82,7 +83,7 @@ namespace Dawem.Validation.Core
             var checkHolidayDuplicateDate = await repositoryManager
                 .HolidayRepository.Get(c => c.CompanyId == requestInfo.CompanyId
                 && c.StartDay == model.StartDay && c.EndDay == model.EndDay
-                && c.StartMonth == model.StartMonth && c.EndMonth == model.EndMonth && c.Id != model.Id).AnyAsync();
+                && c.StartMonth == model.StartMonth && c.EndMonth == model.EndMonth && c.Id != model.Id && c.DateType != model.DateType).AnyAsync();
             if (checkHolidayDuplicateDate)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThereisAnotherHolidayUseThisPeriod);

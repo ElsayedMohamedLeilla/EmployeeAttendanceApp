@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Core.PermissionsTypes;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.VacationsTypes;
 using Dawem.Translations;
@@ -79,6 +80,10 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await vacationTypeBL.Delete(vacationTypeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetVacationTypesInformations()
+        {
+            return Success(await vacationTypeBL.GetVacationTypesInformations());
+        }
     }
 }

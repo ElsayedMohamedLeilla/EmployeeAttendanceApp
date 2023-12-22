@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Groups;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
@@ -16,5 +17,6 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Delete(int GroupId);
         Task<bool> Enable(int GroupId);
         Task<bool> Disable(DisableModelDTO model);
+        Task<GetGroupsInformationsResponseDTO> GetGroupsInformations();
     }
 }

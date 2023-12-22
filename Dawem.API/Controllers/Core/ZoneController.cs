@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Core.VacationsTypes;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -14,22 +15,22 @@ namespace Dawem.API.Controllers.Core
     [Authorize]
     public class ZoneController : BaseController
     {
-        private readonly IZoneBL ZoneBL;
+        private readonly IZoneBL zoneBL;
         public ZoneController(IZoneBL _ZoneBL)
         {
-            ZoneBL = _ZoneBL;
+            zoneBL = _ZoneBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreateZoneDTO model)
         {
-            var result = await ZoneBL.Create(model);
+            var result = await zoneBL.Create(model);
             return Success(result, messageCode: AmgadKeys.DoneCreateZoneSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateZoneDTO model)
         {
 
-            var result = await ZoneBL.Update(model);
+            var result = await zoneBL.Update(model);
             return Success(result, messageCode: AmgadKeys.DoneUpdateZoneSuccessfully);
         }
         [HttpGet]
@@ -39,7 +40,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await ZoneBL.Get(criteria);
+            var result = await zoneBL.Get(criteria);
             return Success(result.Zones, result.TotalCount);
         }
         [HttpGet]
@@ -49,7 +50,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await ZoneBL.GetForDropDown(criteria);
+            var result = await zoneBL.GetForDropDown(criteria);
             return Success(result.Zones, result.TotalCount);
         }
         [HttpGet]
@@ -59,7 +60,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            return Success(await ZoneBL.GetInfo(ZoneId));
+            return Success(await zoneBL.GetInfo(ZoneId));
         }
 
         [HttpGet]
@@ -69,7 +70,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            return Success(await ZoneBL.GetById(ZoneId));
+            return Success(await zoneBL.GetById(ZoneId));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int ZoneId)
@@ -78,7 +79,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            return Success(await ZoneBL.Delete(ZoneId));
+            return Success(await zoneBL.Delete(ZoneId));
         }
 
         [HttpPut]
@@ -88,7 +89,7 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            return Success(await ZoneBL.Enable(ZoneId));
+            return Success(await zoneBL.Enable(ZoneId));
         }
         [HttpPut]
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
@@ -97,8 +98,12 @@ namespace Dawem.API.Controllers.Core
             {
                 return BadRequest();
             }
-            return Success(await ZoneBL.Disable(model));
+            return Success(await zoneBL.Disable(model));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetZonesInformations()
+        {
+            return Success(await zoneBL.GetZonesInformations());
+        }
     }
 }

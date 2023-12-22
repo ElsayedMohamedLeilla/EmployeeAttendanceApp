@@ -12,6 +12,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.VacationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.VacationsTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -221,6 +222,22 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             await unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<GetVacationsTypesInformationsResponseDTO> GetVacationTypesInformations()
+        {
+            var vacationRepository = repositoryManager.VacationsTypeRepository;
+            var query = vacationRepository.Get(vacation => vacation.CompanyId == requestInfo.CompanyId);
 
+            #region Handle Response
+
+            return new GetVacationsTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(vacation => !vacation.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(vacation => !vacation.IsDeleted && vacation.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(vacation => !vacation.IsDeleted && !vacation.IsActive).CountAsync(),
+                DeletedCount = await query.Where(vacation => vacation.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
     }
 }

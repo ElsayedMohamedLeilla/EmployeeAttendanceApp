@@ -13,8 +13,11 @@ using Dawem.Models.Dtos.Core.Holidaies;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Holidaies;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
+using NodaTime.Calendars;
 using System.Globalization;
 
 namespace Dawem.BusinessLogic.Core.holidays
@@ -96,8 +99,8 @@ namespace Dawem.BusinessLogic.Core.holidays
             getholiday.EndMonth = model.EndMonth;
             if (model.DateType == DateType.Hijri) //ignore year in Hijri Data
             {
-                getholiday.StartYear = 0;
-                getholiday.EndYear = 0;
+                getholiday.StartYear = null;
+                getholiday.EndYear = null;
             }
             else
             {
@@ -141,8 +144,8 @@ namespace Dawem.BusinessLogic.Core.holidays
                 IsActive = e.IsActive,
                 DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                 Notes = e.Notes,
-                StartDate = e.GetStartDate(),
-                EndDate = e.GetEndDate()
+                StartDate = e.GetStartDateAsString(criteria.Year ?? DateTime.UtcNow.Year),
+                EndDate = e.GetEndDateAsString(criteria.Year ?? DateTime.UtcNow.Year)
             }).ToListAsync();
 
             return new GetHolidayResponseDTO
@@ -194,6 +197,7 @@ namespace Dawem.BusinessLogic.Core.holidays
         }
         public async Task<GetHolidayInfoResponseDTO> GetInfo(int holidayId)
         {
+            
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
                 .Select(e => new GetHolidayInfoResponseDTO
                 {
@@ -202,8 +206,8 @@ namespace Dawem.BusinessLogic.Core.holidays
                     IsActive = e.IsActive,
                     DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                     Notes = e.Notes,
-                    StartDate = e.GetStartDate(),
-                    EndDate = e.GetEndDate()
+                    StartDate = e.GetStartDateAsString(null),
+                    EndDate = e.GetEndDateAsString(null)
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -211,8 +215,9 @@ namespace Dawem.BusinessLogic.Core.holidays
         }
         public async Task<GetHolidayByIdResponseDTO> GetById(int holidayId)
         {
+            HijriCalendar hijriCalendar = new HijriCalendar();
+            int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
-
                 .Select(e => new GetHolidayByIdResponseDTO
                 {
                     Id = e.Id,
@@ -220,13 +225,9 @@ namespace Dawem.BusinessLogic.Core.holidays
                     Name = e.Name,
                     IsActive = e.IsActive,
                     DateType = e.DateType,
-                    StartDate = e.DateType ==
-                    DateType.Hijri ? new HijriCalendar().ToDateTime(DateTime.Now.Year, e.StartMonth, e.StartDay, 0, 0, 0, 0).Date
-                     : new DateTime(e.StartYear ?? DateTime.Now.Year, e.StartMonth, e.StartDay).Date,
-                    EndDate = e.DateType == DateType.Hijri
-                     ? new HijriCalendar().ToDateTime(DateTime.Now.Year, e.EndMonth, e.EndDay, 0, 0, 0, 0).Date
-                     : new DateTime(e.EndYear ?? DateTime.Now.Year, e.EndMonth, e.EndDay).Date
-
+                    Notes = e.Notes,
+                    StartDate = e.DateType ==DateType.Hijri ?  e.GetHijriDate(currentHijriYear, e.StartMonth,e.StartDay) : new LocalDate(e.StartYear ?? DateTime.UtcNow.Year, e.StartMonth, e.StartDay),
+                    EndDate = e.DateType == DateType.Hijri ? e.GetHijriDate(currentHijriYear, e.EndMonth, e.EndDay) : new LocalDate(e.EndYear ?? DateTime.UtcNow.Year, e.EndMonth, e.EndDay),
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -257,6 +258,84 @@ namespace Dawem.BusinessLogic.Core.holidays
             await unitOfWork.SaveAsync();
             return true;
         }
+
+        public async Task<GetHolidaiesInformationsResponseDTO> GetHolidaiesInformation()
+        {
+            var leapYearPattern = IslamicLeapYearPattern.Base15;
+            var epoch = IslamicEpoch.Astronomical;
+            var holidayRepository = repositoryManager.HolidayRepository;
+            var allHolidays = await holidayRepository
+                .Get(holiday => !holiday.IsDeleted && holiday.CompanyId == requestInfo.CompanyId)
+                .ToListAsync();
+
+            var totalHolidayCount = allHolidays.Count;
+
+            // Calculate Gregorian date counts
+            var (upcomingGregorianCount, pastGregorianCount) = CalculateGregorianCounts(allHolidays.Where(h => h.DateType == DateType.Gregorian).ToList());
+
+            // Calculate Hijri date counts
+            var (upcomingHijriCount, pastHijriCount) = CalculateHijriCounts(allHolidays.Where(h=> h.DateType == DateType.Hijri).ToList(), leapYearPattern, epoch);
+
+            return new GetHolidaiesInformationsResponseDTO
+            {
+                TotalHolidayCount = totalHolidayCount,
+                UpcomingHolidaiesCount = upcomingGregorianCount + upcomingHijriCount,
+                PastHolidaiesCount = pastGregorianCount + pastHijriCount
+            };
+        }
+
+
+
+        #region calculate HolidayCout for Hijri and gerogian date
+        private (int, int) CalculateGregorianCounts(List<Holiday> holidays)
+        {
+            var today = DateTime.Today;
+
+            var upcomingCount = holidays
+                .Count(h =>
+                    h.StartYear > today.Year ||
+                    (h.StartYear == today.Year && h.StartMonth > today.Month) ||
+                    (h.StartYear == today.Year && h.StartMonth == today.Month && h.StartDay > today.Day));
+                    
+
+            var pastCount = holidays
+                .Count(h =>
+                    h.EndYear < today.Year ||
+                    (h.EndYear == today.Year && h.EndMonth < today.Month) ||
+                    (h.EndYear == today.Year && h.EndMonth == today.Month && h.EndDay < today.Day));
+                    
+
+            return (upcomingCount, pastCount);
+        }
+
+        private (int, int) CalculateHijriCounts(List<Holiday> holidays, IslamicLeapYearPattern leapYearPattern, IslamicEpoch epoch)
+        {
+            var todayHijri = LocalDate.FromDateTime(DateTime.Today, CalendarSystem.GetIslamicCalendar(leapYearPattern, epoch));
+
+            var upcomingCount = holidays
+                .Count(h =>
+                    (h.StartMonth > todayHijri.Month ||
+                    (h.StartMonth == todayHijri.Month && h.StartDay > todayHijri.Day)));
+
+            var pastCount = holidays
+                .Count(h =>
+                    (h.EndMonth < todayHijri.Month ||
+                    (h.EndMonth == todayHijri.Month && h.EndDay < todayHijri.Day)));
+
+            return (upcomingCount, pastCount);
+        }
+
+        #endregion
+
+
+
+        // get holiday for mobile
+        //public async Task<GetHolidayResponseDTO> GetForEmployee()
+        //{
+        //}
+
+
+
 
     }
 }

@@ -62,8 +62,6 @@
         public const string StartABreak = "StartABreak";
         public const string FinishABreak = "FinishABreak";
         public const string NotSet = "NotSet";
-
-
         public const string SorryYouMustEnterHolidayName = "Sorry!!YouMustEnterHolidayName!";
         public const string SorryDateTypeMustBe0ForGregorianDateOr1HijriDate = "Sorry!!DateTypeMustBe0ForGregorianDateOr1HijriDate!";
         public const string SorryYouMustEnterStartDateForHoliday = "Sorry!!YouMustEnterStartDateForHoliday!";
@@ -77,8 +75,12 @@
         public const string Gregorian = "Gregorian";
         public const string Hijri = "Hijri";
         public const string SorryHolidayNotFound = "Sorry!!HolidayNotFound!";
+        public const string DoneCreateHolidaySuccessfully = "DoneCreateHolidaySuccessfully";
+        public const string DoneUpdateHolidaySuccessfully = "DoneUpdateHolidaySuccessfully";
 
         
+
+
 
 
 

@@ -3,6 +3,7 @@ using Dawem.Models.Dtos.Core.Holidaies;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Groups;
 using Dawem.Models.Response.Core.Holidaies;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
@@ -17,5 +18,8 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Delete(int HolidayId);
         Task<bool> Enable(int HolidayId);
         Task<bool> Disable(DisableModelDTO model);
+
+        Task<GetHolidaiesInformationsResponseDTO> GetHolidaiesInformation();
+
     }
 }

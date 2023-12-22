@@ -1,5 +1,5 @@
 ﻿using Dawem.Enums.Generals;
-using System.Globalization;
+using NodaTime;
 
 namespace Dawem.Models.Response.Core.Holidaies
 {
@@ -10,16 +10,13 @@ namespace Dawem.Models.Response.Core.Holidaies
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public DateType DateType { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public LocalDate StartDate { get; set; }
+        public LocalDate EndDate { get; set; }
         public string Notes { get; set; }
 
-        public int StartDay { get; set; }
-        public int EndDay { get; set; }
-        public int StartMonth { get; set; }
-        public int EndMonth { get; set; }
-        public int? StartYear { get; set; }
-        public int? EndYear { get; set; }
+
+     
+
 
     }
 }

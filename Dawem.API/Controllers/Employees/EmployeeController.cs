@@ -56,7 +56,6 @@ namespace Dawem.API.Controllers.Employees
                 return BadRequest();
             }
             var employeesresponse = await employeeBL.Get(criteria);
-
             return Success(employeesresponse.Employees, employeesresponse.TotalCount);
         }
         [HttpGet]

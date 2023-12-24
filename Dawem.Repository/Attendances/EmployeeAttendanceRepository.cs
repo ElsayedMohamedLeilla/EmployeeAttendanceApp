@@ -2,8 +2,10 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendances;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Generic;
 using LinqKit;
 
@@ -12,9 +14,9 @@ namespace Dawem.Repository.Attendances
     public class EmployeeAttendanceRepository : GenericRepository<EmployeeAttendance>, IEmployeeAttendanceRepository
     {
         private readonly RequestInfo requestInfo;
-        public EmployeeAttendanceRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
+        public EmployeeAttendanceRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _attendanceInfo) : base(unitOfWork, _generalSetting)
         {
-            requestInfo = _requestInfo;
+            requestInfo = _attendanceInfo;
         }
         public IQueryable<EmployeeAttendance> GetAsQueryable(GetEmployeeAttendancesForWebAdminCriteria criteria)
         {
@@ -36,7 +38,7 @@ namespace Dawem.Repository.Attendances
             }
             if (criteria.EmployeeId != null)
             {
-                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId );
+                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId);
             }
             if (criteria.Date != null)
             {
@@ -54,6 +56,36 @@ namespace Dawem.Repository.Attendances
 
             predicate = predicate.And(inner);
 
+            var Query = Get(predicate);
+            return Query;
+        }
+        public IQueryable<EmployeeAttendance> GetForStatusAsQueryable(GetStatusBaseModel model)
+        {
+            var predicate = PredicateBuilder.New<EmployeeAttendance>(a => !a.IsDeleted && a.CompanyId == requestInfo.CompanyId);
+
+            switch (model.Type)
+            {
+                case GetRequestsStatusType.CurrentDay:
+                    predicate = predicate.And(attendance => attendance.LocalDate.Date == model.LocalDate.Date);
+                    break;
+                case GetRequestsStatusType.CurrentMonth:
+                    predicate = predicate.And(attendance => attendance.LocalDate.Month == model.LocalDate.Month && attendance.LocalDate.Year == model.LocalDate.Year);
+                    break;
+                case GetRequestsStatusType.CurrentYear:
+                    predicate = predicate.And(attendance => attendance.LocalDate.Year == model.LocalDate.Year);
+                    break;
+                default:
+                    break;
+            }
+
+            if (model.DateFrom != null)
+            {
+                predicate = predicate.And(attendance => attendance.LocalDate >= model.DateFrom.Value);
+            }
+            if (model.DateTo != null)
+            {
+                predicate = predicate.And(attendance => attendance.LocalDate <= model.DateTo.Value);
+            }
             var Query = Get(predicate);
             return Query;
         }

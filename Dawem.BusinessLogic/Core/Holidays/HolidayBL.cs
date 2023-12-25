@@ -442,7 +442,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
                     return (TranslationHelper.GetTranslation(AmgadKeys.WillStart, requestInfo.Lang) + " " + dayOfWeek, HolidayStatus.WillStart);
                 }
-                else if (clientLocalDateTime < endDate && clientLocalDateTime > startDate) //starte
+                else if (clientLocalDateTime < endDate && clientLocalDateTime > startDate) //start
                 {
                     dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
                     return (TranslationHelper.GetTranslation(AmgadKeys.Started, requestInfo.Lang) + " " + dayOfWeek, HolidayStatus.Started);

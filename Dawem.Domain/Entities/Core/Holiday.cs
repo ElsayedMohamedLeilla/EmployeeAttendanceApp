@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table("Holida" + LeillaKeys.IES)]
+    [Table(nameof(Holiday) + LeillaKeys.S)]
     public class Holiday : BaseEntity
     {
         #region Forign Key
@@ -28,6 +28,7 @@ namespace Dawem.Domain.Entities.Core
         public DateOnly StartDate { get; set; }
         [NotMapped]
         public DateOnly EndDate { get; set; }
+        public bool IsSpecifiedByYear { get; set; }
 
         public DateTime ToGregorianDate(int year, int month, int day)
         {
@@ -46,21 +47,14 @@ namespace Dawem.Domain.Entities.Core
         {
             if (DateType == DateType.Hijri)
             {
-
                 HijriCalendar hijriCalendar = new HijriCalendar();
                 int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-                //if(year == null)
                 return currentHijriYear + "-" + StartMonth + "-" + StartDay;
-                //else
-                //    return year + "-" + StartMonth + "-" + StartDay;
-
             }
             else
             {
                 int gyear = StartYear ?? DateTime.UtcNow.Year;
                 return gyear + "-" + StartMonth + "-" + StartDay;
-
-                //return new DateTime(StartYear ?? DateTime.UtcNow.Year, StartMonth, StartDay).ToString("yyyy-MM-dd");
             }
         }
         public string GetEndDateAsString(int? year)
@@ -69,10 +63,8 @@ namespace Dawem.Domain.Entities.Core
             {
                 HijriCalendar hijriCalendar = new HijriCalendar();
                 int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-               // if (year == null)
                     return currentHijriYear + "-" + EndMonth + "-" + EndDay;
-               // else
-                   // return year + "-" + EndMonth + "-" + EndDay;
+              
             }
             else
             {
@@ -87,32 +79,14 @@ namespace Dawem.Domain.Entities.Core
             StartMonth = StartDate.Month;
             EndDay = EndDate.Day;
             EndMonth = EndDate.Month;
-            if (DateType == DateType.Gregorian)
+            if (IsSpecifiedByYear)
             {
                 StartYear = StartDate.Year;
                 EndYear = EndDate.Year;
             }
         }
 
-        //public LocalDate GetStartDate(DateType dateType, int year, int startMonth, int startDay)
-        //{
-        //    LocalDate startDate = LocalDate.MinIsoValue;
-
-        //    if (dateType == DateType.Hijri)
-        //    {
-        //        CultureInfo hijriCulture = new CultureInfo("ar-SA");
-        //        HijriCalendar hijriCalendar = new HijriCalendar();
-        //        hijriCulture.DateTimeFormat.Calendar = hijriCalendar;
-        //        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-        //        startDate = GetHijriDate(currentHijriYear, startMonth, startDay);
-        //    }
-        //    else
-        //    {
-        //        startDate = new LocalDate(year, startMonth, startDay);
-        //    }
-
-        //    return startDate;
-        //}
+       
 
         public LocalDate GetHijriDate(int hijriYear, int hijriMonth, int hijriDay)
         {

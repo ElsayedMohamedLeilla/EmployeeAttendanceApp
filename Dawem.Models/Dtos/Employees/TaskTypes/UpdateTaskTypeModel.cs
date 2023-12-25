@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.AssignmentType
+﻿namespace Dawem.Models.Dtos.Employees.TaskTypes
 {
-    public class UpdateAssignmentTypeModel
+    public class UpdateTaskTypeModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

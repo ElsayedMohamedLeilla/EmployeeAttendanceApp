@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Models.Generic;
 using LinqKit;
 

@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Criteria.Core;
-using Dawem.Models.Criteria.Provider;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Providers;
 using Dawem.Models.ResponseModels;
 

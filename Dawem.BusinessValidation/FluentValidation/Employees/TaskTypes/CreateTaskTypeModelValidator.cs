@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.TaskType;
+﻿using Dawem.Models.Dtos.Employees.TaskTypes;
 using Dawem.Translations;
 using FluentValidation;
 

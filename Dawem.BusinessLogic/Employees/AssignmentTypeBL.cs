@@ -7,7 +7,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.AssignmentType;
+using Dawem.Models.Dtos.Employees.AssignmentTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.AssignmentTypes;
 using Dawem.Translations;

@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Dtos.Employees.JobTitle
+﻿namespace Dawem.Models.Dtos.Employees.HolidayTypes
 {
-    public class CreateJobTitleModel
+    public class CreateHolidayTypeModel
     {
         public string Name { get; set; }
         public bool IsActive { get; set; }

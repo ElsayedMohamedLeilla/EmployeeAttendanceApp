@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Provider;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Validations;
 

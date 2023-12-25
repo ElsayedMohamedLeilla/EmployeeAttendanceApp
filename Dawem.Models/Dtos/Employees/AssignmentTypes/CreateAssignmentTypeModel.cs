@@ -1,7 +1,6 @@
-﻿
-namespace Dawem.Models.Dtos.Employees.TaskType
+﻿namespace Dawem.Models.Dtos.Employees.AssignmentTypes
 {
-    public class CreateTaskTypeModel
+    public class CreateAssignmentTypeModel
     {
         public string Name { get; set; }
         public bool IsActive { get; set; }

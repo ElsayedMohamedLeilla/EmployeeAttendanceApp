@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Criteria.Provider
+﻿namespace Dawem.Models.Criteria.Providers
 {
     public class ValidateUserBranchSearchCriteria : BaseCriteria
     {

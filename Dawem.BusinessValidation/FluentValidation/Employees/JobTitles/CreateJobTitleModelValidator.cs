@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.JobTitle;
+﻿using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Translations;
 using FluentValidation;
 

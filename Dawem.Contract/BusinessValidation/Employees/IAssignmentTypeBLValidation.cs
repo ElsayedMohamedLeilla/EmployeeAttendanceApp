@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.AssignmentType;
+﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
 
 namespace Dawem.Contract.BusinessValidation.Employees
 {

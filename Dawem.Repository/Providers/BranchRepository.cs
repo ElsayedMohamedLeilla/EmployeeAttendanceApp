@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Provider;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Generic;
 using LinqKit;

@@ -1,5 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Models.Dtos.Employees.JobTitle;
+using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

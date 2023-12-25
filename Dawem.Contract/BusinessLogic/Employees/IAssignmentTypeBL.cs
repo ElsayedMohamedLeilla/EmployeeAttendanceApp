@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.AssignmentType;
+﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
 using Dawem.Models.Response.Employees.AssignmentTypes;
 
 namespace Dawem.Contract.BusinessLogic.Employees

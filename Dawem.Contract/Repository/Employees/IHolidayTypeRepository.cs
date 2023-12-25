@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Employees.HolidayTypes;
 
 namespace Dawem.Contract.Repository.Employees
 {

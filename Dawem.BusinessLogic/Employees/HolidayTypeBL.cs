@@ -7,7 +7,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.HolidayType;
+using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.HolidayTypes;
 using Dawem.Translations;

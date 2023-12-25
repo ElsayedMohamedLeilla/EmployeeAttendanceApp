@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.JobTitle;
+﻿using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Models.Response.Employees.JobTitles;
 
 namespace Dawem.Contract.BusinessLogic.Employees

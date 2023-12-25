@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Models.Criteria.Provider;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Translations;
 

@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.HolidayType;
+﻿using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Translations;
 using FluentValidation;
 

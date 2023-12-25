@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Attendances
+namespace Dawem.Models.Response.Requests.Assignments
 {
     public class GetAssignmentDayModel
     {

@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Attendances;
+﻿using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Attendances
+namespace Dawem.Validation.FluentValidation.Requests.Assignments
 {
     public class GetEmployeeAssignmentsCriteriaValidator : AbstractValidator<EmployeeGetRequestAssignmentsCriteria>
     {

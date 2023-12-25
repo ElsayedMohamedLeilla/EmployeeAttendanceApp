@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Attendances
+﻿namespace Dawem.Models.Response.Requests.Assignments
 {
     public class EmployeeGetRequestAssignmentsResponseModel
     {

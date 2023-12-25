@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Core.Groups
 {
-    public class GetGroupsInformationsResponseDTO: BaseInformationsResponse
+    public class GetGroupsInformationsResponseDTO : BaseInformationsResponse
     {
     }
 }

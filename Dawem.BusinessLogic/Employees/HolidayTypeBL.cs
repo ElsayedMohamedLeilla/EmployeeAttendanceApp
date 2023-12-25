@@ -10,10 +10,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.HolidayType;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.HolidayTypes;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.HolidayTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees

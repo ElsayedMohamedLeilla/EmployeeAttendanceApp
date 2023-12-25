@@ -1,8 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
-using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Core.Holidaies;
+using Dawem.Models.Dtos.Core.Holidays;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

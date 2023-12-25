@@ -1,6 +1,5 @@
-﻿using Dawem.BusinessLogic.Schedules.SchedulePlans;
-using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Models.Dtos.Employees.User;
+﻿using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Models.Dtos.Employees.Users;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

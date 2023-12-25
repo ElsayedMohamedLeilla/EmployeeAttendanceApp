@@ -15,7 +15,6 @@ using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Justifications;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,5 @@
-﻿
-using Dawem.Models.Dtos.Employees.User;
-using Dawem.Models.Response.Employees.User;
-using Dawem.Models.Response.Requests.Vacations;
+﻿using Dawem.Models.Dtos.Employees.Users;
+using Dawem.Models.Response.Employees.Users;
 
 namespace Dawem.Contract.BusinessLogic.Employees
 {

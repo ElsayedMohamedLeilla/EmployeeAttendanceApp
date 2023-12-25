@@ -1,7 +1,6 @@
 ﻿using Dawem.Enums.Generals;
-using Dawem.Models.Response.Requests;
 
-namespace Dawem.Models.Response.Attendances
+namespace Dawem.Models.Response.Requests.Assignments
 {
     public class GetAssignmentModel
     {
@@ -13,5 +12,5 @@ namespace Dawem.Models.Response.Attendances
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<RequestEmployeeModel> Employees { get; set; }
-}
+    }
 }

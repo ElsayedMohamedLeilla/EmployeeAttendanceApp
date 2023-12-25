@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Requests.Justifications
+﻿namespace Dawem.Models.Response.Requests.Vacations
 {
     public class EmployeeGetRequestVacationsResponseDTO
     {

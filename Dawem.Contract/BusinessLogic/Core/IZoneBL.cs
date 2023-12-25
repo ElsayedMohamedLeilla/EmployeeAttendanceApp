@@ -2,7 +2,6 @@
 using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Zones;
-using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {

@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Criteria.UserManagement;
-using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Employees.Users;
 using Dawem.Translations;
 
 namespace Dawem.Contract.Repository.UserManagement

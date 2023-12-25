@@ -1,7 +1,6 @@
 ﻿using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Attendances.FingerprintDevices;
-using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Attendances
 {

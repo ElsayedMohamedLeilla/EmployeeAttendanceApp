@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Core.Group;
+﻿using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Translations;
 using FluentValidation;
 

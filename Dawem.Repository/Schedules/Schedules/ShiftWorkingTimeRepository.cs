@@ -1,8 +1,6 @@
-﻿using Dawem.Contract.Repository.Employees;
-using Dawem.Contract.Repository.Schedules.Schedules;
+﻿using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using Dawem.Models.Generic;

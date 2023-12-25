@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Others.VacationBalances
 {
     public class GetVacationBalancesInformationsResponseDTO : BaseInformationsResponse
     {

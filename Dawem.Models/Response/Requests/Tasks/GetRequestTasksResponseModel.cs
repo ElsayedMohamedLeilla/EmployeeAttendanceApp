@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Employees;
-using Dawem.Enums.Generals;
+﻿using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Response.Requests.Tasks
 {

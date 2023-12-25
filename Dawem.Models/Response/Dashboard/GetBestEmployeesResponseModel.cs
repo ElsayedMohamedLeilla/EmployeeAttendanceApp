@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees.Employee
+﻿namespace Dawem.Models.Response.Dashboard
 {
     public class GetBestEmployeesResponseModel
     {

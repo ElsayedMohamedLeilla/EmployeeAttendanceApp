@@ -1,11 +1,4 @@
-﻿using Dawem.Models.Response.Employees;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dawem.Models.Response.Core.Roles
+﻿namespace Dawem.Models.Response.Core.Roles
 {
     public class GetRoleDropDownResponseDTO
     {

@@ -1,5 +1,4 @@
-﻿using Dawem.Models.Dtos.Attendances;
-using Dawem.Models.Dtos.Requests.Tasks;
+﻿using Dawem.Models.Dtos.Requests.Tasks;
 
 namespace Dawem.Contract.BusinessValidation.Requests
 {

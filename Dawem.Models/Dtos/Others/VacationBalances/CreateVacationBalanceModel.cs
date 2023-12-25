@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Schedules.SchedulePlans
+namespace Dawem.Models.Dtos.Others.VacationBalances
 {
     public class CreateVacationBalanceModel
     {

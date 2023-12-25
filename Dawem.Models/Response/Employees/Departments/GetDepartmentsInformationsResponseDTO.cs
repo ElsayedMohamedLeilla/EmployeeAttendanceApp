@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Employees.Departments
 {
-    public class GetDepartmentsInformationsResponseDTO: BaseInformationsResponse
+    public class GetDepartmentsInformationsResponseDTO : BaseInformationsResponse
     {
     }
 }

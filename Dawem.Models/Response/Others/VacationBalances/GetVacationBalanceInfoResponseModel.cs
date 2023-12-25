@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Schedules.SchedulePlans
+namespace Dawem.Models.Response.Others.VacationBalances
 {
     public class GetVacationBalanceInfoResponseModel
     {

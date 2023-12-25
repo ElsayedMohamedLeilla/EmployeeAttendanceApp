@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Schedules.SchedulePlans;
+﻿using Dawem.Models.Dtos.Others.VacationBalances;
 
-namespace Dawem.Contract.BusinessValidation.Schedules.SchedulePlans
+namespace Dawem.Contract.BusinessValidation.Others
 {
     public interface IVacationBalanceBLValidation
     {

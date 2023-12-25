@@ -1,17 +1,17 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.Contract.BusinessLogic.Dashboard;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Dashboard;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Employee;
+using Dawem.Models.Response.Dashboard;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.Dashboard
 {
     public class DashboardBL : IDashboardBL
     {
@@ -142,10 +142,10 @@ namespace Dawem.BusinessLogic.Employees
             employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks != null &&
             employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks.FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn) != null &&
 
-            (EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
+            EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
             (DateTime)(object)employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
             .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).Time)
-            > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes))
+            > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes)
                 .CountAsync();
 
             #endregion

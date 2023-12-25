@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Attendances;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;

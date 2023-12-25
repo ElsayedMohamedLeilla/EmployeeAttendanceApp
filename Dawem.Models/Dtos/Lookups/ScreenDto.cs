@@ -1,5 +1,5 @@
 ﻿using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Providers;
 
 namespace Dawem.Models.Dtos.Lookups
 {

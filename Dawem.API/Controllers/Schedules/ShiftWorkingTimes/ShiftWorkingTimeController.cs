@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Employees.Departments;
-using Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime;
+﻿using Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;

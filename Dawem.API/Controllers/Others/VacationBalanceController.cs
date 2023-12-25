@@ -1,12 +1,10 @@
-﻿using Dawem.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Schedules.VacationBalances;
+﻿using Dawem.Contract.BusinessLogic.Others;
 using Dawem.Models.Dtos.Others.VacationBalances;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Schedules
+namespace Dawem.API.Controllers.Others
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

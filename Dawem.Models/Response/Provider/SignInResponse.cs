@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Identity;
+﻿using Dawem.Models.Dtos.Identities;
 
 namespace Dawem.Models.Response.Provider
 {

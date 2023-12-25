@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Generic;
 using LinqKit;
 

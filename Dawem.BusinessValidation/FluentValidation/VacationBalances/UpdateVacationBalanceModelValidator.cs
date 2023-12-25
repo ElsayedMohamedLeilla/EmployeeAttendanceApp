@@ -1,9 +1,8 @@
-﻿using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
+﻿using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Schedules.SchedulePlans
+namespace Dawem.Validation.FluentValidation.VacationBalances
 {
     public class UpdateVacationBalanceModelValidator : AbstractValidator<UpdateVacationBalanceModel>
     {

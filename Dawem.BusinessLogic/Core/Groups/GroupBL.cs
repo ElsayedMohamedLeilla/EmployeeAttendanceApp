@@ -10,13 +10,12 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core.Group;
+using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

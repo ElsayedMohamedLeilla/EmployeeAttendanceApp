@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
@@ -16,10 +15,8 @@ using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Assignments;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Assignments;
 using Microsoft.EntityFrameworkCore;

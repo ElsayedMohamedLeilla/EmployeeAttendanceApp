@@ -1,6 +1,4 @@
-﻿using Dawem.BusinessLogic.Requests;
-using Dawem.Contract.BusinessLogic.Requests;
-using Dawem.Models.Dtos.Attendances;
+﻿using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Translations;
@@ -8,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Requests.Admin
+namespace Dawem.API.Controllers.Requests.Employee
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

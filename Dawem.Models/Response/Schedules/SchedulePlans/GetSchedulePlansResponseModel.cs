@@ -1,7 +1,4 @@
-﻿using Dawem.Enums.Generals;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Dawem.Models.Response.Schedules.SchedulePlans
+﻿namespace Dawem.Models.Response.Schedules.SchedulePlans
 {
     public class GetSchedulePlansResponseModel
     {

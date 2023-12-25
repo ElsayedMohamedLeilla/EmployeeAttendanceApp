@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.Repository.Manager;
 using Dawem.Helpers;
-using Dawem.Repository.Manager;
+using Dawem.Repository.Managers;
 using Dawem.Translations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;

@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Dawem.Helpers
+﻿namespace Dawem.Helpers
 {
     public static class OthersHelper
     {

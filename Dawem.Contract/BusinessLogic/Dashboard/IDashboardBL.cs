@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Employees.Department;
-using Dawem.Models.Response.Employees.Employee;
+﻿using Dawem.Models.Dtos.Dashboard;
+using Dawem.Models.Response.Dashboard;
 
-namespace Dawem.Contract.BusinessLogic.Employees
+namespace Dawem.Contract.BusinessLogic.Dashboard
 {
     public interface IDashboardBL
     {

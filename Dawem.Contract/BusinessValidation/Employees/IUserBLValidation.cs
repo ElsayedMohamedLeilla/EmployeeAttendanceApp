@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.User;
+﻿using Dawem.Models.Dtos.Employees.Users;
 
 namespace Dawem.Contract.BusinessValidation.Employees
 {

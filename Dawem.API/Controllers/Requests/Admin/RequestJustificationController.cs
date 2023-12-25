@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Requests;
-using Dawem.Contract.BusinessLogic.Requests;
+﻿using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Translations;

@@ -11,7 +11,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Response.Schedules.SchedulePlans;
 using Dawem.Translations;

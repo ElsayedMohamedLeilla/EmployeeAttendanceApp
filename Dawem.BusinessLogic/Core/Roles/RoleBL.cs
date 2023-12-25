@@ -6,10 +6,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Roles;
-using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.Roles

@@ -1,6 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
-
-namespace Dawem.Models.Response.Core.Groups
+﻿namespace Dawem.Models.Response.Core.Groups
 {
     public class GetGroupInfoResponseDTO
     {

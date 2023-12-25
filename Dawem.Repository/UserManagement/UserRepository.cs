@@ -1,12 +1,10 @@
 ﻿using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Employees.User;
+using Dawem.Models.Dtos.Employees.Users;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 using LinqKit;

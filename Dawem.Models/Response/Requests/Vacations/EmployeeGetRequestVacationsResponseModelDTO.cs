@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Requests.Justifications
+namespace Dawem.Models.Response.Requests.Vacations
 {
     public class EmployeeGetRequestVacationsResponseModelDTO
     {
@@ -14,5 +14,7 @@ namespace Dawem.Models.Response.Requests.Justifications
         public DateTime DateTo { get; set; }
         public string DirectManagerName { get; set; }
         public int NumberOfDays { get; set; }
+        public float BalanceAfterRequest { get; set; }
+
     }
 }

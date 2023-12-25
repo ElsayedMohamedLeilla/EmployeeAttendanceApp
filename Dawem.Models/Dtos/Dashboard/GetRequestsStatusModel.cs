@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.Department
+﻿namespace Dawem.Models.Dtos.Dashboard
 {
     public class GetRequestsStatusModel : GetStatusBaseModel
     {

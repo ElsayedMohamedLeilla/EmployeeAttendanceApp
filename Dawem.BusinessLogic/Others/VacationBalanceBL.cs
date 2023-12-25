@@ -1,21 +1,19 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Schedules.VacationBalances;
-using Dawem.Contract.BusinessValidation.Schedules.SchedulePlans;
+using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.BusinessValidation.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Others;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others.VacationBalances;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Requests.Vacations;
-using Dawem.Models.Response.Schedules.SchedulePlans;
+using Dawem.Models.Response.Others.VacationBalances;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
+namespace Dawem.BusinessLogic.Others
 {
     public class VacationBalanceBL : IVacationBalanceBL
     {

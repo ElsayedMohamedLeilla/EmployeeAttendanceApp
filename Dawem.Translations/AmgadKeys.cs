@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class AmgadKeys
     {

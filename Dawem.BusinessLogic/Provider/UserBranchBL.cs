@@ -7,7 +7,7 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.ResponseModels;
 using Dawem.Repository.UserManagement;

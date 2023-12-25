@@ -17,16 +17,16 @@ using Dawem.Models.Generic;
 using Dawem.Repository.Attendances;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.Groups;
-using Dawem.Repository.Core.Holidaies;
+using Dawem.Repository.Core.Holidays;
 using Dawem.Repository.Core.JustificationsTypes;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
-using Dawem.Repository.Localization;
+using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
-using Dawem.Repository.Provider;
+using Dawem.Repository.Providers;
 using Dawem.Repository.Requests;
 using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Repository.Schedules.SchedulePlans;
@@ -73,14 +73,12 @@ namespace Dawem.Repository.Managers
         private IGroupManagerDelegatorRepository groupManagerDelegatorRepository;
         private IEmployeeAttendanceRepository employeeAttendanceRepository;
         private IEmployeeAttendanceCheckRepository employeeAttendanceCheckRepository;
-
         private IDepartmentManagerDelegatorRepository departmentManagerDelegatorRepository;
         private IZoneDepartmentRepository departmentZoneRepository;
         private IZoneEmployeeRepository employeeZoneRepository;
         private IZoneGroupRepository groupZoneRepository;
         private IZoneRepository zoneRepository;
         private IFingerprintDeviceRepository fingerprintDeviceRepository;
-
         private IRequestRepository requestRepository;
         private IRequestAssignmentRepository requestAssignmentRepository;
         private IRequestJustificationRepository requestJustificationRepository;

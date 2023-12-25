@@ -13,7 +13,6 @@ using Dawem.Models.Dtos.Providers;
 using Dawem.Models.DtosMappers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.ResponseModels;
-using Dawem.Models.Validation;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +43,7 @@ namespace Dawem.BusinessLogic.Provider
 
             branchBLValidation.ValidateChangeForMainBranchOnly(requestHeaderContext, ChangeType.Add);
 
-            var BranchValidatorModel = new BranchValidatorModel
+            var BranchValidatorModel = new Models.Validations.BranchValidatorModel
             {
                 Branch = branchDTO,
                 ChangeType = ChangeType.Add

@@ -12,6 +12,6 @@ namespace Dawem.Models.Response.Core.Holidaies
         public string DateType { get; set; }
         public string Period { get; set; }
         public HolidayStatus Status { get; set; }
-        public string StartDay { get; set; }    
+        public string StartStatus { get; set; }    
     }
 }

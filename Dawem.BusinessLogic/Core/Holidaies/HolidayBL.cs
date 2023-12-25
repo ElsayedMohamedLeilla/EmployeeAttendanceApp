@@ -338,7 +338,7 @@ namespace Dawem.BusinessLogic.Core.holidays
                 .ToListAsync();
             var holidays = allHolidays.Select(h =>
             {
-                var (startDay, status) = GetStartEndDate(new StartEndDateParametersDTO
+                var (startStatus, status) = GetStartEndStatus(new StartEndDateParametersDTO
                 {
                     dateType = h.DateType,
                     endDay = h.EndDay,
@@ -357,7 +357,7 @@ namespace Dawem.BusinessLogic.Core.holidays
                     IsActive = h.IsActive,
                     Name = h.Name,
                     Period = GetPeriodLabel(h.StartMonth, h.StartDay, h.EndDay, h.DateType),
-                    StartDay = startDay,
+                    StartStatus = startStatus,
                     Status = status
                 };
             }).ToList();
@@ -381,7 +381,7 @@ namespace Dawem.BusinessLogic.Core.holidays
 
         private string GetMonthName(int month, DateType dateType)
         {
-            string monthName = "";
+            string monthName;
 
             if (dateType == DateType.Gregorian)
             {
@@ -425,9 +425,9 @@ namespace Dawem.BusinessLogic.Core.holidays
             return monthName;
         }
 
-        private (string, HolidayStatus) GetStartEndDate(StartEndDateParametersDTO model)
+        private (string, HolidayStatus) GetStartEndStatus(StartEndDateParametersDTO model)
         {
-            string dayOfWeek = "";
+            string dayOfWeek;
             if (model.dateType == 0)  //Gregorian Date
             {
                 //var getTimeZoneId =  repositoryManager.CompanyRepository

@@ -11,6 +11,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.JustificationsTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -213,6 +214,22 @@ namespace Dawem.BusinessLogic.Core.JustificationsTypes
             await unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<GetJustificationsTypesInformationsResponseDTO> GetJustificationTypesInformations()
+        {
+            var justificationRepository = repositoryManager.JustificationsTypeRepository;
+            var query = justificationRepository.Get(justification => justification.CompanyId == requestInfo.CompanyId);
 
+            #region Handle Response
+
+            return new GetJustificationsTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(justification => !justification.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(justification => !justification.IsDeleted && justification.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(justification => !justification.IsDeleted && !justification.IsActive).CountAsync(),
+                DeletedCount = await query.Where(justification => justification.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
     }
 }

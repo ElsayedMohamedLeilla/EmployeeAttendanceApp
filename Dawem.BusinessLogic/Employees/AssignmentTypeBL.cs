@@ -10,6 +10,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.AssignmentTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.AssignmentTypes;
@@ -21,26 +22,26 @@ namespace Dawem.BusinessLogic.Employees
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IAssignmentTypeBLValidation departmentBLValidation;
+        private readonly IAssignmentTypeBLValidation assignmentTypeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         public AssignmentTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
-           IAssignmentTypeBLValidation _departmentBLValidation)
+           IAssignmentTypeBLValidation _assignmentTypeBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            departmentBLValidation = _departmentBLValidation;
+            assignmentTypeBLValidation = _assignmentTypeBLValidation;
             mapper = _mapper;
         }
         public async Task<int> Create(CreateAssignmentTypeModel model)
         {
             #region Business Validation
 
-            await departmentBLValidation.CreateValidation(model);
+            await assignmentTypeBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -78,7 +79,7 @@ namespace Dawem.BusinessLogic.Employees
         {
             #region Business Validation
 
-            await departmentBLValidation.UpdateValidation(model);
+            await assignmentTypeBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -112,21 +113,21 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetAssignmentTypesResponse> Get(GetAssignmentTypesCriteria criteria)
         {
-            var departmentRepository = repositoryManager.AssignmentTypeRepository;
-            var query = departmentRepository.GetAsQueryable(criteria);
+            var assignmentTypeRepository = repositoryManager.AssignmentTypeRepository;
+            var query = assignmentTypeRepository.GetAsQueryable(criteria);
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
+            var queryOrdered = assignmentTypeRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
 
-            var departmentsList = await queryPaged.Select(e => new GetAssignmentTypesResponseModel
+            var assignmentTypesList = await queryPaged.Select(e => new GetAssignmentTypesResponseModel
             {
                 Id = e.Id,
                 Code = e.Code,
@@ -135,7 +136,7 @@ namespace Dawem.BusinessLogic.Employees
             }).ToListAsync();
             return new GetAssignmentTypesResponse
             {
-                AssignmentTypes = departmentsList,
+                AssignmentTypes = assignmentTypesList,
                 TotalCount = await query.CountAsync()
             };
             #endregion
@@ -145,8 +146,8 @@ namespace Dawem.BusinessLogic.Employees
         {
 
             criteria.IsActive = true;
-            var departmentRepository = repositoryManager.AssignmentTypeRepository;
-            var query = departmentRepository.GetAsQueryable(criteria);
+            var assignmentTypeRepository = repositoryManager.AssignmentTypeRepository;
+            var query = assignmentTypeRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -154,7 +155,7 @@ namespace Dawem.BusinessLogic.Employees
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
+            var queryOrdered = assignmentTypeRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -163,7 +164,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Handle Response
 
-            var departmentsList = await queryPaged.Select(e => new GetAssignmentTypesForDropDownResponseModel
+            var assignmentTypesList = await queryPaged.Select(e => new GetAssignmentTypesForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
@@ -171,7 +172,7 @@ namespace Dawem.BusinessLogic.Employees
 
             return new GetAssignmentTypesForDropDownResponse
             {
-                AssignmentTypes = departmentsList,
+                AssignmentTypes = assignmentTypesList,
                 TotalCount = await query.CountAsync()
             };
 
@@ -180,7 +181,7 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetAssignmentTypeInfoResponseModel> GetInfo(int AssignmentTypeId)
         {
-            var department = await repositoryManager.AssignmentTypeRepository.Get(e => e.Id == AssignmentTypeId && !e.IsDeleted)
+            var assignmentType = await repositoryManager.AssignmentTypeRepository.Get(e => e.Id == AssignmentTypeId && !e.IsDeleted)
                 .Select(e => new GetAssignmentTypeInfoResponseModel
                 {
                     Code = e.Code,
@@ -188,11 +189,11 @@ namespace Dawem.BusinessLogic.Employees
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
 
-            return department;
+            return assignmentType;
         }
         public async Task<GetAssignmentTypeByIdResponseModel> GetById(int AssignmentTypeId)
         {
-            var department = await repositoryManager.AssignmentTypeRepository.Get(e => e.Id == AssignmentTypeId && !e.IsDeleted)
+            var assignmentType = await repositoryManager.AssignmentTypeRepository.Get(e => e.Id == AssignmentTypeId && !e.IsDeleted)
                 .Select(e => new GetAssignmentTypeByIdResponseModel
                 {
                     Id = e.Id,
@@ -201,16 +202,33 @@ namespace Dawem.BusinessLogic.Employees
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
 
-            return department;
+            return assignmentType;
 
         }
-        public async Task<bool> Delete(int departmentd)
+        public async Task<bool> Delete(int assignmentTyped)
         {
-            var department = await repositoryManager.AssignmentTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
+            var assignmentType = await repositoryManager.AssignmentTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == assignmentTyped) ??
                 throw new BusinessValidationException(LeillaKeys.SorryAssignmentTypeNotFound);
-            department.Delete();
+            assignmentType.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetAssignmentTypesInformationsResponseDTO> GetAssignmentTypesInformations()
+        {
+            var assignmentTypeRepository = repositoryManager.AssignmentTypeRepository;
+            var query = assignmentTypeRepository.Get(assignmentType => assignmentType.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetAssignmentTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(assignmentType => !assignmentType.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(assignmentType => !assignmentType.IsDeleted && assignmentType.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(assignmentType => !assignmentType.IsDeleted && !assignmentType.IsActive).CountAsync(),
+                DeletedCount = await query.Where(assignmentType => assignmentType.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

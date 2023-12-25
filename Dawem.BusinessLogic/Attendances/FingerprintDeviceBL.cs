@@ -13,6 +13,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Attendances.FingerprintDevices;
 using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -241,6 +242,23 @@ namespace Dawem.BusinessLogic.Attendances
             fingerprintDevice.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetFingerprintDevicesInformationsResponseDTO> GetFingerprintDevicesInformations()
+        {
+            var fingerPrintRepository = repositoryManager.FingerprintDeviceRepository;
+            var query = fingerPrintRepository.Get(fingerPrint => fingerPrint.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetFingerprintDevicesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted && fingerPrint.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted && !fingerPrint.IsActive).CountAsync(),
+                DeletedCount = await query.Where(fingerPrint => fingerPrint.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.VacationBalances;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Schedules.VacationBalances;
 using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Translations;
@@ -80,6 +81,10 @@ namespace Dawem.API.Controllers.Schedules
             }
             return Success(await vacationBalanceBL.Delete(vacationBalanceId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetVacationBalancesInformations()
+        {
+            return Success(await vacationBalanceBL.GetVacationBalancesInformations());
+        }
     }
 }

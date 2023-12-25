@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Attendances.FingerprintDevices;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Attendances
 {
@@ -15,5 +16,6 @@ namespace Dawem.Contract.BusinessLogic.Attendances
         Task<bool> Delete(int fingerprintDeviceId);
         Task<bool> Enable(int fingerprintDeviceId);
         Task<bool> Disable(DisableModelDTO model);
+        Task<GetFingerprintDevicesInformationsResponseDTO> GetFingerprintDevicesInformations();
     }
 }

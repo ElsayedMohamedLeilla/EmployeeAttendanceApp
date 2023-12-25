@@ -11,6 +11,7 @@ using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees;
 using Dawem.Validation.FluentValidation.Employees.TaskTypes;
@@ -208,6 +209,23 @@ namespace Dawem.BusinessLogic.Employees
             department.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetTaskTypesInformationsResponseDTO> GetTaskTypesInformations()
+        {
+            var taskTypeRepository = repositoryManager.TaskTypeRepository;
+            var query = taskTypeRepository.Get(taskType => taskType.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetTaskTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(taskType => !taskType.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(taskType => !taskType.IsDeleted && taskType.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(taskType => !taskType.IsDeleted && !taskType.IsActive).CountAsync(),
+                DeletedCount = await query.Where(taskType => taskType.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

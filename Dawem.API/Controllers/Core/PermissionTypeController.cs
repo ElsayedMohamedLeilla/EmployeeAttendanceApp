@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Core.JustificationsTypes;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.PermissionsTypes;
 using Dawem.Translations;
@@ -79,6 +80,10 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await permissionTypeBL.Delete(permissionTypeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetPermissionTypesInformations()
+        {
+            return Success(await permissionTypeBL.GetPermissionTypesInformations());
+        }
     }
 }

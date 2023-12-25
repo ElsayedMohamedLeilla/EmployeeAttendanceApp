@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Core.Zones;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -79,6 +80,11 @@ namespace Dawem.API.Controllers.Employees
                 return BadRequest();
             }
             return Success(await assignmentTypeBL.Delete(assignmentTypeId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetAssignmentTypesInformations()
+        {
+            return Success(await assignmentTypeBL.GetAssignmentTypesInformations());
         }
 
     }

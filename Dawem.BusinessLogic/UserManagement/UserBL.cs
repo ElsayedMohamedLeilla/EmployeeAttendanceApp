@@ -13,6 +13,7 @@ using Dawem.Models.Dtos.Employees.User;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.User;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.User;
@@ -539,6 +540,23 @@ namespace Dawem.BusinessLogic.UserManagement
             user.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetUsersInformationsResponseDTO> GetUsersInformations()
+        {
+            var userRepository = repositoryManager.UserRepository;
+            var query = userRepository.Get(user => user.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetUsersInformationsResponseDTO
+            {
+                TotalCount = await query.Where(user => !user.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(user => !user.IsDeleted && user.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(user => !user.IsDeleted && !user.IsActive).CountAsync(),
+                DeletedCount = await query.Where(user => user.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

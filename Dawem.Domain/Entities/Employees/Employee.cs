@@ -43,5 +43,7 @@ namespace Dawem.Domain.Entities.Employees
         public List<ZoneEmployee> Zones { get; set; }
         public List<VacationBalance> VacationBalances { get; set; }
         public List<EmployeeAttendance> EmployeeAttendances { get; set; }
+        public List<Request> EmployeeRequests { get; set; }
+        public List<RequestTaskEmployee> EmployeeTasks { get; set; }
     }
 }

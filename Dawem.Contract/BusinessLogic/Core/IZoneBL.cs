@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Response.Core.Zones;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
@@ -16,5 +17,6 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Enable(int ZoneId);
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Delete(int ZoneId);
+        Task<GetZonesInformationsResponseDTO> GetZonesInformations();
     }
 }

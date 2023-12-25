@@ -43,6 +43,27 @@ namespace Dawem.Validation.FluentValidation
                 .WithMessage(LeillaKeys.SorryYouMustEnterParentId);
         }
     }
+    public class GetDepartmentsInformationsCriteriaValidator : AbstractValidator<GetDepartmentsInformationsCriteria>
+    {
+        public GetDepartmentsInformationsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetBestEmployeesCriteriaValidator : AbstractValidator<GetBestEmployeesCriteria>
+    {
+        public GetBestEmployeesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetEmployeesAttendancesStatusCriteriaValidator : AbstractValidator<GetEmployeesAttendancesStatusCriteria>
+    {
+        public GetEmployeesAttendancesStatusCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
     public class GetEmployeesCriteriaValidator : AbstractValidator<GetEmployeesCriteria>
     {
         public GetEmployeesCriteriaValidator()

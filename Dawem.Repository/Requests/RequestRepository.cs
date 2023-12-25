@@ -2,7 +2,9 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Employees.Department;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -122,6 +124,38 @@ namespace Dawem.Repository.Requests
             var Query = Get(predicate);
             return Query;
 
+        }
+        public IQueryable<Request> GetForStatusAsQueryable(GetStatusBaseModel model)
+        {
+            var predicate = PredicateBuilder.New<Request>(a => !a.IsDeleted);
+
+            if (model.Type != null)
+            {
+                switch (model.Type)
+                {
+                    case GetRequestsStatusType.CurrentDay:
+                        predicate = predicate.And(request => request.Date.Date == model.LocalDate.Date);
+                        break;
+                    case GetRequestsStatusType.CurrentMonth:
+                        predicate = predicate.And(request => request.Date.Month == model.LocalDate.Month && request.Date.Year == model.LocalDate.Year);
+                        break;
+                    case GetRequestsStatusType.CurrentYear:
+                        predicate = predicate.And(request => request.Date.Year == model.LocalDate.Year);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (model.DateFrom != null)
+            {
+                predicate = predicate.And(request => request.Date >= model.DateFrom.Value);
+            }
+            if (model.DateTo != null)
+            {
+                predicate = predicate.And(request => request.Date <= model.DateTo.Value);
+            }
+            var Query = Get(predicate);
+            return Query;
         }
     }
 }

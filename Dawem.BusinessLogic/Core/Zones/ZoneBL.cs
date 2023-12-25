@@ -13,6 +13,7 @@ using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Zones;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -249,6 +250,22 @@ namespace Dawem.BusinessLogic.Core.Zones
             await unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<GetZonesInformationsResponseDTO> GetZonesInformations()
+        {
+            var zoneRepository = repositoryManager.ZoneRepository;
+            var query = zoneRepository.Get(zone => zone.CompanyId == requestInfo.CompanyId);
 
+            #region Handle Response
+
+            return new GetZonesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(zone => !zone.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(zone => !zone.IsDeleted && zone.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(zone => !zone.IsDeleted && !zone.IsActive).CountAsync(),
+                DeletedCount = await query.Where(zone => zone.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
     }
 }

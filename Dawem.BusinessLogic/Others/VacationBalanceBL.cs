@@ -10,6 +10,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.SchedulePlans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -244,6 +245,23 @@ namespace Dawem.BusinessLogic.VacationBalances.VacationBalances
             vacationBalance.Delete();
             await unitOfWork.SaveAsync();
             return true;
+        }
+        public async Task<GetVacationBalancesInformationsResponseDTO> GetVacationBalancesInformations()
+        {
+            var vacationBalanceRepository = repositoryManager.VacationBalanceRepository;
+            var query = vacationBalanceRepository.Get(vacationBalance => vacationBalance.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetVacationBalancesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(vacationBalance => !vacationBalance.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(vacationBalance => !vacationBalance.IsDeleted && vacationBalance.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(vacationBalance => !vacationBalance.IsDeleted && !vacationBalance.IsActive).CountAsync(),
+                DeletedCount = await query.Where(vacationBalance => vacationBalance.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

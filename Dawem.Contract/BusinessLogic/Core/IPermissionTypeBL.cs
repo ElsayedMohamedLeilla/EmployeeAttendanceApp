@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.PermissionsTypes;
 using Dawem.Models.Response.Core.PermissionsTypes;
+using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {
@@ -13,5 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<GetPermissionsTypeResponseDTO> Get(GetPermissionsTypesCriteria model);
         Task<GetPermissionsTypeDropDownResponseDTO> GetForDropDown(GetPermissionsTypesCriteria model);
         Task<bool> Delete(int PermissionsTypeId);
+        Task<GetPermissionsTypesInformationsResponseDTO> GetPermissionTypesInformations();
     }
 }

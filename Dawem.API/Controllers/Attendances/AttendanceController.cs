@@ -1,5 +1,6 @@
 ﻿using Dawem.BusinessLogic.Attendances;
 using Dawem.BusinessLogic.Employees;
+using Dawem.BusinessLogic.Employees.Departments;
 using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;

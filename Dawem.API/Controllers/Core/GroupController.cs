@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Employees.Departments;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Group;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -99,6 +100,10 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await groupBL.Disable(model));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetGroupsInformations()
+        {
+            return Success(await groupBL.GetGroupsInformations());
+        }
     }
 }

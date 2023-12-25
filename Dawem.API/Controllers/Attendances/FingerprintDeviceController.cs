@@ -1,4 +1,5 @@
 ﻿using Dawem.BusinessLogic.Core.Zones;
+using Dawem.BusinessLogic.Employees.Departments;
 using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -99,6 +100,11 @@ namespace Dawem.API.Controllers.Attendances
                 return BadRequest();
             }
             return Success(await fingerprintDeviceBL.Delete(fingerprintDeviceId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetFingerprintDevicesInformations()
+        {
+            return Success(await fingerprintDeviceBL.GetFingerprintDevicesInformations());
         }
     }
 }

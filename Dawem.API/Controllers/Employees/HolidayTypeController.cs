@@ -80,6 +80,10 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await holidayTypeBL.Delete(holidayTypeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetHolidayTypesInformations()
+        {
+            return Success(await holidayTypeBL.GetHolidayTypesInformations());
+        }
     }
 }

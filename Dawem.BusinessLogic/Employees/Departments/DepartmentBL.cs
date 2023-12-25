@@ -401,8 +401,8 @@ namespace Dawem.BusinessLogic.Employees.Departments
             return new GetDepartmentsInformationsResponseDTO
             {
                 TotalCount = await query.Where(department=> !department.IsDeleted).CountAsync(),
-                ActiveCount = await query.Where(department => department.IsActive).CountAsync(),
-                NotActiveCount = await query.Where(department => !department.IsActive ).CountAsync(),
+                ActiveCount = await query.Where(department => !department.IsDeleted && department.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(department => !department.IsDeleted &&!department.IsActive ).CountAsync(),
                 DeletedCount = await query.Where(department => department.IsDeleted).CountAsync()
             };
 

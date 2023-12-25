@@ -11,6 +11,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.PermissionsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.PermissionsTypes;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Core.PermissionsTypes;
 using Dawem.Validation.FluentValidation.Employees;
@@ -217,6 +218,22 @@ namespace Dawem.BusinessLogic.Core.PermissionsTypes
             await unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<GetPermissionsTypesInformationsResponseDTO> GetPermissionTypesInformations()
+        {
+            var permissionRepository = repositoryManager.PermissionsTypeRepository;
+            var query = permissionRepository.Get(permission => permission.CompanyId == requestInfo.CompanyId);
 
+            #region Handle Response
+
+            return new GetPermissionsTypesInformationsResponseDTO
+            {
+                TotalCount = await query.Where(permission => !permission.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(permission => !permission.IsDeleted && permission.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(permission => !permission.IsDeleted && !permission.IsActive).CountAsync(),
+                DeletedCount = await query.Where(permission => permission.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
     }
 }

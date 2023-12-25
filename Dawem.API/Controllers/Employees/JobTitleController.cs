@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -80,6 +81,10 @@ namespace Dawem.API.Controllers.Employees
             }
             return Success(await jobTitleBL.Delete(jobTitleId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetJobTitlesInformations()
+        {
+            return Success(await jobTitleBL.GetJobTitlesInformations());
+        }
     }
 }

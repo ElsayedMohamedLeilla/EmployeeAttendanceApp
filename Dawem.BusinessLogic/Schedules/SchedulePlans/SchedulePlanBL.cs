@@ -11,6 +11,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Response.Schedules.SchedulePlans;
 using Dawem.Translations;
@@ -409,6 +410,23 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
             schedulePlanBackgroundJobLog.FinishDate = DateTime.UtcNow;
             repositoryManager.SchedulePlanBackgroundJobLogRepository.Insert(schedulePlanBackgroundJobLog);
             await unitOfWork.SaveAsync();
+        }
+        public async Task<GetSchedulePlansInformationsResponseDTO> GetSchedulePlansInformations()
+        {
+            var schedulePlanRepository = repositoryManager.SchedulePlanRepository;
+            var query = schedulePlanRepository.Get(schedulePlan => schedulePlan.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetSchedulePlansInformationsResponseDTO
+            {
+                TotalCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && schedulePlan.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && !schedulePlan.IsActive).CountAsync(),
+                DeletedCount = await query.Where(schedulePlan => schedulePlan.IsDeleted).CountAsync()
+            };
+
+            #endregion
         }
     }
 }

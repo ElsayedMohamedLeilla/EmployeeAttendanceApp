@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.BusinessLogic.Core.Groups;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Translations;
@@ -79,6 +80,10 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await justificationTypeBL.Delete(justificationTypeId));
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetJustificationTypesInformations()
+        {
+            return Success(await justificationTypeBL.GetJustificationTypesInformations());
+        }
     }
 }

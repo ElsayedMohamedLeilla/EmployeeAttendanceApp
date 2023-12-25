@@ -16,6 +16,7 @@ using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Groups;
+using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -417,6 +418,22 @@ namespace Dawem.BusinessLogic.Core.Groups
             await unitOfWork.SaveAsync();
             return true;
         }
+        public async Task<GetGroupsInformationsResponseDTO> GetGroupsInformations()
+        {
+            var groupRepository = repositoryManager.GroupRepository;
+            var query = groupRepository.Get(group => group.CompanyId == requestInfo.CompanyId);
 
+            #region Handle Response
+
+            return new GetGroupsInformationsResponseDTO
+            {
+                TotalCount = await query.Where(group => !group.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(group => !group.IsDeleted && group.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(group => !group.IsDeleted && !group.IsActive).CountAsync(),
+                DeletedCount = await query.Where(group => group.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
     }
 }

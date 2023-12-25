@@ -107,11 +107,12 @@ namespace Dawem.Validation.BusinessValidation.Requests
 
             var type = getVacationsType.Type;
 
-            var currentYear = DateTime.UtcNow.Year;
+            var currentYear = DateTime.UtcNow.Year; /*65465654654*/
 
             var checkTypeBalance = await repositoryManager.VacationBalanceRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
                 c.CompanyId == requestInfo.CompanyId && c.EmployeeId == getCurrentEmployeeId
-                && c.VacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
+                && c.VacationType == type && c.Year == currentYear) ?? 
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
 
             var requiredDays = (model.DateTo - model.DateFrom).Days + 1;
             if (requiredDays > checkTypeBalance.RemainingBalance)

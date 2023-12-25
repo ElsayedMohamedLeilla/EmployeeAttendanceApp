@@ -334,7 +334,8 @@ namespace Dawem.BusinessLogic.Requests
                 DateTo = requestVacation.DateTo,
                 Status = requestVacation.Request.Status,
                 StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
-                NumberOfDays = requestVacation.NumberOfDays
+                NumberOfDays = requestVacation.NumberOfDays,
+                BalanceAfterRequest = requestVacation.BalanceAfterRequest
             }).ToListAsync();
 
             return new EmployeeGetRequestVacationsResponseDTO
@@ -470,7 +471,8 @@ namespace Dawem.BusinessLogic.Requests
             #region Validate And Set Balance
 
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
-                c.CompanyId == requestInfo.CompanyId && c.Id == request.RequestVacation.VacationTypeId) ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+                c.CompanyId == requestInfo.CompanyId && c.Id == request.RequestVacation.VacationTypeId)
+                ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
             var type = getVacationsType.Type;
 

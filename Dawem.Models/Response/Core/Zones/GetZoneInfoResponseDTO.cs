@@ -1,6 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
-
-namespace Dawem.Models.Response.Core.Zones
+﻿namespace Dawem.Models.Response.Core.Zones
 {
     public class GetZoneInfoResponseDTO
     {

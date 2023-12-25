@@ -1,5 +1,4 @@
 ﻿using Dawem.Models.Dtos.Schedules.Schedules;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Models.Response.Schedules.Schedules;
 
 namespace Dawem.Contract.BusinessLogic.Schedules.Schedules

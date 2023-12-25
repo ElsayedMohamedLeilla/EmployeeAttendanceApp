@@ -2,7 +2,7 @@
 using Dawem.Models.Criteria;
 using System.Text.Json.Serialization;
 
-namespace Dawem.Models.Dtos.Employees.Department
+namespace Dawem.Models.Dtos.Dashboard
 {
     public class GetStatusBaseModel : BaseCriteria
     {
@@ -11,6 +11,6 @@ namespace Dawem.Models.Dtos.Employees.Department
         public DateTime? DateTo { get; set; }
         [JsonIgnore]
         public DateTime LocalDate { get; set; }
-        
+
     }
 }

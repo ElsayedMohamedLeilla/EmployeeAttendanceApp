@@ -1,12 +1,12 @@
 ﻿using Dawem.Contract.Repository.Others;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Others;
 using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Schedules.VacationBalances
+namespace Dawem.Repository.Others
 {
     public class VacationBalanceRepository : GenericRepository<VacationBalance>, IVacationBalanceRepository
     {

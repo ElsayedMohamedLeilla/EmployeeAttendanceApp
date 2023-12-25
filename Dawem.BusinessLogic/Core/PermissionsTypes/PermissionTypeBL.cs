@@ -11,10 +11,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.PermissionsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.PermissionsTypes;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Core.PermissionsTypes;
-using Dawem.Validation.FluentValidation.Employees;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.PermissionsTypes

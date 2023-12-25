@@ -1,5 +1,4 @@
-﻿using Dawem.Models.Dtos.Core.Group;
-using Dawem.Models.Dtos.Core.Holidaies;
+﻿using Dawem.Models.Dtos.Core.Holidays;
 
 namespace Dawem.Contract.BusinessValidation.Core
 {

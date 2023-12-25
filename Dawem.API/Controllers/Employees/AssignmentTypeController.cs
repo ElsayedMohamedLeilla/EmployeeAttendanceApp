@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Core.Zones;
-using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Models.Dtos.Employees.AssignmentType;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

@@ -1,7 +1,4 @@
-﻿using Dawem.BusinessLogic.Attendances;
-using Dawem.BusinessLogic.Requests;
-using Dawem.Contract.BusinessLogic.Requests;
-using Dawem.Models.Dtos.Attendances;
+﻿using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Translations;
@@ -9,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Requests
+namespace Dawem.API.Controllers.Requests.Employee
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
@@ -50,7 +47,7 @@ namespace Dawem.API.Controllers.Requests
             model.Attachments = formData.Attachments;
             var result = await requestAssignmentBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateAssignmentRequestSuccessfully);
-        }        
+        }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestAssignmentsCriteria model)
         {

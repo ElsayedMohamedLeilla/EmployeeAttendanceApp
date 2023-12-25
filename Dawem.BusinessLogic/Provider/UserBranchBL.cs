@@ -2,7 +2,7 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;

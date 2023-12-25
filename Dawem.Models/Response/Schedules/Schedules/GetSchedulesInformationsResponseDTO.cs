@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Schedules.Schedules
 {
     public class GetSchedulesInformationsResponseDTO
     {

@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Dashboard;
 using Dawem.Models.Dtos.Requests;
 
 namespace Dawem.Contract.Repository.Requests

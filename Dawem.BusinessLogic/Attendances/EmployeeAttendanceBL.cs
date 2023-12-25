@@ -11,8 +11,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
-using Dawem.Models.Response.Employees.Employee;
-using Dawem.Models.Response.Requests.Vacations;
+using Dawem.Models.Response.Dashboard;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

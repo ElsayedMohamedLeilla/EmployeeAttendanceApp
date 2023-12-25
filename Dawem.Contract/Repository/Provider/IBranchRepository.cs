@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Criteria.Provider;
-using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Identities;
 using Dawem.Translations;
 
 namespace Dawem.Contract.Repository.Provider

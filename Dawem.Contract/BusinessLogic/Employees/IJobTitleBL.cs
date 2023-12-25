@@ -1,6 +1,5 @@
 ﻿using Dawem.Models.Dtos.Employees.JobTitle;
 using Dawem.Models.Response.Employees.JobTitles;
-using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Employees
 {

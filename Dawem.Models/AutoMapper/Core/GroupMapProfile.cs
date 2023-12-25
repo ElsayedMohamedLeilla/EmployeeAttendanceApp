@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Core.Group;
+using Dawem.Models.Dtos.Core.Groups;
 using Dawem.Models.Dtos.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators;
 

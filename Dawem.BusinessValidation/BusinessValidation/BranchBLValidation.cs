@@ -3,9 +3,10 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Provider;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Provider;
+using Dawem.Models.Validations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -21,7 +22,7 @@ namespace Dawem.Validation.BusinessValidation
         {
             repositoryManager = _repositoryManager;
         }
-        public BranchDTO BranchCreationValidator(Models.Validation.BranchValidatorModel model)
+        public BranchDTO BranchCreationValidator(BranchValidatorModel model)
         {
             var branch = model.Branch;
 

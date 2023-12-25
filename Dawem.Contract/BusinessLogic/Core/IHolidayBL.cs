@@ -1,9 +1,7 @@
 ﻿using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core.Holidaies;
+using Dawem.Models.Dtos.Core.Holidays;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Response.Core.Groups;
-using Dawem.Models.Response.Core.Holidaies;
-using Dawem.Models.Response.Requests.Vacations;
+using Dawem.Models.Response.Core.Holidays;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {

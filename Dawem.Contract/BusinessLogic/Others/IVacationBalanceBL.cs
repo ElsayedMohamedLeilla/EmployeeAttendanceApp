@@ -1,9 +1,7 @@
 ﻿using Dawem.Models.Dtos.Others.VacationBalances;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
-using Dawem.Models.Response.Requests.Vacations;
-using Dawem.Models.Response.Schedules.SchedulePlans;
+using Dawem.Models.Response.Others.VacationBalances;
 
-namespace Dawem.Contract.BusinessLogic.Schedules.VacationBalances
+namespace Dawem.Contract.BusinessLogic.Others
 {
     public interface IVacationBalanceBL
     {

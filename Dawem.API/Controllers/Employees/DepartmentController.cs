@@ -1,6 +1,5 @@
-﻿using Dawem.BusinessLogic.Core.Groups;
-using Dawem.Contract.BusinessLogic.Employees.Department;
-using Dawem.Models.Dtos.Employees.Department;
+﻿using Dawem.Contract.BusinessLogic.Employees.Department;
+using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

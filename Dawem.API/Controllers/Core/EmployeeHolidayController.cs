@@ -16,13 +16,13 @@ namespace Dawem.API.Controllers.Core
         {
             holidayBL = _holidayBL;
         }
-
-        [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-
-            var result = await holidayBL.GetForEmployee();
-            return Success(result);
-        }
+       
+        //[HttpGet]
+        //public async Task<ActionResult> Get()
+        //{
+           
+        //    var result = await holidayBL.Get();
+        //    return Success(result.Holidaies, result.TotalCount);
+        //}
     }
 }

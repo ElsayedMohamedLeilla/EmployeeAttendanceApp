@@ -4,15 +4,12 @@ using Dawem.Contract.BusinessValidation.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
-using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.VacationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.VacationsTypes;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Providers;
 
 namespace Dawem.Contract.BusinessLogic.Provider
 {

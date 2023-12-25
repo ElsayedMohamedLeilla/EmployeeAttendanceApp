@@ -1,5 +1,4 @@
-﻿using Dawem.Models.Exceptions;
-using Dawem.Translations;
+﻿using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Controllers.Others

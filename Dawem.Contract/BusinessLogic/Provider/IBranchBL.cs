@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Provider;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Providers;
 using Dawem.Models.ResponseModels;
 
 namespace Dawem.Contract.BusinessLogic.Provider

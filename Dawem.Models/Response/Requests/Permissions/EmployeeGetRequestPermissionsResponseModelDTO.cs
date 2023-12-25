@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Requests.Justifications
+namespace Dawem.Models.Response.Requests.Permissions
 {
     public class EmployeeGetRequestPermissionsResponseModelDTO
     {

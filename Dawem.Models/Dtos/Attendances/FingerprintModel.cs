@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.Generals;
-
-namespace Dawem.Models.Dtos.Attendances
+﻿namespace Dawem.Models.Dtos.Attendances
 {
     public class FingerprintModel
     {

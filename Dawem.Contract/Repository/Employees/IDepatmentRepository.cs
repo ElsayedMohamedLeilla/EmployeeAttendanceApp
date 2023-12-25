@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Departments;
 
 namespace Dawem.Contract.Repository.Employees
 {

@@ -1,7 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Models.Response.Core.JustificationsTypes;
-using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Core
 {

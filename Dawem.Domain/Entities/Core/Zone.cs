@@ -1,4 +1,4 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Providers;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core

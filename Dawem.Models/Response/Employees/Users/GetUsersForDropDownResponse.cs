@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees.User
+﻿namespace Dawem.Models.Response.Employees.Users
 {
     public class GetUsersForDropDownResponse
     {

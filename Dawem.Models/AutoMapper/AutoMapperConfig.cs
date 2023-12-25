@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Lookups;
 
 namespace Dawem.Models.AutoMapper

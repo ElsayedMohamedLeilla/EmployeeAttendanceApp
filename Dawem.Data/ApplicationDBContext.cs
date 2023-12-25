@@ -5,7 +5,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.UserManagement;

@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Core.JustificationsTypes;
-using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.PermissionsTypes;
 using Dawem.Translations;

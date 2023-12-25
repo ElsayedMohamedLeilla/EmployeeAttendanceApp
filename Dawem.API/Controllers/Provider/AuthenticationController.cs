@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Models.Dtos.Identity;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Identities;
+using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

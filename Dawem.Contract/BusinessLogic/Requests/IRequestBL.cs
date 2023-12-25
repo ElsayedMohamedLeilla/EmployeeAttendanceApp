@@ -1,6 +1,5 @@
 ﻿using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Response.Requests.Requests;
-using Dawem.Models.Response.Requests.Vacations;
 
 namespace Dawem.Contract.BusinessLogic.Requests
 {

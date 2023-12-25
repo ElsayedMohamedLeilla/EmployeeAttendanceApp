@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Requests.Admin
+namespace Dawem.API.Controllers.Requests.Employee
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

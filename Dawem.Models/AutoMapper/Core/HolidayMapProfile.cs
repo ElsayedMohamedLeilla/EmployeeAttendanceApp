@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Core;
-using Dawem.Models.Dtos.Core.Holidaies;
+using Dawem.Models.Dtos.Core.Holidays;
 
 namespace Dawem.Models.AutoMapper.Core
 {

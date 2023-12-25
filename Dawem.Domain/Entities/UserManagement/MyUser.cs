@@ -1,5 +1,5 @@
 ﻿using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;

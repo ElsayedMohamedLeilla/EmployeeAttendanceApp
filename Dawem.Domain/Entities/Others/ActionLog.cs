@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Dawem.Translations;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Domain.Entities.Provider;
 using Dawem.Enums.Generals;
+using Dawem.Domain.Entities.Providers;
 
 namespace Dawem.Domain.Entities.Others
 {

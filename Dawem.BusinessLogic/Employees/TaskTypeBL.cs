@@ -7,14 +7,10 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Employees.TaskType;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.TaskTypes;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees;
-using Dawem.Validation.FluentValidation.Employees.TaskTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees

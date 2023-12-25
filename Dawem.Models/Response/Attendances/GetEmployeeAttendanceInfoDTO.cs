@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.Generals;
-
-namespace Dawem.Models.Response.Attendances
+﻿namespace Dawem.Models.Response.Attendances
 {
     public class GetEmployeeAttendanceInfoDTO
     {

@@ -11,7 +11,6 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.JustificationsTypes;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.JustificationsTypes;
-using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

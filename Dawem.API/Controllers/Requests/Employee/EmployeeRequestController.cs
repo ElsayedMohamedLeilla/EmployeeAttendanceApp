@@ -4,7 +4,7 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Requests
+namespace Dawem.API.Controllers.Requests.Employee
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

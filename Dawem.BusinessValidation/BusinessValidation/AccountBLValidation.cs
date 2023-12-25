@@ -1,8 +1,8 @@
 ﻿using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Models.Dtos.Identity;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Identities;
+using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;

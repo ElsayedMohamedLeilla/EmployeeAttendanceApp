@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Identity;
-using Dawem.Models.Dtos.Provider;
+﻿using Dawem.Models.Dtos.Identities;
+using Dawem.Models.Dtos.Providers;
 
 namespace Dawem.Contract.BusinessLogic.Provider
 {

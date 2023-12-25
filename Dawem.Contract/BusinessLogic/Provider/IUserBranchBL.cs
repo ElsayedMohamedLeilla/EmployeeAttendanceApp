@@ -1,4 +1,4 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.ResponseModels;
 

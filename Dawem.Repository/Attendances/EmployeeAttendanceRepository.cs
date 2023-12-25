@@ -5,7 +5,7 @@ using Dawem.Domain.Entities.Attendances;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Dashboard;
 using Dawem.Models.Generic;
 using LinqKit;
 

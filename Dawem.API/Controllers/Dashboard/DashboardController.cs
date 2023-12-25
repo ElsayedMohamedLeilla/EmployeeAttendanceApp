@@ -1,12 +1,10 @@
-﻿using Dawem.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Models.Dtos.Employees.Department;
+﻿using Dawem.Contract.BusinessLogic.Dashboard;
+using Dawem.Models.Dtos.Dashboard;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Dashboards
+namespace Dawem.API.Controllers.Dashboard
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

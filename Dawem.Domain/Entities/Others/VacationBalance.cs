@@ -1,10 +1,10 @@
 ﻿using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Provider;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Requests
+namespace Dawem.Domain.Entities.Others
 {
     [Table(nameof(VacationBalance) + LeillaKeys.S)]
     public class VacationBalance : BaseEntity
@@ -25,6 +25,6 @@ namespace Dawem.Domain.Entities.Requests
         public DateTime ExpirationDate { get; set; }
         public VacationType VacationType { get; set; }
         public float Balance { get; set; }
-        public float RemainingBalance { get; set; }        
+        public float RemainingBalance { get; set; }
     }
 }

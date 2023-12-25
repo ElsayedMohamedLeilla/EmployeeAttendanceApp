@@ -1,6 +1,6 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Attendances.FingerprintDevices
 {
-    public class GetFingerprintDevicesInformationsResponseDTO: BaseInformationsResponse
+    public class GetFingerprintDevicesInformationsResponseDTO : BaseInformationsResponse
     {
     }
 }

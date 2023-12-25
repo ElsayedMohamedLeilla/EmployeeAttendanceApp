@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.BusinessValidation.Schedules.SchedulePlans;
+﻿using Dawem.Contract.BusinessValidation.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
+using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Schedules.VacationBalance
+namespace Dawem.Validation.BusinessValidation.VacationBalances
 {
 
     public class VacationBalanceBLValidation : IVacationBalanceBLValidation
@@ -21,7 +21,7 @@ namespace Dawem.Validation.BusinessValidation.Schedules.VacationBalance
         public async Task<bool> CreateValidation(CreateVacationBalanceModel model)
         {
             var checkVacationBalanceDuplicate = await repositoryManager
-                .VacationBalanceRepository.Get(c => model.EmployeeId != null && !c.IsDeleted && 
+                .VacationBalanceRepository.Get(c => model.EmployeeId != null && !c.IsDeleted &&
                 c.CompanyId == requestInfo.CompanyId
                 && c.EmployeeId == model.EmployeeId
                 && c.Year == model.Year

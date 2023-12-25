@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Requests.Vacations
+﻿namespace Dawem.Models.Response.Employees.HolidayTypes
 {
     public class GetHolidayTypesInformationsResponseDTO : BaseInformationsResponse
     {

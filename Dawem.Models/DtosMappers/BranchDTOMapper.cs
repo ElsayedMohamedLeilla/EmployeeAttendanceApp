@@ -1,6 +1,6 @@
-﻿using Dawem.Domain.Entities.Provider;
+﻿using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Provider;
+using Dawem.Models.Dtos.Providers;
 
 namespace Dawem.Models.DtosMappers
 {

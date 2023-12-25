@@ -14,7 +14,6 @@ using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
-using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
@@ -191,13 +190,13 @@ namespace Dawem.BusinessLogic.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
-            
+
 
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
             getRequestVacation.NumberOfDays = (model.DateTo - model.DateFrom).Days + 1;
-            
+
 
             await unitOfWork.SaveAsync();
 
@@ -454,7 +453,7 @@ namespace Dawem.BusinessLogic.Requests
         {
             var request = await repositoryManager.RequestRepository
                 .GetWithTracking(d => !d.IsDeleted && d.Id == requestId)
-                .Include(r=>r.RequestVacation).FirstOrDefaultAsync() ??
+                .Include(r => r.RequestVacation).FirstOrDefaultAsync() ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             #region Validation
@@ -568,8 +567,8 @@ namespace Dawem.BusinessLogic.Requests
 
             return new EmployeeGetVacationsInformationsResponseDTO
             {
-                VacationsBalance = await query.AnyAsync(q => q.Request.Employee.VacationBalances != null && q.Request.Employee.VacationBalances.Where(b => b.Year == currentYear).Any()) ?  
-                await query.Select(q=> q.Request.Employee.VacationBalances.Where(b=>b.Year == currentYear).Sum(b => b.Balance)).FirstOrDefaultAsync() : 0,
+                VacationsBalance = await query.AnyAsync(q => q.Request.Employee.VacationBalances != null && q.Request.Employee.VacationBalances.Where(b => b.Year == currentYear).Any()) ?
+                await query.Select(q => q.Request.Employee.VacationBalances.Where(b => b.Year == currentYear).Sum(b => b.Balance)).FirstOrDefaultAsync() : 0,
                 AcceptedCount = await query.Where(request => request.Request.Status == RequestStatus.Accepted).CountAsync(),
                 RejectedCount = await query.Where(request => request.Request.Status == RequestStatus.Rejected).CountAsync(),
                 PendingCount = await query.Where(request => request.Request.Status == RequestStatus.Pending).CountAsync()

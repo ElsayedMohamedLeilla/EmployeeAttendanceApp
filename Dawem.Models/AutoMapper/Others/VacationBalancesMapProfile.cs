@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
+using Dawem.Domain.Entities.Others;
+using Dawem.Models.Dtos.Others.VacationBalances;
 
-namespace Dawem.Models.AutoMapper
+namespace Dawem.Models.AutoMapper.Others
 {
     public class VacationBalancesMapProfile : Profile
     {

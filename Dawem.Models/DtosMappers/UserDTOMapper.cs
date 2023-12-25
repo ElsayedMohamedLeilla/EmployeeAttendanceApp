@@ -1,6 +1,6 @@
 ﻿using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Identity;
+using Dawem.Models.Dtos.Identities;
 
 namespace Dawem.Models.DtosMappers
 {

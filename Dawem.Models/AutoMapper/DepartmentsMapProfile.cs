@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Models.Dtos.Employees.Department;
+using Dawem.Models.Dtos.Employees.Departments;
 
 namespace Dawem.Models.AutoMapper
 {

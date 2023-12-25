@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using System;
+
+namespace Dawem.Translations
 {
     public static class AmgadKeys
     {
@@ -39,12 +41,10 @@
         public const string Unknown = "Unknown";
         public const string OnTime = "OnTime";
         public const string Late = "Late";
-
         public const string SorryYouMustChooseEmployeeForRequestVacation = "Sorry!!YouMustChooseEmployeeForRequestVacation!";
         public const string SorryYouMustChooseVacationType = "Sorry!!YouMustChooseVacationType!";
         public const string SorryYouMustEnterDateFromForVacationRequest = "Sorry!!YouMustEnterDateFromForVacationRequest!";
         public const string SorryYouMustEnterDateToForVacationRequest = "Sorry!!YouMustEnterDateToForVacationRequest!";
-
         public const string SorryYouMustChooseEmployeeForRequestJustification = "Sorry!!YouMustChooseEmployeeForRequestJustification!";
         public const string SorryYouMustChooseJustificationType = "Sorry!!YouMustChooseJustificationType!";
         public const string SorryYouMustEnterDateFromForJustificationRequest = "Sorry!!YouMustEnterDateFromForJustificationRequest!";
@@ -77,8 +77,38 @@
         public const string SorryHolidayNotFound = "Sorry!!HolidayNotFound!";
         public const string DoneCreateHolidaySuccessfully = "DoneCreateHolidaySuccessfully";
         public const string DoneUpdateHolidaySuccessfully = "DoneUpdateHolidaySuccessfully";
+        public const string January = "January";
+        public const string February = "February";
+        public const string March = "March";
+        public const string April = "April";
+        public const string May = "May";
+        public const string June = "June";
+        public const string July = "July";
+        public const string August = "August";
+        public const string September = "September";
+        public const string October = "October";
+        public const string November = "November";
+        public const string December = "December";
+        public const string Muharram       ="Muharram";
+        public const string Safar      ="Safar";
+        public const string RabiAwwal ="RabialAwwal";
+        public const string RabialThani ="RabialThani";
+        public const string JumadaalAwwal ="JumadaalAwwal";
+        public const string JumadaalThani ="JumadaalThani";
+        public const string Rajab        ="Rajab";
+        public const string Shaaban      ="Shaaban";
+        public const string Ramadan       ="Ramadan";
+        public const string Shawwal      ="Shawwal";
+        public const string DhualQidah  ="DhualQidah";
+        public const string DhualHijjah  = "DhualHijjah";
+        public const string InvalidMonthNumber = "InvalidMonthNumber";
 
-        
+        public const string Ended = "Ended";
+        public const string WillStart = "WillStart";
+        public const string Started = "Started";
+
+
+
 
 
 

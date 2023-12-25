@@ -21,5 +21,8 @@ namespace Dawem.Contract.BusinessLogic.Core
 
         Task<GetHolidaiesInformationsResponseDTO> GetHolidaiesInformation();
 
+        Task<GetHolidayResponseForEmployeeDTO> GetForEmployee();
+
+
     }
 }

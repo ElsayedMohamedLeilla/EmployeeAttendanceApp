@@ -13,6 +13,8 @@ namespace Dawem.Models.Dtos.Core.Holidays
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public string Notes { get; set; }
+        public bool IsSpecifiedByYear { get; set; }
+
 
         [JsonIgnore]
         public int StartDay { get; set; }
@@ -34,7 +36,7 @@ namespace Dawem.Models.Dtos.Core.Holidays
             StartMonth = StartDate.Month;
             EndDay = EndDate.Day;
             EndMonth = EndDate.Month;
-            if (DateType == DateType.Gregorian)
+            if (IsSpecifiedByYear)
             {
                 StartYear = StartDate.Year;
                 EndYear = EndDate.Year;

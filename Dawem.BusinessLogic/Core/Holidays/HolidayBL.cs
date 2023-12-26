@@ -17,6 +17,7 @@ using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Calendars;
+using NodaTime.Extensions;
 using System.Globalization;
 
 namespace Dawem.BusinessLogic.Core.Holidays
@@ -43,7 +44,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
         public async Task<int> Create(CreateHolidayDTO model)
         {
-            model.AssignStartEndDayMonthYear(); // to assign startDay EndDay Year From Start and End Date
+            model.JustifyStartEndDate(); 
             #region Business Validation
             await HolidayBLValidation.CreateValidation(model);
             #endregion
@@ -78,7 +79,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
         }
         public async Task<bool> Update(UpdateHolidayDTO model)
         {
-            model.AssignStartEndDayMonthYear(); // to assign startDay EndDay Year From Start and End Date
+            model.JustifyStartEndDate(); 
 
             #region Business Validation
             await HolidayBLValidation.UpdateValidation(model);
@@ -92,49 +93,33 @@ namespace Dawem.BusinessLogic.Core.Holidays
             getholiday.ModifiedDate = DateTime.Now;
             getholiday.ModifyUserId = requestInfo.UserId;
             getholiday.DateType = model.DateType;
-            getholiday.StartDay = model.StartDay;
-            getholiday.EndDay = model.EndDay;
-            getholiday.StartMonth = model.StartMonth;
-            getholiday.EndMonth = model.EndMonth;
-            if (model.DateType == DateType.Hijri) //ignore year in Hijri Data
-            {
-                getholiday.StartYear = null;
-                getholiday.EndYear = null;
-            }
-            else
-            {
-                getholiday.StartYear = model.StartYear;
-                getholiday.EndYear = model.EndYear;
-            }
+            getholiday.StartDate = model.StartDate;
+            getholiday.EndDate = model.EndDate;
+            getholiday.Notes = model.Notes;
             await unitOfWork.SaveAsync();
             #endregion
 
             #region Handle Response
-
             await unitOfWork.CommitAsync();
             return true;
 
             #endregion
         }
+
+
         public async Task<GetHolidayResponseDTO> Get(GetHolidayCriteria criteria)
         {
             var holidayRepository = repositoryManager.HolidayRepository;
             var query = holidayRepository.GetAsQueryable(criteria);
-
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
-
             #region sorting
             var queryOrdered = holidayRepository.OrderBy(query, nameof(Holiday.Id), LeillaKeys.Desc);
             #endregion
-
             var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
             #endregion
-
             #region Handle Response
-
             var holidaysList = await queryPaged.Select(e => new GetHolidayForGridDTO
             {
                 Id = e.Id,
@@ -143,8 +128,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 IsActive = e.IsActive,
                 DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                 Notes = e.Notes,
-                StartDate = e.GetStartDateAsString(criteria.Year ?? DateTime.UtcNow.Year),
-                EndDate = e.GetEndDateAsString(criteria.Year ?? DateTime.UtcNow.Year)
+                StartDate = e.CreateStartEndDate().Item1,
+                EndDate = e.CreateStartEndDate().Item2
             }).ToListAsync();
 
             return new GetHolidayResponseDTO
@@ -205,8 +190,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     IsActive = e.IsActive,
                     DateType = e.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                     Notes = e.Notes,
-                    StartDate = e.GetStartDateAsString(null),
-                    EndDate = e.GetEndDateAsString(null)
+                    StartDate = e.CreateStartEndDate().Item1,
+                    EndDate = e.CreateStartEndDate().Item2
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -217,7 +202,9 @@ namespace Dawem.BusinessLogic.Core.Holidays
             HijriCalendar hijriCalendar = new HijriCalendar();
             int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
-                .Select(e => new GetHolidayByIdResponseDTO
+                .Select(e =>
+               
+                new GetHolidayByIdResponseDTO
                 {
                     Id = e.Id,
                     Code = e.Code,
@@ -225,8 +212,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     IsActive = e.IsActive,
                     DateType = e.DateType,
                     Notes = e.Notes,
-                    StartDate = e.DateType == DateType.Hijri ? e.GetHijriDate(currentHijriYear, e.StartMonth, e.StartDay) : new LocalDate(e.StartYear ?? DateTime.UtcNow.Year, e.StartMonth, e.StartDay),
-                    EndDate = e.DateType == DateType.Hijri ? e.GetHijriDate(currentHijriYear, e.EndMonth, e.EndDay) : new LocalDate(e.EndYear ?? DateTime.UtcNow.Year, e.EndMonth, e.EndDay),
+                    StartDate = DateTime.Parse(e.CreateStartEndDate().Item1),
+                    EndDate = DateTime.Parse(e.CreateStartEndDate().Item2)
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -292,16 +279,16 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
             var upcomingCount = holidays
                 .Count(h =>
-                    h.StartYear > today.Year ||
-                    h.StartYear == today.Year && h.StartMonth > today.Month ||
-                    h.StartYear == today.Year && h.StartMonth == today.Month && h.StartDay > today.Day);
+                    h.StartDate.Year > today.Year ||
+                    h.StartDate.Year == today.Year && h.StartDate.Month > today.Month ||
+                    h.StartDate.Year == today.Year && h.StartDate.Month == today.Month && h.StartDate.Day > today.Day);
 
 
             var pastCount = holidays
                 .Count(h =>
-                    h.EndYear < today.Year ||
-                    h.EndYear == today.Year && h.EndMonth < today.Month ||
-                    h.EndYear == today.Year && h.EndMonth == today.Month && h.EndDay < today.Day);
+                    h.EndDate.Year < today.Year ||
+                    h.EndDate.Year == today.Year && h.EndDate.Month < today.Month ||
+                    h.EndDate.Year == today.Year && h.EndDate.Month == today.Month && h.EndDate.Day < today.Day);
 
 
             return (upcomingCount, pastCount);
@@ -313,13 +300,13 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
             var upcomingCount = holidays
                 .Count(h =>
-                    h.StartMonth > todayHijri.Month ||
-                    h.StartMonth == todayHijri.Month && h.StartDay > todayHijri.Day);
+                    h.StartDate.Month > todayHijri.Month ||
+                    h.StartDate.Month == todayHijri.Month && h.StartDate.Day > todayHijri.Day);
 
             var pastCount = holidays
                 .Count(h =>
-                    h.EndMonth < todayHijri.Month ||
-                    h.EndMonth == todayHijri.Month && h.EndDay < todayHijri.Day);
+                    h.EndDate.Month < todayHijri.Month ||
+                    h.EndDate.Month == todayHijri.Month && h.EndDate.Day < todayHijri.Day);
 
             return (upcomingCount, pastCount);
         }
@@ -340,12 +327,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 var (startStatus, status) = GetStartEndStatus(new StartEndDateParametersDTO
                 {
                     dateType = h.DateType,
-                    endDay = h.EndDay,
-                    endMonth = h.EndMonth,
-                    endYear = h.EndYear ?? DateTime.UtcNow.Year,
-                    startDay = h.StartDay,
-                    startMonth = h.StartMonth,
-                    startYear = h.StartYear ?? DateTime.UtcNow.Year
+                    StartDate = h.IsSpecifiedByYear ? h.StartDate : new DateTime(DateTime.UtcNow.Year,h.StartDate.Month,h.StartDate.Day),
+                    EndDate = h.IsSpecifiedByYear ? h.EndDate : new DateTime(DateTime.UtcNow.Year, h.EndDate.Month, h.EndDate.Day),
                 });
 
                 return new GetHolidayForGridForEmployeeDTO()
@@ -355,7 +338,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     DateType = h.DateType == 0 ? TranslationHelper.GetTranslation(AmgadKeys.Gregorian, requestInfo.Lang) : TranslationHelper.GetTranslation(AmgadKeys.Hijri, requestInfo.Lang),
                     IsActive = h.IsActive,
                     Name = h.Name,
-                    Period = GetPeriodLabel(h.StartMonth, h.StartDay, h.EndDay, h.DateType),
+                    Period = GetPeriodLabel(h.StartDate.Month, h.StartDate.Day, h.EndDate.Day, h.DateType),
                     StartStatus = startStatus,
                     Status = status
                 };
@@ -435,8 +418,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 // .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
 
                 var clientLocalDateTime = DateTime.UtcNow;
-                DateTime startDate = new(model.startYear, model.startMonth, model.startDay);
-                DateTime endDate = new(model.endYear, model.endMonth, model.endDay);
+                DateTime startDate = model.StartDate;
+                DateTime endDate = model.EndDate;
                 if (clientLocalDateTime < startDate) // will start
                 {
                     dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
@@ -461,21 +444,21 @@ namespace Dawem.BusinessLogic.Core.Holidays
             {
                 CalendarSystem hijriCalendar = CalendarSystem.GetIslamicCalendar(IslamicLeapYearPattern.Base15, IslamicEpoch.Astronomical);
                 LocalDate today = SystemClock.Instance.GetCurrentInstant().InUtc().Date.WithCalendar(hijriCalendar);
-                LocalDate startDate = new LocalDate(today.Year, model.startMonth, model.startDay, hijriCalendar);
-                LocalDate endDate = new LocalDate(today.Year, model.endMonth, model.endDay, hijriCalendar);
+                LocalDate startDate = new LocalDate(today.Year, model.StartDate.Month, model.StartDate.Day, hijriCalendar);
+                LocalDate endDate = new LocalDate(today.Year, model.EndDate.Month, model.EndDate.Day, hijriCalendar);
                 if (today < startDate) // will start
                 {
-                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
+                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek.ToDayOfWeek()).ToString(), requestInfo.Lang);
                     return (TranslationHelper.GetTranslation(AmgadKeys.WillStart, requestInfo.Lang) + " " + dayOfWeek, HolidayStatus.WillStart);
                 }
                 else if (today < endDate && today > startDate) //started
                 {
-                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
+                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek.ToDayOfWeek()).ToString(), requestInfo.Lang);
                     return (TranslationHelper.GetTranslation(AmgadKeys.Started, requestInfo.Lang) + " " + dayOfWeek, HolidayStatus.Started);
                 }
                 else if (today > endDate) //ended 
                 {
-                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)endDate.DayOfWeek).ToString(), requestInfo.Lang);
+                    dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)endDate.DayOfWeek.ToDayOfWeek()).ToString(), requestInfo.Lang);
                     return (TranslationHelper.GetTranslation(AmgadKeys.Ended, requestInfo.Lang) + " " + dayOfWeek, HolidayStatus.Ended);
                 }
                 else

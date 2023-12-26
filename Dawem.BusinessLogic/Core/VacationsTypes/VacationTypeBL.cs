@@ -58,11 +58,11 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
 
             #endregion
 
-            var VacationsType = mapper.Map<Domain.Entities.Core.VacationType>(model);
-            VacationsType.CompanyId = requestInfo.CompanyId;
-            VacationsType.AddUserId = requestInfo.UserId;
-            VacationsType.Code = getNextCode;
-            repositoryManager.VacationsTypeRepository.Insert(VacationsType);
+            var vacationType = mapper.Map<Domain.Entities.Core.VacationType>(model);
+            vacationType.CompanyId = requestInfo.CompanyId;
+            vacationType.AddUserId = requestInfo.UserId;
+            vacationType.Code = getNextCode;
+            repositoryManager.VacationsTypeRepository.Insert(vacationType);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -70,7 +70,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return VacationsType.Id;
+            return vacationType.Id;
 
             #endregion
 
@@ -88,6 +88,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #region Update VacationsType
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetByIdAsync(model.Id);
             getVacationsType.Name = model.Name;
+            getVacationsType.Type = model.Type;
             getVacationsType.IsActive = model.IsActive;
             getVacationsType.ModifiedDate = DateTime.Now;
             getVacationsType.ModifyUserId = requestInfo.UserId;

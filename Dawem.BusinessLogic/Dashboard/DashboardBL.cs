@@ -36,13 +36,7 @@ namespace Dawem.BusinessLogic.Dashboard
                 .Select(employee => employee.Name).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
             var currentCompanyId = requestInfo.CompanyId;
-
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow.AddDays(-3), getTimeZoneId).DateTime;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
 
             decimal mustAttendTodayCount = await repositoryManager.EmployeeRepository
                 .Get(employee => !employee.IsDeleted &&
@@ -74,13 +68,7 @@ namespace Dawem.BusinessLogic.Dashboard
         public async Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations()
         {
             var currentCompanyId = requestInfo.CompanyId;
-
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
             var clientLocalDate = clientLocalDateTime.Date;
             var clientLocalDateWeekDay = (WeekDay)clientLocalDateTime.DayOfWeek;
             var clientLocalTimeOnly = TimeOnly.FromTimeSpan(clientLocalDateTime.TimeOfDay);
@@ -165,14 +153,7 @@ namespace Dawem.BusinessLogic.Dashboard
         }
         public async Task<GetRequestsStatusResponseModel> GetRequestsStatus(GetRequestsStatusModel model)
         {
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-
-            model.LocalDate = clientLocalDate;
+            model.LocalDate = requestInfo.LocalDateTime;
 
             var query = repositoryManager.RequestRepository.GetForStatusAsQueryable(model);
 
@@ -189,13 +170,7 @@ namespace Dawem.BusinessLogic.Dashboard
         }
         public async Task<GetEmployeesStatusResponseModel> GetEmployeesStatus()
         {
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-
+            var clientLocalDate = requestInfo.LocalDateTime;
             var query = repositoryManager.EmployeeRepository.Get(employee => employee.CompanyId == requestInfo.CompanyId && !employee.IsDeleted);
 
             #region Available
@@ -305,14 +280,7 @@ namespace Dawem.BusinessLogic.Dashboard
                 !employee.IsDeleted &&
                 employee.Schedule.ScheduleDays.FirstOrDefault(d => d.ShiftId > 0) != null);
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-               .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-               .Select(c => c.Country.TimeZoneId)
-               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-
-            model.LocalDate = clientLocalDate;
+            model.LocalDate = requestInfo.LocalDateTime;
 
             var queryAttendance = repositoryManager.EmployeeAttendanceRepository
                 .GetForStatusAsQueryable(model);
@@ -360,14 +328,7 @@ namespace Dawem.BusinessLogic.Dashboard
                 !employee.IsDeleted &&
                 employee.Schedule.ScheduleDays.FirstOrDefault(d => d.ShiftId > 0) != null);
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-               .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-               .Select(c => c.Country.TimeZoneId)
-               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-
-            model.LocalDate = clientLocalDate;
+            model.LocalDate = requestInfo.LocalDateTime;
 
             var queryAttendance = repositoryManager.EmployeeAttendanceRepository
                 .GetForStatusAsQueryable(model);

@@ -1,11 +1,14 @@
-﻿using Dawem.Contract.Repository.Provider;
+﻿using Dawem.Contract.Repository.Manager;
+using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,7 +24,9 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, UserManagerRepository userManager, IUserRepository smartUserRepository, IBranchRepository branchRepository, IOptions<Jwt> appSettings)
+        public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo,
+            UserManagerRepository userManager, IRepositoryManager repositoryManager, 
+            IBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
 
@@ -50,6 +55,16 @@ namespace Dawem.API.MiddleWares
                     requestInfo.UserId = userId;
                     requestInfo.CompanyId = companyId;
                     requestInfo.ApplicationType = (ApplicationType)applicationType;
+
+
+                    var currentCompanyId = requestInfo.CompanyId;
+
+                    var getTimeZoneId = await repositoryManager.CompanyRepository
+                        .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
+                        .Select(c => c.Country.TimeZoneId)
+                        .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
+
+                    requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
                 }
 
             }

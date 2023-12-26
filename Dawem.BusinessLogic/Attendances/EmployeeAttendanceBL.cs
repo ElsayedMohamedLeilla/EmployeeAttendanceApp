@@ -513,13 +513,7 @@ namespace Dawem.BusinessLogic.Attendances
         public async Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations()
         {
             var currentCompanyId = requestInfo.CompanyId;
-
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
             var clientLocalDate = clientLocalDateTime.Date;
             var clientLocalDateWeekDay = (WeekDay)clientLocalDateTime.DayOfWeek;
             var clientLocalTimeOnly = TimeOnly.FromTimeSpan(clientLocalDateTime.TimeOfDay);

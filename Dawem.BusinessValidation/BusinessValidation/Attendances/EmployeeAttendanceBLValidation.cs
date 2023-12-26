@@ -120,12 +120,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                    }).ToList()
                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDate = requestInfo.LocalDateTime;
 
             var shiftId = getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDate.DayOfWeek)
                 .ShiftId ?? throw new BusinessValidationException(LeillaKeys.SorryYouDoNotHaveScheduleToday);

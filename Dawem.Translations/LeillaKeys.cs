@@ -420,6 +420,8 @@
         public const string SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee = "Sorry!!ThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee!";
         public const string SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee = "Sorry!!ThereIsNoSufficientBalanceForSelectedTypeForEmployee!";
         public const string CurrentBalanceForEmployee = "CurrentBalanceForEmployee:";
+        public const string SorryYouMustEnterCorrectVacationType = "Sorry!!YouMustEnterCorrectVacationType!";
+        
 
     }
 }

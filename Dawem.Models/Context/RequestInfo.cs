@@ -1,5 +1,7 @@
 ﻿using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
+using Dawem.Models.Exceptions;
+using Dawem.Translations;
 
 namespace Dawem.Models.Context
 {
@@ -20,5 +22,7 @@ namespace Dawem.Models.Context
         public int? RequestPort { get; set; }
         public string BaseUrl { get; set; }
         public bool IsMainBranch { get; set; }
+        public DateTime LocalDateTime { get; set; }
+        
     }
 }

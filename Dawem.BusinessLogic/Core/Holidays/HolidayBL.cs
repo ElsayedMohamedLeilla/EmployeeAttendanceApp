@@ -96,6 +96,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
             getholiday.StartDate = model.StartDate;
             getholiday.EndDate = model.EndDate;
             getholiday.Notes = model.Notes;
+            getholiday.IsSpecifiedByYear = model.IsSpecifiedByYear; 
             await unitOfWork.SaveAsync();
             #endregion
 
@@ -212,8 +213,8 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     IsActive = e.IsActive,
                     DateType = e.DateType,
                     Notes = e.Notes,
-                    StartDate = DateTime.Parse(e.CreateStartEndDate().Item1),
-                    EndDate = DateTime.Parse(e.CreateStartEndDate().Item2)
+                    StartDate = DateTime.Parse(e.CreateStartEndDate().Item1).Date,
+                    EndDate = DateTime.Parse(e.CreateStartEndDate().Item2).Date
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
@@ -329,6 +330,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
                     dateType = h.DateType,
                     StartDate = h.IsSpecifiedByYear ? h.StartDate : new DateTime(DateTime.UtcNow.Year,h.StartDate.Month,h.StartDate.Day),
                     EndDate = h.IsSpecifiedByYear ? h.EndDate : new DateTime(DateTime.UtcNow.Year, h.EndDate.Month, h.EndDate.Day),
+                    IsSpecificByYear  = h.IsSpecifiedByYear
                 });
 
                 return new GetHolidayForGridForEmployeeDTO()
@@ -418,8 +420,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 // .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
 
                 var clientLocalDateTime = DateTime.UtcNow;
-                DateTime startDate = model.StartDate;
-                DateTime endDate = model.EndDate;
+                var (startDate, endDate) = JustifyStartEndDate(model.IsSpecificByYear, model.dateType, model.StartDate, model.EndDate);
                 if (clientLocalDateTime < startDate) // will start
                 {
                     dayOfWeek = TranslationHelper.GetTranslation(((WeekDay)startDate.DayOfWeek).ToString(), requestInfo.Lang);
@@ -467,6 +468,35 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 }
             }
 
+        }
+
+
+        public (DateTime, DateTime) JustifyStartEndDate(bool IsSpecifiedByYear,DateType dateType,DateTime startDate, DateTime endDate)
+        {
+
+            if (!IsSpecifiedByYear)
+            {
+                if (dateType == DateType.Hijri)
+                {
+                    HijriCalendar hijriCalendar = new HijriCalendar();
+                    int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
+                    DateTime start = new DateTime(currentHijriYear, startDate.Month, startDate.Day);
+                    DateTime end = new DateTime(currentHijriYear, endDate.Month, endDate.Day);
+                    return (startDate, endDate);
+                }
+                else
+                {
+                    DateTime today = DateTime.UtcNow;
+                    DateTime start = new DateTime(today.Year, startDate.Month, startDate.Day);
+                    DateTime end = new DateTime(today.Year, endDate.Month, endDate.Day);
+                    return (startDate, endDate);
+                }
+
+            }
+            else
+            {
+                return (startDate, endDate);
+            }
         }
 
 

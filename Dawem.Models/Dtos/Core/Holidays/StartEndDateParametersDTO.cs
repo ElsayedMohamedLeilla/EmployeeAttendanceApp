@@ -14,6 +14,8 @@ namespace Dawem.Models.Dtos.Core.Holidays
         public DateTime EndDate { get; set; }
         public DateType dateType { get; set; }
 
+        public bool IsSpecificByYear { get; set; }
+
 
     }
 }

@@ -2,6 +2,8 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,9 +12,10 @@ namespace Dawem.Repository.Employees
 {
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public EmployeeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
         public IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria)
         {
@@ -72,6 +75,50 @@ namespace Dawem.Repository.Employees
             if (criteria.EmployeeNumber is not null)
             {
                 predicate = predicate.And(e => e.EmployeeNumber == criteria.EmployeeNumber);
+            }
+            if (criteria.Status != null)
+            {
+                var clientLocalDate = requestInfo.LocalDateTime;
+
+                switch (criteria.Status.Value)
+                {
+                    case FilterEmployeeStatus.Available:
+                        predicate = predicate.And(employee => !employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted 
+                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending) 
+                        && clientLocalDate.Date >= task.RequestTask.Request.Date && clientLocalDate.Date <= task.RequestTask.DateTo)
+                        &&
+                        !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                        && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
+                        && (request.RequestTask.Request.Type == RequestType.Assignment || request.RequestTask.Request.Type == RequestType.Vacation)
+                        && clientLocalDate.Date >= request.Date.Date
+                        && clientLocalDate.Date <= request.Date.Date));
+
+                        break;
+                    case FilterEmployeeStatus.InTaskOrAssignment:
+                        predicate = predicate.And(employee => employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
+                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending)
+                        && clientLocalDate.Date >= task.RequestTask.Request.Date
+                        && clientLocalDate.Date <= task.RequestTask.DateTo)
+                        &&
+                        !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                        && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
+                        && request.RequestTask.Request.Type == RequestType.Assignment
+                        && clientLocalDate.Date >= request.Date.Date
+                        && clientLocalDate.Date <= request.Date.Date));
+
+                        break;
+                    case FilterEmployeeStatus.InVacationOrOutside:
+                        predicate = predicate.And(employee =>
+                        employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                        && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
+                        && request.RequestTask.Request.Type == RequestType.Vacation
+                        && clientLocalDate.Date >= request.Date.Date
+                        && clientLocalDate.Date <= request.Date.Date));
+
+                        break;
+                    default:
+                        break;
+                }
             }
 
             predicate = predicate.And(inner);

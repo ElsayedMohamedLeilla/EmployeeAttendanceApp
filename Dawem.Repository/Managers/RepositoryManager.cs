@@ -119,7 +119,7 @@ namespace Dawem.Repository.Managers
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
-        employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting);
+        employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
         public IAssignmentTypeRepository AssignmentTypeRepository =>

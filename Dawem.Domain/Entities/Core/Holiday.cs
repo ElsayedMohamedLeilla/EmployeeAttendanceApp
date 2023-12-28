@@ -18,75 +18,99 @@ namespace Dawem.Domain.Entities.Core
         public int Code { get; set; }
         public string Name { get; set; }
         public DateType DateType { get; set; }
-        public int StartDay { get; set; }
-        public int EndDay { get; set; }
-        public int StartMonth { get; set; }
-        public int EndMonth { get; set; }
-        public int? StartYear { get; set; }
-        public int? EndYear { get; set; }
-        [NotMapped]
-        public DateOnly StartDate { get; set; }
-        [NotMapped]
-        public DateOnly EndDate { get; set; }
+        //public int StartDay { get; set; }
+        //public int EndDay { get; set; }
+        //public int StartMonth { get; set; }
+        //public int EndMonth { get; set; }
+        //public int? StartYear { get; set; }
+        //public int? EndYear { get; set; }
+        
+        public DateTime StartDate { get; set; }
+        
+        public DateTime EndDate { get; set; }
         public bool IsSpecifiedByYear { get; set; }
 
-        public DateTime ToGregorianDate(int year, int month, int day)
-        {
-            return new DateTime(year, month, day);
-        }
+        //public DateTime ToGregorianDate(int year, int month, int day)
+        //{
+        //    return new DateTime(year, month, day);
+        //}
 
 
-        public DateTime ToHijriDate(int year, int month, int day)
-        {
-            HijriCalendar hijriCalendar = new();
-            return hijriCalendar.ToDateTime(year, month, day, 0, 0, 0, 0);
-        }
+        //public DateTime ToHijriDate(int year, int month, int day)
+        //{
+        //    HijriCalendar hijriCalendar = new();
+        //    return hijriCalendar.ToDateTime(year, month, day, 0, 0, 0, 0);
+        //}
 
 
-        public string GetStartDateAsString(int? year)
-        {
-            if (DateType == DateType.Hijri)
-            {
-                HijriCalendar hijriCalendar = new HijriCalendar();
-                int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-                return currentHijriYear + "-" + StartMonth + "-" + StartDay;
-            }
-            else
-            {
-                int gyear = StartYear ?? DateTime.UtcNow.Year;
-                return gyear + "-" + StartMonth + "-" + StartDay;
-            }
-        }
-        public string GetEndDateAsString(int? year)
-        {
-            if (DateType == DateType.Hijri)
-            {
-                HijriCalendar hijriCalendar = new HijriCalendar();
-                int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-                    return currentHijriYear + "-" + EndMonth + "-" + EndDay;
+        //public string GetStartDateAsString(int? year)
+        //{
+        //    if (DateType == DateType.Hijri)
+        //    {
+        //        HijriCalendar hijriCalendar = new HijriCalendar();
+        //        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
+        //        return currentHijriYear + "-" + StartMonth + "-" + StartDay;
+        //    }
+        //    else
+        //    {
+        //        int gyear = StartYear ?? DateTime.UtcNow.Year;
+        //        return gyear + "-" + StartMonth + "-" + StartDay;
+        //    }
+        //}
+        //public string GetEndDateAsString(int? year)
+        //{
+        //    if (DateType == DateType.Hijri)
+        //    {
+        //        HijriCalendar hijriCalendar = new HijriCalendar();
+        //        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
+        //            return currentHijriYear + "-" + EndMonth + "-" + EndDay;
               
+        //    }
+        //    else
+        //    {
+        //        int gyear = EndYear ?? DateTime.UtcNow.Year;
+        //        return gyear + "-" + EndMonth + "-" + EndDay;
+        //    }
+        //}
+
+        public void JustifyStartEndDate()
+        {
+            if (!IsSpecifiedByYear)
+            {
+                DateTime tempStartDate = StartDate;
+                DateTime tempEndDate = EndDate;
+                StartDate =new DateTime(0001, tempStartDate.Month, tempStartDate.Day);
+                EndDate = new DateTime(0001, tempEndDate.Month, tempEndDate.Day);
+            }
+        }
+
+       public (string,string) CreateStartEndDate()
+        {
+            
+            if (!IsSpecifiedByYear)
+            {
+                if(DateType.Equals(DateType.Hijri))
+                {
+                    HijriCalendar hijriCalendar = new HijriCalendar();
+                    int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
+                    string startDate = new DateTime(currentHijriYear, StartDate.Month, StartDate.Day).ToShortDateString();
+                    string endDate = new DateTime(currentHijriYear, EndDate.Month, EndDate.Day).ToShortDateString();
+                    return (startDate, endDate);
+                }
+                else
+                {
+                     DateTime today = DateTime.UtcNow;
+                    string startDate = new DateTime(today.Year, StartDate.Month, StartDate.Day).ToShortDateString();
+                    string endDate = new DateTime(today.Year, EndDate.Month, EndDate.Day).ToShortDateString();
+                    return (startDate, endDate);
+                }
+               
             }
             else
             {
-                int gyear = EndYear ?? DateTime.UtcNow.Year;
-                return gyear + "-" + EndMonth + "-" + EndDay;
+                return (StartDate.ToShortDateString(), EndDate.ToShortDateString());
             }
         }
-
-        public void AssignStartEndDayMonthYear()
-        {
-            StartDay = StartDate.Day;
-            StartMonth = StartDate.Month;
-            EndDay = EndDate.Day;
-            EndMonth = EndDate.Month;
-            if (IsSpecifiedByYear)
-            {
-                StartYear = StartDate.Year;
-                EndYear = EndDate.Year;
-            }
-        }
-
-       
 
         public LocalDate GetHijriDate(int hijriYear, int hijriMonth, int hijriDay)
         {

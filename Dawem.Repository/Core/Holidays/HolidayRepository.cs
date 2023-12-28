@@ -47,12 +47,12 @@ namespace Dawem.Repository.Core.Holidays
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
 
-            // search by year get all year is zero or year = critraia.year
-            if (criteria.Year > 0 || criteria.Year != null)
-            {
-                inner = inner.And(e => e.StartYear == criteria.Year || e.StartYear == null);
+            //// search by year get all year is zero or year = critraia.year
+            //if (criteria.Year > 0 || criteria.Year != null)
+            //{
+            //    inner = inner.And(e => e.StartYear == criteria.Year || e.StartYear == null);
 
-            }
+            //}
             if (criteria.DateType != null)
             {
                 inner = inner.And(e => e.DateType == criteria.DateType);

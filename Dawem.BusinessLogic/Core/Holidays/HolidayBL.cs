@@ -44,7 +44,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
         public async Task<int> Create(CreateHolidayDTO model)
         {
-            model.JustifyStartEndDate(); 
+            model.JustifyStartEndDate();
             #region Business Validation
             await HolidayBLValidation.CreateValidation(model);
             #endregion
@@ -79,7 +79,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
         }
         public async Task<bool> Update(UpdateHolidayDTO model)
         {
-            model.JustifyStartEndDate(); 
+            model.JustifyStartEndDate();
 
             #region Business Validation
             await HolidayBLValidation.UpdateValidation(model);
@@ -96,7 +96,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
             getholiday.StartDate = model.StartDate;
             getholiday.EndDate = model.EndDate;
             getholiday.Notes = model.Notes;
-            getholiday.IsSpecifiedByYear = model.IsSpecifiedByYear; 
+            getholiday.IsSpecifiedByYear = model.IsSpecifiedByYear;
             await unitOfWork.SaveAsync();
             #endregion
 
@@ -110,6 +110,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
         public async Task<GetHolidayResponseDTO> Get(GetHolidayCriteria criteria)
         {
+            //LocalDateTime CurrentHijri = requestInfo.LocalHijriDateTime;
             var holidayRepository = repositoryManager.HolidayRepository;
             var query = holidayRepository.GetAsQueryable(criteria);
             #region paging
@@ -204,7 +205,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
             int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
             var holiday = await repositoryManager.HolidayRepository.Get(e => e.Id == holidayId && !e.IsDeleted)
                 .Select(e =>
-               
+
                 new GetHolidayByIdResponseDTO
                 {
                     Id = e.Id,
@@ -254,7 +255,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
             var allHolidays = await holidayRepository
                 .Get(holiday => !holiday.IsDeleted && holiday.CompanyId == requestInfo.CompanyId)
                 .ToListAsync();
-
+            allHolidays = JsutifyStartEndDate(allHolidays);
             var totalHolidayCount = allHolidays.Count;
 
             // Calculate Gregorian date counts
@@ -328,9 +329,9 @@ namespace Dawem.BusinessLogic.Core.Holidays
                 var (startStatus, status) = GetStartEndStatus(new StartEndDateParametersDTO
                 {
                     dateType = h.DateType,
-                    StartDate = h.IsSpecifiedByYear ? h.StartDate : new DateTime(DateTime.UtcNow.Year,h.StartDate.Month,h.StartDate.Day),
+                    StartDate = h.IsSpecifiedByYear ? h.StartDate : new DateTime(DateTime.UtcNow.Year, h.StartDate.Month, h.StartDate.Day),
                     EndDate = h.IsSpecifiedByYear ? h.EndDate : new DateTime(DateTime.UtcNow.Year, h.EndDate.Month, h.EndDate.Day),
-                    IsSpecificByYear  = h.IsSpecifiedByYear
+                    IsSpecificByYear = h.IsSpecifiedByYear
                 });
 
                 return new GetHolidayForGridForEmployeeDTO()
@@ -414,12 +415,9 @@ namespace Dawem.BusinessLogic.Core.Holidays
             string dayOfWeek;
             if (model.dateType == 0)  //Gregorian Date
             {
-                //var getTimeZoneId =  repositoryManager.CompanyRepository
-                // .Get(c => !c.IsDeleted && c.Id == requestInfo.CompanyId)
-                // .Select(c => c.Country.TimeZoneId)
-                // .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
+                
 
-                var clientLocalDateTime = DateTime.UtcNow;
+                var clientLocalDateTime = requestInfo.LocalDateTime;
                 var (startDate, endDate) = JustifyStartEndDate(model.IsSpecificByYear, model.dateType, model.StartDate, model.EndDate);
                 if (clientLocalDateTime < startDate) // will start
                 {
@@ -471,7 +469,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
         }
 
 
-        public (DateTime, DateTime) JustifyStartEndDate(bool IsSpecifiedByYear,DateType dateType,DateTime startDate, DateTime endDate)
+        public (DateTime, DateTime) JustifyStartEndDate(bool IsSpecifiedByYear, DateType dateType, DateTime startDate, DateTime endDate)
         {
 
             if (!IsSpecifiedByYear)
@@ -497,6 +495,35 @@ namespace Dawem.BusinessLogic.Core.Holidays
             {
                 return (startDate, endDate);
             }
+        }
+
+        private List<Holiday> JsutifyStartEndDate(List<Holiday> holidays)
+        {
+            for (int i = 0; i < holidays.Count; i++)
+            {
+                if (!holidays[i].IsSpecifiedByYear)
+                {
+                    if(holidays[i].DateType == DateType.Gregorian)
+                    {
+                        DateTime start = holidays[i].StartDate;
+                        DateTime end = holidays[i].EndDate;
+                        holidays[i].StartDate = new DateTime(requestInfo.LocalDateTime.Year, start.Month, start.Day);
+                        holidays[i].EndDate = new DateTime(requestInfo.LocalDateTime.Year, end.Month, end.Day);
+
+                    }
+                    else
+                    {
+                        HijriCalendar hijriCalendar = new HijriCalendar();
+                        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
+                        DateTime start = holidays[i].StartDate;
+                        DateTime end = holidays[i].EndDate;
+                        holidays[i].StartDate = new DateTime(currentHijriYear, start.Month, start.Day);
+                        holidays[i].EndDate = new DateTime(currentHijriYear, end.Month, end.Day);
+                    }
+                }
+                
+            }
+            return holidays;
         }
 
 

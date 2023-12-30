@@ -14,18 +14,7 @@ namespace Dawem.Models.Dtos.Core.Holidays
         public string Notes { get; set; }
         public bool IsSpecifiedByYear { get; set; }
 
-        //[JsonIgnore]
-        //public int StartDay { get; set; }
-        //[JsonIgnore]
-        //public int EndDay { get; set; }
-        //[JsonIgnore]
-        //public int StartMonth { get; set; }
-        //[JsonIgnore]
-        //public int EndMonth { get; set; }
-        //[JsonIgnore]
-        //public int? StartYear { get; set; }
-        //[JsonIgnore]
-        //public int? EndYear { get; set; }
+      
 
 
         public void JustifyStartEndDate()

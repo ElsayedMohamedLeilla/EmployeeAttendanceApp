@@ -18,61 +18,12 @@ namespace Dawem.Domain.Entities.Core
         public int Code { get; set; }
         public string Name { get; set; }
         public DateType DateType { get; set; }
-        //public int StartDay { get; set; }
-        //public int EndDay { get; set; }
-        //public int StartMonth { get; set; }
-        //public int EndMonth { get; set; }
-        //public int? StartYear { get; set; }
-        //public int? EndYear { get; set; }
-        
         public DateTime StartDate { get; set; }
         
         public DateTime EndDate { get; set; }
         public bool IsSpecifiedByYear { get; set; }
 
-        //public DateTime ToGregorianDate(int year, int month, int day)
-        //{
-        //    return new DateTime(year, month, day);
-        //}
-
-
-        //public DateTime ToHijriDate(int year, int month, int day)
-        //{
-        //    HijriCalendar hijriCalendar = new();
-        //    return hijriCalendar.ToDateTime(year, month, day, 0, 0, 0, 0);
-        //}
-
-
-        //public string GetStartDateAsString(int? year)
-        //{
-        //    if (DateType == DateType.Hijri)
-        //    {
-        //        HijriCalendar hijriCalendar = new HijriCalendar();
-        //        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-        //        return currentHijriYear + "-" + StartMonth + "-" + StartDay;
-        //    }
-        //    else
-        //    {
-        //        int gyear = StartYear ?? DateTime.UtcNow.Year;
-        //        return gyear + "-" + StartMonth + "-" + StartDay;
-        //    }
-        //}
-        //public string GetEndDateAsString(int? year)
-        //{
-        //    if (DateType == DateType.Hijri)
-        //    {
-        //        HijriCalendar hijriCalendar = new HijriCalendar();
-        //        int currentHijriYear = hijriCalendar.GetYear(DateTime.UtcNow);
-        //            return currentHijriYear + "-" + EndMonth + "-" + EndDay;
-              
-        //    }
-        //    else
-        //    {
-        //        int gyear = EndYear ?? DateTime.UtcNow.Year;
-        //        return gyear + "-" + EndMonth + "-" + EndDay;
-        //    }
-        //}
-
+       
         public void JustifyStartEndDate()
         {
             if (!IsSpecifiedByYear)

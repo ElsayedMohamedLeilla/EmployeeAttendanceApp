@@ -14,17 +14,17 @@ namespace Dawem.Validation.FluentValidation.VacationBalances
                 .WithMessage(LeillaKeys.SorryYouMustEnterForType);
 
             RuleFor(model => model.EmployeeId)
-                .Must(s => s > 0)
+                .Must(s => s > 0 || s != null)
                 .When(s => s.ForType == ForType.Employees)
                 .WithMessage(LeillaKeys.SorryYouMustChooseEmployeeWhenForTypeIsEmployee);
 
-            RuleFor(model => model.GroupId)
-               .Must(s => s > 0)
+            RuleFor(model => model.GroupId )
+               .Must(s => s > 0 || s != null)
                .When(s => s.ForType == ForType.Groups)
                .WithMessage(LeillaKeys.SorryYouMustChooseGroupWhenForTypeIsGroup);
 
             RuleFor(model => model.DepartmentId)
-               .Must(s => s > 0)
+               .Must(s => s > 0 || s != null)
                .When(s => s.ForType == ForType.Departments)
                .WithMessage(LeillaKeys.SorryYouMustChooseDepartmentWhenForTypeIsDepartment);
 

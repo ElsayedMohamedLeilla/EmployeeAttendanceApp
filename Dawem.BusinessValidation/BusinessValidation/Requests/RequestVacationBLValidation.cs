@@ -105,13 +105,13 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 c.CompanyId == requestInfo.CompanyId && c.Id == model.VacationTypeId) ?? 
                 throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
-            var type = getVacationsType.Type;
+            var type = getVacationsType.DefaultType;
 
             var currentYear = DateTime.UtcNow.Year; /*65465654654*/
 
             var checkTypeBalance = await repositoryManager.VacationBalanceRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
                 c.CompanyId == requestInfo.CompanyId && c.EmployeeId == getCurrentEmployeeId
-                && c.VacationType == type && c.Year == currentYear) ?? 
+                && c.DefaultVacationType == type && c.Year == currentYear) ?? 
                 throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
 
             var requiredDays = (model.DateTo - model.DateFrom).Days + 1;
@@ -122,7 +122,7 @@ namespace Dawem.Validation.BusinessValidation.Requests
                     LeillaKeys.Space +
                     LeillaKeys.CurrentBalanceForEmployee +
                     checkTypeBalance.RemainingBalance +
-                    LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.VacationType.ToString(), requestInfo.Lang) +
+                    LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.DefaultVacationType.ToString(), requestInfo.Lang) +
                     LeillaKeys.RightBracket);
             }
 
@@ -218,13 +218,13 @@ namespace Dawem.Validation.BusinessValidation.Requests
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
                 c.CompanyId == requestInfo.CompanyId && c.Id == model.VacationTypeId) ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
-            var type = getVacationsType.Type;
+            var type = getVacationsType.DefaultType;
 
             var currentYear = DateTime.UtcNow.Year;
 
             var checkTypeBalance = await repositoryManager.VacationBalanceRepository.GetEntityByConditionAsync(c => !c.IsDeleted &&
                 c.CompanyId == requestInfo.CompanyId && c.EmployeeId == getCurrentEmployeeId
-                && c.VacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
+                && c.DefaultVacationType == type && c.Year == currentYear) ?? throw new BusinessValidationException(LeillaKeys.SorryThereIsNoVacationBalanceOfSelectedVacationTypeForEmployee);
 
             var requiredDays = (model.DateTo - model.DateFrom).Days + 1;
             if (requiredDays > checkTypeBalance.RemainingBalance)
@@ -234,7 +234,7 @@ namespace Dawem.Validation.BusinessValidation.Requests
                     LeillaKeys.Space +
                     LeillaKeys.CurrentBalanceForEmployee +
                     checkTypeBalance.RemainingBalance +
-                    LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.VacationType.ToString(), requestInfo.Lang) +
+                    LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.DefaultVacationType.ToString(), requestInfo.Lang) +
                     LeillaKeys.RightBracket);
             }
 

@@ -88,7 +88,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
             #region Update VacationsType
             var getVacationsType = await repositoryManager.VacationsTypeRepository.GetByIdAsync(model.Id);
             getVacationsType.Name = model.Name;
-            getVacationsType.Type = model.Type;
+            getVacationsType.DefaultType = model.DefaultType;
             getVacationsType.IsActive = model.IsActive;
             getVacationsType.ModifiedDate = DateTime.Now;
             getVacationsType.ModifyUserId = requestInfo.UserId;
@@ -129,8 +129,8 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                 Id = vacationType.Id,
                 Code = vacationType.Code,
                 Name = vacationType.Name,
-                Type = vacationType.Type,
-                TypeName = TranslationHelper.GetTranslation(vacationType.Type.ToString(), requestInfo.Lang),
+                DefaultType = vacationType.DefaultType,
+                DefaultTypeName = TranslationHelper.GetTranslation(vacationType.DefaultType.ToString(), requestInfo.Lang),
                 IsActive = vacationType.IsActive,
             }).ToListAsync();
 
@@ -188,8 +188,8 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                 {
                     Code = vacationType.Code,
                     Name = vacationType.Name,
-                    Type = vacationType.Type,
-                    TypeName = TranslationHelper.GetTranslation(vacationType.Type.ToString(), requestInfo.Lang),
+                    DefaultType = vacationType.DefaultType,
+                    DefaultTypeName = TranslationHelper.GetTranslation(vacationType.DefaultType.ToString(), requestInfo.Lang),
                     IsActive = vacationType.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
 
@@ -203,7 +203,7 @@ namespace Dawem.BusinessLogic.Core.VacationsTypes
                     Id = vacationType.Id,
                     Code = vacationType.Code,
                     Name = vacationType.Name,
-                    Type = vacationType.Type,
+                    DefaultType = vacationType.DefaultType,
                     IsActive = vacationType.IsActive,
 
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);

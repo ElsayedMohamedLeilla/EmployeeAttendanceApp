@@ -51,7 +51,7 @@ namespace Dawem.BusinessLogic.Others
             var getAllVacationBalance = await repositoryManager.VacationBalanceRepository
                 .GetWithTracking(vacationBalance => employeesIds.Contains(vacationBalance.EmployeeId) &&
                 vacationBalance.Year == model.Year &&
-                vacationBalance.VacationType == model.VacationType).ToListAsync();
+                vacationBalance.DefaultVacationType == model.DefaultVacationType).ToListAsync();
 
             foreach (var employeeId in employeesIds)
             {
@@ -136,7 +136,7 @@ namespace Dawem.BusinessLogic.Others
             && vacationBalance.Id == model.Id);
 
             getVacationBalance.EmployeeId = model.EmployeeId;
-            getVacationBalance.VacationType = model.VacationType;
+            getVacationBalance.DefaultVacationType = model.DefaultVacationType;
             getVacationBalance.Year = model.Year;
             getVacationBalance.Balance = model.Balance;
             getVacationBalance.RemainingBalance = model.Balance;
@@ -183,7 +183,7 @@ namespace Dawem.BusinessLogic.Others
                 Id = vacationBalance.Id,
                 Code = vacationBalance.Code,
                 EmployeeName = vacationBalance.Employee.Name,
-                VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
+                DefaultVacationTypeName = TranslationHelper.GetTranslation(vacationBalance.DefaultVacationType.ToString(), requestInfo.Lang),
                 Balance = vacationBalance.Balance,
                 RemainingBalance = vacationBalance.RemainingBalance,
                 Year = vacationBalance.Year,
@@ -206,8 +206,8 @@ namespace Dawem.BusinessLogic.Others
                 {
                     Code = vacationBalance.Code,
                     EmployeeName = vacationBalance.Employee.Name,
-                    VacationTypeName = TranslationHelper.GetTranslation(vacationBalance.VacationType.ToString(), requestInfo.Lang),
-                    VacationType = vacationBalance.VacationType,
+                    DefaultVacationTypeName = TranslationHelper.GetTranslation(vacationBalance.DefaultVacationType.ToString(), requestInfo.Lang),
+                    DefaultVacationType = vacationBalance.DefaultVacationType,
                     Balance = vacationBalance.Balance,
                     RemainingBalance = vacationBalance.RemainingBalance,
                     Year = vacationBalance.Year,
@@ -225,7 +225,7 @@ namespace Dawem.BusinessLogic.Others
                     Id = vacationBalance.Id,
                     Code = vacationBalance.Code,
                     EmployeeId = vacationBalance.EmployeeId,
-                    VacationType = vacationBalance.VacationType,
+                    DefaultVacationType = vacationBalance.DefaultVacationType,
                     Balance = vacationBalance.Balance,
                     Year = vacationBalance.Year,
                     Notes = vacationBalance.Notes,

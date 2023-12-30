@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Enums.Generals
 {
-    public enum VacationType
+    public enum DefaultVacationType
     {
         Ordinary,
         Emergency,

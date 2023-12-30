@@ -20,7 +20,7 @@ namespace Dawem.Validation.FluentValidation.VacationBalances
                 .Must(s => s > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseYear);
 
-            RuleFor(model => model.VacationType)
+            RuleFor(model => model.DefaultVacationType)
                 .IsInEnum()
                 .WithMessage(AmgadKeys.SorryYouMustChooseVacationType);
 

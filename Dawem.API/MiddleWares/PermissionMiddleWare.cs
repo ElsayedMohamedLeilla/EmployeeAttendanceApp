@@ -11,7 +11,6 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Dawem.API.MiddleWares
 {

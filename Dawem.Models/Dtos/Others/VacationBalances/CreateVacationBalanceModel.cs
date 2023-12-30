@@ -9,7 +9,7 @@ namespace Dawem.Models.Dtos.Others.VacationBalances
         public int? GroupId { get; set; }
         public int? DepartmentId { get; set; }
         public int Year { get; set; }
-        public VacationType VacationType { get; set; }
+        public DefaultVacationType DefaultVacationType { get; set; }
         public float Balance { get; set; }
         public string Notes { get; set; }
         public bool IsActive { get; set; }

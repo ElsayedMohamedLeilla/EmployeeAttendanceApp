@@ -12,23 +12,23 @@ namespace Dawem.Models.DtosMappers.Others
         {
             userContext = _userContext;
         }
-        public static UserScreenActionPermissionDTO? Map(UserScreenActionPermission? userScreenActionPermission)
+        public static UserScreenActionPermissionDTO? Map(Permission? userScreenActionPermission)
         {
             if (userScreenActionPermission == null) return null;
             var DTO = new UserScreenActionPermissionDTO()
             {
                 Id = userScreenActionPermission.Id,
-                AddedDate = userScreenActionPermission.AddedDate,
+                AddedDate = userScreenActionPermission.AddedDate/*,
                 ActionType = userScreenActionPermission.ActionType,
-                ActionPlace = userScreenActionPermission.ActionPlace,
+                ActionPlace = userScreenActionPermission.ScreenCode,
                 UserId = userScreenActionPermission.UserId,
-                GroupId = userScreenActionPermission.GroupId
+                GroupId = userScreenActionPermission.GroupId*/
             };
             return DTO;
         }
 
 
-        public static List<UserScreenActionPermissionDTO?>? Map(List<UserScreenActionPermission?>? userScreenActionPermissions)
+        public static List<UserScreenActionPermissionDTO?>? Map(List<Permission?>? userScreenActionPermissions)
         {
             if (userScreenActionPermissions == null) return null;
             return userScreenActionPermissions.Select(selector: Map).ToList();

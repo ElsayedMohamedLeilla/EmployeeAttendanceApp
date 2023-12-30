@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Criteria;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Criteria;
 
 namespace Dawem.Models.Dtos.Employees.Employees
 {
@@ -10,5 +11,6 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int? DirectManagerId { get; set; }
         public bool? WithoutCurrentEmployee { get; set; }
         public int? EmployeeNumber { get; set; }
+        public FilterEmployeeStatus? Status { get; set; }
     }
 }

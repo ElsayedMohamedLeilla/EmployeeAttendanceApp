@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Enums.Configration;
 
 namespace Dawem.Models.Dtos.Others
 {
@@ -8,7 +8,7 @@ namespace Dawem.Models.Dtos.Others
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
         public int? UserId { get; set; }
         public int? GroupId { get; set; }
-        public ApplicationScreenType ActionPlace { get; set; }
-        public ApiMethod ActionType { get; set; }
+        public ApplicationScreenCode ActionPlace { get; set; }
+        public Enums.Configration.ApplicationAction ActionType { get; set; }
     }
 }

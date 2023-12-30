@@ -95,6 +95,19 @@ namespace Dawem.Data
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<PermissionScreen>()
+         .HasOne(p => p.Permission)
+         .WithMany(b => b.PermissionScreens)
+         .HasForeignKey(p => p.PermissionId)
+         .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PermissionScreenAction>()
+        .HasOne(p => p.PermissionScreen)
+        .WithMany(b => b.PermissionScreenActions)
+        .HasForeignKey(p => p.PermissionScreenId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+
             builder.Entity<RequestAttachment>()
          .HasOne(p => p.Request)
          .WithMany(b => b.RequestAttachments)
@@ -281,7 +294,7 @@ namespace Dawem.Data
         public DbSet<PermissionType> PermissionTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
-        public DbSet<ActionLog> ActionLogs { get; set; }
+        public DbSet<ScreenPermissionLog> ScreenPermissionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }
@@ -291,7 +304,9 @@ namespace Dawem.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<EmployeeAttendance> EmployeeAttendances { get; set; }
         public DbSet<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
-        public DbSet<UserScreenActionPermission> UserScreenActionPermissions { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<PermissionScreen> PermissionScreens { get; set; }
+        public DbSet<PermissionScreenAction> PermissionScreenActions { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<VacationBalance> VacationsBalances { get; set; }

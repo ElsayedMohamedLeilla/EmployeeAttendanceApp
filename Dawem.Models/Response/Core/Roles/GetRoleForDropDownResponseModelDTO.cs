@@ -1,8 +1,6 @@
 ﻿namespace Dawem.Models.Response.Core.Roles
 {
-    public class GetRoleForDropDownResponseModelDTO
+    public class GetRoleForDropDownResponseModelDTO: BaseGetForDropDownResponseModel
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
     }
 }

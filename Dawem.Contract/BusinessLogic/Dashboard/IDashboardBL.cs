@@ -6,6 +6,7 @@ namespace Dawem.Contract.BusinessLogic.Dashboard
     public interface IDashboardBL
     {
         Task<GetHeaderInformationsResponseModel> GetHeaderInformations();
+        Task<EmployeeGetHeaderInformationsResponseModel> EmployeeGetHeaderInformations();   
         Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations();
         Task<GetRequestsStatusResponseModel> GetRequestsStatus(GetRequestsStatusModel model);
         Task<GetEmployeesStatusResponseModel> GetEmployeesStatus();

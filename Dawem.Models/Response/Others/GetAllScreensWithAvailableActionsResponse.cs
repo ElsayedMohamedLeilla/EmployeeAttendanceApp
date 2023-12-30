@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Response.Others
 {
-    public class GetAllScreensWithAvailableActionsResponse : BaseResponse
+    public class GetAllScreensWithAvailableActionsResponse
     {
         public GetAllScreensWithAvailableActionsResponse()
         {

@@ -12,52 +12,52 @@ namespace Dawem.Models.DtosMappers.Others
         {
             userContext = _userContext;
         }
-        public static ActionLogDTO? Map(ActionLog? actionLog)
+        public static ActionLogDTO? Map(ScreenPermissionLog? actionLog)
         {
             if (actionLog == null) return null;
             var DTO = new ActionLogDTO()
             {
                 Id = actionLog.Id,
                 ActionType = actionLog.ActionType,
-                ActionPlace = actionLog.ActionPlace,
-                BranchId = actionLog.BranchId,
+                //ActionPlace = actionLog.ActionPlace,
+                //BranchId = actionLog.BranchId,
                 ResponseStatus = actionLog.ResponseStatus
             };
             return DTO;
         }
-        public static ActionLogInfo? MapInfo(ActionLog? actionLog)
+        public static ActionLogInfo? MapInfo(ScreenPermissionLog? actionLog)
         {
             if (actionLog == null) return null;
             var DTO = new ActionLogInfo()
             {
                 Id = actionLog.Id,
                 Date = actionLog.Date,
-                BranchId = actionLog.BranchId,
+                //BranchId = actionLog.BranchId,
                 UserId = actionLog.UserId,
                 ActionType = actionLog.ActionType,
-                ActionPlace = actionLog.ActionPlace,
-                BranchGlobalName = actionLog?.Branch?.Name,
+                //ActionPlace = actionLog.ActionPlace,
+                //BranchGlobalName = actionLog?.Branch?.Name,
                 UserGlobalName = actionLog?.User?.Name,
                 ResponseStatus = actionLog.ResponseStatus
             };
             return DTO;
         }
-        public static ActionLog? Map(ActionLogInfo? actionLogDTO)
+        public static ScreenPermissionLog? Map(ActionLogInfo? actionLogDTO)
         {
             if (actionLogDTO == null) return null;
-            var _actionLog = new ActionLog()
+            var _actionLog = new ScreenPermissionLog()
             {
                 Id = actionLogDTO.Id,
                 Date = actionLogDTO.Date,
-                BranchId = actionLogDTO.BranchId,
+                //BranchId = actionLogDTO.BranchId,
                 UserId = actionLogDTO.UserId,
                 ActionType = actionLogDTO.ActionType,
-                ActionPlace = actionLogDTO.ActionPlace,
+                //ActionPlace = actionLogDTO.ActionPlace,
                 ResponseStatus = actionLogDTO.ResponseStatus
             };
             return _actionLog;
         }
-        public static List<ActionLogDTO?>? Map(List<ActionLog?>? actionLogs)
+        public static List<ActionLogDTO?>? Map(List<ScreenPermissionLog?>? actionLogs)
         {
             if (actionLogs == null) return null;
             return actionLogs.Select(selector: Map).ToList();

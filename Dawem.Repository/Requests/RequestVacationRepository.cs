@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Generic;
@@ -119,6 +120,35 @@ namespace Dawem.Repository.Requests
             if (criteria.Date is not null)
             {
                 predicate = predicate.And(requestVacation => criteria.Date.Value.Date >= requestVacation.Request.Date.Date && criteria.Date.Value.Date <= requestVacation.DateTo.Date);
+            }
+
+            var localDateTime = requestInfo.LocalDateTime;
+            switch (criteria.VacationStatus)
+            {
+                case VacationStatus.Previous:
+                    predicate = predicate.And(requestVacation => (requestVacation.Request.Date.Month < localDateTime.Month &&
+                    requestVacation.Request.Date.Year <= localDateTime.Year) ||
+                    requestVacation.Request.Date.Year < localDateTime.Year ||
+                    (requestVacation.DateTo.Month < localDateTime.Month &&
+                    requestVacation.DateTo.Year <= localDateTime.Year) ||
+                    requestVacation.DateTo.Year < localDateTime.Year);
+                    break;
+                case VacationStatus.Current:
+                    predicate = predicate.And(requestVacation => (requestVacation.Request.Date.Month == localDateTime.Month &&
+                    requestVacation.Request.Date.Year == localDateTime.Year) || 
+                    (requestVacation.DateTo.Month == localDateTime.Month && 
+                    requestVacation.DateTo.Year == localDateTime.Year));
+                    break;     
+                case VacationStatus.Next:
+                    predicate = predicate.And(requestVacation => (requestVacation.Request.Date.Month >localDateTime.Month &&
+                    requestVacation.Request.Date.Year >= localDateTime.Year) ||
+                    requestVacation.Request.Date.Year > localDateTime.Year ||
+                    (requestVacation.DateTo.Month > localDateTime.Month &&
+                    requestVacation.DateTo.Year >= localDateTime.Year) ||
+                    requestVacation.DateTo.Year > localDateTime.Year);
+                    break;
+                default:
+                    break;
             }
 
             predicate = predicate.And(inner);

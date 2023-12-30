@@ -8,5 +8,6 @@ namespace Dawem.Models.Dtos.Requests.Vacations
         public int? VacationTypeId { get; set; }
         public RequestStatus? Status { get; set; }
         public DateTime? Date { get; set; }
+        public VacationStatus VacationStatus { get; set; }
     }
 }

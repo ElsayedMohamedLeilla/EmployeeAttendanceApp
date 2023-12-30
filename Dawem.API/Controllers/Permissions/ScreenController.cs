@@ -5,7 +5,7 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Provider
+namespace Dawem.API.Controllers.Permissions
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

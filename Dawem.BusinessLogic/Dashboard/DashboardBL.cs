@@ -59,8 +59,52 @@ namespace Dawem.BusinessLogic.Dashboard
 
             return new GetHeaderInformationsResponseModel
             {
-                CurrentName = currentEmployeeName,
+                Name = currentEmployeeName,
                 EmployeesAttendanceRateToday = employeesAttendanceRateToday
+            };
+
+            #endregion
+        }
+        public async Task<EmployeeGetHeaderInformationsResponseModel> EmployeeGetHeaderInformations()
+        {
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
+               .Select(u => u.EmployeeId)
+               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
+            var currentEmployeeJobTitleName = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
+                .Select(employee => employee.JobTitle.Name)
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
+            if (requestInfo.User == null)
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+
+            var currentCompanyId = requestInfo.CompanyId;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
+
+            decimal mustAttendTodayCount = await repositoryManager.EmployeeRepository
+                .Get(employee => !employee.IsDeleted &&
+                employee.CompanyId == currentCompanyId &&
+                employee.ScheduleId > 0 &&
+                employee.Schedule.ScheduleDays != null &&
+                employee.Schedule.ScheduleDays.FirstOrDefault(day => day.WeekDay == (WeekDay)clientLocalDateTime.DayOfWeek && day.ShiftId > 0) != null)
+                .CountAsync();
+
+            decimal attendedTodayCount = await repositoryManager.EmployeeAttendanceRepository
+                .Get(employee => !employee.IsDeleted &&
+                employee.LocalDate.Date == clientLocalDateTime.Date &&
+                employee.CompanyId == currentCompanyId)
+                .CountAsync();
+
+            var employeesAttendanceRateToday = mustAttendTodayCount <= 0 ? 0 :
+                Math.Round(attendedTodayCount / mustAttendTodayCount * 100, 2);
+
+            #region Handle Response
+
+            return new EmployeeGetHeaderInformationsResponseModel
+            {
+                Name = requestInfo.User.Name,
+                JobTitleName = currentEmployeeJobTitleName,
+                ProfileImagePath = uploadBLC.GetFilePath(requestInfo.User.ProfileImageName, LeillaKeys.Users)
             };
 
             #endregion

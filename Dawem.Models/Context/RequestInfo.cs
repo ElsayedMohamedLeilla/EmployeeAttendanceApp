@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
+using NodaTime;
 
 namespace Dawem.Models.Context
 {
@@ -21,7 +22,7 @@ namespace Dawem.Models.Context
         public string BaseUrl { get; set; }
         public bool IsMainBranch { get; set; }
         public DateTime LocalDateTime { get; set; }
-        public DateTime LocalHijriDateTime { get; set; }
+        public LocalDateTime LocalHijriDateTime { get; set; }
 
 
 

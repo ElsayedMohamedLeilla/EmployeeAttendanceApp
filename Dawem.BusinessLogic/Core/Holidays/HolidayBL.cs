@@ -110,10 +110,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
         public async Task<GetHolidayResponseDTO> Get(GetHolidayCriteria criteria)
         {
-            DateTime CurrentHijri = requestInfo.LocalHijriDateTime;
-
-
-
+            //LocalDateTime CurrentHijri = requestInfo.LocalHijriDateTime;
             var holidayRepository = repositoryManager.HolidayRepository;
             var query = holidayRepository.GetAsQueryable(criteria);
             #region paging

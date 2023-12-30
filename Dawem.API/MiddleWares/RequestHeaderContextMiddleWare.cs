@@ -1,6 +1,5 @@
 ﻿using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Provider;
-using Dawem.Contract.Repository.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -10,6 +9,8 @@ using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using NodaTime;
+using NodaTime.Calendars;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -25,7 +26,7 @@ namespace Dawem.API.MiddleWares
         }
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo,
-            UserManagerRepository userManager, IRepositoryManager repositoryManager, 
+            UserManagerRepository userManager, IRepositoryManager repositoryManager,
             IBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
@@ -65,7 +66,7 @@ namespace Dawem.API.MiddleWares
                         .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
 
                     requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-                    requestInfo.LocalHijriDateTime = GetHijri(requestInfo.LocalDateTime);
+                    requestInfo.LocalHijriDateTime = GetCurrentLocalHijriDateTime();
                 }
 
             }
@@ -92,20 +93,15 @@ namespace Dawem.API.MiddleWares
 
         }
 
-        private DateTime GetHijri(DateTime gregorianDate)
+        public LocalDateTime GetCurrentLocalHijriDateTime()
         {
-            // Convert the Gregorian date to the Hijri calendar
-            CultureInfo hijriCulture = new CultureInfo("ar-SA");
-            HijriCalendar hijriCalendar = new HijriCalendar();
-
-            DateTimeFormatInfo dateTimeFormat = hijriCulture.DateTimeFormat;
-            dateTimeFormat.Calendar = hijriCalendar;
-
-            string hijriDate = gregorianDate.ToString("dd-MM-yyyy", dateTimeFormat);
-
-            // Parse the Hijri date back to DateTime
-            DateTime Output =  DateTime.ParseExact(hijriDate, "dd-MM-yyyy", hijriCulture);
-            return Output;
+            var leapYearPattern = IslamicLeapYearPattern.Base15;
+            var epoch = IslamicEpoch.Astronomical;
+            var hijriCalendar = CalendarSystem.GetIslamicCalendar(leapYearPattern,epoch);
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var localDateTimeInHijri = now.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).WithCalendar(hijriCalendar);
+            return localDateTimeInHijri.LocalDateTime;
         }
+
     }
 }

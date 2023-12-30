@@ -431,6 +431,10 @@
         public const string Reject = "Reject";
         public const string Enable = "Enable";
         public const string Disable = "Disable";
+        public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission!";
+        public const string InScreen = "InScreen";
+        
+
 
     }
 }

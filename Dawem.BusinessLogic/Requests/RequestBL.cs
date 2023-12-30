@@ -105,8 +105,21 @@ namespace Dawem.BusinessLogic.Requests
                 DirectManagerName = request.Employee.DirectManager != null ?
                 request.Employee.DirectManager.Name : null,
                 RequestType = request.Type,
-                RequestTypeName = TranslationHelper.GetTranslation(request.Type.ToString(), requestInfo.Lang),
-                Date = request.Date,
+                RequestTypeName = TranslationHelper.GetTranslation(request.Type.ToString(), requestInfo.Lang) 
+                + LeillaKeys.SpaceThenDashThenSpace + ( request.RequestVacation != null ? request.RequestVacation.VacationType.Name :
+                request.RequestAssignment != null ? request.RequestAssignment.AssignmentType.Name :
+                request.RequestJustification != null ? request.RequestJustification.JustificatioType.Name :
+                request.RequestPermission != null ? request.RequestPermission.PermissionType.Name :
+                request.RequestTask != null ? request.RequestTask.TaskType.Name : null),
+                DateFrom = request.Date,
+                DateTo= request.RequestVacation != null ? request.RequestVacation.DateTo :
+                request.RequestAssignment != null ? request.RequestAssignment.DateTo :
+                request.RequestJustification != null ? request.RequestJustification.DateTo :
+                request.RequestPermission != null ? request.RequestPermission.DateTo :
+                request.RequestTask != null ? request.RequestTask.DateTo : null,
+                NumberOfDays = request.RequestVacation != null ? request.RequestVacation.NumberOfDays : null,
+                BalanceBeforeRequest = request.RequestVacation != null ? request.RequestVacation.BalanceBeforeRequest : null,
+                BalanceAfterRequest = request.RequestVacation != null ? request.RequestVacation.BalanceAfterRequest : null,
                 Status = request.Status,
                 StatusName = TranslationHelper.GetTranslation(request.Status.ToString(), requestInfo.Lang),
                 AddedDate = request.AddedDate

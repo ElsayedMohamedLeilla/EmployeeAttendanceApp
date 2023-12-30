@@ -19,13 +19,13 @@ namespace Dawem.API.Controllers.Requests.Employee
             requestBL = _requestBL;
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetRequestsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] EmployeeGetRequestsCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var requestsresponse = await requestBL.Get(criteria);
+            var requestsresponse = await requestBL.EmployeeGet(criteria);
 
             return Success(requestsresponse.Requests, requestsresponse.TotalCount);
         }

@@ -7,7 +7,7 @@ namespace Dawem.Contract.BusinessLogic.Others
     public interface IActionLogBL
     {
         Task<ActionLogDTO> GetById(int Id);
-        Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria);
+        Task<GetActionLogsResponseModel> Get(GetScreenPermissionLogsCriteria criteria);
         Task<ActionLogInfo> GetInfo(GetActionLogInfoCriteria criteria);
         Task<bool> Create(CreateActionLogModel model);
     }

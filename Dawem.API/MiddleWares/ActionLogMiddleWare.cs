@@ -57,7 +57,7 @@ namespace Dawem.API.MiddleWares
                         if (userId > 0 && branchId > 0 && controllerName != null && actionName != null)
                         {
                             var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
-                            if (mapResult.Status > 0 && mapResult.Method != null && mapResult.Screen != null)
+                            /*if (mapResult.Status > 0 && mapResult.Method != null && mapResult.Screen != null)
                             {
                                 var model = new CreateActionLogModel();
                                 model.ActionType = mapResult.Method ?? 0;
@@ -66,7 +66,7 @@ namespace Dawem.API.MiddleWares
 
                                 await actionLogBL.Create(model);
                                 await unitOfWork.SaveAsync();
-                            }
+                            }*/
 
                         }
                     }

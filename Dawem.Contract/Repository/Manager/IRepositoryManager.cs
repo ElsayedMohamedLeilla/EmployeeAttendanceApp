@@ -16,7 +16,10 @@ namespace Dawem.Contract.Repository.Manager
     {
         ICompanyRepository CompanyRepository { get; }
         IUserRepository UserRepository { get; }
-        IActionLogRepository ActionLogRepository { get; }
+        IPermissionRepository PermissionRepository { get; }
+        IPermissionScreenRepository PermissionScreenRepository { get; }
+        IPermissionScreenActionRepository PermissionScreenActionRepository { get; }
+        IScreenPermissionLogRepository ScreenPermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
         IBranchRepository BranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
@@ -40,7 +43,7 @@ namespace Dawem.Contract.Repository.Manager
         ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository { get; }
         ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository { get; }
         IEmployeeAttendanceRepository EmployeeAttendanceRepository { get; }
-        IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository { get; }        
+        IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository { get; }
         IScheduleDayRepository ScheduleDayRepository { get; }
         IRoleRepository RoleRepository { get; }
         IShiftWorkingTimeRepository ShiftWorkingTimeRepository { get; }
@@ -52,7 +55,7 @@ namespace Dawem.Contract.Repository.Manager
         IZoneEmployeeRepository ZoneEmployeeRepository { get; }
         IZoneGroupRepository ZoneGroupRepository { get; }
         IZoneRepository ZoneRepository { get; }
-        IFingerprintDeviceRepository FingerprintDeviceRepository  { get; }
+        IFingerprintDeviceRepository FingerprintDeviceRepository { get; }
         IRequestRepository RequestRepository { get; }
         IRequestAssignmentRepository RequestAssignmentRepository { get; }
         IRequestAttachmentRepository RequestAttachmentRepository { get; }
@@ -63,6 +66,6 @@ namespace Dawem.Contract.Repository.Manager
         IRequestVacationRepository RequestVacationRepository { get; }
         IHolidayRepository HolidayRepository { get; }
 
-        IVacationBalanceRepository VacationBalanceRepository { get; }     
+        IVacationBalanceRepository VacationBalanceRepository { get; }
     }
 }

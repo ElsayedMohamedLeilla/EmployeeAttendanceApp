@@ -8,18 +8,18 @@ namespace Dawem.API.Controllers.Others
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
-    public class UserScreenActionPermissionController : BaseController
+    public class PermissionController : BaseController
     {
-        private readonly IUserScreenActionPermissionBL userScreenActionPermissionBL;
+        private readonly IPermissionBL permissionBL;
 
-        public UserScreenActionPermissionController(IUserScreenActionPermissionBL _userScreenActionPermissionBL)
+        public PermissionController(IPermissionBL _permissionBL)
         {
-            userScreenActionPermissionBL = _userScreenActionPermissionBL;
+            permissionBL = _permissionBL;
         }
         [HttpPost]
         public ActionResult GetAllScreensWithAvailableActions()
         {
-            return Ok(userScreenActionPermissionBL.GetAllScreensWithAvailableActions());
+            return Ok(permissionBL.GetAllScreensWithAvailableActions());
         }
 
     }

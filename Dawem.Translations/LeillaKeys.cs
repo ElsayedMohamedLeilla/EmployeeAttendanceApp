@@ -421,7 +421,16 @@
         public const string SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee = "Sorry!!ThereIsNoSufficientBalanceForSelectedTypeForEmployee!";
         public const string CurrentBalanceForEmployee = "CurrentBalanceForEmployee:";
         public const string SorryYouMustEnterCorrectVacationType = "Sorry!!YouMustEnterCorrectVacationType!";
-        
+        public const string Controller = "Controller";
+        public const string Screen = "Screen";
+        public const string Create = "Create";
+        public const string Update = "Update";
+        public const string Delete = "Delete";
+        public const string Get = "Get";
+        public const string Accept = "Accept";
+        public const string Reject = "Reject";
+        public const string Enable = "Enable";
+        public const string Disable = "Disable";
 
     }
 }

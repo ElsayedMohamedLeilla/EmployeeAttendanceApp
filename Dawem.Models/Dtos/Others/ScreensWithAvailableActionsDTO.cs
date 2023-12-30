@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Enums.Configration;
 
 namespace Dawem.Models.Dtos.Others
 {
@@ -6,9 +6,10 @@ namespace Dawem.Models.Dtos.Others
     {
         public ScreensWithAvailableActionsDTO()
         {
-            AvailableActions = new List<ApiMethod>();
+            AvailableActions = new List<Enums.Configration.ApplicationAction>();
         }
-        public ApplicationScreenType Screen { get; set; }
-        public List<ApiMethod> AvailableActions { get; set; }
+        public ApplicationScreenCode ScreenCode { get; set; }
+        public string ScreenName { get; set; }
+        public List<Enums.Configration.ApplicationAction> AvailableActions { get; set; }
     }
 }

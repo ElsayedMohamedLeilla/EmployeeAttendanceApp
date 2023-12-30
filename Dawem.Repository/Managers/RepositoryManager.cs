@@ -41,7 +41,10 @@ namespace Dawem.Repository.Managers
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
-        private IActionLogRepository actionLogRepository;
+        private IScreenPermissionLogRepository screenPermissionLogRepository;
+        private IPermissionRepository permissionRepository;
+        private IPermissionScreenRepository permissionScreenRepository;
+        private IPermissionScreenActionRepository permissionScreenActionRepository;
         private IUserBranchRepository userBranchRepository;
         private IBranchRepository branchRepository;
         private IUserTokenRepository userTokenRepository;
@@ -104,8 +107,14 @@ namespace Dawem.Repository.Managers
          companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
-        public IActionLogRepository ActionLogRepository =>
-         actionLogRepository ??= new ActionLogRepository(unitOfWork, requestInfo);
+        public IPermissionRepository PermissionRepository =>
+         permissionRepository ??= new PermissionRepository(unitOfWork);
+        public IPermissionScreenRepository PermissionScreenRepository =>
+         permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
+        public IPermissionScreenActionRepository PermissionScreenActionRepository =>
+         permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
+        public IScreenPermissionLogRepository ScreenPermissionLogRepository =>
+         screenPermissionLogRepository ??= new ScreenPermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IBranchRepository BranchRepository =>

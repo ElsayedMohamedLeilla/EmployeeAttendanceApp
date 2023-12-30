@@ -1,10 +1,10 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Enums.Configration;
 
 namespace Dawem.Models.Response.Others
 {
-    public class MapControllerAndActionResponse : BaseResponse
+    public class MapControllerAndActionResponse
     {
-        public ApplicationScreenType? Screen { get; set; }
-        public ApiMethod? Method { get; set; }
+        public ApplicationScreenCode? Screen { get; set; }
+        public ApplicationAction? Method { get; set; }
     }
 }

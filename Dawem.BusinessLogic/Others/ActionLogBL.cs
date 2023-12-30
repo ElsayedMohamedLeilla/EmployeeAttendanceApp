@@ -34,18 +34,18 @@ namespace Dawem.BusinessLogic.Others
 
         public async Task<ActionLogDTO> GetById(int Id)
         {
-            var actionLog = await repositoryManager.ActionLogRepository.GetByIdAsync(Id) ??
+            var actionLog = await repositoryManager.ScreenPermissionLogRepository.GetByIdAsync(Id) ??
                 throw new BusinessValidationException(LeillaKeys.NoDataFound);
 
             var response = ActionLogDTOMapper.Map(actionLog);
 
             return response;
         }
-        public async Task<GetActionLogsResponseModel> Get(GetActionLogsCriteria criteria)
+        public async Task<GetActionLogsResponseModel> Get(GetScreenPermissionLogsCriteria criteria)
         {
 
-            var query = repositoryManager.ActionLogRepository.GetAsQueryable(criteria);
-            var queryOrdered = repositoryManager.ActionLogRepository.OrderBy(query, "Id", "desc");
+            var query = repositoryManager.ScreenPermissionLogRepository.GetAsQueryable(criteria);
+            var queryOrdered = repositoryManager.ScreenPermissionLogRepository.OrderBy(query, "Id", "desc");
 
             #region paging
 
@@ -70,7 +70,7 @@ namespace Dawem.BusinessLogic.Others
         }
         public async Task<ActionLogInfo> GetInfo(GetActionLogInfoCriteria criteria)
         {
-            var actionLog = await repositoryManager.ActionLogRepository
+            var actionLog = await repositoryManager.ScreenPermissionLogRepository
                 .GetEntityByConditionWithTrackingAsync(u => u.Id == criteria.Id, "Branch,User")
                 ?? throw new BusinessValidationException(LeillaKeys.ActionLogNotFound);
 
@@ -87,18 +87,18 @@ namespace Dawem.BusinessLogic.Others
             {
                 unitOfWork.CreateTransaction();
 
-                var actionLog = new ActionLog()
+                var actionLog = new ScreenPermissionLog()
                 {
                     ActionType = model.ActionType,
-                    ActionPlace = model.ActionPlace,
+                    ScreenCode = model.ActionPlace,
                     Date = DateTime.Now,
-                    BranchId = userContext?.BranchId ?? 0,
+                    CompanyId = userContext?.BranchId ?? 0,
                     UserId = userContext?.UserId ?? 0,
                     ResponseStatus = model.ResponseStatus
                 };
 
 
-                repositoryManager.ActionLogRepository.Insert(actionLog);
+                repositoryManager.ScreenPermissionLogRepository.Insert(actionLog);
                 await unitOfWork.SaveAsync();
                 unitOfWork.Commit();
             }

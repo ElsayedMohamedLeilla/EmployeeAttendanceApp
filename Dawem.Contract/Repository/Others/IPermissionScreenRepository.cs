@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Others;
 
 namespace Dawem.Contract.Repository.Others
 {
-    public interface IUserScreenActionPermissionRepository : IGenericRepository<UserScreenActionPermission>
+    public interface IPermissionScreenRepository : IGenericRepository<PermissionScreen>
     {
     }
 }

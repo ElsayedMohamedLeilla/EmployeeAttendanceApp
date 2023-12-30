@@ -17,9 +17,8 @@ namespace Dawem.API.Controllers.Attendances
         {
             employeeAttendanceBL = _employeeAttendanceBL;
         }
-
         [HttpPost]
-        public async Task<ActionResult> FingerPrint(FingerprintModel model)
+        public async Task<ActionResult> CreateFingerPrint(FingerprintModel model)
         {
             if (model == null)
             {

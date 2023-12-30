@@ -9,16 +9,16 @@ namespace Dawem.API.Controllers.Others
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
-    public class ActionLogController : BaseController
+    public class PermissionLogController : BaseController
     {
         private readonly IActionLogBL actionLogBL;
 
-        public ActionLogController(IActionLogBL _actionLogBL)
+        public PermissionLogController(IActionLogBL _actionLogBL)
         {
             actionLogBL = _actionLogBL;
         }
         [HttpPost]
-        public async Task<ActionResult> Get(GetActionLogsCriteria criteria)
+        public async Task<ActionResult> Get(GetScreenPermissionLogsCriteria criteria)
         {
             var actionLogsRes = await actionLogBL.Get(criteria);
             return Success(actionLogsRes.ActionLogs, actionLogsRes.TotalCount);

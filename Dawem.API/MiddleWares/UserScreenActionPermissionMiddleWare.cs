@@ -20,10 +20,8 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IUserScreenActionPermissionBL userScreenActionPermissionBL)
+        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IPermissionBL userScreenActionPermissionBL)
         {
-
-
             var controllerActionDescriptor = httpContext
                     ?.GetEndpoint()
                     ?.Metadata
@@ -31,8 +29,6 @@ namespace Dawem.API.MiddleWares
 
             var controllerName = controllerActionDescriptor?.ControllerTypeInfo.Name;
             var actionName = controllerActionDescriptor?.ActionName;
-
-
 
             var userId = 0;
             var authHeaders = httpContext?.Request?.Headers["Authorization"];
@@ -45,27 +41,24 @@ namespace Dawem.API.MiddleWares
                 userContext.UserId = userId;
             }
 
-
-
-
             if (httpContext != null && userId > 0 && controllerName != null && actionName != null)
             {
                 var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
-                if (mapResult.Status == ResponseStatus.Success)
+                if (mapResult.Screen != null && mapResult.Method != null)
                 {
                     var model = new CheckUserPermissionModel();
-                    model.Screen = mapResult.Screen;
-                    model.Method = mapResult.Method;
+                    model.Screen = mapResult.Screen.Value;
+                    model.Action = mapResult.Method.Value;
 
-                    //var checkPermissionResponse = await userScreenActionPermissionBL.CheckUserPermission(model);
-                    //if (checkPermissionResponse.Status == Enums.ResponseStatus.Success)
-                    //{
-                    //    await _next.Invoke(httpContext);
-                    //}
-                    //else
-                    //{
-                    //    await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(checkPermissionResponse));
-                    //}
+                    /*var checkPermissionResponse = await userScreenActionPermissionBL.CheckUserPermission(model);
+                    if (checkPermissionResponse.Status == Enums.ResponseStatus.Success)
+                    {
+                        await _next.Invoke(httpContext);
+                    }
+                    else
+                    {
+                        await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(checkPermissionResponse));
+                    }*/
                 }
 
             }

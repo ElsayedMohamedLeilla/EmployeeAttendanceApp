@@ -40,7 +40,7 @@ namespace Dawem.BusinessLogic.Core.Roles
 
             var RolesList = await query.Select(e => new GetRoleForDropDownResponseModelDTO
             {
-                Id = e.Name,
+                Id = e.Id,
                 Name = TranslationHelper.GetTranslation(e.Name, requestInfo.Lang)
             }).ToListAsync();
 

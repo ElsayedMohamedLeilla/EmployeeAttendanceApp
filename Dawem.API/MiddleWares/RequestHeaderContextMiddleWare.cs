@@ -65,6 +65,7 @@ namespace Dawem.API.MiddleWares
                         .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
 
                     requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+                    requestInfo.LocalHijriDateTime = GetHijri(requestInfo.LocalDateTime);
                 }
 
             }
@@ -89,6 +90,22 @@ namespace Dawem.API.MiddleWares
             await _next.Invoke(httpContext);
 
 
+        }
+
+        private DateTime GetHijri(DateTime gregorianDate)
+        {
+            // Convert the Gregorian date to the Hijri calendar
+            CultureInfo hijriCulture = new CultureInfo("ar-SA");
+            HijriCalendar hijriCalendar = new HijriCalendar();
+
+            DateTimeFormatInfo dateTimeFormat = hijriCulture.DateTimeFormat;
+            dateTimeFormat.Calendar = hijriCalendar;
+
+            string hijriDate = gregorianDate.ToString("dd-MM-yyyy", dateTimeFormat);
+
+            // Parse the Hijri date back to DateTime
+            DateTime Output =  DateTime.ParseExact(hijriDate, "dd-MM-yyyy", hijriCulture);
+            return Output;
         }
     }
 }

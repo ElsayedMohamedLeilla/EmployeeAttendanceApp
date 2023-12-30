@@ -23,6 +23,8 @@ namespace Dawem.Models.Context
         public string BaseUrl { get; set; }
         public bool IsMainBranch { get; set; }
         public DateTime LocalDateTime { get; set; }
-        
+        public DateTime LocalHijriDateTime { get; set; }
+
+
     }
 }

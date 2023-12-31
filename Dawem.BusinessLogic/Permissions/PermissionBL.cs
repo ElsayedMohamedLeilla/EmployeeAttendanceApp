@@ -118,7 +118,7 @@ namespace Dawem.BusinessLogic.Permissions
                     }).ToList();
 
                 var getDeletedPermissionScreens = dbPermissionScreens
-                    .Where(d => !modelPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode))
+                    .Where(d => !modelPermissionScreens.Any(m => m.ScreenCode == d.ScreenCode))
                     .ToList();
 
                 repositoryManager.PermissionScreenRepository.BulkInsert(getAddedPermissionScreens);
@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Permissions
                             }).ToList();
 
                         var getDeletedPermissionScreenActions = dbPermissionScreenActions
-                            .Where(d => !modelPermissionScreenActions.Any(d => d.ActionCode == d.ActionCode))
+                            .Where(d => !modelPermissionScreenActions.Any(m => m.ActionCode == d.ActionCode))
                             .ToList();
 
                         repositoryManager.PermissionScreenActionRepository.BulkInsert(getAddedPermissionScreenActions);
@@ -196,7 +196,7 @@ namespace Dawem.BusinessLogic.Permissions
             {
                 Id = e.Id,
                 Code = e.Code,
-                RoleName = e.Role.Name,
+                RoleName = TranslationHelper.GetTranslation(e.Role.Name, requestInfo.Lang),
                 AllowedScreensCount = e.PermissionScreens.Count,
                 IsActive = e.IsActive,
             }).ToListAsync();
@@ -218,7 +218,7 @@ namespace Dawem.BusinessLogic.Permissions
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString(), requestInfo.Lang),
+                        ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
                         PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = psa.ActionCode,
@@ -310,6 +310,39 @@ namespace Dawem.BusinessLogic.Permissions
             }
 
             return true;
+        }
+        public async Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions()
+        {
+            var resonse = new List<PermissionScreenResponseWithNamesModel>();
+
+            var userRoleRepository = repositoryManager.UserRoleRepository;
+            var getUserRolesIds = await userRoleRepository
+                .Get(u => u.UserId == requestInfo.UserId)
+                .Select(ur => ur.RoleId)
+                .ToListAsync();
+
+            if (getUserRolesIds != null && getUserRolesIds.Count > 0)
+            {
+                var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
+                var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
+                && ps.Permission.CompanyId == requestInfo.CompanyId &&
+                getUserRolesIds.Contains(ps.Permission.RoleId))
+                    .GroupBy(ps => ps.ScreenCode)
+                    .Select(g => new PermissionScreenResponseWithNamesModel
+                    {
+                        ScreenCode = g.First().ScreenCode,
+                        ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                        PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
+                        .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
+                        {
+                            ActionCode = g.First().ActionCode,
+                            ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), requestInfo.Lang)
+                        }).OrderBy(a => a.ActionCode).ToList()
+                    }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+
+                resonse = getRolesPermissions;
+            }
+            return resonse;
         }
     }
 }

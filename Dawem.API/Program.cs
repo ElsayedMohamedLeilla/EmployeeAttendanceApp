@@ -173,7 +173,7 @@ app.UseAuthorization();
 app.UseRequestLocalization(requestLocalizationOptions);
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseMiddleware<PermissionMiddleWare>();
+//app.UseMiddleware<PermissionMiddleWare>();
 //app.UseMiddleware<UserScreenActionPermissionMiddleWare>();
 
 app.MapControllers();

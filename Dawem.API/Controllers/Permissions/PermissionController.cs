@@ -84,5 +84,11 @@ namespace Dawem.API.Controllers.Permissions
             var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
             return Success(response, response.Screens.Count);
         }
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentUserPermissions()
+        {
+            var response = await permissionBL.GetCurrentUserPermissions();
+            return Success(response, response.Count);
+        }
     }
 }

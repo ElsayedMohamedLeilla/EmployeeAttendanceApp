@@ -61,12 +61,14 @@ namespace Dawem.API.MiddleWares
                             Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouDoNotHavePermission,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.RightBracket +
+                                   requestInfo?.Lang) + LeillaKeys.RightBracket +
+                                   LeillaKeys.Space + 
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Screen.Value.ToString() + LeillaKeys.Screen,
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.RightBracket
+                                   requestInfo?.Lang) + LeillaKeys.RightBracket
                         };
+
                         await Return(unitOfWork, httpContext, statusCode, response);
                     }
                 }

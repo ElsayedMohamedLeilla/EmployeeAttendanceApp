@@ -42,7 +42,7 @@ namespace Dawem.BusinessLogic.Permissions
                 Id = pl.Id,
                 Code = pl.Code,
                 UserName = pl.User.Name,
-                ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString(), requestInfo.Lang),
+                ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
                 IsActive = pl.IsActive,
             }).ToListAsync();
 
@@ -61,7 +61,7 @@ namespace Dawem.BusinessLogic.Permissions
                 {
                     Code = pl.Code,
                     UserName = pl.User.Name,
-                    ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString(), requestInfo.Lang),
+                    ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
                     Date = pl.Date,
                     IsActive = pl.IsActive

@@ -3,10 +3,14 @@ using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Permissions;
+using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Response.Core.Roles;
+using Dawem.Repository.Others;
+using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.Roles
@@ -34,11 +38,21 @@ namespace Dawem.BusinessLogic.Core.Roles
         public async Task<GetRoleDropDownResponseDTO> GetForDropDown(GetRolesCriteria criteria)
         {
             criteria.IsActive = true;
-            var RoleRepository = repositoryManager.RoleRepository;
-            var query = RoleRepository.GetAsQueryable(criteria);
+            var roleRepository = repositoryManager.RoleRepository;
+            var query = roleRepository.GetAsQueryable(criteria);
+
+            #region paging
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+            #region sorting
+            var queryOrdered = roleRepository.OrderBy(query, nameof(Role.Id), LeillaKeys.Desc);
+            #endregion
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            #endregion
+
             #region Handle Response
 
-            var RolesList = await query.Select(e => new GetRoleForDropDownResponseModelDTO
+            var RolesList = await queryPaged.Select(e => new GetRoleForDropDownResponseModelDTO
             {
                 Id = e.Id,
                 Name = TranslationHelper.GetTranslation(e.Name, requestInfo.Lang)

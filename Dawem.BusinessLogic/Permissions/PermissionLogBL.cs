@@ -3,9 +3,10 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Permissions.PermissionLogs;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.AssignmentTypes;
+using Dawem.Models.Response.Permissions.PermissionLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

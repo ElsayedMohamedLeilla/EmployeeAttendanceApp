@@ -1,12 +1,12 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Employees
+namespace Dawem.API.Controllers.Permissions
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

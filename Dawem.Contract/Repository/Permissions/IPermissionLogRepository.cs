@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Permissions;
-using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Permissions.PermissionLogs;
 
 namespace Dawem.Contract.Repository.Permissions
 {

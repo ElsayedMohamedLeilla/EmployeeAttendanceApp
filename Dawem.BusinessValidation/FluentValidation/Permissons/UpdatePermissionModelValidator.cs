@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
+﻿using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Requests.Assignments
+namespace Dawem.Validation.FluentValidation.Permissons
 {
     public class UpdatePermissionModelValidator : AbstractValidator<UpdatePermissionModel>
     {

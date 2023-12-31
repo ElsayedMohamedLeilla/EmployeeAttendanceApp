@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.AssignmentTypes
+﻿namespace Dawem.Models.Dtos.Permissions.Permissions
 {
     public class CreatePermissionModel
     {

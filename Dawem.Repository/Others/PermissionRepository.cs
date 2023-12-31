@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using LinqKit;
 
 namespace Dawem.Repository.Others

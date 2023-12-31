@@ -1,7 +1,7 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Employees.AssignmentTypes
+namespace Dawem.Models.Dtos.Permissions.Permissions
 {
     public class GetPermissionsCriteria : BaseCriteria
     {

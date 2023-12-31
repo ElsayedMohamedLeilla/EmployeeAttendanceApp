@@ -1,6 +1,6 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 
-namespace Dawem.Models.Dtos.Employees.AssignmentTypes
+namespace Dawem.Models.Dtos.Permissions.Permissions
 {
     public class PermissionScreenModel
     {

@@ -1,4 +1,4 @@
-﻿namespace Dawem.Enums.Configration
+﻿namespace Dawem.Enums.Permissions
 {
     public enum ApplicationAction
     {

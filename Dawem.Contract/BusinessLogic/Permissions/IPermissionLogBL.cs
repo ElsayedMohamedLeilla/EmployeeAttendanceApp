@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
-using Dawem.Models.Response.Employees.AssignmentTypes;
+﻿using Dawem.Models.Dtos.Permissions.PermissionLogs;
+using Dawem.Models.Response.Permissions.PermissionLogs;
 
 namespace Dawem.Contract.BusinessLogic.Permissions
 {

@@ -10,6 +10,8 @@ using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Models.Dtos.Employees.TaskTypes;
 using Dawem.Models.Dtos.Employees.Users;
+using Dawem.Models.Dtos.Permissions.PermissionLogs;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Dtos.Requests.Justifications;

@@ -1,5 +1,5 @@
-﻿using Dawem.Enums.Configration;
-using Dawem.Enums.Generals;
+﻿using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 
 namespace Dawem.Models.Dtos.Others
 {

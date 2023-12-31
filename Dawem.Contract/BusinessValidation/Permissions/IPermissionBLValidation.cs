@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
+﻿using Dawem.Models.Dtos.Permissions.Permissions;
 
-namespace Dawem.Contract.BusinessValidation.Employees
+namespace Dawem.Contract.BusinessValidation.Permissions
 {
     public interface IPermissionBLValidation
     {

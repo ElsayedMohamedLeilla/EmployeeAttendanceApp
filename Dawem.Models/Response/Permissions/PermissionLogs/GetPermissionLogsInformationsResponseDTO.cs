@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees.AssignmentTypes
+﻿namespace Dawem.Models.Response.Permissions.PermissionLogs
 {
     public class GetPermissionLogsInformationsResponseDTO : BaseInformationsResponse
     {

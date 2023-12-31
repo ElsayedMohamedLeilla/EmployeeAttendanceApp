@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 
 namespace Dawem.Models.Criteria.Others
 {

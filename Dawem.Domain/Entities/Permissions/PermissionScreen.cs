@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 

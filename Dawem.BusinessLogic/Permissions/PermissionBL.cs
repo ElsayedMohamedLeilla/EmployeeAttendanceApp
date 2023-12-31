@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Contract.BusinessValidation.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -8,13 +8,13 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
-using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.Permissions
 {
     public class PermissionBL : IPermissionBL
     {

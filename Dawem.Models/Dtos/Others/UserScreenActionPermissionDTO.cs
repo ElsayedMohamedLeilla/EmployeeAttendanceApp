@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 
 namespace Dawem.Models.Dtos.Others
 {
@@ -9,6 +9,6 @@ namespace Dawem.Models.Dtos.Others
         public int? UserId { get; set; }
         public int? GroupId { get; set; }
         public ApplicationScreenCode ActionPlace { get; set; }
-        public Enums.Configration.ApplicationAction ActionType { get; set; }
+        public ApplicationAction ActionType { get; set; }
     }
 }

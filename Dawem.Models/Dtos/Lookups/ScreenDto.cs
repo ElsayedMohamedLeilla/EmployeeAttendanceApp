@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 using Dawem.Models.Dtos.Providers;
 
 namespace Dawem.Models.Dtos.Lookups

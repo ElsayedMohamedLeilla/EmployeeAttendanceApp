@@ -1,5 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.Permissions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Domain.Entities.Permissions;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Exceptions;
@@ -27,6 +29,39 @@ namespace Dawem.Validation.BusinessValidation.Permissions
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
             }
 
+            #region Validate Available Actions
+
+            var allScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions;
+
+            if (allScreensWithAvailableActions != null)
+            {
+
+                var screenWithNotAvailableAction = model.PermissionScreens
+                    .FirstOrDefault(permissionScreen => permissionScreen.PermissionScreenActions
+                        .Any(a => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s=>s.ScreenCode == permissionScreen.ScreenCode).AvailableActions.Contains(a.ActionCode)));
+
+                if (screenWithNotAvailableAction != null)
+                {
+                    var actionNotAvailable = screenWithNotAvailableAction.PermissionScreenActions
+                        .FirstOrDefault(a => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(a.ActionCode));
+
+                    var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
+                        + LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(screenWithNotAvailableAction.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
+                        + LeillaKeys.SpaceThenDashThenSpace +
+                        TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(actionNotAvailable.ActionCode.ToString(), requestInfo.Lang)
+                        + LeillaKeys.Dot;
+
+                    throw new BusinessValidationException(messageCode: null, message: message);
+                }
+            }
+
+            #endregion
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdatePermissionModel model)
@@ -38,6 +73,39 @@ namespace Dawem.Validation.BusinessValidation.Permissions
             {
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
             }
+
+            #region Validate Available Actions
+
+            var allScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions;
+
+            if (allScreensWithAvailableActions != null)
+            {
+
+                var screenWithNotAvailableAction = model.PermissionScreens
+                    .FirstOrDefault(permissionScreen => permissionScreen.PermissionScreenActions
+                        .Any(a => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s => s.ScreenCode == permissionScreen.ScreenCode).AvailableActions.Contains(a.ActionCode)));
+
+                if (screenWithNotAvailableAction != null)
+                {
+                    var actionNotAvailable = screenWithNotAvailableAction.PermissionScreenActions
+                        .FirstOrDefault(a => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(a.ActionCode));
+
+                    var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
+                        + LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(screenWithNotAvailableAction.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
+                        + LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(actionNotAvailable.ActionCode.ToString(), requestInfo.Lang)
+                        + LeillaKeys.Dot;
+
+                    throw new BusinessValidationException(messageCode: null, message: message);
+                }
+            }
+
+            #endregion
 
             return true;
         }

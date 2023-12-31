@@ -311,13 +311,16 @@ namespace Dawem.BusinessLogic.Permissions
 
             return true;
         }
-        public async Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions()
+        public async Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions(GetCurrentUserPermissionsModel model = null)
         {
             var resonse = new List<PermissionScreenResponseWithNamesModel>();
+            var currentUserId = model?.UserId ?? requestInfo.UserId;
+            var currentCompanyId = model?.CompanyId ?? requestInfo.CompanyId;
+            var lang = requestInfo.Lang;
 
             var userRoleRepository = repositoryManager.UserRoleRepository;
             var getUserRolesIds = await userRoleRepository
-                .Get(u => u.UserId == requestInfo.UserId)
+                .Get(u => u.UserId == currentUserId)
                 .Select(ur => ur.RoleId)
                 .ToListAsync();
 
@@ -325,18 +328,18 @@ namespace Dawem.BusinessLogic.Permissions
             {
                 var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
                 var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
-                && ps.Permission.CompanyId == requestInfo.CompanyId &&
+                && ps.Permission.CompanyId == currentCompanyId &&
                 getUserRolesIds.Contains(ps.Permission.RoleId))
                     .GroupBy(ps => ps.ScreenCode)
                     .Select(g => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = g.First().ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                        ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, lang),
                         PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
                         .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = g.First().ActionCode,
-                            ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), requestInfo.Lang)
+                            ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
                         }).OrderBy(a => a.ActionCode).ToList()
                     }).OrderBy(ps => ps.ScreenCode).ToListAsync();
 

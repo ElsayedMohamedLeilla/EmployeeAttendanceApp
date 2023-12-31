@@ -445,6 +445,9 @@
         public const string SorryYouMustNotDuplicateScreenActions = "Sorry!!YouMustNotDuplicateScreenActions!";
         public const string DoneCreatePermissionSuccessfully = "DoneCreatePermissionSuccessfully";
         public const string DoneUpdatePermissionSuccessfully = "DoneUpdatePermissionSuccessfully";
-       
+        public const string SorryChosenActionNotAvailableForChosenScreen = "Sorry!!ChosenActionNotAvailableForChosenScreen!";
+        public const string ScreenName = "ScreenName:";
+        public const string ActionName = "ActionName:";
+
     }
 }

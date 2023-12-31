@@ -1,5 +1,6 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
 using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Translations;
@@ -25,12 +26,25 @@ namespace Dawem.API.Controllers.Permissions
         [HttpPost]
         public async Task<ActionResult> Create(CreatePermissionModel model)
         {
+            #region Set All Screens Available Actions
+
+            APIHelper.AllScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions == null ?
+                ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo) : APIHelper.AllScreensWithAvailableActions;
+
+            #endregion
+
             var result = await permissionBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreatePermissionSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdatePermissionModel model)
         {
+            #region Set All Screens Available Actions
+
+            APIHelper.AllScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions == null ?
+                ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo) : APIHelper.AllScreensWithAvailableActions;
+
+            #endregion
 
             var result = await permissionBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionSuccessfully);

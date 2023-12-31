@@ -14,6 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Permissions
         Task<bool> Delete(int permissionId);
         Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations();
         Task<bool> CheckUserPermission(CheckUserPermissionModel model);
-        Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions();
+        Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions(GetCurrentUserPermissionsModel? model = null);
     }
 }

@@ -77,7 +77,6 @@ namespace Dawem.API.MiddleWares.Helpers
 
                 response.Screens.Add(screensWithAvailableActionsDTO);
             }
-
             return response;
         }
         public static List<ApplicationAction> GetScreenAvailableActions(ApplicationScreenCode screen)

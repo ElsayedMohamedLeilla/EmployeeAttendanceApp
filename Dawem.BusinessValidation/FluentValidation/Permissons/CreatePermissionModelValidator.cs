@@ -38,6 +38,7 @@ namespace Dawem.Validation.FluentValidation.Permissons
                .Must(model => model.GroupBy(s => s.ActionCode).ToList().All(g => g.Count() == 1))
                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreenActions);
 
+
             RuleForEach(x => x.PermissionScreenActions).SetValidator(new CreatePermissionScreenActionModelValidator());
 
         }

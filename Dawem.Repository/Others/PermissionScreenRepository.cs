@@ -1,7 +1,7 @@
-﻿using Dawem.Contract.Repository.Others;
+﻿using Dawem.Contract.Repository.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Permissions;
 
 namespace Dawem.Repository.Others
 {

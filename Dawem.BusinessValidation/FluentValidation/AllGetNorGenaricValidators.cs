@@ -177,7 +177,7 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetScreenPermissionLogsCriteriaValidator : AbstractValidator<GetScreenPermissionLogsCriteria>
+    public class GetScreenPermissionLogsCriteriaValidator : AbstractValidator<Models.Criteria.Others.GetPermissionLogsCriteria>
     {
         public GetScreenPermissionLogsCriteriaValidator()
         {

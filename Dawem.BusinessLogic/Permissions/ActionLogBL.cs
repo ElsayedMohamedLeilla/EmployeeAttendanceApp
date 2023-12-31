@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Others;
+﻿using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -13,9 +13,9 @@ using Dawem.Models.ResponseModels;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Others
+namespace Dawem.BusinessLogic.Permissions
 {
-    public class ActionLogBL : IActionLogBL
+    public class ActionLogBL : IPermissionLogBL
     {
 
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
@@ -41,7 +41,7 @@ namespace Dawem.BusinessLogic.Others
 
             return response;
         }
-        public async Task<GetActionLogsResponseModel> Get(GetScreenPermissionLogsCriteria criteria)
+        public async Task<GetActionLogsResponseModel> Get(GetPermissionLogsCriteria criteria)
         {
 
             var query = repositoryManager.ScreenPermissionLogRepository.GetAsQueryable(criteria);
@@ -87,7 +87,7 @@ namespace Dawem.BusinessLogic.Others
             {
                 unitOfWork.CreateTransaction();
 
-                var actionLog = new ScreenPermissionLog()
+                var actionLog = new PermissionLog()
                 {
                     ActionType = model.ActionType,
                     ScreenCode = model.ActionPlace,

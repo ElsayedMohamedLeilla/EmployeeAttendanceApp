@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
+using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
@@ -41,7 +42,7 @@ namespace Dawem.Repository.Managers
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
-        private IScreenPermissionLogRepository screenPermissionLogRepository;
+        private IPermissionLogRepository screenPermissionLogRepository;
         private IPermissionRepository permissionRepository;
         private IPermissionScreenRepository permissionScreenRepository;
         private IPermissionScreenActionRepository permissionScreenActionRepository;
@@ -113,7 +114,7 @@ namespace Dawem.Repository.Managers
          permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
         public IPermissionScreenActionRepository PermissionScreenActionRepository =>
          permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
-        public IScreenPermissionLogRepository ScreenPermissionLogRepository =>
+        public IPermissionLogRepository ScreenPermissionLogRepository =>
          screenPermissionLogRepository ??= new ScreenPermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);

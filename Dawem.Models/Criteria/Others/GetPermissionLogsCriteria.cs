@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Criteria.Others
 {
-    public class GetScreenPermissionLogsCriteria : BaseCriteria
+    public class GetPermissionLogsCriteria : BaseCriteria
     {
         public ApplicationScreenCode? ScreenCode { get; set; }
         public Enums.Configration.ApplicationAction? ActionType { get; set; }

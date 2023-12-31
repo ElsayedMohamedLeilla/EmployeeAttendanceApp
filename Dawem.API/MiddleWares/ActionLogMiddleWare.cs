@@ -1,5 +1,5 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
@@ -19,7 +19,7 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork, IActionLogBL actionLogBL)
+        public async Task Invoke(HttpContext httpContext, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork, IPermissionLogBL actionLogBL)
         {
 
 

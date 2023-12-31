@@ -5,6 +5,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
@@ -294,7 +295,7 @@ namespace Dawem.Data
         public DbSet<PermissionType> PermissionTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
-        public DbSet<ScreenPermissionLog> ScreenPermissionLogs { get; set; }
+        public DbSet<PermissionLog> ScreenPermissionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }

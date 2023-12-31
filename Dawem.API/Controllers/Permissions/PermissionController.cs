@@ -1,5 +1,5 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Models.Context;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

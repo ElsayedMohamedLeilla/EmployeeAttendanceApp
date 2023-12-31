@@ -1,7 +1,7 @@
-﻿using Dawem.Contract.Repository.Others;
+﻿using Dawem.Contract.Repository.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Permissions;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Translations;
@@ -9,18 +9,18 @@ using LinqKit;
 
 namespace Dawem.Repository.Others
 {
-    public class ScreenPermissionLogRepository : GenericRepository<ScreenPermissionLog>, IScreenPermissionLogRepository
+    public class ScreenPermissionLogRepository : GenericRepository<PermissionLog>, IPermissionLogRepository
     {
         private readonly RequestInfo requestInfo;
         public ScreenPermissionLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, RequestInfo _requestInfo) : base(unitOfWork)
         {
             requestInfo = _requestInfo;
         }
-        public IQueryable<ScreenPermissionLog> GetAsQueryable(GetScreenPermissionLogsCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
+        public IQueryable<PermissionLog> GetAsQueryable(GetPermissionLogsCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
-            var outerpredicate = PredicateBuilder.New<ScreenPermissionLog>(true);
+            var outerpredicate = PredicateBuilder.New<PermissionLog>(true);
 
-            var inner = PredicateBuilder.New<ScreenPermissionLog>(true);
+            var inner = PredicateBuilder.New<PermissionLog>(true);
 
             outerpredicate = outerpredicate.And(x => x.CompanyId == requestInfo.CompanyId);
 

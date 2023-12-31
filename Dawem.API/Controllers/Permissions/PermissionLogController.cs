@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Others;
+﻿using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Models.Criteria.Others;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -11,14 +11,14 @@ namespace Dawem.API.Controllers.Others
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
     public class PermissionLogController : BaseController
     {
-        private readonly IActionLogBL actionLogBL;
+        private readonly IPermissionLogBL actionLogBL;
 
-        public PermissionLogController(IActionLogBL _actionLogBL)
+        public PermissionLogController(IPermissionLogBL _actionLogBL)
         {
             actionLogBL = _actionLogBL;
         }
         [HttpPost]
-        public async Task<ActionResult> Get(GetScreenPermissionLogsCriteria criteria)
+        public async Task<ActionResult> Get(GetPermissionLogsCriteria criteria)
         {
             var actionLogsRes = await actionLogBL.Get(criteria);
             return Success(actionLogsRes.ActionLogs, actionLogsRes.TotalCount);
@@ -27,11 +27,6 @@ namespace Dawem.API.Controllers.Others
         public async Task<ActionResult> GetInfo(GetActionLogInfoCriteria criteria)
         {
             return Success(await actionLogBL.GetInfo(criteria));
-        }
-        [HttpPost]
-        public async Task<ActionResult> GetById([FromBody] int id)
-        {
-            return Success(await actionLogBL.GetById(id));
         }
     }
 }

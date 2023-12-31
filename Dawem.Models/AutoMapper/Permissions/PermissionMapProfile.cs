@@ -1,0 +1,18 @@
+﻿using AutoMapper;
+using Dawem.Domain.Entities.Permissions;
+using Dawem.Domain.Entities.Requests;
+using Dawem.Enums.Generals;
+using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Models.Dtos.Requests.Assignments;
+
+namespace Dawem.Models.AutoMapper.Requests
+{
+    public class PermissionMapProfile : Profile
+    {
+        public PermissionMapProfile()
+        {
+            CreateMap<CreatePermissionModel, Permission>();
+            CreateMap<UpdatePermissionModel, Permission>();
+        }
+    }
+}

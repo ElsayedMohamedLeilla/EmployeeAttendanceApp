@@ -1,4 +1,4 @@
-﻿using Dawem.Domain.Entities.Others;
+﻿using Dawem.Domain.Entities.Permissions;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
 
@@ -12,7 +12,7 @@ namespace Dawem.Models.DtosMappers.Others
         {
             userContext = _userContext;
         }
-        public static ActionLogDTO? Map(ScreenPermissionLog? actionLog)
+        public static ActionLogDTO? Map(PermissionLog? actionLog)
         {
             if (actionLog == null) return null;
             var DTO = new ActionLogDTO()
@@ -25,7 +25,7 @@ namespace Dawem.Models.DtosMappers.Others
             };
             return DTO;
         }
-        public static ActionLogInfo? MapInfo(ScreenPermissionLog? actionLog)
+        public static ActionLogInfo? MapInfo(PermissionLog? actionLog)
         {
             if (actionLog == null) return null;
             var DTO = new ActionLogInfo()
@@ -42,10 +42,10 @@ namespace Dawem.Models.DtosMappers.Others
             };
             return DTO;
         }
-        public static ScreenPermissionLog? Map(ActionLogInfo? actionLogDTO)
+        public static PermissionLog? Map(ActionLogInfo? actionLogDTO)
         {
             if (actionLogDTO == null) return null;
-            var _actionLog = new ScreenPermissionLog()
+            var _actionLog = new PermissionLog()
             {
                 Id = actionLogDTO.Id,
                 Date = actionLogDTO.Date,
@@ -57,7 +57,7 @@ namespace Dawem.Models.DtosMappers.Others
             };
             return _actionLog;
         }
-        public static List<ActionLogDTO?>? Map(List<ScreenPermissionLog?>? actionLogs)
+        public static List<ActionLogDTO?>? Map(List<PermissionLog?>? actionLogs)
         {
             if (actionLogs == null) return null;
             return actionLogs.Select(selector: Map).ToList();

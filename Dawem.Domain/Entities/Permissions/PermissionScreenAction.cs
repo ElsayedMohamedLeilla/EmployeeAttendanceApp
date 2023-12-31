@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Others
+namespace Dawem.Domain.Entities.Permissions
 {
     [Table(nameof(PermissionScreenAction) + LeillaKeys.S)]
     public class PermissionScreenAction : BaseEntity

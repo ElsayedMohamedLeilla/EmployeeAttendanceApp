@@ -18,10 +18,10 @@ namespace Dawem.Models.DtosMappers.Others
             var DTO = new ActionLogDTO()
             {
                 Id = actionLog.Id,
-                ActionType = actionLog.ActionType,
+                ActionType = actionLog.ActionCode,
                 //ActionPlace = actionLog.ActionPlace,
                 //BranchId = actionLog.BranchId,
-                ResponseStatus = actionLog.ResponseStatus
+                //ResponseStatus = actionLog.ResponseStatus
             };
             return DTO;
         }
@@ -34,11 +34,11 @@ namespace Dawem.Models.DtosMappers.Others
                 Date = actionLog.Date,
                 //BranchId = actionLog.BranchId,
                 UserId = actionLog.UserId,
-                ActionType = actionLog.ActionType,
+                ActionType = actionLog.ActionCode,
                 //ActionPlace = actionLog.ActionPlace,
                 //BranchGlobalName = actionLog?.Branch?.Name,
                 UserGlobalName = actionLog?.User?.Name,
-                ResponseStatus = actionLog.ResponseStatus
+                //ResponseStatus = actionLog.ResponseStatus
             };
             return DTO;
         }
@@ -51,9 +51,9 @@ namespace Dawem.Models.DtosMappers.Others
                 Date = actionLogDTO.Date,
                 //BranchId = actionLogDTO.BranchId,
                 UserId = actionLogDTO.UserId,
-                ActionType = actionLogDTO.ActionType,
+                ActionCode = actionLogDTO.ActionType,
                 //ActionPlace = actionLogDTO.ActionPlace,
-                ResponseStatus = actionLogDTO.ResponseStatus
+               // ResponseStatus = actionLogDTO.ResponseStatus
             };
             return _actionLog;
         }

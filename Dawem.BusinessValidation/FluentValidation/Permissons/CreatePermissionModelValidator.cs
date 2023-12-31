@@ -1,0 +1,54 @@
+﻿using Dawem.Models.Dtos.Employees.AssignmentTypes;
+using Dawem.Translations;
+using FluentValidation;
+
+namespace Dawem.Validation.FluentValidation.Requests.Assignments
+{
+    public class CreatePermissionModelValidator : AbstractValidator<CreatePermissionModel>
+    {
+        public CreatePermissionModelValidator()
+        {
+            RuleFor(model => model.RoleId).GreaterThan(0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseRoleForPermission);
+
+            RuleFor(model => model.PermissionScreens)
+                .Must(model => model != null && model.Count > 0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseOneScreenAtLeast);
+
+            RuleFor(model => model.PermissionScreens)
+                .Must(model => model.GroupBy(s => s.ScreenCode).ToList().All(g => g.Count() == 1))
+                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreens);
+
+            RuleForEach(x => x.PermissionScreens).SetValidator(new CreatePermissionScreenModelValidator());
+
+        }
+    }
+    public class CreatePermissionScreenModelValidator : AbstractValidator<PermissionScreenModel>
+    {
+        public CreatePermissionScreenModelValidator()
+        {
+            RuleFor(model => model.ScreenCode).IsInEnum()
+                .WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
+
+            RuleFor(model => model.PermissionScreenActions)
+                .Must(model => model != null && model.Count > 0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseOneActionAtLeast);
+
+            RuleFor(model => model.PermissionScreenActions)
+               .Must(model => model.GroupBy(s => s.ActionCode).ToList().All(g => g.Count() == 1))
+               .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreenActions);
+
+            RuleForEach(x => x.PermissionScreenActions).SetValidator(new CreatePermissionScreenActionModelValidator());
+
+        }
+    }
+    public class CreatePermissionScreenActionModelValidator : AbstractValidator<PermissionScreenActionModel>
+    {
+        public CreatePermissionScreenActionModelValidator()
+        {
+            RuleFor(model => model.ActionCode).IsInEnum()
+                .WithMessage(LeillaKeys.SorryYouMustEnterCorrectAction);
+
+        }
+    }
+}

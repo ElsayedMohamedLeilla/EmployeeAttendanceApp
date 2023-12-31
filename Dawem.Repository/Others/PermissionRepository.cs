@@ -49,7 +49,7 @@ namespace Dawem.Repository.Others
             }
             if (criteria.ActionCode != null)
             {
-                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.PermissionScreenActions.Any(psa => psa.Action == criteria.ActionCode)));
+                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.PermissionScreenActions.Any(psa => psa.ActionCode == criteria.ActionCode)));
             }
 
             predicate = predicate.And(inner);

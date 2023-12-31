@@ -1,5 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Permissions;
-using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Employees.AssignmentTypes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,22 +11,30 @@ namespace Dawem.API.Controllers.Others
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
     public class PermissionLogController : BaseController
     {
-        private readonly IPermissionLogBL actionLogBL;
+        private readonly IPermissionLogBL permissionLogBL;
 
-        public PermissionLogController(IPermissionLogBL _actionLogBL)
+        public PermissionLogController(IPermissionLogBL _permissionLogBL)
         {
-            actionLogBL = _actionLogBL;
+            permissionLogBL = _permissionLogBL;
         }
-        [HttpPost]
-        public async Task<ActionResult> Get(GetPermissionLogsCriteria criteria)
+        [HttpGet]
+        public async Task<ActionResult> Get([FromQuery] GetPermissionLogsCriteria criteria)
         {
-            var actionLogsRes = await actionLogBL.Get(criteria);
-            return Success(actionLogsRes.ActionLogs, actionLogsRes.TotalCount);
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var response = await permissionLogBL.Get(criteria);
+            return Success(response.PermissionLogs, response.TotalCount);
         }
-        [HttpPost]
-        public async Task<ActionResult> GetInfo(GetActionLogInfoCriteria criteria)
+        [HttpGet]
+        public async Task<ActionResult> GetInfo([FromQuery] int permissionLogId)
         {
-            return Success(await actionLogBL.GetInfo(criteria));
+            if (permissionLogId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await permissionLogBL.GetInfo(permissionLogId));
         }
     }
 }

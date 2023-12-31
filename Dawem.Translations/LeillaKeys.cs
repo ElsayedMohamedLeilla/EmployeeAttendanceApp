@@ -433,8 +433,20 @@
         public const string Disable = "Disable";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission!";
         public const string InScreen = "InScreen";
+
+
+        public const string SorryYouMustChooseRoleForPermission = "Sorry!!YouMustChooseRoleForPermission!";
+        public const string SorryYouMustChooseOneScreenAtLeast = "Sorry!!YouMustChooseOneScreenAtLeast!";
+        public const string SorryYouMustEnterCorrectScreenCode = "Sorry!!YouMustEnterCorrectScreenCode!";
+        public const string SorryYouMustChooseOneActionAtLeast = "Sorry!!YouMustChooseOneActionAtLeastd!";
+        public const string SorryYouMustEnterCorrectAction = "Sorry!!YouMustEnterCorrectActionrd!";
+        public const string SorryYouMustEnterPermissionId = "Sorry!!YouMustEnterPermissionId!";
+        public const string SorryPermissionRoleIsDuplicated = "Sorry!!PermissionRoleIsDuplicated!";
+        public const string SorryPermissionNotFound = "Sorry!!PermissionNotFoundd!";
+        public const string SorryYouMustNotDuplicateScreens = "Sorry!!YouMustNotDuplicateScreens!";
+        public const string SorryYouMustNotDuplicateScreenActions = "Sorry!!YouMustNotDuplicateScreenActions!";
+        public const string DoneCreatePermissionSuccessfully = "DoneCreatePermissionSuccessfully";
+        public const string DoneUpdatePermissionSuccessfully = "DoneUpdatePermissionSuccessfully";
         
-
-
     }
 }

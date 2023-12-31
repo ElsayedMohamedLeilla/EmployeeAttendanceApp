@@ -1,5 +1,5 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
@@ -43,8 +43,8 @@ namespace Dawem.API.MiddleWares
                     var model = new CheckUserPermissionModel
                     {
                         UserId = userId,
-                        Screen = mapResult.Screen.Value,
-                        Action = mapResult.Method.Value
+                        ScreenCode = mapResult.Screen.Value,
+                        ActionCode = mapResult.Method.Value
                     };
 
                     var checkPermissionResponse = await permissionBL.CheckUserPermission(model);

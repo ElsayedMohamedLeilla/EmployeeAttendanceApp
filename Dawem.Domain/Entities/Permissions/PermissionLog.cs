@@ -18,6 +18,6 @@ namespace Dawem.Domain.Entities.Permissions
         public virtual Company User { get; set; }
         public int Code { get; set; }
         public ApplicationScreenCode ScreenCode { get; set; }
-        public ApplicationAction ActionType { get; set; }
+        public ApplicationAction ActionCode { get; set; }
     }
 }

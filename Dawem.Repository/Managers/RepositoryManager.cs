@@ -42,7 +42,7 @@ namespace Dawem.Repository.Managers
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
-        private IPermissionLogRepository screenPermissionLogRepository;
+        private IPermissionLogRepository permissionLogRepository;
         private IPermissionRepository permissionRepository;
         private IPermissionScreenRepository permissionScreenRepository;
         private IPermissionScreenActionRepository permissionScreenActionRepository;
@@ -109,13 +109,13 @@ namespace Dawem.Repository.Managers
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IPermissionRepository PermissionRepository =>
-         permissionRepository ??= new PermissionRepository(unitOfWork);
+         permissionRepository ??= new PermissionRepository(unitOfWork, requestInfo);
         public IPermissionScreenRepository PermissionScreenRepository =>
          permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
         public IPermissionScreenActionRepository PermissionScreenActionRepository =>
          permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
-        public IPermissionLogRepository ScreenPermissionLogRepository =>
-         screenPermissionLogRepository ??= new ScreenPermissionLogRepository(unitOfWork, requestInfo);
+        public IPermissionLogRepository PermissionLogRepository =>
+         permissionLogRepository ??= new PermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IBranchRepository BranchRepository =>

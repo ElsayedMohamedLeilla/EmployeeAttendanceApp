@@ -20,7 +20,7 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }
         IPermissionScreenActionRepository PermissionScreenActionRepository { get; }
-        IPermissionLogRepository ScreenPermissionLogRepository { get; }
+        IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
         IBranchRepository BranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }

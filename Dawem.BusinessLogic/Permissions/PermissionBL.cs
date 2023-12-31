@@ -86,17 +86,84 @@ namespace Dawem.BusinessLogic.Employees
             #region Update Permission
 
             var getPermission = await repositoryManager.PermissionRepository
-                .GetEntityByConditionWithTrackingAsync(permission => !permission.IsDeleted
-                && permission.Id == model.Id);
+                .GetWithTracking(permission => !permission.IsDeleted
+                && permission.Id == model.Id)
+                .Include(p => p.PermissionScreens)
+                .ThenInclude(ps => ps.PermissionScreenActions)
+                .FirstOrDefaultAsync();
 
 
             if (getPermission != null)
             {
-                getPermission.Name = model.Name;
+                getPermission.RoleId = model.RoleId;
                 getPermission.IsActive = model.IsActive;
                 getPermission.ModifiedDate = DateTime.Now;
                 getPermission.ModifyUserId = requestInfo.UserId;
+
+                #region Update Related Screens
+
+                var dbPermissionScreens = getPermission.PermissionScreens;
+                var modelPermissionScreens = model.PermissionScreens;
+
+                var getAddedPermissionScreens = modelPermissionScreens
+                    .Where(m => !dbPermissionScreens.Any(d => d.ScreenCode == m.ScreenCode))
+                    .Select(m => new PermissionScreen
+                    {
+                        PermissionId = model.Id,
+                        ScreenCode = m.ScreenCode,
+                        PermissionScreenActions = m.PermissionScreenActions.Select(m => new PermissionScreenAction
+                        {
+                            ActionCode = m.ActionCode
+                        }).ToList()
+                    }).ToList();
+
+                var getDeletedPermissionScreens = dbPermissionScreens
+                    .Where(d => !modelPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode))
+                    .ToList();
+
+                repositoryManager.PermissionScreenRepository.BulkInsert(getAddedPermissionScreens);
+                repositoryManager.PermissionScreenRepository.BulkDeleteIfExist(getDeletedPermissionScreens);
+
+                var getUpdatedPermissionScreens = modelPermissionScreens
+                    .Where(d => !getAddedPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode)
+                    && !getDeletedPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode))
+                    .ToList();
+
+
+                #region Update Related Screen Actions
+
+                if (getUpdatedPermissionScreens != null && getUpdatedPermissionScreens.Count > 0)
+                {
+                    foreach (var permissionScreen in getUpdatedPermissionScreens)
+                    {
+                        var dbPermissionScreen = dbPermissionScreens
+                            .FirstOrDefault(ps => ps.ScreenCode == permissionScreen.ScreenCode);
+                        var dbPermissionScreenActions = dbPermissionScreen.PermissionScreenActions;
+                        var modelPermissionScreenActions = permissionScreen.PermissionScreenActions;
+
+                        var getAddedPermissionScreenActions = modelPermissionScreenActions
+                            .Where(m => !dbPermissionScreenActions.Any(d => d.ActionCode == m.ActionCode))
+                            .Select(m => new PermissionScreenAction
+                            {
+                                PermissionScreenId = dbPermissionScreen.Id,
+                                ActionCode = m.ActionCode,
+                            }).ToList();
+
+                        var getDeletedPermissionScreenActions = dbPermissionScreenActions
+                            .Where(d => !modelPermissionScreenActions.Any(d => d.ActionCode == d.ActionCode))
+                            .ToList();
+
+                        repositoryManager.PermissionScreenActionRepository.BulkInsert(getAddedPermissionScreenActions);
+                        repositoryManager.PermissionScreenActionRepository.BulkDeleteIfExist(getDeletedPermissionScreenActions);
+                    }
+                }
+
+                #endregion
+
+                #endregion
+
                 await unitOfWork.SaveAsync();
+
                 #region Handle Response
                 await unitOfWork.CommitAsync();
                 return true;
@@ -129,7 +196,8 @@ namespace Dawem.BusinessLogic.Employees
             {
                 Id = e.Id,
                 Code = e.Code,
-                Name = e.Name,
+                RoleName = e.Role.Name,
+                AllowedScreensCount = e.PermissionScreens.Count,
                 IsActive = e.IsActive,
             }).ToListAsync();
             return new GetPermissionsResponse
@@ -140,27 +208,45 @@ namespace Dawem.BusinessLogic.Employees
             #endregion
 
         }
-        public async Task<GetPermissionInfoResponseModel> GetInfo(int PermissionId)
+        public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
-            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == PermissionId && !e.IsDeleted)
-                .Select(e => new GetPermissionInfoResponseModel
+            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == permissionId && !e.IsDeleted)
+                .Select(p => new GetPermissionInfoResponseModel
                 {
-                    Code = e.Code,
-                    Name = e.Name,
-                    IsActive = e.IsActive,
+                    Code = p.Code,
+                    RoleName = p.Role.Name,
+                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseWithNamesModel
+                    {
+                        ScreenCode = ps.ScreenCode,
+                        ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString(), requestInfo.Lang),
+                        PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
+                        {
+                            ActionCode = psa.ActionCode,
+                            ActionName = TranslationHelper.GetTranslation(psa.ActionCode.ToString(), requestInfo.Lang)
+                        }).ToList()
+                    }).ToList(),
+                    IsActive = p.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permission;
         }
-        public async Task<GetPermissionByIdResponseModel> GetById(int PermissionId)
+        public async Task<GetPermissionByIdResponseModel> GetById(int permissionId)
         {
-            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == PermissionId && !e.IsDeleted)
-                .Select(e => new GetPermissionByIdResponseModel
+            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == permissionId && !e.IsDeleted)
+                .Select(p => new GetPermissionByIdResponseModel
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    Name = e.Name,
-                    IsActive = e.IsActive,
+                    Id = p.Id,
+                    Code = p.Code,
+                    RoleId = p.RoleId,
+                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
+                    {
+                        ScreenCode = ps.ScreenCode,
+                        PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseModel
+                        {
+                            ActionCode = psa.ActionCode
+                        }).ToList()
+                    }).ToList(),
+                    IsActive = p.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permission;
@@ -208,8 +294,8 @@ namespace Dawem.BusinessLogic.Employees
                 var checkIfHasPermission = await permissionScreenActionRepository
                     .Get(p => !p.IsDeleted && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
                     p.PermissionScreen.Permission.CompanyId == requestInfo.CompanyId &&
-                    p.PermissionScreen.ScreenCode == model.Screen
-                     && p.Action == model.Action && roles.Contains(p.PermissionScreen.Permission.RoleId))
+                    p.PermissionScreen.ScreenCode == model.ScreenCode
+                     && p.ActionCode == model.ActionCode && roles.Contains(p.PermissionScreen.Permission.RoleId))
                     .AnyAsync();
 
                 if (!checkIfHasPermission)

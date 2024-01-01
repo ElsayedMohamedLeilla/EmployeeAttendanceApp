@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
 {
-    public class GetSchedulePlanBackgroundJobLogInfoResponseModel
+    public class GetSchedulePlanLogInfoResponseModel
     {
         public int Code { get; set; }
         public string ScheduleName { get; set; }
@@ -15,6 +15,6 @@ namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
         public DateTime ApplyDate { get; set; }
         public DateTime ScheduleDateFrom { get; set; }
         public int EmployeesNumberAppliedOn { get; set; }
-        public List<GetSchedulePlanBackgroundJobLogEmployeeInfoModel> EmployeesAppliedOn { get; set; }
+        public List<GetSchedulePlanLogEmployeeInfoModel> EmployeesAppliedOn { get; set; }
     }
 }

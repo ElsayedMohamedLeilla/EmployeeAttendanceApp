@@ -303,7 +303,7 @@
         public const string SorrySchedulePlanNotFound = "Sorry!!SchedulePlanNotFound!";
         public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
         public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
-        public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
+        public const string SorrySchedulePlanLogNotFound = "Sorry!!SchedulePlanLogNotFound!";
         public const string SorryThereIsNoCompanyWithEnteredCode = "Sorry!!ThereIsNoCompanyWithEnteredCode!";
         public const string SorryCannotFindTheCompany = "Sorry!!CannotFindTheCompany!";
         public const string SorryYouMustEnterCompanyCode = "Sorry!!YouMustEnterCompanyCode!";

@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
 {
-    public class GetSchedulePlanBackgroundJobLogsResponseModel
+    public class GetSchedulePlanLogsResponseModel
     {
         public int Id { get; set; }
         public string ScheduleName { get; set; }

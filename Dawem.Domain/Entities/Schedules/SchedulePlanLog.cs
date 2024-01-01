@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Schedules
 {
-    [Table(nameof(SchedulePlanBackgroundJobLog) + LeillaKeys.S)]
-    public class SchedulePlanBackgroundJobLog : BaseEntity
+    [Table(nameof(SchedulePlanLog) + LeillaKeys.S)]
+    public class SchedulePlanLog : BaseEntity
     {
-        public SchedulePlanBackgroundJobLog()
+        public SchedulePlanLog()
         {
-            SchedulePlanBackgroundJobLogEmployees = new List<SchedulePlanBackgroundJobLogEmployee>();
+            SchedulePlanLogEmployees = new List<SchedulePlanLogEmployee>();
         }
         #region Foregn Keys
 
@@ -27,7 +27,7 @@ namespace Dawem.Domain.Entities.Schedules
         public ForType SchedulePlanType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
-        public List<SchedulePlanBackgroundJobLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
+        public List<SchedulePlanLogEmployee> SchedulePlanLogEmployees { get; set; }
 
     }
 }

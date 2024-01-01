@@ -385,7 +385,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
         }
         public async Task HandleSchedulePlanBackgroundJobEmployee(List<Employee> employees, GetSchedulePlanBackgroundJobLogModel model, DateTime startDate)
         {
-            var schedulePlanBackgroundJobLog = new SchedulePlanBackgroundJobLog
+            var schedulePlanBackgroundJobLog = new SchedulePlanLog
             {
                 CompanyId = model.CompanyId,
                 IsActive = true,
@@ -396,7 +396,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
 
             foreach (var employee in employees)
             {
-                schedulePlanBackgroundJobLog.SchedulePlanBackgroundJobLogEmployees.Add(new SchedulePlanBackgroundJobLogEmployee
+                schedulePlanBackgroundJobLog.SchedulePlanLogEmployees.Add(new SchedulePlanLogEmployee
                 {
                     EmployeeId = employee.Id,
                     OldScheduleId = employee.ScheduleId,
@@ -407,7 +407,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
             }
 
             schedulePlanBackgroundJobLog.FinishDate = DateTime.UtcNow;
-            repositoryManager.SchedulePlanBackgroundJobLogRepository.Insert(schedulePlanBackgroundJobLog);
+            repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanBackgroundJobLog);
             await unitOfWork.SaveAsync();
         }
         public async Task<GetSchedulePlansInformationsResponseDTO> GetSchedulePlansInformations()

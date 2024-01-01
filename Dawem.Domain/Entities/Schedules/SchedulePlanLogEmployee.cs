@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Schedules
 {
-    [Table(nameof(SchedulePlanBackgroundJobLogEmployee) + LeillaKeys.S)]
-    public class SchedulePlanBackgroundJobLogEmployee : BaseEntity
+    [Table(nameof(SchedulePlanLogEmployee) + LeillaKeys.S)]
+    public class SchedulePlanLogEmployee : BaseEntity
     {
         #region Foregn Keys
 
         public int SchedulePlanBackgroundJobLogId { get; set; }
         [ForeignKey(nameof(SchedulePlanBackgroundJobLogId))]
-        public SchedulePlanBackgroundJobLog SchedulePlanBackgroundJobLog { get; set; }
+        public SchedulePlanLog SchedulePlanBackgroundJobLog { get; set; }
         public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }

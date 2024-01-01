@@ -207,9 +207,9 @@ namespace Dawem.Data
                .WithOne(b => b.SchedulePlanDepartment)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanBackgroundJobLogEmployee>()
+            builder.Entity<SchedulePlanLogEmployee>()
                .HasOne(p => p.SchedulePlanBackgroundJobLog)
-               .WithMany(b => b.SchedulePlanBackgroundJobLogEmployees)
+               .WithMany(b => b.SchedulePlanLogEmployees)
                .HasForeignKey(p => p.SchedulePlanBackgroundJobLogId)
                .OnDelete(DeleteBehavior.Cascade);
 
@@ -281,8 +281,8 @@ namespace Dawem.Data
         public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }
         public DbSet<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<SchedulePlanBackgroundJobLog> SchedulePlanBackgroundJobLogs { get; set; }
-        public DbSet<SchedulePlanBackgroundJobLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
+        public DbSet<SchedulePlanLog> SchedulePlanBackgroundJobLogs { get; set; }
+        public DbSet<SchedulePlanLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }

@@ -41,7 +41,7 @@ namespace Dawem.Contract.Repository.Manager
         ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository { get; }
         ISchedulePlanGroupRepository SchedulePlanGroupRepository { get; }
         ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository { get; }
-        ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository { get; }
+        ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository { get; }
         ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository { get; }
         IEmployeeAttendanceRepository EmployeeAttendanceRepository { get; }
         IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository { get; }

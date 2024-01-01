@@ -18,7 +18,7 @@ using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Dtos.Requests.Permissions;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Dtos.Requests.Vacations;
-using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Models.Dtos.Schedules.SchedulePlanLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
@@ -74,7 +74,7 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetSchedulePlanBackgroundJobLogsCriteriaValidator : AbstractValidator<GetSchedulePlanBackgroundJobLogsCriteria>
+    public class GetSchedulePlanBackgroundJobLogsCriteriaValidator : AbstractValidator<GetSchedulePlanLogCriteria>
     {
         public GetSchedulePlanBackgroundJobLogsCriteriaValidator()
         {

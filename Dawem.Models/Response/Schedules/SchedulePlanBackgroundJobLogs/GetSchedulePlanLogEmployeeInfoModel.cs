@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
 {
-    public class GetSchedulePlanBackgroundJobLogEmployeeInfoModel
+    public class GetSchedulePlanLogEmployeeInfoModel
     {
         public string EmployeeName { get; set; }
         public string OldScheduleName { get; set; }

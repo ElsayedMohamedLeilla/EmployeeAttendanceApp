@@ -18,7 +18,7 @@ namespace Dawem.Repository.Others
         }
         public IQueryable<Permission> GetAsQueryable(GetPermissionsCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted);
+            var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted && a.IsActive);
             var inner = PredicateBuilder.New<Permission>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

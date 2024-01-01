@@ -28,8 +28,7 @@ namespace Dawem.API.Controllers.Permissions
         {
             #region Set All Screens Available Actions
 
-            APIHelper.AllScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions == null ?
-                ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo) : APIHelper.AllScreensWithAvailableActions;
+            APIHelper.AllScreensWithAvailableActions ??= ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
 
             #endregion
 
@@ -41,8 +40,7 @@ namespace Dawem.API.Controllers.Permissions
         {
             #region Set All Screens Available Actions
 
-            APIHelper.AllScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions == null ?
-                ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo) : APIHelper.AllScreensWithAvailableActions;
+            APIHelper.AllScreensWithAvailableActions ??= ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
 
             #endregion
 
@@ -57,7 +55,6 @@ namespace Dawem.API.Controllers.Permissions
                 return BadRequest();
             }
             var response = await permissionBL.Get(criteria);
-
             return Success(response.Permissions, response.TotalCount);
         }
         [HttpGet]

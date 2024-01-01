@@ -192,13 +192,13 @@ namespace Dawem.BusinessLogic.Permissions
 
             #region Handle Response
 
-            var permissionsList = await queryPaged.Select(e => new GetPermissionsResponseModel
+            var permissionsList = await queryPaged.Select(p => new GetPermissionsResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                RoleName = TranslationHelper.GetTranslation(e.Role.Name, requestInfo.Lang),
-                AllowedScreensCount = e.PermissionScreens.Count,
-                IsActive = e.IsActive,
+                Id = p.Id,
+                Code = p.Code,
+                RoleName = TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang),
+                AllowedScreensCount = p.PermissionScreens.Count,
+                IsActive = p.IsActive,
             }).ToListAsync();
             return new GetPermissionsResponse
             {
@@ -210,11 +210,12 @@ namespace Dawem.BusinessLogic.Permissions
         }
         public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
-            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == permissionId && !e.IsDeleted)
+            var permission = await repositoryManager.PermissionRepository.Get(permission => permission.Id == permissionId
+            && !permission.IsDeleted && permission.IsActive)
                 .Select(p => new GetPermissionInfoResponseModel
                 {
                     Code = p.Code,
-                    RoleName = p.Role.Name,
+                    RoleName = TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang),
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
@@ -232,7 +233,8 @@ namespace Dawem.BusinessLogic.Permissions
         }
         public async Task<GetPermissionByIdResponseModel> GetById(int permissionId)
         {
-            var permission = await repositoryManager.PermissionRepository.Get(e => e.Id == permissionId && !e.IsDeleted)
+            var permission = await repositoryManager.PermissionRepository
+                .Get(permission => permission.Id == permissionId && !permission.IsDeleted && permission.IsActive)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
                     Id = p.Id,

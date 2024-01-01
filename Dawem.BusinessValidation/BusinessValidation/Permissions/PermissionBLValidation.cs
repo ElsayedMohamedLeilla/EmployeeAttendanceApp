@@ -21,11 +21,25 @@ namespace Dawem.Validation.BusinessValidation.Permissions
         }
         public async Task<bool> CreateValidation(CreatePermissionModel model)
         {
-            var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.RoleId == model.RoleId).AnyAsync();
-            if (checkPermissionDuplicate)
+            if (model.RoleId != null)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                var checkPermissionDuplicate = await repositoryManager
+                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                c.RoleId == model.RoleId).AnyAsync();
+                if (checkPermissionDuplicate)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                }
+            }
+            else if (model.UserId != null)
+            {
+                var checkPermissionDuplicate = await repositoryManager
+                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                c.UserId == model.UserId).AnyAsync();
+                if (checkPermissionDuplicate)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionUserIsDuplicated);
+                }
             }
 
             #region Validate Available Actions
@@ -38,13 +52,27 @@ namespace Dawem.Validation.BusinessValidation.Permissions
         }
         public async Task<bool> UpdateValidation(UpdatePermissionModel model)
         {
-            var checkPermissionDuplicate = await repositoryManager
+            if (model.RoleId != null)
+            {
+                var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
                 c.RoleId == model.RoleId && c.Id != model.Id).AnyAsync();
-            if (checkPermissionDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                if (checkPermissionDuplicate)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                }
             }
+            else if(model.UserId != null)
+            {
+                var checkPermissionDuplicate = await repositoryManager
+                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                c.UserId == model.UserId && c.Id != model.Id).AnyAsync();
+                if (checkPermissionDuplicate)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionUserIsDuplicated);
+                }
+            }
+
 
             #region Validate Available Actions
 

@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Permissions.Permissions;
+﻿using Dawem.Enums.Permissions;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Translations;
 using FluentValidation;
 
@@ -8,8 +9,24 @@ namespace Dawem.Validation.FluentValidation.Permissons
     {
         public CreatePermissionModelValidator()
         {
+            RuleFor(model => model.ForType).IsInEnum()
+                .WithMessage(LeillaKeys.SorryChooseCorrectTypeToApplyPermission);
+
             RuleFor(model => model.RoleId).GreaterThan(0)
-                .WithMessage(LeillaKeys.SorryYouMustChooseRoleForPermission);
+                .When(m => m.ForType == ForRoleOrUser.Role)
+                .WithMessage(LeillaKeys.SorryYouMustChooseRoleForPermissionWithTypeRole);
+
+            RuleFor(model => model.RoleId).Null()
+                .When(m => m.ForType == ForRoleOrUser.User)
+                .WithMessage(LeillaKeys.SorryYouMustNotChooseRoleForPermissionWithTypeUser);
+
+            RuleFor(model => model.UserId).GreaterThan(0)
+                .When(m => m.ForType == ForRoleOrUser.User)
+                .WithMessage(LeillaKeys.SorryYouMustChooseUserForPermissionWithTypeUser);
+
+            RuleFor(model => model.UserId).Null()
+               .When(m => m.ForType == ForRoleOrUser.Role)
+               .WithMessage(LeillaKeys.SorryYouMustNotChooseUserForPermissionWithTypeRole);
 
             RuleFor(model => model.PermissionScreens)
                 .Must(model => model != null && model.Count > 0)

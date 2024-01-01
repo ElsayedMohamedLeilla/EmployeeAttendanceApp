@@ -13,6 +13,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Dawem.BusinessLogic.Permissions
 {
@@ -95,7 +96,9 @@ namespace Dawem.BusinessLogic.Permissions
 
             if (getPermission != null)
             {
+                getPermission.ForType = model.ForType;
                 getPermission.RoleId = model.RoleId;
+                getPermission.UserId = model.UserId;
                 getPermission.IsActive = model.IsActive;
                 getPermission.ModifiedDate = DateTime.Now;
                 getPermission.ModifyUserId = requestInfo.UserId;
@@ -169,12 +172,10 @@ namespace Dawem.BusinessLogic.Permissions
                 return true;
                 #endregion
             }
-            #endregion
-
             else
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
-
+            #endregion
         }
         public async Task<GetPermissionsResponse> Get(GetPermissionsCriteria criteria)
         {
@@ -196,7 +197,8 @@ namespace Dawem.BusinessLogic.Permissions
             {
                 Id = p.Id,
                 Code = p.Code,
-                RoleName = TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang),
+                ForType = p.ForType,
+                ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
                 AllowedScreensCount = p.PermissionScreens.Count,
                 IsActive = p.IsActive,
             }).ToListAsync();
@@ -215,7 +217,10 @@ namespace Dawem.BusinessLogic.Permissions
                 .Select(p => new GetPermissionInfoResponseModel
                 {
                     Code = p.Code,
-                    RoleName = TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang),
+                    ForType = p.ForType,
+                    ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
+                    RoleName = p.Role != null ? TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang) : null,
+                    UserName = p.User != null ? TranslationHelper.GetTranslation(p.User.Name, requestInfo.Lang) : null,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
@@ -239,6 +244,8 @@ namespace Dawem.BusinessLogic.Permissions
                 {
                     Id = p.Id,
                     Code = p.Code,
+                    ForType = p.ForType,
+                    UserId = p.UserId,
                     RoleId = p.RoleId,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
@@ -283,30 +290,52 @@ namespace Dawem.BusinessLogic.Permissions
         {
             var permissionRepository = repositoryManager.PermissionRepository;
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
-            var userRepository = repositoryManager.UserRepository;
+            var userRoleRepository = repositoryManager.UserRoleRepository;
 
-            var getUserRoles = await userRepository.Get(u => !u.IsDeleted && u.Id == model.UserId)
-                .Select(u => new { UserRoles = u.UserRoles.Select(ur => ur.RoleId) })
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+            var isUserHasPermission = await repositoryManager.PermissionRepository
+                .Get(p => !p.IsDeleted && p.IsActive &&
+                p.CompanyId == requestInfo.CompanyId && p.UserId == model.UserId).AnyAsync();
 
-            var roles = getUserRoles.UserRoles.Select(roleId => roleId).ToList();
-
-            if (roles != null && roles.Count > 0)
+            if (isUserHasPermission)
             {
                 var checkIfHasPermission = await permissionScreenActionRepository
-                    .Get(p => !p.IsDeleted && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
+                    .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
                     p.PermissionScreen.Permission.CompanyId == requestInfo.CompanyId &&
                     p.PermissionScreen.ScreenCode == model.ScreenCode
-                     && p.ActionCode == model.ActionCode && roles.Contains(p.PermissionScreen.Permission.RoleId))
+                     && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.UserId == model.UserId)
                     .AnyAsync();
 
                 if (!checkIfHasPermission)
                 {
-                    var checkIfHasAnyPermissino = await permissionRepository
-                        .Get(p => !p.IsDeleted && roles.Contains(p.RoleId)).AnyAsync();
-                    if (checkIfHasAnyPermissino)
+                    return false;
+                }
+            }
+            else
+            {
+                var getUserRolesIds = await userRoleRepository
+                    .Get(u => u.UserId == model.UserId)
+                    .Select(ur => ur.RoleId)
+                    .ToListAsync();
+
+                if (getUserRolesIds != null && getUserRolesIds.Count > 0)
+                {
+                    var isRolesHasPermission = await repositoryManager.PermissionRepository
+                    .Get(p => !p.IsDeleted && p.IsActive &&
+                    p.CompanyId == requestInfo.CompanyId && p.RoleId > 0 && getUserRolesIds.Contains(p.RoleId.Value)).AnyAsync();
+
+                    if (isRolesHasPermission)
                     {
-                        return false;
+                        var checkIfHasPermission = await permissionScreenActionRepository
+                            .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
+                            p.PermissionScreen.Permission.CompanyId == requestInfo.CompanyId &&
+                            p.PermissionScreen.ScreenCode == model.ScreenCode
+                            && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.RoleId > 0
+                            && getUserRolesIds.Contains(p.PermissionScreen.Permission.RoleId.Value)).AnyAsync();
+
+                        if (!checkIfHasPermission)
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -319,19 +348,18 @@ namespace Dawem.BusinessLogic.Permissions
             var currentUserId = model?.UserId ?? requestInfo.UserId;
             var currentCompanyId = model?.CompanyId ?? requestInfo.CompanyId;
             var lang = requestInfo.Lang;
+            var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
 
-            var userRoleRepository = repositoryManager.UserRoleRepository;
-            var getUserRolesIds = await userRoleRepository
-                .Get(u => u.UserId == currentUserId)
-                .Select(ur => ur.RoleId)
-                .ToListAsync();
+            var isUserHasPermission = await repositoryManager.PermissionRepository
+               .Get(p => !p.IsDeleted && p.IsActive &&
+               p.CompanyId == currentCompanyId && p.UserId == currentUserId).AnyAsync();
 
-            if (getUserRolesIds != null && getUserRolesIds.Count > 0)
+            if (isUserHasPermission)
             {
-                var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
+                
                 var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                 && ps.Permission.CompanyId == currentCompanyId &&
-                getUserRolesIds.Contains(ps.Permission.RoleId))
+                ps.Permission.UserId == currentUserId)
                     .GroupBy(ps => ps.ScreenCode)
                     .Select(g => new PermissionScreenResponseWithNamesModel
                     {
@@ -347,6 +375,43 @@ namespace Dawem.BusinessLogic.Permissions
 
                 resonse = getRolesPermissions;
             }
+            else
+            {
+                var userRoleRepository = repositoryManager.UserRoleRepository;
+                var getUserRolesIds = await userRoleRepository
+                    .Get(u => u.UserId == currentUserId)
+                    .Select(ur => ur.RoleId)
+                    .ToListAsync();
+
+                if (getUserRolesIds != null && getUserRolesIds.Count > 0)
+                {
+                    var isRolesHasPermission = await repositoryManager.PermissionRepository
+                    .Get(p => !p.IsDeleted && p.IsActive &&
+                    p.CompanyId == requestInfo.CompanyId && p.RoleId > 0 && getUserRolesIds.Contains(p.RoleId.Value)).AnyAsync();
+
+                    if (isRolesHasPermission)
+                    {
+                        var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
+                        && ps.Permission.CompanyId == currentCompanyId &&
+                        ps.Permission.RoleId > 0 && getUserRolesIds.Contains(ps.Permission.RoleId.Value))
+                        .GroupBy(ps => ps.ScreenCode)
+                        .Select(g => new PermissionScreenResponseWithNamesModel
+                        {
+                            ScreenCode = g.First().ScreenCode,
+                            ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, lang),
+                            PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
+                            .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
+                            {
+                                ActionCode = g.First().ActionCode,
+                                ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
+                            }).OrderBy(a => a.ActionCode).ToList()
+                        }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+
+                        resonse = getRolesPermissions;
+                    }                   
+                }
+            }
+            
             return resonse;
         }
     }

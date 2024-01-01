@@ -448,6 +448,13 @@
         public const string SorryChosenActionNotAvailableForChosenScreen = "Sorry!!ChosenActionNotAvailableForChosenScreen!";
         public const string ScreenName = "ScreenName:";
         public const string ActionName = "ActionName:";
-
+        public const string PermissionForType = "PermissionForType";
+        public const string SorryChooseCorrectTypeToApplyPermission = "Sorry!!ChooseCorrectTypeToApplyPermission!";
+        public const string SorryYouMustChooseRoleForPermissionWithTypeRole = "Sorry!!YouMustChooseRoleForPermissionWithTypeRole!";
+        public const string SorryYouMustChooseUserForPermissionWithTypeUser = "Sorry!!YouMustChooseUserForPermissionWithTypeUser!";
+        public const string SorryYouMustNotChooseRoleForPermissionWithTypeUser = "Sorry!!YouMustNotChooseRoleForPermissionWithTypeUser!";
+        public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
+        public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";      
     }
+    
 }

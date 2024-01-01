@@ -112,7 +112,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlanLogs
 
             var schedulePlanLogEmployeeRepository = repositoryManager.SchedulePlanLogEmployeeRepository;
             var query = schedulePlanLogEmployeeRepository
-                .Get(e=>e.IsDeleted && e.SchedulePlanLogId == model.SchedulePlanLogId);
+                .Get(e=> !e.IsDeleted && e.SchedulePlanLogId == model.SchedulePlanLogId);
 
             #region paging
 

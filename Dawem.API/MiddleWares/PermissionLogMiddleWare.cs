@@ -62,7 +62,7 @@ namespace Dawem.API.MiddleWares
                     };
 
                     permissionLogRepository.Insert(permissionLog);
-                    await unitOfWork.SaveAsync();
+                    _ = unitOfWork.SaveAsync();
                 }
             }
         }

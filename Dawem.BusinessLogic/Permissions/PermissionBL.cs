@@ -13,7 +13,6 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Dawem.BusinessLogic.Permissions
 {
@@ -356,7 +355,7 @@ namespace Dawem.BusinessLogic.Permissions
 
             if (isUserHasPermission)
             {
-                
+
                 var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                 && ps.Permission.CompanyId == currentCompanyId &&
                 ps.Permission.UserId == currentUserId)
@@ -408,10 +407,10 @@ namespace Dawem.BusinessLogic.Permissions
                         }).OrderBy(ps => ps.ScreenCode).ToListAsync();
 
                         resonse = getRolesPermissions;
-                    }                   
+                    }
                 }
             }
-            
+
             return resonse;
         }
     }

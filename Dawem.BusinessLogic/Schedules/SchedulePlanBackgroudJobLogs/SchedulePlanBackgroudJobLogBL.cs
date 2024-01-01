@@ -44,10 +44,13 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlanBackgroudJobLogs
                     EmployeeName = schedulePlanBackgroundJobLog.SchedulePlan.SchedulePlanEmployee.Employee.Name,
                     GroupName = schedulePlanBackgroundJobLog.SchedulePlan.SchedulePlanGroup.Group.Name,
                     DepartmentName = schedulePlanBackgroundJobLog.SchedulePlan.SchedulePlanDepartment.Department.Name,
-                    DateFrom = schedulePlanBackgroundJobLog.SchedulePlan.DateFrom,
+                    ApplyDate = schedulePlanBackgroundJobLog.StartDate,
+                    ScheduleDateFrom = schedulePlanBackgroundJobLog.SchedulePlan.DateFrom,
                     Notes = schedulePlanBackgroundJobLog.Notes,
                     EmployeesNumberAppliedOn = schedulePlanBackgroundJobLog.SchedulePlanBackgroundJobLogEmployees.Count,
                     EmployeesAppliedOn = schedulePlanBackgroundJobLog.SchedulePlanBackgroundJobLogEmployees
+                    .OrderByDescending(e=>e.Id)
+                    .Take(5)
                     .Select(e => new GetSchedulePlanBackgroundJobLogEmployeeInfoModel
                     {
                         EmployeeName = e.Employee.Name,
@@ -85,8 +88,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlanBackgroudJobLogs
                 Id = schedulePlanBackgroundJobLog.Id,
                 ScheduleName = schedulePlanBackgroundJobLog.SchedulePlan.Schedule.Name,
                 SchedulePlanTypeName = TranslationHelper.GetTranslation(schedulePlanBackgroundJobLog.SchedulePlan.SchedulePlanType.ToString(), requestInfo.Lang),
-                StartDate = schedulePlanBackgroundJobLog.StartDate,
-                FinishDate = schedulePlanBackgroundJobLog.FinishDate,
+                ApplyDate = schedulePlanBackgroundJobLog.StartDate,
                 EmployeesNumberAppliedOn = schedulePlanBackgroundJobLog.SchedulePlanBackgroundJobLogEmployees.Count
             }).ToListAsync();
 

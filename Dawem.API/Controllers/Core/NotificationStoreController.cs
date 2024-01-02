@@ -55,7 +55,7 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await notificationStoreBL.Disable(model));
         }
-        [HttpGet]
+        [HttpPut]
         public async Task<ActionResult> MarkAsRead(int notificationStoreId)
         {
             if (notificationStoreId < 1)
@@ -64,7 +64,7 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await notificationStoreBL.MarkAsRead(notificationStoreId));
         }
-
+        [HttpGet]
         public async Task<ActionResult> GetNotificationsByUserId(int userId)
         {
             if (userId < 1)
@@ -73,7 +73,7 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await notificationStoreBL.GetNotificationsByUserId(userId));
         }
-
+        [HttpGet]
         public async Task<ActionResult> GetUnreadNotificationCount(int userId)
         {
             if (userId < 1)

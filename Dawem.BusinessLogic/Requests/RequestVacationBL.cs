@@ -50,7 +50,7 @@ namespace Dawem.BusinessLogic.Requests
             mapper = _mapper;
             requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
-            _hubContext = hubContext;
+            hubContext =_hubContext ;
         }
         public async Task<int> Create(CreateRequestVacationDTO model)
         {
@@ -131,8 +131,12 @@ namespace Dawem.BusinessLogic.Requests
             #region Fire Notification
             int ManagerId = repositoryManager.EmployeeRepository.Get(e => e.Id == request.EmployeeId)
                             .Select(o=> o.DirectManagerId).FirstOrDefault() ?? 0;
-            await hubContext.Clients.User(ManagerId.ToString())
-                       .SendAsync("ReceiveVacationRequest", request.Employee.Name, model.DateFrom, model.DateTo);
+            if(ManagerId > 0)  
+            {
+                await hubContext.Clients.User(ManagerId.ToString())
+                      .SendAsync("ReceiveVacationRequest", request.Employee.Name, model.DateFrom, model.DateTo);
+            }
+           
 
             #endregion
 

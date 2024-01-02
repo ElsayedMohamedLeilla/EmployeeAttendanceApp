@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogic.SignalR;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
@@ -17,6 +18,7 @@ using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Vacations;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Requests
@@ -30,13 +32,16 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         private readonly IRequestBLValidation requestBLValidation;
+        private readonly IHubContext<NotificationHub> hubContext;
+
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IRequestBLValidation _requestBLValidation,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestVacationBLValidation _requestVacationBLValidation)
+           IRequestVacationBLValidation _requestVacationBLValidation,
+           IHubContext<NotificationHub> _hubContext)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -45,6 +50,7 @@ namespace Dawem.BusinessLogic.Requests
             mapper = _mapper;
             requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
+            _hubContext = hubContext;
         }
         public async Task<int> Create(CreateRequestVacationDTO model)
         {
@@ -120,6 +126,13 @@ namespace Dawem.BusinessLogic.Requests
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
+
+            #endregion
+            #region Fire Notification
+            int ManagerId = repositoryManager.EmployeeRepository.Get(e => e.Id == request.EmployeeId)
+                            .Select(o=> o.DirectManagerId).FirstOrDefault() ?? 0;
+            await hubContext.Clients.User(ManagerId.ToString())
+                       .SendAsync("ReceiveVacationRequest", request.Employee.Name, model.DateFrom, model.DateTo);
 
             #endregion
 

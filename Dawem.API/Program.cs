@@ -2,6 +2,7 @@ using Dawem.API;
 using Dawem.API.MiddleWares;
 using Dawem.BusinessLogic;
 using Dawem.BusinessLogic.Localization;
+using Dawem.BusinessLogic.SignalR;
 using Dawem.BusinessLogicCore;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -120,6 +121,7 @@ builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
 }, typeof(AutoMapperConfig));
 
+builder.Services.AddSignalR();
 WebApplication app = builder.Build();
 IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()
     .CreateScope();
@@ -174,8 +176,8 @@ app.UseRequestLocalization(requestLocalizationOptions);
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseMiddleware<PermissionMiddleWare>();
-//app.UseMiddleware<UserScreenActionPermissionMiddleWare>();
-
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub");
 app.Run();
 

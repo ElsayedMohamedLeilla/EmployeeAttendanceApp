@@ -100,10 +100,14 @@
         public const string DhualQidah  ="DhualQidah";
         public const string DhualHijjah  = "DhualHijjah";
         public const string InvalidMonthNumber = "InvalidMonthNumber";
-
         public const string Ended = "Ended";
         public const string WillStart = "WillStart";
         public const string Started = "Started";
+
+
+        public const string SorryNotificationNotFound = "SorryNotificationNotFound";
+
+        
 
 
 

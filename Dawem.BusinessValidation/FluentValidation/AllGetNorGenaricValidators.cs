@@ -10,13 +10,15 @@ using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Models.Dtos.Employees.TaskTypes;
 using Dawem.Models.Dtos.Employees.Users;
+using Dawem.Models.Dtos.Permissions.PermissionLogs;
+using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Assignments;
 using Dawem.Models.Dtos.Requests.Justifications;
 using Dawem.Models.Dtos.Requests.Permissions;
 using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Dtos.Requests.Vacations;
-using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Models.Dtos.Schedules.SchedulePlanLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
@@ -72,9 +74,16 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetSchedulePlanBackgroundJobLogsCriteriaValidator : AbstractValidator<GetSchedulePlanBackgroundJobLogsCriteria>
+    public class GetSchedulePlanBackgroundJobLogsCriteriaValidator : AbstractValidator<GetSchedulePlanLogCriteria>
     {
         public GetSchedulePlanBackgroundJobLogsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSchedulePlanLogEmployeesCriteriaValidator : AbstractValidator<GetSchedulePlanLogEmployeesCriteria>
+    {
+        public GetSchedulePlanLogEmployeesCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }
@@ -177,7 +186,14 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetScreenPermissionLogsCriteriaValidator : AbstractValidator<GetScreenPermissionLogsCriteria>
+    public class GetPermissionsCriteriaValidator : AbstractValidator<GetPermissionsCriteria>
+    {
+        public GetPermissionsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetScreenPermissionLogsCriteriaValidator : AbstractValidator<GetPermissionLogsCriteria>
     {
         public GetScreenPermissionLogsCriteriaValidator()
         {

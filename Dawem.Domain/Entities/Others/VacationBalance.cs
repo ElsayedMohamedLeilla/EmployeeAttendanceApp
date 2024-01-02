@@ -23,7 +23,7 @@ namespace Dawem.Domain.Entities.Others
         public int Code { get; set; }
         public int Year { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public VacationType VacationType { get; set; }
+        public DefaultVacationType DefaultVacationType { get; set; }
         public float Balance { get; set; }
         public float RemainingBalance { get; set; }
     }

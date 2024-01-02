@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others;
@@ -77,7 +77,6 @@ namespace Dawem.API.MiddleWares.Helpers
 
                 response.Screens.Add(screensWithAvailableActionsDTO);
             }
-
             return response;
         }
         public static List<ApplicationAction> GetScreenAvailableActions(ApplicationScreenCode screen)

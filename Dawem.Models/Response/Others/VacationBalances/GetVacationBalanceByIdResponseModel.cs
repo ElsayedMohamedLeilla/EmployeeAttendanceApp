@@ -8,7 +8,7 @@ namespace Dawem.Models.Response.Others.VacationBalances
         public int EmployeeId { get; set; }
         public int Code { get; set; }
         public int Year { get; set; }
-        public VacationType VacationType { get; set; }
+        public DefaultVacationType DefaultVacationType { get; set; }
         public float Balance { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }

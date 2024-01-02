@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidation.VacationBalances
                 c.CompanyId == requestInfo.CompanyId
                 && c.EmployeeId == model.EmployeeId
                 && c.Year == model.Year
-                && c.VacationType == model.VacationType).AnyAsync();
+                && c.DefaultVacationType == model.DefaultVacationType).AnyAsync();
 
             if (checkVacationBalanceDuplicate)
             {
@@ -42,7 +42,7 @@ namespace Dawem.Validation.BusinessValidation.VacationBalances
                c.CompanyId == requestInfo.CompanyId
                && c.EmployeeId == model.EmployeeId
                && c.Year == model.Year
-               && c.VacationType == model.VacationType).AnyAsync();
+               && c.DefaultVacationType == model.DefaultVacationType).AnyAsync();
 
             if (checkVacationBalanceDuplicate)
             {

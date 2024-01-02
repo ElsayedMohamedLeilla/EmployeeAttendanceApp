@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -8,6 +9,7 @@ using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Providers;
@@ -40,10 +42,12 @@ namespace Dawem.BusinessLogic.Provider
         private readonly LinkGenerator generator;
         private readonly IAccountBLValidation accountBLValidation;
         private readonly IRepositoryManager repositoryManager;
+        private readonly IPermissionBL permissionBL;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
+            IPermissionBL _permissionBL,
            RequestInfo _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
            LinkGenerator _generator, IAccountBLValidation _registerationValidatorBL)
@@ -54,6 +58,7 @@ namespace Dawem.BusinessLogic.Provider
             jwt = _appSettings.Value;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
+            permissionBL = _permissionBL;
             accessor = _accessor;
             generator = _generator;
             accountBLValidation = _registerationValidatorBL;
@@ -306,6 +311,10 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
+
+            tokenData.AvailablePermissions = signInModel.ApplicationType == Enums.Generals.ApplicationType.Web ?
+              await permissionBL.GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId , UserId = user.Id }) : null;
+
             return tokenData;
         }
         public async Task<TokenDto> GetTokenModel(TokenModel criteria)
@@ -361,7 +370,8 @@ namespace Dawem.BusinessLogic.Provider
 
             TokenDto tokenModel = new()
             {
-                Token = token
+                Token = token,
+                UserId = userId ?? 0
             };
 
             #endregion

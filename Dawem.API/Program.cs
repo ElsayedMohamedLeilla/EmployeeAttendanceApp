@@ -175,8 +175,10 @@ app.UseAuthorization();
 app.UseRequestLocalization(requestLocalizationOptions);
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseMiddleware<PermissionMiddleWare>();
-app.MapControllers();
+//app.UseMiddleware<PermissionMiddleWare>();
+app.UseMiddleware<PermissionLogMiddleWare>();
+
+//app.UseMiddleware<UserScreenActionPermissionMiddleWare>();
 
 app.MapHub<NotificationHub>("/notificationHub");
 app.Run();

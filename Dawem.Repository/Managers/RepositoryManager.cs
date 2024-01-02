@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Contract.Repository.Others;
+using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
@@ -42,7 +43,7 @@ namespace Dawem.Repository.Managers
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
-        private IScreenPermissionLogRepository screenPermissionLogRepository;
+        private IPermissionLogRepository permissionLogRepository;
         private IPermissionRepository permissionRepository;
         private IPermissionScreenRepository permissionScreenRepository;
         private IPermissionScreenActionRepository permissionScreenActionRepository;
@@ -112,13 +113,13 @@ namespace Dawem.Repository.Managers
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IPermissionRepository PermissionRepository =>
-         permissionRepository ??= new PermissionRepository(unitOfWork);
+         permissionRepository ??= new PermissionRepository(unitOfWork, requestInfo);
         public IPermissionScreenRepository PermissionScreenRepository =>
          permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
         public IPermissionScreenActionRepository PermissionScreenActionRepository =>
          permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
-        public IScreenPermissionLogRepository ScreenPermissionLogRepository =>
-         screenPermissionLogRepository ??= new ScreenPermissionLogRepository(unitOfWork, requestInfo);
+        public IPermissionLogRepository PermissionLogRepository =>
+         permissionLogRepository ??= new PermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IBranchRepository BranchRepository =>
@@ -167,9 +168,9 @@ namespace Dawem.Repository.Managers
         schedulePlanGroupRepository ??= new SchedulePlanGroupRepository(unitOfWork, generalSetting);
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
-        public ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository =>
+        public ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository =>
          schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting);
-        public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository =>
+        public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
         public IGroupEmployeeRepository GroupEmployeeRepository =>
         groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);

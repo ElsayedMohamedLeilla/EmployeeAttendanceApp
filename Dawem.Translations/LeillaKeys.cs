@@ -303,7 +303,7 @@
         public const string SorrySchedulePlanNotFound = "Sorry!!SchedulePlanNotFound!";
         public const string DoneCreateSchedulePlanSuccessfully = "DoneCreateSchedulePlanSuccessfully";
         public const string DoneUpdateSchedulePlanSuccessfully = "DoneUpdateSchedulePlanSuccessfully";
-        public const string SorrySchedulePlanBackgroundJobLogNotFound = "Sorry!!SchedulePlanBackgroundJobLogNotFound!";
+        public const string SorrySchedulePlanLogNotFound = "Sorry!!SchedulePlanLogNotFound!";
         public const string SorryThereIsNoCompanyWithEnteredCode = "Sorry!!ThereIsNoCompanyWithEnteredCode!";
         public const string SorryCannotFindTheCompany = "Sorry!!CannotFindTheCompany!";
         public const string SorryYouMustEnterCompanyCode = "Sorry!!YouMustEnterCompanyCode!";
@@ -431,10 +431,30 @@
         public const string Reject = "Reject";
         public const string Enable = "Enable";
         public const string Disable = "Disable";
-        public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission!";
+        public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";
-        
-
-
+        public const string SorryYouMustChooseRoleForPermission = "Sorry!!YouMustChooseRoleForPermission!";
+        public const string SorryYouMustChooseOneScreenAtLeast = "Sorry!!YouMustChooseOneScreenAtLeast!";
+        public const string SorryYouMustEnterCorrectScreenCode = "Sorry!!YouMustEnterCorrectScreenCode!";
+        public const string SorryYouMustChooseOneActionAtLeast = "Sorry!!YouMustChooseOneActionAtLeast!";
+        public const string SorryYouMustEnterCorrectAction = "Sorry!!YouMustEnterCorrectAction!";
+        public const string SorryYouMustEnterPermissionId = "Sorry!!YouMustEnterPermissionId!";
+        public const string SorryPermissionRoleIsDuplicated = "Sorry!!PermissionRoleIsDuplicated!";
+        public const string SorryPermissionNotFound = "Sorry!!PermissionNotFound!";
+        public const string SorryYouMustNotDuplicateScreens = "Sorry!!YouMustNotDuplicateScreens!";
+        public const string SorryYouMustNotDuplicateScreenActions = "Sorry!!YouMustNotDuplicateScreenActions!";
+        public const string DoneCreatePermissionSuccessfully = "DoneCreatePermissionSuccessfully";
+        public const string DoneUpdatePermissionSuccessfully = "DoneUpdatePermissionSuccessfully";
+        public const string SorryChosenActionNotAvailableForChosenScreen = "Sorry!!ChosenActionNotAvailableForChosenScreen!";
+        public const string ScreenName = "ScreenName:";
+        public const string ActionName = "ActionName:";
+        public const string PermissionForType = "PermissionForType";
+        public const string SorryChooseCorrectTypeToApplyPermission = "Sorry!!ChooseCorrectTypeToApplyPermission!";
+        public const string SorryYouMustChooseRoleForPermissionWithTypeRole = "Sorry!!YouMustChooseRoleForPermissionWithTypeRole!";
+        public const string SorryYouMustChooseUserForPermissionWithTypeUser = "Sorry!!YouMustChooseUserForPermissionWithTypeUser!";
+        public const string SorryYouMustNotChooseRoleForPermissionWithTypeUser = "Sorry!!YouMustNotChooseRoleForPermissionWithTypeUser!";
+        public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
+        public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";      
     }
+    
 }

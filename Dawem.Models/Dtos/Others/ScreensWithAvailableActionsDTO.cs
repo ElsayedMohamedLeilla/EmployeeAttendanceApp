@@ -1,4 +1,4 @@
-﻿using Dawem.Enums.Configration;
+﻿using Dawem.Enums.Permissions;
 
 namespace Dawem.Models.Dtos.Others
 {
@@ -6,10 +6,10 @@ namespace Dawem.Models.Dtos.Others
     {
         public ScreensWithAvailableActionsDTO()
         {
-            AvailableActions = new List<Enums.Configration.ApplicationAction>();
+            AvailableActions = new List<ApplicationAction>();
         }
         public ApplicationScreenCode ScreenCode { get; set; }
         public string ScreenName { get; set; }
-        public List<Enums.Configration.ApplicationAction> AvailableActions { get; set; }
+        public List<ApplicationAction> AvailableActions { get; set; }
     }
 }

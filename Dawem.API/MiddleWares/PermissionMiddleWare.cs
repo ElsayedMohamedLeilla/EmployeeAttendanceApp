@@ -1,5 +1,5 @@
 ﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Others;
+using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
@@ -11,7 +11,6 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Dawem.API.MiddleWares
 {
@@ -44,8 +43,8 @@ namespace Dawem.API.MiddleWares
                     var model = new CheckUserPermissionModel
                     {
                         UserId = userId,
-                        Screen = mapResult.Screen.Value,
-                        Action = mapResult.Method.Value
+                        ScreenCode = mapResult.Screen.Value,
+                        ActionCode = mapResult.Method.Value
                     };
 
                     var checkPermissionResponse = await permissionBL.CheckUserPermission(model);
@@ -62,12 +61,14 @@ namespace Dawem.API.MiddleWares
                             Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouDoNotHavePermission,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.RightBracket +
+                                   requestInfo?.Lang) + LeillaKeys.RightBracket +
+                                   LeillaKeys.Space + 
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Screen.Value.ToString() + LeillaKeys.Screen,
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.RightBracket
+                                   requestInfo?.Lang) + LeillaKeys.RightBracket
                         };
+
                         await Return(unitOfWork, httpContext, statusCode, response);
                     }
                 }

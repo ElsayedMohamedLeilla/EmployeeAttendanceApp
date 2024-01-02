@@ -6,7 +6,7 @@ using Dawem.Models.Generic;
 
 namespace Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs
 {
-    public class SchedulePlanBackgroundJobLogEmployeeRepository : GenericRepository<SchedulePlanBackgroundJobLogEmployee>, ISchedulePlanBackgroundJobLogEmployeeRepository
+    public class SchedulePlanBackgroundJobLogEmployeeRepository : GenericRepository<SchedulePlanLogEmployee>, ISchedulePlanBackgroundJobLogEmployeeRepository
     {
         public SchedulePlanBackgroundJobLogEmployeeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {

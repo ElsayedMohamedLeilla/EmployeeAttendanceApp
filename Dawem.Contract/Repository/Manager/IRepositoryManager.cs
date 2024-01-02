@@ -4,6 +4,7 @@ using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
+using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
@@ -19,7 +20,7 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }
         IPermissionScreenActionRepository PermissionScreenActionRepository { get; }
-        IScreenPermissionLogRepository ScreenPermissionLogRepository { get; }
+        IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
         IBranchRepository BranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
@@ -40,8 +41,8 @@ namespace Dawem.Contract.Repository.Manager
         ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository { get; }
         ISchedulePlanGroupRepository SchedulePlanGroupRepository { get; }
         ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository { get; }
-        ISchedulePlanBackgroundJobLogRepository SchedulePlanBackgroundJobLogRepository { get; }
-        ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository { get; }
+        ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository { get; }
+        ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository { get; }
         IEmployeeAttendanceRepository EmployeeAttendanceRepository { get; }
         IEmployeeAttendanceCheckRepository EmployeeAttendanceCheckRepository { get; }
         IScheduleDayRepository ScheduleDayRepository { get; }

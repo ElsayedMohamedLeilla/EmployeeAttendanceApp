@@ -5,6 +5,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
@@ -206,10 +207,10 @@ namespace Dawem.Data
                .WithOne(b => b.SchedulePlanDepartment)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanBackgroundJobLogEmployee>()
-               .HasOne(p => p.SchedulePlanBackgroundJobLog)
-               .WithMany(b => b.SchedulePlanBackgroundJobLogEmployees)
-               .HasForeignKey(p => p.SchedulePlanBackgroundJobLogId)
+            builder.Entity<SchedulePlanLogEmployee>()
+               .HasOne(p => p.SchedulePlanLog)
+               .WithMany(b => b.SchedulePlanLogEmployees)
+               .HasForeignKey(p => p.SchedulePlanLogId)
                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<GroupEmployee>()
@@ -280,8 +281,8 @@ namespace Dawem.Data
         public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }
         public DbSet<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<SchedulePlanBackgroundJobLog> SchedulePlanBackgroundJobLogs { get; set; }
-        public DbSet<SchedulePlanBackgroundJobLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
+        public DbSet<SchedulePlanLog> SchedulePlanBackgroundJobLogs { get; set; }
+        public DbSet<SchedulePlanLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
@@ -294,7 +295,7 @@ namespace Dawem.Data
         public DbSet<PermissionType> PermissionTypes { get; set; }
         public DbSet<ShiftWorkingTime> ShiftWorkingTimes { get; set; }
         public DbSet<JobTitle> JobTitles { get; set; }
-        public DbSet<ScreenPermissionLog> ScreenPermissionLogs { get; set; }
+        public DbSet<PermissionLog> ScreenPermissionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }

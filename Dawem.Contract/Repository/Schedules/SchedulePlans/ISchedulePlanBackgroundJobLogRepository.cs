@@ -1,11 +1,11 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Models.Dtos.Schedules.SchedulePlanLogs;
 
 namespace Dawem.Contract.Repository.Schedules.SchedulePlans
 {
-    public interface ISchedulePlanBackgroundJobLogRepository : IGenericRepository<SchedulePlanBackgroundJobLog>
+    public interface ISchedulePlanBackgroundJobLogRepository : IGenericRepository<SchedulePlanLog>
     {
-        IQueryable<SchedulePlanBackgroundJobLog> GetAsQueryable(GetSchedulePlanBackgroundJobLogsCriteria criteria);
+        IQueryable<SchedulePlanLog> GetAsQueryable(GetSchedulePlanLogCriteria criteria);
     }
 }

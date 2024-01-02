@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
 {
-    public class GetSchedulePlanBackgroundJobLogModel
+    public class GetSchedulePlanLogModel
     {
         public int CompanyId { get; set; }
         public int SchedulePlanId { get; set; }

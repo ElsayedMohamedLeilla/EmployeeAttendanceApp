@@ -315,7 +315,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                 var utcDate = DateTime.UtcNow.Date;
                 var getNextSchedulePlans = await repositoryManager.SchedulePlanRepository.Get(p => !p.IsDeleted && p.IsActive &&
                 p.DateFrom.Date == utcDate)
-                    .Select(p => new GetSchedulePlanBackgroundJobLogModel
+                    .Select(p => new GetSchedulePlanLogModel
                     {
                         CompanyId = p.CompanyId,
                         SchedulePlanId = p.Id,
@@ -341,7 +341,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                                     .GetEntityByConditionWithTrackingAsync(e => !e.IsDeleted && e.Id == employeeId);
                                 if (getEmployee != null)
                                 {
-                                    await HandleSchedulePlanBackgroundJobEmployee(new List<Employee> { getEmployee }, nextSchedulePlan, startDate);
+                                    await HandleSchedulePlanLogEmployee(new List<Employee> { getEmployee }, nextSchedulePlan, startDate);
                                 }
 
                                 break;
@@ -354,7 +354,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                                     .ToListAsync();
                                 if (getEmployeesByGroup != null && getEmployeesByGroup.Count > 0)
                                 {
-                                    await HandleSchedulePlanBackgroundJobEmployee(getEmployeesByGroup, nextSchedulePlan, startDate);
+                                    await HandleSchedulePlanLogEmployee(getEmployeesByGroup, nextSchedulePlan, startDate);
                                 }
 
                                 break;
@@ -366,7 +366,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                                     .ToListAsync();
                                 if (getEmployeesByDepartment != null && getEmployeesByDepartment.Count > 0)
                                 {
-                                    await HandleSchedulePlanBackgroundJobEmployee(getEmployeesByDepartment, nextSchedulePlan, startDate);
+                                    await HandleSchedulePlanLogEmployee(getEmployeesByDepartment, nextSchedulePlan, startDate);
                                 }
 
                                 break;
@@ -383,9 +383,9 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
 
             }
         }
-        public async Task HandleSchedulePlanBackgroundJobEmployee(List<Employee> employees, GetSchedulePlanBackgroundJobLogModel model, DateTime startDate)
+        public async Task HandleSchedulePlanLogEmployee(List<Employee> employees, GetSchedulePlanLogModel model, DateTime startDate)
         {
-            var schedulePlanBackgroundJobLog = new SchedulePlanLog
+            var schedulePlanLog = new SchedulePlanLog
             {
                 CompanyId = model.CompanyId,
                 IsActive = true,
@@ -396,7 +396,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
 
             foreach (var employee in employees)
             {
-                schedulePlanBackgroundJobLog.SchedulePlanLogEmployees.Add(new SchedulePlanLogEmployee
+                schedulePlanLog.SchedulePlanLogEmployees.Add(new SchedulePlanLogEmployee
                 {
                     EmployeeId = employee.Id,
                     OldScheduleId = employee.ScheduleId,
@@ -406,8 +406,8 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                 employee.ScheduleId = model.ScheduleId;
             }
 
-            schedulePlanBackgroundJobLog.FinishDate = DateTime.UtcNow;
-            repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanBackgroundJobLog);
+            schedulePlanLog.FinishDate = DateTime.UtcNow;
+            repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanLog);
             await unitOfWork.SaveAsync();
         }
         public async Task<GetSchedulePlansInformationsResponseDTO> GetSchedulePlansInformations()

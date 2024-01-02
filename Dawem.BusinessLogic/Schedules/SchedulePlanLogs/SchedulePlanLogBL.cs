@@ -101,40 +101,46 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlanLogs
             #endregion
 
         }
-        public async Task<GetSchedulePlanLogsResponse> GetEmployees(GetSchedulePlanLogCriteria criteria)
+        public async Task<GetSchedulePlanLogEmployeesResponse> GetSchedulePlanLogEmployees(GetSchedulePlanLogEmployeesCriteria model)
         {
-            var schedulePlanLogRepository = repositoryManager.SchedulePlanLogRepository;
-            var query = schedulePlanLogRepository.GetAsQueryable(criteria);
+            #region Validation
 
-            #region paging
-
-            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-            int take = PagingHelper.Take(criteria.PageSize);
-
-            #region sorting
-
-            var queryOrdered = schedulePlanLogRepository.OrderBy(query, nameof(SchedulePlanLog.Id), LeillaKeys.Desc);
+            if (model.SchedulePlanLogId <= 0)
+                throw new BusinessValidationException(LeillaKeys.SorrySchedulePlanLogNotFound);
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var schedulePlanLogEmployeeRepository = repositoryManager.SchedulePlanLogEmployeeRepository;
+            var query = schedulePlanLogEmployeeRepository
+                .Get(e=>e.IsDeleted && e.SchedulePlanLogId == model.SchedulePlanLogId);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
+            int take = PagingHelper.Take(model.PageSize);
+
+            #region sorting
+
+            var queryOrdered = schedulePlanLogEmployeeRepository.OrderBy(query, nameof(SchedulePlanLogEmployee.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
             #region Handle Response
 
-            var schedulePlanLogsList = await queryPaged.Select(schedulePlanLog => new GetSchedulePlanLogsResponseModel
+            var schedulePlanLogsList = await queryPaged.Select(e => new GetSchedulePlanLogEmployeeInfoModel
             {
-                Id = schedulePlanLog.Id,
-                ScheduleName = schedulePlanLog.SchedulePlan.Schedule.Name,
-                SchedulePlanTypeName = TranslationHelper.GetTranslation(schedulePlanLog.SchedulePlan.SchedulePlanType.ToString(), requestInfo.Lang),
-                ApplyDate = schedulePlanLog.StartDate,
-                EmployeesNumberAppliedOn = schedulePlanLog.SchedulePlanLogEmployees.Count
+                EmployeeName = e.Employee.Name,
+                OldScheduleName = e.OldSchedule.Name,
+                NewScheduleName = e.NewSchedule.Name
             }).ToListAsync();
 
-            return new GetSchedulePlanLogsResponse
+            return new GetSchedulePlanLogEmployeesResponse
             {
-                SchedulePlanLogs = schedulePlanLogsList,
+                Employees = schedulePlanLogsList,
                 TotalCount = await query.CountAsync()
             };
 

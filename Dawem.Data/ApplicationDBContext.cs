@@ -208,9 +208,9 @@ namespace Dawem.Data
                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SchedulePlanLogEmployee>()
-               .HasOne(p => p.SchedulePlanBackgroundJobLog)
+               .HasOne(p => p.SchedulePlanLog)
                .WithMany(b => b.SchedulePlanLogEmployees)
-               .HasForeignKey(p => p.SchedulePlanBackgroundJobLogId)
+               .HasForeignKey(p => p.SchedulePlanLogId)
                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<GroupEmployee>()

@@ -7,5 +7,6 @@ namespace Dawem.Contract.BusinessLogic.Schedules.SchedulePlanLogs
     {
         Task<GetSchedulePlanLogInfoResponseModel> GetInfo(int schedulePlanBackgroudJobLogId);
         Task<GetSchedulePlanLogsResponse> Get(GetSchedulePlanLogCriteria model);
+        Task<GetSchedulePlanLogEmployeesResponse> GetSchedulePlanLogEmployees(GetSchedulePlanLogEmployeesCriteria model);
     }
 }

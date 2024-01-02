@@ -166,7 +166,7 @@ namespace Dawem.Repository.Managers
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
         public ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository =>
          schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting);
-        public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanBackgroundJobLogEmployeeRepository =>
+        public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
         public IGroupEmployeeRepository GroupEmployeeRepository =>
         groupEmployeeRepository ??= new GroupEmployeeRepository(unitOfWork, generalSetting);

@@ -39,6 +39,15 @@ namespace Dawem.API.Controllers.Schedules
 
             return Success(await schedulePlanLogBL.GetInfo(schedulePlanLogId));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetSchedulePlanLogEmployees([FromQuery] GetSchedulePlanLogEmployeesCriteria model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
 
+            return Success(await schedulePlanLogBL.GetSchedulePlanLogEmployees(model));
+        }
     }
 }

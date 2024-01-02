@@ -9,9 +9,9 @@ namespace Dawem.Domain.Entities.Schedules
     {
         #region Foregn Keys
 
-        public int SchedulePlanBackgroundJobLogId { get; set; }
-        [ForeignKey(nameof(SchedulePlanBackgroundJobLogId))]
-        public SchedulePlanLog SchedulePlanBackgroundJobLog { get; set; }
+        public int SchedulePlanLogId { get; set; }
+        [ForeignKey(nameof(SchedulePlanLogId))]
+        public SchedulePlanLog SchedulePlanLog { get; set; }
         public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }

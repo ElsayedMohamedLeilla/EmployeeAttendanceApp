@@ -81,6 +81,13 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetSchedulePlanLogEmployeesCriteriaValidator : AbstractValidator<GetSchedulePlanLogEmployeesCriteria>
+    {
+        public GetSchedulePlanLogEmployeesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
     public class GetSchedulePlansCriteriaValidator : AbstractValidator<GetSchedulePlansCriteria>
     {
         public GetSchedulePlansCriteriaValidator()

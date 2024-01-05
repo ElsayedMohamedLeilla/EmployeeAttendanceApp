@@ -341,19 +341,29 @@ namespace Dawem.BusinessLogic.Permissions
 
             return true;
         }
-        public async Task<List<PermissionScreenResponseWithNamesModel>> GetCurrentUserPermissions(GetCurrentUserPermissionsModel model = null)
+        public async Task<GetUserPermissionsResponseModel> GetCurrentUserPermissions(GetCurrentUserPermissionsModel model = null)
         {
-            var resonse = new List<PermissionScreenResponseWithNamesModel>();
+            var resonse = new GetUserPermissionsResponseModel();
             var currentUserId = model?.UserId ?? requestInfo.UserId;
             var currentCompanyId = model?.CompanyId ?? requestInfo.CompanyId;
             var lang = requestInfo.Lang;
             var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
 
-            var isUserHasPermission = await repositoryManager.PermissionRepository
+            var isUserIsAdmin = await repositoryManager.UserRepository
                .Get(p => !p.IsDeleted && p.IsActive &&
-               p.CompanyId == currentCompanyId && p.UserId == currentUserId).AnyAsync();
+               p.CompanyId == currentCompanyId && p.IsAdmin && 
+               p.Id == currentUserId).AnyAsync();
 
-            if (isUserHasPermission)
+            var isUserHasPermission = await repositoryManager.PermissionRepository
+                .Get(p => !p.IsDeleted && p.IsActive &&
+                p.CompanyId == currentCompanyId && p.UserId == currentUserId).AnyAsync();
+
+            if (isUserIsAdmin)
+            {
+                resonse.IsAdmin = true;
+                resonse.UserPermissions = null;
+            }
+            else if (isUserHasPermission)
             {
 
                 var getRolesPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
@@ -372,7 +382,7 @@ namespace Dawem.BusinessLogic.Permissions
                         }).OrderBy(a => a.ActionCode).ToList()
                     }).OrderBy(ps => ps.ScreenCode).ToListAsync();
 
-                resonse = getRolesPermissions;
+                resonse.UserPermissions = getRolesPermissions;
             }
             else
             {
@@ -406,7 +416,7 @@ namespace Dawem.BusinessLogic.Permissions
                             }).OrderBy(a => a.ActionCode).ToList()
                         }).OrderBy(ps => ps.ScreenCode).ToListAsync();
 
-                        resonse = getRolesPermissions;
+                        resonse.UserPermissions = getRolesPermissions;
                     }
                 }
             }

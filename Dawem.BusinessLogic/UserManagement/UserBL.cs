@@ -288,7 +288,15 @@ namespace Dawem.BusinessLogic.UserManagement
 
             if (model.Roles != null)
             {
-                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, model.Roles);
+                var getUserRoles = await repositoryManager.RoleRepository
+                    .Get(r => model.Roles.Contains(r.Id))
+                    .Select(r => r.Name)
+                    .ToListAsync();
+
+                if (getUserRoles == null || getUserRoles.Count == 0)
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+
+                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, getUserRoles);
                 if (!assignRolesResult.Succeeded)
                 {
                     unitOfWork.Rollback();
@@ -382,7 +390,15 @@ namespace Dawem.BusinessLogic.UserManagement
             }
             if (model.Roles != null)
             {
-                var getWillDeletedUserRoles = getUserRolesFromDB.Where(dbr => !model.Roles.Contains(dbr)).ToList();
+                var getUserRoles = await repositoryManager.RoleRepository
+                    .Get(r => model.Roles.Contains(r.Id))
+                    .Select(r => r.Name)
+                    .ToListAsync();
+
+                if (getUserRoles == null || getUserRoles.Count == 0)
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+
+                var getWillDeletedUserRoles = getUserRolesFromDB.Where(dbr => !getUserRoles.Contains(dbr)).ToList();
                 if (getWillDeletedUserRoles != null && getWillDeletedUserRoles.Count > 0)
                 {
                     var removeRolesResult = await userManagerRepository.RemoveFromRolesAsync(getUser, getWillDeletedUserRoles);
@@ -392,7 +408,7 @@ namespace Dawem.BusinessLogic.UserManagement
                         throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
                     }
                 }
-                var getWillAddedUserRoles = model.Roles.Where(dbr => !getUserRolesFromDB.Contains(dbr)).ToList();
+                var getWillAddedUserRoles = getUserRoles.Where(dbr => !getUserRolesFromDB.Contains(dbr)).ToList();
                 if (getWillAddedUserRoles != null && getWillAddedUserRoles.Count > 0)
                 {
                     var addRolesResult = await userManagerRepository.AddToRolesAsync(getUser, getWillAddedUserRoles);
@@ -526,7 +542,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
-                    Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList()
+                    Roles = user.UserRoles.Select(ur => ur.RoleId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             return user;

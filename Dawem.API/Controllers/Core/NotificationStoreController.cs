@@ -65,22 +65,15 @@ namespace Dawem.API.Controllers.Core
             return Success(await notificationStoreBL.MarkAsRead(notificationStoreId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetNotificationsByUserId(int userId)
+        public async Task<ActionResult> GetNotificationsByUserId()
         {
-            if (userId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.GetNotificationsByUserId(userId));
+            return Success(await notificationStoreBL.GetNotificationsByUserId());
         }
         [HttpGet]
-        public async Task<ActionResult> GetUnreadNotificationCount(int userId)
+        public async Task<ActionResult> GetUnreadNotificationCount()
         {
-            if (userId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.GetUnreadNotificationCount(userId));
+           
+            return Success(await notificationStoreBL.GetUnreadNotificationCount());
         }
 
         

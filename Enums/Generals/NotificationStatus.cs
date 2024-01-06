@@ -10,6 +10,6 @@ namespace Dawem.Enums.Generals
     {
         Info,
         Warning,
-        Error,
+        Error
     }
 }

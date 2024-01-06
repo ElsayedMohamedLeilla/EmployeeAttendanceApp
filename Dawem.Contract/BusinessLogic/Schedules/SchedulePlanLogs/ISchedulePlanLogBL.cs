@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Schedules.SchedulePlanLogs;
-using Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs;
+﻿using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
+using Dawem.Models.Response.Schedules.SchedulePlanLogs;
 
 namespace Dawem.Contract.BusinessLogic.Schedules.SchedulePlanLogs
 {

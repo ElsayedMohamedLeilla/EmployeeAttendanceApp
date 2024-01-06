@@ -8,11 +8,11 @@ namespace Dawem.Contract.BusinessLogic.Core
     {
         Task<bool> MarkAsRead(int notificationStoreId);
         Task<GetNotificationStoreResponseDTO> Get(GetNotificationStoreCriteria model);
-        Task<GetNotificationStoreResponseDTO> GetNotificationsByUserId(int userId);
+        Task<GetNotificationStoreResponseDTO> GetNotificationsByUserId();
         public Task<bool> Enable(int GroupId);
         public Task<bool> Disable(DisableModelDTO model);
         public Task<bool> Delete(int GroupId);
-        Task<int> GetUnreadNotificationCount(int userId);
+        Task<int> GetUnreadNotificationCount();
 
 
     }

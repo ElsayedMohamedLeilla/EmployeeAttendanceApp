@@ -101,7 +101,7 @@ builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 builder.Services.ConfigureBackGroundService();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
-    _ = options.UseCamelCasing(true);
+    options.UseCamelCasing(true);
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -148,8 +148,8 @@ new TranslationBL(unitOfWork, repositoryManager).RefreshCachedTranslation();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    _ = app.UseSwagger();
-    _ = app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseRouting();
@@ -159,7 +159,7 @@ List<CultureInfo> supportedCultures = new()
 {
                     new CultureInfo(LeillaKeys.En),
                     new CultureInfo(LeillaKeys.Ar)
-                };
+};
 
 app.UseCors(AllowSpecificOrigins);
 
@@ -174,21 +174,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRequestLocalization(requestLocalizationOptions);
 
-app.UseEndpoints(endpoints =>
-{
-    _ = endpoints.MapHub<NotificationHub>("/notificationHub");
-    _ = endpoints.MapControllers();
-    _ = endpoints.MapFallback(context =>
-    {
-        context.Response.Redirect("/swagger"); // Fallback to Swagger UI or your desired endpoint
-        return Task.CompletedTask;
-    });
-});
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 //app.UseMiddleware<PermissionMiddleWare>();
 app.UseMiddleware<PermissionLogMiddleWare>();
 
 //app.UseMiddleware<UserScreenActionPermissionMiddleWare>();
-
+app.MapControllers();
+app.MapHub<SignalRHub>("/realtime");
 app.Run();
 

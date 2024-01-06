@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria;
 
-namespace Dawem.Models.Dtos.Schedules.SchedulePlanLogs
+namespace Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs
 {
     public class GetSchedulePlanLogEmployeesCriteria : BaseCriteria
     {

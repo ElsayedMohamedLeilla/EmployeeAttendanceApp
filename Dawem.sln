@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.Contract", "Dawem.Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.BusinessLogicCore", "Dawem.BusinessLogicCore\Dawem.BusinessLogicCore.csproj", "{ABAB0698-BB66-4E04-BCD4-B29BF84ABB62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.BackgroundJobs", "Dawem.BackgroundJobs\Dawem.BackgroundJobs.csproj", "{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.BackgroundJobs", "Dawem.BackgroundJobs\Dawem.BackgroundJobs.csproj", "{2A01B126-4DA6-4332-B6D5-80B8B1E76CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

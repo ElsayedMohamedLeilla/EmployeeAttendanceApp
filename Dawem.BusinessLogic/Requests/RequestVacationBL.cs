@@ -32,8 +32,7 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         private readonly IRequestBLValidation requestBLValidation;
-        private readonly IHubContext<NotificationHub> hubContext;
-
+        private readonly IHubContext<SignalRHub, ISignalRHubClient> hubContext;
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
@@ -41,7 +40,7 @@ namespace Dawem.BusinessLogic.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestVacationBLValidation _requestVacationBLValidation,
-           IHubContext<NotificationHub> _hubContext)
+           IHubContext<SignalRHub, ISignalRHubClient> _hubContext)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -128,16 +127,10 @@ namespace Dawem.BusinessLogic.Requests
             await unitOfWork.SaveAsync();
 
             #endregion
-            #region Fire Notification
-            int ManagerId = repositoryManager.EmployeeRepository.Get(e => e.Id == request.EmployeeId)
-                            .Select(o=> o.DirectManagerId).FirstOrDefault() ?? 0;
-            if(ManagerId > 0)  
-            {
-                await hubContext.Clients.User(ManagerId.ToString())
-                      .SendAsync("ReceiveVacationRequest", request.Employee.Name, model.DateFrom, model.DateTo);
-            }
-           
 
+            #region Fire Notification
+            await hubContext.Clients.Group("VacationGroup_" + request.Id)
+                .SendMessageToGroup("receiveVacationRequest", "VacationGroup_" + request.Id, SignalRHelper.FillSignalRMessageModel(requestInfo.Lang,NotificationType.NewVacationRequest,NotificationStatus.Info,Priority.Medium,request.Employee.Name)); 
             #endregion
 
             #region Handle Response

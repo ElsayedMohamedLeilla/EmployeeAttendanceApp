@@ -19,15 +19,15 @@ namespace Dawem.Repository.Core.NotificationsStores
             var predicate = PredicateBuilder.New<NotificationStore>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<NotificationStore>(true);
 
-            if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-            {
-                criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.ShortMessege.ToLower().Trim().Contains(criteria.FreeText));
-                if (int.TryParse(criteria.FreeText, out int id))
-                {
-                    criteria.Id = id;
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(criteria.FreeText))
+            //{
+            //    criteria.FreeText = criteria.FreeText.ToLower().Trim();
+            //    inner = inner.And(x => x.ShortMessege.ToLower().Trim().Contains(criteria.FreeText));
+            //    if (int.TryParse(criteria.FreeText, out int id))
+            //    {
+            //        criteria.Id = id;
+            //    }
+            //}
             if (criteria.Id != null)
             {
 

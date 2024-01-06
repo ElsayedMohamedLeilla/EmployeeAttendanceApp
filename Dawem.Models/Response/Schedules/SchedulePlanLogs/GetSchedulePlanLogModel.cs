@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Schedules.SchedulePlanBackgroundJobLogs
+namespace Dawem.Models.Response.Schedules.SchedulePlanLogs
 {
     public class GetSchedulePlanLogModel
     {

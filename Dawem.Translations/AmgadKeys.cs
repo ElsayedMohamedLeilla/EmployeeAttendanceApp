@@ -103,14 +103,24 @@
         public const string Ended = "Ended";
         public const string WillStart = "WillStart";
         public const string Started = "Started";
-
-
         public const string SorryNotificationNotFound = "SorryNotificationNotFound";
+        public const string NewNotification = "NewNotification";
+        public const string NewVacationRequest  = "NewVacationRequest";
+        public const string VacationRequest = "VacationRequest";
+        public const string AcceptingVacationRequest = "AcceptingVacationRequest";
+        public const string RejectingVacationRequest = "RejectingVacationRequest";
+        public const string JustificationRequest = "JustificationRequest";
+        public const string PermisionRequest = "PermisionRequest";
+        public const string AddingInMission = "AddingInMission";
 
-        
 
 
-
+        public const string High = "High";
+        public const string Medium = "Medium"; 
+        public const string Low = "Low";
+        public const string AddingNewVacationWaitingApproval= "AddingNewVacationWaitingApproval";
+        public const string YourVacationIsAccepted = "YourVacationIsAccepted";
+        public const string YourVacationIsRejected = "YourVacationIsRejected";
 
 
 

@@ -11,7 +11,7 @@ namespace Dawem.Models.Response.Core.NotificationsStores
         public NotificationStatus Status { get; set; }
         public string IconUrl { get; set; }
         public Priority Priority { get; set; }
-        public int RecipientUserId { get; set; }
+        public int EmployeeId { get; set; }
 
     }
 }

@@ -12,6 +12,7 @@ using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.NotificationsStores;
 using Dawem.Translations;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.NotificationsStores
@@ -27,7 +28,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
         public NotificationStoreBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
-        RequestInfo _requestHeaderContext)
+         RequestInfo _requestHeaderContext)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -61,12 +62,12 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
             {
                 Id = notificatioStore.Id,
-                FullMessege = notificatioStore.FullMessege,
+               // FullMessege = notificatioStore.FullMessege,
                 IconUrl = notificatioStore.IconUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
-                RecipientUserId = notificatioStore.RecipientUserId,
-                ShortMessege = notificatioStore.ShortMessege,
+                EmployeeId = notificatioStore.EmployeeId,
+                //ShortMessege = notificatioStore.ShortMessege,
                 Status = notificatioStore.Status
 
             }).ToListAsync();
@@ -116,20 +117,21 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             await unitOfWork.SaveAsync();
             return true;
         }
-        public async Task<GetNotificationStoreResponseDTO> GetNotificationsByUserId(int userId)
+        public async Task<GetNotificationStoreResponseDTO> GetNotificationsByUserId()
         {
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
             var notifications = await repositoryManager.NotificationStoreRepository
-        .Get(n => n.RecipientUserId == userId)
+        .Get(n => n.EmployeeId == employeeId)
         .Select(notification => new NotificationStoreForGridDTO
         {
             Id = notification.Id,
-            ShortMessege = notification.ShortMessege,
-            FullMessege = notification.FullMessege,
+            //ShortMessege = notification.ShortMessege,
+            //FullMessege = notification.FullMessege,
             IsRead = notification.IsRead,
             Status = notification.Status,
             IconUrl = notification.IconUrl,
             Priority = notification.Priority,
-            RecipientUserId = notification.RecipientUserId
+            EmployeeId = notification.EmployeeId
 
         }).ToListAsync();
 
@@ -140,9 +142,10 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             };
 
         }
-        public async Task<int> GetUnreadNotificationCount(int userId)
+        public async Task<int> GetUnreadNotificationCount()
         {
-            var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsRead && !n.IsDeleted).ToListAsync();
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
+            var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsRead && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             return notification.Count;
         }
     }

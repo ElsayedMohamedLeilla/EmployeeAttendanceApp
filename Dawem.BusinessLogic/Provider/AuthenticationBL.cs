@@ -311,9 +311,11 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
+            var permissionsResponse = await permissionBL
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id });
 
-            tokenData.AvailablePermissions = signInModel.ApplicationType == Enums.Generals.ApplicationType.Web ?
-              await permissionBL.GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId , UserId = user.Id }) : null;
+            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
+            tokenData.IsAdmin = permissionsResponse.IsAdmin;
 
             return tokenData;
         }

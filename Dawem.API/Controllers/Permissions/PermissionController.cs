@@ -99,7 +99,8 @@ namespace Dawem.API.Controllers.Permissions
         public async Task<ActionResult> GetCurrentUserPermissions()
         {
             var response = await permissionBL.GetCurrentUserPermissions();
-            return Success(response, response.Count);
+            var count = response?.UserPermissions?.Count ?? 0;
+            return Success(response, count);
         }
     }
 }

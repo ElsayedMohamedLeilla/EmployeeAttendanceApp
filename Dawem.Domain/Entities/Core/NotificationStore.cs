@@ -23,7 +23,7 @@ namespace Dawem.Domain.Entities.Core
         //public string FullMessege { get; set; }// make it daynamic
         public bool IsRead { get; set; }
         public NotificationStatus Status { get; set; }
-        public string IconUrl { get; set; }
+        public string ImageUrl { get; set; }
         public Priority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
         public void MarkAsRead()

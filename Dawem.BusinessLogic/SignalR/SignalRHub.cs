@@ -1,5 +1,4 @@
-﻿using Dawem.Models.Dtos.SignalR;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace Dawem.BusinessLogic.SignalR
 {
@@ -18,21 +17,6 @@ namespace Dawem.BusinessLogic.SignalR
         {
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
-
-        public async Task SendMessageToGroup(string method, string groupName, SignalRMessageModelDTO model)
-        {
-            switch (method.ToLower())
-            {
-                case "receivevacationrequest":
-                    await Clients.Group(groupName).NewVacationRequest(model);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-
-
 
 
     }

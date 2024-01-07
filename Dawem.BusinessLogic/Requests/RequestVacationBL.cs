@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Dawem.BusinessLogic.SignalR;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -33,6 +35,8 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IUploadBLC uploadBLC;
         private readonly IRequestBLValidation requestBLValidation;
         private readonly IHubContext<SignalRHub, ISignalRHubClient> hubContext;
+        private readonly INotificationStoreBL notificationStoreBL;
+
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
@@ -40,7 +44,7 @@ namespace Dawem.BusinessLogic.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestVacationBLValidation _requestVacationBLValidation,
-           IHubContext<SignalRHub, ISignalRHubClient> _hubContext)
+           IHubContext<SignalRHub, ISignalRHubClient> _hubContext, INotificationStoreBL _notificationStoreBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -49,7 +53,8 @@ namespace Dawem.BusinessLogic.Requests
             mapper = _mapper;
             requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
-            hubContext =_hubContext ;
+            hubContext = _hubContext;
+            notificationStoreBL = _notificationStoreBL;
         }
         public async Task<int> Create(CreateRequestVacationDTO model)
         {
@@ -67,8 +72,8 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Business Validation
 
-            var employeeId = await requestVacationBLValidation.CreateValidation(model);
-
+            //var employeeId = await requestVacationBLValidation.CreateValidation(model);
+            int? employeeId = 13;
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -125,19 +130,43 @@ namespace Dawem.BusinessLogic.Requests
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
+            var savedrequest = repositoryManager.RequestRepository.GetByID(request.Id);
 
+            #endregion
+
+            #region Save Notification In DB
+            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync() + 1;
+            var notificationStore = new NotificationStore()
+            {
+                Code = getNotificationNextCode,
+                EmployeeId = request.EmployeeId,
+                CompanyId = requestInfo.CompanyId,
+                AddUserId = requestInfo.UserId,
+                AddedDate = DateTime.UtcNow,
+                Status = NotificationStatus.Info,
+                NotificationType = NotificationType.NewVacationRequest,
+                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                IsRead = false,
+                IsActive = true,
+                Priority = Priority.Medium
+
+            };
+            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            await unitOfWork.SaveAsync();
             #endregion
 
             #region Fire Notification
-            await hubContext.Clients.Group("VacationGroup_" + request.Id)
-                .SendMessageToGroup("receiveVacationRequest", "VacationGroup_" + request.Id, SignalRHelper.FillSignalRMessageModel(requestInfo.Lang,NotificationType.NewVacationRequest,NotificationStatus.Info,Priority.Medium,request.Employee.Name)); 
+            await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + request.Employee.DirectManagerId)
+                .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCount(), requestInfo.Lang, NotificationType.NewVacationRequest, savedrequest.Employee.Name));
             #endregion
 
             #region Handle Response
-
             await unitOfWork.CommitAsync();
             return request.Id;
-
             #endregion
 
         }

@@ -63,7 +63,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             {
                 Id = notificatioStore.Id,
                // FullMessege = notificatioStore.FullMessege,
-                IconUrl = notificatioStore.IconUrl,
+                IconUrl = notificatioStore.ImageUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
                 EmployeeId = notificatioStore.EmployeeId,
@@ -129,7 +129,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             //FullMessege = notification.FullMessege,
             IsRead = notification.IsRead,
             Status = notification.Status,
-            IconUrl = notification.IconUrl,
+            IconUrl = notification.ImageUrl,
             Priority = notification.Priority,
             EmployeeId = notification.EmployeeId
 
@@ -144,7 +144,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
         }
         public async Task<int> GetUnreadNotificationCount()
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ?? 0;
             var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsRead && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             return notification.Count;
         }

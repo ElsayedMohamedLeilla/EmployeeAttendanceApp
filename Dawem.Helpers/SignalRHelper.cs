@@ -6,18 +6,18 @@ namespace Dawem.Helpers
 {
     public static class SignalRHelper
     {
-        public static SignalRMessageModelDTO FillSignalRMessageModel(string lang, NotificationType type, NotificationStatus status, Priority priority, string EmployeeName)
+        public static TempNotificationModelDTO TempNotificationModelDTO(int newNotificationCount, string lang, NotificationType type, string EmployeeName)
         {
-            return new SignalRMessageModelDTO()
+            var notificatioData = new NotificationData()
             {
                 EmployeeName = EmployeeName,
-                IconUrl = GetNotificationIcon(status),
-                IsRead = false,
-                Priority = GetNotificationPriority(priority, lang),
-                NotificationType = GetNotificationType(type, lang),
                 Title = GetNotificationType(type, lang),
                 MessageDescription = GetNotificationDescription(type, lang),
-
+            };
+            return new TempNotificationModelDTO()
+            {
+                Data = notificatioData,
+                NewCount = newNotificationCount
             };
         }
 
@@ -36,7 +36,7 @@ namespace Dawem.Helpers
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
             };
         }
-        private static string GetNotificationIcon(NotificationStatus type)
+        public static string GetNotificationImage(NotificationStatus type)
         {
             switch (type)
             {

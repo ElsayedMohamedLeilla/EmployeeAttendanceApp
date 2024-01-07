@@ -10,6 +10,7 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -64,7 +65,26 @@ namespace Dawem.API
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
-            });
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Query.TryGetValue("access_token", out StringValues token))
+                        {
+                            context.Token = token;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        var te = context.Exception;
+                        return Task.CompletedTask;
+                    }
+                };
+
+            }
+            );
         }
         public static void ConfigureRepositoryContainerOld(this IServiceCollection services)
         {

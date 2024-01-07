@@ -121,7 +121,7 @@ builder.Services.AddAutoMapper((serviceProvider, config) =>
 {
 }, typeof(AutoMapperConfig));
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions => { hubOptions.EnableDetailedErrors = true; hubOptions.KeepAliveInterval = TimeSpan.FromSeconds(50); hubOptions.HandshakeTimeout = TimeSpan.FromSeconds(50); });
 WebApplication app = builder.Build();
 IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()
     .CreateScope();

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Dawem.BusinessLogic.SignalR
 {
-    // [Authorize]
+     [Authorize]
     public class SignalRHub : Hub<ISignalRHubClient>
     {
         public SignalRHub()
@@ -10,7 +11,9 @@ namespace Dawem.BusinessLogic.SignalR
         }
         public Task JoinGroup(string groupName)
         {
+            Console.Write("Connected To " + groupName);
             return Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
         }
 
         public Task LeaveGroup(string groupName)

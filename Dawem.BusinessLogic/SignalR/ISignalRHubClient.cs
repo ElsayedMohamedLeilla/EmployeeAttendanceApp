@@ -4,6 +4,6 @@ namespace Dawem.BusinessLogic.SignalR
 {
     public interface ISignalRHubClient
     {
-        public Task ReceiveNewNotification(TempNotificationModelDTO model); 
+        public Task ReceiveNewNotification(TempNotificationModelDTO model);
     }
 }

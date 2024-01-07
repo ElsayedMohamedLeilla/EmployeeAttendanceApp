@@ -408,7 +408,7 @@
         public const string SorryYouMustEnterVacationBalance = "Sorry!!YouMustEnterVacationBalance!";
         public const string SorryYouMustEnterVacationBalanceId = "Sorry!!YouMustEnterVacationBalanceId!";
         public const string SorryVacationBalanceIsDuplicatedWithSameEmployeeAndYearAndVacationType = "Sorry!!VacationBalanceIsDuplicatedWithSameEmployeeAndYearAndVacationType!";
-        public const string DoneCreateVacationBalancesSuccessfully = "DoneCreateVacationBalance/sSuccessfully";
+        public const string DoneCreateVacationBalanceSuccessfully = "DoneCreateVacationBalanceSuccessfully";
         public const string DoneUpdateVacationBalanceSuccessfully = "DoneUpdateVacationBalanceSuccessfully";
         public const string SorryVacationBalanceNotFound = "Sorry!!VacationBalanceNotFound!";
         public const string SorryYouMustChooseEmployee = "Sorry!!YouMustChooseEmployee!";

@@ -28,7 +28,7 @@ namespace Dawem.API.Controllers.Others
             }
 
             var result = await vacationBalanceBL.Create(model);
-            return Success(result, messageCode: LeillaKeys.DoneCreateVacationBalancesSuccessfully);
+            return Success(result, messageCode: LeillaKeys.DoneCreateVacationBalanceSuccessfully);
         }
 
         [HttpPut, DisableRequestSizeLimit]

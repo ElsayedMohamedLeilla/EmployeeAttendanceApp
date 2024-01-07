@@ -118,9 +118,9 @@ namespace Dawem.Validation.BusinessValidation.Requests
             if (requiredDays > checkTypeBalance.RemainingBalance)
             {
                 throw new BusinessValidationException(null,
-                    LeillaKeys.SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee +
+                    TranslationHelper.GetTranslation(LeillaKeys.SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee, requestInfo.Lang) +
                     LeillaKeys.Space +
-                    LeillaKeys.CurrentBalanceForEmployee +
+                    TranslationHelper.GetTranslation(LeillaKeys.CurrentBalanceForEmployee, requestInfo.Lang) +
                     checkTypeBalance.RemainingBalance +
                     LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.DefaultVacationType.ToString(), requestInfo.Lang) +
                     LeillaKeys.RightBracket);
@@ -230,9 +230,9 @@ namespace Dawem.Validation.BusinessValidation.Requests
             if (requiredDays > checkTypeBalance.RemainingBalance)
             {
                 throw new BusinessValidationException(null,
-                    LeillaKeys.SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee +
+                    TranslationHelper.GetTranslation(LeillaKeys.SorryThereIsNoSufficientBalanceForSelectedTypeForEmployee, requestInfo.Lang) +
                     LeillaKeys.Space +
-                    LeillaKeys.CurrentBalanceForEmployee +
+                    TranslationHelper.GetTranslation(LeillaKeys.CurrentBalanceForEmployee, requestInfo.Lang) +
                     checkTypeBalance.RemainingBalance +
                     LeillaKeys.LeftBracket + TranslationHelper.GetTranslation(checkTypeBalance.DefaultVacationType.ToString(), requestInfo.Lang) +
                     LeillaKeys.RightBracket);

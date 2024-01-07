@@ -72,8 +72,8 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Business Validation
 
-            //var employeeId = await requestVacationBLValidation.CreateValidation(model);
-            int? employeeId = 13;
+            var employeeId = await requestVacationBLValidation.CreateValidation(model);
+
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -130,7 +130,14 @@ namespace Dawem.BusinessLogic.Requests
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
-            var savedrequest = repositoryManager.RequestRepository.GetByID(request.Id);
+
+            var requestEmployee = await repositoryManager
+                .EmployeeRepository.Get(r=> r.Id == employeeId)
+                .Select(e=> new
+                {
+                    e.Name,
+                    e.DirectManagerId
+                }).FirstOrDefaultAsync();
 
             #endregion
 
@@ -160,8 +167,8 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
             #region Fire Notification
-            await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + request.Employee.DirectManagerId)
-                .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCount(), requestInfo.Lang, NotificationType.NewVacationRequest, savedrequest.Employee.Name));
+            await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + requestEmployee.DirectManagerId)
+                .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCount(), requestInfo.Lang, NotificationType.NewVacationRequest, requestEmployee.Name));
             #endregion
 
             #region Handle Response

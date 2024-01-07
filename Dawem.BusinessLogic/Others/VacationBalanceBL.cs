@@ -53,6 +53,12 @@ namespace Dawem.BusinessLogic.Others
                 vacationBalance.Year == model.Year &&
                 vacationBalance.DefaultVacationType == model.DefaultVacationType).ToListAsync();
 
+            var getNextCode = await repositoryManager.VacationBalanceRepository
+                        .Get(vacationBalance => vacationBalance.CompanyId == requestInfo.CompanyId)
+                        .Select(vacationBalance => vacationBalance.Code)
+                        .DefaultIfEmpty()
+                        .MaxAsync();
+
             foreach (var employeeId in employeesIds)
             {
                 var checkForVacationBalance = getAllVacationBalance
@@ -70,11 +76,7 @@ namespace Dawem.BusinessLogic.Others
                 {
                     #region Set Vacation Balance code
 
-                    var getNextCode = await repositoryManager.VacationBalanceRepository
-                        .Get(vacationBalance => vacationBalance.CompanyId == requestInfo.CompanyId)
-                        .Select(vacationBalance => vacationBalance.Code)
-                        .DefaultIfEmpty()
-                        .MaxAsync() + 1;
+                    getNextCode++;
 
                     #endregion
 

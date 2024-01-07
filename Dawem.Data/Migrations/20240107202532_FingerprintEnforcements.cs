@@ -11,11 +11,11 @@ namespace Dawem.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            /*migrationBuilder.RenameColumn(
-                name: "IconUrl",
-                schema: "Dawem",
-                table: "NotificationStores",
-                newName: "ImageUrl");*/
+            //migrationBuilder.RenameColumn(
+            //    name: "IconUrl",
+            //    schema: "Dawem",
+            //    table: "NotificationStores",
+            //    newName: "ImageUrl");
 
             migrationBuilder.CreateTable(
                 name: "FingerprintEnforcements",
@@ -115,12 +115,12 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_FingerprintEnforcementDepartments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FingerprintEnforcementDepartments_Companies_CompanyId",
-                        column: x => x.CompanyId,
+                        name: "FK_FingerprintEnforcementDepartments_Companies_FingerprintEnforcementId",
+                        column: x => x.FingerprintEnforcementId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FingerprintEnforcementDepartments_Departments_DepartmentId",
                         column: x => x.DepartmentId,
@@ -163,12 +163,12 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_FingerprintEnforcementEmployees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FingerprintEnforcementEmployees_Companies_CompanyId",
-                        column: x => x.CompanyId,
+                        name: "FK_FingerprintEnforcementEmployees_Companies_FingerprintEnforcementId",
+                        column: x => x.FingerprintEnforcementId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FingerprintEnforcementEmployees_Employees_EmployeeId",
                         column: x => x.EmployeeId,
@@ -211,12 +211,12 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_FingerprintEnforcementGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FingerprintEnforcementGroups_Companies_CompanyId",
-                        column: x => x.CompanyId,
+                        name: "FK_FingerprintEnforcementGroups_Companies_FingerprintEnforcementId",
+                        column: x => x.FingerprintEnforcementId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FingerprintEnforcementGroups_FingerprintEnforcements_FingerprintEnforcementId",
                         column: x => x.FingerprintEnforcementId,
@@ -259,12 +259,12 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_FingerprintEnforcementActions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FingerprintEnforcementActions_Companies_CompanyId",
-                        column: x => x.CompanyId,
+                        name: "FK_FingerprintEnforcementActions_Companies_FingerprintEnforcementId",
+                        column: x => x.FingerprintEnforcementId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_FingerprintEnforcementActions_FingerprintEnforcements_FingerprintEnforcementId",
                         column: x => x.FingerprintEnforcementId,
@@ -273,37 +273,19 @@ namespace Dawem.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FingerprintEnforcementActions_NonComplianceActions_NonComplianceActionId",
-                        column: x => x.NonComplianceActionId,
+                        name: "FK_FingerprintEnforcementActions_NonComplianceActions_FingerprintEnforcementId",
+                        column: x => x.FingerprintEnforcementId,
                         principalSchema: "Dawem",
                         principalTable: "NonComplianceActions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FingerprintEnforcementActions_CompanyId",
-                schema: "Dawem",
-                table: "FingerprintEnforcementActions",
-                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FingerprintEnforcementActions_FingerprintEnforcementId",
                 schema: "Dawem",
                 table: "FingerprintEnforcementActions",
                 column: "FingerprintEnforcementId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FingerprintEnforcementActions_NonComplianceActionId",
-                schema: "Dawem",
-                table: "FingerprintEnforcementActions",
-                column: "NonComplianceActionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FingerprintEnforcementDepartments_CompanyId",
-                schema: "Dawem",
-                table: "FingerprintEnforcementDepartments",
-                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FingerprintEnforcementDepartments_DepartmentId",
@@ -318,12 +300,6 @@ namespace Dawem.Data.Migrations
                 column: "FingerprintEnforcementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FingerprintEnforcementEmployees_CompanyId",
-                schema: "Dawem",
-                table: "FingerprintEnforcementEmployees",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FingerprintEnforcementEmployees_EmployeeId",
                 schema: "Dawem",
                 table: "FingerprintEnforcementEmployees",
@@ -334,12 +310,6 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem",
                 table: "FingerprintEnforcementEmployees",
                 column: "FingerprintEnforcementId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FingerprintEnforcementGroups_CompanyId",
-                schema: "Dawem",
-                table: "FingerprintEnforcementGroups",
-                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FingerprintEnforcementGroups_FingerprintEnforcementId",

@@ -258,6 +258,34 @@ namespace Dawem.Data
          .OnDelete(DeleteBehavior.Cascade);
 
 
+            builder.Entity<FingerprintEnforcementDepartment>()
+        .HasOne(p => p.Company)
+        .WithMany()
+        .HasForeignKey(p => p.FingerprintEnforcementId)
+        .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<FingerprintEnforcementEmployee>()
+        .HasOne(p => p.Company)
+        .WithMany()
+        .HasForeignKey(p => p.FingerprintEnforcementId)
+        .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<FingerprintEnforcementGroup>()
+        .HasOne(p => p.Company)
+        .WithMany()
+        .HasForeignKey(p => p.FingerprintEnforcementId)
+        .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<FingerprintEnforcementAction>()
+       .HasOne(p => p.Company)
+       .WithMany()
+       .HasForeignKey(p => p.FingerprintEnforcementId)
+       .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<FingerprintEnforcementAction>()
+      .HasOne(p => p.NonComplianceAction)
+      .WithMany()
+      .HasForeignKey(p => p.FingerprintEnforcementId)
+      .OnDelete(DeleteBehavior.Restrict);
+
+
 
 
             builder.Entity<Department>()

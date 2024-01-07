@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240107194148_FingerprintEnforcements")]
+    [Migration("20240107202532_FingerprintEnforcements")]
     partial class FingerprintEnforcements
     {
         /// <inheritdoc />
@@ -1181,11 +1181,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("FingerprintEnforcementId");
-
-                    b.HasIndex("NonComplianceActionId");
 
                     b.ToTable("FingerprintEnforcementActions", "Dawem");
                 });
@@ -1241,8 +1237,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("DepartmentId");
 
@@ -1303,8 +1297,6 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("FingerprintEnforcementId");
@@ -1363,8 +1355,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("FingerprintEnforcementId");
 
@@ -4234,12 +4224,6 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.FingerprintEnforcementAction", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.Employees.FingerprintEnforcement", "FingerprintEnforcement")
                         .WithMany("FingerprintEnforcementActions")
                         .HasForeignKey("FingerprintEnforcementId")
@@ -4248,8 +4232,14 @@ namespace Dawem.Data.Migrations
 
                     b.HasOne("Dawem.Domain.Entities.Employees.NonComplianceAction", "NonComplianceAction")
                         .WithMany()
-                        .HasForeignKey("NonComplianceActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FingerprintEnforcementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("FingerprintEnforcementId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Company");
@@ -4261,12 +4251,6 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.FingerprintEnforcementDepartment", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
@@ -4279,6 +4263,12 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("FingerprintEnforcementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Company");
 
                     b.Navigation("Department");
@@ -4288,12 +4278,6 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.FingerprintEnforcementEmployee", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
@@ -4306,6 +4290,12 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("FingerprintEnforcementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Company");
 
                     b.Navigation("Employee");
@@ -4315,16 +4305,16 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.FingerprintEnforcementGroup", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.Employees.FingerprintEnforcement", "FingerprintEnforcement")
                         .WithMany("FingerprintEnforcementGroups")
                         .HasForeignKey("FingerprintEnforcementId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("FingerprintEnforcementId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")

@@ -125,8 +125,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
                 getDepartment.ManagerId = model.ManagerId;
                 getDepartment.Notes = model.Notes;
 
-
-
                 #region Update ZoneDepartment
 
                 List<ZoneDepartment> existDbList = repositoryManager.ZoneDepartmentRepository
@@ -161,6 +159,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     repositoryManager.ZoneDepartmentRepository.BulkInsert(addedDepartmentZones);
 
                 #endregion
+
                 #region Update DepartmentManagerDelgators
 
                 List<DepartmentManagerDelegator> ExistDbList = repositoryManager.DepartmentManagerDelegatorRepository
@@ -193,6 +192,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     repositoryManager.DepartmentManagerDelegatorRepository.BulkInsert(addedDepartmentManagerDelegators);
 
                 #endregion
+
                 await unitOfWork.SaveAsync();
 
                 #region Handle Response

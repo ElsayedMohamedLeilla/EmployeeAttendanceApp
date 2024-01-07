@@ -454,7 +454,29 @@
         public const string SorryYouMustChooseUserForPermissionWithTypeUser = "Sorry!!YouMustChooseUserForPermissionWithTypeUser!";
         public const string SorryYouMustNotChooseRoleForPermissionWithTypeUser = "Sorry!!YouMustNotChooseRoleForPermissionWithTypeUser!";
         public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
-        public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";      
+        public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";
+
+
+        public const string SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees = "Sorry!!YouMustNotSetForAllEmployeesWhenTypeNotEmployees!";
+        public const string SorryYouMustEnterFingerprintDate = "Sorry!!YouMustEnterFingerprintDate!";
+        public const string SorryYouMustEnterAllowedTime = "Sorry!!YouMustEnterAllowedTime!";
+        public const string SorryYouMustChooseTimeType = "Sorry!!YouMustChooseTimeType!";
+        public const string SorryYouMustChooseAtAleastOneAction = "Sorry!!YouMustChooseAtAleastOneAction!";
+        public const string SorryYouMustChooseAtAleastOneEmployee = "Sorry!!YouMustChooseAtAleastOneEmployee!";
+        public const string SorryYouMustChooseAtAleastOneGroup = "Sorry!!YouMustChooseAtAleastOneGroup!";
+        public const string SorryYouMustChooseAtAleastOneDepartment = "Sorry!!YouMustChooseAtAleastOneDepartment!";
+        public const string SorryYouMustEnterNonComplianceActionId = "Sorry!!YouMustEnterNonComplianceActionId!";
+        public const string SorryYouMustEnterNonComplianceActionName = "Sorry!!YouMustEnterNonComplianceActionName!";
+        public const string SorryFingerprintEnforcementNameIsDuplicated = "Sorry!!FingerprintEnforcementNameIsDuplicated!";
+        public const string SorryNonComplianceActionNameIsDuplicated = "Sorry!!NonComplianceActionNameIsDuplicated!";
+        public const string SorryFingerprintEnforcementNotFound = "Sorry!!FingerprintEnforcementNotFound!";
+        public const string SorryNonComplianceActionNotFound = "Sorry!!NonComplianceActionNotFound!";
+        public const string DoneCreateFingerprintEnforcementSuccessfully = "DoneCreateFingerprintEnforcementSuccessfully";
+        public const string DoneUpdateFingerprintEnforcementSuccessfully = "DoneUpdateFingerprintEnforcementSuccessfully";
+        public const string DoneCreateNonComplianceActionSuccessfully = "DoneCreateNonComplianceActionSuccessfully";
+        public const string DoneUpdateNonComplianceActionSuccessfully = "DoneUpdateNonComplianceActionSuccessfully";
+        public const string SorryYouMustViewingActionWhenSelectAnyActionForAnyScreen = "Sorry!!YouMustViewingActionWhenSelectAnyActionForAnyScreen!";
+        
     }
     
 }

@@ -48,9 +48,19 @@ namespace Dawem.Validation.FluentValidation.Permissons
         {
             RuleFor(model => model.ScreenCode).IsInEnum()
                 .WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
+
             RuleFor(model => model.PermissionScreenActions)
                 .Must(model => model != null && model.Count > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseOneActionAtLeast);
+
+            RuleFor(model => model.PermissionScreenActions)
+               .Must(model => model.GroupBy(s => s.ActionCode).ToList().All(g => g.Count() == 1))
+               .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreenActions);
+
+            RuleFor(model => model.PermissionScreenActions)
+               .Must(model => model.Any(a => a.ActionCode == ApplicationAction.ViewingAction))
+               .WithMessage(LeillaKeys.SorryYouMustViewingActionWhenSelectAnyActionForAnyScreen);
+
             RuleForEach(x => x.PermissionScreenActions).SetValidator(new UpdatePermissionScreenActionModelValidator());
 
         }

@@ -66,10 +66,13 @@ namespace Dawem.Contract.Repository.Manager
         IRequestTaskEmployeeRepository RequestTaskEmployeeRepository { get; }
         IRequestVacationRepository RequestVacationRepository { get; }
         IHolidayRepository HolidayRepository { get; }
-
         IVacationBalanceRepository VacationBalanceRepository { get; }
-
         INotificationStoreRepository NotificationStoreRepository { get; }
-
+        IFingerprintEnforcementRepository FingerprintEnforcementRepository { get; }
+        IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository { get; }
+        IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository { get; }
+        IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository { get; }
+        IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository { get; }
+        INonComplianceActionRepository NonComplianceActionRepository { get; }
     }
 }

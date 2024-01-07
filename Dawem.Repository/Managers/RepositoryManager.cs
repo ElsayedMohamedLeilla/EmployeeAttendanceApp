@@ -94,11 +94,15 @@ namespace Dawem.Repository.Managers
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
         private IHolidayRepository holidayRepository;
         private INotificationStoreRepository notificationStoreRepository;
-
-        
-
-
         private IVacationBalanceRepository vacationBalanceRepository;
+        private IFingerprintEnforcementRepository fingerprintEnforcementRepository;
+
+        private IFingerprintEnforcementEmployeeRepository fingerprintEnforcementEmployeeRepository;
+        private IFingerprintEnforcementGroupRepository fingerprintEnforcementGroupRepository;
+        private IFingerprintEnforcementActionRepository fingerprintEnforcementActionRepository;
+        private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
+        
+        private INonComplianceActionRepository nonComplianceActionRepository;
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
@@ -230,5 +234,19 @@ namespace Dawem.Repository.Managers
 
         public INotificationStoreRepository NotificationStoreRepository =>
             notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting);
+
+        public IFingerprintEnforcementRepository FingerprintEnforcementRepository =>
+            fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting);
+        public IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository =>
+            fingerprintEnforcementEmployeeRepository ??= new FingerprintEnforcementEmployeeRepository(unitOfWork, generalSetting);
+        public IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository =>
+            fingerprintEnforcementDepartmentRepository ??= new FingerprintEnforcementDepartmentRepository(unitOfWork, generalSetting);
+        public IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository =>
+            fingerprintEnforcementActionRepository ??= new FingerprintEnforcementActionRepository(unitOfWork, generalSetting);
+        public IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository =>
+            fingerprintEnforcementGroupRepository ??= new FingerprintEnforcementGroupRepository(unitOfWork, generalSetting);
+
+        public INonComplianceActionRepository NonComplianceActionRepository =>
+            nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting);
     }
 }

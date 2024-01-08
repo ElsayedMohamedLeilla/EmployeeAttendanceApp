@@ -132,8 +132,8 @@ namespace Dawem.BusinessLogic.Requests
             await unitOfWork.SaveAsync();
 
             var requestEmployee = await repositoryManager
-                .EmployeeRepository.Get(r=> r.Id == employeeId)
-                .Select(e=> new
+                .EmployeeRepository.Get(r => r.Id == employeeId)
+                .Select(e => new
                 {
                     e.Name,
                     e.DirectManagerId
@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Requests
             var notificationStore = new NotificationStore()
             {
                 Code = getNotificationNextCode,
-                EmployeeId = request.EmployeeId,
+                EmployeeId = requestEmployee.DirectManagerId ?? 0,
                 CompanyId = requestInfo.CompanyId,
                 AddUserId = requestInfo.UserId,
                 AddedDate = DateTime.UtcNow,
@@ -166,9 +166,16 @@ namespace Dawem.BusinessLogic.Requests
             await unitOfWork.SaveAsync();
             #endregion
 
-            #region Fire Notification
-            await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + requestEmployee.DirectManagerId)
-                .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCount(), requestInfo.Lang, NotificationType.NewVacationRequest, requestEmployee.Name));
+            #region Fire Notification & Email
+            var ManagerEmployee = await repositoryManager
+               .EmployeeRepository.Get(r => r.Id == requestEmployee.DirectManagerId)
+               .Select(e => new
+               {
+                   e.Email,
+               }).FirstOrDefaultAsync();
+            //await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + requestEmployee.DirectManagerId)
+            //    .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCountByUserId(), requestInfo.Lang, NotificationType.NewVacationRequest, requestEmployee.Name));
+            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.NewVacationRequest, requestEmployee.DirectManagerId ?? 0, requestEmployee.Name, ManagerEmployee.Email);
             #endregion
 
             #region Handle Response
@@ -493,6 +500,7 @@ namespace Dawem.BusinessLogic.Requests
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
             requestVacation.Delete();
             await unitOfWork.SaveAsync();
+
             return true;
         }
         public async Task<bool> Accept(int requestId)
@@ -550,6 +558,42 @@ namespace Dawem.BusinessLogic.Requests
             request.DecisionDate = DateTime.UtcNow;
 
             await unitOfWork.SaveAsync();
+
+            #region Save Notification In DB
+            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync() + 1;
+            var notificationStore = new NotificationStore()
+            {
+                Code = getNotificationNextCode,
+                EmployeeId = request.EmployeeId,
+                CompanyId = requestInfo.CompanyId,
+                AddUserId = requestInfo.UserId,
+                AddedDate = DateTime.UtcNow,
+                Status = NotificationStatus.Info,
+                NotificationType = NotificationType.AcceptingVacationRequest,
+                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                IsRead = false,
+                IsActive = true,
+                Priority = Priority.Medium
+
+            };
+            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            await unitOfWork.SaveAsync();
+            #region Fire Notification
+            var requestEmployee = await repositoryManager
+               .EmployeeRepository.Get(r => r.Id == request.EmployeeId)
+               .Select(e => new
+               {
+                   e.Email,
+                   e.Name,
+               }).FirstOrDefaultAsync();
+
+            #endregion
+            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.AcceptingVacationRequest, request.EmployeeId , requestEmployee.Name, requestEmployee.Email);
+            #endregion
             return true;
         }
         public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
@@ -573,6 +617,41 @@ namespace Dawem.BusinessLogic.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
+            #region Save Notification In DB
+            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync() + 1;
+            var notificationStore = new NotificationStore()
+            {
+                Code = getNotificationNextCode,
+                EmployeeId = request.EmployeeId,
+                CompanyId = requestInfo.CompanyId,
+                AddUserId = requestInfo.UserId,
+                AddedDate = DateTime.UtcNow,
+                Status = NotificationStatus.Info,
+                NotificationType = NotificationType.AcceptingVacationRequest,
+                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                IsRead = false,
+                IsActive = true,
+                Priority = Priority.Medium
+
+            };
+            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            await unitOfWork.SaveAsync();
+            #region Fire Notification
+            var requestEmployee = await repositoryManager
+               .EmployeeRepository.Get(r => r.Id == request.EmployeeId)
+               .Select(e => new
+               {
+                   e.Email,
+                   e.Name,
+               }).FirstOrDefaultAsync();
+
+            #endregion
+            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.AcceptingVacationRequest, request.EmployeeId, requestEmployee.Name, requestEmployee.Email);
+            #endregion
             return true;
         }
         public async Task<GetVacationsInformationsResponseDTO> GetVacationsInformations()

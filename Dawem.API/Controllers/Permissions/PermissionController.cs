@@ -67,6 +67,15 @@ namespace Dawem.API.Controllers.Permissions
             return Success(await permissionBL.GetInfo(permissionId));
         }
         [HttpGet]
+        public async Task<ActionResult> GetPermissionScreens([FromQuery] GetPermissionScreensCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            return Success(await permissionBL.GetPermissionScreens(criteria));
+        }
+        [HttpGet]
         public async Task<ActionResult> GetById([FromQuery] int permissionId)
         {
             if (permissionId < 1)

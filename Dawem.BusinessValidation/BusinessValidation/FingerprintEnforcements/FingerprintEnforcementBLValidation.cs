@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidation.FingerprintEnforcements
                 && c.ForType == model.ForType && c.FingerprintDate.Date == model.FingerprintDate).AnyAsync();
             if (checkFingerprintEnforcementDuplicate)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryFingerprintEnforcementNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintEnforcementIsDuplicated);
             }
 
             return true;
@@ -37,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.FingerprintEnforcements
                 && c.ForType == model.ForType && c.FingerprintDate.Date == model.FingerprintDate && c.Id != model.Id).AnyAsync();
             if (checkFingerprintEnforcementDuplicate)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryFingerprintEnforcementNameIsDuplicated);
+                throw new BusinessValidationException(LeillaKeys.SorryFingerprintEnforcementIsDuplicated);
             }
 
             return true;

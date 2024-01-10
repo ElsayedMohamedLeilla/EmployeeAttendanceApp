@@ -358,7 +358,7 @@ namespace Dawem.BusinessLogic.Requests
                     }).ToList() 
                 }).ToListAsync();
 
-            var allDatesInMonth = OthersHelper.AllDatesInMonth(criteria.Year, criteria.Month).Where(d => d.Date <= DateTime.UtcNow.Date).ToList();
+            var allDatesInMonth = OthersHelper.AllDatesInMonth(criteria.Year, criteria.Month).ToList();
             var maxDate = allDatesInMonth[allDatesInMonth.Count - 1];
 
             var employeePlans = await repositoryManager.SchedulePlanRepository.Get(s => !s.IsDeleted && s.DateFrom.Date <= maxDate.Date &&

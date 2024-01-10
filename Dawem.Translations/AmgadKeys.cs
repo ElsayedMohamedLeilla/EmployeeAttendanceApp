@@ -117,6 +117,10 @@
         public const string AddingNewVacationWaitingApproval= "AddingNewVacationWaitingApproval";
         public const string YourVacationIsAccepted = "YourVacationIsAccepted";
         public const string YourVacationIsRejected = "YourVacationIsRejected";
+        public const string Dear = "Dear";
+
+
+        
 
 
 

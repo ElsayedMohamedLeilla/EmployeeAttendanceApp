@@ -19,15 +19,7 @@ namespace Dawem.Repository.Core.NotificationsStores
             var predicate = PredicateBuilder.New<NotificationStore>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<NotificationStore>(true);
 
-            //if (!string.IsNullOrWhiteSpace(criteria.FreeText))
-            //{
-            //    criteria.FreeText = criteria.FreeText.ToLower().Trim();
-            //    inner = inner.And(x => x.ShortMessege.ToLower().Trim().Contains(criteria.FreeText));
-            //    if (int.TryParse(criteria.FreeText, out int id))
-            //    {
-            //        criteria.Id = id;
-            //    }
-            //}
+           
             if (criteria.Id != null)
             {
 
@@ -44,6 +36,17 @@ namespace Dawem.Repository.Core.NotificationsStores
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.EmployeeID != null)
+            {
+                if(criteria.IsRead != null && criteria.IsRead == false)
+                {
+                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID && e.IsRead == criteria.IsRead);
+                }
+                else
+                {
+                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID);
+                }
             }
 
             predicate = predicate.And(inner);

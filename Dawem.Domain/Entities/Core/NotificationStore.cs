@@ -19,8 +19,6 @@ namespace Dawem.Domain.Entities.Core
         public Employee Employee { get; set; }
         #endregion
         public int Code { get; set; }
-        //public string ShortMessege { get; set; } // make it daynamic
-        //public string FullMessege { get; set; }// make it daynamic
         public bool IsRead { get; set; }
         public NotificationStatus Status { get; set; }
         public string ImageUrl { get; set; }

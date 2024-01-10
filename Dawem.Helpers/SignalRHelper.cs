@@ -1,6 +1,9 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Domain.Entities.Core;
+using Dawem.Enums.Generals;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.SignalR;
 using Dawem.Translations;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Dawem.Helpers
 {
@@ -22,7 +25,7 @@ namespace Dawem.Helpers
         }
 
 
-        private static string GetNotificationType(NotificationType type, string lang)
+        public static string GetNotificationType(NotificationType type, string lang)
         {
             return type switch
             {
@@ -62,7 +65,7 @@ namespace Dawem.Helpers
             };
         }
 
-        private static string GetNotificationDescription(NotificationType type, string lang)
+        public static string GetNotificationDescription(NotificationType type, string lang)
         {
             return type switch
             {
@@ -72,5 +75,7 @@ namespace Dawem.Helpers
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }
+
+       
     }
 }

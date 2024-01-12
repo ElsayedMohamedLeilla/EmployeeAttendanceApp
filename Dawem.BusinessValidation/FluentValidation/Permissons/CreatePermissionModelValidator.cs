@@ -57,7 +57,7 @@ namespace Dawem.Validation.FluentValidation.Permissons
 
             RuleFor(model => model.PermissionScreenActions)
                .Must(model => model.Any(a=> a.ActionCode == ApplicationAction.ViewingAction))
-               .WithMessage(LeillaKeys.SorryYouMustViewingActionWhenSelectAnyActionForAnyScreen);
+               .WithMessage(LeillaKeys.SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen);
 
             RuleForEach(x => x.PermissionScreenActions).SetValidator(new CreatePermissionScreenActionModelValidator());
 

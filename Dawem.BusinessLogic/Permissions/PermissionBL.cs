@@ -5,12 +5,15 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Permissions.Permissions;
+using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
+using Dawem.Models.Response.Schedules.SchedulePlanLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -220,7 +223,10 @@ namespace Dawem.BusinessLogic.Permissions
                     ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
                     RoleName = p.Role != null ? TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang) : null,
                     UserName = p.User != null ? TranslationHelper.GetTranslation(p.User.Name, requestInfo.Lang) : null,
-                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseWithNamesModel
+                    PermissionScreens = p.PermissionScreens
+                    .OrderByDescending(e => e.Id)
+                    .Take(5)
+                    .Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
                         ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
@@ -234,6 +240,57 @@ namespace Dawem.BusinessLogic.Permissions
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permission;
+        }
+        public async Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria model)
+        {
+            #region Validation
+
+            if (model.PermissionId <= 0)
+                throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
+
+            #endregion
+
+            var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
+            var query = permissionScreenRepository
+                .Get(e => !e.IsDeleted && e.Permission.CompanyId == requestInfo.CompanyId
+                && e.PermissionId == model.PermissionId);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
+            int take = PagingHelper.Take(model.PageSize);
+
+            #region sorting
+
+            var queryOrdered = permissionScreenRepository.OrderBy(query, nameof(PermissionScreen.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var permissionScreensList = await queryPaged.Select(ps => new GetPermissionScreenInfoModel
+            {
+                ScreenCode = ps.ScreenCode,
+                ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
+                {
+                    ActionCode = psa.ActionCode,
+                    ActionName = TranslationHelper.GetTranslation(psa.ActionCode.ToString(), requestInfo.Lang)
+                }).ToList()
+            }).ToListAsync();
+
+            return new GetPermissionScreensResponse
+            {
+                PermissionScreens = permissionScreensList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
         }
         public async Task<GetPermissionByIdResponseModel> GetById(int permissionId)
         {

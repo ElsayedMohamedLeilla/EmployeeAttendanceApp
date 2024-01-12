@@ -34,22 +34,22 @@ namespace Dawem.Validation.FluentValidation.Employees.AssignmentTypes
 
             RuleFor(model => model.Actions)
                 .Must(a => a != null && a.Count > 0)
-                .WithMessage(LeillaKeys.SorryYouMustChooseAtAleastOneAction);
+                .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneAction);
 
             RuleFor(model => model.Employees)
                .Must(a => a != null && a.Count > 0)
                .When(model => model.ForType == ForType.Employees && (model.ForAllEmployees == null || !model.ForAllEmployees.Value))
-               .WithMessage(LeillaKeys.SorryYouMustChooseAtAleastOneEmployee);
+               .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneEmployee);
 
             RuleFor(model => model.Groups)
                .Must(a => a != null && a.Count > 0)
                .When(model => model.ForType == ForType.Groups)
-               .WithMessage(LeillaKeys.SorryYouMustChooseAtAleastOneGroup);
+               .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneGroup);
 
             RuleFor(model => model.Departments)
                .Must(a => a != null && a.Count > 0)
                .When(model => model.ForType == ForType.Departments)
-               .WithMessage(LeillaKeys.SorryYouMustChooseAtAleastOneDepartment);
+               .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneDepartment);
 
         }
     }

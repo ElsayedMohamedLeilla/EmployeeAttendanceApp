@@ -331,26 +331,32 @@ namespace Dawem.BusinessLogic.Requests
 
             #region Business Validation
 
-            var result = await requestTaskBLValidation.GetEmployeeTasksValidation(criteria);
+           var result = await requestTaskBLValidation.GetEmployeeTasksValidation(criteria);
 
             #endregion
 
             var getEmployeeId = requestInfo?.EmployeeId;
+            var test = await repositoryManager.RequestRepository
+               .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId &&
+               a.RequestTask.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId))
+               .Select(d => new { d.Id,d.Date.Year, d.Date.Month }).ToListAsync();
 
-            var employeeTasks = await repositoryManager.RequestTaskRepository
-                .Get(a => !a.Request.IsDeleted && a.TaskEmployees.Any(e=> e.EmployeeId == getEmployeeId)
-                && a.Request.Date.Month == criteria.Month
-                && a.Request.Date.Year == criteria.Year)
+
+
+            var employeeTasks = await repositoryManager.RequestRepository
+                .Get(a => !a.IsDeleted && a.RequestTask.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId)
+                && a.Date.Month == criteria.Month
+                && a.Date.Year == criteria.Year)
                 .Select(requestTask => new
                 {
-                    Id = requestTask.Id,
-                    Code = requestTask.Request.Code,
-                    Date = requestTask.Request.Date,
-                    DateTo = requestTask.DateTo,
-                    Status = requestTask.Request.Status,
-                    StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang),
-                    TaskTypeName = requestTask.TaskType.Name,
-                    Employees = requestTask.TaskEmployees.Select(e=> new RequestEmployeeModel()
+                    requestTask.Id,
+                    requestTask.Code,
+                    requestTask.Date,
+                    requestTask.RequestTask.DateTo,
+                    requestTask.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestTask.Status.ToString(), requestInfo.Lang),
+                    TaskTypeName = requestTask.RequestTask.TaskType.Name,
+                    Employees = requestTask.RequestTask.TaskEmployees.Select(e=> new RequestEmployeeModel()
                     {
                         Code = e.Employee.Code,
                         Name = e.Employee.Name,

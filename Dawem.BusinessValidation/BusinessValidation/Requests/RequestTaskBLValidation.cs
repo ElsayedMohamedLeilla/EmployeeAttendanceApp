@@ -231,11 +231,18 @@ namespace Dawem.Validation.BusinessValidation.Requests
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
             }
+            //var checkIfHasAttendances = await repositoryManager.RequestTaskEmployeeRepository
+            //    .Get(a => !a.RequestTask.Request.IsDeleted && a.EmployeeId == getEmployeeId
+            //    && a.RequestTask.Request.Date.Month == model.Month
+            //    && a.RequestTask.Request.Date.Year == model.Year)
+            //    .AnyAsync();
 
-            var checkIfHasAttendances = await repositoryManager.RequestTaskEmployeeRepository
+            var checkIfHasAttendances = await repositoryManager.RequestRepository
                 .Get(a => !a.RequestTask.Request.IsDeleted && a.EmployeeId == getEmployeeId
-                && a.RequestTask.Request.Date.Month == model.Month
-                && a.RequestTask.Request.Date.Year == model.Year)
+                && (a.RequestTask.Request.Date.Month == model.Month
+                && a.RequestTask.Request.Date.Year == model.Year) 
+                ||(a.RequestTask.DateTo.Month == model.Month 
+                && a.RequestTask.DateTo.Year == model.Year))
                 .AnyAsync();
 
             if (!checkIfHasAttendances)

@@ -12,7 +12,7 @@ namespace Dawem.BusinessLogic.SignalR
         }
         public Task JoinGroup(string groupName)
         {
-            Console.Write("Connected To " + groupName);
+            //Console.Write("Connected To " + groupName);
             return Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
         }

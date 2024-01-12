@@ -307,11 +307,11 @@ namespace Dawem.BusinessLogic.Requests
                 && a.Request.Date.Year == criteria.Year)
                 .Select(requestAssignment => new
                 {
-                    Id = requestAssignment.Id,
-                    Code = requestAssignment.Request.Code,
-                    Date = requestAssignment.Request.Date,
-                    DateTo = requestAssignment.DateTo,
-                    Status = requestAssignment.Request.Status,
+                    requestAssignment.Id,
+                    requestAssignment.Request.Code,
+                    requestAssignment.Request.Date,
+                    requestAssignment.DateTo,
+                    requestAssignment.Request.Status,
                     StatusName = TranslationHelper.GetTranslation(requestAssignment.Request.Status.ToString(), requestInfo.Lang),
                     AssignmentTypeName = requestAssignment.AssignmentType.Name,
                     Employees = new List<RequestEmployeeModel>

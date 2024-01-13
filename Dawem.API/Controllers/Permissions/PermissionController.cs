@@ -2,6 +2,7 @@
 using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -83,6 +84,15 @@ namespace Dawem.API.Controllers.Permissions
                 return BadRequest();
             }
             return Success(await permissionBL.GetById(permissionId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> CheckAndGetPermission([FromQuery] CheckAndGetPermissionModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            return Success(await permissionBL.CheckAndGetPermission(model));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int permissionId)

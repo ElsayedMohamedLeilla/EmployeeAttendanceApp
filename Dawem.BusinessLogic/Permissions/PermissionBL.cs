@@ -317,6 +317,42 @@ namespace Dawem.BusinessLogic.Permissions
             return permission;
 
         }
+        public async Task<GetPermissionByIdResponseModel> CheckAndGetPermission(CheckAndGetPermissionModel model)
+        {
+            #region Validation
+
+            if (model.RoleId == null && model.UserId == null)
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustChooseRoleOrUser);
+
+            if (model.RoleId != null && model.UserId != null)
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustNotChooseRoleAndUserAtTheSameTime);
+
+            #endregion
+
+            var permission = await repositoryManager.PermissionRepository
+                .Get(permission => permission.CompanyId == requestInfo.CompanyId && ((model.RoleId != null && model.RoleId == permission.RoleId) ||
+                (model.UserId != null && model.UserId == permission.UserId) )&& !permission.IsDeleted && permission.IsActive)
+                .Select(p => new GetPermissionByIdResponseModel
+                {
+                    Id = p.Id,
+                    Code = p.Code,
+                    ForType = p.ForType,
+                    UserId = p.UserId,
+                    RoleId = p.RoleId,
+                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
+                    {
+                        ScreenCode = ps.ScreenCode,
+                        PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseModel
+                        {
+                            ActionCode = psa.ActionCode
+                        }).ToList()
+                    }).ToList(),
+                    IsActive = p.IsActive
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
+
+            return permission;
+
+        }
         public async Task<bool> Delete(int permissiond)
         {
             var permission = await repositoryManager.PermissionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == permissiond) ??

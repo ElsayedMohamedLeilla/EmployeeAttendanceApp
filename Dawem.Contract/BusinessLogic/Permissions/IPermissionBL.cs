@@ -12,6 +12,7 @@ namespace Dawem.Contract.BusinessLogic.Permissions
         Task<GetPermissionInfoResponseModel> GetInfo(int permissionId);
         Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria model);
         Task<GetPermissionByIdResponseModel> GetById(int permissionId);
+        Task<GetPermissionByIdResponseModel> CheckAndGetPermission(CheckAndGetPermissionModel model);
         Task<GetPermissionsResponse> Get(GetPermissionsCriteria model);
         Task<bool> Delete(int permissionId);
         Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations();

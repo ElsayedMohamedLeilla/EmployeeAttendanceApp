@@ -474,7 +474,8 @@
         public const string DoneCreateNonComplianceActionSuccessfully = "DoneCreateNonComplianceActionSuccessfully";
         public const string DoneUpdateNonComplianceActionSuccessfully = "DoneUpdateNonComplianceActionSuccessfully";
         public const string SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen = "Sorry!!YouMustSelectViewingActionWhenSelectAnyActionForAnyScreen!";
-        
+        public const string SorryYouMustChooseRoleOrUser = "Sorry!!YouMustChooseRoleOrUser!";
+        public const string SorryYouMustNotChooseRoleAndUserAtTheSameTime = "Sorry!!YouMustNotChooseRoleAndUserAtTheSameTime!";
     }
     
 }

@@ -33,7 +33,7 @@
         Role,
         Schedule,
         SchedulePlan,
-        SchedulePlanBackgroundJobLog,
+        SchedulePlanLog,
         ShiftWorkingTime,
         TaskType,
         User,

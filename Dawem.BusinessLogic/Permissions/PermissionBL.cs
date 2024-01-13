@@ -5,12 +5,10 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
-using Dawem.Domain.Entities.Schedules;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Permissions.Permissions;
-using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
 using Dawem.Models.Response.Schedules.SchedulePlanLogs;
@@ -331,7 +329,7 @@ namespace Dawem.BusinessLogic.Permissions
 
             var permission = await repositoryManager.PermissionRepository
                 .Get(permission => permission.CompanyId == requestInfo.CompanyId && ((model.RoleId != null && model.RoleId == permission.RoleId) ||
-                (model.UserId != null && model.UserId == permission.UserId) )&& !permission.IsDeleted && permission.IsActive)
+                (model.UserId != null && model.UserId == permission.UserId)) && !permission.IsDeleted && permission.IsActive)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
                     Id = p.Id,
@@ -383,16 +381,27 @@ namespace Dawem.BusinessLogic.Permissions
             var permissionRepository = repositoryManager.PermissionRepository;
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
             var userRoleRepository = repositoryManager.UserRoleRepository;
+            var currentUserId = model?.UserId ?? requestInfo.UserId;
+            var currentCompanyId = model?.CompanyId ?? requestInfo.CompanyId;
 
             var isUserHasPermission = await repositoryManager.PermissionRepository
                 .Get(p => !p.IsDeleted && p.IsActive &&
-                p.CompanyId == requestInfo.CompanyId && p.UserId == model.UserId).AnyAsync();
+                p.CompanyId == currentCompanyId && p.UserId == model.UserId).AnyAsync();
 
-            if (isUserHasPermission)
+            var isUserIsAdmin = await repositoryManager.UserRepository
+              .Get(p => !p.IsDeleted && p.IsActive &&
+              p.CompanyId == currentCompanyId && p.IsAdmin &&
+              p.Id == currentUserId).AnyAsync();
+
+            if (isUserIsAdmin)
+            {
+                return true;
+            }
+            else if (isUserHasPermission)
             {
                 var checkIfHasPermission = await permissionScreenActionRepository
                     .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
-                    p.PermissionScreen.Permission.CompanyId == requestInfo.CompanyId &&
+                    p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
                     p.PermissionScreen.ScreenCode == model.ScreenCode
                      && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.UserId == model.UserId)
                     .AnyAsync();
@@ -413,13 +422,13 @@ namespace Dawem.BusinessLogic.Permissions
                 {
                     var isRolesHasPermission = await repositoryManager.PermissionRepository
                     .Get(p => !p.IsDeleted && p.IsActive &&
-                    p.CompanyId == requestInfo.CompanyId && p.RoleId > 0 && getUserRolesIds.Contains(p.RoleId.Value)).AnyAsync();
+                    p.CompanyId == currentCompanyId && p.RoleId > 0 && getUserRolesIds.Contains(p.RoleId.Value)).AnyAsync();
 
                     if (isRolesHasPermission)
                     {
                         var checkIfHasPermission = await permissionScreenActionRepository
                             .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted && !p.PermissionScreen.Permission.IsDeleted &&
-                            p.PermissionScreen.Permission.CompanyId == requestInfo.CompanyId &&
+                            p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
                             p.PermissionScreen.ScreenCode == model.ScreenCode
                             && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.RoleId > 0
                             && getUserRolesIds.Contains(p.PermissionScreen.Permission.RoleId.Value)).AnyAsync();
@@ -444,7 +453,7 @@ namespace Dawem.BusinessLogic.Permissions
 
             var isUserIsAdmin = await repositoryManager.UserRepository
                .Get(p => !p.IsDeleted && p.IsActive &&
-               p.CompanyId == currentCompanyId && p.IsAdmin && 
+               p.CompanyId == currentCompanyId && p.IsAdmin &&
                p.Id == currentUserId).AnyAsync();
 
             var isUserHasPermission = await repositoryManager.PermissionRepository

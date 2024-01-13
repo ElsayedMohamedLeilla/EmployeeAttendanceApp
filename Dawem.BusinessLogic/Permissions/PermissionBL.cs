@@ -198,6 +198,7 @@ namespace Dawem.BusinessLogic.Permissions
                 Id = p.Id,
                 Code = p.Code,
                 ForType = p.ForType,
+                RoleOrUserName = p.RoleId > 0 ? p.Role.Name : p.User.Name,
                 ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
                 AllowedScreensCount = p.PermissionScreens.Count,
                 IsActive = p.IsActive,

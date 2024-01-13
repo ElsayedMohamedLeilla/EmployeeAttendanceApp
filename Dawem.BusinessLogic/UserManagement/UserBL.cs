@@ -538,6 +538,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     Name = user.Name,
                     EmployeeId = user.EmployeeId,
                     IsActive = user.IsActive,
+                    IsAdmin = user.IsAdmin,
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,

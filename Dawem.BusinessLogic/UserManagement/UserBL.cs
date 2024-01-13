@@ -74,7 +74,7 @@ namespace Dawem.BusinessLogic.UserManagement
             #endregion
 
             var user = mapper.Map<MyUser>(model);
-            user.UserName = model.Email;
+            user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
             user.Code = getNextCode;
             user.EmployeeId = employeeId;
             user.VerificationCode = getNewVerificationCode;
@@ -275,7 +275,7 @@ namespace Dawem.BusinessLogic.UserManagement
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
             user.AddUserId = requestInfo.UserId;
-            user.UserName = model.Email;
+            user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
             user.ProfileImageName = imageName;
             user.Code = getNextCode;
 
@@ -356,7 +356,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             getUser.Name = model.Name;
             getUser.EmployeeId = model.EmployeeId;
-            getUser.Email = model.Email;
+            getUser.Email = model.Email + LeillaKeys.SpaceThenDashThenSpace + getUser.CompanyId;
             getUser.UserName = model.Email;
             getUser.MobileNumber = model.MobileNumber;
             getUser.IsActive = model.IsActive;

@@ -51,7 +51,7 @@ namespace Dawem.Data.UnitOfWork
                 _objTran.Rollback();
                 _objTran.Dispose();
             }
-            catch (ObjectDisposedException)
+            catch (Exception)
             {
                 // do nothing
             }

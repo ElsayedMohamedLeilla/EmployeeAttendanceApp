@@ -15,6 +15,8 @@ namespace Dawem.Models.AutoMapper
         }
         private void Maptypes(BaseFingerprintEnforcementModel source, FingerprintEnforcement destination, ResolutionContext context)
         {
+            destination.FingerprintEnforcementNotifyWays = source.NotifyWays != null ?
+               source.NotifyWays.Select(e => new FingerprintEnforcementNotifyWay() { NotifyWay = e }).ToList() : null;
             destination.FingerprintEnforcementEmployees = source.Employees != null ?
                source.Employees.Select(e => new FingerprintEnforcementEmployee() { EmployeeId = e }).ToList() : null;
             destination.FingerprintEnforcementGroups = source.Groups != null ?

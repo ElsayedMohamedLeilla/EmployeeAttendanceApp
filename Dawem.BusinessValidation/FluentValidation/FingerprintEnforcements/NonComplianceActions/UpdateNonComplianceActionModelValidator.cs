@@ -14,6 +14,12 @@ namespace Dawem.Validation.FluentValidation.Employees.NonComplianceActions
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterNonComplianceActionName);
 
+            RuleFor(model => model.Type).IsInEnum().
+                  WithMessage(LeillaKeys.SorryYouMustEnterNonComplianceActionType);
+
+            RuleFor(model => model.WarningMessage).IsInEnum().
+                   WithMessage(LeillaKeys.SorryYouMustEnterNonComplianceActionWarningMessage);
+
         }
     }
 }

@@ -69,6 +69,7 @@ namespace Dawem.Contract.Repository.Manager
         IVacationBalanceRepository VacationBalanceRepository { get; }
         INotificationStoreRepository NotificationStoreRepository { get; }
         IFingerprintEnforcementRepository FingerprintEnforcementRepository { get; }
+        IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository { get; }
         IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository { get; }
         IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository { get; }
         IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository { get; }

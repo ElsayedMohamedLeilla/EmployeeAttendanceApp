@@ -96,12 +96,12 @@ namespace Dawem.Repository.Managers
         private INotificationStoreRepository notificationStoreRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private IFingerprintEnforcementRepository fingerprintEnforcementRepository;
-
+        private IFingerprintEnforcementNotifyWayRepository fingerprintEnforcementNotifyWayRepository;
         private IFingerprintEnforcementEmployeeRepository fingerprintEnforcementEmployeeRepository;
         private IFingerprintEnforcementGroupRepository fingerprintEnforcementGroupRepository;
         private IFingerprintEnforcementActionRepository fingerprintEnforcementActionRepository;
         private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
-        
+
         private INonComplianceActionRepository nonComplianceActionRepository;
 
 
@@ -237,6 +237,9 @@ namespace Dawem.Repository.Managers
 
         public IFingerprintEnforcementRepository FingerprintEnforcementRepository =>
             fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting);
+
+        public IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository =>
+            fingerprintEnforcementNotifyWayRepository ??= new FingerprintEnforcementNotifyWayRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository =>
             fingerprintEnforcementEmployeeRepository ??= new FingerprintEnforcementEmployeeRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository =>

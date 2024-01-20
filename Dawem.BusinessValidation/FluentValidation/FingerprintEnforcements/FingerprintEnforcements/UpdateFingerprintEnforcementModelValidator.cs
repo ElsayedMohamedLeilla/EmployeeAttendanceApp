@@ -32,6 +32,10 @@ namespace Dawem.Validation.FluentValidation.Employees.AssignmentTypes
                 .IsInEnum()
                 .WithMessage(LeillaKeys.SorryYouMustChooseTimeType);
 
+            RuleFor(model => model.NotifyWays)
+                .Must(a => a != null && a.Count > 0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneNotifyWay);
+
             RuleFor(model => model.Actions)
                 .Must(a => a != null && a.Count > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseAtLeastOneAction);

@@ -75,5 +75,7 @@ namespace Dawem.Contract.Repository.Manager
         IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository { get; }
         IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository { get; }
         INonComplianceActionRepository NonComplianceActionRepository { get; }
+        INotificationUserRepository NotificationUserRepository { get; }
+        INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository { get; }
     }
 }

@@ -2,6 +2,7 @@
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Firebase;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
@@ -259,6 +260,14 @@ namespace Dawem.Data
          .OnDelete(DeleteBehavior.Cascade);
 
 
+
+            builder.Entity<NotificationUserDeviceToken>()
+      .HasOne(p => p.NotificationUser)
+      .WithMany(b => b.NotificationUserDeviceTokens)
+      .HasForeignKey(p => p.NotificationUserId)
+      .OnDelete(DeleteBehavior.Cascade);
+
+
             builder.Entity<FingerprintEnforcementDepartment>()
         .HasOne(p => p.Company)
         .WithMany()
@@ -295,6 +304,7 @@ namespace Dawem.Data
       .OnDelete(DeleteBehavior.Restrict);
 
 
+           
 
 
             builder.Entity<Department>()
@@ -351,6 +361,8 @@ namespace Dawem.Data
         public DbSet<SchedulePlanLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<NotificationUser> FirebaseUsers { get; set; }
+        public DbSet<NotificationUserDeviceToken> FirebaseUserDeviceTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }

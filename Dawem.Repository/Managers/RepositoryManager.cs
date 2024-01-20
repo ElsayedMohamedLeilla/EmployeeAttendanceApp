@@ -101,8 +101,9 @@ namespace Dawem.Repository.Managers
         private IFingerprintEnforcementGroupRepository fingerprintEnforcementGroupRepository;
         private IFingerprintEnforcementActionRepository fingerprintEnforcementActionRepository;
         private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
-
         private INonComplianceActionRepository nonComplianceActionRepository;
+        private INotificationUserRepository notificationUserRepository;
+        private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
@@ -248,8 +249,11 @@ namespace Dawem.Repository.Managers
             fingerprintEnforcementActionRepository ??= new FingerprintEnforcementActionRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository =>
             fingerprintEnforcementGroupRepository ??= new FingerprintEnforcementGroupRepository(unitOfWork, generalSetting);
-
         public INonComplianceActionRepository NonComplianceActionRepository =>
             nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting);
+        public INotificationUserRepository NotificationUserRepository =>
+            notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
+        public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>
+            notificationUserDeviceTokenRepository ??= new NotificationUserDeviceTokenRepository(unitOfWork, generalSetting);
     }
 }

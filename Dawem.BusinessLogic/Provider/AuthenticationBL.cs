@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Firebase;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
@@ -292,7 +293,7 @@ namespace Dawem.BusinessLogic.Provider
             #region Get User Role
 
             var roles = await userManagerRepository.GetRolesAsync(user);
-           
+
             #endregion
 
             #region Get Token Model
@@ -316,6 +317,60 @@ namespace Dawem.BusinessLogic.Provider
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;
+
+            #region Handle Save Device Token
+
+            if (!string.IsNullOrEmpty(signInModel.DeviceToken) && !string.IsNullOrWhiteSpace(signInModel.DeviceToken))
+            {
+                var getNotificationUser = await repositoryManager.NotificationUserRepository
+                .Get(f => !f.IsDeleted && f.CompanyId == user.CompanyId && f.UserId == user.Id)
+                .FirstOrDefaultAsync();
+
+                if (getNotificationUser != null)
+                {
+                    var getNotificationUserDeviceToken = await repositoryManager.NotificationUserDeviceTokenRepository
+                    .GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && f.NotificationUserId == getNotificationUser.Id
+                    && f.DeviceToken == signInModel.DeviceToken && f.DeviceType == signInModel.ApplicationType);
+
+                    if (getNotificationUserDeviceToken == null)
+                    {
+                        var notificationUserDeviceToken = new NotificationUserDeviceToken
+                        {
+                            NotificationUserId = getNotificationUser.Id,
+                            DeviceToken = signInModel.DeviceToken,
+                            DeviceType = signInModel.ApplicationType,
+                            LastLogInDate = DateTime.UtcNow
+                        };
+                        repositoryManager.NotificationUserDeviceTokenRepository.Insert(notificationUserDeviceToken);
+                    }
+                    else
+                    {
+                        getNotificationUserDeviceToken.LastLogInDate = DateTime.UtcNow;
+                    }
+                }
+                else
+                {
+                    var firebaseUser = new NotificationUser
+                    {
+                        CompanyId = user.CompanyId ?? 0,
+                        UserId = user.Id,
+                        NotificationUserDeviceTokens = new()
+                        {
+                            new()
+                            {
+                                DeviceToken = signInModel.DeviceToken,
+                                DeviceType = signInModel.ApplicationType,
+                                LastLogInDate = DateTime.UtcNow
+                            }
+                        }
+                    };
+                    repositoryManager.NotificationUserRepository.Insert(firebaseUser);
+                }
+
+                await unitOfWork.SaveAsync();
+            }
+
+            #endregion
 
             return tokenData;
         }

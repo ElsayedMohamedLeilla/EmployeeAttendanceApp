@@ -481,7 +481,9 @@
         public const string SorryYouMustEnterNonComplianceActionType = "Sorry!!YouMustEnterNonComplianceActionType!";
         public const string SorryYouMustEnterNonComplianceActionWarningMessage = "Sorry!!YouMustEnterNonComplianceActionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
+        public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
 
+        
     }
     
 }

@@ -318,7 +318,7 @@ namespace Dawem.BusinessLogic.Provider
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;
 
-            #region Handle Save Device Token
+            #region Handle Device Token
 
             if (!string.IsNullOrEmpty(signInModel.DeviceToken) && !string.IsNullOrWhiteSpace(signInModel.DeviceToken))
             {
@@ -367,7 +367,7 @@ namespace Dawem.BusinessLogic.Provider
                     repositoryManager.NotificationUserRepository.Insert(firebaseUser);
                 }
 
-                await unitOfWork.SaveAsync();
+                _ = unitOfWork.SaveAsync();
             }
 
             #endregion

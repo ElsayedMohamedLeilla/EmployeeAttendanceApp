@@ -97,14 +97,14 @@ namespace Dawem.Repository.Managers
         private INotificationStoreRepository notificationStoreRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private IFingerprintEnforcementRepository fingerprintEnforcementRepository;
-
+        private IFingerprintEnforcementNotifyWayRepository fingerprintEnforcementNotifyWayRepository;
         private IFingerprintEnforcementEmployeeRepository fingerprintEnforcementEmployeeRepository;
         private IFingerprintEnforcementGroupRepository fingerprintEnforcementGroupRepository;
         private IFingerprintEnforcementActionRepository fingerprintEnforcementActionRepository;
         private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
-        
         private INonComplianceActionRepository nonComplianceActionRepository;
-        //private INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private INotificationUserRepository notificationUserRepository;
+        private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
 
         
 
@@ -240,6 +240,9 @@ namespace Dawem.Repository.Managers
 
         public IFingerprintEnforcementRepository FingerprintEnforcementRepository =>
             fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting);
+
+        public IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository =>
+            fingerprintEnforcementNotifyWayRepository ??= new FingerprintEnforcementNotifyWayRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository =>
             fingerprintEnforcementEmployeeRepository ??= new FingerprintEnforcementEmployeeRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository =>
@@ -248,11 +251,11 @@ namespace Dawem.Repository.Managers
             fingerprintEnforcementActionRepository ??= new FingerprintEnforcementActionRepository(unitOfWork, generalSetting);
         public IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository =>
             fingerprintEnforcementGroupRepository ??= new FingerprintEnforcementGroupRepository(unitOfWork, generalSetting);
-
         public INonComplianceActionRepository NonComplianceActionRepository =>
             nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting);
-
-        //public INotificationServiceByFireBaseAdmin NotificationServiceByFireBaseAdmin =>
-        //    notificationServiceByFireBaseAdmin ??= new NotificationServiceByFireBaseAdmin(unitOfWork, generalSetting);
+        public INotificationUserRepository NotificationUserRepository =>
+            notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
+        public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>
+            notificationUserDeviceTokenRepository ??= new NotificationUserDeviceTokenRepository(unitOfWork, generalSetting);
     }
 }

@@ -476,6 +476,14 @@
         public const string SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen = "Sorry!!YouMustSelectViewingActionWhenSelectAnyActionForAnyScreen!";
         public const string SorryYouMustChooseRoleOrUser = "Sorry!!YouMustChooseRoleOrUser!";
         public const string SorryYouMustNotChooseRoleAndUserAtTheSameTime = "Sorry!!YouMustNotChooseRoleAndUserAtTheSameTime!";
+        public const string NonComplianceActionType = "NonComplianceActionType";
+        public const string NotifyWay = "NotifyWay"; 
+        public const string SorryYouMustEnterNonComplianceActionType = "Sorry!!YouMustEnterNonComplianceActionType!";
+        public const string SorryYouMustEnterNonComplianceActionWarningMessage = "Sorry!!YouMustEnterNonComplianceActionWarningMessage!";
+        public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
+        public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
+
+        
     }
     
 }

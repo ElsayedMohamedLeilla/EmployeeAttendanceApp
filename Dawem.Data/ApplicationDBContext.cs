@@ -2,6 +2,7 @@
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Firebase;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
@@ -232,10 +233,11 @@ namespace Dawem.Data
            .OnDelete(DeleteBehavior.Cascade);
 
 
-
-
-
-
+            builder.Entity<FingerprintEnforcementNotifyWay>()
+         .HasOne(p => p.FingerprintEnforcement)
+         .WithMany(b => b.FingerprintEnforcementNotifyWays)
+         .HasForeignKey(p => p.FingerprintEnforcementId)
+         .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<FingerprintEnforcementEmployee>()
           .HasOne(p => p.FingerprintEnforcement)
           .WithMany(b => b.FingerprintEnforcementEmployees)
@@ -258,6 +260,14 @@ namespace Dawem.Data
          .OnDelete(DeleteBehavior.Cascade);
 
 
+
+            builder.Entity<NotificationUserDeviceToken>()
+      .HasOne(p => p.NotificationUser)
+      .WithMany(b => b.NotificationUserDeviceTokens)
+      .HasForeignKey(p => p.NotificationUserId)
+      .OnDelete(DeleteBehavior.Cascade);
+
+
             builder.Entity<FingerprintEnforcementDepartment>()
         .HasOne(p => p.Company)
         .WithMany()
@@ -268,11 +278,13 @@ namespace Dawem.Data
         .WithMany()
         .HasForeignKey(p => p.FingerprintEnforcementId)
         .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<FingerprintEnforcementGroup>()
         .HasOne(p => p.Company)
         .WithMany()
         .HasForeignKey(p => p.FingerprintEnforcementId)
         .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<FingerprintEnforcementAction>()
        .HasOne(p => p.Company)
        .WithMany()
@@ -285,7 +297,14 @@ namespace Dawem.Data
       .HasForeignKey(p => p.FingerprintEnforcementId)
       .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<FingerprintEnforcementNotifyWay>()
+      .HasOne(p => p.Company)
+      .WithMany()
+      .HasForeignKey(p => p.FingerprintEnforcementId)
+      .OnDelete(DeleteBehavior.Restrict);
 
+
+           
 
 
             builder.Entity<Department>()
@@ -342,6 +361,8 @@ namespace Dawem.Data
         public DbSet<SchedulePlanLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<NotificationUser> FirebaseUsers { get; set; }
+        public DbSet<NotificationUserDeviceToken> FirebaseUserDeviceTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }

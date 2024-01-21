@@ -110,16 +110,19 @@ namespace Dawem.BusinessLogic.Employees
                 #region Update Types And Actions
 
                 var existEmployeeDbList = await repositoryManager.FingerprintEnforcementEmployeeRepository
-                                .GetByCondition(e => e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
+                                .GetByCondition(e => !e.IsDeleted && e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
                                 .ToListAsync();
                 var existGroupDbList = await repositoryManager.FingerprintEnforcementGroupRepository
-                                .GetByCondition(e => e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
+                                .GetByCondition(e => !e.IsDeleted & e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
                                 .ToListAsync();
                 var existDepartmentDbList = await repositoryManager.FingerprintEnforcementDepartmentRepository
-                                .GetByCondition(e => e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
+                                .GetByCondition(e => !e.IsDeleted & e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
                                 .ToListAsync();
                 var existActionDbList = await repositoryManager.FingerprintEnforcementActionRepository
-                                .GetByCondition(e => e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
+                                .GetByCondition(e => !e.IsDeleted & e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
+                                .ToListAsync();
+                var existNotifyWaysDbList = await repositoryManager.FingerprintEnforcementNotifyWayRepository
+                                .GetByCondition(e => !e.IsDeleted & e.FingerprintEnforcementId == getFingerprintEnforcement.Id)
                                 .ToListAsync();
 
                 switch (model.ForType)
@@ -224,7 +227,6 @@ namespace Dawem.BusinessLogic.Employees
                         break;
                 }
 
-
                 #region Handle Actions
 
                 var existingActionIds = existActionDbList.Select(e => e.NonComplianceActionId).ToList();
@@ -248,6 +250,32 @@ namespace Dawem.BusinessLogic.Employees
                     repositoryManager.FingerprintEnforcementActionRepository.BulkDeleteIfExist(actionsToRemove);
                 if (addedActions.Count > 0)
                     repositoryManager.FingerprintEnforcementActionRepository.BulkInsert(addedActions);
+
+                #endregion
+
+                #region Handle Notify Ways
+
+                var existingNotifyWaysIds = existNotifyWaysDbList.Select(e => e.NotifyWay).ToList();
+
+                var addedNotifyWays = model.NotifyWays
+                    .Where(notifyWay => !existingNotifyWaysIds.Contains(notifyWay))
+                    .Select(notifyWay => new FingerprintEnforcementNotifyWay
+                    {
+                        FingerprintEnforcementId = model.Id,
+                        NotifyWay = notifyWay,
+                        ModifyUserId = requestInfo.UserId,
+                        ModifiedDate = DateTime.UtcNow
+                    })
+                    .ToList();
+
+                var notifyWaysToRemove = existNotifyWaysDbList
+                    .Where(ge => !model.NotifyWays.Contains(ge.NotifyWay))
+                    .ToList();
+
+                if (notifyWaysToRemove.Count > 0)
+                    repositoryManager.FingerprintEnforcementNotifyWayRepository.BulkDeleteIfExist(notifyWaysToRemove);
+                if (addedNotifyWays.Count > 0)
+                    repositoryManager.FingerprintEnforcementNotifyWayRepository.BulkInsert(addedNotifyWays);
 
                 #endregion
 
@@ -312,6 +340,7 @@ namespace Dawem.BusinessLogic.Employees
                     AllowedTime = e.AllowedTime,
                     TimeType = e.TimeType,
                     ForTypeName = TranslationHelper.GetTranslation(e.ForType.ToString(), requestInfo.Lang),
+                    NotifyWays = e.FingerprintEnforcementNotifyWays != null ? e.FingerprintEnforcementNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
                     Employees = e.FingerprintEnforcementEmployees != null ? e.FingerprintEnforcementEmployees.Select(e => e.Employee.Name).ToList() : null,
                     Groups = e.FingerprintEnforcementGroups != null ? e.FingerprintEnforcementGroups.Select(e => e.Group.Name).ToList() : null,
                     Departments = e.FingerprintEnforcementDepartments != null ? e.FingerprintEnforcementDepartments.Select(e => e.Department.Name).ToList() : null,
@@ -333,6 +362,7 @@ namespace Dawem.BusinessLogic.Employees
                     FingerprintDate = e.FingerprintDate,
                     AllowedTime = e.AllowedTime,
                     TimeType = e.TimeType,
+                    NotifyWays = e.FingerprintEnforcementNotifyWays != null ? e.FingerprintEnforcementNotifyWays.Select(e => e.NotifyWay).ToList() : null,
                     Employees = e.FingerprintEnforcementEmployees != null ? e.FingerprintEnforcementEmployees.Select(e => e.EmployeeId).ToList() : null,
                     Groups = e.FingerprintEnforcementGroups != null ? e.FingerprintEnforcementGroups.Select(e => e.GroupId).ToList() : null,
                     Departments = e.FingerprintEnforcementDepartments != null ? e.FingerprintEnforcementDepartments.Select(e => e.DepartmentId).ToList() : null,

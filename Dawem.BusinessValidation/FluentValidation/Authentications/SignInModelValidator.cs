@@ -1,6 +1,7 @@
 ﻿using Dawem.Models.Dtos.Identities;
 using Dawem.Translations;
 using FluentValidation;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Dawem.Validation.FluentValidation.Authentications
 {
@@ -20,6 +21,10 @@ namespace Dawem.Validation.FluentValidation.Authentications
             RuleFor(signInModel => signInModel.ApplicationType)
                 .IsInEnum().
                 WithMessage(LeillaKeys.SorryYouMustEnterApplicationType);
+
+            RuleFor(signInModel => signInModel.DeviceToken)
+                .Must(d=> !string.IsNullOrEmpty(d) && !string.IsNullOrWhiteSpace(d)).
+                WithMessage(LeillaKeys.SorryYouMustEnterDeviceToken);
         }
     }
 }

@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240120030706_AddTables")]
+    partial class AddTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1887,126 +1890,6 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("ZoneId");
 
                     b.ToTable("ZoneGroups", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("NotificationUsers", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUserDeviceToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DeviceType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastLogInDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NotificationUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NotificationUserId");
-
-                    b.ToTable("NotificationUserDeviceTokens", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Localization.Translation", b =>
@@ -4645,36 +4528,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Zone");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUser", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUserDeviceToken", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Firebase.NotificationUser", "NotificationUser")
-                        .WithMany("NotificationUserDeviceTokens")
-                        .HasForeignKey("NotificationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NotificationUser");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Lookups.Currency", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Lookups.Country", "Country")
@@ -5276,11 +5129,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("FingerprintEnforcementGroups");
 
                     b.Navigation("FingerprintEnforcementNotifyWays");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUser", b =>
-                {
-                    b.Navigation("NotificationUserDeviceTokens");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Permissions.Permission", b =>

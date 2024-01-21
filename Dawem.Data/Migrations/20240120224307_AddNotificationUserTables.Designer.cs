@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240120224307_AddNotificationUserTables")]
+    partial class AddNotificationUserTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1978,6 +1981,9 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("DisableReason")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FirebaseUserId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -1999,10 +2005,12 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NotificationUserId")
+                    b.Property<int?>("NotificationUserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FirebaseUserId");
 
                     b.HasIndex("NotificationUserId");
 
@@ -4667,10 +4675,14 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUserDeviceToken", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Firebase.NotificationUser", "NotificationUser")
-                        .WithMany("NotificationUserDeviceTokens")
-                        .HasForeignKey("NotificationUserId")
+                        .WithMany()
+                        .HasForeignKey("FirebaseUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Firebase.NotificationUser", null)
+                        .WithMany("FirebaseUserDeviceTokens")
+                        .HasForeignKey("NotificationUserId");
 
                     b.Navigation("NotificationUser");
                 });
@@ -5280,7 +5292,7 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUser", b =>
                 {
-                    b.Navigation("NotificationUserDeviceTokens");
+                    b.Navigation("FirebaseUserDeviceTokens");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Permissions.Permission", b =>

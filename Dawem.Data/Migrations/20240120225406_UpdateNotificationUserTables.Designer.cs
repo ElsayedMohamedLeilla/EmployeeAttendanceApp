@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240120225406_UpdateNotificationUserTables")]
+    partial class UpdateNotificationUserTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2002,9 +2005,14 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("NotificationUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("NotificationUserId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NotificationUserId");
+
+                    b.HasIndex("NotificationUserId1");
 
                     b.ToTable("NotificationUserDeviceTokens", "Dawem");
                 });
@@ -4667,10 +4675,14 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Firebase.NotificationUserDeviceToken", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Firebase.NotificationUser", "NotificationUser")
-                        .WithMany("NotificationUserDeviceTokens")
+                        .WithMany()
                         .HasForeignKey("NotificationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Firebase.NotificationUser", null)
+                        .WithMany("NotificationUserDeviceTokens")
+                        .HasForeignKey("NotificationUserId1");
 
                     b.Navigation("NotificationUser");
                 });

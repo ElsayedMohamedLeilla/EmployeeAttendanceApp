@@ -11,6 +11,7 @@ namespace Dawem.Models.Response.Employees.AssignmentTypes
         public DateTime FingerprintDate { get; set; }
         public int AllowedTime { get; set; }
         public TimeType TimeType { get; set; }
+        public List<NotifyWay> NotifyWays { get; set; }
         public List<int> Employees { get; set; }
         public List<int> Groups { get; set; }
         public List<int> Departments { get; set; }

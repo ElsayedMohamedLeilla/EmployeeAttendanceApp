@@ -9,5 +9,6 @@
         JustificationRequest,
         PermisionRequest,
         AddingInMission,
+        NewTaskRequest
     }
 }

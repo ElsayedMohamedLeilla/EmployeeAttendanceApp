@@ -1,16 +1,20 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogic.Core.NotificationsStores;
+using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Core.NotificationsStores;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
@@ -31,12 +35,15 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly INotificationStoreBL notificationStoreBL;
+
         public RequestTaskBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestTaskBLValidation _requestTaskBLValidation)
+           IRequestTaskBLValidation _requestTaskBLValidation,
+           INotificationStoreBL _notificationStoreBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -44,6 +51,7 @@ namespace Dawem.BusinessLogic.Requests
             requestTaskBLValidation = _requestTaskBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            notificationStoreBL = _notificationStoreBL;
         }
         public async Task<int> Create(CreateRequestTaskModelDTO model)
         {
@@ -121,6 +129,49 @@ namespace Dawem.BusinessLogic.Requests
             await unitOfWork.SaveAsync();
 
             #endregion
+
+            #region Save Notification In DB
+            for (int i = 0; i < model.TaskEmployeeIds.Count; i++)
+            {
+                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+              .Get(e => e.CompanyId == requestInfo.CompanyId)
+              .Select(e => e.Code)
+              .DefaultIfEmpty()
+              .MaxAsync() + 1;
+                var notificationStore = new NotificationStore()
+                {
+                    Code = getNotificationNextCode,
+                    EmployeeId = model.TaskEmployeeIds[i],
+                    CompanyId = requestInfo.CompanyId,
+                    AddUserId = requestInfo.UserId,
+                    AddedDate = DateTime.UtcNow,
+                    Status = NotificationStatus.Info,
+                    NotificationType = NotificationType.NewTaskRequest,
+                    ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                    IsRead = false,
+                    IsActive = true,
+                    Priority = Priority.Medium
+
+                };
+                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+                await unitOfWork.SaveAsync();
+              
+                #endregion
+            }
+            #region Fire Notification & Email
+            NotificationParametersModel nPM = new NotificationParametersModel()
+            {
+                departmentIds = null,
+                groupIds = null,
+                employeeIds =   model.TaskEmployeeIds ,
+                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
+                types = new List<NotificationType> { NotificationType.NewVacationRequest }
+            };
+            var status = notificationStoreBL.Notify(nPM);
+
+            #endregion
+
+
 
             #region Handle Response
 

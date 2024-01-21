@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Attendances;
+﻿using Dawem.Contract.Firebase;
+using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
@@ -103,7 +104,9 @@ namespace Dawem.Repository.Managers
         private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
         
         private INonComplianceActionRepository nonComplianceActionRepository;
+        //private INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
 
+        
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {
@@ -248,5 +251,8 @@ namespace Dawem.Repository.Managers
 
         public INonComplianceActionRepository NonComplianceActionRepository =>
             nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting);
+
+        //public INotificationServiceByFireBaseAdmin NotificationServiceByFireBaseAdmin =>
+        //    notificationServiceByFireBaseAdmin ??= new NotificationServiceByFireBaseAdmin(unitOfWork, generalSetting);
     }
 }

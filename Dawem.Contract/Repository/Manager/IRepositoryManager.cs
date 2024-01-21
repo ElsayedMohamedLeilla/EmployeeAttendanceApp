@@ -10,6 +10,7 @@ using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.UserManagement;
+using Dawem.Contract.Firebase;
 
 namespace Dawem.Contract.Repository.Manager
 {
@@ -74,5 +75,7 @@ namespace Dawem.Contract.Repository.Manager
         IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository { get; }
         IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository { get; }
         INonComplianceActionRepository NonComplianceActionRepository { get; }
+        //INotificationServiceByFireBaseAdmin NotificationServiceByFireBaseAdmin { get; }
+
     }
 }

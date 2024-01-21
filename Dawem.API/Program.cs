@@ -26,6 +26,9 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Dawem.Contract.Firebase;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
@@ -109,6 +112,15 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.DateParseHandling = DateParseHandling.None;
     options.SerializerSettings.Converters.Add(new MultiFormatDateConverter());
 });
+
+#region FireBase
+var credential = GoogleCredential.FromFile("ConfigrationFiles\\Firebase\\firebase-adminsdk.json");
+var firebaseApp = FirebaseApp.Create(new AppOptions
+{
+    Credential = credential,
+});
+builder.Services.AddTransient<INotificationServiceByFireBaseAdmin, NotificationServiceByFireBaseAdmin>();
+#endregion
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 builder.Services.AddFluentValidationAutoValidation(cpnfig =>

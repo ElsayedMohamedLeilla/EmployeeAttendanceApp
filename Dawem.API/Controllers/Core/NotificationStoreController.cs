@@ -1,6 +1,8 @@
 ﻿using Dawem.Contract.BusinessLogic.Core;
+using Dawem.Contract.Firebase;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Firebase;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +16,11 @@ namespace Dawem.API.Controllers.Core
     public class NotificationStoreController : BaseController
     {
         private readonly INotificationStoreBL notificationStoreBL;
-        public NotificationStoreController(INotificationStoreBL _NotificationStoreBL)
+        private readonly INotificationServiceByFireBaseAdmin notificationService;
+        public NotificationStoreController(INotificationStoreBL _NotificationStoreBL, INotificationServiceByFireBaseAdmin _notificationService)
         {
             notificationStoreBL = _NotificationStoreBL;
+            notificationService = _notificationService;
         }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetNotificationStoreCriteria criteria)
@@ -87,6 +91,18 @@ namespace Dawem.API.Controllers.Core
                 return BadRequest();
             }
             return Success(await notificationStoreBL.GetUnreadNotificationByUserId(criteria));
+        }
+
+        [Route("send")]
+        [HttpPost]
+        public async Task<IActionResult> SendNotification(NotificationModel notificationModel)
+        {
+            if (notificationModel == null)
+            {
+                return BadRequest();
+            }
+            var result = await notificationService.SendNotification(notificationModel);
+            return Ok(result);
         }
 
 

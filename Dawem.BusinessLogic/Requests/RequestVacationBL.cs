@@ -12,6 +12,7 @@ using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Core.NotificationsStores;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
@@ -167,15 +168,15 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
             #region Fire Notification & Email
-            var ManagerEmployee = await repositoryManager
-               .EmployeeRepository.Get(r => r.Id == requestEmployee.DirectManagerId)
-               .Select(e => new
-               {
-                   e.Email,
-               }).FirstOrDefaultAsync();
-            //await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + requestEmployee.DirectManagerId)
-            //    .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await notificationStoreBL.GetUnreadNotificationCountByUserId(), requestInfo.Lang, NotificationType.NewVacationRequest, requestEmployee.Name));
-            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.NewVacationRequest, requestEmployee.DirectManagerId ?? 0, requestEmployee.Name, ManagerEmployee.Email);
+            NotificationParametersModel nPM = new NotificationParametersModel()
+            {
+                departmentIds = null ,
+                groupIds = null,
+                employeeIds = new List<int> { requestEmployee.DirectManagerId ?? 0 },
+                notifyWays = new List<NotifyWay> { NotifyWay.Email,NotifyWay.OnApp},
+                types = new List<NotificationType> { NotificationType.NewVacationRequest}
+            };
+            var status = notificationStoreBL.Notify(nPM);
             #endregion
 
             #region Handle Response
@@ -583,16 +584,18 @@ namespace Dawem.BusinessLogic.Requests
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #region Fire Notification
-            var requestEmployee = await repositoryManager
-               .EmployeeRepository.Get(r => r.Id == request.EmployeeId)
-               .Select(e => new
-               {
-                   e.Email,
-                   e.Name,
-               }).FirstOrDefaultAsync();
+            NotificationParametersModel nPM = new NotificationParametersModel()
+            {
+                departmentIds = null,
+                groupIds = null,
+                employeeIds = new List<int> { request.EmployeeId },
+                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
+                types = new List<NotificationType> { NotificationType.AcceptingVacationRequest }
+            };
+            var status = notificationStoreBL.Notify(nPM);
 
             #endregion
-            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.AcceptingVacationRequest, request.EmployeeId , requestEmployee.Name, requestEmployee.Email);
+
             #endregion
             return true;
         }
@@ -640,17 +643,15 @@ namespace Dawem.BusinessLogic.Requests
             };
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
-            #region Fire Notification
-            var requestEmployee = await repositoryManager
-               .EmployeeRepository.Get(r => r.Id == request.EmployeeId)
-               .Select(e => new
-               {
-                   e.Email,
-                   e.Name,
-               }).FirstOrDefaultAsync();
-
-            #endregion
-            var status = notificationStoreBL.SendNotificationAndEmail(NotificationType.AcceptingVacationRequest, request.EmployeeId, requestEmployee.Name, requestEmployee.Email);
+            NotificationParametersModel nPM = new NotificationParametersModel()
+            {
+                departmentIds = null,
+                groupIds = null,
+                employeeIds = new List<int> { request.EmployeeId },
+                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
+                types = new List<NotificationType> { NotificationType.RejectingVacationRequest }
+            };
+            var status = notificationStoreBL.Notify(nPM);
             #endregion
             return true;
         }

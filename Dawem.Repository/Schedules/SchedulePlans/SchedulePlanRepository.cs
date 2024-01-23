@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Schedules.SchedulePlans
 {
     public class SchedulePlanRepository : GenericRepository<SchedulePlan>, ISchedulePlanRepository
     {
-        public SchedulePlanRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public SchedulePlanRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            this.requestInfo = requestInfo;
         }
         public IQueryable<SchedulePlan> GetAsQueryable(GetSchedulePlansCriteria criteria)
         {
             var predicate = PredicateBuilder.New<SchedulePlan>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<SchedulePlan>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

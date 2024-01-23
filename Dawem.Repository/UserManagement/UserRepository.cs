@@ -13,24 +13,24 @@ namespace Dawem.Repository.UserManagement
 {
     public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
-        private readonly RequestInfo requestHeaderContext;
-        public UserRepository(RequestInfo _requestHeaderContext, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public UserRepository(RequestInfo _requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
-            requestHeaderContext = _requestHeaderContext;
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
             var userPredicate = PredicateBuilder.New<MyUser>(true);
 
-            if (requestHeaderContext.IsMainBranch && criteria.ForGridView)
+            if (requestInfo.IsMainBranch && criteria.ForGridView)
             {
 
-                userPredicate = userPredicate.And(x => x.BranchId == requestHeaderContext.BranchId);
+                userPredicate = userPredicate.And(x => x.BranchId == requestInfo.BranchId);
             }
             else
             {
-                userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestHeaderContext.BranchId));
+                userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestInfo.BranchId));
             }
 
             if (criteria.Id is not null)
@@ -74,6 +74,8 @@ namespace Dawem.Repository.UserManagement
         {
             var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MyUser>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

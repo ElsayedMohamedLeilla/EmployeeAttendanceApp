@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Others.VacationBalances;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Others
 {
     public class VacationBalanceRepository : GenericRepository<VacationBalance>, IVacationBalanceRepository
     {
-        public VacationBalanceRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public VacationBalanceRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<VacationBalance> GetAsQueryable(GetVacationBalancesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<VacationBalance>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<VacationBalance>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

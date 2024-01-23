@@ -22,6 +22,8 @@ namespace Dawem.Repository.Employees
             var predicate = PredicateBuilder.New<Employee>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Employee>(true);
 
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();

@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.FingerprintEnforcements.NonComplianceActions;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Employees
 {
     public class NonComplianceActionRepository : GenericRepository<NonComplianceAction>, INonComplianceActionRepository
     {
-        public NonComplianceActionRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public NonComplianceActionRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
         public IQueryable<NonComplianceAction> GetAsQueryable(GetNonComplianceActionsCriteria criteria)
         {
             var predicate = PredicateBuilder.New<NonComplianceAction>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<NonComplianceAction>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

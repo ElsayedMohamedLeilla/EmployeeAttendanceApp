@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,18 @@ namespace Dawem.Repository.Core.PermissionsTypes
 {
     public class PermissionsTypeRepository : GenericRepository<PermissionType>, IPermissionsTypeRepository
     {
-        public PermissionsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public PermissionsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<PermissionType> GetAsQueryable(GetPermissionsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<PermissionType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<PermissionType>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

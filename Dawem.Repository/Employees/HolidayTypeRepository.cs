@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.HolidayTypes;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Employees
 {
     public class HolidayTypeRepository : GenericRepository<HolidayType>, IHolidayTypeRepository
     {
-        public HolidayTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public HolidayTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo ) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<HolidayType> GetAsQueryable(GetHolidayTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<HolidayType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<HolidayType>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

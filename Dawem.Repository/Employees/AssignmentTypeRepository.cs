@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.AssignmentTypes;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Employees
 {
     public class AssignmentTypeRepository : GenericRepository<AssignmentType>, IAssignmentTypeRepository
     {
-        public AssignmentTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public AssignmentTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<AssignmentType> GetAsQueryable(GetAssignmentTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<AssignmentType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<AssignmentType>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

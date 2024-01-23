@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Schedules.Schedules
 {
     public class ShiftWorkingTimeRepository : GenericRepository<ShiftWorkingTime>, IShiftWorkingTimeRepository
     {
-        public ShiftWorkingTimeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private RequestInfo _requestInfo;
+        public ShiftWorkingTimeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<ShiftWorkingTime> GetAsQueryable(GetShiftWorkingTimesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<ShiftWorkingTime>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<ShiftWorkingTime>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,16 +11,18 @@ namespace Dawem.Repository.Core.NotificationsStores
 {
     public class NotificationStoreRepository : GenericRepository<NotificationStore>, INotificationStoreRepository
     {
-        public NotificationStoreRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public NotificationStoreRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<NotificationStore> GetAsQueryable(GetNotificationStoreCriteria criteria)
         {
             var predicate = PredicateBuilder.New<NotificationStore>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<NotificationStore>(true);
 
-           
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
+
             if (criteria.Id != null)
             {
 

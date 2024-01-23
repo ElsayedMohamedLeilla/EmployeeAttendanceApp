@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,18 @@ namespace Dawem.Repository.Core.VacationsTypes
 {
     public class VacationsTypeRepository : GenericRepository<VacationType>, IVacationsTypeRepository
     {
-        public VacationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public VacationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
 
         public IQueryable<VacationType> GetAsQueryable(GetVacationsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<VacationType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<VacationType>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

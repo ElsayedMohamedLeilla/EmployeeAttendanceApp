@@ -46,7 +46,10 @@ namespace Dawem.Repository.Core.Holidays
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
-
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
             //// search by year get all year is zero or year = critraia.year
             //if (criteria.Year > 0 || criteria.Year != null)
             //{

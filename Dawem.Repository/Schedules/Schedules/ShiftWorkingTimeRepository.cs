@@ -42,6 +42,10 @@ namespace Dawem.Repository.Schedules.Schedules
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

@@ -120,7 +120,7 @@ namespace Dawem.Repository.Managers
         public IPermissionRepository PermissionRepository =>
          permissionRepository ??= new PermissionRepository(unitOfWork, requestInfo);
         public IPermissionScreenRepository PermissionScreenRepository =>
-         permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
+         permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork, requestInfo);
         public IPermissionScreenActionRepository PermissionScreenActionRepository =>
          permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
         public IPermissionLogRepository PermissionLogRepository =>

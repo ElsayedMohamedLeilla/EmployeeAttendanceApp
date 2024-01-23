@@ -51,6 +51,10 @@ namespace Dawem.Repository.UserManagement
                 userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
             }
+            if (criteria.Code != null)
+            {
+                userPredicate = userPredicate.And(ps => ps.Code == criteria.Code);
+            }
 
             if (!string.IsNullOrWhiteSpace(criteria.UserName))
             {
@@ -86,6 +90,10 @@ namespace Dawem.Repository.UserManagement
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
 
             predicate = predicate.And(inner);

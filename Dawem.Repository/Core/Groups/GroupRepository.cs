@@ -46,6 +46,10 @@ namespace Dawem.Repository.Core.Groups
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

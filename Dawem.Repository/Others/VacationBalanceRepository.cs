@@ -23,7 +23,7 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
@@ -37,6 +37,10 @@ namespace Dawem.Repository.Others
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
             }
             if (criteria.IsActive != null)
             {

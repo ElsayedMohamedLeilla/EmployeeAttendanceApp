@@ -41,9 +41,9 @@ namespace Dawem.Repository.Core
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            if (criteria.Code != null)
             {
-                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
             if (criteria.Longitude != null && criteria.Latitude != null)
             {

@@ -37,6 +37,10 @@ namespace Dawem.Repository.Attendances
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             predicate = predicate.And(inner);

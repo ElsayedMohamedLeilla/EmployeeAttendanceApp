@@ -240,32 +240,26 @@ namespace Dawem.BusinessLogic.Permissions
 
             return permission;
         }
-        public async Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria model)
+        public async Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria criteria)
         {
             #region Validation
 
-            if (model.PermissionId <= 0)
+            if (criteria.PermissionId <= 0)
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             #endregion
 
             var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
-            var query = permissionScreenRepository
-                .Get(e => !e.IsDeleted && e.Permission.CompanyId == requestInfo.CompanyId
-                && e.PermissionId == model.PermissionId);
+            var query = permissionScreenRepository.GetAsQueryable(criteria);
 
             #region paging
 
-            int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
-            int take = PagingHelper.Take(model.PageSize);
-
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-
             var queryOrdered = permissionScreenRepository.OrderBy(query, nameof(PermissionScreen.Id), LeillaKeys.Desc);
-
             #endregion
-
-            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

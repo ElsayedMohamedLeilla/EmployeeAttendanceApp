@@ -36,6 +36,10 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);

@@ -21,6 +21,7 @@ using Dawem.Models.Dtos.Requests.Tasks;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Tasks;
+using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -147,7 +148,7 @@ namespace Dawem.BusinessLogic.Requests
                     AddedDate = DateTime.UtcNow,
                     Status = NotificationStatus.Info,
                     NotificationType = NotificationType.NewTaskRequest,
-                    ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                     IsRead = false,
                     IsActive = true,
                     Priority = Priority.Medium
@@ -159,16 +160,6 @@ namespace Dawem.BusinessLogic.Requests
                 #endregion
             }
             #region Fire Notification & Email
-            NotificationParametersModel nPM = new NotificationParametersModel()
-            {
-                departmentIds = null,
-                groupIds = null,
-                employeeIds =   model.TaskEmployeeIds ,
-                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
-                types = new List<NotificationType> { NotificationType.NewVacationRequest }
-            };
-            var status = notificationStoreBL.Notify(nPM);
-
             #endregion
 
 

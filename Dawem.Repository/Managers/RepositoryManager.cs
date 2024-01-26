@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.Firebase;
+﻿using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
@@ -30,6 +30,7 @@ using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
 using Dawem.Repository.Providers;
+using Dawem.Repository.RealTime.Firebase;
 using Dawem.Repository.Requests;
 using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Repository.Schedules.SchedulePlans;
@@ -106,7 +107,7 @@ namespace Dawem.Repository.Managers
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
 
-        
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
         {

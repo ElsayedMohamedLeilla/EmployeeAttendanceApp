@@ -1,8 +1,9 @@
 ﻿using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.Firebase;
+using Dawem.Contract.RealTime.Firebase;
+using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Firebase;
+using Dawem.Models.RealTime.Firebase;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -95,13 +96,13 @@ namespace Dawem.API.Controllers.Core
 
         [Route("send")]
         [HttpPost]
-        public async Task<IActionResult> SendNotification(NotificationModel notificationModel)
+        public async Task<IActionResult> SendNotification(List<int> UserIds, NotificationType notificationType,NotificationStatus notificationStatus)
         {
-            if (notificationModel == null)
+            if (UserIds.Count == 0)
             {
                 return BadRequest();
             }
-            var result = await notificationService.SendNotification(notificationModel);
+            var result = await notificationService.Send_Notification_Email(UserIds, notificationType, notificationStatus);
             return Ok(result);
         }
 

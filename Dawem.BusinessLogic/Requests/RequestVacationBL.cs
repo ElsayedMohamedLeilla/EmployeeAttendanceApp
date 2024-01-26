@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.SignalR;
+using Dawem.BusinessLogic.RealTime.SignalR;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Requests;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -12,13 +13,13 @@ using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Core.NotificationsStores;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Vacations;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Vacations;
+using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Requests.Vacations;
 using Microsoft.AspNetCore.SignalR;
@@ -37,6 +38,7 @@ namespace Dawem.BusinessLogic.Requests
         private readonly IRequestBLValidation requestBLValidation;
         private readonly IHubContext<SignalRHub, ISignalRHubClient> hubContext;
         private readonly INotificationStoreBL notificationStoreBL;
+        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
 
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
@@ -45,7 +47,8 @@ namespace Dawem.BusinessLogic.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestVacationBLValidation _requestVacationBLValidation,
-           IHubContext<SignalRHub, ISignalRHubClient> _hubContext, INotificationStoreBL _notificationStoreBL)
+           IHubContext<SignalRHub, ISignalRHubClient> _hubContext, INotificationStoreBL _notificationStoreBL,
+           INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -56,6 +59,8 @@ namespace Dawem.BusinessLogic.Requests
             uploadBLC = _uploadBLC;
             hubContext = _hubContext;
             notificationStoreBL = _notificationStoreBL;
+            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+
         }
         public async Task<int> Create(CreateRequestVacationDTO model)
         {
@@ -157,7 +162,7 @@ namespace Dawem.BusinessLogic.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.NewVacationRequest,
-                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
@@ -168,23 +173,23 @@ namespace Dawem.BusinessLogic.Requests
             #endregion
 
             #region Fire Notification & Email
-            NotificationParametersModel nPM = new NotificationParametersModel()
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
+            if(userIds.Count > 0)
             {
-                departmentIds = null ,
-                groupIds = null,
-                employeeIds = new List<int> { requestEmployee.DirectManagerId ?? 0 },
-                notifyWays = new List<NotifyWay> { NotifyWay.Email,NotifyWay.OnApp},
-                types = new List<NotificationType> { NotificationType.NewVacationRequest}
-            };
-            var status = notificationStoreBL.Notify(nPM);
+                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+            }
             #endregion
 
             #region Handle Response
             await unitOfWork.CommitAsync();
             return request.Id;
             #endregion
-
         }
+
+
+
+
+
         public async Task<bool> Update(UpdateRequestVacationDTO model)
         {
             #region Model Validation
@@ -575,7 +580,7 @@ namespace Dawem.BusinessLogic.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.AcceptingVacationRequest,
-                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
@@ -584,15 +589,15 @@ namespace Dawem.BusinessLogic.Requests
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #region Fire Notification
-            NotificationParametersModel nPM = new NotificationParametersModel()
-            {
-                departmentIds = null,
-                groupIds = null,
-                employeeIds = new List<int> { request.EmployeeId },
-                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
-                types = new List<NotificationType> { NotificationType.AcceptingVacationRequest }
-            };
-            var status = notificationStoreBL.Notify(nPM);
+            //NotificationModelDTO nPM = new NotificationModelDTO()
+            //{
+            //    departmentIds = null,
+            //    groupIds = null,
+            //    employeeIds = new List<int> { request.EmployeeId },
+            //    notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
+            //    types = new List<NotificationType> { NotificationType.AcceptingVacationRequest }
+            //};
+            //var status = notificationStoreBL.Notify(nPM);
 
             #endregion
 
@@ -635,7 +640,7 @@ namespace Dawem.BusinessLogic.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.AcceptingVacationRequest,
-                ImageUrl = SignalRHelper.GetNotificationImage(NotificationStatus.Info),
+                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
@@ -643,15 +648,15 @@ namespace Dawem.BusinessLogic.Requests
             };
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
-            NotificationParametersModel nPM = new NotificationParametersModel()
-            {
-                departmentIds = null,
-                groupIds = null,
-                employeeIds = new List<int> { request.EmployeeId },
-                notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
-                types = new List<NotificationType> { NotificationType.RejectingVacationRequest }
-            };
-            var status = notificationStoreBL.Notify(nPM);
+            //NotificationModelDTO nPM = new NotificationModelDTO()
+            //{
+            //    departmentIds = null,
+            //    groupIds = null,
+            //    employeeIds = new List<int> { request.EmployeeId },
+            //    notifyWays = new List<NotifyWay> { NotifyWay.Email, NotifyWay.OnApp },
+            //    types = new List<NotificationType> { NotificationType.RejectingVacationRequest }
+            //};
+            //var status = notificationStoreBL.Notify(nPM);
             #endregion
             return true;
         }

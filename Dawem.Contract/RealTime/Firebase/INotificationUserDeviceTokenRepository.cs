@@ -1,9 +1,10 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Firebase;
+using Dawem.Domain.RealTime.Firebase;
 
-namespace Dawem.Contract.Repository.Employees
+namespace Dawem.Contract.RealTime.Firebase
 {
     public interface INotificationUserDeviceTokenRepository : IGenericRepository<NotificationUserDeviceToken>
     {
+
     }
 }

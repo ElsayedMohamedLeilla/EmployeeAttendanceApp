@@ -2,7 +2,6 @@ using Dawem.API;
 using Dawem.API.MiddleWares;
 using Dawem.BusinessLogic;
 using Dawem.BusinessLogic.Localization;
-using Dawem.BusinessLogic.SignalR;
 using Dawem.BusinessLogicCore;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -28,7 +27,8 @@ using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-using Dawem.Contract.Firebase;
+using Dawem.Contract.RealTime.Firebase;
+using Dawem.BusinessLogic.RealTime.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??

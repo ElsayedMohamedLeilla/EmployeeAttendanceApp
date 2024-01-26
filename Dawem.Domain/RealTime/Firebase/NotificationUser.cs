@@ -1,9 +1,10 @@
-﻿using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Domain.Entities;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Firebase
+namespace Dawem.Domain.RealTime.Firebase
 {
     [Table(nameof(NotificationUser) + LeillaKeys.S)]
     public class NotificationUser : BaseEntity

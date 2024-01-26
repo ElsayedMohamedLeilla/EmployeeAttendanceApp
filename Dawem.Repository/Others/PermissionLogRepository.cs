@@ -44,7 +44,10 @@ namespace Dawem.Repository.Others
             {
                 outerpredicate = outerpredicate.And(x => x.UserId == criteria.UserId.Value);
             }
-
+            if (criteria.Code != null)
+            {
+                outerpredicate = outerpredicate.And(ps => ps.Code == criteria.Code);
+            }
             if (criteria.ActionCode != null)
             {
                 outerpredicate = outerpredicate.And(x => x.ActionCode == criteria.ActionCode);

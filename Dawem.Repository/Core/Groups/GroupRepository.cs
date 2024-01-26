@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,19 @@ namespace Dawem.Repository.Core.Groups
 {
     public class GroupRepository : GenericRepository<Group>, IGroupRepository
     {
-        public GroupRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        
+        private readonly RequestInfo requestInfo;
+        public GroupRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<Group> GetAsQueryable(GetGroupCriteria criteria)
         {
             var predicate = PredicateBuilder.New<Group>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Group>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -45,6 +50,10 @@ namespace Dawem.Repository.Core.Groups
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
 
             predicate = predicate.And(inner);

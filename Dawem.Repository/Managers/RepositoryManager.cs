@@ -123,7 +123,7 @@ namespace Dawem.Repository.Managers
         public IPermissionRepository PermissionRepository =>
          permissionRepository ??= new PermissionRepository(unitOfWork, requestInfo);
         public IPermissionScreenRepository PermissionScreenRepository =>
-         permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork);
+         permissionScreenRepository ??= new PermissionScreenRepository(unitOfWork, requestInfo);
         public IPermissionScreenActionRepository PermissionScreenActionRepository =>
          permissionScreenActionRepository ??= new PermissionScreenActionRepository(unitOfWork);
         public IPermissionLogRepository PermissionLogRepository =>
@@ -143,33 +143,33 @@ namespace Dawem.Repository.Managers
         public IEmployeeRepository EmployeeRepository =>
         employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
-        departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting);
+        departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting, requestInfo);
         public IAssignmentTypeRepository AssignmentTypeRepository =>
-        assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting);
+        assignmentTypeRepository ??= new AssignmentTypeRepository(unitOfWork, generalSetting, requestInfo);
         public ITaskTypeRepository TaskTypeRepository =>
-        taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting);
+        taskTypeRepository ??= new TaskTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IJobTitleRepository JobTitleRepository =>
-        jobTitleRepository ??= new JobTitleRepository(unitOfWork, generalSetting);
+        jobTitleRepository ??= new JobTitleRepository(unitOfWork, generalSetting, requestInfo);
         public IHolidayTypeRepository HolidayTypeRepository =>
-        holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting);
+        holidayTypeRepository ??= new HolidayTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IJustificationsTypeRepository JustificationsTypeRepository =>
-        justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting);
+        justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IVacationsTypeRepository VacationsTypeRepository =>
-        vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting);
+        vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IPermissionsTypeRepository PermissionsTypeRepository =>
-        permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting);
+        permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IRoleRepository RoleRepository =>
         roleRepository ??= new RoleRepository(unitOfWork, generalSetting);
         public IShiftWorkingTimeRepository ShiftWorkingTimeRepository =>
-        shiftWorkingTimeRepository ??= new ShiftWorkingTimeRepository(unitOfWork, generalSetting);
+        shiftWorkingTimeRepository ??= new ShiftWorkingTimeRepository(unitOfWork, generalSetting, requestInfo);
         public IScheduleRepository ScheduleRepository =>
-        scheduleRepository ??= new ScheduleRepository(unitOfWork, generalSetting);
+        scheduleRepository ??= new ScheduleRepository(unitOfWork, generalSetting, requestInfo);
         public IScheduleDayRepository ScheduleDayRepository =>
         scheduleDayRepository ??= new ScheduleDayRepository(unitOfWork, generalSetting);
         public IGroupRepository GroupRepository =>
-        groupRepository ??= new GroupRepository(unitOfWork, generalSetting);
+        groupRepository ??= new GroupRepository(unitOfWork, generalSetting, requestInfo);
         public ISchedulePlanRepository SchedulePlanRepository =>
-         schedulePlanRepository ??= new SchedulePlanRepository(unitOfWork, generalSetting);
+         schedulePlanRepository ??= new SchedulePlanRepository(unitOfWork, generalSetting, requestInfo);
         public ISchedulePlanEmployeeRepository SchedulePlanEmployeeRepository =>
          schedulePlanEmployeeRepository ??= new SchedulePlanEmployeeRepository(unitOfWork, generalSetting);
         public ISchedulePlanGroupRepository SchedulePlanGroupRepository =>
@@ -177,7 +177,7 @@ namespace Dawem.Repository.Managers
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
         public ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository =>
-         schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting);
+         schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting, requestInfo);
         public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
         public IGroupEmployeeRepository GroupEmployeeRepository =>
@@ -200,7 +200,7 @@ namespace Dawem.Repository.Managers
         groupZoneRepository ??= new GroupZoneRepository(unitOfWork, generalSetting);
 
         public IZoneRepository ZoneRepository =>
-        zoneRepository ??= new ZoneRepository(unitOfWork, generalSetting);
+        zoneRepository ??= new ZoneRepository(unitOfWork, generalSetting, requestInfo);
 
         public IFingerprintDeviceRepository FingerprintDeviceRepository =>
         fingerprintDeviceRepository ??= new FingerprintDeviceRepository(unitOfWork, generalSetting, requestInfo);
@@ -230,17 +230,17 @@ namespace Dawem.Repository.Managers
             requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting, requestInfo);
 
         public IVacationBalanceRepository VacationBalanceRepository =>
-            vacationBalanceRepository ??= new VacationBalanceRepository(unitOfWork, generalSetting);
+            vacationBalanceRepository ??= new VacationBalanceRepository(unitOfWork, generalSetting, requestInfo);
 
 
         public IHolidayRepository HolidayRepository =>
-          holidayRepository ??= new HolidayRepository(unitOfWork, generalSetting);
+          holidayRepository ??= new HolidayRepository(unitOfWork, generalSetting, requestInfo);
 
         public INotificationStoreRepository NotificationStoreRepository =>
-            notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting);
+            notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting, requestInfo);
 
         public IFingerprintEnforcementRepository FingerprintEnforcementRepository =>
-            fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting);
+            fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting, requestInfo);
 
         public IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository =>
             fingerprintEnforcementNotifyWayRepository ??= new FingerprintEnforcementNotifyWayRepository(unitOfWork, generalSetting);
@@ -253,7 +253,7 @@ namespace Dawem.Repository.Managers
         public IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository =>
             fingerprintEnforcementGroupRepository ??= new FingerprintEnforcementGroupRepository(unitOfWork, generalSetting);
         public INonComplianceActionRepository NonComplianceActionRepository =>
-            nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting);
+            nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting, requestInfo);
         public INotificationUserRepository NotificationUserRepository =>
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
         public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>

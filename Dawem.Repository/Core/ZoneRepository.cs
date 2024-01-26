@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,18 @@ namespace Dawem.Repository.Core
 {
     public class ZoneRepository : GenericRepository<Zone>, IZoneRepository
     {
-        public ZoneRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public ZoneRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
 
         public IQueryable<Zone> GetAsQueryable(GetZoneCriteria criteria)
         {
             var predicate = PredicateBuilder.New<Zone>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Zone>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -41,9 +45,9 @@ namespace Dawem.Repository.Core
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            if (criteria.Code != null)
             {
-                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
             if (criteria.Longitude != null && criteria.Latitude != null)
             {

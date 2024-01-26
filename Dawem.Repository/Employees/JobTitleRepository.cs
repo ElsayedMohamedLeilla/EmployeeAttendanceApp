@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.JobTitles;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,14 +11,17 @@ namespace Dawem.Repository.Employees
 {
     public class JobTitleRepository : GenericRepository<JobTitle>, IJobTitleRepository
     {
-        public JobTitleRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo _requestInfo;
+        public JobTitleRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            _requestInfo = requestInfo;
         }
         public IQueryable<JobTitle> GetAsQueryable(GetJobTitlesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<JobTitle>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<JobTitle>(true);
+
+            predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -39,6 +43,10 @@ namespace Dawem.Repository.Employees
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
             }
 
             predicate = predicate.And(inner);

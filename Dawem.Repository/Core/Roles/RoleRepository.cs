@@ -36,6 +36,7 @@ namespace Dawem.Repository.Core.Roles
             {
                 inner = inner.And(e => criteria.Ids.Contains(e.Id));
             }
+            
             var Query = Get(inner);
             return Query;
 

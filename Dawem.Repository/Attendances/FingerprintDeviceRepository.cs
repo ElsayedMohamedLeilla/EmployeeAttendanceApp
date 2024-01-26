@@ -21,6 +21,8 @@ namespace Dawem.Repository.Attendances
             var predicate = PredicateBuilder.New<FingerprintDevice>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<FingerprintDevice>(true);
 
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -37,7 +39,10 @@ namespace Dawem.Repository.Attendances
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
 
             predicate = predicate.And(inner);
 

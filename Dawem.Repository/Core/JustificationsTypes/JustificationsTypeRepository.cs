@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,18 @@ namespace Dawem.Repository.Core.JustificationsTypes
 {
     public class JustificationsTypeRepository : GenericRepository<JustificationType>, IJustificationsTypeRepository
     {
-        public JustificationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public JustificationsTypeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<JustificationType> GetAsQueryable(GetJustificationsTypesCriteria criteria)
         {
             var predicate = PredicateBuilder.New<JustificationType>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<JustificationType>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -33,6 +37,10 @@ namespace Dawem.Repository.Core.JustificationsTypes
             {
 
                 predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
             if (criteria.IsActive != null)
             {

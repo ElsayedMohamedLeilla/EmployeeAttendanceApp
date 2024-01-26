@@ -13,24 +13,24 @@ namespace Dawem.Repository.UserManagement
 {
     public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
-        private readonly RequestInfo requestHeaderContext;
-        public UserRepository(RequestInfo _requestHeaderContext, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public UserRepository(RequestInfo _requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
-            requestHeaderContext = _requestHeaderContext;
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
         {
             var userPredicate = PredicateBuilder.New<MyUser>(true);
 
-            if (requestHeaderContext.IsMainBranch && criteria.ForGridView)
+            if (requestInfo.IsMainBranch && criteria.ForGridView)
             {
 
-                userPredicate = userPredicate.And(x => x.BranchId == requestHeaderContext.BranchId);
+                userPredicate = userPredicate.And(x => x.BranchId == requestInfo.BranchId);
             }
             else
             {
-                userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestHeaderContext.BranchId));
+                userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestInfo.BranchId));
             }
 
             if (criteria.Id is not null)
@@ -50,6 +50,10 @@ namespace Dawem.Repository.UserManagement
                 userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
                 userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
+            }
+            if (criteria.Code != null)
+            {
+                userPredicate = userPredicate.And(ps => ps.Code == criteria.Code);
             }
 
             if (!string.IsNullOrWhiteSpace(criteria.UserName))
@@ -71,6 +75,8 @@ namespace Dawem.Repository.UserManagement
             var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MyUser>(true);
 
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -86,6 +92,10 @@ namespace Dawem.Repository.UserManagement
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
 
             predicate = predicate.And(inner);

@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Generic;
 using LinqKit;
@@ -10,15 +11,18 @@ namespace Dawem.Repository.Core.Holidays
 {
     public class HolidayRepository : GenericRepository<Holiday>, IHolidayRepository
     {
-        public HolidayRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
+        private readonly RequestInfo requestInfo;
+        public HolidayRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
-
+            requestInfo = _requestInfo;
         }
 
         public IQueryable<Holiday> GetAsQueryable(GetHolidayCriteria criteria)
         {
             var predicate = PredicateBuilder.New<Holiday>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Holiday>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -46,7 +50,10 @@ namespace Dawem.Repository.Core.Holidays
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
-
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
             //// search by year get all year is zero or year = critraia.year
             //if (criteria.Year > 0 || criteria.Year != null)
             //{

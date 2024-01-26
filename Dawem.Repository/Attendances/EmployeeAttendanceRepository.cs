@@ -23,6 +23,8 @@ namespace Dawem.Repository.Attendances
             var predicate = PredicateBuilder.New<EmployeeAttendance>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<EmployeeAttendance>(true);
 
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -48,11 +50,15 @@ namespace Dawem.Repository.Attendances
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
+            if (criteria.Code != null)
+            {
+                predicate = predicate.And(ps => ps.Code == criteria.Code);
+            }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            
 
             predicate = predicate.And(inner);
 

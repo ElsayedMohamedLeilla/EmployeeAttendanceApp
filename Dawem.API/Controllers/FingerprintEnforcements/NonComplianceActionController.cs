@@ -1,4 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.FingerprintEnforcements.NonComplianceActions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +19,6 @@ namespace Dawem.API.Controllers.Employees
         {
             nonComplianceActionBL = _nonComplianceActionBL;
         }
-
         [HttpPost]
         public async Task<ActionResult> Create(CreateNonComplianceActionModel model)
         {
@@ -70,6 +71,24 @@ namespace Dawem.API.Controllers.Employees
                 return BadRequest();
             }
             return Success(await nonComplianceActionBL.GetById(nonComplianceActionId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int nonComplianceActionId)
+        {
+            if (nonComplianceActionId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await nonComplianceActionBL.Enable(nonComplianceActionId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await nonComplianceActionBL.Disable(model));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int nonComplianceActionId)

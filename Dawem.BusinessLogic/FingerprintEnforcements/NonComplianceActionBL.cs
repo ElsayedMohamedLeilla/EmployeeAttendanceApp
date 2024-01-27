@@ -7,6 +7,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.FingerprintEnforcements.NonComplianceActions;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.AssignmentTypes;
@@ -129,6 +130,7 @@ namespace Dawem.BusinessLogic.Employees
                 Id = e.Id,
                 Code = e.Code,
                 Name = e.Name,
+                TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.NonComplianceActionType, requestInfo.Lang),
                 IsActive = e.IsActive,
             }).ToListAsync();
             return new GetNonComplianceActionsResponse
@@ -183,6 +185,9 @@ namespace Dawem.BusinessLogic.Employees
                 {
                     Code = e.Code,
                     Name = e.Name,
+                    Type = e.Type,
+                    TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.NonComplianceActionType, requestInfo.Lang),
+                    WarningMessage = e.WarningMessage,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryNonComplianceActionNotFound);
 
@@ -196,11 +201,29 @@ namespace Dawem.BusinessLogic.Employees
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
+                    Type = e.Type,
+                    WarningMessage = e.WarningMessage,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryNonComplianceActionNotFound);
 
             return nonComplianceAction;
 
+        }
+        public async Task<bool> Enable(int nonComplianceActiond)
+        {
+            var nonComplianceAction = await repositoryManager.NonComplianceActionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == nonComplianceActiond) ??
+                throw new BusinessValidationException(LeillaKeys.SorryNonComplianceActionNotFound);
+            nonComplianceAction.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var nonComplianceAction = await repositoryManager.NonComplianceActionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorryNonComplianceActionNotFound);
+            nonComplianceAction.Disable(model.DisableReason);
+            await unitOfWork.SaveAsync();
+            return true;
         }
         public async Task<bool> Delete(int nonComplianceActiond)
         {

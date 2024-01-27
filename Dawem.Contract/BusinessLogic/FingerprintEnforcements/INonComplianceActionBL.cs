@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.FingerprintEnforcements.NonComplianceActions;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.FingerprintEnforcements.NonComplianceActions;
 using Dawem.Models.Response.Employees.AssignmentTypes;
 
 namespace Dawem.Contract.BusinessLogic.Employees
@@ -12,6 +13,8 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<GetNonComplianceActionsResponse> Get(GetNonComplianceActionsCriteria model);
         Task<GetNonComplianceActionsForDropDownResponse> GetForDropDown(GetNonComplianceActionsCriteria model);
         Task<bool> Delete(int nonComplianceActionId);
+        Task<bool> Disable(DisableModelDTO model);
+        Task<bool> Enable(int nonComplianceActionId);
         Task<GetNonComplianceActionsInformationsResponseDTO> GetNonComplianceActionsInformations();
     }
 }

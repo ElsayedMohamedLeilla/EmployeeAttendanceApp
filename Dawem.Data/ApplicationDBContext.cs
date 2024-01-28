@@ -9,6 +9,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Models.Generic;
@@ -233,31 +234,41 @@ namespace Dawem.Data
            .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<FingerprintEnforcementNotifyWay>()
-         .HasOne(p => p.FingerprintEnforcement)
-         .WithMany(b => b.FingerprintEnforcementNotifyWays)
-         .HasForeignKey(p => p.FingerprintEnforcementId)
+            builder.Entity<SummonNotifyWay>()
+         .HasOne(p => p.Summon)
+         .WithMany(b => b.SummonNotifyWays)
+         .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<FingerprintEnforcementEmployee>()
-          .HasOne(p => p.FingerprintEnforcement)
-          .WithMany(b => b.FingerprintEnforcementEmployees)
-          .HasForeignKey(p => p.FingerprintEnforcementId)
+
+            builder.Entity<SummonEmployee>()
+          .HasOne(p => p.Summon)
+          .WithMany(b => b.SummonEmployees)
+          .HasForeignKey(p => p.SummonId)
           .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<FingerprintEnforcementGroup>()
-         .HasOne(p => p.FingerprintEnforcement)
-         .WithMany(b => b.FingerprintEnforcementGroups)
-         .HasForeignKey(p => p.FingerprintEnforcementId)
+
+            builder.Entity<SummonGroup>()
+         .HasOne(p => p.Summon)
+         .WithMany(b => b.SummonGroups)
+         .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<FingerprintEnforcementDepartment>()
-         .HasOne(p => p.FingerprintEnforcement)
-         .WithMany(b => b.FingerprintEnforcementDepartments)
-         .HasForeignKey(p => p.FingerprintEnforcementId)
+
+            builder.Entity<SummonDepartment>()
+         .HasOne(p => p.Summon)
+         .WithMany(b => b.SummonDepartments)
+         .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<FingerprintEnforcementAction>()
-         .HasOne(p => p.FingerprintEnforcement)
-         .WithMany(b => b.FingerprintEnforcementActions)
-         .HasForeignKey(p => p.FingerprintEnforcementId)
+
+            builder.Entity<SummonSanction>()
+         .HasOne(p => p.Summon)
+         .WithMany(b => b.SummonSanctions)
+         .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SummonSanction>()
+         .HasOne(p => p.Sanction)
+         .WithMany(b => b.SummonSanctions)
+         .HasForeignKey(p => p.SanctionId)
+         .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -268,39 +279,34 @@ namespace Dawem.Data
       .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<FingerprintEnforcementDepartment>()
+            builder.Entity<SummonDepartment>()
         .HasOne(p => p.Company)
         .WithMany()
-        .HasForeignKey(p => p.FingerprintEnforcementId)
-        .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<FingerprintEnforcementEmployee>()
-        .HasOne(p => p.Company)
-        .WithMany()
-        .HasForeignKey(p => p.FingerprintEnforcementId)
+        .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<FingerprintEnforcementGroup>()
+            builder.Entity<SummonEmployee>()
         .HasOne(p => p.Company)
         .WithMany()
-        .HasForeignKey(p => p.FingerprintEnforcementId)
+        .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<FingerprintEnforcementAction>()
+            builder.Entity<SummonGroup>()
+        .HasOne(p => p.Company)
+        .WithMany()
+        .HasForeignKey(p => p.CompanyId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<SummonSanction>()
        .HasOne(p => p.Company)
        .WithMany()
-       .HasForeignKey(p => p.FingerprintEnforcementId)
+       .HasForeignKey(p => p.CompanyId)
        .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<FingerprintEnforcementAction>()
-      .HasOne(p => p.NonComplianceAction)
-      .WithMany()
-      .HasForeignKey(p => p.FingerprintEnforcementId)
-      .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<FingerprintEnforcementNotifyWay>()
+            builder.Entity<SummonNotifyWay>()
       .HasOne(p => p.Company)
       .WithMany()
-      .HasForeignKey(p => p.FingerprintEnforcementId)
+      .HasForeignKey(p => p.CompanyId)
       .OnDelete(DeleteBehavior.Restrict);
 
 

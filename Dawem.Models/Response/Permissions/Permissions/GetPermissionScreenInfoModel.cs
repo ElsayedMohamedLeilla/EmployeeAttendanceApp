@@ -1,7 +1,6 @@
 ﻿using Dawem.Enums.Permissions;
-using Dawem.Models.Response.Permissions.Permissions;
 
-namespace Dawem.Models.Response.Schedules.SchedulePlanLogs
+namespace Dawem.Models.Response.Permissions.Permissions
 {
     public class GetPermissionScreenInfoModel
     {

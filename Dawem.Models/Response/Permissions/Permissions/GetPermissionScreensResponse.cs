@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Schedules.SchedulePlanLogs
+﻿namespace Dawem.Models.Response.Permissions.Permissions
 {
     public class GetPermissionScreensResponse
     {

@@ -1,7 +1,6 @@
 ﻿using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Response.Permissions.Permissions;
-using Dawem.Models.Response.Schedules.SchedulePlanLogs;
 
 namespace Dawem.Contract.BusinessLogic.Permissions
 {

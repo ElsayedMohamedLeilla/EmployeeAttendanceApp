@@ -2,6 +2,7 @@
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
+using Dawem.Contract.Repository.Firebase;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
@@ -11,6 +12,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -26,6 +28,7 @@ using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
+using Dawem.Repository.Firebase;
 using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;
@@ -35,6 +38,7 @@ using Dawem.Repository.Requests;
 using Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Repository.Schedules.SchedulePlans;
 using Dawem.Repository.Schedules.Schedules;
+using Dawem.Repository.Summons;
 using Dawem.Repository.UserManagement;
 
 namespace Dawem.Repository.Managers
@@ -97,13 +101,13 @@ namespace Dawem.Repository.Managers
         private IHolidayRepository holidayRepository;
         private INotificationStoreRepository notificationStoreRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
-        private IFingerprintEnforcementRepository fingerprintEnforcementRepository;
-        private IFingerprintEnforcementNotifyWayRepository fingerprintEnforcementNotifyWayRepository;
-        private IFingerprintEnforcementEmployeeRepository fingerprintEnforcementEmployeeRepository;
-        private IFingerprintEnforcementGroupRepository fingerprintEnforcementGroupRepository;
-        private IFingerprintEnforcementActionRepository fingerprintEnforcementActionRepository;
-        private IFingerprintEnforcementDepartmentRepository fingerprintEnforcementDepartmentRepository;
-        private INonComplianceActionRepository nonComplianceActionRepository;
+        private ISummonRepository summonRepository;
+        private ISummonNotifyWayRepository summonNotifyWayRepository;
+        private ISummonEmployeeRepository summonEmployeeRepository;
+        private ISummonGroupRepository summonGroupRepository;
+        private ISummonSanctionRepository summonSanctionRepository;
+        private ISummonDepartmentRepository summonDepartmentRepository;
+        private ISanctionRepository sanctionRepository;
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
 
@@ -239,21 +243,21 @@ namespace Dawem.Repository.Managers
         public INotificationStoreRepository NotificationStoreRepository =>
             notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting, requestInfo);
 
-        public IFingerprintEnforcementRepository FingerprintEnforcementRepository =>
-            fingerprintEnforcementRepository ??= new FingerprintEnforcementRepository(unitOfWork, generalSetting, requestInfo);
+        public ISummonRepository SummonRepository =>
+            summonRepository ??= new SummonRepository(unitOfWork, generalSetting, requestInfo);
 
-        public IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository =>
-            fingerprintEnforcementNotifyWayRepository ??= new FingerprintEnforcementNotifyWayRepository(unitOfWork, generalSetting);
-        public IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository =>
-            fingerprintEnforcementEmployeeRepository ??= new FingerprintEnforcementEmployeeRepository(unitOfWork, generalSetting);
-        public IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository =>
-            fingerprintEnforcementDepartmentRepository ??= new FingerprintEnforcementDepartmentRepository(unitOfWork, generalSetting);
-        public IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository =>
-            fingerprintEnforcementActionRepository ??= new FingerprintEnforcementActionRepository(unitOfWork, generalSetting);
-        public IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository =>
-            fingerprintEnforcementGroupRepository ??= new FingerprintEnforcementGroupRepository(unitOfWork, generalSetting);
-        public INonComplianceActionRepository NonComplianceActionRepository =>
-            nonComplianceActionRepository ??= new NonComplianceActionRepository(unitOfWork, generalSetting, requestInfo);
+        public ISummonNotifyWayRepository SummonNotifyWayRepository =>
+            summonNotifyWayRepository ??= new SummonNotifyWayRepository(unitOfWork, generalSetting);
+        public ISummonEmployeeRepository SummonEmployeeRepository =>
+            summonEmployeeRepository ??= new SummonEmployeeRepository(unitOfWork, generalSetting);
+        public ISummonDepartmentRepository SummonDepartmentRepository =>
+            summonDepartmentRepository ??= new SummonDepartmentRepository(unitOfWork, generalSetting);
+        public ISummonSanctionRepository SummonSanctionRepository =>
+            summonSanctionRepository ??= new SummonActionRepository(unitOfWork, generalSetting);
+        public ISummonGroupRepository SummonGroupRepository =>
+            summonGroupRepository ??= new SummonGroupRepository(unitOfWork, generalSetting);
+        public ISanctionRepository SanctionRepository =>
+            sanctionRepository ??= new SanctionRepository(unitOfWork, generalSetting, requestInfo);
         public INotificationUserRepository NotificationUserRepository =>
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
         public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>

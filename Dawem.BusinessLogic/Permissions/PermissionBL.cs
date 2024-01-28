@@ -11,7 +11,6 @@ using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
-using Dawem.Models.Response.Schedules.SchedulePlanLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

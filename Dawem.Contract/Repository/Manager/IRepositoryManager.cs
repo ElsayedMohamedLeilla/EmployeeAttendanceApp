@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
+using Dawem.Contract.Repository.Firebase;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
@@ -9,6 +10,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Contract.RealTime.Firebase;
 
@@ -69,13 +71,13 @@ namespace Dawem.Contract.Repository.Manager
         IHolidayRepository HolidayRepository { get; }
         IVacationBalanceRepository VacationBalanceRepository { get; }
         INotificationStoreRepository NotificationStoreRepository { get; }
-        IFingerprintEnforcementRepository FingerprintEnforcementRepository { get; }
-        IFingerprintEnforcementNotifyWayRepository FingerprintEnforcementNotifyWayRepository { get; }
-        IFingerprintEnforcementEmployeeRepository FingerprintEnforcementEmployeeRepository { get; }
-        IFingerprintEnforcementDepartmentRepository FingerprintEnforcementDepartmentRepository { get; }
-        IFingerprintEnforcementGroupRepository FingerprintEnforcementGroupRepository { get; }
-        IFingerprintEnforcementActionRepository FingerprintEnforcementActionRepository { get; }
-        INonComplianceActionRepository NonComplianceActionRepository { get; }
+        ISummonRepository SummonRepository { get; }
+        ISummonNotifyWayRepository SummonNotifyWayRepository { get; }
+        ISummonEmployeeRepository SummonEmployeeRepository { get; }
+        ISummonDepartmentRepository SummonDepartmentRepository { get; }
+        ISummonGroupRepository SummonGroupRepository { get; }
+        ISummonSanctionRepository SummonSanctionRepository { get; }
+        ISanctionRepository SanctionRepository { get; }
         INotificationUserRepository NotificationUserRepository { get; }
         INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository { get; }
     }

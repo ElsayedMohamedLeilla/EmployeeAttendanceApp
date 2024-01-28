@@ -1,25 +1,25 @@
-﻿using Dawem.Contract.Repository.Attendances;
+﻿using Dawem.Contract.Repository.Summons;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Summons;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Summons.Sanctions;
 using Dawem.Models.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Attendances
+namespace Dawem.Repository.Summons
 {
-    public class FingerprintDeviceRepository : GenericRepository<FingerprintDevice>, IFingerprintDeviceRepository
+    public class SanctionRepository : GenericRepository<Sanction>, ISanctionRepository
     {
         private readonly RequestInfo requestInfo;
-        public FingerprintDeviceRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
+        public SanctionRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
         }
-        public IQueryable<FingerprintDevice> GetAsQueryable(GetFingerprintDevicesCriteria criteria)
+        public IQueryable<Sanction> GetAsQueryable(GetSanctionsCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<FingerprintDevice>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<FingerprintDevice>(true);
+            var predicate = PredicateBuilder.New<Sanction>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<Sanction>(true);
 
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
@@ -32,23 +32,27 @@ namespace Dawem.Repository.Attendances
                     criteria.Id = id;
                 }
             }
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
             }
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            if (criteria.Code != null)
-            {
-                predicate = predicate.And(ps => ps.Code == criteria.Code);
-            }
 
             predicate = predicate.And(inner);
-
             var Query = Get(predicate);
             return Query;
+
         }
     }
 }

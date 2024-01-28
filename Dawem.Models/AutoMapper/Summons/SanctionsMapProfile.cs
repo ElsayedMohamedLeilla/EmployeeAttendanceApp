@@ -1,0 +1,15 @@
+﻿using AutoMapper;
+using Dawem.Domain.Entities.Summons;
+using Dawem.Models.Dtos.Summons.Sanctions;
+
+namespace Dawem.Models.AutoMapper.Summons
+{
+    public class SanctionsMapProfile : Profile
+    {
+        public SanctionsMapProfile()
+        {
+            CreateMap<CreateSanctionModel, Sanction>();
+            CreateMap<UpdateSanctionModel, Sanction>();
+        }
+    }
+}

@@ -1,10 +1,10 @@
-﻿using Dawem.Contract.Repository.Employees;
+﻿using Dawem.Contract.Repository.Firebase;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Firebase;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Employees
+namespace Dawem.Repository.Firebase
 {
     public class NotificationUserDeviceTokenRepository : GenericRepository<NotificationUserDeviceToken>, INotificationUserDeviceTokenRepository
     {

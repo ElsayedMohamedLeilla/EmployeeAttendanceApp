@@ -463,27 +463,29 @@
         public const string SorryYouMustChooseAtLeastOneEmployee = "Sorry!!YouMustChooseAtLeastOneEmployee!";
         public const string SorryYouMustChooseAtLeastOneGroup = "Sorry!!YouMustChooseAtLeastOneGroup!";
         public const string SorryYouMustChooseAtLeastOneDepartment = "Sorry!!YouMustChooseAtLeastOneDepartment!";
-        public const string SorryYouMustEnterNonComplianceActionId = "Sorry!!YouMustEnterNonComplianceActionId!";
-        public const string SorryYouMustEnterNonComplianceActionName = "Sorry!!YouMustEnterNonComplianceActionName!";
-        public const string SorryFingerprintEnforcementIsDuplicated = "Sorry!!FingerprintEnforcementIsDuplicated!";
-        public const string SorryNonComplianceActionNameIsDuplicated = "Sorry!!NonComplianceActionNameIsDuplicated!";
-        public const string SorryFingerprintEnforcementNotFound = "Sorry!!FingerprintEnforcementNotFound!";
-        public const string SorryNonComplianceActionNotFound = "Sorry!!NonComplianceActionNotFound!";
-        public const string DoneCreateFingerprintEnforcementSuccessfully = "DoneCreateFingerprintEnforcementSuccessfully";
-        public const string DoneUpdateFingerprintEnforcementSuccessfully = "DoneUpdateFingerprintEnforcementSuccessfully";
-        public const string DoneCreateNonComplianceActionSuccessfully = "DoneCreateNonComplianceActionSuccessfully";
-        public const string DoneUpdateNonComplianceActionSuccessfully = "DoneUpdateNonComplianceActionSuccessfully";
+
+        public const string SorryYouMustEnterSanctionId = "Sorry!!YouMustEnterSanctionId!";
+        public const string SorryYouMustEnterSanctionName = "Sorry!!YouMustEnterSanctionName!";
+        public const string SorrySummonIsDuplicated = "Sorry!!SummonIsDuplicated!";
+        public const string SorrySanctionNameIsDuplicated = "Sorry!!SanctionNameIsDuplicated!";
+        public const string SorrySummonNotFound = "Sorry!!SummonNotFound!";
+        public const string SorrySanctionNotFound = "Sorry!!SanctionNotFound!";
+        public const string SorryYouMustEnterSummonId = "Sorry!!YouMustEnterSummonId!";
+        public const string DoneCreateSummonSuccessfully = "DoneCreateSummonSuccessfully";
+        public const string DoneUpdateSummonSuccessfully = "DoneUpdateSummonSuccessfully";
+        public const string DoneCreateSanctionSuccessfully = "DoneCreateSanctionSuccessfully";
+        public const string DoneUpdateSanctionSuccessfully = "DoneUpdateSanctionSuccessfully";
         public const string SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen = "Sorry!!YouMustSelectViewingActionWhenSelectAnyActionForAnyScreen!";
         public const string SorryYouMustChooseRoleOrUser = "Sorry!!YouMustChooseRoleOrUser!";
         public const string SorryYouMustNotChooseRoleAndUserAtTheSameTime = "Sorry!!YouMustNotChooseRoleAndUserAtTheSameTime!";
-        public const string NonComplianceActionType = "NonComplianceActionType";
+        public const string SanctionType = "SanctionType";
         public const string NotifyWay = "NotifyWay"; 
-        public const string SorryYouMustEnterNonComplianceActionType = "Sorry!!YouMustEnterNonComplianceActionType!";
-        public const string SorryYouMustEnterNonComplianceActionWarningMessage = "Sorry!!YouMustEnterNonComplianceActionWarningMessage!";
+        public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
+        public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
         public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
-
         
+
     }
     
 }

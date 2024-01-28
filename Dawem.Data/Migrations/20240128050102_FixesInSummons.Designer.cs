@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240128035142_HandleSummonsAndSacations")]
-    partial class HandleSummonsAndSacations
+    [Migration("20240128050102_FixesInSummons")]
+    partial class FixesInSummons
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3619,6 +3619,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("SummonId");
@@ -3677,6 +3679,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("EmployeeId");
 
@@ -3737,6 +3741,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("GroupId");
 
                     b.HasIndex("SummonId");
@@ -3796,6 +3802,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("SummonId");
 
                     b.ToTable("SummonNotifyWays", "Dawem");
@@ -3852,6 +3860,10 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("SanctionId");
 
                     b.HasIndex("SummonId");
 
@@ -5024,16 +5036,16 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonDepartment", b =>
                 {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("SummonId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
@@ -5051,16 +5063,16 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonEmployee", b =>
                 {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("SummonId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
@@ -5078,16 +5090,16 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonGroup", b =>
                 {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("SummonId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
@@ -5107,7 +5119,7 @@ namespace Dawem.Data.Migrations
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("SummonId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -5126,18 +5138,18 @@ namespace Dawem.Data.Migrations
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("SummonId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Sanction", "Sanction")
-                        .WithMany()
-                        .HasForeignKey("SummonId")
+                        .WithMany("SummonSanctions")
+                        .HasForeignKey("SanctionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
-                        .WithMany("SummonActions")
+                        .WithMany("SummonSanctions")
                         .HasForeignKey("SummonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5334,10 +5346,13 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanLogEmployees");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
+                {
+                    b.Navigation("SummonSanctions");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Summon", b =>
                 {
-                    b.Navigation("SummonActions");
-
                     b.Navigation("SummonDepartments");
 
                     b.Navigation("SummonEmployees");
@@ -5345,6 +5360,8 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SummonGroups");
 
                     b.Navigation("SummonNotifyWays");
+
+                    b.Navigation("SummonSanctions");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.MyUser", b =>

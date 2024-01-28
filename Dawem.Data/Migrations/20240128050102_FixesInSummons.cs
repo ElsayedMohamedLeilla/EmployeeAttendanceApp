@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dawem.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class HandleSummonsAndSacations : Migration
+    public partial class FixesInSummons : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -139,8 +139,8 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_SummonDepartments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SummonDepartments_Companies_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonDepartments_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
@@ -187,8 +187,8 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_SummonEmployees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SummonEmployees_Companies_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonEmployees_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
@@ -235,8 +235,8 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_SummonGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SummonGroups_Companies_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonGroups_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
@@ -283,8 +283,8 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_SummonNotifyWays", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SummonNotifyWays_Companies_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonNotifyWays_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
@@ -324,15 +324,15 @@ namespace Dawem.Data.Migrations
                 {
                     table.PrimaryKey("PK_SummonSanctions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SummonSanctions_Companies_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonSanctions_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalSchema: "Dawem",
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SummonSanctions_Sanctions_SummonId",
-                        column: x => x.SummonId,
+                        name: "FK_SummonSanctions_Sanctions_SanctionId",
+                        column: x => x.SanctionId,
                         principalSchema: "Dawem",
                         principalTable: "Sanctions",
                         principalColumn: "Id",
@@ -353,6 +353,12 @@ namespace Dawem.Data.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SummonDepartments_CompanyId",
+                schema: "Dawem",
+                table: "SummonDepartments",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SummonDepartments_DepartmentId",
                 schema: "Dawem",
                 table: "SummonDepartments",
@@ -363,6 +369,12 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem",
                 table: "SummonDepartments",
                 column: "SummonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SummonEmployees_CompanyId",
+                schema: "Dawem",
+                table: "SummonEmployees",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SummonEmployees_EmployeeId",
@@ -377,6 +389,12 @@ namespace Dawem.Data.Migrations
                 column: "SummonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SummonGroups_CompanyId",
+                schema: "Dawem",
+                table: "SummonGroups",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SummonGroups_GroupId",
                 schema: "Dawem",
                 table: "SummonGroups",
@@ -389,6 +407,12 @@ namespace Dawem.Data.Migrations
                 column: "SummonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SummonNotifyWays_CompanyId",
+                schema: "Dawem",
+                table: "SummonNotifyWays",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SummonNotifyWays_SummonId",
                 schema: "Dawem",
                 table: "SummonNotifyWays",
@@ -399,6 +423,18 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem",
                 table: "Summons",
                 column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SummonSanctions_CompanyId",
+                schema: "Dawem",
+                table: "SummonSanctions",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SummonSanctions_SanctionId",
+                schema: "Dawem",
+                table: "SummonSanctions",
+                column: "SanctionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SummonSanctions_SummonId",

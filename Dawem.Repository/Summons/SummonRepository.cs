@@ -26,7 +26,7 @@ namespace Dawem.Repository.Summons
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.SummonActions.Any(a => a.Sanction.Name.ToLower().Trim().Contains(criteria.FreeText)));
+                inner = inner.And(x => x.SummonSanctions.Any(a => a.Sanction.Name.ToLower().Trim().Contains(criteria.FreeText)));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;

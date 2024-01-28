@@ -239,26 +239,36 @@ namespace Dawem.Data
          .WithMany(b => b.SummonNotifyWays)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<SummonEmployee>()
           .HasOne(p => p.Summon)
           .WithMany(b => b.SummonEmployees)
           .HasForeignKey(p => p.SummonId)
           .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<SummonGroup>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonGroups)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<SummonDepartment>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonDepartments)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<SummonSanction>()
          .HasOne(p => p.Summon)
-         .WithMany(b => b.SummonActions)
+         .WithMany(b => b.SummonSanctions)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<SummonSanction>()
+         .HasOne(p => p.Sanction)
+         .WithMany(b => b.SummonSanctions)
+         .HasForeignKey(p => p.SanctionId)
+         .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -272,36 +282,31 @@ namespace Dawem.Data
             builder.Entity<SummonDepartment>()
         .HasOne(p => p.Company)
         .WithMany()
-        .HasForeignKey(p => p.SummonId)
+        .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<SummonEmployee>()
         .HasOne(p => p.Company)
         .WithMany()
-        .HasForeignKey(p => p.SummonId)
+        .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<SummonGroup>()
         .HasOne(p => p.Company)
         .WithMany()
-        .HasForeignKey(p => p.SummonId)
+        .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<SummonSanction>()
        .HasOne(p => p.Company)
        .WithMany()
-       .HasForeignKey(p => p.SummonId)
+       .HasForeignKey(p => p.CompanyId)
        .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<SummonSanction>()
-      .HasOne(p => p.Sanction)
-      .WithMany()
-      .HasForeignKey(p => p.SummonId)
-      .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<SummonNotifyWay>()
       .HasOne(p => p.Company)
       .WithMany()
-      .HasForeignKey(p => p.SummonId)
+      .HasForeignKey(p => p.CompanyId)
       .OnDelete(DeleteBehavior.Restrict);
 
 

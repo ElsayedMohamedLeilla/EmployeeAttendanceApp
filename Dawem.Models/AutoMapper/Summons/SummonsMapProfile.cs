@@ -24,7 +24,7 @@ namespace Dawem.Models.AutoMapper.Summons
                source.Groups.Select(g => new SummonGroup() { GroupId = g }).ToList() : null;
             destination.SummonDepartments = source.Departments != null ?
                source.Departments.Select(d => new SummonDepartment() { DepartmentId = d }).ToList() : null;
-            destination.SummonActions = source.Sanctions != null ?
+            destination.SummonSanctions = source.Sanctions != null ?
                source.Sanctions.Select(a => new SummonSanction() { SanctionId = a }).ToList() : null;
         }
     }

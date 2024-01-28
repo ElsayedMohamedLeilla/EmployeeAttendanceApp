@@ -8,13 +8,13 @@ namespace Dawem.Contract.BusinessLogic.Summons
     {
         Task<int> Create(CreateSanctionModel model);
         Task<bool> Update(UpdateSanctionModel model);
-        Task<GetSanctionInfoResponseModel> GetInfo(int nonComplianceActionId);
-        Task<GetSanctionByIdResponseModel> GetById(int nonComplianceActionId);
+        Task<GetSanctionInfoResponseModel> GetInfo(int sanctionId);
+        Task<GetSanctionByIdResponseModel> GetById(int sanctionId);
         Task<GetSanctionsResponse> Get(GetSanctionsCriteria model);
         Task<GetSanctionsForDropDownResponse> GetForDropDown(GetSanctionsCriteria model);
-        Task<bool> Delete(int nonComplianceActionId);
+        Task<bool> Delete(int sanctionId);
         Task<bool> Disable(DisableModelDTO model);
-        Task<bool> Enable(int nonComplianceActionId);
+        Task<bool> Enable(int sanctionId);
         Task<GetSanctionsInformationsResponseDTO> GetSanctionsInformations();
     }
 }

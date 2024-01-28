@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Summons.Summons;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Models.Response.Summons.Summons;
 
 namespace Dawem.Contract.BusinessLogic.Summons
@@ -7,10 +8,12 @@ namespace Dawem.Contract.BusinessLogic.Summons
     {
         Task<int> Create(CreateSummonModel model);
         Task<bool> Update(UpdateSummonModel model);
-        Task<GetSummonInfoResponseModel> GetInfo(int fingerprintEnforcementId);
-        Task<GetSummonByIdResponseModel> GetById(int fingerprintEnforcementId);
+        Task<GetSummonInfoResponseModel> GetInfo(int summonId);
+        Task<GetSummonByIdResponseModel> GetById(int summonId);
         Task<GetSummonsResponse> Get(GetSummonsCriteria model);
-        Task<bool> Delete(int fingerprintEnforcementId);
+        Task<bool> Disable(DisableModelDTO model);
+        Task<bool> Enable(int summonId);
+        Task<bool> Delete(int summonId);
         Task<GetSummonsInformationsResponseDTO> GetSummonsInformations();
     }
 }

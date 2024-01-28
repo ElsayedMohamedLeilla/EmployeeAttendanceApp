@@ -17,5 +17,6 @@ namespace Dawem.Domain.Entities.Summons
         public SanctionType Type { get; set; }
         public string Name { get; set; }
         public string WarningMessage { get; set; }
+        public List<SummonSanction> SummonSanctions { get; set; }
     }
 }

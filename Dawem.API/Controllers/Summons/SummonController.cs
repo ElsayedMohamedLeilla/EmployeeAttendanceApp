@@ -1,4 +1,7 @@
-﻿using Dawem.Contract.BusinessLogic.Summons;
+﻿using Dawem.BusinessLogic.Summons;
+using Dawem.Contract.BusinessLogic.Summons;
+using Dawem.Domain.Entities.Summons;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -59,6 +62,24 @@ namespace Dawem.API.Controllers.Summons
                 return BadRequest();
             }
             return Success(await summonBL.GetById(summonId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int summonId)
+        {
+            if (summonId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await summonBL.Enable(summonId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await summonBL.Disable(model));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int summonId)

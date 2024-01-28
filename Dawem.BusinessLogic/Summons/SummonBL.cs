@@ -4,11 +4,11 @@ using Dawem.Contract.BusinessValidation.Summons;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Summons.Summons;
@@ -40,6 +40,7 @@ namespace Dawem.BusinessLogic.Summons
         {
             #region Business Validation
 
+            var companyId = requestInfo.CompanyId;
             await summonBLValidation.CreateValidation(model);
 
             #endregion
@@ -50,15 +51,27 @@ namespace Dawem.BusinessLogic.Summons
 
             #region Set Summon code
             var getNextCode = await repositoryManager.SummonRepository
-                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Get(e => e.CompanyId == companyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
             #endregion
 
             var summon = mapper.Map<Summon>(model);
-            summon.CompanyId = requestInfo.CompanyId;
+
             summon.AddUserId = requestInfo.UserId;
+
+            #region Handle Company Id
+
+            summon.CompanyId = companyId;
+
+            summon.SummonEmployees?.ForEach(e => e.CompanyId = companyId);
+            summon.SummonGroups?.ForEach(e => e.CompanyId = companyId);
+            summon.SummonDepartments?.ForEach(e => e.CompanyId = companyId);
+            summon.SummonNotifyWays?.ForEach(e => e.CompanyId = companyId);
+            summon.SummonSanctions?.ForEach(e => e.CompanyId = companyId);
+
+            #endregion
 
             summon.Code = getNextCode;
             repositoryManager.SummonRepository.Insert(summon);
@@ -66,7 +79,7 @@ namespace Dawem.BusinessLogic.Summons
 
             #endregion
 
-            #region Notifiacationas
+            #region Notifiacations
 
             // for mogod
 
@@ -138,6 +151,7 @@ namespace Dawem.BusinessLogic.Summons
                             .Where(employeeId => !existingEmployeeIds.Contains(employeeId))
                             .Select(employeeId => new SummonEmployee
                             {
+                                CompanyId = requestInfo.CompanyId,
                                 SummonId = model.Id,
                                 EmployeeId = employeeId,
                                 ModifyUserId = requestInfo.UserId,
@@ -170,6 +184,7 @@ namespace Dawem.BusinessLogic.Summons
                             .Where(groupId => !existingGroupIds.Contains(groupId))
                             .Select(groupId => new SummonGroup
                             {
+                                CompanyId = requestInfo.CompanyId,
                                 SummonId = model.Id,
                                 GroupId = groupId,
                                 ModifyUserId = requestInfo.UserId,
@@ -202,6 +217,7 @@ namespace Dawem.BusinessLogic.Summons
                             .Where(departmentId => !existingDepartmentIds.Contains(departmentId))
                             .Select(departmentId => new SummonDepartment
                             {
+                                CompanyId = requestInfo.CompanyId,
                                 SummonId = model.Id,
                                 DepartmentId = departmentId,
                                 ModifyUserId = requestInfo.UserId,
@@ -236,6 +252,7 @@ namespace Dawem.BusinessLogic.Summons
                     .Where(actionId => !existingSanctionIds.Contains(actionId))
                     .Select(actionId => new SummonSanction
                     {
+                        CompanyId = requestInfo.CompanyId,
                         SummonId = model.Id,
                         SanctionId = actionId,
                         ModifyUserId = requestInfo.UserId,
@@ -262,6 +279,7 @@ namespace Dawem.BusinessLogic.Summons
                     .Where(notifyWay => !existingNotifyWaysIds.Contains(notifyWay))
                     .Select(notifyWay => new SummonNotifyWay
                     {
+                        CompanyId = requestInfo.CompanyId,
                         SummonId = model.Id,
                         NotifyWay = notifyWay,
                         ModifyUserId = requestInfo.UserId,
@@ -341,11 +359,11 @@ namespace Dawem.BusinessLogic.Summons
                     AllowedTime = e.AllowedTime,
                     TimeType = e.TimeType,
                     ForTypeName = TranslationHelper.GetTranslation(e.ForType.ToString(), requestInfo.Lang),
-                    NotifyWays = e.SummonNotifyWays != null ? e.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
-                    Employees = e.SummonEmployees != null ? e.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
-                    Groups = e.SummonGroups != null ? e.SummonGroups.Select(e => e.Group.Name).ToList() : null,
-                    Departments = e.SummonDepartments != null ? e.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
-                    Actions = e.SummonActions != null ? e.SummonActions.Select(e => e.Sanction.Name).ToList() : null,
+                    NotifyWays = e.SummonNotifyWays.Count > 0 ? e.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
+                    Employees = e.SummonEmployees.Count > 0 ? e.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
+                    Groups = e.SummonGroups.Count > 0 ? e.SummonGroups.Select(e => e.Group.Name).ToList() : null,
+                    Departments = e.SummonDepartments.Count > 0 ? e.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
+                    Actions = e.SummonSanctions.Count > 0 ? e.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
                     IsActive = e.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
@@ -363,16 +381,32 @@ namespace Dawem.BusinessLogic.Summons
                     FingerprintDate = e.FingerprintDate,
                     AllowedTime = e.AllowedTime,
                     TimeType = e.TimeType,
-                    NotifyWays = e.SummonNotifyWays != null ? e.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
-                    Employees = e.SummonEmployees != null ? e.SummonEmployees.Select(e => e.EmployeeId).ToList() : null,
-                    Groups = e.SummonGroups != null ? e.SummonGroups.Select(e => e.GroupId).ToList() : null,
-                    Departments = e.SummonDepartments != null ? e.SummonDepartments.Select(e => e.DepartmentId).ToList() : null,
-                    Actions = e.SummonActions != null ? e.SummonActions.Select(e => e.SanctionId).ToList() : null,
+                    NotifyWays = e.SummonNotifyWays.Count > 0 ? e.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
+                    Employees = e.SummonEmployees.Count > 0 ? e.SummonEmployees.Select(e => e.EmployeeId).ToList() : null,
+                    Groups = e.SummonGroups.Count > 0 ? e.SummonGroups.Select(e => e.GroupId).ToList() : null,
+                    Departments = e.SummonDepartments.Count > 0 ? e.SummonDepartments.Select(e => e.DepartmentId).ToList() : null,
+                    Actions = e.SummonSanctions.Count > 0 ? e.SummonSanctions.Select(e => e.SanctionId).ToList() : null,
                     IsActive = e.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;
 
+        }
+        public async Task<bool> Enable(int summonId)
+        {
+            var sanction = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == summonId) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
+            sanction.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var sanction = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
+            sanction.Disable(model.DisableReason);
+            await unitOfWork.SaveAsync();
+            return true;
         }
         public async Task<bool> Delete(int summond)
         {

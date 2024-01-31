@@ -12,5 +12,6 @@ namespace Dawem.Models.Response.Requests.Vacations
         public RequestStatus Status { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public float BalanceAfterRequest { get; set; }
     }
 }

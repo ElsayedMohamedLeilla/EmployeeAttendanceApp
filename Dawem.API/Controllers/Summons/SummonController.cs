@@ -1,6 +1,4 @@
-﻿using Dawem.BusinessLogic.Summons;
-using Dawem.Contract.BusinessLogic.Summons;
-using Dawem.Domain.Entities.Summons;
+﻿using Dawem.Contract.BusinessLogic.Summons;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Translations;

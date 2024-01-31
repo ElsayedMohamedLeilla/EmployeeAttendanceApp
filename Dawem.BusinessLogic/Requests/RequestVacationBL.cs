@@ -243,7 +243,7 @@ namespace Dawem.BusinessLogic.Requests
                  .GetEntityByConditionWithTrackingAsync(requestVacation => !requestVacation.Request.IsDeleted
                  && requestVacation.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
@@ -339,7 +339,8 @@ namespace Dawem.BusinessLogic.Requests
                 DateFrom = requestVacation.Request.Date,
                 DateTo = requestVacation.DateTo,
                 Status = requestVacation.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
+                BalanceAfterRequest = requestVacation.BalanceAfterRequest
 
             }).ToListAsync();
 

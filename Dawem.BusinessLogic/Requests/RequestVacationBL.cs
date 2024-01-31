@@ -243,7 +243,7 @@ namespace Dawem.BusinessLogic.Requests
                  .GetEntityByConditionWithTrackingAsync(requestVacation => !requestVacation.Request.IsDeleted
                  && requestVacation.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;

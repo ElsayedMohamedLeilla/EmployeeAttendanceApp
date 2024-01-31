@@ -6,6 +6,8 @@ namespace Dawem.Models.Dtos.Core.NotificationsStores
     {
         public int UnreadNotificationCount { get; set; }
         public NotificationType NotificationType { get; set; }
+        public string RedirectURL { get; set; }
+
 
 
     }

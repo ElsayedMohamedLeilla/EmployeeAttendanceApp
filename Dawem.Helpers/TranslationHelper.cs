@@ -29,7 +29,6 @@ namespace Dawem.Helpers
                 cachedKey = LeillaKeys.EnTrans;
             }
             var cached = GetCachedData<IEnumerable<TransModel>>(cachedKey);
-
             if (cached != null)
             {
                 List<TransModel> data = cached.ToList();
@@ -44,16 +43,13 @@ namespace Dawem.Helpers
                     {
                         return key;
                     }
-
                 }
                 else
                 {
                     return key;
                 }
             }
-
             return key;
-
         }
         public static void SetlangTrans(object translations, string cachKey)
         {

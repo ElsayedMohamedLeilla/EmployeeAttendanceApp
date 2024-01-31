@@ -333,7 +333,8 @@ namespace Dawem.BusinessLogic.Requests
                 DateFrom = requestVacation.Request.Date,
                 DateTo = requestVacation.DateTo,
                 Status = requestVacation.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+                StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
+                BalanceAfterRequest = requestVacation.BalanceAfterRequest
 
             }).ToListAsync();
 

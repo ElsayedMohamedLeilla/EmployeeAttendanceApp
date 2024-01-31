@@ -1,7 +1,7 @@
-﻿using Dawem.Contract.Repository.Attendances;
+﻿using Dawem.Contract.RealTime.Firebase;
+using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
-using Dawem.Contract.Repository.Firebase;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Others;
@@ -12,7 +12,6 @@ using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
-using Dawem.Contract.RealTime.Firebase;
 
 namespace Dawem.Contract.Repository.Manager
 {

@@ -78,7 +78,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
         }
         #endregion
         #region Send Email
-         await SendEmailByUserIds(UserIds, notificationType);
+        await SendEmailByUserIds(UserIds, notificationType);
         #endregion
         return response;
     }
@@ -265,17 +265,18 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
 
         return userTokens;
     }
-    public async Task<bool> SendEmailByUserIds(List<int> userIds,NotificationType notificationType) {
+    public async Task<bool> SendEmailByUserIds(List<int> userIds, NotificationType notificationType)
+    {
         List<string> emails = GetUserEmails(userIds);
         bool result = false;
         foreach (var email in emails)
         {
-            if(email != AmgadKeys.NoEmail)
+            if (email != AmgadKeys.NoEmail)
             {
                 var verifyEmail = new VerifyEmailModel
                 {
                     Email = email,
-                    Subject = NotificationHelper.GetNotificationType(notificationType,requestInfo.Lang),
+                    Subject = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang),
                     Body = @"<meta charset='UTF-8'>
                                             <title>عزيزي الموظف</title>
                                             <style>
@@ -288,9 +289,9 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
                                             </html>"
                 };
 
-              result =  await mailBL.SendEmail(verifyEmail);
+                result = await mailBL.SendEmail(verifyEmail);
             }
-           
+
         }
         return result;
     }

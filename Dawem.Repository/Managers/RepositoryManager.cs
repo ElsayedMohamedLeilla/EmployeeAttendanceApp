@@ -2,7 +2,6 @@
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Employees;
-using Dawem.Contract.Repository.Firebase;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
@@ -28,7 +27,6 @@ using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
-using Dawem.Repository.Firebase;
 using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
 using Dawem.Repository.Others;

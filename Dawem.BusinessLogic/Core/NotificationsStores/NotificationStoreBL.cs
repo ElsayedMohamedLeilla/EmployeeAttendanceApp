@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.SignalR;
+using Dawem.BusinessLogic.RealTime.SignalR;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.Repository.Manager;
@@ -10,10 +10,12 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
+using Dawem.Models.Dtos.Core.NotificationsStores;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.NotificationsStores;
+using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -72,12 +74,12 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
             {
                 Id = notificatioStore.Id,
-                FullMessege = SignalRHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
+                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
                 IconUrl = notificatioStore.ImageUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
                 EmployeeId = notificatioStore.EmployeeId,
-                ShortMessege = SignalRHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
+                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
                 Status = notificatioStore.Status
 
             }).ToListAsync();
@@ -154,12 +156,12 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
             {
                 Id = notificatioStore.Id,
-                FullMessege = SignalRHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
+                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
                 IconUrl = notificatioStore.ImageUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
                 EmployeeId = notificatioStore.EmployeeId,
-                ShortMessege = SignalRHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
+                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
                 Status = notificatioStore.Status
 
             }).ToListAsync();
@@ -206,12 +208,12 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
             {
                 Id = notificatioStore.Id,
-                FullMessege = SignalRHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
+                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
                 IconUrl = notificatioStore.ImageUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
                 EmployeeId = notificatioStore.EmployeeId,
-                ShortMessege = SignalRHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
+                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
                 Status = notificatioStore.Status
 
             }).ToListAsync();
@@ -224,24 +226,394 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
 
         }
 
-        public async Task<bool> SendNotificationAndEmail(NotificationType type, int groupEmployeeId, string EmployeeName, string employeeEmail)
-        {
-            #region Notification
-            await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + groupEmployeeId)
-               .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await GetUnreadNotificationCountByUserId(), requestInfo.Lang, NotificationType.NewVacationRequest, EmployeeName));
-            #endregion
-            #region Email
-            var verifyEmail = new VerifyEmailModel
-            {
-                Email = employeeEmail,
-                Subject = SignalRHelper.GetNotificationType(type, requestInfo.Lang),
-                Body = TranslationHelper.GetTranslation(AmgadKeys.Dear, requestInfo.Lang)  + "<h3>  " + EmployeeName + " </h3> " + SignalRHelper.GetNotificationDescription(type, requestInfo.Lang),
+        //public async Task<bool> Notify(NotificationModelDTO param)
+        //{
 
-            };
+        //    #region RetrieveEmployeeInfo
+        //    List<EmployeeInfoModel> employeeInfoModels = new List<EmployeeInfoModel>();
+        //    if (param.departmentIds != null && param.departmentIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //          .Get(e => e.IsActive && !e.IsDeleted && param.departmentIds.Contains(e.DepartmentId ?? 0))
+        //          .Select(e => new EmployeeInfoModel
+        //          {
+        //              Id = e.Id,
+        //              Name = e.Name,
+        //              Email = e.Email
+        //          })
+        //          .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.employeeIds != null && param.employeeIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    employeeInfoModels.Distinct();
+        //    #endregion
+        //    for (int i = 0; i < param.notifyWays.Count; i++)
+        //    {
+        //        if (param.notifyWays[i] == NotifyWay.OnApp)
+        //        {
+        //            for (int o = 0; o < param.types.Count; o++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Notification
+        //                    await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + employeeInfoModels[emp].Id)
+        //                       .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await GetUnreadNotificationCountByUserId(), requestInfo.Lang, param.types[o], employeeInfoModels[emp].Name));
+        //                    #endregion
+        //                }
+        //            }
 
-            await mailBL.SendEmail(verifyEmail);
-            #endregion
-            return true;
-        }
+        //        }
+        //        else if (param.notifyWays[i] == NotifyWay.Email)
+        //        {
+        //            for (int x = 0; x < param.types.Count; x++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Email
+        //                    var verifyEmail = new VerifyEmailModel
+        //                    {
+        //                        Email = employeeInfoModels[emp].Email,
+        //                        Subject = SignalRHelper.GetNotificationType(param.types[x], requestInfo.Lang),
+        //                        Body = TranslationHelper.GetTranslation(AmgadKeys.Dear, requestInfo.Lang) + employeeInfoModels[emp].Name + SignalRHelper.GetNotificationDescription(param.types[x], requestInfo.Lang),
+        //                    };
+
+        //                    await mailBL.SendEmail(verifyEmail);
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    return true;
+        //}        //public async Task<bool> Notify(NotificationModelDTO param)
+        //{
+
+        //    #region RetrieveEmployeeInfo
+        //    List<EmployeeInfoModel> employeeInfoModels = new List<EmployeeInfoModel>();
+        //    if (param.departmentIds != null && param.departmentIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //          .Get(e => e.IsActive && !e.IsDeleted && param.departmentIds.Contains(e.DepartmentId ?? 0))
+        //          .Select(e => new EmployeeInfoModel
+        //          {
+        //              Id = e.Id,
+        //              Name = e.Name,
+        //              Email = e.Email
+        //          })
+        //          .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.employeeIds != null && param.employeeIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    employeeInfoModels.Distinct();
+        //    #endregion
+        //    for (int i = 0; i < param.notifyWays.Count; i++)
+        //    {
+        //        if (param.notifyWays[i] == NotifyWay.OnApp)
+        //        {
+        //            for (int o = 0; o < param.types.Count; o++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Notification
+        //                    await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + employeeInfoModels[emp].Id)
+        //                       .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await GetUnreadNotificationCountByUserId(), requestInfo.Lang, param.types[o], employeeInfoModels[emp].Name));
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //        else if (param.notifyWays[i] == NotifyWay.Email)
+        //        {
+        //            for (int x = 0; x < param.types.Count; x++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Email
+        //                    var verifyEmail = new VerifyEmailModel
+        //                    {
+        //                        Email = employeeInfoModels[emp].Email,
+        //                        Subject = SignalRHelper.GetNotificationType(param.types[x], requestInfo.Lang),
+        //                        Body = TranslationHelper.GetTranslation(AmgadKeys.Dear, requestInfo.Lang) + employeeInfoModels[emp].Name + SignalRHelper.GetNotificationDescription(param.types[x], requestInfo.Lang),
+        //                    };
+
+        //                    await mailBL.SendEmail(verifyEmail);
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    return true;
+        //}        //public async Task<bool> Notify(NotificationModelDTO param)
+        //{
+
+        //    #region RetrieveEmployeeInfo
+        //    List<EmployeeInfoModel> employeeInfoModels = new List<EmployeeInfoModel>();
+        //    if (param.departmentIds != null && param.departmentIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //          .Get(e => e.IsActive && !e.IsDeleted && param.departmentIds.Contains(e.DepartmentId ?? 0))
+        //          .Select(e => new EmployeeInfoModel
+        //          {
+        //              Id = e.Id,
+        //              Name = e.Name,
+        //              Email = e.Email
+        //          })
+        //          .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.employeeIds != null && param.employeeIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    employeeInfoModels.Distinct();
+        //    #endregion
+        //    for (int i = 0; i < param.notifyWays.Count; i++)
+        //    {
+        //        if (param.notifyWays[i] == NotifyWay.OnApp)
+        //        {
+        //            for (int o = 0; o < param.types.Count; o++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Notification
+        //                    await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + employeeInfoModels[emp].Id)
+        //                       .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await GetUnreadNotificationCountByUserId(), requestInfo.Lang, param.types[o], employeeInfoModels[emp].Name));
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //        else if (param.notifyWays[i] == NotifyWay.Email)
+        //        {
+        //            for (int x = 0; x < param.types.Count; x++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Email
+        //                    var verifyEmail = new VerifyEmailModel
+        //                    {
+        //                        Email = employeeInfoModels[emp].Email,
+        //                        Subject = SignalRHelper.GetNotificationType(param.types[x], requestInfo.Lang),
+        //                        Body = TranslationHelper.GetTranslation(AmgadKeys.Dear, requestInfo.Lang) + employeeInfoModels[emp].Name + SignalRHelper.GetNotificationDescription(param.types[x], requestInfo.Lang),
+        //                    };
+
+        //                    await mailBL.SendEmail(verifyEmail);
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    return true;
+        //}        //public async Task<bool> Notify(NotificationModelDTO param)
+        //{
+
+        //    #region RetrieveEmployeeInfo
+        //    List<EmployeeInfoModel> employeeInfoModels = new List<EmployeeInfoModel>();
+        //    if (param.departmentIds != null && param.departmentIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //          .Get(e => e.IsActive && !e.IsDeleted && param.departmentIds.Contains(e.DepartmentId ?? 0))
+        //          .Select(e => new EmployeeInfoModel
+        //          {
+        //              Id = e.Id,
+        //              Name = e.Name,
+        //              Email = e.Email
+        //          })
+        //          .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.groupIds != null && param.groupIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    if (param.employeeIds != null && param.employeeIds.Any())
+        //    {
+        //        var info = repositoryManager.EmployeeRepository
+        //            .Get(e => e.IsActive && !e.IsDeleted && e.EmployeeGroups.Any(ge => param.groupIds.Contains(ge.GroupId ?? 0)))
+        //            .Select(e => new EmployeeInfoModel
+        //            {
+        //                Id = e.Id,
+        //                Name = e.Name,
+        //                Email = e.Email
+        //            })
+        //            .ToList();
+        //        employeeInfoModels.AddRange(info);
+        //    }
+        //    employeeInfoModels.Distinct();
+        //    #endregion
+        //    for (int i = 0; i < param.notifyWays.Count; i++)
+        //    {
+        //        if (param.notifyWays[i] == NotifyWay.OnApp)
+        //        {
+        //            for (int o = 0; o < param.types.Count; o++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Notification
+        //                    await hubContext.Clients.Group(AmgadKeys.EmployeeGroup + LeillaKeys.UnderScore + employeeInfoModels[emp].Id)
+        //                       .ReceiveNewNotification(SignalRHelper.TempNotificationModelDTO(await GetUnreadNotificationCountByUserId(), requestInfo.Lang, param.types[o], employeeInfoModels[emp].Name));
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //        else if (param.notifyWays[i] == NotifyWay.Email)
+        //        {
+        //            for (int x = 0; x < param.types.Count; x++)
+        //            {
+        //                for (int emp = 0; emp < employeeInfoModels.Count; emp++)
+        //                {
+        //                    #region Email
+        //                    var verifyEmail = new VerifyEmailModel
+        //                    {
+        //                        Email = employeeInfoModels[emp].Email,
+        //                        Subject = SignalRHelper.GetNotificationType(param.types[x], requestInfo.Lang),
+        //                        Body = TranslationHelper.GetTranslation(AmgadKeys.Dear, requestInfo.Lang) + employeeInfoModels[emp].Name + SignalRHelper.GetNotificationDescription(param.types[x], requestInfo.Lang),
+        //                    };
+
+        //                    await mailBL.SendEmail(verifyEmail);
+        //                    #endregion
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    return true;
+        //}
     }
 }

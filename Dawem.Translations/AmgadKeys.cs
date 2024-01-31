@@ -2,6 +2,15 @@
 {
     public static class AmgadKeys
     {
+        public const string InfoImageName = "info.jpg";
+        public const string WarningImageName = "warning.jpg";
+        public const string ErrorImageName = "error.jpg";
+        public const string DefaultImageName = "default.jpg";
+        public const string NotificationIcons = "NotificationIcons";
+
+        public const string NoEmail = "NoEmail";
+
+
         public const string EmployeeGroup = "EmployeeGroup";
         public const string JustificationRequests = "justificationRequests";
         public const string SorryYouMustChooseValidTimePeriod0Or1 = "Sorry!!YouMustChooseValidTimePeriod0Or1!";
@@ -118,6 +127,8 @@
         public const string YourVacationIsAccepted = "YourVacationIsAccepted";
         public const string YourVacationIsRejected = "YourVacationIsRejected";
         public const string Dear = "Dear";
+
+
 
 
         

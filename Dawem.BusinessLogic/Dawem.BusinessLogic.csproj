@@ -23,6 +23,11 @@
     <ProjectReference Include="..\Dawem.Repository\Dawem.Repository.csproj" />
     <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
     <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
+    <ProjectReference Include="..\RealTime\Dawem.RealTime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RealTime\Firebase\" />
   </ItemGroup>
 
 </Project>

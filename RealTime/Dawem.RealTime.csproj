@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dawem.BusinessLogicCore\Dawem.BusinessLogicCore.csproj" />
+    <ProjectReference Include="..\Dawem.Helpers\Dawem.Helpers.csproj" />
+    <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
+    <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
+    <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SignalR\" />
+  </ItemGroup>
+
+</Project>

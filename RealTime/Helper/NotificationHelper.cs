@@ -1,28 +1,13 @@
-﻿using Dawem.Domain.Entities.Core;
+﻿using Dawem.Contract.BusinessLogicCore;
 using Dawem.Enums.Generals;
-using Dawem.Models.Context;
-using Dawem.Models.Dtos.SignalR;
+using Dawem.Helpers;
 using Dawem.Translations;
-using Microsoft.AspNetCore.SignalR;
 
-namespace Dawem.Helpers
+namespace Dawem.RealTime.Helper
 {
-    public static class SignalRHelper
+    public static class NotificationHelper
     {
-        public static TempNotificationModelDTO TempNotificationModelDTO(int newNotificationCount, string lang, NotificationType type, string EmployeeName)
-        {
-            var notificatioData = new NotificationData()
-            {
-                EmployeeName = EmployeeName,
-                Title = GetNotificationType(type, lang),
-                MessageDescription = GetNotificationDescription(type, lang),
-            };
-            return new TempNotificationModelDTO()
-            {
-                Data = notificatioData,
-                NewCount = newNotificationCount
-            };
-        }
+
 
 
         public static string GetNotificationType(NotificationType type, string lang)
@@ -39,21 +24,20 @@ namespace Dawem.Helpers
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
             };
         }
-        public static string GetNotificationImage(NotificationStatus type)
+        public static string GetNotificationImage(NotificationStatus type, IUploadBLC uploadBLC)
         {
             switch (type)
             {
                 case NotificationStatus.Info:
-                    return "/NotificationIcons/info.jpg";
+                    return uploadBLC.GetFilePath(AmgadKeys.InfoImageName, AmgadKeys.NotificationIcons);
                 case NotificationStatus.Error:
-                    return "/NotificationIcons/error.jpg";
+                    return uploadBLC.GetFilePath(AmgadKeys.ErrorImageName, AmgadKeys.NotificationIcons);
                 case NotificationStatus.Warning:
-                    return "/NotificationIcons/warning.jpg";
+                    return uploadBLC.GetFilePath(AmgadKeys.WarningImageName, AmgadKeys.NotificationIcons);
                 default:
-                    return "/NotificationIcons/default.jpg";
+                    return uploadBLC.GetFilePath(AmgadKeys.DefaultImageName, AmgadKeys.NotificationIcons);
             }
         }
-
         private static string GetNotificationPriority(Priority priority, string lang)
         {
             return priority switch
@@ -64,7 +48,6 @@ namespace Dawem.Helpers
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }
-
         public static string GetNotificationDescription(NotificationType type, string lang)
         {
             return type switch
@@ -76,6 +59,6 @@ namespace Dawem.Helpers
             };
         }
 
-       
+
     }
 }

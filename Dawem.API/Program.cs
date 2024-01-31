@@ -2,7 +2,6 @@ using Dawem.API;
 using Dawem.API.MiddleWares;
 using Dawem.BusinessLogic;
 using Dawem.BusinessLogic.Localization;
-using Dawem.BusinessLogic.SignalR;
 using Dawem.BusinessLogicCore;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -26,6 +25,10 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Dawem.Contract.RealTime.Firebase;
+using Dawem.BusinessLogic.RealTime.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
@@ -109,6 +112,15 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.DateParseHandling = DateParseHandling.None;
     options.SerializerSettings.Converters.Add(new MultiFormatDateConverter());
 });
+
+#region FireBase
+var credential = GoogleCredential.FromFile("ConfigrationFiles\\Firebase\\firebase-adminsdk.json");
+var firebaseApp = FirebaseApp.Create(new AppOptions
+{
+    Credential = credential,
+});
+builder.Services.AddTransient<INotificationServiceByFireBaseAdmin, NotificationServiceByFireBaseAdmin>();
+#endregion
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 builder.Services.AddFluentValidationAutoValidation(cpnfig =>

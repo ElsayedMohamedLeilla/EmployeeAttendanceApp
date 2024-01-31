@@ -1,10 +1,10 @@
-﻿using Dawem.Contract.Repository.Firebase;
+﻿using Dawem.Contract.RealTime.Firebase;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Firebase;
+using Dawem.Domain.RealTime.Firebase;
 using Dawem.Models.Generic;
 
-namespace Dawem.Repository.Firebase
+namespace Dawem.Repository.RealTime.Firebase
 {
     public class NotificationUserDeviceTokenRepository : GenericRepository<NotificationUserDeviceToken>, INotificationUserDeviceTokenRepository
     {

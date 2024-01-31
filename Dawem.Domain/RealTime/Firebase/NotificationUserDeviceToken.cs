@@ -1,8 +1,9 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Domain.Entities;
+using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Firebase
+namespace Dawem.Domain.RealTime.Firebase
 {
     [Table(nameof(NotificationUserDeviceToken) + LeillaKeys.S)]
     public class NotificationUserDeviceToken : BaseEntity

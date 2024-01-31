@@ -12,6 +12,7 @@ using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
+using Dawem.Contract.RealTime.Firebase;
 
 namespace Dawem.Contract.Repository.Manager
 {

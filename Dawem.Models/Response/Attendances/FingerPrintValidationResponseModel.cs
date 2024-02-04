@@ -7,6 +7,7 @@ namespace Dawem.Models.Response.Attendances
         public int EmployeeId { get; set; }
         public int ScheduleId { get; set; }
         public int ShiftId { get; set; }
+        public int? SummonId { get; set; }
         public DateTime LocalDate { get; set; }
         public TimeOnly ShiftCheckInTime { get; set; }
         public TimeOnly ShiftCheckOutTime { get; set; }

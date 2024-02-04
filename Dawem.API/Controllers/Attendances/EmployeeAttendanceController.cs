@@ -24,7 +24,7 @@ namespace Dawem.API.Controllers.Attendances
             {
                 return BadRequest();
             }
-            var fingerPrintType = await employeeAttendanceBL.FingerPrint(model);
+            var fingerPrintType = await employeeAttendanceBL.CreateFingerPrint(model);
             var messageCode = fingerPrintType == Enums.Generals.FingerPrintType.CheckIn ?
                  LeillaKeys.DoneCheckInSuccessfully : LeillaKeys.DoneCheckOutSuccessfully;
             return Success(fingerPrintType, messageCode: messageCode);

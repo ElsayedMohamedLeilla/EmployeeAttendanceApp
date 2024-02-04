@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Models.Dtos.Summons.Summons;
 

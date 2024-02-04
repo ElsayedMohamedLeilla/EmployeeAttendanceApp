@@ -33,7 +33,7 @@ namespace Dawem.BusinessLogic.Attendances
             repositoryManager = _repositoryManager;
             employeeAttendanceBLValidation = _employeeAttendanceBLValidation;
         }
-        public async Task<FingerPrintType> FingerPrint(FingerprintModel model)
+        public async Task<FingerPrintType> CreateFingerPrint(FingerprintModel model)
         {
             #region Business Validation
 
@@ -52,13 +52,14 @@ namespace Dawem.BusinessLogic.Attendances
                 .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
-            //checkout
+            //checkout or summon
             if (getAttandanceId > 0)
             {
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getAttandanceId,
-                    FingerPrintType = validationResult.FingerPrintType,
+                    SummonId = validationResult.SummonId,
+                    FingerPrintType = validationResult.FingerPrintType,                    
                     IsActive = true,
                     Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,

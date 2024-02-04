@@ -1,4 +1,5 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Domain.Entities.Summons;
+using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,11 @@ namespace Dawem.Domain.Entities.Attendances
         public int EmployeeAttendanceId { get; set; }
         [ForeignKey(nameof(EmployeeAttendanceId))]
         public EmployeeAttendance EmployeeAttendance { get; set; }
+
+        public int? SummonId { get; set; }
+        [ForeignKey(nameof(SummonId))]
+        public Summon Summon { get; set; }
+
         #endregion
         public TimeOnly Time { get; set; }
         public double Latitude { get; set; }

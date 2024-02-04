@@ -5,6 +5,7 @@ using NCrontab;
 
 namespace Dawem.BackgroundJobs
 {
+    // test CrontabSchedule in => https://crontab.cronhub.io/
     public class SummonsMissingHostedService : BackgroundService
     {
         private CrontabSchedule _schedule;

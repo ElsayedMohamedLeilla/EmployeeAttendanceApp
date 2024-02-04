@@ -105,13 +105,6 @@ namespace Dawem.Data
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Summon>()
-         .HasOne(p => p.Company)
-         .WithMany(b => b.Summons)
-         .HasForeignKey(p => p.CompanyId)
-         .OnDelete(DeleteBehavior.Cascade);
-
-
             builder.Entity<PermissionScreen>()
          .HasOne(p => p.Permission)
          .WithMany(b => b.PermissionScreens)

@@ -33,6 +33,9 @@ namespace Dawem.Repository.Requests
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(request => request.CompanyId == requestInfo.CompanyId);
+
             if (criteria.Id != null)
             {
                 predicate = predicate.And(e => e.Id == criteria.Id);

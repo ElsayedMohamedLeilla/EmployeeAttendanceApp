@@ -114,7 +114,7 @@ namespace Dawem.BusinessLogic.Summons
             {
                 getSummon.ForType = model.ForType;
                 getSummon.ForAllEmployees = model.ForAllEmployees;
-                getSummon.FingerprintDate = model.FingerprintDate;
+                getSummon.DateAndTime = model.DateAndTime;
                 getSummon.AllowedTime = model.AllowedTime;
                 getSummon.TimeType = model.TimeType;
                 getSummon.IsActive = model.IsActive;
@@ -335,7 +335,7 @@ namespace Dawem.BusinessLogic.Summons
                 Id = s.Id,
                 Code = s.Code,
                 ForType = s.ForType,
-                FingerprintDate = s.FingerprintDate,
+                DateAndTime = s.DateAndTime,
                 ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                 IsActive = s.IsActive
             }).ToListAsync();
@@ -353,9 +353,8 @@ namespace Dawem.BusinessLogic.Summons
                 .Select(s => new GetSummonInfoResponseModel
                 {
                     Code = s.Code,
-                    ForType = s.ForType,
                     ForAllEmployees = s.ForAllEmployees,
-                    FingerprintDate = s.FingerprintDate,
+                    DateAndTime = s.DateAndTime,
                     AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
                     ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                     NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
@@ -377,7 +376,7 @@ namespace Dawem.BusinessLogic.Summons
                     Code = s.Code,
                     ForType = s.ForType,
                     ForAllEmployees = s.ForAllEmployees,
-                    FingerprintDate = s.FingerprintDate,
+                    DateAndTime = s.DateAndTime,
                     AllowedTime = s.AllowedTime,
                     TimeType = s.TimeType,
                     NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
@@ -453,10 +452,10 @@ namespace Dawem.BusinessLogic.Summons
                 var tempGetEmployeesMissing = await repositoryManager
                     .EmployeeRepository.Get(e => !e.IsDeleted && e.Company.Country.TimeZoneId != null &&
                     e.Company.Summons.Any(s => !s.IsDeleted &&
-                    maxLocalDate >= s.FingerprintDate &&
-                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxLocalDate) > s.AllowedTime)) &&
+                    maxLocalDate >= s.DateAndTime &&
+                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, maxLocalDate) > s.AllowedTime)) &&
                     ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                     (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
                     (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
@@ -467,10 +466,10 @@ namespace Dawem.BusinessLogic.Summons
                         EmployeeId = e.Id,
                         e.CompanyId,
                         e.Company.Country.TimeZoneId,
-                        Summons = e.Company.Summons.Where(s => !s.IsDeleted && maxLocalDate >= s.FingerprintDate &&
-                        ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxLocalDate) > s.AllowedTime)) &&
+                        Summons = e.Company.Summons.Where(s => !s.IsDeleted && maxLocalDate >= s.DateAndTime &&
+                        ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, maxLocalDate) > s.AllowedTime)) &&
                         ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                         (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
                         (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
@@ -480,23 +479,23 @@ namespace Dawem.BusinessLogic.Summons
                             SummonId = s.Id,
                             s.TimeType,
                             s.AllowedTime,
-                            s.FingerprintDate
+                            s.DateAndTime
                         }).ToList()
                     }).ToListAsync();
 
                 var getEmployeesMissing = tempGetEmployeesMissing
-                    .Where(e => e.Summons.Any(s => StringHelper.GetLocalDateTime(e.TimeZoneId) > s.FingerprintDate &&
-                    ((s.TimeType == TimeType.Second && (maxLocalDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && (maxLocalDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && (maxLocalDate - s.FingerprintDate).TotalHours > s.AllowedTime))))
+                    .Where(e => e.Summons.Any(s => StringHelper.GetLocalDateTime(e.TimeZoneId) > s.DateAndTime &&
+                    ((s.TimeType == TimeType.Second && (maxLocalDate - s.DateAndTime).TotalSeconds > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && (maxLocalDate - s.DateAndTime).TotalMinutes > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && (maxLocalDate - s.DateAndTime).TotalHours > s.AllowedTime))))
                     .Select(e => new
                     {
                         e.EmployeeId,
                         e.CompanyId,
-                        Summons = e.Summons.Where(s => StringHelper.GetLocalDateTime(e.TimeZoneId) >= s.FingerprintDate &&
-                        ((s.TimeType == TimeType.Second && (maxLocalDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && (maxLocalDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && (maxLocalDate - s.FingerprintDate).TotalHours > s.AllowedTime)))
+                        Summons = e.Summons.Where(s => StringHelper.GetLocalDateTime(e.TimeZoneId) >= s.DateAndTime &&
+                        ((s.TimeType == TimeType.Second && (maxLocalDate - s.DateAndTime).TotalSeconds > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Minute && (maxLocalDate - s.DateAndTime).TotalMinutes > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Hour && (maxLocalDate - s.DateAndTime).TotalHours > s.AllowedTime)))
                         .Select(s => new
                         {
                             s.SummonId

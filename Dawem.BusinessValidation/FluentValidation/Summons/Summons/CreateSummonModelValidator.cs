@@ -18,8 +18,8 @@ namespace Dawem.Validation.FluentValidation.Summons.Summons
                 .When(model => model.ForType != ForType.Employees)
                 .WithMessage(LeillaKeys.SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees);
 
-            RuleFor(model => model.FingerprintDate).Must(d => d != default)
-               .WithMessage(LeillaKeys.SorryYouMustEnterFingerprintDate);
+            RuleFor(model => model.DateAndTime).Must(d => d != default)
+               .WithMessage(LeillaKeys.SorryYouMustEnterSummonDateAndTime);
 
             RuleFor(model => model.AllowedTime)
                 .GreaterThan(0)

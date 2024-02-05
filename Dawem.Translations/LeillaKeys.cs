@@ -456,7 +456,7 @@
         public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
         public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";
         public const string SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees = "Sorry!!YouMustNotSetForAllEmployeesWhenTypeNotEmployees!";
-        public const string SorryYouMustEnterFingerprintDate = "Sorry!!YouMustEnterFingerprintDate!";
+        public const string SorryYouMustEnterSummonDateAndTime = "Sorry!!YouMustEnterSummonDateAndTime!";
         public const string SorryYouMustEnterAllowedTime = "Sorry!!YouMustEnterAllowedTime!";
         public const string SorryYouMustChooseTimeType = "Sorry!!YouMustChooseTimeType!";
         public const string SorryYouMustChooseAtLeastOneAction = "Sorry!!YouMustChooseAtLeastOneAction!";

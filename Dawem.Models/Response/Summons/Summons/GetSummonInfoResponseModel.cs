@@ -5,10 +5,9 @@ namespace Dawem.Models.Response.Summons.Summons
     public class GetSummonInfoResponseModel
     {
         public int Code { get; set; }
-        public ForType ForType { get; set; }
         public string ForTypeName { get; set; }
         public bool? ForAllEmployees { get; set; }
-        public DateTime FingerprintDate { get; set; }
+        public DateTime DateAndTime { get; set; }
         public string AllowedTimeName { get; set; }
         public List<string> NotifyWays { get; set; }
         public List<string> Employees { get; set; }

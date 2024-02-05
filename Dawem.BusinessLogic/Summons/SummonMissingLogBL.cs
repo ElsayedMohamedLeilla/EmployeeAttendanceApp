@@ -45,7 +45,7 @@ namespace Dawem.BusinessLogic.Summons
                 Code = sml.Code,
                 EmployeeName = sml.Employee.Name,
                 SummonCode = sml.Summon.Code.ToString(),
-                SummonDate = sml.Summon.FingerprintDate,
+                SummonDate = sml.Summon.DateAndTime,
                 DoneNotify = sml.DoneNotify
             }).ToListAsync();
 
@@ -65,7 +65,7 @@ namespace Dawem.BusinessLogic.Summons
                     Code = sml.Code,
                     EmployeeName = sml.Employee.Name,
                     SummonCode = sml.Summon.Code.ToString(),
-                    SummonDate = sml.Summon.FingerprintDate,
+                    SummonDate = sml.Summon.DateAndTime,
                     DoneNotify = sml.DoneNotify,
                     SummonForTypeName = TranslationHelper.GetTranslation(sml.Summon.ForType.ToString(), requestInfo.Lang),
                     SummonAllowedTimeName = sml.Summon.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(sml.Summon.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang)

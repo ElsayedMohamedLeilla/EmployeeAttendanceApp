@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.Summons;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Providers
@@ -14,6 +15,7 @@ namespace Dawem.Domain.Entities.Providers
         [ForeignKey(nameof(CountryId))]
         public Country Country { get; set; }
         public string Email { get; set; }
+        public List<Summon> Summons { get; set; }
 
     }
 

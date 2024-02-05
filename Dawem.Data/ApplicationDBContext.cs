@@ -98,6 +98,13 @@ namespace Dawem.Data
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
+
+            builder.Entity<SummonMissingLog>()
+         .HasOne(p => p.Summon)
+         .WithMany(b => b.SummonMissingLogs)
+         .HasForeignKey(p => p.SummonId)
+         .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<PermissionScreen>()
          .HasOne(p => p.Permission)
          .WithMany(b => b.PermissionScreens)

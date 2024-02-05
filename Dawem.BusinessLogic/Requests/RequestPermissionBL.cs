@@ -184,7 +184,7 @@ namespace Dawem.BusinessLogic.Requests
                  .GetEntityByConditionWithTrackingAsync(requestPermission => !requestPermission.Request.IsDeleted
                  && requestPermission.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;

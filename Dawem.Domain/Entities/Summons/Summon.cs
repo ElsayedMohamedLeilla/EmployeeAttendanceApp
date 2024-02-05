@@ -24,5 +24,7 @@ namespace Dawem.Domain.Entities.Summons
         public List<SummonGroup> SummonGroups { get; set; }
         public List<SummonDepartment> SummonDepartments { get; set; }
         public List<SummonSanction> SummonSanctions { get; set; }
+        public List<SummonMissingLog> SummonMissingLogs { get; set; }
+
     }
 }

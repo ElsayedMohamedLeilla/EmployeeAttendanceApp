@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.SchedulePlans;
+﻿using Dawem.Contract.BusinessLogic.Summons;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NCrontab;
@@ -6,23 +6,20 @@ using NCrontab;
 namespace Dawem.BackgroundJobs
 {
     // test CrontabSchedule in => https://crontab.cronhub.io/
-    public class SchedulePlanBackgroundJobHostedService : BackgroundService
+    public class SummonsMissingHostedService : BackgroundService
     {
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
         private IServiceScopeFactory serviceScopeFactory;
 
-        private string Schedule => "0 10 0 * * *"; // Fire at 12:10 am every day
+        private string Schedule => "*/10 * * * * *"; // Fire every 10 seconds
 
-        //private string Schedule => "*/10 * * * * *"; // Runs every 10 
-
-        public SchedulePlanBackgroundJobHostedService(IServiceScopeFactory _serviceScopeFactory)
+        public SummonsMissingHostedService(IServiceScopeFactory _serviceScopeFactory)
         {
             _schedule = CrontabSchedule.Parse(Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.UtcNow);
             serviceScopeFactory = _serviceScopeFactory;
         }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             do
@@ -36,15 +33,13 @@ namespace Dawem.BackgroundJobs
             }
             while (!stoppingToken.IsCancellationRequested);
         }
-
         private async Task Process()
         {
-            Console.WriteLine("Handle Schedule Plans " + DateTime.UtcNow.ToString("F"));
+            Console.WriteLine("Handle Summons " + DateTime.UtcNow.ToString("F"));
             using (var scope = serviceScopeFactory.CreateScope())
             {
-                var schedulePlanBL = scope.ServiceProvider.GetRequiredService<ISchedulePlanBL>();
-                await schedulePlanBL.HandleSchedulePlanBackgroundJob();
-
+                var summonBL = scope.ServiceProvider.GetRequiredService<ISummonBL>();
+                await summonBL.HandleSummonMissingLog();
             }
         }
     }

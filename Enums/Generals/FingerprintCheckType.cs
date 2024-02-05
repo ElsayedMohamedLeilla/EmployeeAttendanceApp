@@ -1,12 +1,10 @@
 ﻿namespace Dawem.Enums.Generals
 {
-    public enum FingerPrintType
+    public enum FingerprintCheckType
     {
+        NotDefined,
         CheckIn,
         CheckOut,
-        BreakIn,
-        BreakOut,
         Summon
     }
-
 }

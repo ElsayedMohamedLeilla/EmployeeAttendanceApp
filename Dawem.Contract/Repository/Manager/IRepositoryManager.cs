@@ -18,6 +18,7 @@ namespace Dawem.Contract.Repository.Manager
     public interface IRepositoryManager
     {
         ICompanyRepository CompanyRepository { get; }
+        ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }
@@ -71,6 +72,7 @@ namespace Dawem.Contract.Repository.Manager
         IVacationBalanceRepository VacationBalanceRepository { get; }
         INotificationStoreRepository NotificationStoreRepository { get; }
         ISummonRepository SummonRepository { get; }
+        ISummonMissingLogRepository SummonMissingLogRepository { get; }
         ISummonNotifyWayRepository SummonNotifyWayRepository { get; }
         ISummonEmployeeRepository SummonEmployeeRepository { get; }
         ISummonDepartmentRepository SummonDepartmentRepository { get; }

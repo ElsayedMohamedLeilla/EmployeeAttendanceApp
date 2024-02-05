@@ -12,12 +12,16 @@ namespace Dawem.Helpers
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-
         public static string RandomNumber(int length)
         {
             const string chars = LeillaKeys.AllNumbers;
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public static DateTime GetLocalDateTime(string timeAoneId)
+        {
+            var localDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, timeAoneId).DateTime;
+            return localDateTime;
         }
     }
 }

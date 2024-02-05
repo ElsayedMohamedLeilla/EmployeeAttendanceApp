@@ -39,6 +39,8 @@
         User,
         VacationBalance,
         VacationType,
-        Zone
+        Zone,
+        Sanction,
+        Summon
     }
 }

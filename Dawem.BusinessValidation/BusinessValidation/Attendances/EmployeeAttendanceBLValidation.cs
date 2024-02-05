@@ -120,9 +120,10 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                    }).ToList()
                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
 
-            var clientLocalDate = requestInfo.LocalDateTime;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
+            var clientLocalDate = requestInfo.LocalDateTime.Date;
 
-            var shiftId = getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDate.DayOfWeek)
+            var shiftId = getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDateTime.DayOfWeek)
                 .ShiftId ?? throw new BusinessValidationException(LeillaKeys.SorryYouDoNotHaveScheduleToday);
 
             var shiftInfo = await repositoryManager.ShiftWorkingTimeRepository
@@ -139,7 +140,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var fingerPrintTypes = await repositoryManager
                 .EmployeeAttendanceCheckRepository
                 .Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == getEmployeeId
-                && e.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date)
+                && e.EmployeeAttendance.LocalDate.Date == clientLocalDate)
                 .Select(a => a.FingerPrintType)
                 .ToListAsync();
 
@@ -147,15 +148,53 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             if (fingerPrintTypes == null || fingerPrintTypes.Count <= 0)
             {
-                fingerPrintType = FingerPrintType.CheckIn;
+                if (model.Type == FingerPrintType.Summon)
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
+                else
+                    fingerPrintType = FingerPrintType.CheckIn;
+
+
             }
             else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn) && fingerPrintTypes.Contains(FingerPrintType.CheckOut))
             {
-                throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay);
+                if (model.Type == FingerPrintType.Summon)
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
+                else
+                    throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay);
+
             }
             else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn))
             {
-                fingerPrintType = FingerPrintType.CheckOut;
+                if (model.Type == FingerPrintType.Summon)
+                    fingerPrintType = FingerPrintType.Summon;
+                else
+                    fingerPrintType = FingerPrintType.CheckOut;
+            }
+
+            #endregion
+
+            #region Validate Summon
+
+            int? summonId = null;
+
+            if (model.Type == FingerPrintType.Summon)
+            {
+                var getSummon = await repositoryManager.SummonRepository
+                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDate >= s.FingerprintDate &&
+                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, clientLocalDate) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, clientLocalDate) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, clientLocalDate) <= s.AllowedTime)) &&
+                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
+                    (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
+                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
+                    (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
+                    .FirstOrDefaultAsync();
+
+                if (getSummon == null)
+                    throw new BusinessValidationException(LeillaKeys.SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon);
+                else
+                    summonId = getSummon.Id;
+
             }
 
             #endregion
@@ -165,7 +204,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 EmployeeId = getEmployeeId,
                 ScheduleId = getScheduleId,
                 ShiftId = shiftId,
-                LocalDate = clientLocalDate,
+                SummonId = summonId,
+                LocalDate = clientLocalDateTime,
                 ShiftCheckInTime = shiftInfo.CheckInTime,
                 ShiftCheckOutTime = shiftInfo.CheckOutTime,
                 AllowedMinutes = shiftInfo.AllowedMinutes,
@@ -247,16 +287,12 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #endregion
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+            var clientLocalDateTime = requestInfo.LocalDateTime;
+            var clientLocalDate = requestInfo.LocalDateTime.Date;
 
             var getAttendance = await repositoryManager.EmployeeAttendanceRepository
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
-                && a.LocalDate.Date == clientLocalDate.Date)
+                && a.LocalDate.Date == clientLocalDateTime.Date)
                 .Select(a => new GetCurrentFingerPrintInfoResponseModel
                 {
                     Id = a.Id,
@@ -265,8 +301,25 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                      a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
                     CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
-                    LocalDate = clientLocalDate
+                    LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
+
+
+            #region Check If Summon
+
+            var checkSummon = await repositoryManager.SummonRepository
+                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.FingerprintDate &&
+                   ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, clientLocalDateTime) <= s.AllowedTime) ||
+                   (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, clientLocalDateTime) <= s.AllowedTime) ||
+                   (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, clientLocalDateTime) <= s.AllowedTime)) &&
+                   ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
+                   (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
+                   (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
+                   (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
+                   .AnyAsync();
+
+            #endregion
+
 
             return new GetCurrentFingerPrintInfoResponseModel
             {
@@ -274,11 +327,18 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 Code = getAttendance?.Code,
                 CheckInTime = getAttendance?.CheckInTime,
                 CheckOutTime = getAttendance?.CheckOutTime,
+
+                DefaultCheckType = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? FingerprintCheckType.CheckIn :
+                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? FingerprintCheckType.NotDefined :
+                getAttendance?.CheckInTime != null ? (checkSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut) :
+                FingerprintCheckType.NotDefined,
+
                 EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :
                 getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? EmployeeStatus.AttendThenLeaved :
                 getAttendance?.CheckInTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
-                LocalDate = clientLocalDate,
+
+                LocalDate = clientLocalDateTime,
                 AvailableZones = availableZonesOutput
             };
         }

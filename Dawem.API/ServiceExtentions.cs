@@ -129,12 +129,11 @@ namespace Dawem.API
             });
 
         }
-
         public static void ConfigureBackGroundService(this IServiceCollection services)
         {
             services.AddHostedService<SchedulePlanBackgroundJobHostedService>();
+            services.AddHostedService<SummonsMissingHostedService>();
             //services.AddSingleton<CancellationTokenSource>();
         }
-
     }
 }

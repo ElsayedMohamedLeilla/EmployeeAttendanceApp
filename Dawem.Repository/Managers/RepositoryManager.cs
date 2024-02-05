@@ -55,6 +55,7 @@ namespace Dawem.Repository.Managers
         private IBranchRepository branchRepository;
         private IUserTokenRepository userTokenRepository;
         private ICompanyRepository companyRepository;
+        private ICountryRepository countryRepository;
         private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
         private ITranslationRepository translationRepository;
@@ -100,6 +101,7 @@ namespace Dawem.Repository.Managers
         private INotificationStoreRepository notificationStoreRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private ISummonRepository summonRepository;
+        private ISummonMissingLogRepository summonMissingLogRepository;
         private ISummonNotifyWayRepository summonNotifyWayRepository;
         private ISummonEmployeeRepository summonEmployeeRepository;
         private ISummonGroupRepository summonGroupRepository;
@@ -120,6 +122,8 @@ namespace Dawem.Repository.Managers
 
         public ICompanyRepository CompanyRepository =>
          companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
+        public ICountryRepository CountryRepository =>
+         countryRepository ??= new CountryRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IPermissionRepository PermissionRepository =>
@@ -243,6 +247,9 @@ namespace Dawem.Repository.Managers
 
         public ISummonRepository SummonRepository =>
             summonRepository ??= new SummonRepository(unitOfWork, generalSetting, requestInfo);
+
+        public ISummonMissingLogRepository SummonMissingLogRepository =>
+            summonMissingLogRepository ??= new SummonMissingLogRepository(unitOfWork, generalSetting, requestInfo);
 
         public ISummonNotifyWayRepository SummonNotifyWayRepository =>
             summonNotifyWayRepository ??= new SummonNotifyWayRepository(unitOfWork, generalSetting);

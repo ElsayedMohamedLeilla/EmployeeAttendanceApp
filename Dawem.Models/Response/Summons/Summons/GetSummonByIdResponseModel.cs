@@ -15,7 +15,7 @@ namespace Dawem.Models.Response.Summons.Summons
         public List<int> Employees { get; set; }
         public List<int> Groups { get; set; }
         public List<int> Departments { get; set; }
-        public List<int> Actions { get; set; }
+        public List<int> Sanctions { get; set; }
         public bool IsActive { get; set; }
     }
 }

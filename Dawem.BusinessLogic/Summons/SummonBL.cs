@@ -330,14 +330,14 @@ namespace Dawem.BusinessLogic.Summons
 
             #region Handle Response
 
-            var summonsList = await queryPaged.Select(e => new GetSummonsResponseModel
+            var summonsList = await queryPaged.Select(s => new GetSummonsResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                ForType = e.ForType,
-                FingerprintDate = e.FingerprintDate,
-                ForTypeName = TranslationHelper.GetTranslation(e.ForType.ToString(), requestInfo.Lang),
-                IsActive = e.IsActive
+                Id = s.Id,
+                Code = s.Code,
+                ForType = s.ForType,
+                FingerprintDate = s.FingerprintDate,
+                ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
+                IsActive = s.IsActive
             }).ToListAsync();
             return new GetSummonsResponse
             {
@@ -350,21 +350,20 @@ namespace Dawem.BusinessLogic.Summons
         public async Task<GetSummonInfoResponseModel> GetInfo(int summonId)
         {
             var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
-                .Select(e => new GetSummonInfoResponseModel
+                .Select(s => new GetSummonInfoResponseModel
                 {
-                    Code = e.Code,
-                    ForType = e.ForType,
-                    ForAllEmployees = e.ForAllEmployees,
-                    FingerprintDate = e.FingerprintDate,
-                    AllowedTime = e.AllowedTime,
-                    TimeType = e.TimeType,
-                    ForTypeName = TranslationHelper.GetTranslation(e.ForType.ToString(), requestInfo.Lang),
-                    NotifyWays = e.SummonNotifyWays.Count > 0 ? e.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
-                    Employees = e.SummonEmployees.Count > 0 ? e.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
-                    Groups = e.SummonGroups.Count > 0 ? e.SummonGroups.Select(e => e.Group.Name).ToList() : null,
-                    Departments = e.SummonDepartments.Count > 0 ? e.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
-                    Actions = e.SummonSanctions.Count > 0 ? e.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
-                    IsActive = e.IsActive
+                    Code = s.Code,
+                    ForType = s.ForType,
+                    ForAllEmployees = s.ForAllEmployees,
+                    FingerprintDate = s.FingerprintDate,
+                    AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
+                    NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
+                    Employees = s.SummonEmployees.Count > 0 ? s.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
+                    Groups = s.SummonGroups.Count > 0 ? s.SummonGroups.Select(e => e.Group.Name).ToList() : null,
+                    Departments = s.SummonDepartments.Count > 0 ? s.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
+                    Sanctions = s.SummonSanctions.Count > 0 ? s.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
+                    IsActive = s.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;
@@ -372,21 +371,21 @@ namespace Dawem.BusinessLogic.Summons
         public async Task<GetSummonByIdResponseModel> GetById(int summonId)
         {
             var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
-                .Select(e => new GetSummonByIdResponseModel
+                .Select(s => new GetSummonByIdResponseModel
                 {
-                    Id = e.Id,
-                    Code = e.Code,
-                    ForType = e.ForType,
-                    ForAllEmployees = e.ForAllEmployees,
-                    FingerprintDate = e.FingerprintDate,
-                    AllowedTime = e.AllowedTime,
-                    TimeType = e.TimeType,
-                    NotifyWays = e.SummonNotifyWays.Count > 0 ? e.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
-                    Employees = e.SummonEmployees.Count > 0 ? e.SummonEmployees.Select(e => e.EmployeeId).ToList() : null,
-                    Groups = e.SummonGroups.Count > 0 ? e.SummonGroups.Select(e => e.GroupId).ToList() : null,
-                    Departments = e.SummonDepartments.Count > 0 ? e.SummonDepartments.Select(e => e.DepartmentId).ToList() : null,
-                    Actions = e.SummonSanctions.Count > 0 ? e.SummonSanctions.Select(e => e.SanctionId).ToList() : null,
-                    IsActive = e.IsActive
+                    Id = s.Id,
+                    Code = s.Code,
+                    ForType = s.ForType,
+                    ForAllEmployees = s.ForAllEmployees,
+                    FingerprintDate = s.FingerprintDate,
+                    AllowedTime = s.AllowedTime,
+                    TimeType = s.TimeType,
+                    NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
+                    Employees = s.SummonEmployees.Count > 0 ? s.SummonEmployees.Select(e => e.EmployeeId).ToList() : null,
+                    Groups = s.SummonGroups.Count > 0 ? s.SummonGroups.Select(e => e.GroupId).ToList() : null,
+                    Departments = s.SummonDepartments.Count > 0 ? s.SummonDepartments.Select(e => e.DepartmentId).ToList() : null,
+                    Sanctions = s.SummonSanctions.Count > 0 ? s.SummonSanctions.Select(e => e.SanctionId).ToList() : null,
+                    IsActive = s.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;
@@ -437,112 +436,128 @@ namespace Dawem.BusinessLogic.Summons
         {
             try
             {
-                try
+                var timeZones = await repositoryManager.CountryRepository
+                .Get(c => !c.IsDeleted && c.TimeZoneId != null)
+                .Select(c => c.TimeZoneId)
+                .Distinct()
+                .ToListAsync();
+
+                var timeZonesDates = timeZones.Select(t => new
                 {
-                    var timeZones = await repositoryManager.CountryRepository
-                    .Get(c => !c.IsDeleted && c.TimeZoneId != null)
-                    .Select(c => c.TimeZoneId)
-                    .Distinct()
-                    .ToListAsync();
+                    TimeZoneId = t,
+                    LocalDateTime = StringHelper.GetLocalDateTime(t)
+                }).ToList();
 
-                    var timeZonesDates = timeZones.Select(t => new
+                var maxLocalDate = timeZonesDates.Max(t => t.LocalDateTime);
+
+                var tempGetEmployeesMissing = await repositoryManager
+                    .EmployeeRepository.Get(e => !e.IsDeleted && e.Company.Country.TimeZoneId != null &&
+                    e.Company.Summons.Any(s => !s.IsDeleted &&
+                    maxLocalDate >= s.FingerprintDate &&
+                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxLocalDate) > s.AllowedTime)) &&
+                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
+                    (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
+                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
+                    (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) &&
+                    !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id)))
+                    .Select(e => new
                     {
-                        TimeZoneId = t,
-                        LocalDateTime = StringHelper.GetLocalDateTime(t)
-                    }).ToList();
-
-                    var maxDate = timeZonesDates.Max(t => t.LocalDateTime);
-
-                    //StringHelper.GetLocalDateTime(e.Company.Country.TimeZoneId)
-
-                    var tempGetEmployeesMissing = await repositoryManager
-                        .EmployeeRepository.Get(e => !e.IsDeleted && e.Company.Country.TimeZoneId != null &&
-                        e.Company.Summons.Any(s => !s.IsDeleted &&
-                        maxDate >= s.FingerprintDate &&
-                        ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxDate) > s.AllowedTime)) &&
+                        EmployeeId = e.Id,
+                        e.CompanyId,
+                        e.Company.Country.TimeZoneId,
+                        Summons = e.Company.Summons.Where(s => !s.IsDeleted && maxLocalDate >= s.FingerprintDate &&
+                        ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxLocalDate) > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxLocalDate) > s.AllowedTime)) &&
                         ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                         (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
                         (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
-                        (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) &&
-                        !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id)))
-                        .Select(e => new
+                        (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) && !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id))
+                        .Select(s => new
                         {
-                            EmployeeId = e.Id,
-                            e.CompanyId,
-                            e.Company.Country.TimeZoneId,
-                            Summons = e.Company.Summons.Where(s => !s.IsDeleted && maxDate >= s.FingerprintDate &&
-                            ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.FingerprintDate, maxDate) > s.AllowedTime) ||
-                            (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.FingerprintDate, maxDate) > s.AllowedTime) ||
-                            (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.FingerprintDate, maxDate) > s.AllowedTime)) &&
-                            ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
-                            (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
-                            (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
-                            (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) && !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id))
-                            .Select(s => new
-                            {
-                                SummonId = s.Id,
-                                s.TimeType,
-                                s.AllowedTime,
-                                s.FingerprintDate
-                            }).ToList()
-                        }).ToListAsync();
+                            SummonId = s.Id,
+                            s.TimeType,
+                            s.AllowedTime,
+                            s.FingerprintDate
+                        }).ToList()
+                    }).ToListAsync();
 
-                    var getEmployeesMissing = tempGetEmployeesMissing
-                        .Where(e => e.Summons.Any(s => StringHelper.GetLocalDateTime(e.TimeZoneId) > s.FingerprintDate &&
-                        ((s.TimeType == TimeType.Second && (maxDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && (maxDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && (maxDate - s.FingerprintDate).TotalHours > s.AllowedTime))))
-                        .Select(e => new
-                        {
-                            e.EmployeeId,
-                            e.CompanyId,
-                            Summons = e.Summons.Where(s => StringHelper.GetLocalDateTime(e.TimeZoneId) >= s.FingerprintDate &&
-                            ((s.TimeType == TimeType.Second && (maxDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
-                            (s.TimeType == TimeType.Minute && (maxDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
-                            (s.TimeType == TimeType.Hour && (maxDate - s.FingerprintDate).TotalHours > s.AllowedTime)))
-                            .Select(s => new
-                            {
-                                s.SummonId
-                            }).ToList()
-                        }).ToList();
-
-                    if (getEmployeesMissing != null && getEmployeesMissing.Count > 0)
+                var getEmployeesMissing = tempGetEmployeesMissing
+                    .Where(e => e.Summons.Any(s => StringHelper.GetLocalDateTime(e.TimeZoneId) > s.FingerprintDate &&
+                    ((s.TimeType == TimeType.Second && (maxLocalDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && (maxLocalDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && (maxLocalDate - s.FingerprintDate).TotalHours > s.AllowedTime))))
+                    .Select(e => new
                     {
-                        var summonMissingLogs = new List<SummonMissingLog>();
-                        foreach (var employeesMissing in getEmployeesMissing)
+                        e.EmployeeId,
+                        e.CompanyId,
+                        Summons = e.Summons.Where(s => StringHelper.GetLocalDateTime(e.TimeZoneId) >= s.FingerprintDate &&
+                        ((s.TimeType == TimeType.Second && (maxLocalDate - s.FingerprintDate).TotalSeconds > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Minute && (maxLocalDate - s.FingerprintDate).TotalMinutes > s.AllowedTime) ||
+                        (s.TimeType == TimeType.Hour && (maxLocalDate - s.FingerprintDate).TotalHours > s.AllowedTime)))
+                        .Select(s => new
+                        {
+                            s.SummonId
+                        }).ToList()
+                    }).ToList();
+
+                if (getEmployeesMissing != null && getEmployeesMissing.Count > 0)
+                {
+                    var summonMissingLogs = new List<SummonMissingLog>();
+
+                    var employeesMissingGroupedByCompany =
+                        getEmployeesMissing.GroupBy(e => e.CompanyId).ToList();
+
+                    foreach (var employeesMissingGroup in employeesMissingGroupedByCompany)
+                    {
+                        #region Set Summon code
+
+                        var getMaxCode = await repositoryManager.SummonMissingLogRepository
+                            .Get(e => e.CompanyId == employeesMissingGroup.Key)
+                            .Select(e => e.Code)
+                            .DefaultIfEmpty()
+                            .MaxAsync();
+
+                        #endregion
+
+                        foreach (var employeesMissing in employeesMissingGroup)
                         {
                             foreach (var summon in employeesMissing.Summons)
                             {
+                                getMaxCode++;
+
                                 summonMissingLogs.Add(new SummonMissingLog()
                                 {
+                                    Code = getMaxCode,
                                     CompanyId = employeesMissing.CompanyId,
                                     EmployeeId = employeesMissing.EmployeeId,
                                     SummonId = summon.SummonId
                                 });
 
-                            }           
+                            }
                         }
-                        repositoryManager.SummonMissingLogRepository.BulkInsert(summonMissingLogs);
-                        _ = unitOfWork.SaveAsync();
                     }
 
-
-                    #region Send Notification To Employees Missing Summon
-
-                    // here
-
-                    #endregion
+                    repositoryManager.SummonMissingLogRepository.BulkInsert(summonMissingLogs);
+                    _ = unitOfWork.SaveAsync();
                 }
-                catch (Exception ex)
-                {
-                    var fff = ex;
-                }
+
+
+                #region Send Notification To Employees Missing Summon
+
+                // here
+
+                #endregion
+                var exception1 = 0;
+                var exception2 = 0;
+                var exception3 = 0;
+                var exception4 = 0;
             }
             catch (Exception ex)
             {
-                var fff = 0;
+                var exception = ex;
             }
         }
     }

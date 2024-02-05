@@ -41,6 +41,7 @@
         VacationType,
         Zone,
         Sanction,
-        Summon
+        Summon,
+        SummonMissingLog
     }
 }

@@ -9,13 +9,12 @@ namespace Dawem.Models.Response.Summons.Summons
         public string ForTypeName { get; set; }
         public bool? ForAllEmployees { get; set; }
         public DateTime FingerprintDate { get; set; }
-        public int AllowedTime { get; set; }
-        public TimeType TimeType { get; set; }
+        public string AllowedTimeName { get; set; }
         public List<string> NotifyWays { get; set; }
         public List<string> Employees { get; set; }
         public List<string> Groups { get; set; }
         public List<string> Departments { get; set; }
-        public List<string> Actions { get; set; }
+        public List<string> Sanctions { get; set; }
         public bool IsActive { get; set; }
     }
 }

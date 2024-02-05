@@ -486,8 +486,8 @@
         public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
-        
-
+        public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
+        public const string TimeType = "TimeType";
 
     }
     

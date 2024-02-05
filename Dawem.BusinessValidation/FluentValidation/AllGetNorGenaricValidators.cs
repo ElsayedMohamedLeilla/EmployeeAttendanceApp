@@ -22,6 +22,8 @@ using Dawem.Models.Dtos.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Schedules.Schedules;
 using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Summons.Sanctions;
+using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Translations;
 using FluentValidation;
 
@@ -44,6 +46,27 @@ namespace Dawem.Validation.FluentValidation
                 .NotNull()
                 .When(m => !m.IsBaseParent)
                 .WithMessage(LeillaKeys.SorryYouMustEnterParentId);
+        }
+    }
+    public class GetSanctionsCriteriaValidator : AbstractValidator<GetSanctionsCriteria>
+    {
+        public GetSanctionsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSummonsCriteriaValidator : AbstractValidator<GetSummonsCriteria>
+    {
+        public GetSummonsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSummonMissingLogsCriteriaValidator : AbstractValidator<GetSummonMissingLogsCriteria>
+    {
+        public GetSummonMissingLogsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
         }
     }
     public class GetDepartmentsInformationsCriteriaValidator : AbstractValidator<GetDepartmentsInformationsCriteria>

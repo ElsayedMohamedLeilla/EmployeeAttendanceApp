@@ -22,7 +22,7 @@ namespace Dawem.Validation.BusinessValidation.Summons
         {
             var checkFingerprintEnforcementDuplicate = await repositoryManager
                 .SummonRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId
-                && c.ForType == model.ForType && c.DateAndTime.Date == model.DateAndTime).AnyAsync();
+                && c.ForType == model.ForType && c.DateAndTime == model.DateAndTime).AnyAsync();
             if (checkFingerprintEnforcementDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorrySummonIsDuplicated);
@@ -34,7 +34,7 @@ namespace Dawem.Validation.BusinessValidation.Summons
         {
             var checkSummonDuplicate = await repositoryManager
                 .SummonRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId
-                && c.ForType == model.ForType && c.DateAndTime.Date == model.DateAndTime && c.Id != model.Id).AnyAsync();
+                && c.ForType == model.ForType && c.DateAndTime == model.DateAndTime && c.Id != model.Id).AnyAsync();
             if (checkSummonDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorrySummonIsDuplicated);

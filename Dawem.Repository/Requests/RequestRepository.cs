@@ -132,6 +132,8 @@ namespace Dawem.Repository.Requests
         {
             var predicate = PredicateBuilder.New<Request>(a => !a.IsDeleted);
 
+            predicate = predicate.And(request => request.CompanyId == requestInfo.CompanyId);
+
             if (model.Type != null)
             {
                 switch (model.Type)

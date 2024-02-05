@@ -49,6 +49,7 @@
     <ProjectReference Include="..\Dawem.Data\Dawem.Data.csproj" />
     <ProjectReference Include="..\Dawem.Domain\Dawem.Domain.csproj" />
     <ProjectReference Include="..\Dawem.Helpers\Dawem.Helpers.csproj" />
+    <ProjectReference Include="..\Dawem.Reports\Dawem.Reports.csproj" />
     <ProjectReference Include="..\Dawem.Repository\Dawem.Repository.csproj" />
     <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
   </ItemGroup>

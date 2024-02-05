@@ -2,7 +2,9 @@ using Dawem.API;
 using Dawem.API.MiddleWares;
 using Dawem.BusinessLogic;
 using Dawem.BusinessLogic.Localization;
+using Dawem.BusinessLogic.RealTime.SignalR;
 using Dawem.BusinessLogicCore;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
@@ -16,7 +18,9 @@ using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation;
 using Dawem.Validation.FluentValidation.Authentications;
+using FirebaseAdmin;
 using FluentValidation;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -25,10 +29,7 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
-using Dawem.Contract.RealTime.Firebase;
-using Dawem.BusinessLogic.RealTime.SignalR;
+using Dawem.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
@@ -102,6 +103,8 @@ builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 builder.Services.ConfigureBackGroundService();
+builder.Services.ConfigureReports();
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.UseCamelCasing(true);

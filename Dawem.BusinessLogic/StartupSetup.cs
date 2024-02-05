@@ -10,7 +10,7 @@ namespace Dawem.BusinessLogic
         public static void ConfigureBusinessLogic(this IServiceCollection services)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes()
-             .Where(p => p.Name.EndsWith(LeillaKeys.BL) && !p.IsInterface);
+             .Where(p => p.Name.EndsWith(LeillaKeys.BL) && !p.IsInterface); 
 
             foreach (var type in types)
             {

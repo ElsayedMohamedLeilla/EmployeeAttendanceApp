@@ -215,7 +215,8 @@ namespace Dawem.BusinessLogic.Dashboard
         public async Task<GetEmployeesStatusResponseModel> GetEmployeesStatus()
         {
             var clientLocalDate = requestInfo.LocalDateTime;
-            var query = repositoryManager.EmployeeRepository.Get(employee => employee.CompanyId == requestInfo.CompanyId && !employee.IsDeleted);
+            var query = repositoryManager.EmployeeRepository.Get(employee => employee.CompanyId == requestInfo.CompanyId &&
+            !employee.IsDeleted);
 
             #region Available
 
@@ -226,39 +227,48 @@ namespace Dawem.BusinessLogic.Dashboard
 
                 &&
 
-                  !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
                 && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
-                && (request.RequestTask.Request.Type == RequestType.Assignment || request.RequestTask.Request.Type == RequestType.Vacation)
+                && (request.Type == RequestType.Assignment)
                 && clientLocalDate.Date >= request.Date.Date
-                 && clientLocalDate.Date <= request.Date.Date)).CountAsync();
+                 && clientLocalDate.Date <= request.RequestAssignment.DateTo)
+
+                &&
+
+                !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
+                && (request.Type == RequestType.Vacation)
+                && clientLocalDate.Date >= request.Date.Date
+                 && clientLocalDate.Date <= request.RequestVacation.DateTo)).CountAsync();
 
             #endregion
 
             #region Task Or Assignment
 
-            var inTaskOrAssignmentCount = await query.Where(employee => employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
+            var inTaskOrAssignmentCount = await query.Where(employee =>
+            employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
                 && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending)
                 && clientLocalDate.Date >= task.RequestTask.Request.Date
                  && clientLocalDate.Date <= task.RequestTask.DateTo)
 
-                &&
+                ||
 
-                  !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
+                employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
                 && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
-                && request.RequestTask.Request.Type == RequestType.Assignment
+                && request.Type == RequestType.Assignment
                 && clientLocalDate.Date >= request.Date.Date
-                 && clientLocalDate.Date <= request.Date.Date)).CountAsync();
+                 && clientLocalDate.Date <= request.RequestAssignment.DateTo)).CountAsync();
 
             #endregion
 
             #region Vacation Or Outside
 
             var inVacationOrOutsideCount = await query.Where(employee =>
-            employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
-            && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
-            && request.RequestTask.Request.Type == RequestType.Vacation
+            employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestVacation.Request.IsDeleted
+            && (request.RequestVacation.Request.Status == RequestStatus.Accepted || request.RequestVacation.Request.Status == RequestStatus.Pending)
+            && request.Type == RequestType.Vacation
             && clientLocalDate.Date >= request.Date.Date
-             && clientLocalDate.Date <= request.Date.Date)).CountAsync();
+             && clientLocalDate.Date <= request.RequestVacation.DateTo)).CountAsync();
 
             #endregion
 

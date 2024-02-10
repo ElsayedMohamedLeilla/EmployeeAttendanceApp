@@ -54,7 +54,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
         }
         if (androidTokens.Count > 0)
         {
-            NotificationModel webModel = new NotificationModel()
+            NotificationModel androiodModel = new NotificationModel()
             {
                 Body = Body,
                 Title = Title,
@@ -62,11 +62,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
                 ImageUrl = ImageUrl,
                 Tokens = androidTokens
             };
-            response = await Send_Android_Notification(webModel);
+            response = await Send_Android_Notification(androiodModel);
         }
         if (iosTokens.Count > 0)
         {
-            NotificationModel webModel = new NotificationModel()
+            NotificationModel iosModel = new NotificationModel()
             {
                 Body = Body,
                 Title = Title,
@@ -74,7 +74,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
                 ImageUrl = ImageUrl,
                 Tokens = iosTokens
             };
-            response = await Send_Ios_Notification(webModel);
+            response = await Send_Ios_Notification(iosModel);
         }
         #endregion
         #region Send Email

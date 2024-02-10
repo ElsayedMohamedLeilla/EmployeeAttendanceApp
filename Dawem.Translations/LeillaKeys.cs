@@ -456,7 +456,7 @@
         public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
         public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";
         public const string SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees = "Sorry!!YouMustNotSetForAllEmployeesWhenTypeNotEmployees!";
-        public const string SorryYouMustEnterFingerprintDate = "Sorry!!YouMustEnterFingerprintDate!";
+        public const string SorryYouMustEnterSummonDateAndTime = "Sorry!!YouMustEnterSummonDateAndTime!";
         public const string SorryYouMustEnterAllowedTime = "Sorry!!YouMustEnterAllowedTime!";
         public const string SorryYouMustChooseTimeType = "Sorry!!YouMustChooseTimeType!";
         public const string SorryYouMustChooseAtLeastOneAction = "Sorry!!YouMustChooseAtLeastOneAction!";
@@ -486,8 +486,8 @@
         public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
-        
-
+        public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
+        public const string TimeType = "TimeType";
 
     }
     

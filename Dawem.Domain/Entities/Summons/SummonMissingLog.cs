@@ -19,6 +19,7 @@ namespace Dawem.Domain.Entities.Summons
         [ForeignKey(nameof(SummonId))]
         public Summon Summon { get; set; }
         #endregion
+        public int Code { get; set; }
         public bool DoneNotify  { get; set; }
     }
 }

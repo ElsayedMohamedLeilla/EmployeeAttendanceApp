@@ -14,8 +14,8 @@ namespace Dawem.Validation.FluentValidation.Summons.Sanctions
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterSanctionName);
 
-            RuleFor(model => model.Type).IsInEnum().
-                  WithMessage(LeillaKeys.SorryYouMustEnterSanctionType);
+            /*RuleFor(model => model.Type).IsInEnum().
+                  WithMessage(LeillaKeys.SorryYouMustEnterSanctionType);*/
 
             RuleFor(model => model.WarningMessage)
                 .NotNull()

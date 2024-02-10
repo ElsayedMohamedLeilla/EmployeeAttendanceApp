@@ -16,7 +16,7 @@ namespace Dawem.Domain.Entities.Summons
         public int Code { get; set; }
         public ForType ForType { get; set; }
         public bool? ForAllEmployees { get; set; }
-        public DateTime FingerprintDate { get; set; }
+        public DateTime DateAndTime { get; set; }
         public int AllowedTime { get; set; }
         public TimeType TimeType { get; set; }
         public List<SummonNotifyWay> SummonNotifyWays { get; set; }
@@ -25,6 +25,5 @@ namespace Dawem.Domain.Entities.Summons
         public List<SummonDepartment> SummonDepartments { get; set; }
         public List<SummonSanction> SummonSanctions { get; set; }
         public List<SummonMissingLog> SummonMissingLogs { get; set; }
-
     }
 }

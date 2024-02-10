@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240205072743_AddCodeToSummonMissingLog")]
+    partial class AddCodeToSummonMissingLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3407,14 +3410,14 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateAndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FingerprintDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool?>("ForAllEmployees")
                         .HasColumnType("bit");
@@ -4972,7 +4975,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanEmployee", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany("SchedulePlanEmployees")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5390,8 +5393,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("EmployeeRequests");
 
                     b.Navigation("EmployeeTasks");
-
-                    b.Navigation("SchedulePlanEmployees");
 
                     b.Navigation("VacationBalances");
 

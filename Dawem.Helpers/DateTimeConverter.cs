@@ -10,7 +10,13 @@ namespace Dawem.Helpers
                 "yyyy-MM-ddTHH:mm", "dd-MM-yyyy",
                 "MM-dd-yyyy", "dd/MM/yyyy",
                 "MM/dd/yyyy" , "yyyy-dd-MM",
-                "yyyy-MM-dd" };
+                "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss",
+                "dd-MM-yyyy HH:mm:ss", "MM-dd-yyyy HH:mm:ss",
+                "yyyy/MM/dd HH:mm:ss" , "dd/MM/yyyy HH:mm:ss",
+                "MM/dd/yyyy HH:mm:ss", "yyyy-MM-dd HH:mm",
+                "dd-MM-yyyy HH:mm", "MM-dd-yyyy HH:mm",
+                "yyyy/MM/dd HH:mm" , "dd/MM/yyyy HH:mm",
+                "MM/dd/yyyy HH:mm"};
 
         public override bool CanConvert(Type objectType)
         {

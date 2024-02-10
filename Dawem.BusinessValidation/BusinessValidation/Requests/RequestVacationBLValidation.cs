@@ -131,6 +131,20 @@ namespace Dawem.Validation.BusinessValidation.Requests
 
             #endregion
 
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.VacationsTypeRepository
+
+                .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.VacationTypeId)
+                .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
+
             return getCurrentEmployeeId;
         }
         public async Task<int?> UpdateValidation(UpdateRequestVacationDTO model)
@@ -240,6 +254,20 @@ namespace Dawem.Validation.BusinessValidation.Requests
 
             model.BalanceBeforeRequest = checkTypeBalance.RemainingBalance;
             model.BalanceAfterRequest = checkTypeBalance.RemainingBalance - requiredDays;
+
+            #endregion
+
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.VacationsTypeRepository
+
+                .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.VacationTypeId)
+                .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
 
             #endregion
 

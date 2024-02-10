@@ -57,6 +57,20 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakePermissionRequestEmployeeHasVacationRequestInTheSameDate);
             }
 
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.PermissionsTypeRepository
+                .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.PermissionTypeId)
+                .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
+
+
             return getCurrentEmployeeId;
         }
         public async Task<int?> UpdateValidation(UpdateRequestPermissionModelDTO model)
@@ -112,6 +126,18 @@ namespace Dawem.Validation.BusinessValidation.Requests
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakePermissionRequestEmployeeHasVacationRequestInTheSameDate);
             }
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.PermissionsTypeRepository
+                .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.PermissionTypeId)
+                .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
 
             return getCurrentEmployeeId;
         }

@@ -120,6 +120,19 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 getCurrentEmployeeId = model.EmployeeId;
             }
 
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.JustificationsTypeRepository
+               .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.JustificationTypeId)
+               .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
+
             return getCurrentEmployeeId;
         }
         public async Task<int?> UpdateValidation(UpdateRequestJustificationDTO model)
@@ -220,6 +233,18 @@ namespace Dawem.Validation.BusinessValidation.Requests
             {
                 getCurrentEmployeeId = model.EmployeeId;
             }
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.JustificationsTypeRepository
+               .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.JustificationTypeId)
+               .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
 
             return getCurrentEmployeeId;
         }

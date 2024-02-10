@@ -93,6 +93,7 @@ namespace Dawem.BusinessLogic.Summons
             if (getSanction != null)
             {
                 getSanction.Name = model.Name;
+                getSanction.Type = model.Type;
                 getSanction.IsActive = model.IsActive;
                 getSanction.ModifiedDate = DateTime.Now;
                 getSanction.ModifyUserId = requestInfo.UserId;
@@ -130,7 +131,7 @@ namespace Dawem.BusinessLogic.Summons
                 Id = e.Id,
                 Code = e.Code,
                 Name = e.Name,
-                //TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.SanctionType, requestInfo.Lang),
+                TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.SanctionType, requestInfo.Lang),
                 IsActive = e.IsActive,
             }).ToListAsync();
             return new GetSanctionsResponse
@@ -185,8 +186,7 @@ namespace Dawem.BusinessLogic.Summons
                 {
                     Code = e.Code,
                     Name = e.Name,
-                    //Type = e.Type,
-                    //TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.SanctionType, requestInfo.Lang),
+                    TypeName = TranslationHelper.GetTranslation(e.Type.ToString() + LeillaKeys.SanctionType, requestInfo.Lang),
                     WarningMessage = e.WarningMessage,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySanctionNotFound);
@@ -201,7 +201,7 @@ namespace Dawem.BusinessLogic.Summons
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
-                    //Type = e.Type,
+                    Type = e.Type,
                     WarningMessage = e.WarningMessage,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySanctionNotFound);

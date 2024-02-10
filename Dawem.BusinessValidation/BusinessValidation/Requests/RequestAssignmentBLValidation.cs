@@ -72,6 +72,18 @@ namespace Dawem.Validation.BusinessValidation.Requests
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate);
             }
 
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.AssignmentTypeRepository
+               .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.AssignmentTypeId)
+               .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
+
             return getCurrentEmployeeId;
         }
         public async Task<int?> UpdateValidation(UpdateRequestAssignmentModelDTO model)
@@ -142,6 +154,18 @@ namespace Dawem.Validation.BusinessValidation.Requests
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate);
             }
+
+            #region Validate Request Type
+
+            var checkRequestType = await repositoryManager.AssignmentTypeRepository
+               .Get(p => !p.IsDeleted && p.IsActive && p.CompanyId == requestInfo.CompanyId && p.Id == model.AssignmentTypeId)
+               .AnyAsync();
+            if (!checkRequestType)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryRequestTypeNotFound);
+            }
+
+            #endregion
 
             return getCurrentEmployeeId;
         }

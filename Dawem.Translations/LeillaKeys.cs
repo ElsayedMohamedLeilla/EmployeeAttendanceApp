@@ -488,7 +488,8 @@
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
         public const string TimeType = "TimeType";
-
+        public const string SorryRequestTypeNotFound = "Sorry!!RequestTypeNotFound!";
+        
     }
     
 }

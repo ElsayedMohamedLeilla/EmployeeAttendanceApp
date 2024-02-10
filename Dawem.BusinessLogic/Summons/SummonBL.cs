@@ -477,6 +477,7 @@ namespace Dawem.BusinessLogic.Summons
                         .Select(s => new
                         {
                             SummonId = s.Id,
+                            SanctionsTypes = s.SummonSanctions.Select(ss=>ss.Sanction.Type),
                             s.TimeType,
                             s.AllowedTime,
                             s.DateAndTime
@@ -498,7 +499,8 @@ namespace Dawem.BusinessLogic.Summons
                         (s.TimeType == TimeType.Hour && (maxLocalDate - s.DateAndTime).TotalHours > s.AllowedTime)))
                         .Select(s => new
                         {
-                            s.SummonId
+                            s.SummonId,
+                            s.SanctionsTypes
                         }).ToList()
                     }).ToList();
 
@@ -518,6 +520,12 @@ namespace Dawem.BusinessLogic.Summons
                             .Select(e => e.Code)
                             .DefaultIfEmpty()
                             .MaxAsync();
+
+                        #endregion
+
+                        #region Handle Remove Fingerprint
+
+                        // here
 
                         #endregion
 
@@ -549,6 +557,8 @@ namespace Dawem.BusinessLogic.Summons
                 // here
 
                 #endregion
+
+
                 var exception1 = 0;
                 var exception2 = 0;
                 var exception3 = 0;

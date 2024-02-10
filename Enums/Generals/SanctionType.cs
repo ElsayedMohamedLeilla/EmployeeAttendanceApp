@@ -2,7 +2,7 @@
 {
     public enum SanctionType
     {
-        SendWarningNotificationOnApp,
-        SendWarningNotificationOnEmail
+        Notification,
+        CancelDayFingerprint
     }
 }

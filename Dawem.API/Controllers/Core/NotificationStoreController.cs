@@ -96,7 +96,7 @@ namespace Dawem.API.Controllers.Core
 
         [Route("send")]
         [HttpPost]
-        public async Task<IActionResult> SendNotification(List<int> UserIds, NotificationType notificationType,NotificationStatus notificationStatus)
+        public async Task<IActionResult> SendNotification([FromQuery]  List<int> UserIds, NotificationType notificationType,NotificationStatus notificationStatus)
         {
             if (UserIds.Count == 0)
             {

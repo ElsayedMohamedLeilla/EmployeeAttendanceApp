@@ -20,6 +20,6 @@ namespace Dawem.Domain.Entities.Summons
         public Summon Summon { get; set; }
         #endregion
         public int Code { get; set; }
-        public bool DoneNotify  { get; set; }
+        public List<SummonMissingLogSanction> SummonMissingLogSanctions { get; set; }
     }
 }

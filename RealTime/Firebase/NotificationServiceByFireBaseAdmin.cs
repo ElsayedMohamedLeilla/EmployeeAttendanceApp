@@ -144,7 +144,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
                     Notification = new AndroidNotification
                     {
                         Icon = "your_notification_icon",
-                        Color = "#RRGGBB",
+                        Color = "#1827b5",
                     },
                 },
                 Data = notificationModel.Data
@@ -256,7 +256,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     private List<TokensModel> GetUserTokens(List<int> userids)
     {
         List<TokensModel> userTokens = repositoryManager.NotificationUserDeviceTokenRepository
-            .Get(s => !s.IsDeleted && userids.Contains(s.NotificationUserId)).Select(c => new TokensModel()
+            .Get(s => !s.IsDeleted && userids.Contains(s.NotificationUser.UserId)).Select(c => new TokensModel()
             {
                 ApplicationType = c.DeviceType,
                 Token = c.DeviceToken

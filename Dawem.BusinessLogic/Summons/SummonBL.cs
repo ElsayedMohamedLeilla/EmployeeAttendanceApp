@@ -573,25 +573,13 @@ namespace Dawem.BusinessLogic.Summons
                                     EmployeeId = employeesMissing.EmployeeId,
                                     SummonId = summon.SummonId,
                                     SummonMissingLogSanctions = summon.SummonSanctions
-                                    .Select(ss => new SummonMissingLogSanction() { SummonSanctionId = ss.Id }).ToList()
+                                    .Select(ss => new SummonMissingLogSanction()
+                                    {
+                                        SummonSanctionId = ss.Id,
+                                        Done = ss.SanctionType == SanctionType.CancelDayFingerprint
+                                    }).ToList()
                                 });
 
-                                if (summon.SummonSanctions.Any(ss => ss.SanctionType == SanctionType.CancelDayFingerprint))
-                                {
-                                    var getEmployeeAttendance = await repositoryManager.EmployeeAttendanceRepository
-                                        .GetEntityByConditionWithTrackingAsync(ea => !ea.IsDeleted && ea.IsActive &&
-                                        ea.EmployeeId == employeesMissing.EmployeeId &&
-                                        ea.LocalDate.Date == summon.DateAndTime.Date);
-
-                                    getEmployeeAttendance.IsActive = false;
-                                    getEmployeeAttendance.Notes += LeillaKeys.Space + LeillaKeys.NoteDayAttendanceWasCanceledDueToFailureInSummons;
-                                }
-
-                                #region Handle Remove Fingerprint
-
-                                // here
-
-                                #endregion
                             }
                         }
                     }

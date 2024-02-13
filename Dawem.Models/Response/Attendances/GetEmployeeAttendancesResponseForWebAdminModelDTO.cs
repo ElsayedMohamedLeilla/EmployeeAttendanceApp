@@ -10,11 +10,5 @@
         public string Status { get; set; }
         public string TimeGap { get; set; }
         public string WayOfRecognition { get; set; }
-        public string ZoneName { get; set; }
-
-
-
-
-
     }
 }

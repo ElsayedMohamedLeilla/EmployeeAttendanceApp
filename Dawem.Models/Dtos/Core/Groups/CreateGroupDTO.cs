@@ -37,9 +37,9 @@ namespace Dawem.Models.Dtos.Core.Groups
 
         public void MapGroupZones()
         {
-            Zones = ZoneIds
+            Zones = ZoneIds != null ? ZoneIds
                 .Select(zoneId => new ZoneGroupCreateModelDTO { ZoneId = zoneId })
-                .ToList();
+                .ToList() : null;
         }
 
     }

@@ -229,7 +229,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                    Name = s.Zone.Name,
                                    Latitude = s.Zone.Latitude,
                                    Longitude = s.Zone.Longitude,
-                                   Radius = s.Zone.Radius
+                                   Radius = s.Zone.Radius ?? 0
                                })
                                .ToListAsync();
             if (employeeZones != null)
@@ -252,7 +252,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                         Name = gz.Zone.Name,
                                         Latitude = gz.Zone.Latitude,
                                         Longitude = gz.Zone.Longitude,
-                                        Radius = gz.Zone.Radius,
+                                        Radius = gz.Zone.Radius ?? 0,
                                     })
                                     .ToListAsync();
                     if (groupZones != null)
@@ -272,7 +272,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                       Name = gz.Zone.Name,
                                       Latitude = gz.Zone.Latitude,
                                       Longitude = gz.Zone.Longitude,
-                                      Radius = gz.Zone.Radius,
+                                      Radius = gz.Zone.Radius ?? 0,
                                   })
                                   .ToListAsync();
                             if (departmentZones != null)

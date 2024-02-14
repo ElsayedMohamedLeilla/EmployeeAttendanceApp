@@ -32,9 +32,9 @@ namespace Dawem.Models.Dtos.Employees.Employees
 
         public void MapEmployeeZones()
         {
-            Zones = ZoneIds
+            Zones = ZoneIds != null ? ZoneIds
                 .Select(zoneId => new EmployeeZonesUpdateModelDTO { ZoneId = zoneId })
-                .ToList();
+                .ToList() : null;
         }
     }
 }

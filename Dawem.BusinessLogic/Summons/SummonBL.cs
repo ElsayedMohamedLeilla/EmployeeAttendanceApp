@@ -477,10 +477,17 @@ namespace Dawem.BusinessLogic.Summons
                         .Select(s => new
                         {
                             SummonId = s.Id,
-                            SanctionsTypes = s.SummonSanctions.Select(ss=>ss.Sanction.Type),
+                            SummonSanctions = s.SummonSanctions
+                            .Select(ss => new { ss.Id, SanctionType = ss.Sanction.Type }),
                             s.TimeType,
                             s.AllowedTime,
-                            s.DateAndTime
+                            s.DateAndTime,
+                            s.SummonEmployees,
+                            WillCanceledEmployeeAttendanceId = s.SummonSanctions
+                            .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && e.EmployeeAttendances
+                            .Any(ea => !ea.IsDeleted && ea.IsActive && ea.LocalDate.Date == s.DateAndTime.Date) ?
+                            e.EmployeeAttendances.FirstOrDefault(ea => !ea.IsDeleted && ea.IsActive &&
+                            ea.LocalDate.Date == s.DateAndTime.Date).Id : (int?)null
                         }).ToList()
                     }).ToListAsync();
 
@@ -500,7 +507,9 @@ namespace Dawem.BusinessLogic.Summons
                         .Select(s => new
                         {
                             s.SummonId,
-                            s.SanctionsTypes
+                            s.SummonSanctions,
+                            s.DateAndTime,
+                            s.WillCanceledEmployeeAttendanceId
                         }).ToList()
                     }).ToList();
 
@@ -511,6 +520,34 @@ namespace Dawem.BusinessLogic.Summons
                     var employeesMissingGroupedByCompany =
                         getEmployeesMissing.GroupBy(e => e.CompanyId).ToList();
 
+                    #region Handle Cancel Employee Attendances
+
+                    var willCanceledEmployeeAttendanceIds = getEmployeesMissing
+                        .Where(e => e.Summons.Any(ss => ss.WillCanceledEmployeeAttendanceId > 0))
+                        .SelectMany(s => s.Summons.Where(es => es.WillCanceledEmployeeAttendanceId > 0)
+                        .Select(ss => ss.WillCanceledEmployeeAttendanceId.Value)).ToList();
+
+                    if (willCanceledEmployeeAttendanceIds.Count > 0)
+                    {
+                        var willCanceledEmployeeAttendances = await repositoryManager.EmployeeAttendanceRepository
+                                        .GetWithTracking(ea => willCanceledEmployeeAttendanceIds.Contains(ea.Id))
+                                        .ToListAsync();
+
+                        willCanceledEmployeeAttendances.ForEach(getEmployeeAttendance =>
+                        {
+                            getEmployeeAttendance.IsActive = false;
+                            getEmployeeAttendance.Notes += LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.NoteDayAttendanceWasCanceledDueToFailureInSummons, LeillaKeys.Ar);
+                        });
+
+                        await unitOfWork.SaveAsync();
+                    }
+
+                    #endregion
+
+
+
+
                     foreach (var employeesMissingGroup in employeesMissingGroupedByCompany)
                     {
                         #region Set Summon code
@@ -520,12 +557,6 @@ namespace Dawem.BusinessLogic.Summons
                             .Select(e => e.Code)
                             .DefaultIfEmpty()
                             .MaxAsync();
-
-                        #endregion
-
-                        #region Handle Remove Fingerprint
-
-                        // here
 
                         #endregion
 
@@ -540,7 +571,13 @@ namespace Dawem.BusinessLogic.Summons
                                     Code = getMaxCode,
                                     CompanyId = employeesMissing.CompanyId,
                                     EmployeeId = employeesMissing.EmployeeId,
-                                    SummonId = summon.SummonId
+                                    SummonId = summon.SummonId,
+                                    SummonMissingLogSanctions = summon.SummonSanctions
+                                    .Select(ss => new SummonMissingLogSanction()
+                                    {
+                                        SummonSanctionId = ss.Id,
+                                        Done = ss.SanctionType == SanctionType.CancelDayFingerprint
+                                    }).ToList()
                                 });
 
                             }

@@ -46,7 +46,7 @@ namespace Dawem.BusinessLogic.Summons
                 EmployeeName = sml.Employee.Name,
                 SummonCode = sml.Summon.Code.ToString(),
                 SummonDate = sml.Summon.DateAndTime,
-                DoneNotify = sml.DoneNotify
+                SanctionsCount = sml.SummonMissingLogSanctions.Count
             }).ToListAsync();
 
             return new GetSummonMissingLogsResponse
@@ -66,7 +66,8 @@ namespace Dawem.BusinessLogic.Summons
                     EmployeeName = sml.Employee.Name,
                     SummonCode = sml.Summon.Code.ToString(),
                     SummonDate = sml.Summon.DateAndTime,
-                    DoneNotify = sml.DoneNotify,
+                    SanctionsCount = sml.SummonMissingLogSanctions.Count,
+                    SummonSanctions = sml.SummonMissingLogSanctions.Select(smls => smls.SummonSanction.Sanction.Name).ToList(),
                     SummonForTypeName = TranslationHelper.GetTranslation(sml.Summon.ForType.ToString(), requestInfo.Lang),
                     SummonAllowedTimeName = sml.Summon.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(sml.Summon.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonMissingLogNotFound);

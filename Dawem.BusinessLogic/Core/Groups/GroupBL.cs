@@ -109,7 +109,9 @@ namespace Dawem.BusinessLogic.Core.Groups
             #endregion
 
             unitOfWork.CreateTransaction();
+
             #region Update Group
+
             var getGroup = await repositoryManager.GroupRepository.GetEntityByConditionWithTrackingAsync(grp => !grp.IsDeleted
             && grp.Id == model.Id);
             if (getGroup != null)
@@ -190,6 +192,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                     repositoryManager.GroupManagerDelegatorRepository.BulkInsert(addedGroupManagerDelegators);
 
                 #endregion
+
                 #region Update ZoneGroup
 
                 List<ZoneGroup> existZDbList = repositoryManager.ZoneGroupRepository
@@ -198,7 +201,7 @@ namespace Dawem.BusinessLogic.Core.Groups
 
                 List<int> existingZoneIds = existZDbList.Select(e => e.ZoneId).ToList();
 
-                List<ZoneGroup> addedGroupZones = model.Zones
+                var addedGroupZones = model.Zones != null ? model.Zones
                     .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
                     .Select(ge => new ZoneGroup
                     {
@@ -206,11 +209,10 @@ namespace Dawem.BusinessLogic.Core.Groups
                         ZoneId = ge.ZoneId,
                         ModifyUserId = requestInfo.UserId,
                         ModifiedDate = DateTime.UtcNow
-                    })
-                    .ToList();
+                    }).ToList() : null;
 
                 List<int> ZonesToRemove = existZDbList
-                    .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                    .Where(ge => model.ZoneIds == null || model.ZoneIds.Contains(ge.ZoneId))
                     .Select(ge => ge.ZoneId)
                     .ToList();
 

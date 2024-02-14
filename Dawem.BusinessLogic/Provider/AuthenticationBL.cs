@@ -348,6 +348,7 @@ namespace Dawem.BusinessLogic.Provider
                     else
                     {
                         getNotificationUserDeviceToken.LastLogInDate = DateTime.UtcNow;
+                        getNotificationUserDeviceToken.DeviceToken = signInModel.DeviceToken;
                     }
                 }
                 else

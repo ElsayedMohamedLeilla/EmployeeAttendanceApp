@@ -351,8 +351,7 @@ namespace Dawem.BusinessLogic.Attendances
                              .OrderBy(check => check.Time)
                              .Select(check => check.Time)
                              .FirstOrDefault()
-                             .ToTimeSpan())),
-                   ZoneName = "Zone Name"
+                             .ToTimeSpan()))
 
                }).ToListAsync();
 
@@ -423,30 +422,77 @@ namespace Dawem.BusinessLogic.Attendances
             // Format the non-negative time gap into HH:mm
             return nonNegativeTimeGap.ToString(@"hh\:mm");
         }
-        public async Task<List<GetEmployeeAttendanceInfoDTO>> GetEmployeeAttendancesInfo(int employeeAttendanceId)
+        public async Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
-            var result = await repositoryManager.EmployeeAttendanceCheckRepository.Get(s => s.EmployeeAttendanceId == employeeAttendanceId)
-                .Select(r => new GetEmployeeAttendanceInfoDTO
+            var result = await repositoryManager.EmployeeAttendanceRepository.Get(s => s.Id == employeeAttendanceId)
+                .Select(empAttendance => new GetEmployeeAttendanceInfoDTO
                 {
-                    EmployeeName = r.EmployeeAttendance.Employee.Name,
-                    LocalDate = r.EmployeeAttendance.LocalDate,
-                    Time = r.Time.ToString("hh:mm") + TranslateAmAndPm(r.Time.ToString("tt"), requestInfo.Lang),
-                    Type = r.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
-                r.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
-                r.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
-                r.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
-                AmgadKeys.Unknown,
-                    RecognitionWay = r.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.PinRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
-                r.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
+                    EmployeeName = empAttendance.Employee.Name,
+                    Date = empAttendance.LocalDate.Date,
+                    CheckInTime =
+                   empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                    .Min(check => check.Time).ToString("hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                    .Min(check => check.Time).ToString("tt"), requestInfo.Lang) : null,
 
-                AmgadKeys.Unknown,
+                    CheckOutTime =
+                   empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                    .Max(check => check.Time).ToString("hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                    .Max(check => check.Time).ToString("tt"), requestInfo.Lang) : null,
 
-                }).ToListAsync();
+                    WayOfRecognition = GetWayOfRecognition(
+                      empAttendance.EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                       .OrderBy(check => check.Time)
+                       .Select(check => check.RecognitionWay)
+                       .FirstOrDefault(),
+                      empAttendance
+                      .EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
+                       .OrderByDescending(check => check.Time)
+                       .Select(check => check.RecognitionWay)
+                       .FirstOrDefault(), requestInfo.Lang),
+                    Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.LocalDate, requestInfo.Lang),
+                    TimeGap = CalculateTimeGap(
+                     empAttendance.ShiftCheckInTime,
+                     empAttendance.AllowedMinutes,
+                     empAttendance.LocalDate.Date.Add(
+                     empAttendance
+                            .EmployeeAttendanceChecks
+                             .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                             .OrderBy(check => check.Time)
+                             .Select(check => check.Time)
+                             .FirstOrDefault()
+                             .ToTimeSpan())),
+                    Fingerprints = empAttendance.EmployeeAttendanceChecks
+                    .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
+                    {
+                        ZoneName = "Zone Name",
+                        Time = employeeAttendanceCheck.Time.ToString("hh:mm") + TranslateAmAndPm(employeeAttendanceCheck.Time.ToString("tt"), requestInfo.Lang),
+                        Type = employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
+                        AmgadKeys.Unknown,
+                        RecognitionWay = employeeAttendanceCheck.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.PinRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PinRecognition, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
+                        employeeAttendanceCheck.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
+                        AmgadKeys.Unknown,
+                    }).ToList()
+                    
+
+                }).FirstOrDefaultAsync();
             return result;
         }
         public async Task<bool> Delete(DeleteEmployeeAttendanceModel model)

@@ -8,6 +8,7 @@
         public DateTime SummonDate { get; set; }
         public string SummonForTypeName { get; set; }
         public string SummonAllowedTimeName { get; set; }
-        public bool DoneNotify { get; set; }
+        public int SanctionsCount { get; set; }
+        public List<string> SummonSanctions { get; set; }
     }
 }

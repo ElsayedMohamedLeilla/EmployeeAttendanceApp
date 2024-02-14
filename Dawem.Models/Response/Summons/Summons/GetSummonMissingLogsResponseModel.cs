@@ -7,6 +7,6 @@
         public string EmployeeName { get; set; }
         public string SummonCode { get; set; }
         public DateTime SummonDate { get; set; }
-        public bool DoneNotify { get; set; }
+        public int SanctionsCount { get; set; }
     }
 }

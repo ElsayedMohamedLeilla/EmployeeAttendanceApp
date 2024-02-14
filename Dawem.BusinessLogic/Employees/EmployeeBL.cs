@@ -182,7 +182,7 @@ namespace Dawem.BusinessLogic.Employees
 
             List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-            List<ZoneEmployee> addedEmployeeZones = model.Zones
+            var addedEmployeeZones = model.Zones!= null ? model.Zones
                 .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
                 .Select(ge => new ZoneEmployee
                 {
@@ -190,11 +190,10 @@ namespace Dawem.BusinessLogic.Employees
                     ZoneId = ge.ZoneId,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
-                })
-                .ToList();
+                }).ToList() : new List<ZoneEmployee>();
 
             List<int> ZonesToRemove = existDbList
-                .Where(ge => !model.ZoneIds.Contains(ge.ZoneId))
+                .Where(ge => model.ZoneIds == null || !model.ZoneIds.Contains(ge.ZoneId))
                 .Select(ge => ge.ZoneId)
                 .ToList();
 

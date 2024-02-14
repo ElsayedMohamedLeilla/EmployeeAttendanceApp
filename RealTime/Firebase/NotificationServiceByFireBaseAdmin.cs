@@ -242,7 +242,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
         NotificationModelDTO nPM = new NotificationModelDTO()
         {
             NotificationType = notificationType,
-            UnreadNotificationCount = await notificationStoreBL.GetUnreadNotificationCountByUserId(),
+            UnreadNotificationCount = await notificationStoreBL.GetUnreadNotificationCount(),
         };
         string jsonString = JsonSerializer.Serialize(nPM);
 

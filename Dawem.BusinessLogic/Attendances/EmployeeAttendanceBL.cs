@@ -447,7 +447,7 @@ namespace Dawem.BusinessLogic.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(check => check.Time).ToString("tt"), requestInfo.Lang) : null,
 
-                    WayOfRecognition = GetWayOfRecognition(
+                    /*WayOfRecognition = GetWayOfRecognition(
                       empAttendance.EmployeeAttendanceChecks
                        .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                        .OrderBy(check => check.Time)
@@ -458,7 +458,7 @@ namespace Dawem.BusinessLogic.Attendances
                        .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                        .OrderByDescending(check => check.Time)
                        .Select(check => check.RecognitionWay)
-                       .FirstOrDefault(), requestInfo.Lang),
+                       .FirstOrDefault(), requestInfo.Lang),*/
                     Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.LocalDate, requestInfo.Lang),
                     TimeGap = CalculateTimeGap(
                      empAttendance.ShiftCheckInTime,

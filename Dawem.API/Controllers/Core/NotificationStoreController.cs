@@ -3,7 +3,6 @@ using Dawem.Contract.RealTime.Firebase;
 using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.RealTime.Firebase;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -81,7 +80,7 @@ namespace Dawem.API.Controllers.Core
         [HttpGet]
         public async Task<ActionResult> GetUnreadNotificationCountByUserId()
         {
-          
+
             return Success(await notificationStoreBL.GetUnreadNotificationCountByUserId());
         }
         [HttpGet]
@@ -96,7 +95,7 @@ namespace Dawem.API.Controllers.Core
 
         [Route("send")]
         [HttpPost]
-        public async Task<IActionResult> SendNotification([FromQuery]  List<int> UserIds, NotificationType notificationType,NotificationStatus notificationStatus)
+        public async Task<IActionResult> SendNotification([FromQuery] List<int> UserIds, NotificationType notificationType, NotificationStatus notificationStatus)
         {
             if (UserIds.Count == 0)
             {

@@ -428,7 +428,8 @@ namespace Dawem.BusinessLogic.Requests
                     {
                         FileName = a.FileName,
                         FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.JustificationRequests)
-                    }).ToList()
+                    }).ToList(),
+                    Notes = requestJustification.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestJustification;

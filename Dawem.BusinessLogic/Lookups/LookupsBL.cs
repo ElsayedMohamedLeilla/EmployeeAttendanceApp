@@ -67,7 +67,7 @@ namespace Dawem.BusinessLogic.Lookups
             var countries = await queryPaged.Select(c => new CountryLiteDTO()
             {
                 Id = c.Id,
-                GlobalName = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
+                Name = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
                 CountryISOCode = c.Iso.ToLower()
             }).ToListAsync();
 

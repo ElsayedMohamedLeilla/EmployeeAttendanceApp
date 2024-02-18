@@ -3,8 +3,10 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Enums.Generals;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
 using Dawem.Models.Generic;
 using LinqKit;
 
@@ -85,8 +87,8 @@ namespace Dawem.Repository.Employees
                 switch (criteria.Status.Value)
                 {
                     case FilterEmployeeStatus.Available:
-                        predicate = predicate.And(employee => !employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted 
-                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending) 
+                        predicate = predicate.And(employee => !employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
+                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending)
                         && clientLocalDate.Date >= task.RequestTask.Request.Date && clientLocalDate.Date <= task.RequestTask.DateTo)
                         &&
                         !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
@@ -122,6 +124,70 @@ namespace Dawem.Repository.Employees
                         break;
                 }
             }
+
+            predicate = predicate.And(inner);
+            var Query = Get(predicate);
+            return Query;
+
+        }
+        public IQueryable<Employee> GetAsQueryableForAttendanceSummary(AttendanceSummaryCritria criteria)
+        {
+            var predicate = PredicateBuilder.New<Employee>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<Employee>(true);
+
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            predicate = predicate.And(e => e.EmployeeAttendances != null && e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
+            e.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0));
+
+
+            if (!string.IsNullOrWhiteSpace(criteria.FreeText))
+            {
+                criteria.FreeText = criteria.FreeText.ToLower().Trim();
+
+                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
+
+                if (int.TryParse(criteria.FreeText, out int code))
+                {
+                    criteria.Code = code;
+                }
+            }
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.IsActive is not null)
+            {
+                predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
+            }
+            if (criteria.EmployeeId is not null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.EmployeeId);
+            }
+            if (criteria.EmployeeId is not null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.EmployeeId);
+            }
+
+            predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date >= criteria.DateFrom.Date));
+            predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date <= criteria.DateTo.Date));
+
+            var weekDays = DateHelper.GetWeekDaysBetweenTwoDates(criteria.DateFrom, criteria.DateTo).Distinct().ToList();
+            predicate = predicate.And(e => e.Schedule.ScheduleDays.Any(sd => weekDays.Contains(sd.WeekDay)));
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

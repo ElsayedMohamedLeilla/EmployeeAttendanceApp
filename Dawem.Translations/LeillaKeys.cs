@@ -479,7 +479,7 @@
         public const string SorryYouMustChooseRoleOrUser = "Sorry!!YouMustChooseRoleOrUser!";
         public const string SorryYouMustNotChooseRoleAndUserAtTheSameTime = "Sorry!!YouMustNotChooseRoleAndUserAtTheSameTime!";
         public const string SanctionType = "SanctionType";
-        public const string NotifyWay = "NotifyWay"; 
+        public const string NotifyWay = "NotifyWay";
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
@@ -490,7 +490,8 @@
         public const string TimeType = "TimeType";
         public const string SorryRequestTypeNotFound = "Sorry!!RequestTypeNotFound!";
         public const string NoteDayAttendanceWasCanceledDueToFailureInSummons = "Note-DayAttendanceWasCanceledDueToFailureInSummons";
-
+        public const string SorryYouMustEnterAValidDateTo = "Sorry!!YouMustEnterAValidDateTo!";
+        public const string SorryDateToMustLessThanOrEqualTodayDay = "Sorry!!DateToMustLessThanOrEqualTodayDay!";
+        public const string SorryPeriodMustLessThanOrEqualTwoMonths = "Sorry!!PeriodMustLessThanOrEqualTwoMonths!";        
     }
-    
 }

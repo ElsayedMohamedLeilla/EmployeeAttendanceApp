@@ -18,7 +18,7 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
             requestInfo = _requestInfo;
         }
 
-        public async Task<AttendanceSummaryForGridDTO> Get(AttendanceSummaryCritria model)
+        public async Task<AttendanceSummaryResponseDTO> Get(AttendanceSummaryCritria model)
         {
             var result = await repositoryManager.EmployeeRepository.Get(
      employee =>
@@ -31,52 +31,52 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
                  ea.EmployeeAttendanceChecks
                      .Any(eac =>
                          eac != null && eac.IsActive && !eac.IsDeleted &&
-                         (!model.FromDate.HasValue || ea.LocalDate >= model.FromDate.Value) &&
-                         (!model.ToDate.HasValue || ea.LocalDate <= model.ToDate.Value)
+                         ( ea.LocalDate >= model.DateFrom) &&
+                         ( ea.LocalDate <= model.DateTo)
                      )
              ) &&
          employee.SchedulePlanEmployees
              .Any(spe =>
                  spe.IsActive &&
-                 spe.SchedulePlan.DateFrom <= (model.ToDate ?? DateTime.MaxValue) &&
-                 spe.SchedulePlan.DateFrom >= (model.FromDate ?? DateTime.MinValue)
+                 spe.SchedulePlan.DateFrom <= (model.DateTo) &&
+                 spe.SchedulePlan.DateFrom >= (model.DateFrom )
              )
- ).Select(employee => new AttendanceSummaryModelDTO
+ ).Select(employee => new AttendanceSummaryModel
  {
      EmployeeId = employee.Id,
      EmployeeNumber = employee.EmployeeNumber,
      EmployeeName = employee.Name,
-     Total_Working_Hours = CalculateTotalWorkingHours(employee.EmployeeAttendances, model.FromDate ?? DateTime.MinValue, model.ToDate ?? DateTime.MaxValue),
-     Total_Absences = employee.EmployeeAttendances
+     WorkingHoursCount = CalculateTotalWorkingHours(employee.EmployeeAttendances, model.DateFrom , model.DateTo),
+     AbsencesCount = employee.EmployeeAttendances
          .Select(ea => ea.LocalDate) // Select attendance dates
          .GroupBy(date => date) // Group by attendance date
          .Count(group => !group.Any(date => employee.EmployeeAttendances
              .Any(ea => ea.LocalDate == date && ea.EmployeeAttendanceChecks.All(eac =>
                  eac != null && eac.IsActive && !eac.IsDeleted))))
          ,
-     Total_Early_Departures = employee.EmployeeAttendances
+     EarlyDeparturesCount = employee.EmployeeAttendances
     .SelectMany(ea => ea.EmployeeAttendanceChecks)
     .Where(eac =>
         eac != null && eac.IsActive && !eac.IsDeleted &&
         eac.EmployeeAttendance != null &&
-        eac.EmployeeAttendance.LocalDate >= (model.FromDate ?? DateTime.MinValue) &&
-        eac.EmployeeAttendance.LocalDate <= (model.ToDate ?? DateTime.MaxValue) &&
+        eac.EmployeeAttendance.LocalDate >= (model.DateFrom) &&
+        eac.EmployeeAttendance.LocalDate <= (model.DateTo ) &&
         eac.Time < eac.EmployeeAttendance.ShiftCheckOutTime
     )
     .Count(),
-     Total_Late_Arrivals = employee.EmployeeAttendances
+     LateArrivalsCount = employee.EmployeeAttendances
         .SelectMany(ea => ea.EmployeeAttendanceChecks)
         .Count(eac =>
             eac != null && eac.IsActive && !eac.IsDeleted &&
-            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate >= (model.FromDate ?? DateTime.MinValue)) &&
-            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate <= (model.ToDate ?? DateTime.MaxValue)) &&
+            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate >= (model.DateFrom)) &&
+            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate <= (model.DateTo )) &&
             (eac.EmployeeAttendance != null
             //&&
              //eac.Time > GetLateArrivalThreshold(eac.EmployeeAttendance.ShiftCheckInTime, model.FromDate ?? DateTime.MinValue)
              )
         )
  }).ToListAsync();
-            if (!model.NeedToExport) //apply pagination if false
+            if (!model.IsExport) //apply pagination if false
             {
                 #region paging
                 int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
@@ -86,32 +86,30 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
                 #endregion
                 var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
                 #endregion
-                var output = queryPaged.Select(employee => new AttendanceSummaryModelDTO
+                var output = queryPaged.Select(employee => new AttendanceSummaryModel
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeNumber = employee.EmployeeNumber,
                     EmployeeName = employee.EmployeeName,
-                    Total_Working_Hours = employee.Total_Working_Hours,
-                    Total_Absences = employee.Total_Absences,
-                    Total_Early_Departures = employee.Total_Early_Departures,
-                    Total_Late_Arrivals = employee.Total_Late_Arrivals
+                    WorkingHoursCount = employee.WorkingHoursCount,
+                    AbsencesCount = employee.AbsencesCount,
+                    EarlyDeparturesCount = employee.EarlyDeparturesCount,
+                    LateArrivalsCount = employee.LateArrivalsCount
                 });
-                return new AttendanceSummaryForGridDTO()
+                return new AttendanceSummaryResponseDTO()
                 {
-                    AttendanceSummaryData = output.ToList(),
+                    AttendanceSmmaries = output.ToList(),
                     TotalCount = output.Count()
                 };
             }
 
-            return new AttendanceSummaryForGridDTO()
+            return new AttendanceSummaryResponseDTO()
             {
-                AttendanceSummaryData = result.ToList(),
+                AttendanceSmmaries = result.ToList(),
                 TotalCount = result.Count()
             };
         }
-
-
-        private static double CalculateTotalWorkingHours(IEnumerable<EmployeeAttendance> attendances, DateTime fromDate, DateTime toDate)
+        private static decimal CalculateTotalWorkingHours(IEnumerable<EmployeeAttendance> attendances, DateTime fromDate, DateTime toDate)
         {
             var checks = attendances
             .Where(ea => ea.EmployeeAttendanceChecks != null)
@@ -122,7 +120,7 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
                 (toDate != DateTime.MaxValue || eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate <= toDate)
             );
 
-            var totalWorkingHours = checks
+            var totalWorkingHours = (decimal)checks
                 .GroupBy(eac => eac.EmployeeAttendanceId)
                 .Select(g => CalculateWorkingHours(g))
                 .Sum();
@@ -141,7 +139,6 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
 
             return (endTime - startTime).TotalMinutes;
         }
-
         TimeOnly GetLateArrivalThreshold(TimeOnly shiftCheckInTime, DateTime fromDate)
         {
             TimeSpan shiftTimeSpan = shiftCheckInTime.ToTimeSpan();

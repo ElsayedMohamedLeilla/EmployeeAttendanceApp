@@ -120,7 +120,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                 getGroup.IsActive = model.IsActive;
                 getGroup.ModifiedDate = DateTime.UtcNow;
                 getGroup.ModifyUserId = requestInfo.UserId;
-                getGroup.GroupManagerId = model.ManagerId;
+                getGroup.ManagerId = model.ManagerId;
                 getGroup.ModifiedApplicationType = requestInfo.ApplicationType;
                 #endregion
 
@@ -270,7 +270,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                 Name = group.Name,
                 IsActive = group.IsActive,
                 NumberOfEmployees = group.GroupEmployees.Count,
-                Manager = group.GroupManagerId != null ? new GroupManagarForGridDTO
+                Manager = group.ManagerId != null ? new GroupManagarForGridDTO
                 {
                     ManagerName = group.GroupManager.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(group.GroupManager.ProfileImageName, LeillaKeys.Employees),
@@ -368,7 +368,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                     Code = group.Code,
                     Name = group.Name,
                     IsActive = group.IsActive,
-                    ManagerId = group.GroupManagerId,
+                    ManagerId = group.ManagerId,
                     EmployeeIds = group.GroupEmployees
              .Join(repositoryManager.EmployeeRepository.GetAll(),
                  groupEmployee => groupEmployee.EmployeeId,

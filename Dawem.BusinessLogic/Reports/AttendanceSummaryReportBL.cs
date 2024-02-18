@@ -12,7 +12,7 @@ namespace Dawem.BusinessLogic.Reports
         {
             attendanceSummaryHelper = _attendanceSummaryHelper;
         }
-        public async Task<AttendanceSummaryForGridDTO> Get(AttendanceSummaryCritria model)
+        public async Task<AttendanceSummaryResponseDTO> Get(AttendanceSummaryCritria model)
         {
             return await attendanceSummaryHelper.Get(model);
         }

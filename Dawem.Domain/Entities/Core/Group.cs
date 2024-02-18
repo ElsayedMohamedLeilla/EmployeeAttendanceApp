@@ -12,8 +12,8 @@ namespace Dawem.Domain.Entities.Core
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-        public int? GroupManagerId { get; set; }
-        [ForeignKey(nameof(GroupManagerId))]
+        public int? ManagerId { get; set; }
+        [ForeignKey(nameof(ManagerId))]
         public Employee GroupManager { get; set; }
         #endregion
 

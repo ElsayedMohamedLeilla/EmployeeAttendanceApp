@@ -45,7 +45,6 @@ namespace Dawem.BusinessLogic.Employees.Departments
         }
         public async Task<int> Create(CreateDepartmentModel model)
         {
-
             #region Business Validation
 
             await departmentBLValidation.CreateValidation(model);

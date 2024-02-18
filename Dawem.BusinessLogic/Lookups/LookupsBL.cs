@@ -46,7 +46,6 @@ namespace Dawem.BusinessLogic.Lookups
                 countryPredicate = countryPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
             }
 
-
             #region paging
 
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
@@ -56,7 +55,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = countryRepository.OrderBy(query, "Id", "asc");
+            var queryOrdered = countryRepository.OrderBy(query, nameof(Country.Order), "asc");
 
             #endregion
 

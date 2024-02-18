@@ -209,14 +209,14 @@ namespace Dawem.BusinessLogic.Core.Zones
         public async Task<GetZoneByIdResponseDTO> GetById(int ZoneId)
         {
             var Zone = await repositoryManager.ZoneRepository.Get(e => e.Id == ZoneId && !e.IsDeleted)
-                .Select(Zone => new GetZoneByIdResponseDTO
+                .Select(zone => new GetZoneByIdResponseDTO
                 {
-                    Id = Zone.Id,
-                    Name = Zone.Name,
-                    IsActive = Zone.IsActive,
-                    Longitude = Zone.Longitude,
-                    Latitude = Zone.Latitude,
-                    Radius = Zone.Radius
+                    Id = zone.Id,
+                    Name = zone.Name,
+                    IsActive = zone.IsActive,
+                    Longitude = zone.Longitude,
+                    Latitude = zone.Latitude,
+                    Radius = zone.Radius
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryZoneNotFound);
 
             return Zone;

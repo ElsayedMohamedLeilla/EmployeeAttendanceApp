@@ -42,11 +42,9 @@ namespace Dawem.BusinessLogic.Lookups
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-
-                countryPredicate = countryPredicate.Start(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
+                countryPredicate = countryPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
                 countryPredicate = countryPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
             }
-
 
             #region paging
 
@@ -57,7 +55,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = countryRepository.OrderBy(query, "Id", "asc");
+            var queryOrdered = countryRepository.OrderBy(query, nameof(Country.Order), "asc");
 
             #endregion
 
@@ -68,7 +66,7 @@ namespace Dawem.BusinessLogic.Lookups
             var countries = await queryPaged.Select(c => new CountryLiteDTO()
             {
                 Id = c.Id,
-                GlobalName = userContext.Lang == "ar" ? c.NameEn : c.NameEn,
+                Name = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
                 CountryISOCode = c.Iso.ToLower()
             }).ToListAsync();
 

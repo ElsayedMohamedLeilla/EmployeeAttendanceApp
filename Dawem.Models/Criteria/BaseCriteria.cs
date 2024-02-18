@@ -17,6 +17,7 @@ namespace Dawem.Models.Criteria
         public OrderDirection? OrderByDirection { get; set; }
         public bool ForGridView { get; set; }
         public bool? IsActive { get; set; }
+        public bool IsExport { get; set; }
 
     }
 }

@@ -12,7 +12,7 @@ namespace Dawem.Models.Dtos.Core.Groups
         [JsonIgnore] // This property will be excluded from JSON serialization
         public List<GroupEmployeeCreateModelDTO> Employees { get; set; }
 
-        public int GroupManagerId { get; set; }
+        public int ManagerId { get; set; }
 
         public List<int> ManagerDelegatorIds { get; set; }
 

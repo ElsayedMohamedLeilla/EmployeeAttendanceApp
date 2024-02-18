@@ -4,6 +4,6 @@ namespace Dawem.Contract.Reports
 {
     public interface IAttendanceSummaryReportBL
     {
-        Task<AttendanceSummaryForGridDTO> Get(AttendanceSummaryCritria model);
+        Task<AttendanceSummaryResponseDTO> Get(AttendanceSummaryCritria model);
     }
 }

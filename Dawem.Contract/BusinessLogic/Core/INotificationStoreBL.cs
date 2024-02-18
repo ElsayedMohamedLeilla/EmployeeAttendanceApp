@@ -14,7 +14,6 @@ namespace Dawem.Contract.BusinessLogic.Core
         public Task<bool> Delete(int GroupId);
         Task<int> GetUnreadNotificationCount();
         Task<GetNotificationStoreResponseDTO> GetUnreadNotification(GetNotificationStoreCriteria criteria);
-        //Task<bool> Notify(NotificationModelDTO param);
 
     }
 }

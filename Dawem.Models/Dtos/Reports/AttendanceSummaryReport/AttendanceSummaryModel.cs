@@ -11,5 +11,6 @@
         public decimal WorkingHoursCount { get; set; }    
         public decimal LateArrivalsCount { get; set; }
         public decimal EarlyDeparturesCount { get; set; }
+        public IEnumerable<int> Plans { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace Dawem.BusinessLogic.Employees
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -43,7 +43,6 @@ namespace Dawem.BusinessLogic.Employees
                 EmployeeId = employee.Id,
                 EmployeeNumber = employee.EmployeeNumber,
                 EmployeeName = employee.Name,
-
 
                 AllWorkingDaysCount = ReportsHelper.GetShouldAttendCount(employee.Schedule.ScheduleDays
                 .Where(es => !es.IsDeleted && es.ShiftId > 0)
@@ -90,10 +89,17 @@ namespace Dawem.BusinessLogic.Employees
 
                 AbsencesCount = ReportsHelper.GetShouldAttendCount(employee.Schedule.ScheduleDays
                 .Where(es => !es.IsDeleted && es.ShiftId > 0)
-                .Select(sd => sd.WeekDay).ToList(), criteria.DateFrom, criteria.DateTo) -
+                .Select(sd => sd.WeekDay).ToList(), criteria.DateFrom, criteria.DateTo) -  // - vacations in this period
                 employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted) && ea.LocalDate.Date >= criteria.DateFrom.Date
-                && ea.LocalDate.Date <= criteria.DateTo.Date).Count()
+                && ea.LocalDate.Date <= criteria.DateTo.Date).Count(),
+
+                Plans = (employee.SchedulePlanEmployees != null ? 
+                employee.SchedulePlanEmployees.Select(ep => ep.SchedulePlanId).ToList() : new List<int>()).Concat 
+                (employee.DepartmentId != null && employee.Department.SchedulePlanDepartments != null ?
+                employee.Department.SchedulePlanDepartments.Select(ep => ep.SchedulePlanId).ToList() : new List<int>()).Concat
+                (employee.EmployeeGroups != null && employee.EmployeeGroups.All(eg=>eg.GroupId > 0) ?
+                employee.EmployeeGroups.Select(eg => eg.Group).SelectMany(ge => ge.SchedulePlanGroups).Select(ep => ep.SchedulePlanId).ToList() : new List<int>()),
 
 
             }).ToListAsync();

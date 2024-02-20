@@ -257,7 +257,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestPermissionRepository.OrderBy(query, nameof(RequestPermission.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -276,6 +276,9 @@ namespace Dawem.BusinessLogic.Requests
                 PermissionTypeName = requestPermission.PermissionType.Name,
                 DateFrom = requestPermission.Request.Date,
                 DateTo = requestPermission.DateTo,
+                Period =LeillaKeys.LeftBracket + 
+                (requestPermission.DateTo - requestPermission.Request.Date).TotalHours + 
+                LeillaKeys.RightBracket + LeillaKeys.Space + LeillaKeys.Hour,
                 Status = requestPermission.Request.Status,
                 StatusName = TranslationHelper.GetTranslation(requestPermission.Request.Status.ToString(), requestInfo.Lang)
 
@@ -312,7 +315,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -356,7 +359,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestPermissionRepository.OrderBy(query, nameof(RequestPermission.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,5 +28,6 @@ namespace Dawem.Domain.Entities.Employees
         public List<Employee> Employees { get; set; }
         public List<ZoneDepartment> Zones { get; set; }
         public List<DepartmentManagerDelegator> ManagerDelegators { get; set; }
+        public List<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
     }
 }

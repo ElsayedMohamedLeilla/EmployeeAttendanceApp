@@ -492,6 +492,9 @@
         public const string NoteDayAttendanceWasCanceledDueToFailureInSummons = "Note-DayAttendanceWasCanceledDueToFailureInSummons";
         public const string SorryYouMustEnterAValidDateTo = "Sorry!!YouMustEnterAValidDateTo!";
         public const string SorryDateToMustLessThanOrEqualTodayDay = "Sorry!!DateToMustLessThanOrEqualTodayDay!";
-        public const string SorryPeriodMustLessThanOrEqualTwoMonths = "Sorry!!PeriodMustLessThanOrEqualTwoMonths!";        
+        public const string SorryPeriodMustLessThanOrEqualTwoMonths = "Sorry!!PeriodMustLessThanOrEqualTwoMonths!";
+        public const string Hour = "Hour";
+        public const string Minute = "Minute";
+        public const string Second = "Second";
     }
 }

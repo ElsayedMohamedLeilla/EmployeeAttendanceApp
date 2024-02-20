@@ -136,8 +136,11 @@ namespace Dawem.Repository.Employees
             var inner = PredicateBuilder.New<Employee>(true);
 
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
-            predicate = predicate.And(e => e.EmployeeAttendances != null && e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
-            e.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0));
+
+            predicate = predicate.And(e => (e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
+            e.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
+            (e.SchedulePlanEmployees != null && e.SchedulePlanEmployees.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
+            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0))));
 
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
@@ -174,17 +177,13 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => e.Code == criteria.Code);
             }
-            if (criteria.EmployeeId is not null)
+            if (criteria.EmployeesIds is not null)
             {
-                predicate = predicate.And(e => e.Id == criteria.EmployeeId);
-            }
-            if (criteria.EmployeeId is not null)
-            {
-                predicate = predicate.And(e => e.Id == criteria.EmployeeId);
+                predicate = predicate.And(e => criteria.EmployeesIds.Contains(e.Id));
             }
 
-            predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date >= criteria.DateFrom.Date));
-            predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date <= criteria.DateTo.Date));
+            //predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date >= criteria.DateFrom.Date));
+            //predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date <= criteria.DateTo.Date));
 
             var weekDays = DateHelper.GetWeekDaysBetweenTwoDates(criteria.DateFrom, criteria.DateTo).Distinct().ToList();
             predicate = predicate.And(e => e.Schedule.ScheduleDays.Any(sd => weekDays.Contains(sd.WeekDay)));

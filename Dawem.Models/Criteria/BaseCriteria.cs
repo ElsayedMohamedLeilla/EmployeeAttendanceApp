@@ -1,4 +1,5 @@
 ﻿using Dawem.Enums.Generals;
+using System.Xml.Linq;
 
 namespace Dawem.Models.Criteria
 {
@@ -18,6 +19,9 @@ namespace Dawem.Models.Criteria
         public bool ForGridView { get; set; }
         public bool? IsActive { get; set; }
         public bool IsExport { get; set; }
-
+        public bool GetPagingEnabled()
+        {
+            return PagingEnabled && !IsExport;
+        }
     }
 }

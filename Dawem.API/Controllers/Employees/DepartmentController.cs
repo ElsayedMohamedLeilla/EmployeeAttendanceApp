@@ -116,6 +116,5 @@ namespace Dawem.API.Controllers.Employees
         {
             return Success(await departmentBL.GetDepartmentsInformations());
         }
-
     }
 }

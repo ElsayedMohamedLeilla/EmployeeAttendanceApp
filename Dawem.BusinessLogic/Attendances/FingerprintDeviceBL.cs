@@ -121,7 +121,7 @@ namespace Dawem.BusinessLogic.Attendances
             #region sorting
             var queryOrdered = fingerprintDeviceRepository.OrderBy(query, nameof(FingerprintDevice.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
@@ -160,7 +160,7 @@ namespace Dawem.BusinessLogic.Attendances
             var queryOrdered = fingerprintDeviceRepository.OrderBy(query, nameof(FingerprintDevice.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

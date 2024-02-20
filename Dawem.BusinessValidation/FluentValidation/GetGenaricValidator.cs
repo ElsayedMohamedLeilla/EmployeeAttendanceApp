@@ -8,11 +8,14 @@ namespace Dawem.Validation.FluentValidation
     {
         public GetGenaricValidator()
         {
-            RuleFor(model => model).Must(m => m.PagingEnabled).
-                    WithMessage(LeillaKeys.SorryYouMustEnablePagination);
+            RuleFor(model => model).Must(m => m.PagingEnabled)
+                .When(m => !m.IsExport)
+                .WithMessage(LeillaKeys.SorryYouMustEnablePagination);
 
-            RuleFor(model => model).Must(m => m.PageSize <= 5).
-                    WithMessage(LeillaKeys.SorryPageSizeMustLessThanOrEqual5);
+            RuleFor(model => model)
+                .Must(m => m.PageSize <= 5)
+                .When(m => !m.IsExport)
+                .WithMessage(LeillaKeys.SorryPageSizeMustLessThanOrEqual5);
         }
     }
 }

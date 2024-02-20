@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.Core.NotificationsStores;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogicCore;
@@ -14,7 +13,6 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
-using Dawem.Models.Dtos.Core.NotificationsStores;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Dtos.Requests;
 using Dawem.Models.Dtos.Requests.Tasks;
@@ -156,7 +154,7 @@ namespace Dawem.BusinessLogic.Requests
                 };
                 repositoryManager.NotificationStoreRepository.Insert(notificationStore);
                 await unitOfWork.SaveAsync();
-              
+
                 #endregion
             }
             #region Fire Notification & Email
@@ -334,7 +332,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestTaskRepository.OrderBy(query, nameof(RequestTask.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -519,7 +517,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestTaskRepository.OrderBy(query, nameof(RequestTask.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

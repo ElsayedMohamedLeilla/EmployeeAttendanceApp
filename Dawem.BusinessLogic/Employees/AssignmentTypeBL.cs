@@ -119,7 +119,7 @@ namespace Dawem.BusinessLogic.Employees
             #region sorting
             var queryOrdered = assignmentTypeRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Employees
             var queryOrdered = assignmentTypeRepository.OrderBy(query, nameof(AssignmentType.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

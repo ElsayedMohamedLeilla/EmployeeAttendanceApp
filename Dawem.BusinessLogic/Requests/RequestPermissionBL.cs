@@ -395,6 +395,9 @@ namespace Dawem.BusinessLogic.Requests
                     PermissionTypeName = requestPermission.PermissionType.Name,
                     DateFrom = requestPermission.Request.Date,
                     DateTo = requestPermission.DateTo,
+                    Period = LeillaKeys.LeftBracket + 
+                    (requestPermission.DateTo - requestPermission.Request.Date).TotalHours + 
+                    LeillaKeys.RightBracket + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
                     IsActive = requestPermission.Request.IsActive,
                     IsNecessary = requestPermission.Request.IsNecessary,
                     ForEmployee = requestPermission.Request.ForEmployee,

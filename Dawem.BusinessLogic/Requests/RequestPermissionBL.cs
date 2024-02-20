@@ -278,7 +278,7 @@ namespace Dawem.BusinessLogic.Requests
                 DateTo = requestPermission.DateTo,
                 Period =LeillaKeys.LeftBracket + 
                 (requestPermission.DateTo - requestPermission.Request.Date).TotalHours + 
-                LeillaKeys.RightBracket + LeillaKeys.Space + LeillaKeys.Hour,
+                LeillaKeys.RightBracket + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
                 Status = requestPermission.Request.Status,
                 StatusName = TranslationHelper.GetTranslation(requestPermission.Request.Status.ToString(), requestInfo.Lang)
 

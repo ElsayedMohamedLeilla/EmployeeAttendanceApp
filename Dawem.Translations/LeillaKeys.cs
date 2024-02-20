@@ -431,6 +431,8 @@
         public const string Reject = "Reject";
         public const string Enable = "Enable";
         public const string Disable = "Disable";
+        public const string MarkAsRead = "MarkAsRead";
+        public const string Send = "Send";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";
         public const string SorryYouMustChooseRoleForPermission = "Sorry!!YouMustChooseRoleForPermission!";
@@ -496,5 +498,6 @@
         public const string Hour = "Hour";
         public const string Minute = "Minute";
         public const string Second = "Second";
+        public const string SorryInternalErrorHappenInPermissions = "Sorry!!InternalErrorHappenInPermissions!";
     }
 }

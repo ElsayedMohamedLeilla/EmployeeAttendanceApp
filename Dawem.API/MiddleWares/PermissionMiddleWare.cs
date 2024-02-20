@@ -72,6 +72,17 @@ namespace Dawem.API.MiddleWares
                         await Return(unitOfWork, httpContext, statusCode, response);
                     }
                 }
+                else
+                {
+                    int statusCode = StatusCodes.Status403Forbidden;
+                    var response = new ErrorResponse
+                    {
+                        State = ResponseStatus.Forbidden,
+                        Message = TranslationHelper.GetTranslation(LeillaKeys.SorryInternalErrorHappenInPermissions, requestInfo?.Lang)
+                    };
+
+                    await Return(unitOfWork, httpContext, statusCode, response);
+                }
             }
             else
             {

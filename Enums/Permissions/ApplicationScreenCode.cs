@@ -42,6 +42,7 @@
         Zone,
         Sanction,
         Summon,
-        SummonMissingLog
+        SummonMissingLog,
+        NotificationStore
     }
 }

@@ -213,7 +213,7 @@ namespace Dawem.BusinessLogic.Permissions
         public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
             var permission = await repositoryManager.PermissionRepository.Get(permission => permission.Id == permissionId
-            && !permission.IsDeleted && permission.IsActive)
+            && !permission.IsDeleted)
                 .Select(p => new GetPermissionInfoResponseModel
                 {
                     Code = p.Code,

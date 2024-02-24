@@ -323,7 +323,7 @@ namespace Dawem.BusinessLogic.Permissions
 
             var permission = await repositoryManager.PermissionRepository
                 .Get(permission => permission.CompanyId == requestInfo.CompanyId && ((model.RoleId != null && model.RoleId == permission.RoleId) ||
-                (model.UserId != null && model.UserId == permission.UserId)) && !permission.IsDeleted && permission.IsActive)
+                (model.UserId != null && model.UserId == permission.UserId)) && !permission.IsDeleted)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
                     Id = p.Id,

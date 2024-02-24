@@ -137,10 +137,23 @@ namespace Dawem.Repository.Employees
 
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
-            predicate = predicate.And(e => (e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
+            predicate = predicate.And(e =>
+
+            (e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
             e.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
+
             (e.SchedulePlanEmployees != null && e.SchedulePlanEmployees.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
-            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0))));
+            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
+            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date)) ||
+
+            (e.Department.SchedulePlanDepartments != null && e.Department.SchedulePlanDepartments.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
+            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
+            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date)) ||
+
+            (e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => eg.Group.SchedulePlanGroups != null)
+            && e.EmployeeGroups.Where(eg => eg.Group.SchedulePlanGroups != null).Any(egs => egs.Group.SchedulePlanGroups.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
+            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
+            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date))));
 
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

@@ -5,5 +5,6 @@ namespace Dawem.Contract.BusinessLogic.Employees
     public interface IAttendanceReportBL
     {
         Task<AttendanceSummaryResponseDTO> GetAttendanceSummary(AttendanceSummaryCritria model);
+        Task<AttendanceSummaryResponseDTO> GetAttendanceSummaryNew(AttendanceSummaryCritria criteria);
     }
 }

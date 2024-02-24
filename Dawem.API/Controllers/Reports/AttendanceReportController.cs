@@ -30,7 +30,7 @@ namespace Dawem.API.Controllers.Core
         [HttpGet]
         public async Task<ActionResult> GetAttendanceSummaryNew([FromQuery] AttendanceSummaryCritria model)
         {
-            var result = await attendanceReportBL.GetAttendanceSummary(model);
+            var result = await attendanceReportBL.GetAttendanceSummaryNew(model);
             return Success(result);
         }
     }

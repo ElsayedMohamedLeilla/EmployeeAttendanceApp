@@ -175,63 +175,22 @@ namespace Dawem.BusinessLogic.Employees
                     }).ToList()
                 } : null,
 
+                Plans = employee.Company.SchedulePlans.Any(sp => !sp.IsDeleted) ?
 
-                SchedulePlanEmployees = employee.SchedulePlanEmployees.Any(spe => !spe.IsDeleted && spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                (spe.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                spe.SchedulePlan.DateFrom.Date == employee.SchedulePlanEmployees.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())) ?
-                employee.SchedulePlanEmployees
-                .Where(spe => !spe.IsDeleted && spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                (spe.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                spe.SchedulePlan.DateFrom.Date == employee.SchedulePlanEmployees.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max()))
-                .Select(spe => new
+                employee.Company.SchedulePlans
+                .Where(sp => !sp.IsDeleted &&
+                ((sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                sp.SchedulePlanEmployee.EmployeeId == employee.Id) || (employee.DepartmentId != null &&
+                sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
+                sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId) || (employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
+                employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId))) && sp.DateFrom.Date <= criteria.DateTo.Date &&
+                (sp.DateFrom.Date >= criteria.DateFrom.Date ||
+                sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max()))
+                .Select(sp => new
                 {
-                    SchedulePlan = new
-                    {
-                        spe.SchedulePlan.DateFrom
-                    }
+                    sp.DateFrom
                 }).ToList() : null,
-
-
-                Department = employee.Department != null && !employee.Department.IsDeleted
-                && employee.Department.SchedulePlanDepartments.Any(spd => !spd.IsDeleted && spd.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                    (spd.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                    spd.SchedulePlan.DateFrom.Date == employee.Department.SchedulePlanDepartments.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())) ? new
-                    {
-                        SchedulePlanDepartments = employee.Department.SchedulePlanDepartments
-                    .Where(spd => !spd.IsDeleted && spd.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                    (spd.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                    spd.SchedulePlan.DateFrom.Date == employee.Department.SchedulePlanDepartments.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max()))
-                    .Select(spd => new
-                    {
-                        SchedulePlan = new
-                        {
-                            spd.SchedulePlan.DateFrom
-                        }
-                    }).ToList()
-                    } : null,
-
-                EmployeeGroups = employee.EmployeeGroups != null ?
-                employee.EmployeeGroups.Where(eg => !eg.IsDeleted && !eg.Group.IsDeleted && eg.Group.SchedulePlanGroups != null && eg.Group.SchedulePlanGroups.Any(spd => !spd.IsDeleted && spd.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                        (spd.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                        spd.SchedulePlan.DateFrom.Date == eg.Group.SchedulePlanGroups.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())))
-                .Select(eg => new
-                {
-                    Group = !eg.Group.IsDeleted ? new
-                    {
-                        SchedulePlanGroups = eg.Group.SchedulePlanGroups
-                        .Where(spd => !spd.IsDeleted && spd.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date &&
-                        (spd.SchedulePlan.DateFrom.Date >= criteria.DateFrom.Date ||
-                        spd.SchedulePlan.DateFrom.Date == eg.Group.SchedulePlanGroups.Select(esp => esp.SchedulePlan.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max()))
-                        .Select(spd => new
-                        {
-                            SchedulePlan = new
-                            {
-                                spd.SchedulePlan.DateFrom
-                            }
-                        }).ToList()
-                    } : null,
-                }).ToList() : null,
-
 
 
             }).ToListAsync();

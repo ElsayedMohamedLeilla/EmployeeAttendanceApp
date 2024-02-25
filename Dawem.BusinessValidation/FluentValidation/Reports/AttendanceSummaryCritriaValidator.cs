@@ -25,8 +25,8 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                 .WithMessage(LeillaKeys.SorryDateToMustGreaterThanOrEqualDateFrom);
 
             RuleFor(model => model)
-                .Must(m => m.DateFrom.AddMonths(2) >= m.DateTo  )
-                .WithMessage(LeillaKeys.SorryPeriodMustLessThanOrEqualTwoMonths);
+                .Must(m => m.DateFrom.AddMonths(3) >= m.DateTo)
+                .WithMessage(LeillaKeys.SorryPeriodMustLessThanOrEqualThreeMonths);
         }
     }
 }

@@ -254,7 +254,7 @@ namespace Dawem.BusinessLogic.Requests
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
-            getRequestVacation.NumberOfDays = (model.DateTo - model.DateFrom).Days + 1;
+            getRequestVacation.NumberOfDays = (int)(model.DateTo - model.DateFrom).TotalDays + 1;
 
 
             await unitOfWork.SaveAsync();

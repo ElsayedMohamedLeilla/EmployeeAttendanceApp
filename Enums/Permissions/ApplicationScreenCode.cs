@@ -43,6 +43,7 @@
         Sanction,
         Summon,
         SummonMissingLog,
-        NotificationStore
+        NotificationStore,
+        AttendanceSummaryReport
     }
 }

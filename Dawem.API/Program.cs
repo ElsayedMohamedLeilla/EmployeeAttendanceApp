@@ -29,7 +29,6 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Globalization;
-using Dawem.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
@@ -103,7 +102,6 @@ builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 builder.Services.ConfigureBackGroundService();
-builder.Services.ConfigureReports();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

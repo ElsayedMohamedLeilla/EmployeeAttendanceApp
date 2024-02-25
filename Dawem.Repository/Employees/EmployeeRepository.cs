@@ -133,28 +133,9 @@ namespace Dawem.Repository.Employees
         public IQueryable<Employee> GetAsQueryableForAttendanceSummary(AttendanceSummaryCritria criteria)
         {
             var predicate = PredicateBuilder.New<Employee>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<Employee>(true);
-
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
 
-            predicate = predicate.And(e =>
-
-            (e.ScheduleId > 0 && e.Schedule.ScheduleDays != null &&
-            e.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
-
-            (e.SchedulePlanEmployees != null && e.SchedulePlanEmployees.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
-            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
-            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date)) ||
-
-            (e.Department.SchedulePlanDepartments != null && e.Department.SchedulePlanDepartments.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
-            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
-            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date)) ||
-
-            (e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => eg.Group.SchedulePlanGroups != null)
-            && e.EmployeeGroups.Where(eg => eg.Group.SchedulePlanGroups != null).Any(egs => egs.Group.SchedulePlanGroups.Any(spe => spe.SchedulePlan.Schedule.ScheduleDays != null &&
-            spe.SchedulePlan.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) &&
-            spe.SchedulePlan.DateFrom.Date <= criteria.DateTo.Date))));
-
+            var inner = PredicateBuilder.New<Employee>(true);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -174,6 +155,23 @@ namespace Dawem.Repository.Employees
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(employee =>
+            
+            (employee.ScheduleId > 0 && employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
+
+            employee.Company.SchedulePlans
+                .Any(sp => !sp.IsDeleted &&
+                ((sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                sp.SchedulePlanEmployee.EmployeeId == employee.Id) || (employee.DepartmentId != null &&
+                sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
+                sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId) || (employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
+                employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId))) && sp.DateFrom.Date <= criteria.DateTo.Date &&
+                (sp.DateFrom.Date >= criteria.DateFrom.Date ||
+                sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())));
+           
             if (criteria.Id != null)
             {
                 predicate = predicate.And(e => e.Id == criteria.Id);
@@ -190,16 +188,10 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => e.Code == criteria.Code);
             }
-            if (criteria.EmployeesIds is not null)
+            if (criteria.EmployeesIds is not null && criteria.EmployeesIds.Count > 0)
             {
                 predicate = predicate.And(e => criteria.EmployeesIds.Contains(e.Id));
             }
-
-            //predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date >= criteria.DateFrom.Date));
-            //predicate = predicate.And(e => e.EmployeeAttendances.Any(ea => ea.LocalDate.Date <= criteria.DateTo.Date));
-
-            var weekDays = DateHelper.GetWeekDaysBetweenTwoDates(criteria.DateFrom, criteria.DateTo).Distinct().ToList();
-            predicate = predicate.And(e => e.Schedule.ScheduleDays.Any(sd => weekDays.Contains(sd.WeekDay)));
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);

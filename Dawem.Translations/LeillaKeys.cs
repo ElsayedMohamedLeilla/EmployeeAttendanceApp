@@ -501,5 +501,6 @@
         public const string Second = "Second";
         public const string SorryInternalErrorHappenInPermissions = "Sorry!!InternalErrorHappenInPermissions!";
         public const string Day = "Day";
+        public const string DawemTest = "dawem_test";
     }
 }

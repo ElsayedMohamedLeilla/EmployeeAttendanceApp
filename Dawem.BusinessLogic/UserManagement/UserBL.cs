@@ -80,6 +80,7 @@ namespace Dawem.BusinessLogic.UserManagement
             user.VerificationCode = getNewVerificationCode;
             user.VerificationCodeSendDate = DateTime.UtcNow;
             user.IsActive = true;
+            user.EmailConfirmed = user.Email.Contains(LeillaKeys.DawemTest);
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -278,6 +279,8 @@ namespace Dawem.BusinessLogic.UserManagement
             user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
             user.ProfileImageName = imageName;
             user.Code = getNextCode;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)

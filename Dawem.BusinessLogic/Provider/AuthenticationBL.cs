@@ -265,7 +265,8 @@ namespace Dawem.BusinessLogic.Provider
                 Code = 1,
                 MobileNumber = model.UserMobileNumber,
                 IsAdmin = true,
-                IsActive = true
+                IsActive = true,
+                EmailConfirmed = model.UserEmail.Contains(LeillaKeys.DawemTest)
             };
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);

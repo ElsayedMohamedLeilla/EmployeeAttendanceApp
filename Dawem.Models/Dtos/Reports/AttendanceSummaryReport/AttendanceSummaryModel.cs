@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Dawem.Models.Dtos.Reports.AttendanceSummaryReport
+﻿namespace Dawem.Models.Dtos.Reports.AttendanceSummaryReport
 {
     public class AttendanceSummaryModel
     {

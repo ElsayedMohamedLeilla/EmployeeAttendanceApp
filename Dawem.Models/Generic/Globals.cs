@@ -6,6 +6,7 @@ using TimeZoneConverter;
 
 namespace Dawem.Models.Generic
 {
+    
     public static class Globals
     {
         public static string ToRfc3339String(this DateTime dateTime)

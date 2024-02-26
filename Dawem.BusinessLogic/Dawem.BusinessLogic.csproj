@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="Google.Apis.Gmail.v1" Version="1.62.1.3196" />
+    <PackageReference Include="IPinfo" Version="3.0.0" />
     <PackageReference Include="LinqKit" Version="1.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
   </ItemGroup>

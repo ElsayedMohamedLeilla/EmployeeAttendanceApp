@@ -44,6 +44,7 @@
         public const string FourigitPhone = "FourigitPhone";
         public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
         public const string AppSettings = "AppSettings";
+        public const string Globals = "Globals";
         public const string ConnectionStringsDawemConnection = "ConnectionStrings:DawemConnection";
         public const string ConnectionStrings = "ConnectionStrings";
         public const string DoneSuccessfullyAr = "تم بنجاح";

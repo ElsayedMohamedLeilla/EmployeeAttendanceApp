@@ -359,7 +359,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             getUser.Name = model.Name;
             getUser.EmployeeId = model.EmployeeId;
-            getUser.Email = model.Email + LeillaKeys.SpaceThenDashThenSpace + getUser.CompanyId;
+            getUser.Email = model.Email;
             getUser.UserName = model.Email;
             getUser.MobileNumber = model.MobileNumber;
             getUser.IsActive = model.IsActive;

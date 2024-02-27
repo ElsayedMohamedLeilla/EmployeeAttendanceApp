@@ -7,6 +7,7 @@ namespace Dawem.Contract.BusinessLogic.Core
     public interface INotificationStoreBL
     {
         Task<bool> MarkAsRead(int notificationStoreId);
+        Task<bool> MarkAsViewed();
         Task<GetNotificationStoreResponseDTO> Get(GetNotificationStoreCriteria criteria);
         Task<GetNotificationStoreResponseDTO> GetNotifications(GetNotificationStoreCriteria criteria);
         public Task<bool> Enable(int GroupId);
@@ -14,6 +15,7 @@ namespace Dawem.Contract.BusinessLogic.Core
         public Task<bool> Delete(int GroupId);
         Task<int> GetUnreadNotificationCount();
         Task<GetNotificationStoreResponseDTO> GetUnreadNotification(GetNotificationStoreCriteria criteria);
+        Task<int> GetUnViewedNotificationCount();
 
     }
 }

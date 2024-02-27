@@ -3,12 +3,17 @@
     public enum NotificationType
     {
         NewVacationRequest,
-        VacationRequest,
         AcceptingVacationRequest,
         RejectingVacationRequest,
+
+        NewTaskRequest,
+        AccecptingTaskRequest,
+        RejectingTaskRequest,
+
         JustificationRequest,
         PermisionRequest,
         AddingInMission,
-        NewTaskRequest
+       
+
     }
 }

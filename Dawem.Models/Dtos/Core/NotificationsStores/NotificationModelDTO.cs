@@ -4,7 +4,14 @@ namespace Dawem.Models.Dtos.Core.NotificationsStores
 {
     public class NotificationModelDTO
     {
-        public int UnreadNotificationCount { get; set; }
+     
+        public int UnViewdNotificationCount { get; set; }
+        public int UnReadNotificationCount  { get; set; }
+
         public NotificationType NotificationType { get; set; }
+        public string NotificationIcon { get; set; }
+        public Priority Priority { get; set; }
+
+
     }
 }

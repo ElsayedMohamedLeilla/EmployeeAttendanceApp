@@ -24,9 +24,15 @@ namespace Dawem.Domain.Entities.Core
         public string ImageUrl { get; set; }
         public Priority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
+        public bool IsViewed { get; set; }
         public void MarkAsRead()
         {
             IsRead = true;
+            ModifiedDate = DateTime.UtcNow;
+        }
+        public void MarkAsViewed()
+        {
+            IsViewed = true;
             ModifiedDate = DateTime.UtcNow;
         }
 

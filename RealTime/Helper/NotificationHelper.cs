@@ -15,7 +15,6 @@ namespace Dawem.RealTime.Helper
             return type switch
             {
                 NotificationType.NewVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.NewVacationRequest, lang),
-                NotificationType.VacationRequest => TranslationHelper.GetTranslation(AmgadKeys.VacationRequest, lang),
                 NotificationType.AcceptingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.AcceptingVacationRequest, lang),
                 NotificationType.RejectingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingVacationRequest, lang),
                 NotificationType.JustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),

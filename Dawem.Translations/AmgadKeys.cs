@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Dawem.Translations
 {
     public static class AmgadKeys
     {
@@ -117,9 +119,6 @@
         public const string JustificationRequest = "JustificationRequest";
         public const string PermisionRequest = "PermisionRequest";
         public const string AddingInMission = "AddingInMission";
-
-
-
         public const string High = "High";
         public const string Medium = "Medium"; 
         public const string Low = "Low";
@@ -129,9 +128,16 @@
         public const string Dear = "Dear";
 
 
+        public const string NotificationSentSuccessfullyTo = "NotificationSentSuccessfullyTo";
+        public const string FailedToSendNotification = "FailedToSendNotification";
+        public const string ErrorSendingNotification = "ErrorSendingNotification:";
+        public const string Devices = "Devices";
 
 
-        
+
+
+
+
 
 
 

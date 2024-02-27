@@ -42,7 +42,6 @@ namespace Dawem.API.Controllers.Requests.Employee
             {
                 return BadRequest();
             }
-
             var model = JsonConvert.DeserializeObject<UpdateRequestVacationDTO>(formData.UpdateRequestVacationModelString);
             model.Attachments = formData.Attachments;
             var result = await requestVacationBL.Update(model);

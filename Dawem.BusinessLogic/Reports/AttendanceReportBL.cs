@@ -310,6 +310,7 @@ namespace Dawem.BusinessLogic.Employees
                     ea.ShiftCheckInTime,
                     ea.ShiftCheckOutTime,
                     ea.AllowedMinutes,
+
                     EmployeeAttendanceChecks = ea.EmployeeAttendanceChecks
                     .Where(eac => !eac.IsDeleted && ((eac.FingerPrintType == FingerPrintType.CheckIn &&
                     eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckIn)

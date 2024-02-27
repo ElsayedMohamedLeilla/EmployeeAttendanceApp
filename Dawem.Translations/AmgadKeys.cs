@@ -128,10 +128,13 @@ namespace Dawem.Translations
         public const string Dear = "Dear";
 
 
+
         public const string NotificationSentSuccessfullyTo = "NotificationSentSuccessfullyTo";
         public const string FailedToSendNotification = "FailedToSendNotification";
         public const string ErrorSendingNotification = "ErrorSendingNotification:";
         public const string Devices = "Devices";
+        public const string MarkAsViewed = "MarkAsViewed";
+
 
 
 

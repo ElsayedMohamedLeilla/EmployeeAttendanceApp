@@ -27,7 +27,7 @@ namespace Dawem.API.MiddleWares.Helpers
                 {
                     method = ApplicationAction.AdditionAction;
                 }
-                else if (actionName.Contains(LeillaKeys.Update) || actionName.Contains(LeillaKeys.MarkAsRead))
+                else if (actionName.Contains(LeillaKeys.Update) || actionName.Contains(LeillaKeys.MarkAsRead) || actionName.Contains(AmgadKeys.MarkAsViewed))
                 {
                     method = ApplicationAction.EditAction;
                 }

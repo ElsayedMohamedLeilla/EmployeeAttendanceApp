@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Results;
+using System.Net;
 
 namespace Dawem.API
 {
@@ -47,7 +48,12 @@ namespace Dawem.API
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            var response = new JsonResult(errorResponse, settings);
+
+            var response = new JsonResult(errorResponse, settings)
+            {
+                StatusCode = (int)HttpStatusCode.UnprocessableEntity
+            };
+
             return response;
 
         }

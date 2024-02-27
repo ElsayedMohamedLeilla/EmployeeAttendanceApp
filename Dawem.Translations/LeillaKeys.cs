@@ -44,6 +44,7 @@
         public const string FourigitPhone = "FourigitPhone";
         public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
         public const string AppSettings = "AppSettings";
+        public const string Globals = "Globals";
         public const string ConnectionStringsDawemConnection = "ConnectionStrings:DawemConnection";
         public const string ConnectionStrings = "ConnectionStrings";
         public const string DoneSuccessfullyAr = "تم بنجاح";
@@ -431,6 +432,8 @@
         public const string Reject = "Reject";
         public const string Enable = "Enable";
         public const string Disable = "Disable";
+        public const string MarkAsRead = "MarkAsRead";
+        public const string Send = "Send";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";
         public const string SorryYouMustChooseRoleForPermission = "Sorry!!YouMustChooseRoleForPermission!";
@@ -492,6 +495,12 @@
         public const string NoteDayAttendanceWasCanceledDueToFailureInSummons = "Note-DayAttendanceWasCanceledDueToFailureInSummons";
         public const string SorryYouMustEnterAValidDateTo = "Sorry!!YouMustEnterAValidDateTo!";
         public const string SorryDateToMustLessThanOrEqualTodayDay = "Sorry!!DateToMustLessThanOrEqualTodayDay!";
-        public const string SorryPeriodMustLessThanOrEqualTwoMonths = "Sorry!!PeriodMustLessThanOrEqualTwoMonths!";        
+        public const string SorryPeriodMustLessThanOrEqualThreeMonths = "Sorry!!PeriodMustLessThanOrEqualThreeMonths!";
+        public const string Hour = "Hour";
+        public const string Minute = "Minute";
+        public const string Second = "Second";
+        public const string SorryInternalErrorHappenInPermissions = "Sorry!!InternalErrorHappenInPermissions!";
+        public const string Day = "Day";
+        public const string DawemTest = "dawem_test";
     }
 }

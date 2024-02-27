@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240218195002_RenameManagerIdInGroup")]
+    partial class RenameManagerIdInGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1090,7 +1093,7 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -1438,7 +1441,7 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("DisableReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -1608,9 +1611,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PhoneLength")
                         .HasColumnType("int");
 
                     b.Property<string>("TimeZoneId")
@@ -4582,8 +4582,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
                         .WithMany("GroupEmployees")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Employee");
 
@@ -4664,8 +4663,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
                         .WithMany("Zones")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
                         .WithMany()
@@ -5012,7 +5010,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlan", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("SchedulePlans")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5031,7 +5029,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanDepartment", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
-                        .WithMany("SchedulePlanDepartments")
+                        .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5069,7 +5067,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanGroup", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
-                        .WithMany("SchedulePlanGroups")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5464,8 +5462,6 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("GroupManagerDelegators");
 
-                    b.Navigation("SchedulePlanGroups");
-
                     b.Navigation("Zones");
                 });
 
@@ -5476,8 +5472,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("ManagerDelegators");
-
-                    b.Navigation("SchedulePlanDepartments");
 
                     b.Navigation("Zones");
                 });
@@ -5517,8 +5511,6 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.Company", b =>
                 {
                     b.Navigation("Branches");
-
-                    b.Navigation("SchedulePlans");
 
                     b.Navigation("Summons");
                 });

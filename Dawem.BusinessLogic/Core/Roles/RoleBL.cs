@@ -47,7 +47,7 @@ namespace Dawem.BusinessLogic.Core.Roles
             #region sorting
             var queryOrdered = roleRepository.OrderBy(query, nameof(Role.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response

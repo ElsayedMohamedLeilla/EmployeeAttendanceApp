@@ -10,9 +10,9 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> MarkAsViewed();
         Task<GetNotificationStoreResponseDTO> Get(GetNotificationStoreCriteria criteria);
         Task<GetNotificationStoreResponseDTO> GetNotifications(GetNotificationStoreCriteria criteria);
-        public Task<bool> Enable(int GroupId);
-        public Task<bool> Disable(DisableModelDTO model);
-        public Task<bool> Delete(int GroupId);
+        Task<bool> Enable(int GroupId);
+        Task<bool> Disable(DisableModelDTO model);
+        Task<bool> Delete(int GroupId);
         Task<int> GetUnreadNotificationCount();
         Task<GetNotificationStoreResponseDTO> GetUnreadNotification(GetNotificationStoreCriteria criteria);
         Task<int> GetUnViewedNotificationCount();

@@ -17,7 +17,7 @@ namespace Dawem.Repository.Others
         }
         public IQueryable<Permission> GetAsQueryable(GetPermissionsCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted && a.IsActive);
+            var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Permission>(true);
 
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);

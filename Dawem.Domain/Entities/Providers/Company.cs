@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.Summons;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,8 @@ namespace Dawem.Domain.Entities.Providers
         public Country Country { get; set; }
         public string Email { get; set; }
         public List<Summon> Summons { get; set; }
+        public List<SchedulePlan> SchedulePlans { get; set; }
+        
 
     }
 

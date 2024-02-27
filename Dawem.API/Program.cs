@@ -28,8 +28,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Configuration;
 using System.Globalization;
-using Dawem.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString(LeillaKeys.DawemConnectionString) ??
@@ -103,7 +103,7 @@ builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 builder.Services.ConfigureBackGroundService();
-builder.Services.ConfigureReports();
+builder.Services.ConfigureGlobals(builder.Configuration); 
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -169,6 +169,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 app.UseRouting();
 app.UseStaticFiles();
+
+
 
 List<CultureInfo> supportedCultures = new()
 {

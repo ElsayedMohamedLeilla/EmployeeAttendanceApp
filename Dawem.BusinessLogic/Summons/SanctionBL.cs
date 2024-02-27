@@ -121,7 +121,7 @@ namespace Dawem.BusinessLogic.Summons
             #region sorting
             var queryOrdered = sanctionRepository.OrderBy(query, nameof(Sanction.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
@@ -158,7 +158,7 @@ namespace Dawem.BusinessLogic.Summons
             var queryOrdered = sanctionRepository.OrderBy(query, nameof(Sanction.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

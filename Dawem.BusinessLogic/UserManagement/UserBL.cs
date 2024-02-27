@@ -80,6 +80,7 @@ namespace Dawem.BusinessLogic.UserManagement
             user.VerificationCode = getNewVerificationCode;
             user.VerificationCodeSendDate = DateTime.UtcNow;
             user.IsActive = true;
+            user.EmailConfirmed = user.Email.Contains(LeillaKeys.DawemTest);
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -278,6 +279,8 @@ namespace Dawem.BusinessLogic.UserManagement
             user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
             user.ProfileImageName = imageName;
             user.Code = getNextCode;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -356,7 +359,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             getUser.Name = model.Name;
             getUser.EmployeeId = model.EmployeeId;
-            getUser.Email = model.Email + LeillaKeys.SpaceThenDashThenSpace + getUser.CompanyId;
+            getUser.Email = model.Email;
             getUser.UserName = model.Email;
             getUser.MobileNumber = model.MobileNumber;
             getUser.IsActive = model.IsActive;
@@ -448,7 +451,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -490,7 +493,7 @@ namespace Dawem.BusinessLogic.UserManagement
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

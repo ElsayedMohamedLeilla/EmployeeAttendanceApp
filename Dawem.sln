@@ -31,8 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.BackgroundJobs", "Daw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawem.RealTime", "RealTime\Dawem.RealTime.csproj", "{AD181608-7957-47A4-9DC4-E2DBA0151E50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawem.Reports", "Dawem.Reports\Dawem.Reports.csproj", "{6CB41650-3D49-4C21-AA35-C31786C5CE79}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,10 +93,6 @@ Global
 		{AD181608-7957-47A4-9DC4-E2DBA0151E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD181608-7957-47A4-9DC4-E2DBA0151E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD181608-7957-47A4-9DC4-E2DBA0151E50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CB41650-3D49-4C21-AA35-C31786C5CE79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CB41650-3D49-4C21-AA35-C31786C5CE79}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CB41650-3D49-4C21-AA35-C31786C5CE79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CB41650-3D49-4C21-AA35-C31786C5CE79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,7 +12,7 @@ namespace Dawem.Domain.Entities.Employees
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }
 
-        public int? GroupId { get; set; }
+        public int GroupId { get; set; }
         [ForeignKey(nameof(GroupId))]
         public Group Group { get; set; }
 

@@ -92,7 +92,7 @@ namespace Dawem.BusinessLogic.Provider
             int take = PagingHelper.Take(criteria.PageSize);
 
             var query = repositoryManager.UserBranchRepository.Get(a => a.UserId == user.Id, IncludeProperties: nameof(UserBranch.Branch));
-            var queryPaged = criteria.PagingEnabled ? query.Skip(skip).Take(take) : query;
+            var queryPaged = criteria.GetPagingEnabled() ? query.Skip(skip).Take(take) : query;
 
             #endregion
 

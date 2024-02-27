@@ -1,11 +1,11 @@
-﻿using Dawem.Models.Criteria;
+﻿using Dawem.Enums.Generals;
 
 namespace Dawem.Models.Dtos.Reports.AttendanceSummaryReport
 {
-    public class AttendanceSummaryCritria : BaseCriteria
+    public class AttendanceSummaryHelperModel
     {
-        public List<int> EmployeesIds { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public List<WeekDay> WeekDays { get; set; }
     }
 }

@@ -37,13 +37,19 @@ namespace Dawem.API
             }
            );
         }
+        public static void ConfigureGlobals(this IServiceCollection services, IConfiguration config)
+        {
+            IConfigurationSection appSettingsSection = config.GetSection(LeillaKeys.Globals);
+            var globals = appSettingsSection.Get<GlobalVariables>();
+            StaticGlobalVariables.IPInfoToken = globals.IPInfoToken;
+        }
         public static void ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
             IConfigurationSection appSettingsSection = config.GetSection(LeillaKeys.Jwt);
             _ = services.Configure<Jwt>(appSettingsSection);
             Jwt? appSettings = appSettingsSection.Get<Jwt>();
             byte[] key = Encoding.ASCII.GetBytes(appSettings.Key);
-            
+
             var audience = appSettings.Issuer;
             var issuer = appSettings.Issuer;
 
@@ -90,12 +96,12 @@ namespace Dawem.API
         {
             services.AddScoped<ApplicationDBContext>();
             services.AddScoped<IUnitOfWork<ApplicationDBContext>, UnitOfWork<ApplicationDBContext>>();
-           
+
         }
         public static void ConfigureBLContainer(this IServiceCollection services)
         {
             _ = services.AddScoped<ILookupsBL, LookupsBL>();
-            
+
         }
         public static void AddUserConfiguration(this IServiceCollection services)
         {

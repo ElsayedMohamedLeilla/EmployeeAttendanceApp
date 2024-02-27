@@ -12,6 +12,7 @@ namespace Dawem.Models.Response.Requests.Permissions
         public string PermissionTypeName { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public string Period { get; set; }
         public string StatusName { get; set; }
         public RequestStatus Status { get; set; }
         public List<FileDTO> Attachments { get; set; }

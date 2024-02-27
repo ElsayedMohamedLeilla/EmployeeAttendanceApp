@@ -259,7 +259,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestJustificationRepository.OrderBy(query, nameof(RequestJustification.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -314,7 +314,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -358,7 +358,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestJustificationRepository.OrderBy(query, nameof(RequestJustification.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

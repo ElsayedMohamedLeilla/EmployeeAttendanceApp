@@ -7,9 +7,13 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Dtos.Lookups;
+using Dawem.Models.Generic;
 using Dawem.Translations;
+using IPinfo;
 using LinqKit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace Dawem.BusinessLogic.Lookups
@@ -20,12 +24,16 @@ namespace Dawem.BusinessLogic.Lookups
         private readonly ICountryRepository countryRepository;
         private readonly ICurrencyRepository currencyRepository;
         private readonly RequestInfo userContext;
-        public LookupsBL(IUnitOfWork<ApplicationDBContext> _unitOfWork, ICurrencyRepository _currencyRepository, ICountryRepository _countryRepository,
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public LookupsBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+            IHttpContextAccessor _httpContextAccessor,
+            ICurrencyRepository _currencyRepository, ICountryRepository _countryRepository,
              RequestInfo _userContext)
         {
             unitOfWork = _unitOfWork;
             currencyRepository = _currencyRepository;
             countryRepository = _countryRepository;
+            httpContextAccessor = _httpContextAccessor;
             userContext = _userContext;
         }
 
@@ -33,7 +41,8 @@ namespace Dawem.BusinessLogic.Lookups
         {
             var countryPredicate = PredicateBuilder.New<Country>(true);
 
-
+            var getCurrentCountryCode = await GetCurrentCountryInfo();
+            
             if (criteria.Id is not 0 && criteria.Id is not null)
             {
                 countryPredicate = countryPredicate.And(x => x.Id == criteria.Id);
@@ -59,7 +68,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -67,7 +76,10 @@ namespace Dawem.BusinessLogic.Lookups
             {
                 Id = c.Id,
                 Name = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
-                CountryISOCode = c.Iso.ToLower()
+                CountryISOCode = c.Iso.ToLower(),
+                IsCurrentCountry = c.Iso == getCurrentCountryCode ? true : null,
+                Dial = c.Dial,
+                PhoneLength = c.PhoneLength
             }).ToListAsync();
 
             return countries;
@@ -88,7 +100,7 @@ namespace Dawem.BusinessLogic.Lookups
             #endregion
 
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -102,6 +114,26 @@ namespace Dawem.BusinessLogic.Lookups
 
             return currenciesList;
 
+        }
+        public async Task<string> GetCurrentCountryInfo()
+        {
+            var context = httpContextAccessor.HttpContext;
+            var ip = context.Connection.RemoteIpAddress.MapToIPv4().ToString();
+
+            if (ip.Contains(".0.0."))
+            {
+                ip = "41.47.113.144";
+                //ip = "109.75.79.255";
+            }
+
+            string token = StaticGlobalVariables.IPInfoToken;
+            IPinfoClient client = new IPinfoClient.Builder()
+                .AccessToken(token)
+                .Build();
+
+            var ipResponse = await client.IPApi.GetDetailsAsync(ip);
+
+            return ipResponse.Country;
         }
     }
 }

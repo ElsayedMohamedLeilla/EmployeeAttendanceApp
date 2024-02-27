@@ -44,7 +44,10 @@ namespace Dawem.Helpers
             double tmp = (double)Math.Truncate(step * value);
             return tmp / step;
         }
-
+        public static decimal ToDecimal(this double value)
+        {
+            return (decimal)value;
+        }
 
         public static string ConvertArabicNumbersToEnglish(this string number)
         {
@@ -62,7 +65,7 @@ namespace Dawem.Helpers
             return number;
         }
 
-        
+
         public static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
         {
             if (includeInherited || type.BaseType == null)

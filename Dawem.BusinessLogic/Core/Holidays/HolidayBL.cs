@@ -119,7 +119,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
             #region sorting
             var queryOrdered = holidayRepository.OrderBy(query, nameof(Holiday.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
             #region Handle Response
             var holidaysList = await queryPaged.Select(e => new GetHolidayForGridDTO
@@ -160,7 +160,7 @@ namespace Dawem.BusinessLogic.Core.Holidays
 
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

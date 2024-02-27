@@ -8,7 +8,7 @@ namespace Dawem.Domain.Entities.Employees
     public class ZoneGroup : BaseEntity
     {
         #region Foregn Keys
-        public int? GroupId { get; set; }
+        public int GroupId { get; set; }
         [ForeignKey(nameof(GroupId))]
         public Group Group { get; set; }
 

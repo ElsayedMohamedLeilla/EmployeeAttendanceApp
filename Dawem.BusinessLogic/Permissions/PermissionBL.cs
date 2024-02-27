@@ -187,7 +187,7 @@ namespace Dawem.BusinessLogic.Permissions
             #region sorting
             var queryOrdered = permissionRepository.OrderBy(query, nameof(Permission.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
@@ -197,7 +197,7 @@ namespace Dawem.BusinessLogic.Permissions
                 Id = p.Id,
                 Code = p.Code,
                 ForType = p.ForType,
-                RoleOrUserName = p.RoleId > 0 ? p.Role.Name : p.User.Name,
+                RoleOrUserName = p.RoleId > 0 ? TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang) : p.User.Name,
                 ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
                 AllowedScreensCount = p.PermissionScreens.Count,
                 IsActive = p.IsActive,
@@ -213,14 +213,14 @@ namespace Dawem.BusinessLogic.Permissions
         public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
             var permission = await repositoryManager.PermissionRepository.Get(permission => permission.Id == permissionId
-            && !permission.IsDeleted && permission.IsActive)
+            && !permission.IsDeleted)
                 .Select(p => new GetPermissionInfoResponseModel
                 {
                     Code = p.Code,
                     ForType = p.ForType,
                     ForTypeName = TranslationHelper.GetTranslation(LeillaKeys.PermissionForType + p.ForType.ToString(), requestInfo.Lang),
                     RoleName = p.Role != null ? TranslationHelper.GetTranslation(p.Role.Name, requestInfo.Lang) : null,
-                    UserName = p.User != null ? TranslationHelper.GetTranslation(p.User.Name, requestInfo.Lang) : null,
+                    UserName = p.User != null ? p.User.Name : null,
                     PermissionScreens = p.PermissionScreens
                     .OrderByDescending(e => e.Id)
                     .Take(5)
@@ -258,7 +258,7 @@ namespace Dawem.BusinessLogic.Permissions
             #region sorting
             var queryOrdered = permissionScreenRepository.OrderBy(query, nameof(PermissionScreen.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -323,7 +323,7 @@ namespace Dawem.BusinessLogic.Permissions
 
             var permission = await repositoryManager.PermissionRepository
                 .Get(permission => permission.CompanyId == requestInfo.CompanyId && ((model.RoleId != null && model.RoleId == permission.RoleId) ||
-                (model.UserId != null && model.UserId == permission.UserId)) && !permission.IsDeleted && permission.IsActive)
+                (model.UserId != null && model.UserId == permission.UserId)) && !permission.IsDeleted)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
                     Id = p.Id,

@@ -9,6 +9,7 @@ namespace Dawem.Models.Response.Requests.Permissions
         public RequestEmployeeModel Employee { get; set; }
         public string PermissionTypeName { get; set; }
         public string StatusName { get; set; }
+        public string Period { get; set; }
         public RequestStatus Status { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }

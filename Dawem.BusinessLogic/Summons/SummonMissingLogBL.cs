@@ -33,7 +33,7 @@ namespace Dawem.BusinessLogic.Summons
             var queryOrdered = summonMissingLogRepository.OrderBy(query, nameof(SummonMissingLog.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

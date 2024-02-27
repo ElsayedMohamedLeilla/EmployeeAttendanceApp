@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Models.Dtos.Lookups;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -52,7 +53,48 @@ namespace Dawem.Data
                 context.SaveChanges();
             }
 
+            #region Handle country phone numbers length
 
+            /*var fullPath3 = "C:\\Users\\Leilla\\Downloads\\countries_phone_number_length.json";
+
+            var jsonData3 = System.IO.File.ReadAllText(fullPath3);
+
+            if (!string.IsNullOrWhiteSpace(jsonData3))
+            {
+                try
+                {
+                    var phones = JsonConvert.DeserializeObject<List<PhoneLengthDTO>>(jsonData3);
+
+                    #region Seed phones
+
+                    var getCountries = context.Countries.ToList();
+
+                    if (phones?.Count() > 0)
+                    {
+                        foreach (var item in getCountries)
+                        {
+                            var getCountry = phones.FirstOrDefault(p => p.code == item.Iso);
+                            if (getCountry != null)
+                            {
+                                item.Dial = getCountry.phone;
+                                item.PhoneLength = getCountry.phoneLength;
+                                context.SaveChanges();
+                            }
+                        }
+
+                    }
+
+                    #endregion
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+            }*/
+
+
+            #endregion
 
         }
     }

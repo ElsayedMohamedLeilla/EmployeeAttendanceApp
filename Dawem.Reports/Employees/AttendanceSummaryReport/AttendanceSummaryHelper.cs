@@ -17,16 +17,16 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
-
         public async Task<AttendanceSummaryResponseDTO> Get(AttendanceSummaryCritria model)
         {
             var result = await repositoryManager.EmployeeRepository.Get(
      employee =>
-         (model.EmployeeId == null || employee.Id == model.EmployeeId) && // Check if employee is selected
+         (model.EmployeesIds == null || model.EmployeesIds.Contains( employee.Id)) && // Check if employee is selected
          !employee.IsDeleted &&
          employee.IsActive &&
          employee.CompanyId == 7 /*requestInfo.CompanyId*/ &&
-         employee.EmployeeAttendances
+
+         /*employee.EmployeeAttendances
              .Any(ea =>
                  ea.EmployeeAttendanceChecks
                      .Any(eac =>
@@ -34,7 +34,7 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
                          ( ea.LocalDate >= model.DateFrom) &&
                          ( ea.LocalDate <= model.DateTo)
                      )
-             ) &&
+             ) &&*/
          employee.SchedulePlanEmployees
              .Any(spe =>
                  spe.IsActive &&
@@ -47,6 +47,7 @@ namespace Dawem.Reports.Employees.AttendanceSummaryReport
      EmployeeNumber = employee.EmployeeNumber,
      EmployeeName = employee.Name,
      WorkingHoursCount = CalculateTotalWorkingHours(employee.EmployeeAttendances, model.DateFrom , model.DateTo),
+
      AbsencesCount = employee.EmployeeAttendances
          .Select(ea => ea.LocalDate) // Select attendance dates
          .GroupBy(date => date) // Group by attendance date

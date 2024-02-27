@@ -256,7 +256,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestAssignmentRepository.OrderBy(query, nameof(RequestAssignment.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
@@ -443,7 +443,7 @@ namespace Dawem.BusinessLogic.Requests
             var queryOrdered = requestAssignmentRepository.OrderBy(query, nameof(RequestAssignment.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = criteria.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

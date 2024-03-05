@@ -119,6 +119,10 @@ namespace Dawem.Translations
         public const string JustificationRequest = "JustificationRequest";
         public const string PermisionRequest = "PermisionRequest";
         public const string AddingInMission = "AddingInMission";
+        public const string NewSummons = "NewSummons";
+        public const string NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction = "NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction";
+
+
         public const string High = "High";
         public const string Medium = "Medium"; 
         public const string Low = "Low";

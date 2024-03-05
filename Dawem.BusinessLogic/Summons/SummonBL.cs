@@ -1,17 +1,22 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Summons;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Summons;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Firebase;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Summons.Summons;
+using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,17 +29,24 @@ namespace Dawem.BusinessLogic.Summons
         private readonly ISummonBLValidation summonBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IUploadBLC uploadBLC;
+        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+
+
+
         public SummonBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
-           ISummonBLValidation _summonBLValidation)
+           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
             summonBLValidation = _summonBLValidation;
             mapper = _mapper;
+            uploadBLC = _uploadBLC;
+            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
         }
         public async Task<int> Create(CreateSummonModel model)
         {
@@ -48,7 +60,6 @@ namespace Dawem.BusinessLogic.Summons
             unitOfWork.CreateTransaction();
 
             #region Insert Summon
-
             #region Set Summon code
             var getNextCode = await repositoryManager.SummonRepository
                 .Get(e => e.CompanyId == companyId)
@@ -76,12 +87,98 @@ namespace Dawem.BusinessLogic.Summons
             summon.Code = getNextCode;
             repositoryManager.SummonRepository.Insert(summon);
             await unitOfWork.SaveAsync();
-
             #endregion
 
             #region Notifiacations
+            var notificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync();
 
-            // for mogod
+            #region For All Employee
+            List<NotificationRecieverDTO> notificationRecieverDTO = new();
+            if ((bool)model.ForAllEmployees)
+            {
+                notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
+            }
+            else
+            {
+                if (model.Employees.Count != 0 || model.Employees.Any())
+                {
+                    notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Employees.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
+                }
+                if (model.Groups.Count != 0 || model.Groups.Any())
+                {
+                    List<int> groupEmployeeIds = repositoryManager.GroupEmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Groups.Contains(s.Id)).Select(g => g.EmployeeId).ToList();
+                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && groupEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
+                }
+                if (model.Departments.Count != 0 || model.Departments.Any())
+                {
+                    List<int> departmentEmployeeIds = repositoryManager.EmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Departments.Contains(s.DepartmentId ?? 0)).Select(g => g.Id).ToList();
+                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Departments.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
+                }
+            }
+
+            List<NotificationStore> notificationStores = new();
+            for (int i = 0; i < notificationRecieverDTO.Count; i++)
+            {
+                var notificationStore = new NotificationStore()
+                {
+                    Code = notificationNextCode++,
+                    EmployeeId = notificationRecieverDTO[i].EmployeeId,
+                    CompanyId = requestInfo.CompanyId,
+                    AddUserId = requestInfo.UserId,
+                    AddedDate = DateTime.UtcNow,
+                    Status = NotificationStatus.Info,
+                    NotificationType = NotificationType.NewSummons,
+                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Warning, uploadBLC),
+                    IsRead = false,
+                    IsActive = true,
+                    IsViewed = false,
+                    Priority = Priority.High
+                };
+                notificationStores.Add(notificationStore);
+                #region Fire Notification & Email
+                await notificationServiceByFireBaseAdmin.Send_Notification_Email(notificationRecieverDTO.Select(S => S.UserId).ToList(), NotificationType.NewSummons, NotificationStatus.Warning);
+                #endregion
+            }
+            repositoryManager.NotificationStoreRepository.BulkInsert(notificationStores);
+            await unitOfWork.SaveAsync();
+
+
+
+            #endregion
+
+
+            #region Save Notification In DB
+
+            //var notificationStore = new NotificationStore()
+            //{
+            //    Code = notificationNextCode,
+            //    EmployeeId = requestEmployee.DirectManagerId ?? 0,
+            //    CompanyId = requestInfo.CompanyId,
+            //    AddUserId = requestInfo.UserId,
+            //    AddedDate = DateTime.UtcNow,
+            //    Status = NotificationStatus.Info,
+            //    NotificationType = NotificationType.NewVacationRequest,
+            //    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
+            //    IsRead = false,
+            //    IsActive = true,
+            //    Priority = Priority.Medium
+
+            //};
+            //repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            //await unitOfWork.SaveAsync();
+            #endregion
+
+            //#region Fire Notification & Email
+            //List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
+            //if (userIds.Count > 0)
+            //{
+            //    await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+            //}
+            //#endregion
 
             #endregion
 

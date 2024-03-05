@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.Contract.BusinessLogic.Reports;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Employees;
@@ -9,7 +9,7 @@ using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees
+namespace Dawem.BusinessLogic.Reports
 {
     public class AttendanceReportBL : IAttendanceSummaryReportBL
     {
@@ -43,8 +43,8 @@ namespace Dawem.BusinessLogic.Employees
          employee.SchedulePlanEmployees
              .Any(spe =>
                  spe.IsActive &&
-                 spe.SchedulePlan.DateFrom <= (model.DateTo) &&
-                 spe.SchedulePlan.DateFrom >= (model.DateFrom)
+                 spe.SchedulePlan.DateFrom <= model.DateTo &&
+                 spe.SchedulePlan.DateFrom >= model.DateFrom
              )
  ).Select(employee => new AttendanceSummaryModel
  {
@@ -65,8 +65,8 @@ namespace Dawem.BusinessLogic.Employees
     .Where(eac =>
         eac != null && eac.IsActive && !eac.IsDeleted &&
         eac.EmployeeAttendance != null &&
-        eac.EmployeeAttendance.LocalDate >= (model.DateFrom) &&
-        eac.EmployeeAttendance.LocalDate <= (model.DateTo) &&
+        eac.EmployeeAttendance.LocalDate >= model.DateFrom &&
+        eac.EmployeeAttendance.LocalDate <= model.DateTo &&
         eac.Time < eac.EmployeeAttendance.ShiftCheckOutTime
     )
     .Count() + LeillaKeys.Space + LeillaKeys.Hour,
@@ -74,12 +74,12 @@ namespace Dawem.BusinessLogic.Employees
         .SelectMany(ea => ea.EmployeeAttendanceChecks)
         .Count(eac =>
             eac != null && eac.IsActive && !eac.IsDeleted &&
-            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate >= (model.DateFrom)) &&
-            (eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate <= (model.DateTo)) &&
-            (eac.EmployeeAttendance != null
-             //&&
-             //eac.Time > GetLateArrivalThreshold(eac.EmployeeAttendance.ShiftCheckInTime, model.FromDate ?? DateTime.MinValue)
-             )
+            eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate >= model.DateFrom &&
+            eac.EmployeeAttendance != null && eac.EmployeeAttendance.LocalDate <= model.DateTo &&
+            eac.EmployeeAttendance != null
+        //&&
+        //eac.Time > GetLateArrivalThreshold(eac.EmployeeAttendance.ShiftCheckInTime, model.FromDate ?? DateTime.MinValue)
+
         ) + LeillaKeys.Space + LeillaKeys.Hour
  }).ToListAsync();
             if (!model.IsExport) //apply pagination if false
@@ -287,9 +287,9 @@ namespace Dawem.BusinessLogic.Employees
                 er.Status == RequestStatus.Accepted && er.Type == RequestType.Vacation) ?
                 employee.EmployeeRequests.Where(er => !er.IsDeleted && er.Type == RequestType.Vacation &&
                 er.Status == RequestStatus.Accepted &&
-                ((er.Date.Date >= criteria.DateFrom && er.RequestVacation.DateTo.Date <= criteria.DateTo) ||
-                (er.Date.Date <= criteria.DateFrom && er.RequestVacation.DateTo.Date >= criteria.DateFrom) ||
-                (er.Date.Date <= criteria.DateTo && er.RequestVacation.DateTo.Date >= criteria.DateTo)))
+                (er.Date.Date >= criteria.DateFrom && er.RequestVacation.DateTo.Date <= criteria.DateTo ||
+                er.Date.Date <= criteria.DateFrom && er.RequestVacation.DateTo.Date >= criteria.DateFrom ||
+                er.Date.Date <= criteria.DateTo && er.RequestVacation.DateTo.Date >= criteria.DateTo))
                 .Select(ev => new
                 {
                     DateFrom = ev.Date < criteria.DateFrom ? criteria.DateFrom : ev.Date,
@@ -312,11 +312,11 @@ namespace Dawem.BusinessLogic.Employees
                     ea.AllowedMinutes,
 
                     EmployeeAttendanceChecks = ea.EmployeeAttendanceChecks
-                    .Where(eac => !eac.IsDeleted && ((eac.FingerPrintType == FingerPrintType.CheckIn &&
+                    .Where(eac => !eac.IsDeleted && (eac.FingerPrintType == FingerPrintType.CheckIn &&
                     eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(eac => eac.Time)) || (eac.FingerPrintType == FingerPrintType.CheckOut &&
+                    .Min(eac => eac.Time) || eac.FingerPrintType == FingerPrintType.CheckOut &&
                     eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(eac => eac.Time))))
+                    .Max(eac => eac.Time)))
                     .Select(eac => new
                     {
                         eac.FingerPrintType,
@@ -338,12 +338,12 @@ namespace Dawem.BusinessLogic.Employees
 
                 employee.Company.SchedulePlans
                 .Where(sp => !sp.IsDeleted &&
-                ((sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
-                sp.SchedulePlanEmployee.EmployeeId == employee.Id) || (employee.DepartmentId != null &&
+                (sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                sp.SchedulePlanEmployee.EmployeeId == employee.Id || employee.DepartmentId != null &&
                 sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
-                sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId) || (employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId || employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
                 sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
-                employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId))) && sp.DateFrom.Date <= criteria.DateTo.Date &&
+                employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId)) && sp.DateFrom.Date <= criteria.DateTo.Date &&
                 (sp.DateFrom.Date >= criteria.DateFrom.Date ||
                 sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max()))
                 .Select(sp => new

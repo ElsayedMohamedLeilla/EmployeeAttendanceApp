@@ -1,10 +1,10 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
+﻿using Dawem.Contract.BusinessLogic.Reports;
 using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Core
+namespace Dawem.API.Controllers.Reports
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

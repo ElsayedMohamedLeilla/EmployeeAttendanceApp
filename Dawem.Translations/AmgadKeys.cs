@@ -110,7 +110,7 @@ namespace Dawem.Translations
         public const string Ended = "Ended";
         public const string WillStart = "WillStart";
         public const string Started = "Started";
-        public const string SorryNotificationNotFound = "SorryNotificationNotFound";
+        public const string SorryNotificationNotFound = "Sorry!!NotificationNotFound!";
         public const string NewNotification = "NewNotification";
         public const string NewVacationRequest  = "NewVacationRequest";
         public const string VacationRequest = "VacationRequest";

@@ -44,7 +44,7 @@ namespace Dawem.BusinessLogic.Requests
            RequestInfo _requestHeaderContext,
            IRequestTaskBLValidation _requestTaskBLValidation,
            INotificationStoreBL _notificationStoreBL,
-            INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -55,6 +55,7 @@ namespace Dawem.BusinessLogic.Requests
             notificationStoreBL = _notificationStoreBL;
             notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
         }
+
         public async Task<int> Create(CreateRequestTaskModelDTO model)
         {
             #region Model Validation

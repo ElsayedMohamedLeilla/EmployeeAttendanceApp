@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Glamatek.Model.DTos.RegistrationCycle
+namespace Dawem.Models.Dtos.Others
 {
     public class IpInfoDTO
     {

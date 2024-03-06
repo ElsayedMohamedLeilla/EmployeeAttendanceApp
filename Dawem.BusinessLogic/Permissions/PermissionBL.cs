@@ -12,7 +12,7 @@ using Dawem.Models.Dtos.Permissions.Permissions;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Permissions.Permissions;
 using Dawem.Translations;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; 
 
 namespace Dawem.BusinessLogic.Permissions
 {

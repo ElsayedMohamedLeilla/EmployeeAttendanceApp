@@ -32,7 +32,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     }
     public async Task<ResponseModel> Send_Notification_Email(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
     {
-        ResponseModel response = new ResponseModel();
+        ResponseModel response = new();
         string Title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
         string Body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
         Dictionary<string, string> Data = await GetNotificationData(notificationType);

@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
 
-namespace Dawem.Contract.BusinessLogic.Employees
+namespace Dawem.Contract.BusinessLogic.Reports
 {
     public interface IAttendanceSummaryReportBL
     {

@@ -269,7 +269,7 @@ namespace Dawem.BusinessLogic.Requests
                 Code = requestPermission.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = requestPermission.Request.Employee.Code,
+                    EmployeeNumber = requestPermission.Request.Employee.EmployeeNumber,
                     Name = requestPermission.Request.Employee.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(requestPermission.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
@@ -388,7 +388,7 @@ namespace Dawem.BusinessLogic.Requests
                     Code = requestPermission.Request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = requestPermission.Request.Employee.Code,
+                        EmployeeNumber = requestPermission.Request.Employee.EmployeeNumber,
                         Name = requestPermission.Request.Employee.Name,
                         ProfileImagePath = uploadBLC.GetFilePath(requestPermission.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
@@ -497,8 +497,9 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations()
         {
             var requestPermissionRepository = repositoryManager.RequestPermissionRepository;
-            var query = requestPermissionRepository.Get(request => !request.Request.IsDeleted &&
-            request.Request.CompanyId == requestInfo.CompanyId);
+            var query = requestPermissionRepository.Get(requestPermission => requestPermission.Request.Type == RequestType.Permission &&
+            !requestPermission.Request.IsDeleted &&
+            requestPermission.Request.CompanyId == requestInfo.CompanyId);
 
             #region Handle Response
 

@@ -6,12 +6,9 @@ namespace Dawem.Models.Dtos.Employees.Departments
     {
         public string Name { get; set; }
         public bool IsActive { get; set; }
-
         public string Notes { get; set; }
         public int? ParentId { get; set; }
-
         public int ManagerId { get; set; }
-
         public List<int> ManagerDelegatorIds { get; set; }
 
         [JsonIgnore]

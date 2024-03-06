@@ -183,7 +183,7 @@ namespace Dawem.BusinessLogic.Requests
                  .GetEntityByConditionWithTrackingAsync(requestAssignment => !requestAssignment.Request.IsDeleted
                  && requestAssignment.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
@@ -268,7 +268,7 @@ namespace Dawem.BusinessLogic.Requests
                 Code = requestAssignment.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = requestAssignment.Request.Employee.Code,
+                    EmployeeNumber = requestAssignment.Request.Employee.EmployeeNumber,
                     Name = requestAssignment.Request.Employee.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
@@ -318,7 +318,7 @@ namespace Dawem.BusinessLogic.Requests
                     {
                         new RequestEmployeeModel()
                         {
-                            Code = requestAssignment.Request.Employee.Code,
+                            EmployeeNumber = requestAssignment.Request.Employee.EmployeeNumber,
                             Name = requestAssignment.Request.Employee.Name,
                             ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                         }
@@ -472,7 +472,7 @@ namespace Dawem.BusinessLogic.Requests
                     Code = requestAssignment.Request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = requestAssignment.Request.Employee.Code,
+                        EmployeeNumber = requestAssignment.Request.Employee.EmployeeNumber,
                         Name = requestAssignment.Request.Employee.Name,
                         ProfileImagePath = uploadBLC.GetFilePath(requestAssignment.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
@@ -578,8 +578,9 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<GetAssignmentsInformationsResponseDTO> GetAssignmentsInformations()
         {
             var requestAssignmentRepository = repositoryManager.RequestAssignmentRepository;
-            var query = requestAssignmentRepository.Get(request => !request.Request.IsDeleted &&
-            request.Request.CompanyId == requestInfo.CompanyId);
+            var query = requestAssignmentRepository.Get(requestAssignment => requestAssignment.Request.Type == RequestType.Assignment
+            && !requestAssignment.Request.IsDeleted &&
+            requestAssignment.Request.CompanyId == requestInfo.CompanyId);
 
             #region Handle Response
 

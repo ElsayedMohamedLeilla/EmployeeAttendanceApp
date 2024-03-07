@@ -7,6 +7,8 @@
         public int CompanyCountryId { get; set; }
         public string CompanyAddress { get; set; }
         public string CompanyEmail { get; set; }
+        public int NumberOfEmployees { get; set; }
+        public int SubscriptionDurationInMonths { get; set; }
 
         #endregion
 

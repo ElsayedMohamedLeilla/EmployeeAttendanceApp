@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Reports;
+﻿using Dawem.Contract.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Reports;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Employees;

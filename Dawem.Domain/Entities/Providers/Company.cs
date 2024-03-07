@@ -18,8 +18,8 @@ namespace Dawem.Domain.Entities.Providers
         public string Email { get; set; }
         public List<Summon> Summons { get; set; }
         public List<SchedulePlan> SchedulePlans { get; set; }
-        
-
+        public int NumberOfEmployees { get; set; }
+        public int SubscriptionDurationInMonths { get; set; }
     }
 
 }

@@ -502,5 +502,11 @@
         public const string SorryInternalErrorHappenInPermissions = "Sorry!!InternalErrorHappenInPermissions!";
         public const string Day = "Day";
         public const string DawemTest = "dawem_test";
+        public const string SorryYouMustEnterNumberOfEmployees = "Sorry!!YouMustEnterNumberOfEmployees!";
+        public const string SorryYouMustEnterSubscriptionDurationInMonths = "Sorry!!YouMustEnterSubscriptionDurationInMonths!";
+        public const string SorryYouReachTheMaxNumberOfEmployeesInYourCompany = "Sorry!!YouReachTheMaxNumberOfEmployeesInYourCompany!";
+        public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
+
+
     }
 }

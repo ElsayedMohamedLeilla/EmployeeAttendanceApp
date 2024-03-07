@@ -121,7 +121,9 @@ namespace Dawem.BusinessLogic.Provider
                 IsActive = true,
                 AddUserId = user.Id,
                 CountryId = signUpModel.CompanyCountryId,
-                Email = signUpModel.CompanyEmail
+                Email = signUpModel.CompanyEmail,
+                NumberOfEmployees = signUpModel.NumberOfEmployees,
+                SubscriptionDurationInMonths = signUpModel.SubscriptionDurationInMonths
             });
 
             await unitOfWork.SaveAsync();

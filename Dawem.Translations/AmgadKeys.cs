@@ -44,6 +44,7 @@ namespace Dawem.Translations
         public const string PinRecognition = "PinRecognition";
         public const string PasswordRecognition = "PasswordRecognition";
         public const string Unknown = "Unknown";
+        public const string Early = "Early";
         public const string OnTime = "OnTime";
         public const string Late = "Late";
         public const string SorryYouMustChooseEmployeeForRequestVacation = "Sorry!!YouMustChooseEmployeeForRequestVacation!";

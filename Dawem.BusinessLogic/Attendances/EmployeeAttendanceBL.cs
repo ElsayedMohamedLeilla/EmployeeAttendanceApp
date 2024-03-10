@@ -59,12 +59,15 @@ namespace Dawem.BusinessLogic.Attendances
                 {
                     EmployeeAttendanceId = getAttandanceId,
                     SummonId = validationResult.SummonId,
-                    FingerPrintType = validationResult.FingerPrintType,                    
+                    ZoneId = validationResult.ZoneId,
+                    FingerPrintType = validationResult.FingerPrintType,
                     IsActive = true,
                     Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
-                    IpAddress = requestInfo.RemoteIpAddress
+                    IpAddress = requestInfo.RemoteIpAddress,
+                    RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ? 
+                    RecognitionWay.FingerPrint : model.RecognitionWay
                 });
             }
             //checkin
@@ -99,10 +102,13 @@ namespace Dawem.BusinessLogic.Attendances
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
                         FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
+                        ZoneId = validationResult.ZoneId,
                         Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
                         Latitude = model.Latitude,
                         Longitude = model.Longitude,
-                        IpAddress = requestInfo.RemoteIpAddress
+                        IpAddress = requestInfo.RemoteIpAddress,
+                        RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ? 
+                        RecognitionWay.FingerPrint : model.RecognitionWay
                     } }
                 };
 
@@ -341,7 +347,11 @@ namespace Dawem.BusinessLogic.Attendances
                        .OrderByDescending(check => check.Time)
                        .Select(check => check.RecognitionWay)
                        .FirstOrDefault(), requestInfo.Lang),
-                   Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.LocalDate, requestInfo.Lang),
+                   Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                       .OrderBy(check => check.Time)
+                       .Select(check => check.Time)
+                       .FirstOrDefault(), requestInfo.Lang),
                    TimeGap = CalculateTimeGap(
                      empAttendance.ShiftCheckInTime,
                      empAttendance.AllowedMinutes,
@@ -394,16 +404,19 @@ namespace Dawem.BusinessLogic.Attendances
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }
-        public static string DetermineAttendanceStatus(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime localDateTime, string lang)
+        public static string DetermineAttendanceStatus(TimeOnly shiftCheckInTime, int allowedMinutes, TimeOnly chekInTime, string lang)
         {
-            TimeSpan allowedTimeSpan = TimeSpan.FromMinutes(allowedMinutes);
-            DateTime checkInLimit = localDateTime.Date.Add(shiftCheckInTime.ToTimeSpan());
+            var newShiftCheckInTime = shiftCheckInTime.AddMinutes(allowedMinutes);
 
-            if (localDateTime <= checkInLimit.Add(allowedTimeSpan))
+            if (chekInTime < shiftCheckInTime)
+            {
+                return TranslationHelper.GetTranslation(AmgadKeys.Early, lang); ;
+            }
+            else if (chekInTime >= shiftCheckInTime && chekInTime <= newShiftCheckInTime)
             {
                 return TranslationHelper.GetTranslation(AmgadKeys.OnTime, lang); ;
             }
-            else if (localDateTime > checkInLimit.Add(allowedTimeSpan))
+            else if (chekInTime > newShiftCheckInTime)
             {
                 return TranslationHelper.GetTranslation(AmgadKeys.Late, lang); ;
             }
@@ -460,7 +473,11 @@ namespace Dawem.BusinessLogic.Attendances
                        .OrderByDescending(check => check.Time)
                        .Select(check => check.RecognitionWay)
                        .FirstOrDefault(), requestInfo.Lang),*/
-                    Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.LocalDate, requestInfo.Lang),
+                    Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.EmployeeAttendanceChecks
+                       .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
+                       .OrderBy(check => check.Time)
+                       .Select(check => check.Time)
+                       .FirstOrDefault(), requestInfo.Lang),
                     TimeGap = CalculateTimeGap(
                      empAttendance.ShiftCheckInTime,
                      empAttendance.AllowedMinutes,
@@ -475,7 +492,7 @@ namespace Dawem.BusinessLogic.Attendances
                     Fingerprints = empAttendance.EmployeeAttendanceChecks
                     .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
                     {
-                        ZoneName = "Zone Name",
+                        ZoneName = employeeAttendanceCheck.Zone.Name,
                         Time = employeeAttendanceCheck.Time.ToString("hh:mm") + TranslateAmAndPm(employeeAttendanceCheck.Time.ToString("tt"), requestInfo.Lang),
                         Type = employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
@@ -491,7 +508,7 @@ namespace Dawem.BusinessLogic.Attendances
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
                         AmgadKeys.Unknown,
                     }).ToList()
-                    
+
 
                 }).FirstOrDefaultAsync();
             return result;

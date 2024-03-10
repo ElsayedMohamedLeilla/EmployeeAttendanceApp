@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.Attendances
 
             return new GetFingerprintDevicesInformationsResponseDTO
             {
-                TotalCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted && fingerPrint.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(fingerPrint => !fingerPrint.IsDeleted && !fingerPrint.IsActive).CountAsync(),
                 DeletedCount = await query.Where(fingerPrint => fingerPrint.IsDeleted).CountAsync()

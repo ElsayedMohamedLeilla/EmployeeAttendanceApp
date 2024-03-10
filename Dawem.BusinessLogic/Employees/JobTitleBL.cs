@@ -215,7 +215,7 @@ namespace Dawem.BusinessLogic.Employees
 
             return new GetJobTitlesInformationsResponseDTO
             {
-                TotalCount = await query.Where(jobTitle => !jobTitle.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(jobTitle => !jobTitle.IsDeleted && jobTitle.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(jobTitle => !jobTitle.IsDeleted && !jobTitle.IsActive).CountAsync(),
                 DeletedCount = await query.Where(jobTitle => jobTitle.IsDeleted).CountAsync()

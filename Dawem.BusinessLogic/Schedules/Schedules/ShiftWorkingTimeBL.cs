@@ -303,7 +303,7 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
 
             return new GetShiftWorkingTimesInformationsResponseDTO
             {
-                TotalCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted && shiftWorkingTime.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted && !shiftWorkingTime.IsActive).CountAsync(),
                 DeletedCount = await query.Where(shiftWorkingTime => shiftWorkingTime.IsDeleted).CountAsync()

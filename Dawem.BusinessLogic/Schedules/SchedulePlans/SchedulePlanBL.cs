@@ -419,7 +419,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
 
             return new GetSchedulePlansInformationsResponseDTO
             {
-                TotalCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && schedulePlan.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && !schedulePlan.IsActive).CountAsync(),
                 DeletedCount = await query.Where(schedulePlan => schedulePlan.IsDeleted).CountAsync()

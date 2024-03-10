@@ -215,7 +215,7 @@ namespace Dawem.BusinessLogic.Employees
 
             return new GetTaskTypesInformationsResponseDTO
             {
-                TotalCount = await query.Where(taskType => !taskType.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(taskType => !taskType.IsDeleted && taskType.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(taskType => !taskType.IsDeleted && !taskType.IsActive).CountAsync(),
                 DeletedCount = await query.Where(taskType => taskType.IsDeleted).CountAsync()

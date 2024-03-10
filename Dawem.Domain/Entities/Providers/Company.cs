@@ -21,6 +21,7 @@ namespace Dawem.Domain.Entities.Providers
         public List<EmployeeAttendance> EmployeeAttendances { get; set; }
         public virtual List<Employee> Employees { get; set; }
         public List<Summon> Summons { get; set; }
+        public List<Schedule> Schedules { get; set; }
         public List<SchedulePlan> SchedulePlans { get; set; }
         public int NumberOfEmployees { get; set; }
         public int SubscriptionDurationInMonths { get; set; }

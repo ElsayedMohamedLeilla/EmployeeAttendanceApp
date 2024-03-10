@@ -14,6 +14,7 @@ using Dawem.Models.Response.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation;
 using Dawem.Validation.FluentValidation.Schedules.ShiftWorkingTimes;
+using Google.Api.Gax;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Schedules.Schedules
@@ -159,21 +160,25 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
 
             #region Handle Response
 
-            var ShiftWorkingTimesList = await queryPaged.Select(e => new GetShiftWorkingTimeResponseModelDTO
+            var shiftWorkingTimesList = await queryPaged.Select(shift => new GetShiftWorkingTimeResponseModelDTO
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                CheckInTime = e.CheckInTime,
-                CheckOutTime = e.CheckOutTime,
-                AllowedMinutes = e.AllowedMinutes,
-                TimePeriod = e.TimePeriod ,
-                IsActive = e.IsActive,
+                Id = shift.Id,
+                Code = shift.Code,
+                Name = shift.Name,
+                CheckInTime = shift.CheckInTime,
+                CheckOutTime = shift.CheckOutTime,
+                AllowedMinutes = shift.AllowedMinutes,
+                TimePeriod = shift.TimePeriod,
+                IsActive = shift.IsActive,
+                EmployeesCount = shift.Company.Schedules
+                .Where(s => !s.IsDeleted && s.Employees != null && s.ScheduleDays != null && s.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId == shift.Id))
+                .SelectMany(s => s.Employees)
+                .Count()
             }).ToListAsync();
 
             return new GetShiftWorkingTimeResponseDTO
             {
-                ShiftWorkingTimes = ShiftWorkingTimesList,
+                ShiftWorkingTimes = shiftWorkingTimesList,
                 TotalCount = await query.CountAsync()
             };
 
@@ -299,8 +304,8 @@ namespace Dawem.BusinessLogic.Schedules.Schedules
             return new GetShiftWorkingTimesInformationsResponseDTO
             {
                 TotalCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted).CountAsync(),
-                ActiveCount = await query.Where(shiftWorkingTime => shiftWorkingTime.IsActive).CountAsync(),
-                NotActiveCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsActive).CountAsync(),
+                ActiveCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted && shiftWorkingTime.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(shiftWorkingTime => !shiftWorkingTime.IsDeleted && !shiftWorkingTime.IsActive).CountAsync(),
                 DeletedCount = await query.Where(shiftWorkingTime => shiftWorkingTime.IsDeleted).CountAsync()
             };
 

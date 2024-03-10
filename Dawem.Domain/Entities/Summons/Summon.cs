@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,5 +26,6 @@ namespace Dawem.Domain.Entities.Summons
         public List<SummonDepartment> SummonDepartments { get; set; }
         public List<SummonSanction> SummonSanctions { get; set; }
         public List<SummonMissingLog> SummonMissingLogs { get; set; }
+        public  List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
     }
 }

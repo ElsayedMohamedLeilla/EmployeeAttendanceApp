@@ -307,11 +307,12 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #region Check If Summon
 
-            var checkSummon = await repositoryManager.SummonRepository
+            var checkIfHasSummon = await repositoryManager.SummonRepository
                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.DateAndTime &&
                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
+                   !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                    (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
@@ -330,7 +331,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
                 DefaultCheckType = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? FingerprintCheckType.CheckIn :
                 getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? FingerprintCheckType.NotDefined :
-                getAttendance?.CheckInTime != null ? (checkSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut) :
+                getAttendance?.CheckInTime != null ? (checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut) :
                 FingerprintCheckType.NotDefined,
 
                 EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :

@@ -307,6 +307,7 @@ namespace Dawem.BusinessLogic.Attendances
                .Select(empAttendance => new GetEmployeeAttendancesResponseForWebAdminModelDTO
                {
                    Id = empAttendance.Id,
+                   EmployeeNumber = empAttendance.Employee.EmployeeNumber,
                    EmployeeName = empAttendance.Employee.Name,
                    Date = empAttendance.LocalDate.Date,
 

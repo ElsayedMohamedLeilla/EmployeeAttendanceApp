@@ -6,8 +6,10 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -84,7 +86,9 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            #region Insert Company
+            #region Insert Company And Subscription
+
+            #region Handle Company
 
             #region Set Company Code
 
@@ -113,7 +117,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            var insertedCompany = repositoryManager.CompanyRepository.Insert(new Company()
+            var insertedCompany = repositoryManager.CompanyRepository.Insert(new()
             {
                 IdentityCode = identityCode,
                 Code = getNextCode,
@@ -122,12 +126,52 @@ namespace Dawem.BusinessLogic.Provider
                 AddUserId = user.Id,
                 CountryId = signUpModel.CompanyCountryId,
                 Email = signUpModel.CompanyEmail,
-                NumberOfEmployees = signUpModel.NumberOfEmployees,
-                SubscriptionDurationInMonths = signUpModel.SubscriptionDurationInMonths
+                NumberOfEmployees = signUpModel.NumberOfEmployees
             });
 
             await unitOfWork.SaveAsync();
+
             var companyId = insertedCompany.Id;
+
+            #endregion
+
+            #region Handle Subscription
+
+            #region Set Subscription Code
+
+            var getNextSubscriptionCode = await repositoryManager.SubscriptionRepository
+                .Get(e => !e.IsDeleted)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
+            var planId = signUpModel.PlanId ?? 0;
+
+            if (planId <= 0)
+            {
+                var getTrialPlanId = await repositoryManager.PlanRepository
+                    .Get(p => !p.IsDeleted && p.IsTrial)
+                    .Select(p => p.Id)
+                    .FirstOrDefaultAsync();
+                planId = getTrialPlanId;
+            }
+
+            var insertedSubscription = repositoryManager.SubscriptionRepository.Insert(new()
+            {
+                CompanyId = companyId,
+                PlanId = planId,
+                Code = getNextSubscriptionCode,
+                DurationInDays = signUpModel.SubscriptionDurationInMonths * 30,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(signUpModel.SubscriptionDurationInMonths * 30),
+                Status = SubscriptionStatus.Created,
+                RenewalCount = 1,
+                FollowUpEmail = insertedCompany.Email
+            });
+
+            #endregion
 
             #endregion
 
@@ -467,6 +511,30 @@ namespace Dawem.BusinessLogic.Provider
                 {
                     return false;
                 }
+
+                #region Confirm Subscription
+
+                if (user.IsAdmin && user.CompanyId > 0)
+                {
+                    var getCompanySubscription = await repositoryManager.SubscriptionRepository
+                        .GetEntityByConditionWithTrackingAsync(s => !s.IsDeleted && s.CompanyId == user.CompanyId && s.Status == SubscriptionStatus.Created);
+                    if (getCompanySubscription != null)
+                    {
+                        getCompanySubscription.Status = SubscriptionStatus.Confirmed;
+
+                        repositoryManager.SubscriptionLogRepository.Insert(new()
+                        {
+                            SubscriptionId = getCompanySubscription.Id,
+                            EndDate = getCompanySubscription.EndDate,
+                            LogType = SubscriptionLogType.Confirmed,
+                            LogTypeName = nameof(SubscriptionLogType.Confirmed)
+                        });
+
+                        await unitOfWork.SaveAsync();
+                    }
+                }
+
+                #endregion
             }
             else
             {

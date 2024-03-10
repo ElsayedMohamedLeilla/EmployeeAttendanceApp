@@ -9,6 +9,7 @@
         public string CompanyEmail { get; set; }
         public int NumberOfEmployees { get; set; }
         public int SubscriptionDurationInMonths { get; set; }
+        public int? PlanId { get; set; }
 
         #endregion
 

@@ -506,7 +506,7 @@
         public const string SorryYouMustEnterSubscriptionDurationInMonths = "Sorry!!YouMustEnterSubscriptionDurationInMonths!";
         public const string SorryYouReachTheMaxNumberOfEmployeesInYourCompany = "Sorry!!YouReachTheMaxNumberOfEmployeesInYourCompany!";
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
-
-
+        public const string SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal!";
+        public const string SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!"; 
     }
 }

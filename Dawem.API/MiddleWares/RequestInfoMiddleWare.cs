@@ -16,11 +16,11 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Dawem.API.MiddleWares
 {
-    public class RequestHeaderContextMiddleWare
+    public class RequestInfoMiddleWare
     {
         private readonly RequestDelegate _next;
 
-        public RequestHeaderContextMiddleWare(RequestDelegate next)
+        public RequestInfoMiddleWare(RequestDelegate next)
         {
             _next = next;
         }

@@ -1,0 +1,77 @@
+﻿using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
+using Dawem.Data.UnitOfWork;
+using Dawem.Enums.Generals;
+using Dawem.Helpers;
+using Dawem.Models.Context;
+using Dawem.Models.Generic;
+using Dawem.Translations;
+
+namespace Dawem.API.MiddleWares
+{
+    public class SubscriptionMiddleWare
+    {
+        private readonly RequestDelegate _next;
+
+        public SubscriptionMiddleWare(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo,
+             IRepositoryManager repositoryManager, IUnitOfWork<ApplicationDBContext> unitOfWork)
+        {
+            try
+            {
+                var getSubscription = await repositoryManager.SubscriptionRepository
+                        .GetEntityByConditionAsync(s => s.CompanyId == requestInfo.CompanyId);
+
+                if (getSubscription != null)
+                {
+                    if (getSubscription.EndDate.Date >= DateTime.Now.Date)
+                    {
+                        var getPlansThresholdPercentage = (await repositoryManager.DawemSettingRepository
+                        .GetEntityByConditionAsync(d => d.Type == DawemSettingType.PlansThresholdPercentage))?
+                        .Integer;
+
+                        var extraDays = 0;
+
+                        if (getPlansThresholdPercentage != null)
+                        {
+                            extraDays = getPlansThresholdPercentage.Value * getSubscription.DurationInDays / 100;
+                        }
+
+                        if (getSubscription.EndDate.AddDays(extraDays).Date >= DateTime.Now.Date)
+                        {
+                            int statusCode = StatusCodes.Status422UnprocessableEntity;
+                            var response = new ErrorResponse
+                            {
+                                State = ResponseStatus.ValidationError,
+                                Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal,
+                                       requestInfo?.Lang)
+                            };
+                            await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
+                        }
+                    }
+                    if (getSubscription.Status != SubscriptionStatus.Active)
+                    {
+                        int statusCode = StatusCodes.Status422UnprocessableEntity;
+                        var response = new ErrorResponse
+                        {
+                            State = ResponseStatus.ValidationError,
+                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForRenewal,
+                                   requestInfo?.Lang)
+                        };
+                        await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // do nothing if jwt validation fails
+            }
+            await _next.Invoke(httpContext);
+        }
+    }
+}

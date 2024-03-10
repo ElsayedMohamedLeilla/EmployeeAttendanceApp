@@ -9,6 +9,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
@@ -109,7 +110,7 @@ namespace Dawem.Data
          .HasOne(p => p.SummonMissingLog)
          .WithMany(b => b.SummonMissingLogSanctions)
          .HasForeignKey(p => p.SummonMissingLogId)
-         .OnDelete(DeleteBehavior.Cascade); 
+         .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<PermissionScreen>()
          .HasOne(p => p.Permission)
@@ -323,7 +324,7 @@ namespace Dawem.Data
       .OnDelete(DeleteBehavior.Restrict);
 
 
-           
+
 
 
             builder.Entity<Department>()
@@ -370,7 +371,11 @@ namespace Dawem.Data
 
         }
 
-
+        public DbSet<DawemSetting> DawemSettings { get; set; }
+        public DbSet<Plan> Plans { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionLog> SubscriptionLogs { get; set; }
+        public DbSet<SubscriptionLog> SubscriptionLogs { get; set; }
         public DbSet<SchedulePlan> SchedulePlans { get; set; }
         public DbSet<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
         public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }
@@ -420,7 +425,7 @@ namespace Dawem.Data
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
         public DbSet<ZoneEmployee> ZoneEmployees { get; set; }
         public DbSet<Zone> Zones { get; set; }
-        public DbSet<Holiday> Holidays  { get; set; }
+        public DbSet<Holiday> Holidays { get; set; }
         public DbSet<NotificationStore> NotificationStores { get; set; }
 
 

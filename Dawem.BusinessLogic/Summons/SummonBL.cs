@@ -60,12 +60,15 @@ namespace Dawem.BusinessLogic.Summons
             unitOfWork.CreateTransaction();
 
             #region Insert Summon
+
             #region Set Summon code
+
             var getNextCode = await repositoryManager.SummonRepository
                 .Get(e => e.CompanyId == companyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
+
             #endregion
 
             var summon = mapper.Map<Summon>(model);

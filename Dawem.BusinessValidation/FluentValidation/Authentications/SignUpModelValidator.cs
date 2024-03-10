@@ -48,11 +48,13 @@ namespace Dawem.Validation.FluentValidation.Authentications
                    WithMessage(LeillaKeys.SorryYouMustEnterUserName);
 
 
-            RuleFor(signUpModel => signUpModel.NumberOfEmployees).NotNull().
-                   WithMessage(LeillaKeys.SorryYouMustEnterNumberOfEmployees);
+            RuleFor(signUpModel => signUpModel.NumberOfEmployees)
+                .Must(n => n > 0)
+                .WithMessage(LeillaKeys.SorryYouMustEnterNumberOfEmployees);
 
-            RuleFor(signUpModel => signUpModel.SubscriptionDurationInMonths).NotNull().
-                   WithMessage(LeillaKeys.SorryYouMustEnterSubscriptionDurationInMonths);
+            RuleFor(signUpModel => signUpModel.SubscriptionDurationInMonths)
+                .Must(s => s > 0)
+                .WithMessage(LeillaKeys.SorryYouMustEnterSubscriptionDurationInMonths);
         }
     }
 }

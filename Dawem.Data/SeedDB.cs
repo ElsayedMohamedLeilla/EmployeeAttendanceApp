@@ -1,6 +1,8 @@
 ﻿using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Models.Dtos.Lookups;
+using Dawem.Enums.Generals;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -52,6 +54,115 @@ namespace Dawem.Data
                 context.Countries.AddRange(countries);
                 context.SaveChanges();
             }
+
+            #region Handle Plans
+
+            var allPlansCount = context.Plans.Count();
+
+            if (allPlansCount <= 0)
+            {
+                var plans = new List<Plan>();
+                var code = 0;
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "التجريبية",
+                    NameEn = "Trial",
+                    IsTrial = true,
+                    MaxNumberOfEmployees = 10
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "الاساسية",
+                    NameEn = "Basic",
+                    MaxNumberOfEmployees = 100
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "المتقدمة",
+                    NameEn = "Advanced",
+                    MaxNumberOfEmployees = 1000
+                });
+
+                context.Plans.AddRange(plans);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Handle Subscriptions
+
+            var allSubscriptionsCount = context.Subscriptions.Count();
+
+            if (allSubscriptionsCount <= 0)
+            {
+                var subscriptions = new List<Subscription>();
+
+                var getAllCompanies = context.Companies.ToList();
+                var code = 0;
+                var getBasicPlanId = context.Plans
+                    .FirstOrDefault(p => p.IsTrial)?.Id ?? 0;
+
+                foreach (var company in getAllCompanies)
+                {
+                    subscriptions.Add(new()
+                    {
+                        CompanyId = company.Id,
+                        PlanId = getBasicPlanId,
+                        Code = code++,
+                        DurationInDays = 6 * 30,
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddDays(6 * 30),
+                        Status = SubscriptionStatus.Active,
+                        RenewalCount = 1,
+                        FollowUpEmail = company.Email
+                    });
+                }
+
+                context.Subscriptions.AddRange(subscriptions);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Handle Dawem Setting
+
+            var getAllDawemSettings = context.DawemSettings.ToList();
+            var dawemSettings = new List<DawemSetting>();
+
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansThresholdPercentage) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlansThresholdPercentage,
+                    TypeName = nameof(DawemSettingType.PlansThresholdPercentage),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 5
+                });
+            }
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanEmployeeCost) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlanEmployeeCost,
+                    TypeName = nameof(DawemSettingType.PlanEmployeeCost),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Decimal,
+                    ValueTypeName = nameof(DawemSettingValueType.Decimal),
+                    Decimal = 10
+                });
+            }
+
+            #endregion
 
             #region Handle country phone numbers length
 

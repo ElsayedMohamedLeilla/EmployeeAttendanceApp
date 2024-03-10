@@ -19,7 +19,7 @@ namespace Dawem.API.MiddleWares
             _request = next;
         }
         public Task Invoke(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
-        async Task InvokeAsync(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork)
+        async Task InvokeAsync(HttpContext context, RequestInfo requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
 
             await _request.Invoke(context);
@@ -31,9 +31,9 @@ namespace Dawem.API.MiddleWares
                 {
                     State = ResponseStatus.Forbidden,
                     Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword,
-                           userContext?.Lang)
+                           requestInfo?.Lang)
                 };
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
             else if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
@@ -43,22 +43,12 @@ namespace Dawem.API.MiddleWares
                 {
                     State = ResponseStatus.UnAuthorized,
                     Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouAreForbiddenToAccessRequestedData,
-                           userContext?.Lang)
+                           requestInfo?.Lang)
                 };
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
         }
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
-        {
-            unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
-        }
+        
     }
 }

@@ -139,6 +139,7 @@ namespace Dawem.API
         {
             services.AddHostedService<SchedulePlanBackgroundJobHostedService>();
             services.AddHostedService<SummonsMissingHostedService>();
+            services.AddHostedService<SubscriptionHostedService>();
             //services.AddSingleton<CancellationTokenSource>();
         }
     }

@@ -143,7 +143,9 @@ IServiceScope serviceScope = app.Services.GetService<IServiceScopeFactory>()
 
 ApplicationDBContext context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
 SeedDB.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
-app.UseMiddleware<RequestHeaderContextMiddleWare>();
+
+app.UseMiddleware<RequestInfoMiddleWare>();
+app.UseMiddleware<SubscriptionMiddleWare>();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -156,7 +158,6 @@ IUnitOfWork<ApplicationDBContext> unitOfWork = serviceProvider.GetService<IUnitO
 GeneralSetting generalSetting = serviceProvider.GetService<GeneralSetting>();
 RepositoryManager repositoryManager = new(unitOfWork, generalSetting, new RequestInfo());
 new TranslationBL(unitOfWork, repositoryManager).RefreshCachedTranslation();
-
 
 //var app = builder.Build();
 

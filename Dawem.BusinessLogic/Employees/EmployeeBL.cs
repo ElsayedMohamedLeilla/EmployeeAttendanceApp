@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
@@ -10,10 +11,14 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Excel;
 using Dawem.Models.Exceptions;
+using Dawem.Models.Generic;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
+using DocumentFormat.OpenXml.Spreadsheet;
+using FollowUp.Validation.BusinessValidation.General;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees
@@ -75,7 +80,7 @@ namespace Dawem.BusinessLogic.Employees
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
                 var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
-                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }
 
@@ -458,6 +463,77 @@ namespace Dawem.BusinessLogic.Employees
             };
 
             #endregion
+        }
+
+        public async Task<MemoryStream> ExportDraft()
+        {
+            EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
+            employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
+            employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
+            return  ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
+        }
+        public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
+        {
+            #region Fill IniValidationModelDTO
+            IniValidationModelDTO iniValidationModelDTO = new();
+            iniValidationModelDTO.FileStream = importedFile;
+            iniValidationModelDTO.MaxRowCount = 10; // will be configured
+            iniValidationModelDTO.ColumnIndexToCheckNull.Add(1); // index one which contain number
+            iniValidationModelDTO.ColumnIndexToCheckNull.Add(2); //index one which contain Name
+            iniValidationModelDTO.ColumnIndexToCheckNull.Add(3); //index one which contain Department Name
+            iniValidationModelDTO.ColumnIndexToCheckNull.Add(7); //index one which contain Email
+            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle", "ScheduleName",
+                                         "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
+                                         "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
+            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            #endregion
+            Dictionary<string, string> result = new();
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO,requestInfo.Lang);
+            if (validationMessages.Count > 0)
+            {
+                foreach (var kvp in validationMessages)
+                {
+                    result.Add(kvp.Key, kvp.Value);
+                }
+            }
+            else
+            {
+                List<Employee> ImportedList = new();
+                Employee Temp = new();
+                using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
+                var worksheet = workbook.Worksheet(1);
+                var getNextCode = await repositoryManager.EmployeeRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync();
+                foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
+                {
+                    Temp = new();
+                    Temp.Code = getNextCode++;
+                    Temp.AddedApplicationType = ApplicationType.Web;
+                    Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
+                    Temp.Name = row.Cell(2).GetString();
+                    Temp.Department = repositoryManager.DepartmentRepository.Get(d => d.IsActive && ! d.IsDeleted && d.Name == row.Cell(3).GetString()).FirstOrDefault();
+                    Temp.JobTitle = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).FirstOrDefault();
+                    Temp.Schedule  = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).FirstOrDefault();
+                    Temp.DirectManager = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).FirstOrDefault();
+                    Temp.Email = row.Cell(7).GetString();
+                    Temp.MobileNumber = row.Cell(8).GetString();
+                    Temp.Address = row.Cell(9).GetString();
+                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
+                    Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
+                    Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
+                    Temp.AnnualVacationBalance = int.Parse(row.Cell(13).GetString());
+                    Temp.IsActive = bool.Parse(row.Cell(14).GetString());
+                    Temp.CompanyId = requestInfo.CompanyId;
+                    // _employeeDAL.SaveEmployeeFromExcelRow(row);
+                    ImportedList.Add(Temp);
+                }
+
+                result.Add("success", TranslationHelper.GetTranslation( AmgadKeys.ImportedSuccessfully, requestInfo.Lang));
+            }
+            return result;
         }
     }
 }

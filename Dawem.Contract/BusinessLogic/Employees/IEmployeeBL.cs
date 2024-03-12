@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Excel;
 using Dawem.Models.Response.Employees.Employees;
 
 namespace Dawem.Contract.BusinessLogic.Employees
@@ -16,5 +17,7 @@ namespace Dawem.Contract.BusinessLogic.Employees
         Task<bool> Enable(int employeeId);
         Task<bool> Delete(int employeeId);
         Task<GetEmployeesInformationsResponseDTO> GetEmployeesInformations();
+        public  Task<MemoryStream> ExportDraft();
+        public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
     }
 }

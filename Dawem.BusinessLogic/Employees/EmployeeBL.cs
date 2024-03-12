@@ -152,7 +152,8 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Update Employee
 
-            var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
@@ -168,6 +169,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.Email = model.Email;
+            getEmployee.AllowChangeFingerprintDeviceCodeForOneTime = model.AllowChangeFingerprintDeviceCodeForOneTime;
             getEmployee.MobileNumber = model.MobileNumber;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
@@ -323,6 +325,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
+                    AllowChangeFingerprintDeviceCodeForOneTime = e.AllowChangeFingerprintDeviceCodeForOneTime,
                     Zones = e.Zones
                     .Select(d => d.Zone.Name)
                     .ToList()
@@ -374,6 +377,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeType = e.EmployeeType,
                     EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
+                    AllowChangeFingerprintDeviceCodeForOneTime = e.AllowChangeFingerprintDeviceCodeForOneTime,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
                     ZoneIds = e.Zones

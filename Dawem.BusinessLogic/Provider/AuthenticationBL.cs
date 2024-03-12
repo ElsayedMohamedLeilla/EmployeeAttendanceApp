@@ -378,6 +378,36 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
+            #region Handle Fingerprint Device Code
+
+            if (!string.IsNullOrEmpty(signInModel.FingerprintDeviceCode) &&
+                !string.IsNullOrWhiteSpace(signInModel.FingerprintDeviceCode) &&
+                user.EmployeeId > 0)
+            {
+                var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+                && employee.Id == user.EmployeeId);
+
+                if (getEmployee != null)
+                {
+                    if (string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode) ||
+                        string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode))
+                    {
+                        getEmployee.FingerprintDeviceCode = signInModel.FingerprintDeviceCode;
+                    }
+                    else if (getEmployee.AllowChangeFingerprintDeviceCodeForOneTime &&
+                        signInModel.FingerprintDeviceCode != getEmployee.FingerprintDeviceCode)
+                    {
+                        getEmployee.FingerprintDeviceCode = signInModel.FingerprintDeviceCode;
+                        getEmployee.AllowChangeFingerprintDeviceCodeForOneTime = false;
+                    }
+                    _ = unitOfWork.SaveAsync();
+                }
+
+            }
+
+            #endregion
+
             return tokenData;
         }
         public async Task<TokenDto> GetTokenModel(TokenModel criteria)
@@ -451,9 +481,9 @@ namespace Dawem.BusinessLogic.Provider
         }
         private static string GetResetPasswordLink(ResetPasswordToken emailToken)
         {
-            var path = "resetpassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
+            var path = "resetPassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
             var protocol = LeillaKeys.Https;
-            var host = "pro.dawem.app/";
+            var host = "stage.dawem.app/";
             var resetPasswordLink = $"{protocol}://{host}{path}";
             return resetPasswordLink;
         }

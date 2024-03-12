@@ -36,6 +36,8 @@ namespace Dawem.Domain.Entities.Employees
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public string ProfileImageName { get; set; }
+        public string FingerprintDeviceCode { get; set; }
+        public bool AllowChangeFingerprintDeviceCodeForOneTime { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }

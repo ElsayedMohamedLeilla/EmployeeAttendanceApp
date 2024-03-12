@@ -481,7 +481,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         private static string GetResetPasswordLink(ResetPasswordToken emailToken)
         {
-            var path = "resetPassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
+            var path = "#/resetPassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
             var protocol = LeillaKeys.Https;
             var host = "stage.dawem.app/";
             var resetPasswordLink = $"{protocol}://{host}{path}";

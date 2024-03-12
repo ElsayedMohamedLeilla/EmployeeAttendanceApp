@@ -533,7 +533,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
-            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             var resetPasswordResult = await userManagerRepository.ResetPasswordAsync(user, model.ResetToken, model.NewPassword);

@@ -97,23 +97,24 @@ namespace Dawem.BusinessLogic.Summons
                .MaxAsync();
 
             #region For All Employee
+
             List<NotificationRecieverDTO> notificationRecieverDTO = new();
-            if ((bool)model.ForAllEmployees)
+            if (model.ForAllEmployees.HasValue && model.ForAllEmployees.Value)
             {
                 notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
             }
             else
             {
-                if (model.Employees.Count != 0 || model.Employees.Any())
+                if (model.Employees != null && model.Employees.Any())
                 {
                     notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Employees.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
                 }
-                if (model.Groups.Count != 0 || model.Groups.Any())
+                if (model.Groups != null && model.Groups.Any())
                 {
                     List<int> groupEmployeeIds = repositoryManager.GroupEmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Groups.Contains(s.Id)).Select(g => g.EmployeeId).ToList();
                     notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && groupEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
                 }
-                if (model.Departments.Count != 0 || model.Departments.Any())
+                if (model.Departments != null && model.Departments.Any())
                 {
                     List<int> departmentEmployeeIds = repositoryManager.EmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Departments.Contains(s.DepartmentId ?? 0)).Select(g => g.Id).ToList();
                     notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Departments.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());

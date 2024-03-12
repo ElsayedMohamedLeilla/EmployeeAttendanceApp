@@ -184,7 +184,7 @@ namespace Dawem.BusinessLogic.Employees
 
             List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-            var addedEmployeeZones = model.Zones!= null ? model.Zones
+            var addedEmployeeZones = model.Zones != null ? model.Zones
                 .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
                 .Select(ge => new ZoneEmployee
                 {
@@ -324,6 +324,7 @@ namespace Dawem.BusinessLogic.Employees
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    ProfileImageName = e.ProfileImageName,
                     DisableReason = e.DisableReason,
                     AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
                     Zones = e.Zones

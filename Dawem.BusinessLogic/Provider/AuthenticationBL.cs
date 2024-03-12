@@ -380,8 +380,8 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Fingerprint Device Code
 
-            if (!string.IsNullOrEmpty(signInModel.FingerprintDeviceCode) &&
-                !string.IsNullOrWhiteSpace(signInModel.FingerprintDeviceCode) &&
+            if (!string.IsNullOrEmpty(signInModel.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(signInModel.FingerprintMobileCode) &&
                 user.EmployeeId > 0)
             {
                 var getEmployee = await repositoryManager.EmployeeRepository
@@ -390,20 +390,27 @@ namespace Dawem.BusinessLogic.Provider
 
                 if (getEmployee != null)
                 {
-                    if (string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode) ||
-                        string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode))
-                    {
-                        getEmployee.FingerprintDeviceCode = signInModel.FingerprintDeviceCode;
-                    }
-                    else if (getEmployee.AllowChangeFingerprintDeviceCodeForOneTime &&
-                        signInModel.FingerprintDeviceCode != getEmployee.FingerprintDeviceCode)
-                    {
-                        getEmployee.FingerprintDeviceCode = signInModel.FingerprintDeviceCode;
-                        getEmployee.AllowChangeFingerprintDeviceCodeForOneTime = false;
-                    }
-                    _ = unitOfWork.SaveAsync();
-                }
+                    var checkFingerprintMobileCodeDuplicate = await repositoryManager.EmployeeRepository
+                        .Get(employee => !employee.IsDeleted
+                        && employee.Id != getEmployee.Id && employee.FingerprintMobileCode == signInModel.FingerprintMobileCode)
+                        .AnyAsync();
 
+                    if (!checkFingerprintMobileCodeDuplicate)
+                    {
+                        if (string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) ||
+                            string.IsNullOrEmpty(getEmployee.FingerprintMobileCode))
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                        }
+                        else if (getEmployee.AllowChangeFingerprintMobileCodeForOneTime &&
+                            signInModel.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                            getEmployee.AllowChangeFingerprintMobileCodeForOneTime = false;
+                        }
+                        _ = unitOfWork.SaveAsync();
+                    }
+                }
             }
 
             #endregion

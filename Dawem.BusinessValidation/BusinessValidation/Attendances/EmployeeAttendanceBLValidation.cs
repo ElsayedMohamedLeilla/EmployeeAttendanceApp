@@ -213,15 +213,15 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #region Validate Fingerprint Device Code
 
-            if (!string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode) &&
-                !string.IsNullOrWhiteSpace(getEmployee.FingerprintDeviceCode))
+            if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
             {
-                if (string.IsNullOrEmpty(model.FingerprintDeviceCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintDeviceCode))
+                if (string.IsNullOrEmpty(model.FingerprintMobileCode) ||
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode))
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }
-                else if (model.FingerprintDeviceCode != getEmployee.FingerprintDeviceCode)
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }

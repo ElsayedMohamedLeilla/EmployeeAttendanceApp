@@ -169,7 +169,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.Email = model.Email;
-            getEmployee.AllowChangeFingerprintDeviceCodeForOneTime = model.AllowChangeFingerprintDeviceCodeForOneTime;
+            getEmployee.AllowChangeFingerprintMobileCodeForOneTime = model.AllowChangeFingerprintMobileCodeForOneTime;
             getEmployee.MobileNumber = model.MobileNumber;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
@@ -325,7 +325,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
-                    AllowChangeFingerprintDeviceCodeForOneTime = e.AllowChangeFingerprintDeviceCodeForOneTime,
+                    AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
                     Zones = e.Zones
                     .Select(d => d.Zone.Name)
                     .ToList()
@@ -377,7 +377,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeType = e.EmployeeType,
                     EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
-                    AllowChangeFingerprintDeviceCodeForOneTime = e.AllowChangeFingerprintDeviceCodeForOneTime,
+                    AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
                     ZoneIds = e.Zones

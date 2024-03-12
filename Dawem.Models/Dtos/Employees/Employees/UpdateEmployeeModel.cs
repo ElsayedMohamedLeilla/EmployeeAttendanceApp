@@ -22,7 +22,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
         public int? AnnualVacationBalance { get; set; }
-        public bool AllowChangeFingerprintDeviceCodeForOneTime { get; set; }
+        public bool AllowChangeFingerprintMobileCodeForOneTime { get; set; }
         public int EmployeeNumber { get; set; }
         public bool IsActive { get; set; }
         public List<int> ZoneIds { get; set; }

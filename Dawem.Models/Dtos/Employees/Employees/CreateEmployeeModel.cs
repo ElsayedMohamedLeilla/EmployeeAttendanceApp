@@ -9,7 +9,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int DepartmentId { get; set; }
         public int? JobTitleId { get; set; }
         public int? ScheduleId { get; set; }
-        public int? DirectManagerId { get; set; }
+        public int? DirectManagerId { get; set; } 
         public string Name { get; set; }
         public string Email { get; set; }
         public string MobileNumber { get; set; }

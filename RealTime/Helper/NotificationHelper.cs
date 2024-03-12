@@ -17,9 +17,13 @@ namespace Dawem.RealTime.Helper
                 NotificationType.NewVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.NewVacationRequest, lang),
                 NotificationType.AcceptingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.AcceptingVacationRequest, lang),
                 NotificationType.RejectingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingVacationRequest, lang),
+                NotificationType.NewTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.NewTaskRequest, lang),
+                NotificationType.AccecptingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.AccecptingTaskRequest, lang),
+                NotificationType.RejectingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingTaskRequest, lang),
                 NotificationType.JustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),
-                NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
                 NotificationType.PermisionRequest => TranslationHelper.GetTranslation(AmgadKeys.PermisionRequest, lang),
+                NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
+                NotificationType.NewSummons => TranslationHelper.GetTranslation(AmgadKeys.NewSummons, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
             };
         }
@@ -54,6 +58,13 @@ namespace Dawem.RealTime.Helper
                 NotificationType.NewVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.AddingNewVacationWaitingApproval, lang),
                 NotificationType.AcceptingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.YourVacationIsAccepted, lang),
                 NotificationType.RejectingVacationRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingVacationRequest, lang),
+                NotificationType.NewTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.NewTaskRequest, lang),
+                NotificationType.AccecptingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.AccecptingTaskRequest, lang),
+                NotificationType.RejectingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingTaskRequest, lang),
+                NotificationType.JustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),
+                NotificationType.PermisionRequest => TranslationHelper.GetTranslation(AmgadKeys.PermisionRequest, lang),
+                NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
+                NotificationType.NewSummons => TranslationHelper.GetTranslation(AmgadKeys.NewSummons, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }

@@ -46,6 +46,13 @@ namespace Dawem.Validation.FluentValidation.Authentications
                    WithMessage(LeillaKeys.SorryYouMustEnterUserMobileNumber);
             RuleFor(signUpModel => signUpModel.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterUserName);
+
+
+            RuleFor(signUpModel => signUpModel.NumberOfEmployees).NotNull().
+                   WithMessage(LeillaKeys.SorryYouMustEnterNumberOfEmployees);
+
+            RuleFor(signUpModel => signUpModel.SubscriptionDurationInMonths).NotNull().
+                   WithMessage(LeillaKeys.SorryYouMustEnterSubscriptionDurationInMonths);
         }
     }
 }

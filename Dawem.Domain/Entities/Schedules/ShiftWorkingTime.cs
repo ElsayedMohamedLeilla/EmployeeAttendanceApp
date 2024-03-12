@@ -19,8 +19,6 @@ namespace Dawem.Domain.Entities.Schedules
         public TimeOnly CheckInTime { get; set; }
         public TimeOnly CheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
-
-
-
+        public List<ScheduleDay> ScheduleDays { get; set; }
     }
 }

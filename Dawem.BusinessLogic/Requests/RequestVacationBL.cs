@@ -331,7 +331,7 @@ namespace Dawem.BusinessLogic.Requests
                 Code = requestVacation.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = requestVacation.Request.Employee.Code,
+                    EmployeeNumber = requestVacation.Request.Employee.EmployeeNumber,
                     Name = requestVacation.Request.Employee.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(requestVacation.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
@@ -450,7 +450,7 @@ namespace Dawem.BusinessLogic.Requests
                     Code = requestVacation.Request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = requestVacation.Request.Employee.Code,
+                        EmployeeNumber = requestVacation.Request.Employee.EmployeeNumber,
                         Name = requestVacation.Request.Employee.Name,
                         ProfileImagePath = uploadBLC.GetFilePath(requestVacation.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
@@ -664,8 +664,9 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<GetVacationsInformationsResponseDTO> GetVacationsInformations()
         {
             var requestVacationRepository = repositoryManager.RequestVacationRepository;
-            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted &&
-            request.Request.CompanyId == requestInfo.CompanyId);
+            var query = requestVacationRepository.Get(requestVacation => requestVacation.Request.Type == RequestType.Vacation &&
+            !requestVacation.Request.IsDeleted &&
+            requestVacation.Request.CompanyId == requestInfo.CompanyId);
 
             #region Handle Response
 
@@ -690,10 +691,11 @@ namespace Dawem.BusinessLogic.Requests
             var currentYear = DateTime.UtcNow.Year;
 
             var requestVacationRepository = repositoryManager.RequestVacationRepository;
-            var query = requestVacationRepository.Get(request => !request.Request.IsDeleted &&
-            request.Request.Date.Year == currentYear &&
-            request.Request.CompanyId == requestInfo.CompanyId &&
-            request.Request.EmployeeId == requestInfo.EmployeeId);
+            var query = requestVacationRepository.Get(requestVacation => requestVacation.Request.Type == RequestType.Vacation &&
+            !requestVacation.Request.IsDeleted &&
+            requestVacation.Request.Date.Year == currentYear &&
+            requestVacation.Request.CompanyId == requestInfo.CompanyId &&
+            requestVacation.Request.EmployeeId == requestInfo.EmployeeId);
 
             #region Handle Response
 

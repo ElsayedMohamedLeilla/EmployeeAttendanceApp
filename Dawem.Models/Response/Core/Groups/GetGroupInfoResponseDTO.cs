@@ -6,12 +6,8 @@
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public List<string> Employees { get; set; }
-        public string Manager { get; set; }
+        public string ManagerName { get; set; }
         public List<string> ManagerDelegators { get; set; }
         public List<string> Zones { get; set; }
-
-
-
-
     }
 }

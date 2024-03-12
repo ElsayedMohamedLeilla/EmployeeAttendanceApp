@@ -185,7 +185,7 @@ namespace Dawem.BusinessLogic.Requests
                  .GetEntityByConditionWithTrackingAsync(requestJustification => !requestJustification.Request.IsDeleted
                  && requestJustification.Request.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            getRequest.EmployeeId = model.EmployeeId ?? 0;
+            getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.Requests
                 Code = requestJustification.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = requestJustification.Request.Employee.Code,
+                    EmployeeNumber = requestJustification.Request.Employee.EmployeeNumber,
                     Name = requestJustification.Request.Employee.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(requestJustification.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
@@ -387,7 +387,7 @@ namespace Dawem.BusinessLogic.Requests
                     Code = requestJustification.Request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = requestJustification.Request.Employee.Code,
+                        EmployeeNumber = requestJustification.Request.Employee.EmployeeNumber,
                         Name = requestJustification.Request.Employee.Name,
                         ProfileImagePath = uploadBLC.GetFilePath(requestJustification.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
@@ -492,8 +492,9 @@ namespace Dawem.BusinessLogic.Requests
         public async Task<GetJustificationsInformationsResponseDTO> GetJustificationsInformations()
         {
             var requestJustificationRepository = repositoryManager.RequestJustificationRepository;
-            var query = requestJustificationRepository.Get(request => !request.Request.IsDeleted &&
-            request.Request.CompanyId == requestInfo.CompanyId);
+            var query = requestJustificationRepository.Get(requestJustification => requestJustification.Request.Type == RequestType.Justification
+            && !requestJustification.Request.IsDeleted &&
+            requestJustification.Request.CompanyId == requestInfo.CompanyId);
 
             #region Handle Response
 

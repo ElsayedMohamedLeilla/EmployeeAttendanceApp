@@ -121,7 +121,9 @@ namespace Dawem.BusinessLogic.Provider
                 IsActive = true,
                 AddUserId = user.Id,
                 CountryId = signUpModel.CompanyCountryId,
-                Email = signUpModel.CompanyEmail
+                Email = signUpModel.CompanyEmail,
+                NumberOfEmployees = signUpModel.NumberOfEmployees,
+                SubscriptionDurationInMonths = signUpModel.SubscriptionDurationInMonths
             });
 
             await unitOfWork.SaveAsync();
@@ -376,6 +378,43 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
+            #region Handle Fingerprint Device Code
+
+            if (!string.IsNullOrEmpty(signInModel.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(signInModel.FingerprintMobileCode) &&
+                user.EmployeeId > 0)
+            {
+                var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+                && employee.Id == user.EmployeeId);
+
+                if (getEmployee != null)
+                {
+                    var checkFingerprintMobileCodeDuplicate = await repositoryManager.EmployeeRepository
+                        .Get(employee => !employee.IsDeleted
+                        && employee.Id != getEmployee.Id && employee.FingerprintMobileCode == signInModel.FingerprintMobileCode)
+                        .AnyAsync();
+
+                    if (!checkFingerprintMobileCodeDuplicate)
+                    {
+                        if (string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) ||
+                            string.IsNullOrEmpty(getEmployee.FingerprintMobileCode))
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                        }
+                        else if (getEmployee.AllowChangeFingerprintMobileCodeForOneTime &&
+                            signInModel.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                            getEmployee.AllowChangeFingerprintMobileCodeForOneTime = false;
+                        }
+                        _ = unitOfWork.SaveAsync();
+                    }
+                }
+            }
+
+            #endregion
+
             return tokenData;
         }
         public async Task<TokenDto> GetTokenModel(TokenModel criteria)
@@ -449,9 +488,9 @@ namespace Dawem.BusinessLogic.Provider
         }
         private static string GetResetPasswordLink(ResetPasswordToken emailToken)
         {
-            var path = "resetpassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
+            var path = "#/resetPassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
             var protocol = LeillaKeys.Https;
-            var host = "pro.dawem.app/";
+            var host = "stage.dawem.app/";
             var resetPasswordLink = $"{protocol}://{host}{path}";
             return resetPasswordLink;
         }
@@ -501,7 +540,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
-            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             var resetPasswordResult = await userManagerRepository.ResetPasswordAsync(user, model.ResetToken, model.NewPassword);

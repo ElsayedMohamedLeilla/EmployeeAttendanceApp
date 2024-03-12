@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Summons;
+﻿using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,10 @@ namespace Dawem.Domain.Entities.Attendances
         public int? SummonId { get; set; }
         [ForeignKey(nameof(SummonId))]
         public Summon Summon { get; set; }
+
+        public int? ZoneId { get; set; }
+        [ForeignKey(nameof(ZoneId))]
+        public Zone Zone { get; set; }
 
         #endregion
         public TimeOnly Time { get; set; }

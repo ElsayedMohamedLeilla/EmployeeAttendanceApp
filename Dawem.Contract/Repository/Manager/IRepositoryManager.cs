@@ -18,6 +18,7 @@ namespace Dawem.Contract.Repository.Manager
     public interface IRepositoryManager
     {
         ICompanyRepository CompanyRepository { get; }
+        ISubscriptionRepository SubscriptionRepository { get; }
         ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }

@@ -347,7 +347,7 @@ namespace Dawem.BusinessLogic.Core.Groups
                  employee => employee.Id,
                  (groupEmployee, employee) => employee.Name) // Select employee names
              .ToList(),
-         Manager = group.GroupManager.Name,
+         ManagerName = group.GroupManager.Name,
          Zones = group.Zones
              .Join(repositoryManager.ZoneRepository.GetAll(), // Assuming access to Employee repository
                  depZone => depZone.ZoneId,
@@ -370,23 +370,17 @@ namespace Dawem.BusinessLogic.Core.Groups
                     IsActive = group.IsActive,
                     ManagerId = group.ManagerId,
                     EmployeeIds = group.GroupEmployees
-             .Join(repositoryManager.EmployeeRepository.GetAll(),
-                 groupEmployee => groupEmployee.EmployeeId,
-                 employee => employee.Id,
-                 (groupEmployee, employee) => employee.Id)
-             .ToList(),
-                    ManagerDelegatorIds = group.GroupManagerDelegators
-             .Join(repositoryManager.EmployeeRepository.GetAll(),
-                 groupEmployee => groupEmployee.EmployeeId,
-                 employee => employee.Id,
-                 (groupEmployee, employee) => employee.Id)
-             .ToList(),
-                    ZoneIds = group.Zones
-                 .Join(repositoryManager.ZoneRepository.GetAll(),
-                 zoneDepartment => zoneDepartment.ZoneId,
-                 zone => zone.Id,
-                 (zoneDepartment, zone) => zone.Id)
-                 .ToList(),
+                    .Join(repositoryManager.EmployeeRepository.GetAll(),
+                    groupEmployee => groupEmployee.EmployeeId, employee => employee.Id,
+                    (groupEmployee, employee) => employee.Id).ToList(),
+                    ManagerDelegatorIds = group.GroupManagerDelegators.Join(repositoryManager.EmployeeRepository.GetAll(),
+                    groupEmployee => groupEmployee.EmployeeId,
+                    employee => employee.Id,
+                    (groupEmployee, employee) => employee.Id).ToList(),
+                    ZoneIds = group.Zones.Join(repositoryManager.ZoneRepository.GetAll(),
+                    zoneDepartment => zoneDepartment.ZoneId,
+                    zone => zone.Id,
+                    (zoneDepartment, zone) => zone.Id).ToList(),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryGroupNotFound);
 
             return Group;

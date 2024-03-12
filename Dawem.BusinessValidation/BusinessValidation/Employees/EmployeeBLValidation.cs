@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Exceptions;
@@ -35,6 +36,27 @@ namespace Dawem.Validation.BusinessValidation.Employees
                 throw new BusinessValidationException(AmgadKeys.SorryEmployeeNumberIsDuplicated);
             }
 
+            #region Employees Count
+
+            var companyNumberOfEmployees = await repositoryManager
+               .CompanyRepository.Get(c => c.Id == requestInfo.CompanyId)
+               .Select(c => c.NumberOfEmployees)
+               .FirstOrDefaultAsync();
+
+            var getEmployeesCount = await repositoryManager.EmployeeRepository.Get(e => e.IsDeleted &&
+            e.CompanyId == requestInfo.CompanyId)
+                .CountAsync();
+
+            if (getEmployeesCount >= companyNumberOfEmployees)
+                throw new BusinessValidationException(messageCode: null, message: TranslationHelper.GetTranslation(LeillaKeys.SorryYouReachTheMaxNumberOfEmployeesInYourCompany, requestInfo.Lang) +
+                    LeillaKeys.SpaceThenDashThenSpace +
+                    TranslationHelper.GetTranslation(LeillaKeys.MaxNumberOfEmployees, requestInfo.Lang) +
+                    LeillaKeys.Space +
+                     companyNumberOfEmployees);
+
+            #endregion
+
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateEmployeeModel model)
@@ -49,7 +71,7 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             var checkEmployeeNumberDuplicate = await repositoryManager
               .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-              c.EmployeeNumber == model.EmployeeNumber && 
+              c.EmployeeNumber == model.EmployeeNumber &&
               c.Id != model.Id).AnyAsync();
             if (checkEmployeeNumberDuplicate)
             {

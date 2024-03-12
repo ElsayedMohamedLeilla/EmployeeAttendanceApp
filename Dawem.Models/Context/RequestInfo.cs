@@ -24,7 +24,5 @@ namespace Dawem.Models.Context
         public DateTime LocalDateTime { get; set; }
         public LocalDateTime LocalHijriDateTime { get; set; }
 
-
-
     }
 }

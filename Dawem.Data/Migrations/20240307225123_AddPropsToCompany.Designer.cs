@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240307225123_AddPropsToCompany")]
+    partial class AddPropsToCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,16 +176,11 @@ namespace Dawem.Data.Migrations
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
 
-                    b.Property<int?>("ZoneId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeAttendanceId");
 
                     b.HasIndex("SummonId");
-
-                    b.HasIndex("ZoneId");
 
                     b.ToTable("EmployeeAttendanceChecks", "Dawem");
                 });
@@ -986,9 +984,6 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("AllowChangeFingerprintMobileCodeForOneTime")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("AnnualVacationBalance")
                         .HasColumnType("int");
 
@@ -1021,9 +1016,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int>("EmployeeType")
                         .HasColumnType("int");
-
-                    b.Property<string>("FingerprintMobileCode")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -4329,7 +4321,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendance", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("EmployeeAttendances")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4370,20 +4362,13 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
-                        .WithMany("EmployeeAttendanceChecks")
-                        .HasForeignKey("SummonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
                         .WithMany()
-                        .HasForeignKey("ZoneId")
+                        .HasForeignKey("SummonId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("EmployeeAttendance");
 
                     b.Navigation("Summon");
-
-                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.DepartmentManagerDelegator", b =>
@@ -4563,7 +4548,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5010,7 +4995,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.Schedule", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("Schedules")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5027,7 +5012,7 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", "Shift")
-                        .WithMany("ScheduleDays")
+                        .WithMany()
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -5545,13 +5530,7 @@ namespace Dawem.Data.Migrations
                 {
                     b.Navigation("Branches");
 
-                    b.Navigation("EmployeeAttendances");
-
-                    b.Navigation("Employees");
-
                     b.Navigation("SchedulePlans");
-
-                    b.Navigation("Schedules");
 
                     b.Navigation("Summons");
                 });
@@ -5597,11 +5576,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanLogEmployees");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", b =>
-                {
-                    b.Navigation("ScheduleDays");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
                 {
                     b.Navigation("SummonSanctions");
@@ -5609,8 +5583,6 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Summon", b =>
                 {
-                    b.Navigation("EmployeeAttendanceChecks");
-
                     b.Navigation("SummonDepartments");
 
                     b.Navigation("SummonEmployees");

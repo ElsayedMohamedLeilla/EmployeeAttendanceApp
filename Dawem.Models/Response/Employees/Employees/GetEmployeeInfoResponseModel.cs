@@ -20,6 +20,6 @@
         public string DisableReason { get; set; }
         public bool IsActive { get; set; }
         public List<string> Zones { get; set; }
-
+        public bool AllowChangeFingerprintMobileCodeForOneTime { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240312194511_AddAllowChangeFingerprintDeviceCodeForOneTimeToEmployeeTable")]
+    partial class AddAllowChangeFingerprintDeviceCodeForOneTimeToEmployeeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -986,7 +989,7 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("AllowChangeFingerprintMobileCodeForOneTime")
+                    b.Property<bool>("AllowChangeFingerprintDeviceCodeForOneTime")
                         .HasColumnType("bit");
 
                     b.Property<int?>("AnnualVacationBalance")
@@ -1022,7 +1025,7 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("EmployeeType")
                         .HasColumnType("int");
 
-                    b.Property<string>("FingerprintMobileCode")
+                    b.Property<string>("FingerprintDeviceCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")

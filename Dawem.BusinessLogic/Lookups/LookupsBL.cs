@@ -13,7 +13,6 @@ using IPinfo;
 using LinqKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace Dawem.BusinessLogic.Lookups
@@ -42,7 +41,7 @@ namespace Dawem.BusinessLogic.Lookups
             var countryPredicate = PredicateBuilder.New<Country>(true);
 
             var getCurrentCountryCode = await GetCurrentCountryInfo();
-            
+
             if (criteria.Id is not 0 && criteria.Id is not null)
             {
                 countryPredicate = countryPredicate.And(x => x.Id == criteria.Id);

@@ -58,7 +58,7 @@ namespace Dawem.BusinessLogic.Requests
                 Code = request.Code,
                 Employee = new RequestEmployeeModel
                 {
-                    Code = request.Employee.Code,
+                    EmployeeNumber = request.Employee.EmployeeNumber,
                     Name = request.Employee.Name,
                     ProfileImagePath = uploadBLC.GetFilePath(request.Employee.ProfileImageName, LeillaKeys.Employees)
                 },
@@ -143,7 +143,7 @@ namespace Dawem.BusinessLogic.Requests
                     Code = request.Code,
                     Employee = new RequestEmployeeModel
                     {
-                        Code = request.Employee.Code,
+                        EmployeeNumber = request.Employee.EmployeeNumber,
                         Name = request.Employee.Name,
                         ProfileImagePath = uploadBLC.GetFilePath(request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },

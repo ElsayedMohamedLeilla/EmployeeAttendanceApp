@@ -10,5 +10,6 @@ namespace Dawem.Models.Dtos.Identities
         public int CompanyId { get; set; }
         public ApplicationType ApplicationType { get; set; }
         public string DeviceToken { get; set; }
+        public string FingerprintMobileCode { get; set; }
     }
 }

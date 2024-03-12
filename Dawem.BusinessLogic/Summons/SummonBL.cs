@@ -88,7 +88,7 @@ namespace Dawem.BusinessLogic.Summons
             #endregion
 
             #region Notifiacations
-
+            /*
             var notificationNextCode = await repositoryManager.NotificationStoreRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
@@ -100,7 +100,10 @@ namespace Dawem.BusinessLogic.Summons
             List<NotificationRecieverDTO> notificationRecieverDTO = new();
             if (model.ForAllEmployees.HasValue && model.ForAllEmployees.Value)
             {
-                notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
+                notificationRecieverDTO = repositoryManager.UserRepository
+                    .Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null)
+                    .Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id })
+                    .ToList();
             }
             else
             {
@@ -150,7 +153,6 @@ namespace Dawem.BusinessLogic.Summons
 
             #endregion
 
-
             #region Save Notification In DB
 
             //var notificationStore = new NotificationStore()
@@ -171,15 +173,7 @@ namespace Dawem.BusinessLogic.Summons
             //repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             //await unitOfWork.SaveAsync();
             #endregion
-
-            //#region Fire Notification & Email
-            //List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
-            //if (userIds.Count > 0)
-            //{
-            //    await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
-            //}
-            //#endregion
-
+            */
             #endregion
 
             #region Handle Response

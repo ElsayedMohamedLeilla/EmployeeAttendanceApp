@@ -28,6 +28,10 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetByIdAsync(getEmployeeId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
             #region Validate Latitude And Longitude 
 
             int? zoneId = null;
@@ -110,10 +114,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #endregion
 
-            var getScheduleId = await repositoryManager.EmployeeRepository
-                .Get(e => e.Id == getEmployeeId && !e.IsDeleted)
-                .Select(e => e.ScheduleId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
+            var getScheduleId = getEmployee.ScheduleId ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
             var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == getScheduleId && !schedule.IsDeleted)
                .Select(schedule => new GetScheduleByIdResponseModel
@@ -205,6 +207,24 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 else
                     summonId = getSummon.Id;
 
+            }
+
+            #endregion
+
+            #region Validate Fingerprint Device Code
+
+            if (!string.IsNullOrEmpty(getEmployee.FingerprintDeviceCode) &&
+                !string.IsNullOrWhiteSpace(getEmployee.FingerprintDeviceCode))
+            {
+                if (string.IsNullOrEmpty(model.FingerprintDeviceCode) ||
+                    string.IsNullOrWhiteSpace(model.FingerprintDeviceCode))
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
+                }
+                else if (model.FingerprintDeviceCode != getEmployee.FingerprintDeviceCode)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
+                }
             }
 
             #endregion

@@ -506,7 +506,7 @@
         public const string SorryYouMustEnterSubscriptionDurationInMonths = "Sorry!!YouMustEnterSubscriptionDurationInMonths!";
         public const string SorryYouReachTheMaxNumberOfEmployeesInYourCompany = "Sorry!!YouReachTheMaxNumberOfEmployeesInYourCompany!";
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
-
-
+        public const string SorryYouMustEnterEmployeeFingerprintMobileCode = "Sorry!!YouMustEnterEmployeeFingerprintMobileCode!";
+        public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
     }
 }

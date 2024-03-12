@@ -32,8 +32,6 @@ namespace Dawem.BusinessLogic.Summons
         private readonly IUploadBLC uploadBLC;
         private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
 
-
-
         public SummonBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
@@ -90,6 +88,7 @@ namespace Dawem.BusinessLogic.Summons
             #endregion
 
             #region Notifiacations
+
             var notificationNextCode = await repositoryManager.NotificationStoreRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)

@@ -8,5 +8,6 @@ namespace Dawem.Models.Dtos.Attendances
         public double Longitude { get; set; }
         public FingerPrintType Type { get; set; }
         public RecognitionWay RecognitionWay { get; set; }
+        public string FingerprintDeviceCode { get; set; }
     }
 }

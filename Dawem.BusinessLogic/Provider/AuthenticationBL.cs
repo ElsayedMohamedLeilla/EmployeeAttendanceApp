@@ -373,7 +373,7 @@ namespace Dawem.BusinessLogic.Provider
                     repositoryManager.NotificationUserRepository.Insert(firebaseUser);
                 }
 
-                _ = unitOfWork.SaveAsync();
+                await unitOfWork.SaveAsync();
             }
 
             #endregion
@@ -408,7 +408,7 @@ namespace Dawem.BusinessLogic.Provider
                             getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
                             getEmployee.AllowChangeFingerprintMobileCodeForOneTime = false;
                         }
-                        _ = unitOfWork.SaveAsync();
+                        await unitOfWork.SaveAsync();
                     }
                 }
             }

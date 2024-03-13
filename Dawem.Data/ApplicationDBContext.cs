@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -109,7 +110,7 @@ namespace Dawem.Data
          .HasOne(p => p.SummonMissingLog)
          .WithMany(b => b.SummonMissingLogSanctions)
          .HasForeignKey(p => p.SummonMissingLogId)
-         .OnDelete(DeleteBehavior.Cascade); 
+         .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<PermissionScreen>()
          .HasOne(p => p.Permission)
@@ -285,9 +286,9 @@ namespace Dawem.Data
 
 
 
-            builder.Entity<NotificationUserDeviceToken>()
+            builder.Entity<NotificationUserFCMToken>()
       .HasOne(p => p.NotificationUser)
-      .WithMany(b => b.NotificationUserDeviceTokens)
+      .WithMany(b => b.NotificationUserFCMTokens)
       .HasForeignKey(p => p.NotificationUserId)
       .OnDelete(DeleteBehavior.Cascade);
 
@@ -323,7 +324,7 @@ namespace Dawem.Data
       .OnDelete(DeleteBehavior.Restrict);
 
 
-           
+
 
 
             builder.Entity<Department>()
@@ -364,10 +365,30 @@ namespace Dawem.Data
           .Property(e => e.ShiftCheckOutTime)
           .HasConversion(
               v => v.ToTimeSpan(),
-              v => TimeOnly.FromTimeSpan(v)
+            v => TimeOnly.FromTimeSpan(v)
+            );
 
-          );
+            #region Add Index To All CompanyId And Name In All Tables
 
+            var allEntities = builder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(Employee.Name)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
+
+            foreach (var entityType in allEntities)
+            {
+                var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
+                var name = entityType?.GetProperty(nameof(Employee.Name));
+                var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
+
+                if (entityType != null && compoanyId != null && name != null && isDeleted != null)
+                {
+                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
+                    .IsUnique = true;
+                }
+            }
+
+            #endregion
         }
 
 
@@ -381,7 +402,7 @@ namespace Dawem.Data
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<NotificationUser> FirebaseUsers { get; set; }
-        public DbSet<NotificationUserDeviceToken> FirebaseUserDeviceTokens { get; set; }
+        public DbSet<NotificationUserFCMToken> FirebaseUserFCMTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }
@@ -420,7 +441,7 @@ namespace Dawem.Data
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
         public DbSet<ZoneEmployee> ZoneEmployees { get; set; }
         public DbSet<Zone> Zones { get; set; }
-        public DbSet<Holiday> Holidays  { get; set; }
+        public DbSet<Holiday> Holidays { get; set; }
         public DbSet<NotificationStore> NotificationStores { get; set; }
 
 

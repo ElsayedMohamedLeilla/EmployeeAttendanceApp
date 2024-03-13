@@ -325,7 +325,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Device Token
 
-            if (!string.IsNullOrEmpty(signInModel.DeviceToken) && !string.IsNullOrWhiteSpace(signInModel.DeviceToken))
+            if (!string.IsNullOrEmpty(signInModel.FCMToken) && !string.IsNullOrWhiteSpace(signInModel.FCMToken))
             {
                 var getNotificationUser = await repositoryManager.NotificationUserRepository
                 .Get(f => !f.IsDeleted && f.CompanyId == user.CompanyId && f.UserId == user.Id)
@@ -333,25 +333,25 @@ namespace Dawem.BusinessLogic.Provider
 
                 if (getNotificationUser != null)
                 {
-                    var getNotificationUserDeviceToken = await repositoryManager.NotificationUserDeviceTokenRepository
+                    var getNotificationUserDeviceToken = await repositoryManager.NotificationUserFCMTokenRepository
                     .GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && f.NotificationUserId == getNotificationUser.Id
-                    && f.DeviceToken == signInModel.DeviceToken && f.DeviceType == signInModel.ApplicationType);
+                    && f.FCMToken == signInModel.FCMToken && f.DeviceType == signInModel.ApplicationType);
 
                     if (getNotificationUserDeviceToken == null)
                     {
-                        var notificationUserDeviceToken = new NotificationUserDeviceToken
+                        var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
                             NotificationUserId = getNotificationUser.Id,
-                            DeviceToken = signInModel.DeviceToken,
+                            FCMToken = signInModel.FCMToken,
                             DeviceType = signInModel.ApplicationType,
                             LastLogInDate = DateTime.UtcNow
                         };
-                        repositoryManager.NotificationUserDeviceTokenRepository.Insert(notificationUserDeviceToken);
+                        repositoryManager.NotificationUserFCMTokenRepository.Insert(notificationUserDeviceToken);
                     }
                     else
                     {
                         getNotificationUserDeviceToken.LastLogInDate = DateTime.UtcNow;
-                        getNotificationUserDeviceToken.DeviceToken = signInModel.DeviceToken;
+                        getNotificationUserDeviceToken.FCMToken = signInModel.FCMToken;
                     }
                 }
                 else
@@ -360,11 +360,11 @@ namespace Dawem.BusinessLogic.Provider
                     {
                         CompanyId = user.CompanyId ?? 0,
                         UserId = user.Id,
-                        NotificationUserDeviceTokens = new()
+                        NotificationUserFCMTokens = new()
                         {
                             new()
                             {
-                                DeviceToken = signInModel.DeviceToken,
+                                FCMToken = signInModel.FCMToken,
                                 DeviceType = signInModel.ApplicationType,
                                 LastLogInDate = DateTime.UtcNow
                             }

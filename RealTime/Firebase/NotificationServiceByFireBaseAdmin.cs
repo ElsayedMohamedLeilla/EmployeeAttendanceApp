@@ -255,11 +255,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     }
     private List<TokensModel> GetUserTokens(List<int> userids)
     {
-        List<TokensModel> userTokens = repositoryManager.NotificationUserDeviceTokenRepository
+        List<TokensModel> userTokens = repositoryManager.NotificationUserFCMTokenRepository
             .Get(s => !s.IsDeleted && userids.Contains(s.NotificationUser.UserId)).Select(c => new TokensModel()
             {
                 ApplicationType = c.DeviceType,
-                Token = c.DeviceToken
+                Token = c.FCMToken
             }).ToList();
 
         return userTokens;

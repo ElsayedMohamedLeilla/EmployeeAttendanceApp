@@ -167,8 +167,22 @@ namespace Dawem.Translations
         public const string ThisMobileNumberIsUsedByEmployee = "ThisMobileNumberIsUsedByEmployee";
         public const string ThisNameIsUsedByEmployee = "ThisNameIsUsedByEmployee";
         public const string ThisEmployeeNumberIsUsedByEmployee = "ThisEmployeeNumberIsUsedByEmployee";
+        public const string MissingData = "MissingData";
+        public const string ThisDepartment = "ThisDepartment";
+        public const string NotFound = "NotFound";
+        public const string OnRowNumber = "OnRowNumber";
+        public const string ThisJobTitle = "ThisJobTitle";
+        public const string ThisSchedule = "ThisSchedule";
+        public const string ThisDirectManager = "ThisDirectManager";
+        public const string YouDonotAllowToAddAnyEmployee = "YouDonotAllowToAddAnyEmployee";
+        public const string WrongData = "WrongData";
+        public const string AnnualVacationBalanceCanNotBeNegativeValue = "AnnualVacationBalanceCanNotBeNegativeValue";
+        public const string EmployeeEnteredSuccessfully = "EmployeeEnteredSuccessfully";
 
         
+
+
+
 
 
 

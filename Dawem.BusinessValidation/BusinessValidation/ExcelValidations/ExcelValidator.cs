@@ -16,6 +16,10 @@ namespace FollowUp.Validation.BusinessValidation.General
             var actualHeaders = worksheet.FirstRow().CellsUsed().Select(cell => cell.Value.ToString()).ToArray();
             int rowCount = worksheet.RowsUsed().Count();
 
+            if(iniValidationDTO.MaxRowCount <= 0)
+            {
+                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.YouDonotAllowToAddAnyEmployee, iniValidationDTO.lang));
+            }
             if (!IsvalidExcel)
             {
                 validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.lang));
@@ -40,7 +44,7 @@ namespace FollowUp.Validation.BusinessValidation.General
                 // Check for duplicate values in each column
                 for (int columnIndex = 1; columnIndex <= actualHeaders.Length; columnIndex++)
                 {
-                    if (iniValidationDTO.columnsToCheckDuplication.Contains(columnIndex))
+                    if (!iniValidationDTO.columnsToCheckDuplication.Contains(columnIndex))
                     {
                         continue; // Skip the column if it's in the list of excluded columns
                     }

@@ -49,5 +49,6 @@ namespace Dawem.Domain.Entities.Employees
         public List<Request> EmployeeRequests { get; set; }
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
+        public bool InsertedFromExcel { get; set; } = false;
     }
 }

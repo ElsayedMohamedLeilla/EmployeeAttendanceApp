@@ -6,5 +6,7 @@
         public string[] ExpectedHeaders { get; set; }
         public int MaxRowCount { get; set; }
         public List<int> ColumnIndexToCheckNull { get; set; } = new List<int>();
+        public List<int> columnsToCheckDuplication { get; set; } = new List<int>();
+        public string lang { get; set; }
     }
 }

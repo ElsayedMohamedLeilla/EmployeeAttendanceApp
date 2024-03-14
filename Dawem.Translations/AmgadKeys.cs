@@ -11,7 +11,8 @@ namespace Dawem.Translations
         public const string NotificationIcons = "NotificationIcons";
         public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
 
-        
+        public const string Success = "Success";
+
 
         public const string NoEmail = "NoEmail";
 
@@ -152,14 +153,23 @@ namespace Dawem.Translations
         public const string NoFileUploaded = "NoFileUploaded";
         public const string ValueInColumnRequired = "ValueInColumnRequired";
         public const string DoneCreateEmployeeDraftSuccessfully = "DoneCreateEmployeeDraftSuccessfully";
-        public const string EmptyData = "EmptyData";
+        public const string EmptyDataProblem = "EmptyData";
         public const string NoDataImportedInFileTheFileIsEmpty = "NoDataImportedInFileTheFileIsEmpty";
 
         public const string NewTaskRequest = "NewTaskRequest";
         public const string AccecptingTaskRequest = "AccecptingTaskRequest";
         public const string RejectingTaskRequest = "RejectingTaskRequest";
+        public const string DuplicateColumnValueProblem = "DuplicateColumnValueProblem";
+        public const string DuplicateColumnValueFound = "DuplicateColumnValueFound";
+        public const string CannotBeNull = "CannotBeNull";
+        public const string DuplicationInDBProblem = "DuplicationInDBProblem";
+        public const string ThisEmailIsUsedByEmployee = "ThisEmailIsUsedByEmployee";
+        public const string ThisMobileNumberIsUsedByEmployee = "ThisMobileNumberIsUsedByEmployee";
+        public const string ThisNameIsUsedByEmployee = "ThisNameIsUsedByEmployee";
+        public const string ThisEmployeeNumberIsUsedByEmployee = "ThisEmployeeNumberIsUsedByEmployee";
 
         
+
 
 
 

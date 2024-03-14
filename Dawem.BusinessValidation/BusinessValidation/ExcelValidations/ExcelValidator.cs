@@ -7,34 +7,76 @@ namespace FollowUp.Validation.BusinessValidation.General
 {
     public class ExcelValidator
     {
-        public static Dictionary<string, string> InitialValidate(IniValidationModelDTO iniValidationDTO, string lang)
+        public static Dictionary<string, string> InitialValidate(IniValidationModelDTO iniValidationDTO)
         {
             bool IsvalidExcel = IsValidExcelFile(iniValidationDTO.FileStream);
             Dictionary<string, string> validationMessages = new();
             using var workbook = new XLWorkbook(iniValidationDTO.FileStream);
             var worksheet = workbook.Worksheet(1); // Assuming you want to validate the first worksheet
             var actualHeaders = worksheet.FirstRow().CellsUsed().Select(cell => cell.Value.ToString()).ToArray();
+            int rowCount = worksheet.RowsUsed().Count();
+
             if (!IsvalidExcel)
             {
-                validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, lang));
+                validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.lang));
             }
             // Check header
-            if (!Enumerable.SequenceEqual(iniValidationDTO.ExpectedHeaders, actualHeaders))
+            else if (!Enumerable.SequenceEqual(iniValidationDTO.ExpectedHeaders, actualHeaders))
             {
-                validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, lang));
+                validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, iniValidationDTO.lang));
             }
             // Check row count
-            int rowCount = worksheet.RowsUsed().Count();
-            if (rowCount > iniValidationDTO.MaxRowCount)
+            else if (rowCount > iniValidationDTO.MaxRowCount + 1) // add 1 to exclude header from count
             {
-                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, lang));
+                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, iniValidationDTO.lang));
             }
             // if no data found
-            if (rowCount == 1)
+            else if (rowCount == 1)
             {
-                validationMessages.Add(AmgadKeys.EmptyData, TranslationHelper.GetTranslation(AmgadKeys.NoDataImportedInFileTheFileIsEmpty, lang));
+                validationMessages.Add(AmgadKeys.EmptyDataProblem, TranslationHelper.GetTranslation(AmgadKeys.NoDataImportedInFileTheFileIsEmpty, iniValidationDTO.lang));
             }
+            else
+            {
+                // Check for duplicate values in each column
+                for (int columnIndex = 1; columnIndex <= actualHeaders.Length; columnIndex++)
+                {
+                    if (iniValidationDTO.columnsToCheckDuplication.Contains(columnIndex))
+                    {
+                        continue; // Skip the column if it's in the list of excluded columns
+                    }
+                    HashSet<string> uniqueValues = new HashSet<string>();
+                    Dictionary<string, List<int>> duplicateCells = new Dictionary<string, List<int>>();
 
+                    for (int rowNum = 2; rowNum <= rowCount; rowNum++)
+                    {
+                        var cell = worksheet.Cell(rowNum, columnIndex);
+                        var cellValue = cell.GetString();
+                        if (!string.IsNullOrWhiteSpace(cellValue))
+                        {
+                            if (uniqueValues.Contains(cellValue))
+                            {
+                                string columnName = actualHeaders[columnIndex - 1];
+                                if (!duplicateCells.ContainsKey(columnName))
+                                {
+                                    duplicateCells[columnName] = new List<int>();
+                                }
+                                duplicateCells[columnName].Add(rowNum);
+                            }
+                            else
+                            {
+                                uniqueValues.Add(cellValue);
+                            }
+                        }
+                    }
+                    // Add duplicate cell information to validation messages
+                    foreach (var kvp in duplicateCells)
+                    {
+                        string cellReferences = string.Join(", ", kvp.Value.Select(row => $"A{row}"));
+                        validationMessages.Add($"{AmgadKeys.DuplicateColumnValueProblem}{kvp.Key}",
+                            TranslationHelper.GetTranslation($"{AmgadKeys.DuplicateColumnValueFound} ({cellReferences})", iniValidationDTO.lang));
+                    }
+                }
+            }
             List<Tuple<int, string>> nullColumns = new List<Tuple<int, string>>();
             foreach (int columnIndex in iniValidationDTO.ColumnIndexToCheckNull)
             {
@@ -56,7 +98,7 @@ namespace FollowUp.Validation.BusinessValidation.General
             int index = 0;
             foreach (var nullColumn in nullColumns)
             {
-                validationMessages.Add(AmgadKeys.NullColumnsProblem + index++, $"(Cell {nullColumn.Item2}) has no value.");
+                validationMessages.Add(AmgadKeys.NullColumnsProblem + index++, $"(Cell {nullColumn.Item2}) " + AmgadKeys.CannotBeNull);
             }
 
             return validationMessages;

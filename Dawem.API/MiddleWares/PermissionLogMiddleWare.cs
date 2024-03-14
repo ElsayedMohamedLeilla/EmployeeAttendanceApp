@@ -42,19 +42,8 @@ namespace Dawem.API.MiddleWares
                 {
                     var permissionLogRepository = repositoryManager.PermissionLogRepository;
 
-                    #region Set Permission Log Code
-
-                    var getNextCode = await permissionLogRepository
-                        .Get(e => e.CompanyId == requestInfo.CompanyId)
-                        .Select(e => e.Code)
-                        .DefaultIfEmpty()
-                        .MaxAsync() + 1;
-
-                    #endregion
-
                     var permissionLog = new PermissionLog
                     {
-                        Code = getNextCode,
                         CompanyId = companyId,
                         UserId = userId,
                         ActionCode = mapResult.Method.Value,

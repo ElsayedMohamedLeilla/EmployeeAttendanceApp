@@ -39,7 +39,6 @@ namespace Dawem.BusinessLogic.Permissions
             var permissionLogsList = await queryPaged.Select(pl => new GetPermissionLogsResponseModel
             {
                 Id = pl.Id,
-                Code = pl.Code,
                 UserName = pl.User.Name,
                 ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
                 IsActive = pl.IsActive,
@@ -58,7 +57,6 @@ namespace Dawem.BusinessLogic.Permissions
             var permissionLog = await repositoryManager.PermissionLogRepository.Get(e => e.Id == permissionLogId && !e.IsDeleted)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
-                    Code = pl.Code,
                     UserName = pl.User.Name,
                     ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),

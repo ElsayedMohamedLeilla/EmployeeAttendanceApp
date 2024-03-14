@@ -14,6 +14,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int? DirectManagerId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public int MobileCountryId { get; set; }
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public IFormFile ProfileImageFile { get; set; }

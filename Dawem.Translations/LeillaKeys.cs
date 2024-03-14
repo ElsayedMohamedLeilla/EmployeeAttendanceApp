@@ -17,6 +17,7 @@ namespace Dawem.Translations
         public const string En = "en";
         public const string Ar1 = "1";
         public const string En2 = "2";
+        public const string PlusSign = "+";
         public const string Entity = "entity";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
         public const string AnErrorOccuredPleaseContactYourSystemAdministrator = "An error occured - please contact your system administrator.";
@@ -512,7 +513,8 @@ namespace Dawem.Translations
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
         public const string SorryYouMustEnterEmployeeFingerprintMobileCode = "Sorry!!YouMustEnterEmployeeFingerprintMobileCode!";
         public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
-        public const string SorryDuplicationOfDataIsNotAllowed = "Sorry!!DuplicationOfDataIsNotAllowed!";
-       
+        public const string SorryDuplicationOfDataIsNotAllowedPleaseTryAgain = "Sorry!!DuplicationOfDataIsNotAllowedPleaseTryAgain!";
+        public const string SorryYouMustChooseMobileCountry = "Sorry!!YouMustChooseMobileCountry!";
+
     }
 }

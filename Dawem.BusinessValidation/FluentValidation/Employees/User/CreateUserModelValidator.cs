@@ -13,8 +13,14 @@ namespace Dawem.Validation.FluentValidation.Employees.User
                   WithMessage(LeillaKeys.SorryYouMustEnterUserName);
             RuleFor(user => user.Email).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+
             RuleFor(user => user.MobileNumber).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+
+            RuleFor(user => user.MobileCountryId)
+                .GreaterThan(0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 

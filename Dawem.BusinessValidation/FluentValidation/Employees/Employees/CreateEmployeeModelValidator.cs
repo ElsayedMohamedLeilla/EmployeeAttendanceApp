@@ -17,8 +17,14 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeJoiningDate);
             RuleFor(model => model.Email).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+
             RuleFor(model => model.MobileNumber).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+
+            RuleFor(user => user.MobileCountryId)
+            .GreaterThan(0)
+            .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+
             RuleFor(model => model.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
             RuleFor(model => model.AttendanceType).NotNull().

@@ -308,6 +308,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeInfoResponseModel
                 {
@@ -316,6 +318,8 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -339,6 +343,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetCurrentEmployeeInfoResponseModel> GetCurrentEmployeeInfo()
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
                 .Select(u => u.EmployeeId)
                 .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
@@ -351,6 +357,8 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     JobTitleName = e.JobTitle.Name,
@@ -370,6 +378,7 @@ namespace Dawem.BusinessLogic.Employees
                     DepartmentId = e.DepartmentId,
                     DirectManagerId = e.DirectManagerId,
                     Email = e.Email,
+                    MobileCountryId = e.MobileCountryId ?? 0,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -491,6 +500,7 @@ namespace Dawem.BusinessLogic.Employees
             iniValidationModelDTO.lang = requestInfo.Lang;
             iniValidationModelDTO.columnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
+
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
             if (validationMessages.Count > 0)

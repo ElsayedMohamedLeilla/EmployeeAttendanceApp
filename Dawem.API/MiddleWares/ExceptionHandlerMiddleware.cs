@@ -76,7 +76,8 @@ namespace Dawem.API.MiddleWares
             {
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 responseGenaric.State = ResponseStatus.ValidationError;
-                responseGenaric.Message = TranslationHelper.GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowed, requestInfo?.Lang); ;
+                responseGenaric.Message = TranslationHelper
+                    .GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowedPleaseTryAgain, requestInfo?.Lang); ;
                 await Return(unitOfWork, context, statusCode, responseGenaric);
 
             }

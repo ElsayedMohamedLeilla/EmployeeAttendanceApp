@@ -8,6 +8,7 @@ namespace Dawem.Models.Dtos.Employees.Users
         public int? EmployeeId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public int MobileCountryId { get; set; }
         public string MobileNumber { get; set; }
         public string ProfileImageName { get; set; }
         public IFormFile ProfileImageFile { get; set; }

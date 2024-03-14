@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
@@ -22,6 +23,10 @@ namespace Dawem.Domain.Entities.UserManagement
         public int? EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public virtual Employee Employee { get; set; }
+
+        public int? MobileCountryId { get; set; }
+        [ForeignKey(nameof(MobileCountryId))]
+        public Country MobileCountry { get; set; }
 
         #endregion
         public int Code { get; set; }

@@ -20,6 +20,7 @@ namespace Dawem.Models.Response.Employees.Employees
         public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
         public string Email { get; set; }
+        public int MobileCountryId { get; set; }
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public string DisableReason { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
@@ -28,6 +29,11 @@ namespace Dawem.Domain.Entities.Employees
         public int? DirectManagerId { get; set; }
         [ForeignKey(nameof(DirectManagerId))]
         public Employee DirectManager { get; set; }
+
+        public int? MobileCountryId { get; set; }
+        [ForeignKey(nameof(MobileCountryId))]
+        public Country MobileCountry { get; set; }
+
         #endregion
         public int Code { get; set; }
         public int EmployeeNumber { get; set; }

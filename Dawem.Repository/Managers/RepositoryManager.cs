@@ -75,7 +75,7 @@ namespace Dawem.Repository.Managers
         private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
         private ISchedulePlanGroupRepository schedulePlanGroupRepository;
         private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
-        private ISchedulePlanBackgroundJobLogRepository schedulePlanBackgroundJobLogRepository;
+        private ISchedulePlanBackgroundJobLogRepository schedulePlanLogRepository;
         private ISchedulePlanBackgroundJobLogEmployeeRepository schedulePlanBackgroundJobLogEmployeeRepository;
         private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
@@ -186,7 +186,7 @@ namespace Dawem.Repository.Managers
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
         public ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository =>
-         schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting, requestInfo);
+         schedulePlanLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting, requestInfo);
         public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
         public IGroupEmployeeRepository GroupEmployeeRepository =>

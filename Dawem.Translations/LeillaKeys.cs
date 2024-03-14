@@ -80,6 +80,7 @@ namespace Dawem.Translations
         public const string BL = "BL";
         public const string BLC = "BLC";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
+        public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string ApiControllerAction = "api/[controller]/[action]";

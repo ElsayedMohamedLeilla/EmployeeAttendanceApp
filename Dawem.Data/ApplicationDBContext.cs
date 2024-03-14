@@ -370,12 +370,12 @@ namespace Dawem.Data
 
             #region Add Index To All CompanyId And Name In All Tables
 
-            var allEntities = builder.Model.GetEntityTypes()
+            var allNameEntities = builder.Model.GetEntityTypes()
                      .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(Employee.Name)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
 
-            foreach (var entityType in allEntities)
+            foreach (var entityType in allNameEntities)
             {
                 var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
                 var name = entityType?.GetProperty(nameof(Employee.Name));
@@ -384,6 +384,28 @@ namespace Dawem.Data
                 if (entityType != null && compoanyId != null && name != null && isDeleted != null)
                 {
                     entityType.AddIndex(new List<IMutableProperty> { compoanyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
+                    .IsUnique = true;
+                }
+            }
+
+            #endregion
+
+            #region Add Index To All CompanyId Code All Tables
+
+            var allCodeEntities = builder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(Employee.Code)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
+
+            foreach (var entityType in allCodeEntities)
+            {
+                var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
+                var code = entityType?.GetProperty(nameof(Employee.Code));
+                var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
+
+                if (entityType != null && compoanyId != null && code != null && isDeleted != null)
+                {
+                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, code, isDeleted }, LeillaKeys.UniqueIndexCompanyIdCodeIsDeleted)
                     .IsUnique = true;
                 }
             }

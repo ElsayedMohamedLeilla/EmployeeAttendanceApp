@@ -375,8 +375,6 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                         }
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -405,6 +403,18 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                 });
                 employee.ScheduleId = model.ScheduleId;
             }
+
+            #region Set Schedule Plan Log code
+
+            var getNextCode = await repositoryManager.SchedulePlanLogRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            schedulePlanLog.Code = getNextCode;
+
+            #endregion
 
             schedulePlanLog.FinishDate = DateTime.UtcNow;
             repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanLog);

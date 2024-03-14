@@ -9,7 +9,7 @@ namespace Dawem.API.Controllers.Employees
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class EmployeeController : BaseController
     {
         private readonly IEmployeeBL employeeBL;

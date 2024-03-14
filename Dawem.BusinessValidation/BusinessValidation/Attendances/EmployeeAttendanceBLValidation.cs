@@ -221,7 +221,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }
-                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }

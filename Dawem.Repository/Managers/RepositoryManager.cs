@@ -110,7 +110,7 @@ namespace Dawem.Repository.Managers
         private ISummonDepartmentRepository summonDepartmentRepository;
         private ISanctionRepository sanctionRepository;
         private INotificationUserRepository notificationUserRepository;
-        private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
+        private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
 
 
 
@@ -268,7 +268,7 @@ namespace Dawem.Repository.Managers
             sanctionRepository ??= new SanctionRepository(unitOfWork, generalSetting, requestInfo);
         public INotificationUserRepository NotificationUserRepository =>
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
-        public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>
-            notificationUserDeviceTokenRepository ??= new NotificationUserDeviceTokenRepository(unitOfWork, generalSetting);
+        public INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository =>
+            notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
     }
 }

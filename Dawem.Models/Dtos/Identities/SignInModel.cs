@@ -9,7 +9,7 @@ namespace Dawem.Models.Dtos.Identities
         public string Password { get; set; }
         public int CompanyId { get; set; }
         public ApplicationType ApplicationType { get; set; }
-        public string DeviceToken { get; set; }
+        public string FCMToken { get; set; }
         public string FingerprintMobileCode { get; set; }
     }
 }

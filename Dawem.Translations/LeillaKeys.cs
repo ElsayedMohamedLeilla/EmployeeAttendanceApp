@@ -1,4 +1,6 @@
-﻿namespace Dawem.Translations
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -77,6 +79,7 @@
         public const string Repository = "Repository";
         public const string BL = "BL";
         public const string BLC = "BLC";
+        public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string ApiControllerAction = "api/[controller]/[action]";
@@ -486,7 +489,7 @@
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
-        public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
+        public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
@@ -508,5 +511,7 @@
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
         public const string SorryYouMustEnterEmployeeFingerprintMobileCode = "Sorry!!YouMustEnterEmployeeFingerprintMobileCode!";
         public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
+        public const string SorryDuplicationOfDataIsNotAllowed = "Sorry!!DuplicationOfDataIsNotAllowed!";
+       
     }
 }

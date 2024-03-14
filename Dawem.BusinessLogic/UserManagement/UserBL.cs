@@ -527,6 +527,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImageName = user.ProfileImageName,
                     Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             return user;

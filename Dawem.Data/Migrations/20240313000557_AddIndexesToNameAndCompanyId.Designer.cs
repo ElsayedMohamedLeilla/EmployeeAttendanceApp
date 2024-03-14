@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240313000557_AddIndexesToNameAndCompanyId")]
+    partial class AddIndexesToNameAndCompanyId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,7 +314,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -377,7 +380,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -508,7 +511,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -569,7 +572,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -709,7 +712,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -773,7 +776,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -843,7 +846,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -904,7 +907,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -975,7 +978,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -1089,7 +1092,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -1208,7 +1211,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -1269,7 +1272,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -1330,7 +1333,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -2129,7 +2132,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("MainBranchId");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -2858,7 +2861,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -3374,7 +3377,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -3441,7 +3444,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
@@ -4102,7 +4105,7 @@ namespace Dawem.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                    b.HasIndex(new[] { "CompanyId", "Name" }, "IX_Unique_CompanyId_Name")
                         .IsUnique()
                         .HasFilter("[CompanyId] IS NOT NULL AND [Name] IS NOT NULL");
 
@@ -4300,7 +4303,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("NotificationUsers", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserFCMToken", b =>
+            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserDeviceToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4322,13 +4325,13 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeviceToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DeviceType")
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FCMToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -4359,7 +4362,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("NotificationUserId");
 
-                    b.ToTable("NotificationUserFCMTokens", "Dawem");
+                    b.ToTable("NotificationUserDeviceTokens", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendance", b =>
@@ -5505,10 +5508,10 @@ namespace Dawem.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserFCMToken", b =>
+            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserDeviceToken", b =>
                 {
                     b.HasOne("Dawem.Domain.RealTime.Firebase.NotificationUser", "NotificationUser")
-                        .WithMany("NotificationUserFCMTokens")
+                        .WithMany("NotificationUserDeviceTokens")
                         .HasForeignKey("NotificationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5679,7 +5682,7 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUser", b =>
                 {
-                    b.Navigation("NotificationUserFCMTokens");
+                    b.Navigation("NotificationUserDeviceTokens");
                 });
 #pragma warning restore 612, 618
         }

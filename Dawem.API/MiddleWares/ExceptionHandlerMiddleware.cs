@@ -6,6 +6,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Translations;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net;
@@ -69,6 +70,14 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.NotRegisteredUser;
                 response.Message = LeillaKeys.RedirectToRegister;
                 await Return(unitOfWork, context, statusCode, response);
+
+            }
+            catch (DbUpdateException ex)
+            {
+                statusCode = (int)HttpStatusCode.UnprocessableEntity;
+                responseGenaric.State = ResponseStatus.ValidationError;
+                responseGenaric.Message = TranslationHelper.GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowed, requestInfo?.Lang); ;
+                await Return(unitOfWork, context, statusCode, responseGenaric);
 
             }
             catch (Exception exception)

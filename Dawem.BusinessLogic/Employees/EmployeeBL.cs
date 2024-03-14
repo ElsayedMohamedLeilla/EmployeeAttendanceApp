@@ -327,6 +327,7 @@ namespace Dawem.BusinessLogic.Employees
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    ProfileImageName = e.ProfileImageName,
                     DisableReason = e.DisableReason,
                     AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
                     Zones = e.Zones

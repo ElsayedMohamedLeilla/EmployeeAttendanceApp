@@ -19,6 +19,14 @@ namespace Dawem.Helpers
             {
                 worksheet.Cell(1, i + 1).Value = properties[i].Name;
             }
+
+            // Add another sheet called "Read Me"
+            var readmeSheet = workbook.Worksheets.Add("Read Me");
+            readmeSheet.Cell(1, 1).Value = "Instructions:";
+            readmeSheet.Cell(2, 1).Value = "1. Fill in the data in the main sheet.";
+            readmeSheet.Cell(3, 1).Value = "2. Ensure all required fields are populated.";
+            readmeSheet.Cell(4, 1).Value = "3. Save the file.";
+
             // Create a memory stream to hold the Excel file content
             MemoryStream stream = new MemoryStream();
             // Save the workbook to the memory stream

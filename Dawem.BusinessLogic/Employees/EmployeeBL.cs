@@ -13,11 +13,9 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Generic;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
-using DocumentFormat.OpenXml.Spreadsheet;
 using FollowUp.Validation.BusinessValidation.General;
 using Microsoft.EntityFrameworkCore;
 
@@ -475,7 +473,7 @@ namespace Dawem.BusinessLogic.Employees
             EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
             employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
             employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
-            return  ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
+            return ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
         }
         public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
         {
@@ -483,17 +481,18 @@ namespace Dawem.BusinessLogic.Employees
             IniValidationModelDTO iniValidationModelDTO = new();
             iniValidationModelDTO.FileStream = importedFile;
             iniValidationModelDTO.MaxRowCount = 10; // will be configured
-            iniValidationModelDTO.ColumnIndexToCheckNull.Add(1); // index one which contain number
-            iniValidationModelDTO.ColumnIndexToCheckNull.Add(2); //index one which contain Name
-            iniValidationModelDTO.ColumnIndexToCheckNull.Add(3); //index one which contain Department Name
-            iniValidationModelDTO.ColumnIndexToCheckNull.Add(7); //index one which contain Email
-            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle", "ScheduleName",
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+
+            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
+                                        , "ScheduleName",
                                          "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
                                          "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            iniValidationModelDTO.lang = requestInfo.Lang;
+            iniValidationModelDTO.columnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
             Dictionary<string, string> result = new();
-            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO,requestInfo.Lang);
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
             if (validationMessages.Count > 0)
             {
                 foreach (var kvp in validationMessages)
@@ -514,29 +513,68 @@ namespace Dawem.BusinessLogic.Employees
                .MaxAsync();
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
-                    Temp = new();
-                    Temp.Code = getNextCode++;
-                    Temp.AddedApplicationType = ApplicationType.Web;
-                    Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
-                    Temp.Name = row.Cell(2).GetString();
-                    Temp.Department = repositoryManager.DepartmentRepository.Get(d => d.IsActive && ! d.IsDeleted && d.Name == row.Cell(3).GetString()).FirstOrDefault();
-                    Temp.JobTitle = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).FirstOrDefault();
-                    Temp.Schedule  = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).FirstOrDefault();
-                    Temp.DirectManager = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).FirstOrDefault();
-                    Temp.Email = row.Cell(7).GetString();
-                    Temp.MobileNumber = row.Cell(8).GetString();
-                    Temp.Address = row.Cell(9).GetString();
-                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
-                    Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
-                    Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                    Temp.AnnualVacationBalance = int.Parse(row.Cell(13).GetString());
-                    Temp.IsActive = bool.Parse(row.Cell(14).GetString());
-                    Temp.CompanyId = requestInfo.CompanyId;
-                    // _employeeDAL.SaveEmployeeFromExcelRow(row);
-                    ImportedList.Add(Temp);
+                    var foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.EmployeeNumber == int.Parse(row.Cell(1).GetString())).FirstOrDefaultAsync();
+                    if (foundEmployeeInDB == null) // employee number not found
+                    {
+                        foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(2).GetString())).FirstOrDefaultAsync();
+                        if (foundEmployeeInDB == null) // Name Not Found
+                        {
+                            foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(8).GetString())).FirstOrDefaultAsync();
+                            if (foundEmployeeInDB == null) // mobile Number Not Found
+                            {
+                                foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(7).GetString())).FirstOrDefaultAsync();
+                                if (foundEmployeeInDB == null) // Email Not Found
+                                {
+                                    Temp = new();
+                                    Temp.Code = getNextCode++;
+                                    Temp.AddedApplicationType = ApplicationType.Web;
+                                    Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
+                                    Temp.Name = row.Cell(2).GetString();
+                                    Temp.Department = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).FirstOrDefault();
+                                    Temp.JobTitle = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).FirstOrDefault();
+                                    Temp.Schedule = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).FirstOrDefault();
+                                    Temp.DirectManager = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).FirstOrDefault();
+                                    Temp.Email = row.Cell(7).GetString();
+                                    Temp.MobileNumber = row.Cell(8).GetString();
+                                    Temp.Address = row.Cell(9).GetString();
+                                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
+                                    Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
+                                    Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
+                                    Temp.AnnualVacationBalance = int.Parse(row.Cell(13).GetString());
+                                    Temp.IsActive = bool.Parse(row.Cell(14).GetString());
+                                    Temp.CompanyId = requestInfo.CompanyId;
+                                    Temp.AddedDate = DateTime.Now;
+                                    Temp.AddUserId = requestInfo.UserId;
+                                    Temp.InsertedFromExcel = true;
+                                    ImportedList.Add(Temp);
+                                }
+                                else
+                                {
+                                    result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Email  + LeillaKeys.Space +  AmgadKeys.ThisEmailIsUsedByEmployee  + LeillaKeys.Space  +  foundEmployeeInDB.Name  , requestInfo.Lang));
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.MobileNumber + LeillaKeys.Space + AmgadKeys.ThisMobileNumberIsUsedByEmployee  + LeillaKeys.Space + foundEmployeeInDB.Name, requestInfo.Lang));
+                                return result;
+                            }
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisNameIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name, requestInfo.Lang));
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name, requestInfo.Lang));
+                        return result;
+                    }
                 }
-
-                result.Add("success", TranslationHelper.GetTranslation( AmgadKeys.ImportedSuccessfully, requestInfo.Lang));
+                repositoryManager.EmployeeRepository.BulkInsert(ImportedList);
+                await unitOfWork.SaveAsync();
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully, requestInfo.Lang));
             }
             return result;
         }

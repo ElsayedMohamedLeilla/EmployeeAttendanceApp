@@ -30,7 +30,7 @@ namespace Dawem.Domain.Entities.Employees
         [ForeignKey(nameof(DirectManagerId))]
         public Employee DirectManager { get; set; }
 
-        public int? MobileCountryId { get; set; }
+        public int MobileCountryId { get; set; }
         [ForeignKey(nameof(MobileCountryId))]
         public Country MobileCountry { get; set; }
 
@@ -43,7 +43,7 @@ namespace Dawem.Domain.Entities.Employees
         public string Address { get; set; }
         public string ProfileImageName { get; set; }
         public string FingerprintMobileCode { get; set; }
-        public bool AllowChangeFingerprintMobileCodeForOneTime { get; set; }
+        public bool AllowChangeFingerprintMobileCode { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }

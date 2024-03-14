@@ -548,7 +548,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
-                    MobileCountryId = user.MobileCountryId ?? 0,
+                    MobileCountryId = user.MobileCountryId,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),

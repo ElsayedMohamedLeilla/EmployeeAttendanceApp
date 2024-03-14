@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240314223902_AddMobileCountryIdInUserAndEmployee")]
+    [Migration("20240314224100_AddMobileCountryIdInUserAndEmployee")]
     partial class AddMobileCountryIdInUserAndEmployee
     {
         /// <inheritdoc />

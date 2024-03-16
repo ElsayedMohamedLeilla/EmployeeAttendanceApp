@@ -14,6 +14,7 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Models.Generic;
 using Dawem.Translations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -411,6 +412,90 @@ namespace Dawem.Data
             }
 
             #endregion
+
+            #region Handle All String Max Length
+
+            var allEntity = builder.Model.GetEntityTypes()
+                .Where(e => e.ClrType != typeof(UserToken) && 
+                e.ClrType != typeof(UserLogIn) && 
+                e.ClrType != typeof(UserLoginInfo));
+
+            var allStringPropertiesWithMobile = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name.Contains(LeillaKeys.Mobile)
+                     || p.Name.Contains(LeillaKeys.Phone)));
+
+            foreach (var property in allStringPropertiesWithMobile)
+            {
+                property.SetMaxLength(20);
+            }
+
+
+            var allStringPropertiesWithOutNotesAndAddress = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && p.Name != nameof(BaseEntity.Notes)
+                     && p.Name != nameof(Employee.Address)
+                     && !p.Name.Contains(LeillaKeys.Mobile)
+                     && !p.Name.Contains(LeillaKeys.Phone));
+
+            foreach (var property in allStringPropertiesWithOutNotesAndAddress)
+            {
+                property.SetMaxLength(50);
+            }
+
+            var allStringPropertiesWithNotesAndAddress = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name == nameof(BaseEntity.Notes) || p.Name == nameof(Employee.Address)));
+
+            foreach (var property in allStringPropertiesWithNotesAndAddress)
+            {
+                property.SetMaxLength(200);
+            }
+
+            var allStringPropertiesWithFileOrImageName = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name.Contains(LeillaKeys.ProfileImageName)
+                     || p.Name.Contains(LeillaKeys.FileName)));
+
+            foreach (var property in allStringPropertiesWithFileOrImageName)
+            {
+                property.SetMaxLength(250);
+            }
+
+            builder.Entity<Employee>()
+                .Property(e => e.FingerprintMobileCode)
+                .HasMaxLength(100);
+
+            builder.Entity<Translation>()
+                .Property(e => e.KeyWord)
+                .HasMaxLength(250);
+
+            builder.Entity<Translation>()
+                .Property(e => e.TransWords)
+                .HasMaxLength(250);
+
+            builder.Entity<NotificationUserFCMToken>()
+                .Property(e => e.FCMToken)
+                .HasMaxLength(250);
+
+            builder.Entity<NotificationStore>()
+                .Property(e => e.ImageUrl)
+                .HasMaxLength(100);
+
+            builder.Entity<MyUser>()
+                .Property(e => e.PasswordHash)
+                .HasMaxLength(250);
+
+            builder.Entity<MyUser>()
+                .Property(e => e.SecurityStamp)
+                .HasMaxLength(250);
+
+            #endregion
+
         }
 
 

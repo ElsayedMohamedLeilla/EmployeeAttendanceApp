@@ -1,4 +1,5 @@
 ﻿using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dawem.Translations
 {
@@ -19,6 +20,10 @@ namespace Dawem.Translations
         public const string En2 = "2";
         public const string PlusSign = "+";
         public const string Entity = "entity";
+        public const string Mobile = "Mobile";
+        public const string Phone = "Phone";
+        public const string ProfileImageName = "ProfileImageName";
+        public const string FileName = "FileName";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
         public const string AnErrorOccuredPleaseContactYourSystemAdministrator = "An error occured - please contact your system administrator.";
         public const string Entities = "entities";
@@ -515,6 +520,9 @@ namespace Dawem.Translations
         public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
         public const string SorryDuplicationOfDataIsNotAllowedPleaseTryAgain = "Sorry!!DuplicationOfDataIsNotAllowedPleaseTryAgain!";
         public const string SorryYouMustChooseMobileCountry = "Sorry!!YouMustChooseMobileCountry!";
+        public const string SorryErrorHappenWhenProcessingInsertedData = "Sorry!!ErrorHappenWhenProcessingInsertedData!";
+        public const string SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain = "Sorry!!TheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain!";
+        public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
 
     }
 }

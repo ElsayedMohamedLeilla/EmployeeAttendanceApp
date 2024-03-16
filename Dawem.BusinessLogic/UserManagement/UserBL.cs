@@ -527,7 +527,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
-                    MobileCountryCode = user.MobileCountry.Dial,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + user.MobileCountry.Dial,
                     MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
                     MobileNumber = user.MobileNumber,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),

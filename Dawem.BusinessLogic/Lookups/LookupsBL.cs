@@ -77,7 +77,7 @@ namespace Dawem.BusinessLogic.Lookups
                 Name = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
                 CountryISOCode = c.Iso.ToLower(),
                 IsCurrentCountry = c.Iso == getCurrentCountryCode ? true : null,
-                Dial = LeillaKeys.PlusSign + c.Dial,
+                Dial = LeillaKeys.PlusSign + LeillaKeys.Space + c.Dial,
                 PhoneLength = c.PhoneLength + 1
             }).ToListAsync();
 

@@ -1,7 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -42,6 +39,8 @@ namespace Dawem.Translations
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string AllCountriesFlags = "AllCountriesFlags";
+        public const string PNG = ".png";
         public const string TaskRequests = "TaskRequests";
         public const string PermissionRequests = "PermissionRequests";
         public const string AssignmentRequests = "AssignmentRequests";
@@ -523,6 +522,7 @@ namespace Dawem.Translations
         public const string SorryErrorHappenWhenProcessingInsertedData = "Sorry!!ErrorHappenWhenProcessingInsertedData!";
         public const string SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain = "Sorry!!TheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain!";
         public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
+        public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
 
     }
 }

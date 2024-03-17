@@ -18,6 +18,10 @@ namespace Dawem.Validation.FluentValidation.Employees.User
             RuleFor(user => user.MobileNumber).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
 
+            RuleFor(model => model.MobileNumber).
+                Must(m => m.IsDigitsOnly()).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
+
             RuleFor(user => user.MobileCountryId)
                 .GreaterThan(0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);

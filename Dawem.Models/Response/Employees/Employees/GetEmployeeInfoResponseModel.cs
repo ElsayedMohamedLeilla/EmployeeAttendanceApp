@@ -16,6 +16,7 @@
         public int? AnnualVacationBalance { get; set; }
         public DateTime JoiningDate { get; set; }
         public string Email { get; set; }
+        public string MobileCountryFlagPath { get; set; }
         public string MobileCountryName { get; set; }
         public string MobileCountryCode { get; set; }
         public string MobileNumber { get; set; }

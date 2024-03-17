@@ -529,6 +529,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     Email = user.Email,
                     MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + user.MobileCountry.Dial,
                     MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
+                    MobileCountryFlagPath = uploadBLC.GetFilePath(user.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = user.MobileNumber,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     ProfileImageName = user.ProfileImageName,

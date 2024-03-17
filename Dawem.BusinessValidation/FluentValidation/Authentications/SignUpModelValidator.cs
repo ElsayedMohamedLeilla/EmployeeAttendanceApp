@@ -11,8 +11,10 @@ namespace Dawem.Validation.FluentValidation.Authentications
         {
             RuleFor(signUpModel => signUpModel.CompanyName).NotNull().
                     WithMessage(LeillaKeys.SorryYouMustEnterCompanyName);
+
             RuleFor(signUpModel => signUpModel.CompanyCountryId).GreaterThan(0).
                    WithMessage(LeillaKeys.SorryYouMustChooseCountry);
+
             RuleFor(signUpModel => signUpModel.CompanyAddress).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterCompanyAddress);
 
@@ -22,9 +24,9 @@ namespace Dawem.Validation.FluentValidation.Authentications
             RuleFor(signUpModel => signUpModel.CompanyEmail).Must(EmailHelper.IsValidEmail).
                  WithMessage(LeillaKeys.SorryYouMustEnterValidCompanyEmail);
 
-
             RuleFor(signUpModel => signUpModel.Password).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterPassword);
+
             RuleFor(signUpModel => signUpModel.ConfirmPassword).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterConfirmPassword);
 
@@ -34,8 +36,6 @@ namespace Dawem.Validation.FluentValidation.Authentications
             RuleFor(signUpModel => signUpModel).Must(signUpModel => signUpModel.Password == signUpModel.ConfirmPassword).
                   WithMessage(LeillaKeys.SorryPasswordAndConfirmPasswordMustEqual);
 
-
-
             RuleFor(signUpModel => signUpModel.UserEmail).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterUserEmail);
 
@@ -44,9 +44,17 @@ namespace Dawem.Validation.FluentValidation.Authentications
 
             RuleFor(signUpModel => signUpModel.UserMobileNumber).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterUserMobileNumber);
+
+            RuleFor(model => model.UserMobileNumber).
+                Must(m => m.IsDigitsOnly()).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
+
+            RuleFor(user => user.UserMobileCountryId)
+            .GreaterThan(0)
+            .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+
             RuleFor(signUpModel => signUpModel.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterUserName);
-
 
             RuleFor(signUpModel => signUpModel.NumberOfEmployees).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterNumberOfEmployees);

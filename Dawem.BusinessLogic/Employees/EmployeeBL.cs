@@ -320,6 +320,7 @@ namespace Dawem.BusinessLogic.Employees
                     Email = e.Email,
                     MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + e.MobileCountry.Dial,
                     MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
+                    MobileCountryFlagPath = uploadBLC.GetFilePath(e.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,

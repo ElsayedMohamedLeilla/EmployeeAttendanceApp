@@ -242,7 +242,7 @@ namespace Dawem.BusinessLogic.Summons
 
             return new GetSanctionsInformationsResponseDTO
             {
-                TotalCount = await query.Where(sanction => !sanction.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(sanction => !sanction.IsDeleted && sanction.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(sanction => !sanction.IsDeleted && !sanction.IsActive).CountAsync(),
                 DeletedCount = await query.Where(sanction => sanction.IsDeleted).CountAsync()

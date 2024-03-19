@@ -79,6 +79,15 @@ namespace Dawem.BusinessLogic.Employees.Departments
             department.AddedApplicationType = requestInfo.ApplicationType;
             department.Code = getNextCode;
             repositoryManager.DepartmentRepository.Insert(department);
+
+            /*var department2 = mapper.Map<Department>(model);
+            department2.CompanyId = requestInfo.CompanyId;
+            department2.AddUserId = requestInfo.UserId;
+            department2.AddedApplicationType = requestInfo.ApplicationType;
+            department2.Code = getNextCode;
+
+            repositoryManager.DepartmentRepository.Insert(department2);*/
+
             await unitOfWork.SaveAsync();
 
             #endregion

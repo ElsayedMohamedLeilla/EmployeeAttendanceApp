@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\uploads\ExcelEmptyDrafts\" />
     <Folder Include="wwwroot\uploads\JustificationRequests\" />
     <Folder Include="wwwroot\uploads\VacationRequests\" />
   </ItemGroup>

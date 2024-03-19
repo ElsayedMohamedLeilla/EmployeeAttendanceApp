@@ -255,11 +255,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     }
     private List<TokensModel> GetUserTokens(List<int> userids)
     {
-        List<TokensModel> userTokens = repositoryManager.NotificationUserDeviceTokenRepository
+        List<TokensModel> userTokens = repositoryManager.NotificationUserFCMTokenRepository
             .Get(s => !s.IsDeleted && userids.Contains(s.NotificationUser.UserId)).Select(c => new TokensModel()
             {
                 ApplicationType = c.DeviceType,
-                Token = c.DeviceToken
+                Token = c.FCMToken
             }).ToList();
 
         return userTokens;
@@ -268,15 +268,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     {
         List<string> emails = GetUserEmails(userIds);
         bool result = false;
-        foreach (var email in emails)
+
+        var verifyEmail = new VerifyEmailModel
         {
-            if (email != AmgadKeys.NoEmail)
-            {
-                var verifyEmail = new VerifyEmailModel
-                {
-                    Email = email,
-                    Subject = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang),
-                    Body = @"<meta charset='UTF-8'>
+            Subject = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang),
+            Body = @"<meta charset='UTF-8'>
                                             <title>عزيزي الموظف</title>
                                             <style>
                                             body { direction: rtl; }
@@ -285,13 +281,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
                                             <body>
                                             <h1>" + NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang) + @"</h1>
                                             </body>
-                                            </html>"
-                };
+                                            </html>",
+            Emails = emails.Where(e => e != AmgadKeys.NoEmail).Distinct().ToList()
+        };
 
-                result = await mailBL.SendEmail(verifyEmail);
-            }
-
-        }
+        result = await mailBL.SendEmail(verifyEmail);
         return result;
     }
     public List<string> GetUserEmails(List<int> userIds)

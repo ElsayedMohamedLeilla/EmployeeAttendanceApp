@@ -281,7 +281,6 @@ namespace Dawem.BusinessLogic.Reports
             {
                 employee.Id,
                 employee.EmployeeNumber,
-                employee.Code,
                 employee.Name,
 
                 Vacations = employee.EmployeeRequests.Any(er => !er.IsDeleted &&
@@ -373,7 +372,6 @@ namespace Dawem.BusinessLogic.Reports
                     EmployeeId = employee.Id,
                     EmployeeName = employee.Name,
                     EmployeeNumber = employee.EmployeeNumber,
-                    EmployeeCode = employee.Code,
 
                     ActualAttendCount = employee.EmployeeAttendances.Count() + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Day, requestInfo.Lang),
 

@@ -15,10 +15,12 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Models.Generic;
 using Dawem.Translations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -286,9 +288,9 @@ namespace Dawem.Data
 
 
 
-            builder.Entity<NotificationUserDeviceToken>()
+            builder.Entity<NotificationUserFCMToken>()
       .HasOne(p => p.NotificationUser)
-      .WithMany(b => b.NotificationUserDeviceTokens)
+      .WithMany(b => b.NotificationUserFCMTokens)
       .HasForeignKey(p => p.NotificationUserId)
       .OnDelete(DeleteBehavior.Cascade);
 
@@ -365,9 +367,135 @@ namespace Dawem.Data
           .Property(e => e.ShiftCheckOutTime)
           .HasConversion(
               v => v.ToTimeSpan(),
-              v => TimeOnly.FromTimeSpan(v)
+            v => TimeOnly.FromTimeSpan(v)
+            );
 
-          );
+            #region Add Index To All CompanyId And Name In All Tables
+
+            var allNameEntities = builder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(Employee.Name)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
+
+            foreach (var entityType in allNameEntities)
+            {
+                var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
+                var name = entityType?.GetProperty(nameof(Employee.Name));
+                var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
+
+                if (entityType != null && compoanyId != null && name != null && isDeleted != null)
+                {
+                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
+                    .IsUnique = true;
+                }
+            }
+
+            #endregion
+
+            #region Add Index To All CompanyId Code All Tables
+
+            var allCodeEntities = builder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(Employee.Code)) &&
+                     entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
+
+            foreach (var entityType in allCodeEntities)
+            {
+                var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
+                var code = entityType?.GetProperty(nameof(Employee.Code));
+                var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
+
+                if (entityType != null && compoanyId != null && code != null && isDeleted != null)
+                {
+                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, code, isDeleted }, LeillaKeys.UniqueIndexCompanyIdCodeIsDeleted)
+                    .IsUnique = true;
+                }
+            }
+
+            #endregion
+
+            #region Handle All String Max Length
+
+            var allEntity = builder.Model.GetEntityTypes()
+                .Where(e => e.ClrType != typeof(UserToken) && 
+                e.ClrType != typeof(UserLogIn) && 
+                e.ClrType != typeof(UserLoginInfo));
+
+            var allStringPropertiesWithMobile = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name.Contains(LeillaKeys.Mobile)
+                     || p.Name.Contains(LeillaKeys.Phone)));
+
+            foreach (var property in allStringPropertiesWithMobile)
+            {
+                property.SetMaxLength(20);
+            }
+
+
+            var allStringPropertiesWithOutNotesAndAddress = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && p.Name != nameof(BaseEntity.Notes)
+                     && p.Name != nameof(Employee.Address)
+                     && !p.Name.Contains(LeillaKeys.Mobile)
+                     && !p.Name.Contains(LeillaKeys.Phone));
+
+            foreach (var property in allStringPropertiesWithOutNotesAndAddress)
+            {
+                property.SetMaxLength(50);
+            }
+
+            var allStringPropertiesWithNotesAndAddress = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name == nameof(BaseEntity.Notes) || p.Name == nameof(Employee.Address)));
+
+            foreach (var property in allStringPropertiesWithNotesAndAddress)
+            {
+                property.SetMaxLength(200);
+            }
+
+            var allStringPropertiesWithFileOrImageName = allEntity
+                     .SelectMany(t => t.GetProperties())
+                     .Where(p => p.ClrType == typeof(string)
+                     && (p.Name.Contains(LeillaKeys.ProfileImageName)
+                     || p.Name.Contains(LeillaKeys.FileName)));
+
+            foreach (var property in allStringPropertiesWithFileOrImageName)
+            {
+                property.SetMaxLength(250);
+            }
+
+            builder.Entity<Employee>()
+                .Property(e => e.FingerprintMobileCode)
+                .HasMaxLength(100);
+
+            builder.Entity<Translation>()
+                .Property(e => e.KeyWord)
+                .HasMaxLength(250);
+
+            builder.Entity<Translation>()
+                .Property(e => e.TransWords)
+                .HasMaxLength(250);
+
+            builder.Entity<NotificationUserFCMToken>()
+                .Property(e => e.FCMToken)
+                .HasMaxLength(250);
+
+            builder.Entity<NotificationStore>()
+                .Property(e => e.ImageUrl)
+                .HasMaxLength(100);
+
+            builder.Entity<MyUser>()
+                .Property(e => e.PasswordHash)
+                .HasMaxLength(250);
+
+            builder.Entity<MyUser>()
+                .Property(e => e.SecurityStamp)
+                .HasMaxLength(250);
+
+            #endregion
 
         }
 
@@ -386,7 +514,7 @@ namespace Dawem.Data
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<NotificationUser> FirebaseUsers { get; set; }
-        public DbSet<NotificationUserDeviceToken> FirebaseUserDeviceTokens { get; set; }
+        public DbSet<NotificationUserFCMToken> FirebaseUserFCMTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<AssignmentType> AssignmentTypes { get; set; }

@@ -375,8 +375,6 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                         }
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -406,6 +404,18 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
                 employee.ScheduleId = model.ScheduleId;
             }
 
+            #region Set Schedule Plan Log code
+
+            var getNextCode = await repositoryManager.SchedulePlanLogRepository
+                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            schedulePlanLog.Code = getNextCode;
+
+            #endregion
+
             schedulePlanLog.FinishDate = DateTime.UtcNow;
             repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanLog);
             await unitOfWork.SaveAsync();
@@ -419,7 +429,7 @@ namespace Dawem.BusinessLogic.Schedules.SchedulePlans
 
             return new GetSchedulePlansInformationsResponseDTO
             {
-                TotalCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted).CountAsync(),
+                TotalCount = await query.CountAsync(),
                 ActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && schedulePlan.IsActive).CountAsync(),
                 NotActiveCount = await query.Where(schedulePlan => !schedulePlan.IsDeleted && !schedulePlan.IsActive).CountAsync(),
                 DeletedCount = await query.Where(schedulePlan => schedulePlan.IsDeleted).CountAsync()

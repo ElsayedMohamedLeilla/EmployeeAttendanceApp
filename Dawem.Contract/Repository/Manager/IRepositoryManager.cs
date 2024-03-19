@@ -84,6 +84,6 @@ namespace Dawem.Contract.Repository.Manager
         ISummonSanctionRepository SummonSanctionRepository { get; }
         ISanctionRepository SanctionRepository { get; }
         INotificationUserRepository NotificationUserRepository { get; }
-        INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository { get; }
+        INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository { get; }
     }
 }

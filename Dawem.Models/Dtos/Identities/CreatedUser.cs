@@ -9,6 +9,7 @@ namespace Dawem.Models.Dtos.Identities
         public virtual string UserName { get; set; }
         public int MainBranchId { get; set; }
         public bool IsActive { get; set; }
+        public int MobileCountryId { get; set; }
         public string MobileNumber { get; set; }
         public virtual string Email { get; set; }
         public DateTime BirthDate { get; set; }

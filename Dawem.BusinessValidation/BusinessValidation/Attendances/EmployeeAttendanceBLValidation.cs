@@ -28,7 +28,13 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetByIdAsync(getEmployeeId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
             #region Validate Latitude And Longitude 
+
+            int? zoneId = null;
 
             var availableZonesOutput = new List<AvailableZoneDTO>();
 
@@ -36,6 +42,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                .Get(e => e.EmployeeId == getEmployeeId)
                                .Select(s => new AvailableZoneDTO
                                {
+                                   ZoneId = s.Zone.Id,
                                    Name = s.Zone.Name,
                                    Latitude = s.Zone.Latitude,
                                    Longitude = s.Zone.Longitude,
@@ -44,7 +51,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                .ToListAsync();
             if (employeeZones != null)
             {
-                if (!IsWithinZone(model.Latitude, model.Longitude, employeeZones))
+                zoneId = IsWithinZone(model.Latitude, model.Longitude, employeeZones);
+                if (zoneId == null || zoneId == 0)
                     throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
             }
             else
@@ -60,6 +68,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                     .Get(gz => employeeGroups.Contains(gz.GroupId))
                                     .Select(gz => new AvailableZoneDTO
                                     {
+                                        ZoneId = gz.Zone.Id,
                                         Name = gz.Zone.Name,
                                         Latitude = gz.Zone.Latitude,
                                         Longitude = gz.Zone.Longitude,
@@ -67,43 +76,46 @@ namespace Dawem.Validation.BusinessValidation.Attendances
                                     })
                                     .ToListAsync();
                     if (groupZones != null)
-                        if (!IsWithinZone(model.Latitude, model.Longitude, groupZones))
+                    {
+                        zoneId = IsWithinZone(model.Latitude, model.Longitude, groupZones);
+                        if (zoneId == null || zoneId == 0)
                             throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
+                    }
 
-                        else //check employee department zones
+                    else //check employee department zones
+                    {
+                        var employeeDepartmentId = await repositoryManager.EmployeeRepository
+                                    .Get(g => g.Id == getEmployeeId)
+                                    .Select(g => g.DepartmentId).FirstOrDefaultAsync();
+                        if (employeeDepartmentId != null)
                         {
-                            var employeeDepartmentId = await repositoryManager.EmployeeRepository
-                                        .Get(g => g.Id == getEmployeeId)
-                                        .Select(g => g.DepartmentId).FirstOrDefaultAsync();
-                            if (employeeDepartmentId != null)
+                            var departmentZones = await repositoryManager.ZoneDepartmentRepository
+                                  .Get(gz => gz.DepartmentId == employeeDepartmentId)
+                                  .Select(gz => new AvailableZoneDTO
+                                  {
+                                      ZoneId = gz.Zone.Id,
+                                      Name = gz.Zone.Name,
+                                      Latitude = gz.Zone.Latitude,
+                                      Longitude = gz.Zone.Longitude,
+                                      Radius = gz.Zone.Radius,
+                                  })
+                                  .ToListAsync();
+                            if (departmentZones != null)
                             {
-                                var departmentZones = await repositoryManager.ZoneDepartmentRepository
-                                      .Get(gz => gz.DepartmentId == employeeDepartmentId)
-                                      .Select(gz => new AvailableZoneDTO
-                                      {
-                                          Name = gz.Zone.Name,
-                                          Latitude = gz.Zone.Latitude,
-                                          Longitude = gz.Zone.Longitude,
-                                          Radius = gz.Zone.Radius,
-                                      })
-                                      .ToListAsync();
-                                if (departmentZones != null)
-                                {
-                                    if (!IsWithinZone(model.Latitude, model.Longitude, departmentZones))
-                                        throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
-                                }
+                                zoneId = IsWithinZone(model.Latitude, model.Longitude, departmentZones);
+                                if (zoneId == null || zoneId == 0)
+                                    throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
                             }
-
                         }
+
+                    }
                 }
             }
 
             #endregion
 
-            var getScheduleId = await repositoryManager.EmployeeRepository
-                .Get(e => e.Id == getEmployeeId && !e.IsDeleted)
-                .Select(e => e.ScheduleId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
+            var getScheduleId = getEmployee.ScheduleId ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
             var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == getScheduleId && !schedule.IsDeleted)
                .Select(schedule => new GetScheduleByIdResponseModel
@@ -199,12 +211,31 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #endregion
 
+            #region Validate Fingerprint Device Code
+
+            if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
+            {
+                if (string.IsNullOrEmpty(model.FingerprintMobileCode) ||
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode))
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
+                }
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
+                }
+            }
+
+            #endregion
+
             return new FingerPrintValidationResponseModel
             {
                 EmployeeId = getEmployeeId,
                 ScheduleId = getScheduleId,
                 ShiftId = shiftId,
                 SummonId = summonId,
+                ZoneId = zoneId,
                 LocalDate = clientLocalDateTime,
                 ShiftCheckInTime = shiftInfo.CheckInTime,
                 ShiftCheckOutTime = shiftInfo.CheckOutTime,
@@ -307,11 +338,12 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             #region Check If Summon
 
-            var checkSummon = await repositoryManager.SummonRepository
+            var checkIfHasSummon = await repositoryManager.SummonRepository
                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.DateAndTime &&
                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
+                   !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                    (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
@@ -330,7 +362,7 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
                 DefaultCheckType = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? FingerprintCheckType.CheckIn :
                 getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? FingerprintCheckType.NotDefined :
-                getAttendance?.CheckInTime != null ? (checkSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut) :
+                getAttendance?.CheckInTime != null ? (checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut) :
                 FingerprintCheckType.NotDefined,
 
                 EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :
@@ -419,17 +451,17 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             return Math.PI * angle / 180.0;
         }
 
-        public static bool IsWithinZone(double userLat, double userLon, List<AvailableZoneDTO> employeeZones)
+        public static int? IsWithinZone(double userLat, double userLon, List<AvailableZoneDTO> employeeZones)
         {
             for (int i = 0; i < employeeZones.Count; i++)
             {
                 double distance = CalculateDistance(userLat, userLon, employeeZones[i].Latitude, employeeZones[i].Longitude);
                 if (distance <= employeeZones[i].Radius)
                 {
-                    return true;
+                    return employeeZones[i].ZoneId;
                 }
             }
-            return false;
+            return null;
         }
         #endregion
     }

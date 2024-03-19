@@ -369,7 +369,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Device Token
 
-            if (!string.IsNullOrEmpty(signInModel.DeviceToken) && !string.IsNullOrWhiteSpace(signInModel.DeviceToken))
+            if (!string.IsNullOrEmpty(signInModel.FCMToken) && !string.IsNullOrWhiteSpace(signInModel.FCMToken))
             {
                 var getNotificationUser = await repositoryManager.NotificationUserRepository
                 .Get(f => !f.IsDeleted && f.CompanyId == user.CompanyId && f.UserId == user.Id)
@@ -377,25 +377,25 @@ namespace Dawem.BusinessLogic.Provider
 
                 if (getNotificationUser != null)
                 {
-                    var getNotificationUserDeviceToken = await repositoryManager.NotificationUserDeviceTokenRepository
+                    var getNotificationUserDeviceToken = await repositoryManager.NotificationUserFCMTokenRepository
                     .GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && f.NotificationUserId == getNotificationUser.Id
-                    && f.DeviceToken == signInModel.DeviceToken && f.DeviceType == signInModel.ApplicationType);
+                    && f.FCMToken == signInModel.FCMToken && f.DeviceType == signInModel.ApplicationType);
 
                     if (getNotificationUserDeviceToken == null)
                     {
-                        var notificationUserDeviceToken = new NotificationUserDeviceToken
+                        var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
                             NotificationUserId = getNotificationUser.Id,
-                            DeviceToken = signInModel.DeviceToken,
+                            FCMToken = signInModel.FCMToken,
                             DeviceType = signInModel.ApplicationType,
                             LastLogInDate = DateTime.UtcNow
                         };
-                        repositoryManager.NotificationUserDeviceTokenRepository.Insert(notificationUserDeviceToken);
+                        repositoryManager.NotificationUserFCMTokenRepository.Insert(notificationUserDeviceToken);
                     }
                     else
                     {
                         getNotificationUserDeviceToken.LastLogInDate = DateTime.UtcNow;
-                        getNotificationUserDeviceToken.DeviceToken = signInModel.DeviceToken;
+                        getNotificationUserDeviceToken.FCMToken = signInModel.FCMToken;
                     }
                 }
                 else
@@ -404,11 +404,11 @@ namespace Dawem.BusinessLogic.Provider
                     {
                         CompanyId = user.CompanyId ?? 0,
                         UserId = user.Id,
-                        NotificationUserDeviceTokens = new()
+                        NotificationUserFCMTokens = new()
                         {
                             new()
                             {
-                                DeviceToken = signInModel.DeviceToken,
+                                FCMToken = signInModel.FCMToken,
                                 DeviceType = signInModel.ApplicationType,
                                 LastLogInDate = DateTime.UtcNow
                             }
@@ -417,7 +417,44 @@ namespace Dawem.BusinessLogic.Provider
                     repositoryManager.NotificationUserRepository.Insert(firebaseUser);
                 }
 
-                _ = unitOfWork.SaveAsync();
+                await unitOfWork.SaveAsync();
+            }
+
+            #endregion
+
+            #region Handle Fingerprint Device Code
+
+            if (!string.IsNullOrEmpty(signInModel.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(signInModel.FingerprintMobileCode) &&
+                user.EmployeeId > 0)
+            {
+                var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+                && employee.Id == user.EmployeeId);
+
+                if (getEmployee != null)
+                {
+                    var checkFingerprintMobileCodeDuplicate = await repositoryManager.EmployeeRepository
+                        .Get(employee => !employee.IsDeleted
+                        && employee.Id != getEmployee.Id && employee.FingerprintMobileCode == signInModel.FingerprintMobileCode)
+                        .AnyAsync();
+
+                    if (!checkFingerprintMobileCodeDuplicate)
+                    {
+                        if (string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) ||
+                            string.IsNullOrEmpty(getEmployee.FingerprintMobileCode))
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                        }
+                        else if (getEmployee.AllowChangeFingerprintMobileCode &&
+                            signInModel.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                        {
+                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                            getEmployee.AllowChangeFingerprintMobileCode = false;
+                        }
+                        await unitOfWork.SaveAsync();
+                    }
+                }
             }
 
             #endregion
@@ -495,9 +532,9 @@ namespace Dawem.BusinessLogic.Provider
         }
         private static string GetResetPasswordLink(ResetPasswordToken emailToken)
         {
-            var path = "resetpassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
+            var path = "#/resetPassword?resetToken=" + emailToken.Token + "&email=" + emailToken.Email;
             var protocol = LeillaKeys.Https;
-            var host = "pro.dawem.app/";
+            var host = "stage.dawem.app/";
             var resetPasswordLink = $"{protocol}://{host}{path}";
             return resetPasswordLink;
         }
@@ -571,7 +608,7 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<bool> ResetPassword(ResetPasswordModel model)
         {
-            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             var resetPasswordResult = await userManagerRepository.ResetPasswordAsync(user, model.ResetToken, model.NewPassword);

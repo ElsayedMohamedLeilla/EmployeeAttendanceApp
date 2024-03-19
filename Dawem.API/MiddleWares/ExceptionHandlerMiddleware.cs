@@ -6,6 +6,8 @@ using Dawem.Models.Context;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Translations;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net;
@@ -71,10 +73,44 @@ namespace Dawem.API.MiddleWares
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
+            catch (DbUpdateException ex)
+            {
+                var innerException = (SqlException)ex.InnerException;
+
+                if (innerException != null)
+                {
+                    response.Message = innerException.Number switch
+                    {
+                        // Cannot insert duplicate key row in object ........
+                        2601 => TranslationHelper.
+                        GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowedPleaseTryAgain, requestInfo?.Lang),
+
+                        // String or binary data would be truncated in table ........
+                        2628 => TranslationHelper.
+                        GetTranslation(LeillaKeys.SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain, requestInfo?.Lang),
+
+                        _ => TranslationHelper.
+                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo?.Lang),
+                    };
+                }
+                else
+                {
+                    response.Message = TranslationHelper.
+                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo?.Lang);
+                }
+
+                statusCode = (int)HttpStatusCode.UnprocessableEntity;
+                response.State = ResponseStatus.ValidationError;
+                await Return(unitOfWork, context, statusCode, response);
+
+            }
             catch (Exception exception)
             {
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 response.State = ResponseStatus.Error;
+                response.Message = TranslationHelper.
+                        GetTranslation(LeillaKeys.SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt, requestInfo?.Lang);
+                await Return(unitOfWork, context, statusCode, response);
                 response.Message = exception.Message;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }

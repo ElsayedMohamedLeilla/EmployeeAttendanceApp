@@ -15,7 +15,12 @@
         public const string En = "en";
         public const string Ar1 = "1";
         public const string En2 = "2";
+        public const string PlusSign = "+";
         public const string Entity = "entity";
+        public const string Mobile = "Mobile";
+        public const string Phone = "Phone";
+        public const string ProfileImageName = "ProfileImageName";
+        public const string FileName = "FileName";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
         public const string AnErrorOccuredPleaseContactYourSystemAdministrator = "An error occured - please contact your system administrator.";
         public const string Entities = "entities";
@@ -34,6 +39,8 @@
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string AllCountriesFlags = "AllCountriesFlags";
+        public const string PNG = ".png";
         public const string TaskRequests = "TaskRequests";
         public const string PermissionRequests = "PermissionRequests";
         public const string AssignmentRequests = "AssignmentRequests";
@@ -77,6 +84,8 @@
         public const string Repository = "Repository";
         public const string BL = "BL";
         public const string BLC = "BLC";
+        public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
+        public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string ApiControllerAction = "api/[controller]/[action]";
@@ -486,7 +495,7 @@
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
-        public const string SorryYouMustEnterDeviceToken = "Sorry!!YouMustEnterDeviceToken!";
+        public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
@@ -506,6 +515,15 @@
         public const string SorryYouMustEnterSubscriptionDurationInMonths = "Sorry!!YouMustEnterSubscriptionDurationInMonths!";
         public const string SorryYouReachTheMaxNumberOfEmployeesInYourCompany = "Sorry!!YouReachTheMaxNumberOfEmployeesInYourCompany!";
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
+        public const string SorryYouMustEnterEmployeeFingerprintMobileCode = "Sorry!!YouMustEnterEmployeeFingerprintMobileCode!";
+        public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
+        public const string SorryDuplicationOfDataIsNotAllowedPleaseTryAgain = "Sorry!!DuplicationOfDataIsNotAllowedPleaseTryAgain!";
+        public const string SorryYouMustChooseMobileCountry = "Sorry!!YouMustChooseMobileCountry!";
+        public const string SorryErrorHappenWhenProcessingInsertedData = "Sorry!!ErrorHappenWhenProcessingInsertedData!";
+        public const string SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain = "Sorry!!TheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain!";
+        public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
+        public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
+
         public const string SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal!";
         public const string SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!"; 
     }

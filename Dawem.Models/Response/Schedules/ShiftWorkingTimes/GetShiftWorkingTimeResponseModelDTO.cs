@@ -12,5 +12,6 @@ namespace Dawem.Models.Response.Schedules.ShiftWorkingTimes
         public TimeOnly CheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
         public bool IsActive { get; set; }
+        public int EmployeesCount { get; set; }
     }
 }

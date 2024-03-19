@@ -78,7 +78,7 @@ namespace Dawem.Repository.Managers
         private ISchedulePlanEmployeeRepository schedulePlanEmployeeRepository;
         private ISchedulePlanGroupRepository schedulePlanGroupRepository;
         private ISchedulePlanDepartmentRepository schedulePlanDepartmentRepository;
-        private ISchedulePlanBackgroundJobLogRepository schedulePlanBackgroundJobLogRepository;
+        private ISchedulePlanBackgroundJobLogRepository schedulePlanLogRepository;
         private ISchedulePlanBackgroundJobLogEmployeeRepository schedulePlanBackgroundJobLogEmployeeRepository;
         private IScheduleDayRepository scheduleDayRepository;
         private IShiftWorkingTimeRepository shiftWorkingTimeRepository;
@@ -113,7 +113,7 @@ namespace Dawem.Repository.Managers
         private ISummonDepartmentRepository summonDepartmentRepository;
         private ISanctionRepository sanctionRepository;
         private INotificationUserRepository notificationUserRepository;
-        private INotificationUserDeviceTokenRepository notificationUserDeviceTokenRepository;
+        private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
 
 
 
@@ -197,7 +197,7 @@ namespace Dawem.Repository.Managers
         public ISchedulePlanDepartmentRepository SchedulePlanDepartmentRepository =>
         schedulePlanDepartmentRepository ??= new SchedulePlanDepartmentRepository(unitOfWork, generalSetting);
         public ISchedulePlanBackgroundJobLogRepository SchedulePlanLogRepository =>
-         schedulePlanBackgroundJobLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting, requestInfo);
+         schedulePlanLogRepository ??= new SchedulePlanBackgroundJobLogRepository(unitOfWork, generalSetting, requestInfo);
         public ISchedulePlanBackgroundJobLogEmployeeRepository SchedulePlanLogEmployeeRepository =>
          schedulePlanBackgroundJobLogEmployeeRepository ??= new SchedulePlanBackgroundJobLogEmployeeRepository(unitOfWork, generalSetting);
         public IGroupEmployeeRepository GroupEmployeeRepository =>
@@ -279,7 +279,7 @@ namespace Dawem.Repository.Managers
             sanctionRepository ??= new SanctionRepository(unitOfWork, generalSetting, requestInfo);
         public INotificationUserRepository NotificationUserRepository =>
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
-        public INotificationUserDeviceTokenRepository NotificationUserDeviceTokenRepository =>
-            notificationUserDeviceTokenRepository ??= new NotificationUserDeviceTokenRepository(unitOfWork, generalSetting);
+        public INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository =>
+            notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
     }
 }

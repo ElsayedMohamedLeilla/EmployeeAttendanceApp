@@ -4,6 +4,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
+using NuGet.Packaging;
 using System.Net;
 using System.Net.Mail;
 
@@ -20,10 +21,24 @@ namespace Dawem.BusinessLogic.Provider
 
         public async Task<bool> SendEmail(VerifyEmailModel emailModel)
         {
-            var isValidEmail = EmailHelper.IsValidEmail(emailModel.Email);
-            if (!isValidEmail)
+            if (emailModel.Email != null)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterValidEmail);
+                var isValidEmail = EmailHelper.IsValidEmail(emailModel.Email);
+                if (!isValidEmail)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterValidEmail);
+                }
+            }
+            if (emailModel.Emails != null)
+            {
+                emailModel.Emails.ForEach(email =>
+                {
+                    var isValidEmail = EmailHelper.IsValidEmail(email);
+                    if (!isValidEmail)
+                    {
+                        throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterValidEmail);
+                    }
+                });
             }
 
             // Create a new mail message
@@ -32,7 +47,16 @@ namespace Dawem.BusinessLogic.Provider
                 // Set the sender and recipient addresses
                 From = new MailAddress(LeillaKeys.DawemAppDevelopersGmailCom)
             };
-            message.To.Add(emailModel.Email);
+
+            if (emailModel.Email != null)
+            {
+                message.To.Add(emailModel.Email);
+            }
+            if (emailModel.Emails != null)
+            {
+                message.To.AddRange(emailModel.Emails.Select(email=> new MailAddress(email)));
+            }
+
             message.IsBodyHtml = true;
             // Set the subject and body of the message
             message.Subject = emailModel.Subject;
@@ -41,14 +65,15 @@ namespace Dawem.BusinessLogic.Provider
             var client = new SmtpClient(LeillaKeys.SmtpGmailCom, 587)
             {
                 Credentials = new NetworkCredential(LeillaKeys.DawemAppDevelopersGmailCom, LeillaKeys.DawemAppDevelopersGmailComPassword),
-                EnableSsl = true
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network
             };
 
             try
             {
                 await client.SendMailAsync(message);
             }
-            catch
+            catch (Exception e)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhenSendEmail);
             }

@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Lookups;
+using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -13,8 +14,8 @@ using IPinfo;
 using LinqKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using static NodaTime.TimeZones.TzdbZone1970Location;
 
 namespace Dawem.BusinessLogic.Lookups
 {
@@ -25,8 +26,9 @@ namespace Dawem.BusinessLogic.Lookups
         private readonly ICurrencyRepository currencyRepository;
         private readonly RequestInfo userContext;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IUploadBLC uploadBLC;
         public LookupsBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IHttpContextAccessor _httpContextAccessor,
+            IHttpContextAccessor _httpContextAccessor, IUploadBLC _uploadBLC,
             ICurrencyRepository _currencyRepository, ICountryRepository _countryRepository,
              RequestInfo _userContext)
         {
@@ -35,19 +37,23 @@ namespace Dawem.BusinessLogic.Lookups
             countryRepository = _countryRepository;
             httpContextAccessor = _httpContextAccessor;
             userContext = _userContext;
+            uploadBLC = _uploadBLC;
         }
 
         public async Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria)
         {
-            var countryPredicate = PredicateBuilder.New<Country>(true);
+            var countryPredicate = PredicateBuilder.New<Domain.Entities.Lookups.Country>(true);
 
             var getCurrentCountryCode = await GetCurrentCountryInfo();
-            
+
             if (criteria.Id is not 0 && criteria.Id is not null)
             {
                 countryPredicate = countryPredicate.And(x => x.Id == criteria.Id);
             }
-
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                countryPredicate = countryPredicate.And(e => criteria.Ids.Contains(e.Id));
+            }
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -64,7 +70,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = countryRepository.OrderBy(query, nameof(Country.Order), "asc");
+            var queryOrdered = countryRepository.OrderBy(query, nameof(Domain.Entities.Lookups.Country.Order), "asc");
 
             #endregion
 
@@ -78,8 +84,9 @@ namespace Dawem.BusinessLogic.Lookups
                 Name = userContext.Lang == LeillaKeys.Ar ? c.NameAr : c.NameEn,
                 CountryISOCode = c.Iso.ToLower(),
                 IsCurrentCountry = c.Iso == getCurrentCountryCode ? true : null,
-                Dial = c.Dial,
-                PhoneLength = c.PhoneLength
+                Dial = LeillaKeys.PlusSign + LeillaKeys.Space + c.Dial,
+                PhoneLength = c.PhoneLength + 1,
+                FlagPath = uploadBLC.GetFilePath(c.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags)
             }).ToListAsync();
 
             return countries;

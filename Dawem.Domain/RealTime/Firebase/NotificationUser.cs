@@ -17,6 +17,6 @@ namespace Dawem.Domain.RealTime.Firebase
         [ForeignKey(nameof(UserId))]
         public MyUser User { get; set; }
         #endregion
-        public List<NotificationUserDeviceToken> NotificationUserDeviceTokens { get; set; }
+        public List<NotificationUserFCMToken> NotificationUserFCMTokens { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Dawem.Contract.BusinessLogic.Employees;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
@@ -10,10 +11,12 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Excel;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Employees.Employees;
+using FollowUp.Validation.BusinessValidation.General;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees
@@ -75,7 +78,7 @@ namespace Dawem.BusinessLogic.Employees
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
                 var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
-                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
             }
 
@@ -152,7 +155,8 @@ namespace Dawem.BusinessLogic.Employees
 
             #region Update Employee
 
-            var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
@@ -168,6 +172,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.Email = model.Email;
+            getEmployee.AllowChangeFingerprintMobileCode = model.AllowChangeFingerprintMobileCode;
             getEmployee.MobileNumber = model.MobileNumber;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
@@ -182,7 +187,7 @@ namespace Dawem.BusinessLogic.Employees
 
             List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-            var addedEmployeeZones = model.Zones!= null ? model.Zones
+            var addedEmployeeZones = model.Zones != null ? model.Zones
                 .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
                 .Select(ge => new ZoneEmployee
                 {
@@ -303,6 +308,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeInfoResponseModel
                 {
@@ -311,6 +318,9 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
+                    MobileCountryFlagPath = uploadBLC.GetFilePath(e.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -322,7 +332,9 @@ namespace Dawem.BusinessLogic.Employees
                     AttendanceTypeName = TranslationHelper.GetTranslation(e.AttendanceType.ToString(), requestInfo.Lang),
                     EmployeeTypeName = TranslationHelper.GetTranslation(e.EmployeeType.ToString(), requestInfo.Lang),
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
+                    ProfileImageName = e.ProfileImageName,
                     DisableReason = e.DisableReason,
+                    AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,
                     Zones = e.Zones
                     .Select(d => d.Zone.Name)
                     .ToList()
@@ -332,6 +344,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetCurrentEmployeeInfoResponseModel> GetCurrentEmployeeInfo()
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
                 .Select(u => u.EmployeeId)
                 .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
@@ -344,6 +358,8 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     JobTitleName = e.JobTitle.Name,
@@ -363,6 +379,7 @@ namespace Dawem.BusinessLogic.Employees
                     DepartmentId = e.DepartmentId,
                     DirectManagerId = e.DirectManagerId,
                     Email = e.Email,
+                    MobileCountryId = e.MobileCountryId,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -374,6 +391,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeType = e.EmployeeType,
                     EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
+                    AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
                     ZoneIds = e.Zones
@@ -458,6 +476,149 @@ namespace Dawem.BusinessLogic.Employees
             };
 
             #endregion
+        }
+
+        public async Task<MemoryStream> ExportDraft()
+        {
+            EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
+            employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
+            employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
+            return ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
+        }
+        public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
+        {
+            #region Fill IniValidationModelDTO
+            IniValidationModelDTO iniValidationModelDTO = new();
+            iniValidationModelDTO.FileStream = importedFile;
+            iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
+                                               - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+
+            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
+                                        , "ScheduleName",
+                                         "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
+                                         "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
+            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            iniValidationModelDTO.lang = requestInfo.Lang;
+            iniValidationModelDTO.columnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
+            #endregion
+
+            Dictionary<string, string> result = new();
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
+            if (validationMessages.Count > 0)
+            {
+                foreach (var kvp in validationMessages)
+                {
+                    result.Add(kvp.Key, kvp.Value);
+                }
+            }
+            else
+            {
+                List<Employee> ImportedList = new();
+                Employee Temp = new();
+                using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
+                var worksheet = workbook.Worksheet(1);
+                var getNextCode = await repositoryManager.EmployeeRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync();
+                foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
+                {
+                    var foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.EmployeeNumber == int.Parse(row.Cell(1).GetString())).FirstOrDefaultAsync();
+                    if (foundEmployeeInDB == null) // employee number not found
+                    {
+                        foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(2).GetString())).FirstOrDefaultAsync();
+                        if (foundEmployeeInDB == null) // Name Not Found
+                        {
+                            foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(8).GetString())).FirstOrDefaultAsync();
+                            if (foundEmployeeInDB == null) // mobile Number Not Found
+                            {
+                                foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(7).GetString())).FirstOrDefaultAsync();
+                                if (foundEmployeeInDB == null) // Email Not Found
+                                {
+
+                                    Temp = new();
+                                    Temp.Code = getNextCode++;
+                                    Temp.AddedApplicationType = ApplicationType.Web;
+                                    Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
+                                    Temp.Name = row.Cell(2).GetString();
+                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.Email = row.Cell(7).GetString();
+                                    Temp.MobileNumber = row.Cell(8).GetString();
+                                    Temp.Address = row.Cell(9).GetString();
+                                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
+                                    Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
+                                    Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
+                                    Temp.AnnualVacationBalance = int.Parse(row.Cell(13).GetString());
+                                    Temp.IsActive = bool.Parse(row.Cell(14).GetString());
+                                    Temp.CompanyId = requestInfo.CompanyId;
+                                    Temp.AddedDate = DateTime.Now;
+                                    Temp.AddUserId = requestInfo.UserId;
+                                    Temp.InsertedFromExcel = true;
+                                    if (Temp.DepartmentId == 0)
+                                    {
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                        return result;
+
+                                    }
+                                    else if (Temp.JobTitleId == 0)
+                                    {
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisJobTitle + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                        return result;
+                                    }
+                                    else if (Temp.ScheduleId == 0)
+                                    {
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisSchedule + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                        return result;
+                                    }
+                                    else if (Temp.DirectManagerId == 0)
+                                    {
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                        return result;
+                                    }
+                                    else if (Temp.AnnualVacationBalance < 0)
+                                    {
+                                        result.Add(AmgadKeys.WrongData, TranslationHelper.GetTranslation(AmgadKeys.AnnualVacationBalanceCanNotBeNegativeValue + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                        return result;
+                                    }
+                                    else
+                                    {
+                                        ImportedList.Add(Temp);
+                                    }
+                                }
+                                else
+                                {
+                                    result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Email + LeillaKeys.Space + AmgadKeys.ThisEmailIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.MobileNumber + LeillaKeys.Space + AmgadKeys.ThisMobileNumberIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                return result;
+                            }
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisNameIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                        return result;
+                    }
+                }
+                repositoryManager.EmployeeRepository.BulkInsert(ImportedList);
+                await unitOfWork.SaveAsync();
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo.Lang));
+            }
+            return result;
         }
     }
 }

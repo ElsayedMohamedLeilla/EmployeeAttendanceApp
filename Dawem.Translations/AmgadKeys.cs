@@ -9,6 +9,10 @@ namespace Dawem.Translations
         public const string ErrorImageName = "error.jpg";
         public const string DefaultImageName = "default.jpg";
         public const string NotificationIcons = "NotificationIcons";
+        public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
+
+        public const string Success = "Success";
+
 
         public const string NoEmail = "NoEmail";
 
@@ -44,6 +48,7 @@ namespace Dawem.Translations
         public const string PinRecognition = "PinRecognition";
         public const string PasswordRecognition = "PasswordRecognition";
         public const string Unknown = "Unknown";
+        public const string Early = "Early";
         public const string OnTime = "OnTime";
         public const string Late = "Late";
         public const string SorryYouMustChooseEmployeeForRequestVacation = "Sorry!!YouMustChooseEmployeeForRequestVacation!";
@@ -130,14 +135,61 @@ namespace Dawem.Translations
         public const string YourVacationIsAccepted = "YourVacationIsAccepted";
         public const string YourVacationIsRejected = "YourVacationIsRejected";
         public const string Dear = "Dear";
-
-
-
         public const string NotificationSentSuccessfullyTo = "NotificationSentSuccessfullyTo";
         public const string FailedToSendNotification = "FailedToSendNotification";
         public const string ErrorSendingNotification = "ErrorSendingNotification:";
         public const string Devices = "Devices";
         public const string MarkAsViewed = "MarkAsViewed";
+        public const string HeaderProblem = "HeaderProblem";
+        public const string RowCountProblem = "RowCountProblem";
+        public const string NullColumnsProblem = "NullColumnsProblem";
+        public const string ValidationError = "ValidationError";
+        public const string FileProblem = "FileProblem";
+        public const string ExportedSuccessfully = "ExportedSuccessfully";
+        public const string Headersdonotmatchtheexpectedvalues = "HeadersDonotMatchTheExpectedValues";
+        public const string RowCountExceedsTheExpected = "RowCountExceedsTheExpected";
+        public const string FileExtentionNotValidOnlyExcelFilesAllawed = "FileExtentionNotValidOnlyExcelFilesAllawed";
+        public const string ImportedSuccessfully = "ImportedSuccessfully";
+        public const string NoFileUploaded = "NoFileUploaded";
+        public const string ValueInColumnRequired = "ValueInColumnRequired";
+        public const string DoneCreateEmployeeDraftSuccessfully = "DoneCreateEmployeeDraftSuccessfully";
+        public const string EmptyDataProblem = "EmptyData";
+        public const string NoDataImportedInFileTheFileIsEmpty = "NoDataImportedInFileTheFileIsEmpty";
+
+        public const string NewTaskRequest = "NewTaskRequest";
+        public const string AccecptingTaskRequest = "AccecptingTaskRequest";
+        public const string RejectingTaskRequest = "RejectingTaskRequest";
+        public const string DuplicateColumnValueProblem = "DuplicateColumnValueProblem";
+        public const string DuplicateColumnValueFound = "DuplicateColumnValueFound";
+        public const string CannotBeNull = "CannotBeNull";
+        public const string DuplicationInDBProblem = "DuplicationInDBProblem";
+        public const string ThisEmailIsUsedByEmployee = "ThisEmailIsUsedByEmployee";
+        public const string ThisMobileNumberIsUsedByEmployee = "ThisMobileNumberIsUsedByEmployee";
+        public const string ThisNameIsUsedByEmployee = "ThisNameIsUsedByEmployee";
+        public const string ThisEmployeeNumberIsUsedByEmployee = "ThisEmployeeNumberIsUsedByEmployee";
+        public const string MissingData = "MissingData";
+        public const string ThisDepartment = "ThisDepartment";
+        public const string NotFound = "NotFound";
+        public const string OnRowNumber = "OnRowNumber";
+        public const string ThisJobTitle = "ThisJobTitle";
+        public const string ThisSchedule = "ThisSchedule";
+        public const string ThisDirectManager = "ThisDirectManager";
+        public const string YouDonotAllowToAddAnyEmployee = "YouDonotAllowToAddAnyEmployee";
+        public const string WrongData = "WrongData";
+        public const string AnnualVacationBalanceCanNotBeNegativeValue = "AnnualVacationBalanceCanNotBeNegativeValue";
+        public const string EmployeeEnteredSuccessfully = "EmployeeEnteredSuccessfully";
+
+        
+
+
+
+
+
+
+
+
+
+
 
 
 

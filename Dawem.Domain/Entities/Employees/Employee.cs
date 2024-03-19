@@ -1,4 +1,5 @@
 ﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
@@ -28,6 +29,11 @@ namespace Dawem.Domain.Entities.Employees
         public int? DirectManagerId { get; set; }
         [ForeignKey(nameof(DirectManagerId))]
         public Employee DirectManager { get; set; }
+
+        public int MobileCountryId { get; set; }
+        [ForeignKey(nameof(MobileCountryId))]
+        public Country MobileCountry { get; set; }
+
         #endregion
         public int Code { get; set; }
         public int EmployeeNumber { get; set; }
@@ -36,6 +42,8 @@ namespace Dawem.Domain.Entities.Employees
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public string ProfileImageName { get; set; }
+        public string FingerprintMobileCode { get; set; }
+        public bool AllowChangeFingerprintMobileCode { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
@@ -47,5 +55,6 @@ namespace Dawem.Domain.Entities.Employees
         public List<Request> EmployeeRequests { get; set; }
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
+        public bool InsertedFromExcel { get; set; } = false;
     }
 }

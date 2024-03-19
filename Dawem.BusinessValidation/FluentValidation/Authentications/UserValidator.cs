@@ -15,10 +15,17 @@ namespace Dawem.Validation.FluentValidation.Authentications
                  WithMessage(LeillaKeys.SorryYouMustEnterLastName);
             RuleFor(user => user.Email).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+
+            RuleFor(user => user.MobileCountryId)
+            .GreaterThan(0)
+            .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+
             RuleFor(user => user.MobileNumber).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
+
 
             RuleFor(user => user.Password).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterPassword);

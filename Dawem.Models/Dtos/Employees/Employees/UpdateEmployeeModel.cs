@@ -14,6 +14,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int? DirectManagerId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public int MobileCountryId { get; set; }
         public string MobileNumber { get; set; }
         public string Address { get; set; }
         public IFormFile ProfileImageFile { get; set; }
@@ -22,7 +23,7 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
         public int? AnnualVacationBalance { get; set; }
-        public bool AllowChangeFingerprintMobileCodeForOneTime { get; set; }
+        public bool AllowChangeFingerprintMobileCode { get; set; }
         public int EmployeeNumber { get; set; }
         public bool IsActive { get; set; }
         public List<int> ZoneIds { get; set; }

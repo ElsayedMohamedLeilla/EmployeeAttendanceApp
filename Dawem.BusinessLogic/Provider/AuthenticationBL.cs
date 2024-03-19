@@ -402,11 +402,11 @@ namespace Dawem.BusinessLogic.Provider
                         {
                             getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
                         }
-                        else if (getEmployee.AllowChangeFingerprintMobileCodeForOneTime &&
+                        else if (getEmployee.AllowChangeFingerprintMobileCode &&
                             signInModel.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
                         {
                             getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
-                            getEmployee.AllowChangeFingerprintMobileCodeForOneTime = false;
+                            getEmployee.AllowChangeFingerprintMobileCode = false;
                         }
                         await unitOfWork.SaveAsync();
                     }

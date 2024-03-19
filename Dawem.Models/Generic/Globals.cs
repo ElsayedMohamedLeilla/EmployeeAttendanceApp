@@ -96,7 +96,6 @@ namespace Dawem.Models.Generic
         public static bool IsDigits(this string numbersString)
         {
             if (string.IsNullOrWhiteSpace(numbersString)) return true;
-            Regex regex = new Regex(@"^\d$");
             if (Regex.IsMatch(numbersString, @"^\d+$"))
             {
                 return true;

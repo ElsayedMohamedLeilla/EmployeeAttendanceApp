@@ -516,6 +516,8 @@ namespace Dawem.BusinessLogic.UserManagement
         }
         public async Task<GetUserInfoResponseModel> GetInfo(int userId)
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var user = await repositoryManager.UserRepository.Get(e => e.Id == userId && !e.IsDeleted)
                 .Select(user => new GetUserInfoResponseModel
                 {
@@ -525,6 +527,9 @@ namespace Dawem.BusinessLogic.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + user.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
+                    MobileCountryFlagPath = uploadBLC.GetFilePath(user.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = user.MobileNumber,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     ProfileImageName = user.ProfileImageName,
@@ -544,6 +549,7 @@ namespace Dawem.BusinessLogic.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
+                    MobileCountryId = user.MobileCountryId,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),

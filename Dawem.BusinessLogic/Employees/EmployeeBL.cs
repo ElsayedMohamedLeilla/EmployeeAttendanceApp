@@ -174,7 +174,7 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.Email = model.Email;
-            getEmployee.AllowChangeFingerprintMobileCodeForOneTime = model.AllowChangeFingerprintMobileCodeForOneTime;
+            getEmployee.AllowChangeFingerprintMobileCode = model.AllowChangeFingerprintMobileCode;
             getEmployee.MobileNumber = model.MobileNumber;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
@@ -310,6 +310,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetEmployeeInfoResponseModel
                 {
@@ -318,6 +320,9 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
+                    MobileCountryFlagPath = uploadBLC.GetFilePath(e.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -331,7 +336,7 @@ namespace Dawem.BusinessLogic.Employees
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     ProfileImageName = e.ProfileImageName,
                     DisableReason = e.DisableReason,
-                    AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
+                    AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,
                     Zones = e.Zones
                     .Select(d => d.Zone.Name)
                     .ToList()
@@ -341,6 +346,8 @@ namespace Dawem.BusinessLogic.Employees
         }
         public async Task<GetCurrentEmployeeInfoResponseModel> GetCurrentEmployeeInfo()
         {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
             var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
                 .Select(u => u.EmployeeId)
                 .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
@@ -353,6 +360,8 @@ namespace Dawem.BusinessLogic.Employees
                     DapartmentName = e.Department.Name,
                     DirectManagerName = e.DirectManager.Name,
                     Email = e.Email,
+                    MobileCountryCode = LeillaKeys.PlusSign + LeillaKeys.Space + e.MobileCountry.Dial,
+                    MobileCountryName = isArabic ? e.MobileCountry.NameAr : e.MobileCountry.NameEn,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     JobTitleName = e.JobTitle.Name,
@@ -372,6 +381,7 @@ namespace Dawem.BusinessLogic.Employees
                     DepartmentId = e.DepartmentId,
                     DirectManagerId = e.DirectManagerId,
                     Email = e.Email,
+                    MobileCountryId = e.MobileCountryId,
                     MobileNumber = e.MobileNumber,
                     Address = e.Address,
                     IsActive = e.IsActive,
@@ -383,7 +393,7 @@ namespace Dawem.BusinessLogic.Employees
                     EmployeeType = e.EmployeeType,
                     EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
-                    AllowChangeFingerprintMobileCodeForOneTime = e.AllowChangeFingerprintMobileCodeForOneTime,
+                    AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     DisableReason = e.DisableReason,
                     ZoneIds = e.Zones
@@ -497,6 +507,7 @@ namespace Dawem.BusinessLogic.Employees
             iniValidationModelDTO.Lang = requestInfo.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
+
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
             if (validationMessages.Count > 0)

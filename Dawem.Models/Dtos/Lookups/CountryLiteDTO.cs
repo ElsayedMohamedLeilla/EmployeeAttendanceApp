@@ -8,5 +8,6 @@
         public string Dial { get; set; }
         public bool? IsCurrentCountry { get; set; }
         public int PhoneLength { get; set; }
+        public string FlagPath { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
     {
@@ -17,7 +15,12 @@ namespace Dawem.Translations
         public const string En = "en";
         public const string Ar1 = "1";
         public const string En2 = "2";
+        public const string PlusSign = "+";
         public const string Entity = "entity";
+        public const string Mobile = "Mobile";
+        public const string Phone = "Phone";
+        public const string ProfileImageName = "ProfileImageName";
+        public const string FileName = "FileName";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
         public const string AnErrorOccuredPleaseContactYourSystemAdministrator = "An error occured - please contact your system administrator.";
         public const string Entities = "entities";
@@ -36,6 +39,8 @@ namespace Dawem.Translations
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string AllCountriesFlags = "AllCountriesFlags";
+        public const string PNG = ".png";
         public const string TaskRequests = "TaskRequests";
         public const string PermissionRequests = "PermissionRequests";
         public const string AssignmentRequests = "AssignmentRequests";
@@ -512,7 +517,12 @@ namespace Dawem.Translations
         public const string MaxNumberOfEmployees = "MaxNumberOfEmployees:";
         public const string SorryYouMustEnterEmployeeFingerprintMobileCode = "Sorry!!YouMustEnterEmployeeFingerprintMobileCode!";
         public const string SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile = "Sorry!!FingerprintAllowedOnlyFromCurrentEmployeePersonalMobile!";
-        public const string SorryDuplicationOfDataIsNotAllowed = "Sorry!!DuplicationOfDataIsNotAllowed!";
-       
+        public const string SorryDuplicationOfDataIsNotAllowedPleaseTryAgain = "Sorry!!DuplicationOfDataIsNotAllowedPleaseTryAgain!";
+        public const string SorryYouMustChooseMobileCountry = "Sorry!!YouMustChooseMobileCountry!";
+        public const string SorryErrorHappenWhenProcessingInsertedData = "Sorry!!ErrorHappenWhenProcessingInsertedData!";
+        public const string SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain = "Sorry!!TheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain!";
+        public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
+        public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
+
     }
 }

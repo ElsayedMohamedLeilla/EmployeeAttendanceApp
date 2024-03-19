@@ -466,8 +466,9 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     var foundDepartmentInDB = await repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString()).FirstOrDefaultAsync();
                     if (foundDepartmentInDB == null) // Department Name not found
                     {
+                        getNextCode++;
                         Temp = new();
-                        Temp.Code = getNextCode++;
+                        Temp.Code = getNextCode;
                         Temp.AddedApplicationType = ApplicationType.Web;
                         Temp.Name = row.Cell(2).GetString();
                         Temp.ManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();

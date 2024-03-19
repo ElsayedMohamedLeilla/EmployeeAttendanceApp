@@ -69,8 +69,11 @@ namespace Dawem.Data
                     Code = code++,
                     NameAr = "التجريبية",
                     NameEn = "Trial",
+                    EmployeeCost = 0,
+                    GracePeriodPercentage = 0,
                     IsTrial = true,
-                    MaxNumberOfEmployees = 10
+                    MinNumberOfEmployees = 1,
+                    MaxNumberOfEmployees = 2
                 });
 
                 plans.Add(new()
@@ -78,7 +81,17 @@ namespace Dawem.Data
                     Code = code++,
                     NameAr = "الاساسية",
                     NameEn = "Basic",
+                    MinNumberOfEmployees = 1,
                     MaxNumberOfEmployees = 100
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "المتوسطة",
+                    NameEn = "Medium",
+                    MinNumberOfEmployees = 101,
+                    MaxNumberOfEmployees = 500
                 });
 
                 plans.Add(new()
@@ -86,6 +99,7 @@ namespace Dawem.Data
                     Code = code++,
                     NameAr = "المتقدمة",
                     NameEn = "Advanced",
+                    MinNumberOfEmployees = 501,
                     MaxNumberOfEmployees = 1000
                 });
 
@@ -135,12 +149,12 @@ namespace Dawem.Data
             var getAllDawemSettings = context.DawemSettings.ToList();
             var dawemSettings = new List<DawemSetting>();
 
-            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansThresholdPercentage) == null)
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansGracePeriodPercentage) == null)
             {
                 dawemSettings.Add(new()
                 {
-                    Type = DawemSettingType.PlansThresholdPercentage,
-                    TypeName = nameof(DawemSettingType.PlansThresholdPercentage),
+                    Type = DawemSettingType.PlansGracePeriodPercentage,
+                    TypeName = nameof(DawemSettingType.PlansGracePeriodPercentage),
                     GroupType = DawemSettingGroupType.Plans,
                     GroupTypeName = nameof(DawemSettingGroupType.Plans),
                     ValueType = DawemSettingValueType.Integer,
@@ -148,17 +162,30 @@ namespace Dawem.Data
                     Integer = 5
                 });
             }
-            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanEmployeeCost) == null)
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialDurationInDays) == null)
             {
                 dawemSettings.Add(new()
                 {
-                    Type = DawemSettingType.PlanEmployeeCost,
-                    TypeName = nameof(DawemSettingType.PlanEmployeeCost),
+                    Type = DawemSettingType.PlanTrialDurationInDays,
+                    TypeName = nameof(DawemSettingType.PlanTrialDurationInDays),
                     GroupType = DawemSettingGroupType.Plans,
                     GroupTypeName = nameof(DawemSettingGroupType.Plans),
-                    ValueType = DawemSettingValueType.Decimal,
-                    ValueTypeName = nameof(DawemSettingValueType.Decimal),
-                    Decimal = 10
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 3
+                });
+            }
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialEmployeesCount) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlanTrialEmployeesCount,
+                    TypeName = nameof(DawemSettingType.PlanTrialEmployeesCount),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 2
                 });
             }
 

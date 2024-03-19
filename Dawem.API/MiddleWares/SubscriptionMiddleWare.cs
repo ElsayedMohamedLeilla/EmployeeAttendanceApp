@@ -28,20 +28,22 @@ namespace Dawem.API.MiddleWares
 
                 if (getSubscription != null)
                 {
-                    if (getSubscription.EndDate.Date >= DateTime.Now.Date)
+                    if (DateTime.Now.Date >= getSubscription.EndDate.Date)
                     {
-                        var getPlansThresholdPercentage = (await repositoryManager.DawemSettingRepository
-                        .GetEntityByConditionAsync(d => d.Type == DawemSettingType.PlansThresholdPercentage))?
-                        .Integer;
+                        var getPlansGracePeriodPercentage = (await repositoryManager.DawemSettingRepository.
+                            GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
+                            Integer;
 
                         var extraDays = 0;
 
-                        if (getPlansThresholdPercentage != null)
+                        if (getPlansGracePeriodPercentage != null)
                         {
-                            extraDays = getPlansThresholdPercentage.Value * getSubscription.DurationInDays / 100;
+                            extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
                         }
 
-                        if (getSubscription.EndDate.AddDays(extraDays).Date >= DateTime.Now.Date)
+                        var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
+
+                        if (DateTime.Now.Date >= newEndDate)
                         {
                             int statusCode = StatusCodes.Status422UnprocessableEntity;
                             var response = new ErrorResponse
@@ -59,7 +61,7 @@ namespace Dawem.API.MiddleWares
                         var response = new ErrorResponse
                         {
                             State = ResponseStatus.ValidationError,
-                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForRenewal,
+                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry,
                                    requestInfo?.Lang)
                         };
                         await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);

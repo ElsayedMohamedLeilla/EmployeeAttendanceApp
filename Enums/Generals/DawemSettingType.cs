@@ -2,7 +2,8 @@
 {
     public enum DawemSettingType
     {
-        PlansThresholdPercentage,
-        PlanEmployeeCost
+        PlansGracePeriodPercentage,
+        PlanTrialDurationInDays,
+        PlanTrialEmployeesCount
     }
 }

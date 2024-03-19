@@ -8,8 +8,8 @@
         public string CompanyAddress { get; set; }
         public string CompanyEmail { get; set; }
         public int NumberOfEmployees { get; set; }
-        public int SubscriptionDurationInMonths { get; set; }
-        public int? PlanId { get; set; }
+        public bool IsTrial { get; set; }
+        public int? SubscriptionDurationInMonths { get; set; }
 
         #endregion
 

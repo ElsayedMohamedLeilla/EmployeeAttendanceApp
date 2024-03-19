@@ -50,10 +50,10 @@ namespace Dawem.BusinessLogic.Summons
 
                 var getWillExpiredSubscriptions = await repositoryManager.SubscriptionRepository
                             .GetWithTracking(s => !s.IsDeleted &&
-                            ((DateTime.Now.Date >= s.EndDate && !s.SubscriptionLogs.Any(l => l.EndDate == s.EndDate && l.LogType == SubscriptionLogType.SendEmailAboutExpired)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate) == 1 && !s.SubscriptionLogs.Any(l => l.EndDate == s.EndDate && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter1Days)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate) == 3 && !s.SubscriptionLogs.Any(l => l.EndDate == s.EndDate && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter3Days)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate) == 7 && !s.SubscriptionLogs.Any(l => l.EndDate == s.EndDate && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter7Days))))
+                            ((DateTime.Now.Date >= s.EndDate.Date && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpired)) ||
+                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 1 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter1Days)) ||
+                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 3 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter3Days)) ||
+                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 7 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter7Days))))
                             .ToListAsync();
 
                 if (getWillExpiredSubscriptions != null && getWillExpiredSubscriptions.Count > 0)
@@ -213,27 +213,55 @@ namespace Dawem.BusinessLogic.Summons
 
                 if (getExpiredSubscriptions != null && getExpiredSubscriptions.Count > 0)
                 {
-                    var getThresholdPercentage = await repositoryManager.DawemSettingRepository
-                        .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlansThresholdPercentage)
+                    var getGracePeriodPercentage = await repositoryManager.DawemSettingRepository
+                        .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
 
                     foreach (var subscription in getExpiredSubscriptions)
                     {
-                        var extraDays = getThresholdPercentage * subscription.DurationInDays / 100;
+                        var extraDays = getGracePeriodPercentage * subscription.DurationInDays / 100;
+                        var newEndDate = subscription.EndDate.AddDays(extraDays);
 
-                        if (DateTime.Now.Date >= subscription.EndDate.AddDays(extraDays))
+                        if (DateTime.Now.Date >= newEndDate)
                         {
                             subscription.Status = SubscriptionStatus.Deactivated;
-                        }
 
-                        repositoryManager.SubscriptionLogRepository.Insert(new()
-                        {
-                            SubscriptionId = subscription.Id,
-                            EndDate = subscription.EndDate,
-                            LogType = SubscriptionLogType.Deactivated,
-                            LogTypeName = nameof(SubscriptionLogType.Deactivated)
-                        });
+                            repositoryManager.SubscriptionLogRepository.Insert(new()
+                            {
+                                SubscriptionId = subscription.Id,
+                                EndDate = subscription.EndDate,
+                                LogType = SubscriptionLogType.Deactivated,
+                                LogTypeName = nameof(SubscriptionLogType.Deactivated)
+                            });
+
+                            #region Send Deactivate Email
+
+                            var verifyEmail = new VerifyEmailModel
+                            {
+                                Email = subscription.FollowUpEmail,
+                                Subject = "تم إيقاف إشتراكك علي داوم",
+                                Body = @"<meta charset='UTF-8'>
+                                            <title>لقد انتهي إشتراكك علي داوم</title>
+                                            <style>
+                                            body { direction: rtl; }
+                                            </style>
+                                            </head>
+                                            <body>
+                                            <h1>مرحباً</h1>
+                                            <h2>تم إيقاف إشتراكك علي داوم يرجي التواصل مع فريق دعم داوم للتجديد و إعادة التفعيل.</h2>
+                                            <h1>تاريخ انتهاء الإشتراك:  " + subscription.EndDate.ToString("dd-MM-yyyy") + @"</h1>
+                                            <p>فريق خدمة العملاء لشركة داوم يتطلع لخدمتك.</p>
+                                            <p>للتواصل معنا:</p>
+                                            <p> البريد الإلكتروني: <a href='mailto:dawem.app.developers@gmail.com'>dawem.app.developers@gmail.com</a></p>
+                                            <p> الهاتف: (+20)01234567
+                                            </body>
+                                            </html>"
+                            };
+                            await mailBL.SendEmail(verifyEmail);
+
+                            #endregion
+                        }
                     }
                     await unitOfWork.SaveAsync();
                 }

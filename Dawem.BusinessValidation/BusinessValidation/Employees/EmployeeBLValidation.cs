@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
@@ -38,21 +39,43 @@ namespace Dawem.Validation.BusinessValidation.Employees
 
             #region Employees Count
 
-            var companyNumberOfEmployees = await repositoryManager
+            var checkIsTrialSubscription = await repositoryManager.SubscriptionRepository.
+                Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Plan.IsTrial).
+                AnyAsync();
+
+            var getEmployeesCount = await repositoryManager.EmployeeRepository.
+                Get(e => e.IsDeleted && e.CompanyId == requestInfo.CompanyId).
+                CountAsync();
+
+            if (checkIsTrialSubscription)
+            {
+                var getPlanTrialEmployeesCount = (await repositoryManager.DawemSettingRepository.
+                            GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlanTrialEmployeesCount))?.
+                            Integer ?? 0;
+
+                if (getEmployeesCount >= getPlanTrialEmployeesCount)
+                    throw new BusinessValidationException(messageCode: null, message:
+                        TranslationHelper.GetTranslation(LeillaKeys.SorryYouReachTheMaxNumberOfEmployeesInYourCompany, requestInfo.Lang) +
+                        LeillaKeys.SpaceThenDashThenSpace +
+                        TranslationHelper.GetTranslation(LeillaKeys.YouAreOnTrialSubscription, requestInfo.Lang) +
+                        LeillaKeys.SpaceThenDashThenSpace +
+                        TranslationHelper.GetTranslation(LeillaKeys.MaxNumberOfEmployees, requestInfo.Lang) +
+                        LeillaKeys.Space + getPlanTrialEmployeesCount);
+            }
+            else
+            {
+                var companyNumberOfEmployees = await repositoryManager
                .CompanyRepository.Get(c => c.Id == requestInfo.CompanyId)
                .Select(c => c.NumberOfEmployees)
                .FirstOrDefaultAsync();
 
-            var getEmployeesCount = await repositoryManager.EmployeeRepository.Get(e => e.IsDeleted &&
-            e.CompanyId == requestInfo.CompanyId)
-                .CountAsync();
-
-            if (getEmployeesCount >= companyNumberOfEmployees)
-                throw new BusinessValidationException(messageCode: null, message: TranslationHelper.GetTranslation(LeillaKeys.SorryYouReachTheMaxNumberOfEmployeesInYourCompany, requestInfo.Lang) +
-                    LeillaKeys.SpaceThenDashThenSpace +
-                    TranslationHelper.GetTranslation(LeillaKeys.MaxNumberOfEmployees, requestInfo.Lang) +
-                    LeillaKeys.Space +
-                     companyNumberOfEmployees);
+                if (getEmployeesCount >= companyNumberOfEmployees)
+                    throw new BusinessValidationException(messageCode: null, message: TranslationHelper.GetTranslation(LeillaKeys.SorryYouReachTheMaxNumberOfEmployeesInYourCompany, requestInfo.Lang) +
+                        LeillaKeys.SpaceThenDashThenSpace +
+                        TranslationHelper.GetTranslation(LeillaKeys.MaxNumberOfEmployees, requestInfo.Lang) +
+                        LeillaKeys.Space +
+                         companyNumberOfEmployees);
+            }
 
             #endregion
 

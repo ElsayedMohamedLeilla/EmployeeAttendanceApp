@@ -6,7 +6,6 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
@@ -66,23 +65,23 @@ namespace Dawem.BusinessLogic.Provider
             generator = _generator;
             accountBLValidation = _registerationValidatorBL;
         }
-        public async Task<bool> SignUp(SignUpModel signUpModel)
+        public async Task<bool> SignUp(SignUpModel model)
         {
             requestHeaderContext.IsMainBranch = true;
 
             #region Business Validation
 
-            await accountBLValidation.SignUpValidation(signUpModel);
+            await accountBLValidation.SignUpValidation(model);
 
             #endregion
 
-            signUpModel.UserMobileNumber = MobileHelper.HandleMobile(signUpModel.UserMobileNumber);
+            model.UserMobileNumber = MobileHelper.HandleMobile(model.UserMobileNumber);
 
             unitOfWork.CreateTransaction();
 
             #region Insert User
 
-            var user = await CreateUser(signUpModel);
+            var user = await CreateUser(model);
 
             #endregion
 
@@ -121,12 +120,12 @@ namespace Dawem.BusinessLogic.Provider
             {
                 IdentityCode = identityCode,
                 Code = getNextCode,
-                Name = signUpModel.CompanyName,
+                Name = model.CompanyName,
                 IsActive = true,
                 AddUserId = user.Id,
-                CountryId = signUpModel.CompanyCountryId,
-                Email = signUpModel.CompanyEmail,
-                NumberOfEmployees = signUpModel.NumberOfEmployees
+                CountryId = model.CompanyCountryId,
+                Email = model.CompanyEmail,
+                NumberOfEmployees = model.NumberOfEmployees
             });
 
             await unitOfWork.SaveAsync();
@@ -147,25 +146,48 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            var planId = signUpModel.PlanId ?? 0;
+            #region Handle Trial Or Subscription
 
-            if (planId <= 0)
+            int? planId = null;
+            var durationInDays = 0;
+
+            if (model.IsTrial)
             {
-                var getTrialPlanId = await repositoryManager.PlanRepository
+                planId = await repositoryManager.PlanRepository
                     .Get(p => !p.IsDeleted && p.IsTrial)
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync();
-                planId = getTrialPlanId;
+
+                durationInDays =  await repositoryManager.DawemSettingRepository
+                        .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlanTrialDurationInDays)
+                        .Select(d => d.Integer)
+                        .FirstOrDefaultAsync() ?? 0;
+
             }
+            else
+            {
+                planId = await repositoryManager.PlanRepository
+                    .Get(p => !p.IsDeleted && model.NumberOfEmployees >= p.MinNumberOfEmployees &&
+                    model.NumberOfEmployees <= p.MaxNumberOfEmployees)
+                    .Select(p => p.Id)
+                    .FirstOrDefaultAsync();
+
+                durationInDays = model.SubscriptionDurationInMonths.Value * 30;
+            }
+
+            if (planId == null)
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionPlanNotFound);
+
+            #endregion
 
             var insertedSubscription = repositoryManager.SubscriptionRepository.Insert(new()
             {
                 CompanyId = companyId,
-                PlanId = planId,
+                PlanId = planId.Value,
                 Code = getNextSubscriptionCode,
-                DurationInDays = signUpModel.SubscriptionDurationInMonths * 30,
+                DurationInDays = durationInDays,
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(signUpModel.SubscriptionDurationInMonths * 30),
+                EndDate = DateTime.Now.AddDays(durationInDays),
                 Status = SubscriptionStatus.Created,
                 RenewalCount = 1,
                 FollowUpEmail = insertedCompany.Email
@@ -180,13 +202,13 @@ namespace Dawem.BusinessLogic.Provider
             Branch branch = new()
             {
                 CompanyId = companyId,
-                Email = signUpModel.CompanyEmail,
+                Email = model.CompanyEmail,
                 IsActive = true,
                 AdminUserId = user.Id,
-                Name = signUpModel.CompanyName,
+                Name = model.CompanyName,
                 IsMainBranch = true,
-                CountryId = signUpModel.CompanyCountryId,
-                Address = signUpModel.CompanyAddress,
+                CountryId = model.CompanyCountryId,
+                Address = model.CompanyAddress,
             };
 
             repositoryManager.BranchRepository.Insert(branch);

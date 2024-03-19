@@ -101,7 +101,7 @@ namespace Dawem.API.MiddleWares
 
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 response.State = ResponseStatus.ValidationError;
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
             catch (Exception exception)
@@ -110,8 +110,6 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.Error;
                 response.Message = TranslationHelper.
                         GetTranslation(LeillaKeys.SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt, requestInfo?.Lang);
-                await Return(unitOfWork, context, statusCode, response);
-                response.Message = exception.Message;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
         }

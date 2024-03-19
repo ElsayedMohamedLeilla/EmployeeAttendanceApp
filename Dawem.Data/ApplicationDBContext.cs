@@ -503,7 +503,6 @@ namespace Dawem.Data
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<SubscriptionLog> SubscriptionLogs { get; set; }
-        public DbSet<SubscriptionLog> SubscriptionLogs { get; set; }
         public DbSet<SchedulePlan> SchedulePlans { get; set; }
         public DbSet<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
         public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }

@@ -17,5 +17,8 @@ namespace Dawem.Contract.BusinessLogic.Employees.Department
         Task<bool> Enable(int departmentId);
         Task<bool> Disable(DisableModelDTO model);
         Task<GetDepartmentsInformationsResponseDTO> GetDepartmentsInformations();
+
+        public Task<MemoryStream> ExportDraft();
+        public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
     }
 }

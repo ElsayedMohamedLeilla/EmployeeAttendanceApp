@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Dtos.Excel;
 using Dawem.Translations;
@@ -16,35 +17,35 @@ namespace FollowUp.Validation.BusinessValidation.General
             var actualHeaders = worksheet.FirstRow().CellsUsed().Select(cell => cell.Value.ToString()).ToArray();
             int rowCount = worksheet.RowsUsed().Count();
 
-            if(iniValidationDTO.MaxRowCount <= 0)
+            if (iniValidationDTO.MaxRowCount <= 0 && iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees)
             {
-                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.YouDonotAllowToAddAnyEmployee, iniValidationDTO.lang));
+                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.YouDonotAllowToAddAnyEmployee, iniValidationDTO.Lang));
             }
             if (!IsvalidExcel)
             {
-                validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.lang));
+                validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.Lang));
             }
             // Check header
             else if (!Enumerable.SequenceEqual(iniValidationDTO.ExpectedHeaders, actualHeaders))
             {
-                validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, iniValidationDTO.lang));
+                validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, iniValidationDTO.Lang));
             }
             // Check row count
-            else if (rowCount > iniValidationDTO.MaxRowCount + 1) // add 1 to exclude header from count
+            else if (rowCount > iniValidationDTO.MaxRowCount + 1 &&  iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees) // add 1 to exclude header from count
             {
-                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, iniValidationDTO.lang));
+                validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, iniValidationDTO.Lang));
             }
             // if no data found
             else if (rowCount == 1)
             {
-                validationMessages.Add(AmgadKeys.EmptyDataProblem, TranslationHelper.GetTranslation(AmgadKeys.NoDataImportedInFileTheFileIsEmpty, iniValidationDTO.lang));
+                validationMessages.Add(AmgadKeys.EmptyDataProblem, TranslationHelper.GetTranslation(AmgadKeys.NoDataImportedInFileTheFileIsEmpty, iniValidationDTO.Lang));
             }
             else
             {
                 // Check for duplicate values in each column
                 for (int columnIndex = 1; columnIndex <= actualHeaders.Length; columnIndex++)
                 {
-                    if (!iniValidationDTO.columnsToCheckDuplication.Contains(columnIndex))
+                    if (!iniValidationDTO.ColumnsToCheckDuplication.Contains(columnIndex))
                     {
                         continue; // Skip the column if it's in the list of excluded columns
                     }
@@ -77,7 +78,7 @@ namespace FollowUp.Validation.BusinessValidation.General
                     {
                         string cellReferences = string.Join(", ", kvp.Value.Select(row => $"A{row}"));
                         validationMessages.Add($"{AmgadKeys.DuplicateColumnValueProblem}{kvp.Key}",
-                            TranslationHelper.GetTranslation($"{AmgadKeys.DuplicateColumnValueFound} ({cellReferences})", iniValidationDTO.lang));
+                            TranslationHelper.GetTranslation($"{AmgadKeys.DuplicateColumnValueFound} ({cellReferences})", iniValidationDTO.Lang));
                     }
                 }
             }

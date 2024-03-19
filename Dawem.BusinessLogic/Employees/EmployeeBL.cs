@@ -7,12 +7,13 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Departments;
+using Dawem.Models.Dtos.Excel.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
@@ -474,6 +475,8 @@ namespace Dawem.BusinessLogic.Employees
             EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
             employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
             employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
+            employeeHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Employees;
+
             return ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
         }
         public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
@@ -481,17 +484,18 @@ namespace Dawem.BusinessLogic.Employees
             #region Fill IniValidationModelDTO
             IniValidationModelDTO iniValidationModelDTO = new();
             iniValidationModelDTO.FileStream = importedFile;
-            iniValidationModelDTO.MaxRowCount =  await repositoryManager.CompanyRepository.Get(c=> c.Id== requestInfo.CompanyId).Select(cc=> cc.NumberOfEmployees).FirstOrDefaultAsync() 
-                                               - await repositoryManager.EmployeeRepository.Get(e=> !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee=> ee.Id).CountAsync(); // will be configured
+            iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
+                                               - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
 
             string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
                                         , "ScheduleName",
                                          "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
                                          "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
-            iniValidationModelDTO.lang = requestInfo.Lang;
-            iniValidationModelDTO.columnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
+            iniValidationModelDTO.Lang = requestInfo.Lang;
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
@@ -533,7 +537,7 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.AddedApplicationType = ApplicationType.Web;
                                     Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
                                     Temp.Name = row.Cell(2).GetString();
-                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).Select(e=> e.Id).FirstOrDefault();
+                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).Select(e => e.Id).FirstOrDefault();
                                     Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).Select(e => e.Id).FirstOrDefault();
                                     Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).Select(e => e.Id).FirstOrDefault();
                                     Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).Select(e => e.Id).FirstOrDefault();
@@ -549,28 +553,28 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.AddedDate = DateTime.Now;
                                     Temp.AddUserId = requestInfo.UserId;
                                     Temp.InsertedFromExcel = true;
-                                    if(Temp.DepartmentId == 0)
+                                    if (Temp.DepartmentId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber() , requestInfo.Lang));
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                         return result;
-                                        
+
                                     }
-                                    else if(Temp.JobTitleId == 0)
+                                    else if (Temp.JobTitleId == 0)
                                     {
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisJobTitle + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                         return result;
                                     }
-                                    else if(Temp.ScheduleId == 0)
+                                    else if (Temp.ScheduleId == 0)
                                     {
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisSchedule + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                         return result;
                                     }
-                                    else if(Temp.DirectManagerId == 0)
+                                    else if (Temp.DirectManagerId == 0)
                                     {
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                         return result;
                                     }
-                                    else if(Temp.AnnualVacationBalance < 0)
+                                    else if (Temp.AnnualVacationBalance < 0)
                                     {
                                         result.Add(AmgadKeys.WrongData, TranslationHelper.GetTranslation(AmgadKeys.AnnualVacationBalanceCanNotBeNegativeValue + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                         return result;
@@ -582,13 +586,13 @@ namespace Dawem.BusinessLogic.Employees
                                 }
                                 else
                                 {
-                                    result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Email  + LeillaKeys.Space +  AmgadKeys.ThisEmailIsUsedByEmployee  + LeillaKeys.Space  +  foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                    result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Email + LeillaKeys.Space + AmgadKeys.ThisEmailIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                     return result;
                                 }
                             }
                             else
                             {
-                                result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.MobileNumber + LeillaKeys.Space + AmgadKeys.ThisMobileNumberIsUsedByEmployee  + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                                result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.MobileNumber + LeillaKeys.Space + AmgadKeys.ThisMobileNumberIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                                 return result;
                             }
                         }
@@ -600,13 +604,13 @@ namespace Dawem.BusinessLogic.Employees
                     }
                     else
                     {
-                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space  + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
                         return result;
                     }
                 }
                 repositoryManager.EmployeeRepository.BulkInsert(ImportedList);
                 await unitOfWork.SaveAsync();
-                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully   +    LeillaKeys.Space   + ImportedList.Count  +  LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo.Lang));
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo.Lang));
             }
             return result;
         }

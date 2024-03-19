@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Excel
+﻿namespace Dawem.Models.Dtos.Excel.Employees
 {
     public class EmployeeHeaderDraftDTO
     {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
@@ -7,13 +8,17 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Departments;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
+using FollowUp.Validation.BusinessValidation.General;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees.Departments
@@ -141,7 +146,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
 
                 List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
-                var addedDepartmentZones = model.Zones !=null ? model.Zones
+                var addedDepartmentZones = model.Zones != null ? model.Zones
                     .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
                     .Select(ge => new ZoneDepartment
                     {
@@ -405,13 +410,99 @@ namespace Dawem.BusinessLogic.Employees.Departments
 
             return new GetDepartmentsInformationsResponseDTO
             {
-                TotalCount = await query.Where(department=> !department.IsDeleted).CountAsync(),
+                TotalCount = await query.Where(department => !department.IsDeleted).CountAsync(),
                 ActiveCount = await query.Where(department => !department.IsDeleted && department.IsActive).CountAsync(),
-                NotActiveCount = await query.Where(department => !department.IsDeleted &&!department.IsActive ).CountAsync(),
+                NotActiveCount = await query.Where(department => !department.IsDeleted && !department.IsActive).CountAsync(),
                 DeletedCount = await query.Where(department => department.IsDeleted).CountAsync()
             };
 
             #endregion
+        }
+
+        public async Task<MemoryStream> ExportDraft()
+        {
+            EmptyExcelDraftModelDTO departmentHeaderDraftDTO = new();
+            departmentHeaderDraftDTO.FileName = AmgadKeys.DepartmentEmptyDraft;
+            departmentHeaderDraftDTO.Obj = new DepartmentHeaderDraftDTO();
+            departmentHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Department;
+            return ExcelManager.ExportEmptyDraft(departmentHeaderDraftDTO);
+        }
+
+        public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
+        {
+            #region Fill IniValidationModelDTO
+            IniValidationModelDTO iniValidationModelDTO = new();
+            iniValidationModelDTO.FileStream = importedFile;
+            iniValidationModelDTO.MaxRowCount = 0;
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1 });//department Name can't be null
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Department;
+            string[] ExpectedHeaders = { "ParentDepartment", "ManagerName", "DepartmentName", "IsActive" };
+            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            iniValidationModelDTO.Lang = requestInfo.Lang;
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated
+            #endregion
+            Dictionary<string, string> result = new();
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
+            if (validationMessages.Count > 0)
+            {
+                foreach (var kvp in validationMessages)
+                {
+                    result.Add(kvp.Key, kvp.Value);
+                }
+            }
+            else
+            {
+                List<Department> ImportedList = new();
+                Department Temp = new();
+                using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
+                var worksheet = workbook.Worksheet(1);
+                var getNextCode = await repositoryManager.DepartmentRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync();
+                foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
+                {
+                    var foundDepartmentInDB = await repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString()).FirstOrDefaultAsync();
+                    if (foundDepartmentInDB == null) // Department Name not found
+                    {
+                        Temp = new();
+                        Temp.Code = getNextCode++;
+                        Temp.AddedApplicationType = ApplicationType.Web;
+                        Temp.Name = row.Cell(2).GetString();
+                        Temp.ManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(3).GetString()).Select(e => e.Id).FirstOrDefault();
+                        Temp.IsActive = bool.Parse(row.Cell(4).GetString());
+                        Temp.ParentId = repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(2).GetString()).Select(e => e.Id).FirstOrDefault();
+                        Temp.CompanyId = requestInfo.CompanyId;
+                        Temp.AddedDate = DateTime.Now;
+                        Temp.AddUserId = requestInfo.UserId;
+                        Temp.InsertedFromExcel = true;
+                        if (Temp.ManagerId == 0)
+                        {
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            return result;
+                        }
+                        else if (Temp.ParentId == 0)
+                        {
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            return result;
+                        }
+                        else
+                        {
+                            ImportedList.Add(Temp);
+                        }
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundDepartmentInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                        return result;
+                    }
+                }
+                repositoryManager.DepartmentRepository.BulkInsert(ImportedList);
+                await unitOfWork.SaveAsync();
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.DepartmentEnteredSuccessfully, requestInfo.Lang));
+            }
+            return result;
         }
     }
 }

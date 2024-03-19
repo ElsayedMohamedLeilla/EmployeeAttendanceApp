@@ -544,14 +544,15 @@ namespace Dawem.BusinessLogic.Employees
                                 {
 
                                     Temp = new();
-                                    Temp.Code = getNextCode++;
+                                    getNextCode++;
+                                    Temp.Code = getNextCode;
                                     Temp.AddedApplicationType = ApplicationType.Web;
                                     Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
-                                    Temp.Name = row.Cell(2).GetString();
-                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.Name = row.Cell(2).GetString().Trim();
+                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.CompanyId == requestInfo.CompanyId && j.Name == row.Cell(4).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Name == row.Cell(5).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive &&  e.CompanyId == requestInfo.CompanyId &&  e.Name == row.Cell(6).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.Email = row.Cell(7).GetString();
                                     Temp.MobileNumber = row.Cell(8).GetString();
                                     Temp.Address = row.Cell(9).GetString();

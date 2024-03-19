@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Employees.Department;
+﻿using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;

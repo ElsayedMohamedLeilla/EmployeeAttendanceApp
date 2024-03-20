@@ -1,6 +1,8 @@
 ﻿using Dawem.Domain.Entities.Lookups;
+using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Models.Dtos.Lookups;
+using Dawem.Enums.Generals;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -52,6 +54,142 @@ namespace Dawem.Data
                 context.Countries.AddRange(countries);
                 context.SaveChanges();
             }
+
+            #region Handle Plans
+
+            var allPlansCount = context.Plans.Count();
+
+            if (allPlansCount <= 0)
+            {
+                var plans = new List<Plan>();
+                var code = 0;
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "التجريبية",
+                    NameEn = "Trial",
+                    EmployeeCost = 0,
+                    IsTrial = true,
+                    MinNumberOfEmployees = 1,
+                    MaxNumberOfEmployees = 2
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "الاساسية",
+                    NameEn = "Basic",
+                    MinNumberOfEmployees = 1,
+                    MaxNumberOfEmployees = 100
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "المتوسطة",
+                    NameEn = "Medium",
+                    MinNumberOfEmployees = 101,
+                    MaxNumberOfEmployees = 500
+                });
+
+                plans.Add(new()
+                {
+                    Code = code++,
+                    NameAr = "المتقدمة",
+                    NameEn = "Advanced",
+                    MinNumberOfEmployees = 501,
+                    MaxNumberOfEmployees = 1000
+                });
+
+                context.Plans.AddRange(plans);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Handle Subscriptions
+
+            var allSubscriptionsCount = context.Subscriptions.Count();
+
+            if (allSubscriptionsCount <= 0)
+            {
+                var subscriptions = new List<Subscription>();
+
+                var getAllCompanies = context.Companies.ToList();
+                var code = 0;
+                var getBasicPlanId = context.Plans
+                    .FirstOrDefault(p => p.NameEn == "Medium")?.Id ?? 0;
+
+                foreach (var company in getAllCompanies)
+                {
+                    code++;
+                    subscriptions.Add(new()
+                    {
+                        CompanyId = company.Id,
+                        PlanId = getBasicPlanId,
+                        Code = code,
+                        DurationInDays = 6 * 30,
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddDays(6 * 30),
+                        Status = SubscriptionStatus.Active,
+                        RenewalCount = 1,
+                        FollowUpEmail = company.Email
+                    });
+                }
+
+                context.Subscriptions.AddRange(subscriptions);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Handle Dawem Setting
+
+            var getAllDawemSettings = context.DawemSettings.ToList();
+            var dawemSettings = new List<DawemSetting>();
+
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansGracePeriodPercentage) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlansGracePeriodPercentage,
+                    TypeName = nameof(DawemSettingType.PlansGracePeriodPercentage),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 5
+                });
+            }
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialDurationInDays) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlanTrialDurationInDays,
+                    TypeName = nameof(DawemSettingType.PlanTrialDurationInDays),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 3
+                });
+            }
+            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialEmployeesCount) == null)
+            {
+                dawemSettings.Add(new()
+                {
+                    Type = DawemSettingType.PlanTrialEmployeesCount,
+                    TypeName = nameof(DawemSettingType.PlanTrialEmployeesCount),
+                    GroupType = DawemSettingGroupType.Plans,
+                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
+                    ValueType = DawemSettingValueType.Integer,
+                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    Integer = 2
+                });
+            }
+
+            #endregion
 
             #region Handle country phone numbers length
 

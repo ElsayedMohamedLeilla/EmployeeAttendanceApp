@@ -24,7 +24,6 @@ namespace Dawem.Domain.Entities.Providers
         public List<Schedule> Schedules { get; set; }
         public List<SchedulePlan> SchedulePlans { get; set; }
         public int NumberOfEmployees { get; set; }
-        public int SubscriptionDurationInMonths { get; set; }
     }
 
 }

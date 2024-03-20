@@ -9,6 +9,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
@@ -498,7 +499,10 @@ namespace Dawem.Data
 
         }
 
-
+        public DbSet<DawemSetting> DawemSettings { get; set; }
+        public DbSet<Plan> Plans { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionLog> SubscriptionLogs { get; set; }
         public DbSet<SchedulePlan> SchedulePlans { get; set; }
         public DbSet<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
         public DbSet<SchedulePlanGroup> SchedulePlanGroups { get; set; }

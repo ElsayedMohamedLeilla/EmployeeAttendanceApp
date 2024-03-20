@@ -11,6 +11,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Subscriptions;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
@@ -56,6 +57,9 @@ namespace Dawem.Repository.Managers
         private IUserTokenRepository userTokenRepository;
         private ICompanyRepository companyRepository;
         private ISubscriptionRepository subscriptionRepository;
+        private ISubscriptionLogRepository subscriptionLogRepository;
+        private IPlanRepository planRepository;
+        private IDawemSettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
         private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
@@ -123,8 +127,16 @@ namespace Dawem.Repository.Managers
 
         public ICompanyRepository CompanyRepository =>
          companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
-         public ISubscriptionRepository SubscriptionRepository =>
-         subscriptionRepository ??= new SubscriptionRepository(unitOfWork, generalSetting);
+        public ISubscriptionRepository SubscriptionRepository =>
+        subscriptionRepository ??= new SubscriptionRepository(unitOfWork, generalSetting);
+
+        public ISubscriptionLogRepository SubscriptionLogRepository =>
+        subscriptionLogRepository ??= new SubscriptionLogRepository(unitOfWork, generalSetting);
+        public IPlanRepository PlanRepository =>
+        planRepository ??= new PlanRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDawemSettingRepository DawemSettingRepository =>
+         dawemSettingRepository ??= new DawemSettingRepository(unitOfWork, generalSetting);
         public ICountryRepository CountryRepository =>
          countryRepository ??= new CountryRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>

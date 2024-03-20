@@ -69,7 +69,7 @@ namespace Dawem.API.MiddleWares
                                    requestInfo?.Lang) + LeillaKeys.RightBracket
                         };
 
-                        await Return(unitOfWork, httpContext, statusCode, response);
+                        await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
                     }
                 }
                 else
@@ -81,24 +81,13 @@ namespace Dawem.API.MiddleWares
                         Message = TranslationHelper.GetTranslation(LeillaKeys.SorryInternalErrorHappenInPermissions, requestInfo?.Lang)
                     };
 
-                    await Return(unitOfWork, httpContext, statusCode, response);
+                    await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
                 }
             }
             else
             {
                 await _next.Invoke(httpContext);
             }
-        }
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
-        {
-            unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
         }
     }
 }

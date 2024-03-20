@@ -4,7 +4,6 @@
     {
         public int EmployeeId { get; set; }
         public int EmployeeNumber { get; set; }
-        public int EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string ShouldAttendCount { get; set; }
         public string ActualAttendCount { get; set; }

@@ -38,7 +38,7 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.ValidationError;
                 response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
                      TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
             catch (BusinessValidationExceptionGenaric<int> ex)
             {
@@ -47,7 +47,7 @@ namespace Dawem.API.MiddleWares
                 responseGenaric.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
                      TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
                 responseGenaric.Data = ex.Data;
-                await Return(unitOfWork, context, statusCode, responseGenaric);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, responseGenaric);
             }
             catch (ActionNotAllowedValidationError ex)
             {
@@ -55,14 +55,14 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.ActionNotAllowed;
                 response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
                                 TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
             catch (UnAuthorizedException ex)
             {
                 statusCode = (int)HttpStatusCode.Unauthorized;
                 response.State = ResponseStatus.UnAuthorized;
                 response.Message = string.IsNullOrEmpty(ex.Message) ? LeillaKeys.UnAuthorized : ex.Message;
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
             }
             catch (NotRegisteredUserException)
@@ -70,7 +70,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.OK;
                 response.State = ResponseStatus.NotRegisteredUser;
                 response.Message = LeillaKeys.RedirectToRegister;
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
             catch (DbUpdateException ex)
@@ -101,7 +101,7 @@ namespace Dawem.API.MiddleWares
 
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 response.State = ResponseStatus.ValidationError;
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
             catch (Exception exception)
@@ -110,30 +110,9 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.Error;
                 response.Message = TranslationHelper.
                         GetTranslation(LeillaKeys.SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt, requestInfo?.Lang);
-                await Return(unitOfWork, context, statusCode, response);
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
         }
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
-        {
-            unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
-        }
-        private static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponseGenaric<int> response)
-        {
-            unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
-        }
+       
     }
 }

@@ -12,6 +12,8 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Departments;
+using Dawem.Models.Dtos.Excel.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
@@ -483,6 +485,8 @@ namespace Dawem.BusinessLogic.Employees
             EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
             employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
             employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
+            employeeHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Employees;
+
             return ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
         }
         public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
@@ -493,14 +497,15 @@ namespace Dawem.BusinessLogic.Employees
             iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
                                                - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
 
             string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
                                         , "ScheduleName",
                                          "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
                                          "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
-            iniValidationModelDTO.lang = requestInfo.Lang;
-            iniValidationModelDTO.columnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
+            iniValidationModelDTO.Lang = requestInfo.Lang;
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
 
             Dictionary<string, string> result = new();
@@ -539,14 +544,15 @@ namespace Dawem.BusinessLogic.Employees
                                 {
 
                                     Temp = new();
-                                    Temp.Code = getNextCode++;
+                                    getNextCode++;
+                                    Temp.Code = getNextCode;
                                     Temp.AddedApplicationType = ApplicationType.Web;
                                     Temp.EmployeeNumber = int.Parse(row.Cell(1).GetString());
-                                    Temp.Name = row.Cell(2).GetString();
-                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.Name == row.Cell(4).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.Name == row.Cell(5).GetString()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(6).GetString()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.Name = row.Cell(2).GetString().Trim();
+                                    Temp.DepartmentId = repositoryManager.DepartmentRepository.Get(d => d.IsActive && !d.IsDeleted && d.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.CompanyId == requestInfo.CompanyId && j.Name == row.Cell(4).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Name == row.Cell(5).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                                    Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive &&  e.CompanyId == requestInfo.CompanyId &&  e.Name == row.Cell(6).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.Email = row.Cell(7).GetString();
                                     Temp.MobileNumber = row.Cell(8).GetString();
                                     Temp.Address = row.Cell(9).GetString();

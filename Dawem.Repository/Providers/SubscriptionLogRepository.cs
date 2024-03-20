@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.Repository.Provider;
+﻿using Dawem.Contract.Repository.Subscriptions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;

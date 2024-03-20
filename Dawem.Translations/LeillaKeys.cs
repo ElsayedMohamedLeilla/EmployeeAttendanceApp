@@ -525,11 +525,20 @@
         public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
         public const string SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal!";
         public const string SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!";
-
         public const string SorryYouMustNotEnterSubscriptionDurationInMonthsWhenChooseTrial = "Sorry!!YouMustNotEnterSubscriptionDurationInMonthsWhenChooseTrial!";
         public const string SorrySubscriptionPlanNotFound = "Sorry!!SubscriptionPlanNotFound!";
         public const string YouAreOnTrialSubscription = "YouAreOnTrialSubscription";
-
-
+        public const string SorryPlanNotFound = "Sorry!!PlanNotFound!";
+        public const string SorryPlanNameIsDuplicated = "Sorry!!PlanNameIsDuplicated!";
+        public const string SorryPlanOverlapWithOtherPlanInNumberOfEmployees = "Sorry!!PlanOverlapWithOtherPlanInNumberOfEmployees!";
+        public const string SorryYouMustEnterPlanName = "Sorry!!YouMustEnterPlanName!";
+        public const string SorryYouMustEnterPlanMinNumberOfEmployees = "Sorry!!YouMustEnterPlanMinNumberOfEmployees!";
+        public const string SorryYouMustEnterPlanMaxNumberOfEmployees = "Sorry!!YouMustEnterPlanMaxNumberOfEmployees!";
+        public const string SorryYouMustEnterPlanEmployeeCost = "Sorry!!YouMustEnterPlanEmployeeCost!";
+        public const string SorryPlanMinNumberOfEmployeesMustLessThanOrEqualMaxNumberOfEmployees = "Sorry!!PlanMinNumberOfEmployeesMustLessThanOrEqualMaxNumberOfEmployees!";
+        public const string SorryYouMustEnterPlanId = "Sorry!!YouMustEnterPlanId!";
+        public const string DoneCreatePlanSuccessfully = "DoneCreatePlanSuccessfully";
+        public const string DoneUpdatePlanSuccessfully = "DoneUpdatePlanSuccessfully";
     }
+    
 }

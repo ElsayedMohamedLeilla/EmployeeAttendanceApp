@@ -70,7 +70,6 @@ namespace Dawem.Data
                     NameAr = "التجريبية",
                     NameEn = "Trial",
                     EmployeeCost = 0,
-                    GracePeriodPercentage = 0,
                     IsTrial = true,
                     MinNumberOfEmployees = 1,
                     MaxNumberOfEmployees = 2

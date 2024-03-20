@@ -10,6 +10,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Subscriptions;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
 

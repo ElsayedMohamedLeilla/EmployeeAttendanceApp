@@ -10,6 +10,9 @@ namespace Dawem.Translations
         public const string DefaultImageName = "default.jpg";
         public const string NotificationIcons = "NotificationIcons";
         public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
+        public const string DepartmentEmptyDraft = "DepartmentEmptyDraft";
+
+        
 
         public const string Success = "Success";
 
@@ -178,6 +181,7 @@ namespace Dawem.Translations
         public const string WrongData = "WrongData";
         public const string AnnualVacationBalanceCanNotBeNegativeValue = "AnnualVacationBalanceCanNotBeNegativeValue";
         public const string EmployeeEnteredSuccessfully = "EmployeeEnteredSuccessfully";
+        public const string DepartmentEnteredSuccessfully = "DepartmentEnteredSuccessfully";
 
         
 

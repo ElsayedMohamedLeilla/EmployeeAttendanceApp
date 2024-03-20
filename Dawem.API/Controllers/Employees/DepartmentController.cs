@@ -116,5 +116,25 @@ namespace Dawem.API.Controllers.Employees
         {
             return Success(await departmentBL.GetDepartmentsInformations());
         }
+
+        [HttpGet]
+        public async Task<ActionResult> CreateExportDraft()
+        {
+            var stream = await departmentBL.ExportDraft();
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", AmgadKeys.DepartmentEmptyDraft);
+        }
+
+        [HttpPost]
+        [RequestSizeLimit(10 * 2048 * 2048)] // Max 20 MB
+        public async Task<ActionResult> CreateImportDataFromExcel(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(AmgadKeys.NoFileUploaded);
+            }
+            using Stream fileStream = file.OpenReadStream();
+            Dictionary<string, string> result = await departmentBL.ImportDataFromExcelToDB(fileStream);
+            return Ok(result);
+        }
     }
 }

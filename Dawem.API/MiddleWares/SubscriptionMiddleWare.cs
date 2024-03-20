@@ -28,6 +28,7 @@ namespace Dawem.API.MiddleWares
 
                 if (getSubscription != null)
                 {
+                    var isSubscriptionExpired = false;
                     if (DateTime.Now.Date >= getSubscription.EndDate.Date)
                     {
                         var getPlansGracePeriodPercentage = (await repositoryManager.DawemSettingRepository.
@@ -45,6 +46,7 @@ namespace Dawem.API.MiddleWares
 
                         if (DateTime.Now.Date >= newEndDate)
                         {
+                            isSubscriptionExpired = true;
                             int statusCode = StatusCodes.Status422UnprocessableEntity;
                             var response = new ErrorResponse
                             {
@@ -55,7 +57,7 @@ namespace Dawem.API.MiddleWares
                             await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
                         }
                     }
-                    if (getSubscription.Status != SubscriptionStatus.Active)
+                    if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
                     {
                         int statusCode = StatusCodes.Status422UnprocessableEntity;
                         var response = new ErrorResponse
@@ -73,7 +75,8 @@ namespace Dawem.API.MiddleWares
             {
                 // do nothing if jwt validation fails
             }
-            await _next.Invoke(httpContext);
+            if (!httpContext.Response.HasStarted)
+                await _next.Invoke(httpContext);
         }
     }
 }

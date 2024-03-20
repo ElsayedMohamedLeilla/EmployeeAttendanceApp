@@ -119,15 +119,16 @@ namespace Dawem.Data
                 var getAllCompanies = context.Companies.ToList();
                 var code = 0;
                 var getBasicPlanId = context.Plans
-                    .FirstOrDefault(p => p.IsTrial)?.Id ?? 0;
+                    .FirstOrDefault(p => p.NameEn == "Medium")?.Id ?? 0;
 
                 foreach (var company in getAllCompanies)
                 {
+                    code++;
                     subscriptions.Add(new()
                     {
                         CompanyId = company.Id,
                         PlanId = getBasicPlanId,
-                        Code = code++,
+                        Code = code,
                         DurationInDays = 6 * 30,
                         StartDate = DateTime.Now,
                         EndDate = DateTime.Now.AddDays(6 * 30),

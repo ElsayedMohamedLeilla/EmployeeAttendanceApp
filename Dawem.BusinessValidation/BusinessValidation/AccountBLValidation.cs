@@ -1,6 +1,9 @@
 ﻿using Dawem.Contract.BusinessValidation;
+using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.Generals;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Exceptions;
@@ -15,10 +18,13 @@ namespace Dawem.Validation.BusinessValidation
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly UserManagerRepository userManagerRepository;
-        public AccountBLValidation(IRepositoryManager _repositoryManager, UserManagerRepository _userManagerRepository)
+        private readonly ISubscriptionBLValidationCore subscriptionBLValidationCore;
+        public AccountBLValidation(IRepositoryManager _repositoryManager, UserManagerRepository _userManagerRepository,
+            ISubscriptionBLValidationCore _subscriptionBLValidationCore)
         {
             repositoryManager = _repositoryManager;
             userManagerRepository = _userManagerRepository;
+            subscriptionBLValidationCore = _subscriptionBLValidationCore;
         }
         public async Task<bool> SignUpValidation(SignUpModel model)
         {
@@ -60,7 +66,18 @@ namespace Dawem.Validation.BusinessValidation
                     throw new BusinessValidationException(LeillaKeys.SorryCannotFindTheCompany);
                 }
             }
-           
+
+            #endregion
+
+            #region Check Company Subscription
+
+            var checkCompanySubscriptionModel = new CheckCompanySubscriptionModel
+            {
+                CompanyId = model.CompanyId,
+                FromType = CheckCompanySubscriptionFromType.LogIn
+            };
+            await subscriptionBLValidationCore.CheckCompanySubscription(checkCompanySubscriptionModel);
+
             #endregion
 
             #region Try Find User

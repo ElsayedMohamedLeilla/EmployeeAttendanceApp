@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
+using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -43,10 +44,12 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
         private readonly IAccountBLValidation accountBLValidation;
+        private readonly ISubscriptionBLValidationCore subscriptionBLValidationCore;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
+            ISubscriptionBLValidationCore _subscriptionBLValidationCore,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
             IPermissionBL _permissionBL,
@@ -58,6 +61,7 @@ namespace Dawem.BusinessLogic.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
+            subscriptionBLValidationCore = _subscriptionBLValidationCore;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
             permissionBL = _permissionBL;
@@ -353,12 +357,12 @@ namespace Dawem.BusinessLogic.Provider
 
             return user;
         }
-        public async Task<TokenDto> SignIn(SignInModel signInModel)
+        public async Task<TokenDto> SignIn(SignInModel model)
         {
             #region Business Validation
 
-            var user = await accountBLValidation.SignInValidation(signInModel);
-
+            var user = await accountBLValidation.SignInValidation(model);
+           
             #endregion
 
             #region Get User Role
@@ -373,10 +377,10 @@ namespace Dawem.BusinessLogic.Provider
             {
                 UserId = user.Id,
                 UserName = user.UserName,
-                RememberMe = signInModel.RememberMe,
+                RememberMe = model.RememberMe,
                 Roles = roles,
                 CompanyId = user.CompanyId,
-                ApplicationType = signInModel.ApplicationType
+                ApplicationType = model.ApplicationType
             };
 
             var tokenData = await GetTokenModel(tokenModelSearchCriteria);
@@ -391,7 +395,7 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Device Token
 
-            if (!string.IsNullOrEmpty(signInModel.FCMToken) && !string.IsNullOrWhiteSpace(signInModel.FCMToken))
+            if (!string.IsNullOrEmpty(model.FCMToken) && !string.IsNullOrWhiteSpace(model.FCMToken))
             {
                 var getNotificationUser = await repositoryManager.NotificationUserRepository
                 .Get(f => !f.IsDeleted && f.CompanyId == user.CompanyId && f.UserId == user.Id)
@@ -401,15 +405,15 @@ namespace Dawem.BusinessLogic.Provider
                 {
                     var getNotificationUserDeviceToken = await repositoryManager.NotificationUserFCMTokenRepository
                     .GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && f.NotificationUserId == getNotificationUser.Id
-                    && f.FCMToken == signInModel.FCMToken && f.DeviceType == signInModel.ApplicationType);
+                    && f.FCMToken == model.FCMToken && f.DeviceType == model.ApplicationType);
 
                     if (getNotificationUserDeviceToken == null)
                     {
                         var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
                             NotificationUserId = getNotificationUser.Id,
-                            FCMToken = signInModel.FCMToken,
-                            DeviceType = signInModel.ApplicationType,
+                            FCMToken = model.FCMToken,
+                            DeviceType = model.ApplicationType,
                             LastLogInDate = DateTime.UtcNow
                         };
                         repositoryManager.NotificationUserFCMTokenRepository.Insert(notificationUserDeviceToken);
@@ -417,7 +421,7 @@ namespace Dawem.BusinessLogic.Provider
                     else
                     {
                         getNotificationUserDeviceToken.LastLogInDate = DateTime.UtcNow;
-                        getNotificationUserDeviceToken.FCMToken = signInModel.FCMToken;
+                        getNotificationUserDeviceToken.FCMToken = model.FCMToken;
                     }
                 }
                 else
@@ -430,8 +434,8 @@ namespace Dawem.BusinessLogic.Provider
                         {
                             new()
                             {
-                                FCMToken = signInModel.FCMToken,
-                                DeviceType = signInModel.ApplicationType,
+                                FCMToken = model.FCMToken,
+                                DeviceType = model.ApplicationType,
                                 LastLogInDate = DateTime.UtcNow
                             }
                         }
@@ -446,8 +450,8 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Fingerprint Device Code
 
-            if (!string.IsNullOrEmpty(signInModel.FingerprintMobileCode) &&
-                !string.IsNullOrWhiteSpace(signInModel.FingerprintMobileCode) &&
+            if (!string.IsNullOrEmpty(model.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(model.FingerprintMobileCode) &&
                 user.EmployeeId > 0)
             {
                 var getEmployee = await repositoryManager.EmployeeRepository
@@ -458,7 +462,7 @@ namespace Dawem.BusinessLogic.Provider
                 {
                     var checkFingerprintMobileCodeDuplicate = await repositoryManager.EmployeeRepository
                         .Get(employee => !employee.IsDeleted
-                        && employee.Id != getEmployee.Id && employee.FingerprintMobileCode == signInModel.FingerprintMobileCode)
+                        && employee.Id != getEmployee.Id && employee.FingerprintMobileCode == model.FingerprintMobileCode)
                         .AnyAsync();
 
                     if (!checkFingerprintMobileCodeDuplicate)
@@ -466,12 +470,12 @@ namespace Dawem.BusinessLogic.Provider
                         if (string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) ||
                             string.IsNullOrEmpty(getEmployee.FingerprintMobileCode))
                         {
-                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                            getEmployee.FingerprintMobileCode = model.FingerprintMobileCode;
                         }
                         else if (getEmployee.AllowChangeFingerprintMobileCode &&
-                            signInModel.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                            model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
                         {
-                            getEmployee.FingerprintMobileCode = signInModel.FingerprintMobileCode;
+                            getEmployee.FingerprintMobileCode = model.FingerprintMobileCode;
                             getEmployee.AllowChangeFingerprintMobileCode = false;
                         }
                         await unitOfWork.SaveAsync();

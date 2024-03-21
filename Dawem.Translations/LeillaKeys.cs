@@ -88,6 +88,7 @@
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
+        public const string BLValidationCore = "BLValidationCore";
         public const string ApiControllerAction = "api/[controller]/[action]";
         public const string Comma = ",";
         public const string CommaThenSpace = ", ";

@@ -210,6 +210,13 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetLanguagesCriteriaValidator : AbstractValidator<GetLanguagesCriteria>
+    {
+        public GetLanguagesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
     public class GetPermissionsCriteriaValidator : AbstractValidator<GetPermissionsCriteria>
     {
         public GetPermissionsCriteriaValidator()

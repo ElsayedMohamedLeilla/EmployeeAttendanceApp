@@ -193,7 +193,38 @@ namespace Dawem.Data
                 context.DawemSettings.AddRange(dawemSettings);
                 context.SaveChanges();
             }
-            
+
+
+            #endregion
+
+            #region Handle Languages
+
+            var languages = new List<Language>();
+
+            if (!context.Languages.Any())
+            {
+                languages.AddRange(new List<Language>()
+                {   new () { Name = "Arabic", NativeName = "العربية", ISO2 = "ar" , ISO3="ara" },
+                    new () { Name = "English", NativeName = "English", ISO2 = "en" , ISO3="eng" },
+                    new () { Name = "Chinese", NativeName = "汉语", ISO2 = "zh" , ISO3="zho" },
+                    new () { Name = "Spanish", NativeName = "Español", ISO2 = "es" , ISO3="spa" },
+                    new () { Name = "Russian", NativeName = "Русский", ISO2 = "ru" , ISO3="rus" },
+                    new () { Name = "Hindi", NativeName = "हिन्दी", ISO2 = "hi" , ISO3="hin" },
+                    new () { Name = "Japanese", NativeName = "日本語", ISO2 = "ja" , ISO3="jpn" },
+                    new () { Name = "German", NativeName = "Deutsch", ISO2 = "de" , ISO3="due" },
+                    new () { Name = "French", NativeName = "Français", ISO2 = "fr" , ISO3="fra" },
+                    new () { Name = "Portuguese", NativeName = "Português", ISO2 = "pt" , ISO3="por" },
+                    new () { Name = "Korean", NativeName = "한국어", ISO2 = "ko" , ISO3="kor" },
+                    new () { Name = "Turkish", NativeName = "Türkçe", ISO2 = "tr" , ISO3="tur" },
+                    new () { Name = "Italian", NativeName = "Italiano", ISO2 = "it" , ISO3="ita" },
+                    new () { Name = "Indonesian", NativeName = "Bahasa Indonesia", ISO2 = "id" , ISO3="ind" },
+                    new () { Name = "Bengali", NativeName = "বাংলা", ISO2 = "bn" , ISO3="ben" },
+                    new () { Name = "Punjabi", NativeName = "ਪੰਜਾਬੀ", ISO2 = "pa" , ISO3="pan" }
+                });
+
+                context.Languages.AddRange(languages);
+                context.SaveChanges();
+            }
 
             #endregion
 

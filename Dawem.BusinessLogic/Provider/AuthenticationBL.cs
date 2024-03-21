@@ -44,12 +44,10 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
         private readonly IAccountBLValidation accountBLValidation;
-        private readonly ISubscriptionBLValidationCore subscriptionBLValidationCore;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            ISubscriptionBLValidationCore _subscriptionBLValidationCore,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
             IPermissionBL _permissionBL,
@@ -61,7 +59,6 @@ namespace Dawem.BusinessLogic.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
-            subscriptionBLValidationCore = _subscriptionBLValidationCore;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
             permissionBL = _permissionBL;
@@ -201,25 +198,6 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            #region Insert Branch
-
-            Branch branch = new()
-            {
-                CompanyId = companyId,
-                Email = model.CompanyEmail,
-                IsActive = true,
-                AdminUserId = user.Id,
-                Name = model.CompanyName,
-                IsMainBranch = true,
-                CountryId = model.CompanyCountryId,
-                Address = model.CompanyAddress,
-            };
-
-            repositoryManager.BranchRepository.Insert(branch);
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
             #region Insert Department And Employee
 
             var employee = repositoryManager.EmployeeRepository.Insert(new Employee
@@ -244,24 +222,9 @@ namespace Dawem.BusinessLogic.Provider
             #region Update User
 
             var getUser = repositoryManager.UserRepository.GetByID(user.Id);
-            getUser.BranchId = branch.Id;
             getUser.CompanyId = insertedCompany.Id;
             getUser.EmployeeId = employee.Id;
 
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
-            #region Insert User Branch
-
-            var userBranch = new UserBranch()
-            {
-
-                UserId = user.Id,
-                BranchId = branch.Id
-            };
-
-            repositoryManager.UserBranchRepository.Insert(userBranch);
             await unitOfWork.SaveAsync();
 
             #endregion

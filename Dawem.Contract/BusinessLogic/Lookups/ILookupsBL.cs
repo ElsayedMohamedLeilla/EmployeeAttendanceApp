@@ -7,5 +7,6 @@ namespace Dawem.Contract.BusinessLogic.Lookups
     {
         Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria);
         Task<List<CurrencyLiteDTO>> GetCurrencies(GetCurrenciesCriteria criteria);
+        Task<List<LanguageLiteDTO>> GetLanguages(GetLanguagesCriteria criteria);
     }
 }

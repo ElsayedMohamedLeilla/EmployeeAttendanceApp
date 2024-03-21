@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Lookups;
 using Dawem.Contract.BusinessLogicCore;
-using Dawem.Contract.Repository.Lookups;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Lookups;
@@ -15,34 +15,31 @@ using LinqKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using static NodaTime.TimeZones.TzdbZone1970Location;
 
 namespace Dawem.BusinessLogic.Lookups
 {
     public class LookupsBL : ILookupsBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly ICountryRepository countryRepository;
-        private readonly ICurrencyRepository currencyRepository;
         private readonly RequestInfo userContext;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IUploadBLC uploadBLC;
+        private readonly IRepositoryManager repositoryManager;
         public LookupsBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IHttpContextAccessor _httpContextAccessor, IUploadBLC _uploadBLC,
-            ICurrencyRepository _currencyRepository, ICountryRepository _countryRepository,
+            IHttpContextAccessor _httpContextAccessor, IUploadBLC _uploadBLC, IRepositoryManager _repositoryManager,
              RequestInfo _userContext)
         {
             unitOfWork = _unitOfWork;
-            currencyRepository = _currencyRepository;
-            countryRepository = _countryRepository;
             httpContextAccessor = _httpContextAccessor;
             userContext = _userContext;
             uploadBLC = _uploadBLC;
+            repositoryManager = _repositoryManager;
         }
 
         public async Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria)
         {
             var countryPredicate = PredicateBuilder.New<Domain.Entities.Lookups.Country>(true);
+            var countryRepository = repositoryManager.CountryRepository;
 
             var getCurrentCountryCode = await GetCurrentCountryInfo();
 
@@ -91,8 +88,9 @@ namespace Dawem.BusinessLogic.Lookups
 
             return countries;
         }
-        public async Task<List<CurrencyLiteDTO>?> GetCurrencies(GetCurrenciesCriteria criteria)
+        public async Task<List<CurrencyLiteDTO>> GetCurrencies(GetCurrenciesCriteria criteria)
         {
+            var currencyRepository = repositoryManager.CurrencyRepository;
             var query = currencyRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -141,6 +139,37 @@ namespace Dawem.BusinessLogic.Lookups
             var ipResponse = await client.IPApi.GetDetailsAsync(ip);
 
             return ipResponse.Country;
+        }
+        public async Task<List<LanguageLiteDTO>> GetLanguages(GetLanguagesCriteria criteria)
+        {
+            var languageRepository = repositoryManager.LanguageRepository;
+            var query = languageRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = languageRepository.OrderBy(query, nameof(Currency.Id), LeillaKeys.Asc);
+
+            #endregion
+
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            var currenciesList = await queryPaged.Select(c => new LanguageLiteDTO()
+            {
+                Id = c.Id,
+                Name = c.NativeName,
+                ISOCode = c.ISO2
+            }).ToListAsync();
+
+            return currenciesList;
+
         }
     }
 }

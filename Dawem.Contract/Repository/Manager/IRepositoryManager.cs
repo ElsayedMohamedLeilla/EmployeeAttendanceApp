@@ -18,12 +18,14 @@ namespace Dawem.Contract.Repository.Manager
 {
     public interface IRepositoryManager
     {
+        ICountryRepository CountryRepository { get; }
+        ILanguageRepository LanguageRepository { get; }
+        ICurrencyRepository CurrencyRepository { get; }
         ICompanyRepository CompanyRepository { get; }
         ISubscriptionRepository SubscriptionRepository { get; }
         ISubscriptionLogRepository SubscriptionLogRepository { get; }
         IPlanRepository PlanRepository { get; }
         IDawemSettingRepository DawemSettingRepository { get; }
-        ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }

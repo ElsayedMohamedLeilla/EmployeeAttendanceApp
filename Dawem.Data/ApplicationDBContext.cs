@@ -101,6 +101,17 @@ namespace Dawem.Data
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<CompanyBranch>()
+         .HasOne(p => p.Company)
+         .WithMany(b => b.CompanyBranches)
+         .HasForeignKey(p => p.CompanyId)
+         .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<CompanyIndustry>()
+         .HasOne(p => p.Company)
+         .WithMany(b => b.CompanyIndustries)
+         .HasForeignKey(p => p.CompanyId)
+         .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<SummonMissingLog>()
          .HasOne(p => p.Summon)
@@ -499,6 +510,7 @@ namespace Dawem.Data
 
         }
 
+        public DbSet<Language> Languages { get; set; }
         public DbSet<DawemSetting> DawemSettings { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
@@ -528,7 +540,7 @@ namespace Dawem.Data
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }
-        public DbSet<Branch> Branches { get; set; }
+        public DbSet<CompanyBranch> Branches { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }

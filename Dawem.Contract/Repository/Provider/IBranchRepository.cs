@@ -6,8 +6,8 @@ using Dawem.Translations;
 
 namespace Dawem.Contract.Repository.Provider
 {
-    public interface IBranchRepository : IGenericRepository<Branch>
+    public interface IBranchRepository : IGenericRepository<CompanyBranch>
     {
-        IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = LeillaKeys.EmptyString, UserDTO user = null);
+        IQueryable<CompanyBranch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = LeillaKeys.EmptyString, UserDTO user = null);
     }
 }

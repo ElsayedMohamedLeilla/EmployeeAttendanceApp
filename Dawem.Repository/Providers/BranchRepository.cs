@@ -10,7 +10,7 @@ using LinqKit;
 
 namespace Dawem.Repository.Providers
 {
-    public class BranchRepository : GenericRepository<Branch>, IBranchRepository
+    public class BranchRepository : GenericRepository<CompanyBranch>, IBranchRepository
     {
 
         private readonly RequestInfo requestHeaderContext;
@@ -21,12 +21,12 @@ namespace Dawem.Repository.Providers
             requestHeaderContext = _requestHeaderContext;
         }
 
-        public IQueryable<Branch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "Company", UserDTO user = null)
+        public IQueryable<CompanyBranch> GetAsQueryable(GetBranchesCriteria criteria, string includeProperties = "Company", UserDTO user = null)
         {
 
 
-            var predicate = PredicateBuilder.New<Branch>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<Branch>(true);
+            var predicate = PredicateBuilder.New<CompanyBranch>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<CompanyBranch>(true);
 
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

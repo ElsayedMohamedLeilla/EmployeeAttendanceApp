@@ -30,7 +30,7 @@ namespace Dawem.Domain.Entities.Providers
         public string IdentityCode { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
-        public string LogoName { get; set; }
+        public string LogoImageName { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
         public string HeadquarterLocation { get; set; }

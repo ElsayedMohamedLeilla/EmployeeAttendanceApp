@@ -6,7 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.Core
+namespace Dawem.Validation.BusinessValidation.Core
 {
     public class VacationsTypeBLValidation : IVacationTypeBLValidation
     {

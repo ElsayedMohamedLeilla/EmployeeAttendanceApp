@@ -13,8 +13,9 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
                     WithMessage(LeillaKeys.SorryYouMustChooseDepartment);
             RuleFor(model => model.Name).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterEmployeeName);
-            RuleFor(model => model.JoiningDate).GreaterThan(default(DateTime)).
-                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeJoiningDate);
+            RuleFor(model => model.JoiningDate).
+                GreaterThan(default(DateTime)).
+                WithMessage(LeillaKeys.SorryYouMustEnterEmployeeJoiningDate);
             RuleFor(model => model.Email).NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterEmail);
 
@@ -29,7 +30,8 @@ namespace Dawem.Validation.FluentValidation.Employees.Employees
             .GreaterThan(0)
             .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
 
-            RuleFor(model => model.Email).Must(EmailHelper.IsValidEmail).
+            RuleFor(model => model.Email)
+                .Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
             RuleFor(model => model.AttendanceType).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterAttendanceType);

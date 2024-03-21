@@ -476,7 +476,6 @@
         public const string SorryYouMustChooseAtLeastOneEmployee = "Sorry!!YouMustChooseAtLeastOneEmployee!";
         public const string SorryYouMustChooseAtLeastOneGroup = "Sorry!!YouMustChooseAtLeastOneGroup!";
         public const string SorryYouMustChooseAtLeastOneDepartment = "Sorry!!YouMustChooseAtLeastOneDepartment!";
-
         public const string SorryYouMustEnterSanctionId = "Sorry!!YouMustEnterSanctionId!";
         public const string SorryYouMustEnterSanctionName = "Sorry!!YouMustEnterSanctionName!";
         public const string SorrySummonIsDuplicated = "Sorry!!SummonIsDuplicated!";
@@ -540,6 +539,23 @@
         public const string SorryYouMustEnterPlanId = "Sorry!!YouMustEnterPlanId!";
         public const string DoneCreatePlanSuccessfully = "DoneCreatePlanSuccessfully";
         public const string DoneUpdatePlanSuccessfully = "DoneUpdatePlanSuccessfully";
+
+        public const string SorryYouMustChoosePlan = "Sorry!!YouMustChoosePlan!";
+        public const string SorryYouMustChooseCompany = "Sorry!!YouMustChooseCompany!";
+        public const string SorryYouMustEnterDurationInDays = "Sorry!!YouMustEnterDurationInDays!";
+        public const string SorryYouMustChooseSubscriptionStatus = "Sorry!!YouMustChooseSubscriptionStatus!";
+        public const string SorryYouMustEnterStartDate = "Sorry!!YouMustEnterStartDate!";
+        public const string SorryYouMustEnterEndDate = "Sorry!!YouMustEnterEndDate!";
+        public const string SorryYouMustEnterFollowUpEmail = "Sorry!!YouMustEnterFollowUpEmaile!";
+        public const string SorryYouMustEnterSubscriptionId = "Sorry!!YouMustEnterSubscriptionId!";
+
+        public const string SorryYouChooseCountry = "Sorry!!YouChooseCountry!";
+        public const string SorryYouMustEnterIndustryName = "Sorry!!YouMustEnterIndustryName!";
+        public const string SorryThereIsSubscriptionAlreadyWithThisCompany = "Sorry!!ThereIsSubscriptionAlreadyWithThisCompany!";
+        public const string SorryStartDateMustLessThanOrEqualEndDate = "Sorry!!StartDateMustLessThanOrEqualEndDate!";
+        public const string SorryYouMustEnterValidFollowUpEmail = "Sorry!!YouMustEnterValidFollowUpEmail!";
+        public const string SorryDurationInDaysMustEqualPeriodBetweenStartDateAndEndDate = "Sorry!!DurationInDaysMustEqualPeriodBetweenStartDateAndEndDate!";
+        
     }
     
 }

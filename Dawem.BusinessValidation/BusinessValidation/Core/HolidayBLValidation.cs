@@ -6,7 +6,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.Core
+namespace Dawem.Validation.BusinessValidation.Core
 {
     public class HolidayBLValidation : IHolidayBLValidation
     {
@@ -41,19 +41,19 @@ namespace Dawem.Validation.Core
 
             }
             // Handle Feb Month
-            if ((model.StartDate.Month == 2 && model.StartDate.Day > 29) || (model.EndDate.Month == 2 && model.EndDate.Day > 29))
+            if (model.StartDate.Month == 2 && model.StartDate.Day > 29 || model.EndDate.Month == 2 && model.EndDate.Day > 29)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryFebrauryMonthCantBeMoreThan29Day);
             }
             // months 31 Day
-            if (((model.StartDate.Month == 1 || model.StartDate.Month == 3 || model.StartDate.Month == 5 || model.StartDate.Month == 7 || model.StartDate.Month == 8 || model.StartDate.Month == 10 || model.StartDate.Month == 12) && model.StartDate.Day > 31) ||
-                ((model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.StartDate.Day > 31))
+            if ((model.StartDate.Month == 1 || model.StartDate.Month == 3 || model.StartDate.Month == 5 || model.StartDate.Month == 7 || model.StartDate.Month == 8 || model.StartDate.Month == 10 || model.StartDate.Month == 12) && model.StartDate.Day > 31 ||
+                (model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.StartDate.Day > 31)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryPleaseEnterAvalidDate);
             }
             // months 30 Day
-            if (((model.StartDate.Month == 4 || model.StartDate.Month == 6 || model.StartDate.Month == 9 || model.StartDate.Month == 11) && model.StartDate.Day > 30) ||
-                ((model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31))
+            if ((model.StartDate.Month == 4 || model.StartDate.Month == 6 || model.StartDate.Month == 9 || model.StartDate.Month == 11) && model.StartDate.Day > 30 ||
+                (model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryPleaseEnterAvalidDate);
             }
@@ -92,19 +92,19 @@ namespace Dawem.Validation.Core
                 throw new BusinessValidationException(AmgadKeys.SorryDayCantBeLessThanOne);
             }
             // Handle Feb Month
-            if ((model.StartDate.Month == 2 && model.StartDate.Month > 29) || (model.EndDate.Month == 2 && model.StartDate.Day > 29))
+            if (model.StartDate.Month == 2 && model.StartDate.Month > 29 || model.EndDate.Month == 2 && model.StartDate.Day > 29)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryFebrauryMonthCantBeMoreThan29Day);
             }
             // months 31 Day
-            if (((model.StartDate.Month == 1 || model.StartDate.Month == 3 || model.StartDate.Month == 5 || model.StartDate.Month == 7 || model.StartDate.Month == 8 || model.StartDate.Month == 10 || model.StartDate.Month == 12) && model.StartDate.Day > 31) ||
-                ((model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31))
+            if ((model.StartDate.Month == 1 || model.StartDate.Month == 3 || model.StartDate.Month == 5 || model.StartDate.Month == 7 || model.StartDate.Month == 8 || model.StartDate.Month == 10 || model.StartDate.Month == 12) && model.StartDate.Day > 31 ||
+                (model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryPleaseEnterAvalidDate);
             }
             // months 30 Day
-            if (((model.StartDate.Month == 4 || model.StartDate.Month == 6 || model.StartDate.Month == 9 || model.StartDate.Month == 11) && model.StartDate.Day > 30) ||
-                ((model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31))
+            if ((model.StartDate.Month == 4 || model.StartDate.Month == 6 || model.StartDate.Month == 9 || model.StartDate.Month == 11) && model.StartDate.Day > 30 ||
+                (model.EndDate.Month == 1 || model.EndDate.Month == 3 || model.EndDate.Month == 5 || model.EndDate.Month == 7 || model.EndDate.Month == 8) && model.EndDate.Day > 31)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryPleaseEnterAvalidDate);
             }

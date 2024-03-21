@@ -7,7 +7,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.Core
+namespace Dawem.Validation.BusinessValidation.Core
 {
     public class GroupBLValidation : IGroupBLValidation
     {
@@ -35,9 +35,9 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeNotFound);
             }
-          
+
             bool hasDuplicates = model.EmployeeIds.Count != model.EmployeeIds.Distinct().Count();
-            if(hasDuplicates)
+            if (hasDuplicates)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCantAddEmployeeInTheSameGroupTwice);
             }
@@ -49,7 +49,7 @@ namespace Dawem.Validation.Core
             {
                 throw new BusinessValidationException(AmgadKeys.SorrySomeAddedEmployeeNotFound);
             }
-          
+
             return true;
         }
 

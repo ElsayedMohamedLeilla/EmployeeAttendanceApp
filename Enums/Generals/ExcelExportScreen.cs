@@ -3,6 +3,7 @@
     public enum ExcelExportScreen
     {
         Employees,
-        Department
+        Departments,
+        Zones
     }
 }

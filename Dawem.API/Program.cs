@@ -145,7 +145,7 @@ ApplicationDBContext context = serviceScope.ServiceProvider.GetRequiredService<A
 SeedDB.Initialize(app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
 
 app.UseMiddleware<RequestInfoMiddleWare>();
-app.UseMiddleware<SubscriptionMiddleWare>();
+//app.UseMiddleware<SubscriptionMiddleWare>();
 
 if (!app.Environment.IsDevelopment())
 {

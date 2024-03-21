@@ -438,7 +438,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Department;
             string[] ExpectedHeaders = { "ParentDepartment", "ManagerName", "DepartmentName", "IsActive" };
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
-            iniValidationModelDTO.Lang = requestInfo.Lang;
+            iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated
             #endregion
             Dictionary<string, string> result = new();
@@ -480,7 +480,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                         Temp.InsertedFromExcel = true;
                         if (Temp.ManagerId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
                             return result;
                         }
                         else if (Temp.ParentId == 0)

@@ -1,9 +1,11 @@
-﻿using Dawem.Contract.Repository.Manager;
+﻿using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Others;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 
@@ -19,64 +21,62 @@ namespace Dawem.API.MiddleWares
         }
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo,
-             IRepositoryManager repositoryManager, IUnitOfWork<ApplicationDBContext> unitOfWork)
+             IRepositoryManager repositoryManager,
+             IUnitOfWork<ApplicationDBContext> unitOfWork, ISubscriptionBLValidationCore subscriptionBLValidationCore)
         {
             try
             {
-                var getSubscription = await repositoryManager.SubscriptionRepository
-                        .GetEntityByConditionAsync(s => s.CompanyId == requestInfo.CompanyId);
-
-                if (getSubscription != null)
+                var model = new CheckCompanySubscriptionModel
                 {
-                    var isSubscriptionExpired = false;
-                    if (DateTime.Now.Date >= getSubscription.EndDate.Date)
+                    CompanyId = requestInfo.CompanyId,
+                    FromType = CheckCompanySubscriptionFromType.SubscriptionMiddleWare
+                };
+
+                var checkCompanySubscriptionResponse = await subscriptionBLValidationCore.CheckCompanySubscription(model);
+                if (checkCompanySubscriptionResponse != null)
+                {
+                    if (checkCompanySubscriptionResponse.Result)
                     {
-                        var getPlansGracePeriodPercentage = (await repositoryManager.DawemSettingRepository.
-                            GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
-                            Integer;
-
-                        var extraDays = 0;
-
-                        if (getPlansGracePeriodPercentage != null)
-                        {
-                            extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
-                        }
-
-                        var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
-
-                        if (DateTime.Now.Date >= newEndDate)
-                        {
-                            isSubscriptionExpired = true;
-                            int statusCode = StatusCodes.Status422UnprocessableEntity;
-                            var response = new ErrorResponse
-                            {
-                                State = ResponseStatus.ValidationError,
-                                Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal,
-                                       requestInfo?.Lang)
-                            };
-                            await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
-                        }
+                        await _next.Invoke(httpContext);
                     }
-                    if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
+                    else
                     {
                         int statusCode = StatusCodes.Status422UnprocessableEntity;
+                        var messageCode = string.Empty;
+
+                        switch (checkCompanySubscriptionResponse.ErrorType)
+                        {
+                            case CheckCompanySubscriptionErrorType.SubscriptionExpired:
+
+                                messageCode = LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal;
+
+                                break;
+                            case CheckCompanySubscriptionErrorType.SubscriptionNotActive:
+
+                                messageCode = LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry;
+
+                                break;
+                            default:
+                                break;
+                        }
+
                         var response = new ErrorResponse
                         {
                             State = ResponseStatus.ValidationError,
-                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry,
-                                   requestInfo?.Lang)
+                            Message = TranslationHelper.GetTranslation(messageCode, requestInfo?.Lang)
                         };
                         await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
                     }
-
+                }
+                else
+                {
+                    await _next.Invoke(httpContext);
                 }
             }
             catch (Exception ex)
             {
-                // do nothing if jwt validation fails
+                // do nothing
             }
-            if (!httpContext.Response.HasStarted)
-                await _next.Invoke(httpContext);
         }
     }
 }

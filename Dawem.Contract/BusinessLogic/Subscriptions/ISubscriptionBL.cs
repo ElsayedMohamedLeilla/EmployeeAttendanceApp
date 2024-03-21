@@ -1,4 +1,7 @@
-﻿namespace Dawem.Contract.BusinessLogic.Summons
+﻿using Dawem.Models.Criteria.Others;
+using Dawem.Models.Response.Employees.Departments;
+
+namespace Dawem.Contract.BusinessLogic.Summons
 {
     public interface ISubscriptionBL
     {

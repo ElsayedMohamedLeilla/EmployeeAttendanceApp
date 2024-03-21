@@ -146,10 +146,9 @@ namespace Dawem.Data
 
             #region Handle Dawem Setting
 
-            var getAllDawemSettings = context.DawemSettings.ToList();
             var dawemSettings = new List<DawemSetting>();
 
-            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansGracePeriodPercentage) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansGracePeriodPercentage) == null)
             {
                 dawemSettings.Add(new()
                 {
@@ -162,7 +161,7 @@ namespace Dawem.Data
                     Integer = 5
                 });
             }
-            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialDurationInDays) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialDurationInDays) == null)
             {
                 dawemSettings.Add(new()
                 {
@@ -175,7 +174,7 @@ namespace Dawem.Data
                     Integer = 3
                 });
             }
-            if (getAllDawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialEmployeesCount) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialEmployeesCount) == null)
             {
                 dawemSettings.Add(new()
                 {
@@ -188,6 +187,13 @@ namespace Dawem.Data
                     Integer = 2
                 });
             }
+
+            if (dawemSettings.Count > 0)
+            {
+                context.DawemSettings.AddRange(dawemSettings);
+                context.SaveChanges();
+            }
+            
 
             #endregion
 

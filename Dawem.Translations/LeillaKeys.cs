@@ -562,7 +562,10 @@
         public const string SorryCompanyNotFound = "Sorry!!CompanyNotFound!";
         public const string SorryErrorHappenWhileUploadCompanyAttachements = "Sorry!!ErrorHappenWhileUploadCompanyAttachements!";
         public const string SorrySubscriptionNotFound = "Sorry!!SubscriptionNotFound!";
-
+        public const string DoneCreateSubscriptionSuccessfully = "DoneCreateSubscriptionSuccessfully";
+        public const string DoneUpdateSubscriptionSuccessfully = "DoneUpdateSubscriptionSuccessfully";
+        public const string DoneCreateCompanySuccessfully = "DoneCreateCompanySuccessfully";
+        public const string DoneUpdateCompanySuccessfully = "DoneUpdateCompanySuccessfully";
         
     }
 

@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Dtos.Employees.Employees
 {
-    public class CreateCompanyWithLogoModel
+    public class CreateCompanyWithFilesModel
     {
         public string CreateCompanyModelString { get; set; }
         public IFormFile LogoImageFile { get; set; }

@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Others;
+﻿using Dawem.Models.Dtos.Others;
+using Dawem.Models.Dtos.Providers.Companies;
 
-namespace Dawem.Models.Response.Employees.Employees
+namespace Dawem.Models.Response.Providers.Companies
 {
     public class GetCompanyInfoResponseModel
     {

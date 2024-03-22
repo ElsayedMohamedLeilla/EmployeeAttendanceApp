@@ -4,7 +4,7 @@ using Dawem.Helpers;
 using Dawem.Models.Dtos.Excel;
 using Dawem.Translations;
 
-namespace FollowUp.Validation.BusinessValidation.General
+namespace Dawem.Validation.BusinessValidation.ExcelValidations
 {
     public class ExcelValidator
     {
@@ -26,12 +26,12 @@ namespace FollowUp.Validation.BusinessValidation.General
                 validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.Lang));
             }
             // Check header
-            else if (!Enumerable.SequenceEqual(iniValidationDTO.ExpectedHeaders, actualHeaders))
+            else if (!iniValidationDTO.ExpectedHeaders.SequenceEqual(actualHeaders))
             {
                 validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, iniValidationDTO.Lang));
             }
             // Check row count
-            else if (rowCount > iniValidationDTO.MaxRowCount + 1 &&  iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees) // add 1 to exclude header from count
+            else if (rowCount > iniValidationDTO.MaxRowCount + 1 && iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees) // add 1 to exclude header from count
             {
                 validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, iniValidationDTO.Lang));
             }

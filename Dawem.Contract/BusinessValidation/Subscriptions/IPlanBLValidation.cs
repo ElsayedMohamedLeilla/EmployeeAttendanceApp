@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.Departments;
+﻿using Dawem.Models.Dtos.Subscriptions.Plans;
 
-namespace Dawem.Contract.BusinessValidation.Employees
+namespace Dawem.Contract.BusinessValidation.Subscriptions
 {
     public interface IPlanBLValidation
     {

@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Subscriptions;
-using Dawem.Models.Dtos.Employees.Departments;
+using Dawem.Models.Dtos.Subscriptions.Plans;
 
 namespace Dawem.Contract.Repository.Subscriptions
 {

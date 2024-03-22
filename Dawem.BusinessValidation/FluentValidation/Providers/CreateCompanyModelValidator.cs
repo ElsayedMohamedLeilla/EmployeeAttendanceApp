@@ -1,10 +1,10 @@
 ﻿using Dawem.Helpers;
 using Dawem.Models.Dtos.Employees.Departments;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Departments
+namespace Dawem.Validation.FluentValidation.Providers
 {
     public class CreateCompanyModelValidator : AbstractValidator<CreateCompanyModel>
     {

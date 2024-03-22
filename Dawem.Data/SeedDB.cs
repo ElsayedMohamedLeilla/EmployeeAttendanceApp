@@ -1,5 +1,5 @@
-﻿using Dawem.Domain.Entities.Lookups;
-using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Domain.Entities.Dawem;
+using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;

@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Models.Dtos.Providers.Companies;
 
-namespace Dawem.Contract.BusinessValidation.Employees
+namespace Dawem.Contract.BusinessValidation.Providers
 {
     public interface ICompanyBLValidation
     {

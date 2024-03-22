@@ -1,14 +1,14 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidationCore.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Others;
+using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Subscriptions;
 using Dawem.Translations;
 
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidationCore.Subscriptions
 {
 
     public class SubscriptionBLValidationCore : ISubscriptionBLValidationCore

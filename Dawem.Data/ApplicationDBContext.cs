@@ -1,6 +1,7 @@
 ﻿using Dawem.Domain.Entities;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
 using Dawem.Domain.Entities.Lookups;

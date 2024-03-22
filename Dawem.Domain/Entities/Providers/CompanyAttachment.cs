@@ -1,8 +1,7 @@
-﻿using Dawem.Domain.Entities.Providers;
-using Dawem.Translations;
+﻿using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Requests
+namespace Dawem.Domain.Entities.Providers
 {
     [Table(nameof(CompanyAttachment) + LeillaKeys.S)]
     public class CompanyAttachment : BaseEntity

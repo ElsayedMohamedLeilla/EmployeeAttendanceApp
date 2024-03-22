@@ -1,13 +1,13 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidation.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Departments;
+using Dawem.Models.Dtos.Subscriptions.Plans;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Subscriptions
 {
 
     public class PlanBLValidationBLValidation : IPlanBLValidation
@@ -29,9 +29,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }*/
 
             var checkPlanOverlap = await repositoryManager
-                .PlanRepository.Get(c => !c.IsDeleted && ((model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
-                model.MinNumberOfEmployees <= c.MaxNumberOfEmployees) || (model.MaxNumberOfEmployees >= c.MinNumberOfEmployees &&
-                model.MaxNumberOfEmployees <= c.MaxNumberOfEmployees))).AnyAsync();
+                .PlanRepository.Get(c => !c.IsDeleted && (model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
+                model.MinNumberOfEmployees <= c.MaxNumberOfEmployees || model.MaxNumberOfEmployees >= c.MinNumberOfEmployees &&
+                model.MaxNumberOfEmployees <= c.MaxNumberOfEmployees)).AnyAsync();
             if (checkPlanOverlap)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryPlanOverlapWithOtherPlanInNumberOfEmployees);
@@ -50,9 +50,9 @@ namespace Dawem.Validation.BusinessValidation.Employees
             }*/
 
             var checkPlanOverlap = await repositoryManager
-                .PlanRepository.Get(c => !c.IsDeleted && ((model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
-                model.MinNumberOfEmployees <= c.MaxNumberOfEmployees) || (model.MaxNumberOfEmployees >= c.MinNumberOfEmployees &&
-                model.MaxNumberOfEmployees <= c.MaxNumberOfEmployees)) &&
+                .PlanRepository.Get(c => !c.IsDeleted && (model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
+                model.MinNumberOfEmployees <= c.MaxNumberOfEmployees || model.MaxNumberOfEmployees >= c.MinNumberOfEmployees &&
+                model.MaxNumberOfEmployees <= c.MaxNumberOfEmployees) &&
                  c.Id != model.Id).AnyAsync();
             if (checkPlanOverlap)
             {

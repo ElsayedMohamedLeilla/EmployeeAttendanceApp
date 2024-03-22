@@ -52,7 +52,7 @@ namespace Dawem.BusinessLogicCore
                         await file.CopyToAsync(stream);
                         var img = Image.FromStream(stream);
                         var resizedimg = ImageHelper.ResizeImage(img, 300, 300);
-                        resizedimg.Save(uniqueFileName);
+                        resizedimg.Save(filePath);
                     }
                     else
                     {

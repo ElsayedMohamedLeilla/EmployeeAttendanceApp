@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Employees.Departments;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Response.Employees.Departments;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Subscriptions;
+using Dawem.Models.Response.Subscriptions;
 
 namespace Dawem.Contract.BusinessLogic.Subscriptions
 {

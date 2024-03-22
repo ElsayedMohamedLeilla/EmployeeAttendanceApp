@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees.Departments
+﻿namespace Dawem.Models.Response.Subscriptions.Plans
 {
     public class GetPlanByIdResponseModel
     {

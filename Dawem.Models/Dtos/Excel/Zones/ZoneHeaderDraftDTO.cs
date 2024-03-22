@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Excel.Departments
+﻿namespace Dawem.Models.Dtos.Excel.Zones
 {
     public class ZoneHeaderDraftDTO
     {

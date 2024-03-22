@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Employees.Departments
+﻿namespace Dawem.Models.Dtos.Subscriptions.Plans
 {
     public class CreatePlanModel
     {

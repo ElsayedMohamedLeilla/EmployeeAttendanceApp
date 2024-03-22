@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Subscriptions;
-using Dawem.Models.Dtos.Employees.Departments;
+using Dawem.Models.Dtos.Subscriptions;
 
 namespace Dawem.Models.AutoMapper.Subscriptions
 {

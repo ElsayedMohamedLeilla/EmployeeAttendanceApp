@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Criteria.Others;
-using Dawem.Models.Response.Employees.Departments;
+﻿using Dawem.Models.Criteria.Subscriptions;
+using Dawem.Models.Response.Subscriptions;
 
-namespace Dawem.Contract.BusinessValidation.Employees
+namespace Dawem.Contract.BusinessValidationCore.Subscriptions
 {
     public interface ISubscriptionBLValidationCore
     {

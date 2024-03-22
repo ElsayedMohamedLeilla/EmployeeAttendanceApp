@@ -1,13 +1,13 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidation.Providers;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Providers
 {
 
     public class CompanyBLValidation : ICompanyBLValidation

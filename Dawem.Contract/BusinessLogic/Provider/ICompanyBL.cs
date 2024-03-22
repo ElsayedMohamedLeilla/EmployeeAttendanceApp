@@ -1,7 +1,8 @@
 ﻿using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Response.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
+using Dawem.Models.Response.Providers.Companies;
 
-namespace Dawem.Contract.BusinessLogic.Companies
+namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface ICompanyBL
     {

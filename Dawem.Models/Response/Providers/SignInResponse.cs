@@ -1,9 +1,9 @@
 ﻿using Dawem.Models.Dtos.Identities;
 
-namespace Dawem.Models.Response.Provider
+namespace Dawem.Models.Response.Providers
 {
     public class SignInResponse : BaseResponse
     {
-        public TokenDto? TokeObject { get; set; }
+        public TokenDto TokeObject { get; set; }
     }
 }

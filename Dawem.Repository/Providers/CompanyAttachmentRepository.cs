@@ -1,7 +1,7 @@
 ﻿using Dawem.Contract.Repository.Provider;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Generic;
 
 namespace Dawem.Repository.Providers

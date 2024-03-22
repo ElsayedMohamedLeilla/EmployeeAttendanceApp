@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Providers;
 
-namespace Dawem.Models.Response.Provider
+namespace Dawem.Models.Response.Providers
 {
     public class PackageSearchResult : BaseResponse
     {

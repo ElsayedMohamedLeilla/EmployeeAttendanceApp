@@ -1,9 +1,9 @@
 ﻿using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Departments
+namespace Dawem.Validation.FluentValidation.Providers
 {
     public class UpdateCompanyModelValidator : AbstractValidator<UpdateCompanyModel>
     {
@@ -18,7 +18,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyEmail);
 
             RuleFor(model => model.Industries).
-                 Must(iList=> iList.All(i=> !string.IsNullOrEmpty(i.Name) && !string.IsNullOrWhiteSpace(i.Name))).
+                 Must(iList => iList.All(i => !string.IsNullOrEmpty(i.Name) && !string.IsNullOrWhiteSpace(i.Name))).
                  When(model => model.Industries != null && model.Industries.Count() > 0).
                  WithMessage(LeillaKeys.SorryYouMustEnterIndustryName);
 

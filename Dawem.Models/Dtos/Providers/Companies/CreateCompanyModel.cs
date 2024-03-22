@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 
-namespace Dawem.Models.Dtos.Employees.Employees
+namespace Dawem.Models.Dtos.Providers.Companies
 {
     public class CreateCompanyModel
     {

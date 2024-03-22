@@ -1,11 +1,12 @@
-﻿using Dawem.Contract.BusinessLogic.Companies;
+﻿using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Controllers.Companies
+namespace Dawem.API.Controllers.Provider
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

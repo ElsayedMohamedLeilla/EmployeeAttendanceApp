@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.Departments;
+﻿using Dawem.Models.Dtos.Subscriptions;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Departments
+namespace Dawem.Validation.FluentValidation.Subscriptions
 {
     public class UpdateSubscriptionModelValidator : AbstractValidator<UpdateSubscriptionModel>
     {

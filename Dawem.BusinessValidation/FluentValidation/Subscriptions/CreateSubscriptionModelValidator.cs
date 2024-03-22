@@ -1,9 +1,9 @@
 ﻿using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Departments;
+using Dawem.Models.Dtos.Subscriptions;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Employees.Departments
+namespace Dawem.Validation.FluentValidation.Subscriptions
 {
     public class CreateSubscriptionModelValidator : AbstractValidator<CreateSubscriptionModel>
     {
@@ -26,7 +26,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
                 WithMessage(LeillaKeys.SorryYouMustChooseSubscriptionStatus);
 
             RuleFor(model => model.StartDate).
-                Must(d=> d != default).
+                Must(d => d != default).
                 WithMessage(LeillaKeys.SorryYouMustEnterStartDate);
 
             RuleFor(model => model.EndDate).
@@ -46,7 +46,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
                WithMessage(LeillaKeys.SorryYouMustEnterValidFollowUpEmail);
 
             RuleFor(model => model).
-               Must( model => model.DurationInDays == (model.EndDate - model.StartDate).TotalDays).
+               Must(model => model.DurationInDays == (model.EndDate - model.StartDate).TotalDays).
                WithMessage(LeillaKeys.SorryDurationInDaysMustEqualPeriodBetweenStartDateAndEndDate);
 
         }

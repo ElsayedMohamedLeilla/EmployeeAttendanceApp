@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Employees.Plan;
+using Dawem.Contract.BusinessLogic.Subscriptions;
 using Dawem.Contract.BusinessLogicCore;
-using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.BusinessValidation.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Subscriptions.Plans;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Employees.Plans
+namespace Dawem.BusinessLogic.Subscriptions
 {
     public class PlanBL : IPlanBL
     {

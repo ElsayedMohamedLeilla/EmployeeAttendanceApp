@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Provider
+﻿namespace Dawem.Models.Response.Providers
 {
     public class validateUserBranchResult : BaseResponse
     {

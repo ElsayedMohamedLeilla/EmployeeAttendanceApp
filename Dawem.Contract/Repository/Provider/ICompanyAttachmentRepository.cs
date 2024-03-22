@@ -1,5 +1,5 @@
 ﻿using Dawem.Data;
-using Dawem.Domain.Entities.Requests;
+using Dawem.Domain.Entities.Providers;
 
 namespace Dawem.Contract.Repository.Provider
 {

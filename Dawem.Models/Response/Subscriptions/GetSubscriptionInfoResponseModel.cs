@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Employees.Departments
+namespace Dawem.Models.Response.Subscriptions
 {
     public class GetSubscriptionInfoResponseModel
     {

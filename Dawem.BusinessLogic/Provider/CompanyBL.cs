@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Companies;
+using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessLogicCore;
-using Dawem.Contract.BusinessValidation.Employees;
+using Dawem.Contract.BusinessValidation.Providers;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Domain.Entities.Requests;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Others;
+using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Employees;
+using Dawem.Models.Response.Providers.Companies;
 using Dawem.Translations;
-using Dawem.Validation.FluentValidation.Employees.Departments;
+using Dawem.Validation.FluentValidation.Providers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Companies
+namespace Dawem.BusinessLogic.Provider
 {
     public class CompanyBL : ICompanyBL
     {

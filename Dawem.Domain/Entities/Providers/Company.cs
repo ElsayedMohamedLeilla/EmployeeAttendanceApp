@@ -1,7 +1,6 @@
 ﻿using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Lookups;
-using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.Summons;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,11 +1,11 @@
-﻿using Dawem.Contract.BusinessLogic.Employees.Plan;
-using Dawem.Models.Dtos.Employees.Departments;
+﻿using Dawem.Contract.BusinessLogic.Subscriptions;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Controllers.Employees
+namespace Dawem.API.Controllers.Subscriptions
 {
     [Route(LeillaKeys.ApiControllerAction)]
     [ApiController]

@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Employees.Departments
+namespace Dawem.Models.Dtos.Subscriptions
 {
     public class UpdateSubscriptionModel
     {

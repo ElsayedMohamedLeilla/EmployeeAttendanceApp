@@ -14,11 +14,11 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
-using Dawem.Models.Dtos.Excel.Departments;
+using Dawem.Models.Dtos.Excel.Zones;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Zones;
 using Dawem.Translations;
-using FollowUp.Validation.BusinessValidation.General;
+using Dawem.Validation.BusinessValidation.ExcelValidations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.Zones
@@ -355,7 +355,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                     if (foundZoneInDB == null) // Name not found
                     {
                         foundZoneInDB = await repositoryManager.ZoneRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Latitude == tempLatitude && e.Longitude == tempLongtude && e.Radius == tempRaduis).FirstOrDefaultAsync();
-                        if (foundZoneInDB == null) 
+                        if (foundZoneInDB == null)
                         {
                             getNextCode++;
                             Temp.Code = getNextCode;
@@ -373,13 +373,13 @@ namespace Dawem.BusinessLogic.Core.Zones
                         }
                         else
                         {
-                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.TheSameLatitudeLongtudeRaduisIsUsedBy, requestInfo?.Lang) + LeillaKeys.Space + foundZoneInDB.Name  + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.TheSameLatitudeLongtudeRaduisIsUsedBy, requestInfo?.Lang) + LeillaKeys.Space + foundZoneInDB.Name + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                     }
                     else
                     {
-                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNameIsDuplicated , requestInfo.Lang ) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo.Lang) + LeillaKeys.Space + row.RowNumber());
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNameIsDuplicated, requestInfo.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
                 }

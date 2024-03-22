@@ -67,39 +67,84 @@ namespace Dawem.Data
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "التجريبية",
-                    NameEn = "Trial",
                     EmployeeCost = 0,
                     IsTrial = true,
                     MinNumberOfEmployees = 1,
-                    MaxNumberOfEmployees = 2
+                    MaxNumberOfEmployees = 2,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = 1,
+                            Name ="التجريبية"
+                        },
+                         new ()
+                        {
+                             LanguageId = 2,
+                             Name ="Trial"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "الاساسية",
-                    NameEn = "Basic",
                     MinNumberOfEmployees = 1,
-                    MaxNumberOfEmployees = 100
+                    MaxNumberOfEmployees = 100,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = 1,
+                            Name ="الاساسية"
+                        },
+                         new ()
+                        {
+                             LanguageId = 2,
+                             Name ="Basic"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "المتوسطة",
-                    NameEn = "Medium",
                     MinNumberOfEmployees = 101,
-                    MaxNumberOfEmployees = 500
+                    MaxNumberOfEmployees = 500,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = 1,
+                            Name ="المتوسطة"
+                        },
+                         new ()
+                        {
+                             LanguageId = 2,
+                             Name ="Medium"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "المتقدمة",
-                    NameEn = "Advanced",
                     MinNumberOfEmployees = 501,
-                    MaxNumberOfEmployees = 1000
+                    MaxNumberOfEmployees = 1000,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = 1,
+                            Name ="المتقدمة"
+                        },
+                         new ()
+                        {
+                             LanguageId = 2,
+                             Name ="Advanced"
+                        }
+                    }
+
                 });
 
                 context.Plans.AddRange(plans);
@@ -119,7 +164,7 @@ namespace Dawem.Data
                 var getAllCompanies = context.Companies.ToList();
                 var code = 0;
                 var getBasicPlanId = context.Plans
-                    .FirstOrDefault(p => p.NameEn == "Medium")?.Id ?? 0;
+                    .FirstOrDefault(p => p.PlanNameTranslations.Any(pt => pt.Name == "Medium"))?.Id ?? 0;
 
                 foreach (var company in getAllCompanies)
                 {

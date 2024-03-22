@@ -9,9 +9,17 @@ namespace Dawem.Validation.FluentValidation.Subscriptions.Plans
         public CreatePlanModelValidator()
         {
 
-            RuleFor(model => model.NameAr).
-                NotNull().
-                WithMessage(LeillaKeys.SorryYouMustEnterPlanName);
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt != null && nt.Count > 0 ).
+                WithMessage(LeillaKeys.SorryYouMustEnterAtLeastOneName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.All(n => n.LanguageId > 0)).
+                WithMessage(LeillaKeys.SorryYouMustChooseLanguageWithName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.All(n => !string.IsNullOrEmpty(n.Name) && !string.IsNullOrWhiteSpace(n.Name))).
+                WithMessage(LeillaKeys.SorryYouMustEnterName);
 
             RuleFor(model => model.MinNumberOfEmployees).
                 Must(n => n > 0).

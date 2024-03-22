@@ -570,6 +570,10 @@
         public const string DoneUpdateCompanySuccessfully = "DoneUpdateCompanySuccessfully";
         public const string SorryCompanyNameIsDuplicated = "Sorry!!CompanyNameIsDuplicated!";
 
+        public const string SorryYouMustEnterAtLeastOneName = "Sorry!!YouMustEnterAtLeastOneName!";
+        public const string SorryYouMustChooseLanguageWithName = "Sorry!!YouMustChooseLanguageWithName!";
+        public const string SorryYouMustEnterName = "Sorry!!YouMustEnterName!";
+        
     }
 
 }

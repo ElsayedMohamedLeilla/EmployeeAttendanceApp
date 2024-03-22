@@ -102,11 +102,17 @@ namespace Dawem.Data
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<CompanyBranch>()
-         .HasOne(p => p.Company)
-         .WithMany(b => b.CompanyBranches)
-         .HasForeignKey(p => p.CompanyId)
+            builder.Entity<PlanNameTranslation>()
+         .HasOne(p => p.Plan)
+         .WithMany(b => b.PlanNameTranslations)
+         .HasForeignKey(p => p.PlanId)
          .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<CompanyBranch>()
+             .HasOne(p => p.Company)
+             .WithMany(b => b.CompanyBranches)
+             .HasForeignKey(p => p.CompanyId)
+             .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<CompanyIndustry>()
          .HasOne(p => p.Company)
@@ -429,8 +435,8 @@ namespace Dawem.Data
             #region Handle All String Max Length
 
             var allEntity = builder.Model.GetEntityTypes()
-                .Where(e => e.ClrType != typeof(UserToken) && 
-                e.ClrType != typeof(UserLogIn) && 
+                .Where(e => e.ClrType != typeof(UserToken) &&
+                e.ClrType != typeof(UserLogIn) &&
                 e.ClrType != typeof(UserLoginInfo));
 
             var allStringPropertiesWithMobile = allEntity

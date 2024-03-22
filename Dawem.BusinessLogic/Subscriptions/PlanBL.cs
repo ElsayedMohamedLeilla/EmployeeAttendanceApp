@@ -106,7 +106,6 @@ namespace Dawem.BusinessLogic.Subscriptions
                 getPlan.MinNumberOfEmployees = model.MinNumberOfEmployees;
                 getPlan.MaxNumberOfEmployees = model.MaxNumberOfEmployees;
                 getPlan.EmployeeCost = model.EmployeeCost;
-                getPlan.GracePeriodPercentage = model.GracePeriodPercentage;
                 getPlan.Notes = model.Notes;
 
                 await unitOfWork.SaveAsync();
@@ -206,7 +205,6 @@ namespace Dawem.BusinessLogic.Subscriptions
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
                     EmployeeCost = plan.EmployeeCost,
-                    GracePeriodPercentage = plan.GracePeriodPercentage,
                     IsActive = plan.IsActive,
                     Notes = plan.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
@@ -226,7 +224,6 @@ namespace Dawem.BusinessLogic.Subscriptions
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
                     EmployeeCost = plan.EmployeeCost,
-                    GracePeriodPercentage = plan.GracePeriodPercentage,
                     IsActive = plan.IsActive,
                     Notes = plan.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);

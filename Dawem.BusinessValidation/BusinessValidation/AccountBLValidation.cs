@@ -3,7 +3,6 @@ using Dawem.Contract.BusinessValidationCore.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
-using Dawem.Models.Criteria.Others;
 using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Providers;
@@ -84,8 +83,8 @@ namespace Dawem.Validation.BusinessValidation
             #region Try Find User
 
             var user = await repositoryManager.UserRepository
-                .GetEntityByConditionAsync(u=> !u.IsDeleted && u.Email == model.Email && (model.CompanyId <= 0 || 
-                (u.Company != null && u.Company.Id == model.CompanyId))) ?? 
+                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && (model.CompanyId <= 0 ||
+                (u.Company != null && u.Company.Id == model.CompanyId))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion
@@ -102,8 +101,8 @@ namespace Dawem.Validation.BusinessValidation
 
             if (!user.EmailConfirmed)
             {
-                throw new BusinessValidationExceptionGenaric<int>(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail) { Data = user.Id};
-            }    
+                throw new BusinessValidationExceptionGenaric<int>(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail) { Data = user.Id };
+            }
 
             return user;
         }

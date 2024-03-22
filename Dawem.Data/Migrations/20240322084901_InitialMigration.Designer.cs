@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240216010643_AddOrder")]
-    partial class AddOrder
+    [Migration("20240322084901_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -82,7 +83,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -98,13 +100,14 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("ScheduleId");
 
                     b.HasIndex("ShiftId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("EmployeeAttendances", "Dawem");
                 });
@@ -132,7 +135,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeAttendanceId")
                         .HasColumnType("int");
@@ -141,7 +145,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -165,7 +170,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RecognitionWay")
                         .HasColumnType("int");
@@ -176,11 +182,16 @@ namespace Dawem.Data.Migrations
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
 
+                    b.Property<int?>("ZoneId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeAttendanceId");
 
                     b.HasIndex("SummonId");
+
+                    b.HasIndex("ZoneId");
 
                     b.ToTable("EmployeeAttendanceChecks", "Dawem");
                 });
@@ -211,7 +222,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -232,7 +244,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -272,10 +285,12 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -284,7 +299,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Model")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -296,20 +312,29 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PortNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("SerialNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("FingerprintDevices", "Dawem");
                 });
@@ -343,16 +368,17 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("GroupManagerId")
-                        .HasColumnType("int");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -364,16 +390,23 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("ManagerId");
 
-                    b.HasIndex("GroupManagerId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Groups", "Dawem");
                 });
@@ -401,7 +434,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -425,7 +459,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -468,7 +503,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -492,17 +528,24 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Holidays", "Dawem");
                 });
@@ -536,7 +579,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -554,14 +598,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("JustificationTypes", "Dawem");
                 });
@@ -595,13 +646,15 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -610,6 +663,9 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsViewed")
                         .HasColumnType("bit");
 
                     b.Property<int?>("ModifiedApplicationType")
@@ -622,7 +678,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("NotificationType")
                         .HasColumnType("int");
@@ -635,9 +692,10 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("NotificationStores", "Dawem");
                 });
@@ -671,7 +729,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -689,14 +748,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("PermissionTypes", "Dawem");
                 });
@@ -733,7 +799,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -751,14 +818,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("VacationTypes", "Dawem");
                 });
@@ -792,7 +866,11 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("InsertedFromExcel")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -816,19 +894,108 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double?>("Radius")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Zones", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.DawemSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<decimal?>("Decimal")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("GroupType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GroupTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("Integer")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("String")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ValueType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ValueTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DawemSettings", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
@@ -860,7 +1027,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -878,14 +1046,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("AssignmentTypes", "Dawem");
                 });
@@ -919,7 +1094,11 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("InsertedFromExcel")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -940,21 +1119,28 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("ParentId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Departments", "Dawem");
                 });
@@ -979,7 +1165,11 @@ namespace Dawem.Data.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("AllowChangeFingerprintMobileCode")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("AnnualVacationBalance")
                         .HasColumnType("int");
@@ -1003,16 +1193,25 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeNumber")
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeType")
                         .HasColumnType("int");
+
+                    b.Property<string>("FingerprintMobileCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("InsertedFromExcel")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1026,8 +1225,12 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTime>("JoiningDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("MobileCountryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("MobileNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -1039,20 +1242,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ProfileImageName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("DepartmentId");
 
@@ -1060,7 +1264,16 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("JobTitleId");
 
+                    b.HasIndex("MobileCountryId");
+
                     b.HasIndex("ScheduleId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Employees", "Dawem");
                 });
@@ -1088,12 +1301,13 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -1112,7 +1326,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -1152,7 +1367,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1170,14 +1386,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("HolidayTypes", "Dawem");
                 });
@@ -1211,7 +1434,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1229,14 +1453,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("JobTitles", "Dawem");
                 });
@@ -1270,7 +1501,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1288,14 +1520,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("TaskTypes", "Dawem");
                 });
@@ -1326,7 +1565,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1344,7 +1584,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ZoneId")
                         .HasColumnType("int");
@@ -1381,7 +1622,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
@@ -1402,7 +1644,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ZoneId")
                         .HasColumnType("int");
@@ -1439,9 +1682,10 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -1460,7 +1704,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ZoneId")
                         .HasColumnType("int");
@@ -1497,7 +1742,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -1510,11 +1756,12 @@ namespace Dawem.Data.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("KeyWord")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Lang")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -1526,10 +1773,12 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TransWords")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -1560,19 +1809,23 @@ namespace Dawem.Data.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CurrencyName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Dial")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1581,10 +1834,12 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Iso")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Iso3")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -1596,19 +1851,34 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameEn")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NationalityNameAr")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NationalityNameEn")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
+                    b.Property<int>("PhoneLength")
+                        .HasColumnType("int");
+
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -1635,7 +1905,8 @@ namespace Dawem.Data.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
@@ -1644,7 +1915,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1662,22 +1934,92 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NameAr")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NameEn")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Symbol")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
 
                     b.ToTable("Currencies", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Lookups.Language", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ISO2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ISO3")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NativeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Languages", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Others.VacationBalance", b =>
@@ -1715,7 +2057,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -1739,7 +2082,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<float>("RemainingBalance")
                         .HasColumnType("real");
@@ -1749,9 +2093,10 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("VacationBalances", "Dawem");
                 });
@@ -1785,7 +2130,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ForType")
                         .HasColumnType("int");
@@ -1806,7 +2152,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("RoleId")
                         .HasColumnType("int");
@@ -1816,11 +2163,12 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("Permissions", "Dawem");
                 });
@@ -1847,9 +2195,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -1860,7 +2205,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1878,7 +2224,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ScreenCode")
                         .HasColumnType("int");
@@ -1918,7 +2265,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1936,7 +2284,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
@@ -1977,7 +2326,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1995,7 +2345,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("PermissionScreenId")
                         .HasColumnType("int");
@@ -2005,87 +2356,6 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("PermissionScreenId");
 
                     b.ToTable("PermissionScreenActions", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Providers.Branch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AdminUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMainBranch")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("MainBranchId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("MainBranchId");
-
-                    b.ToTable("Branches", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.Company", b =>
@@ -2117,13 +2387,245 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HeadquarterAddress")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HeadquarterLocation")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HeadquarterPostalCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("IdentityCode")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("ImportDefaultData")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LogoImageName")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("NumberOfEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PreferredLanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalNumberOfEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WebSite")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("IdentityCode")
+                        .IsUnique()
+                        .HasFilter("[IdentityCode] IS NOT NULL");
+
+                    b.HasIndex("PreferredLanguageId");
+
+                    b.ToTable("Companies", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyAttachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("CompanyAttachments", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyBranch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("CompanyBranches", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyIndustry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2141,20 +2643,20 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("IdentityCode")
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
                         .IsUnique()
-                        .HasFilter("[IdentityCode] IS NOT NULL");
+                        .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("Companies", "Dawem");
+                    b.ToTable("CompanyIndustries", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.UserBranch", b =>
@@ -2183,7 +2685,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2201,14 +2704,13 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
 
                     b.HasIndex("UserId");
 
@@ -2253,7 +2755,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -2280,10 +2783,12 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("RejectReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -2293,11 +2798,12 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("DecisionUserId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("Requests", "Dawem");
                 });
@@ -2334,7 +2840,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2352,7 +2859,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -2390,10 +2898,12 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2411,7 +2921,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -2452,7 +2963,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2473,7 +2985,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -2517,7 +3030,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2535,7 +3049,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("PermissionTypeId")
                         .HasColumnType("int");
@@ -2582,7 +3097,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2600,7 +3116,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
@@ -2641,7 +3158,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -2662,7 +3180,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RequestTaskId")
                         .HasColumnType("int");
@@ -2711,7 +3230,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2729,7 +3249,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
@@ -2779,7 +3300,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2797,14 +3319,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Schedules", "Dawem");
                 });
@@ -2832,7 +3361,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2850,7 +3380,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -2902,7 +3433,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2920,7 +3452,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -2930,9 +3463,10 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("ScheduleId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("SchedulePlans", "Dawem");
                 });
@@ -2963,7 +3497,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2981,7 +3516,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SchedulePlanId")
                         .HasColumnType("int");
@@ -3019,7 +3555,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -3040,7 +3577,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SchedulePlanId")
                         .HasColumnType("int");
@@ -3078,7 +3616,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -3099,7 +3638,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SchedulePlanId")
                         .HasColumnType("int");
@@ -3143,7 +3683,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("FinishDate")
                         .HasColumnType("datetime2");
@@ -3164,7 +3705,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SchedulePlanId")
                         .HasColumnType("int");
@@ -3177,9 +3719,10 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("SchedulePlanId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("SchedulePlanLogs", "Dawem");
                 });
@@ -3207,7 +3750,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -3231,7 +3775,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("OldScheduleId")
                         .HasColumnType("int");
@@ -3290,7 +3835,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -3308,19 +3854,251 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("TimePeriod")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("ShiftWorkingTimes", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Plan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("EmployeeCost")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrial")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxNumberOfEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinNumberOfEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NameAr")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NameEn")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plans", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("DurationInDays")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FollowUpEmail")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RenewalCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.ToTable("Subscriptions", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.SubscriptionLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LogType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LogTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SubscriptionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("SubscriptionLogs", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
@@ -3352,7 +4130,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -3370,20 +4149,28 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("WarningMessage")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Sanctions", "Dawem");
                 });
@@ -3423,7 +4210,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool?>("ForAllEmployees")
                         .HasColumnType("bit");
@@ -3447,14 +4235,16 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("TimeType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("Summons", "Dawem");
                 });
@@ -3488,7 +4278,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -3506,7 +4297,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SummonId")
                         .HasColumnType("int");
@@ -3548,7 +4340,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -3569,7 +4362,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SummonId")
                         .HasColumnType("int");
@@ -3611,7 +4405,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
@@ -3632,7 +4427,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SummonId")
                         .HasColumnType("int");
@@ -3677,7 +4473,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -3698,18 +4495,20 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SummonId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("SummonId");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
 
                     b.ToTable("SummonMissingLogs", "Dawem");
                 });
@@ -3740,7 +4539,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("Done")
                         .HasColumnType("bit");
@@ -3761,7 +4561,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SummonMissingLogId")
                         .HasColumnType("int");
@@ -3804,7 +4605,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -3822,7 +4624,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("NotifyWay")
                         .HasColumnType("int");
@@ -3865,7 +4668,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -3883,7 +4687,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SanctionId")
                         .HasColumnType("int");
@@ -3927,9 +4732,6 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Code")
                         .HasColumnType("int");
 
@@ -3938,17 +4740,19 @@ namespace Dawem.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -3974,8 +4778,12 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int>("MobileCountryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("MobileNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -3987,30 +4795,35 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImageName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -4019,22 +4832,21 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("VerificationCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("VerificationCodeSendDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
-
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("MobileCountryId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -4043,6 +4855,14 @@ namespace Dawem.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL");
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL AND [Name] IS NOT NULL");
 
                     b.ToTable("MyUsers", "Dawem");
                 });
@@ -4057,15 +4877,16 @@ namespace Dawem.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -4086,10 +4907,12 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -4110,10 +4933,12 @@ namespace Dawem.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -4206,7 +5031,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -4224,7 +5050,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -4238,7 +5065,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("NotificationUsers", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserDeviceToken", b =>
+            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserFCMToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4260,14 +5087,16 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DeviceToken")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("DeviceType")
                         .HasColumnType("int");
 
                     b.Property<string>("DisableReason")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FCMToken")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -4288,7 +5117,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("NotificationUserId")
                         .HasColumnType("int");
@@ -4297,13 +5127,13 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("NotificationUserId");
 
-                    b.ToTable("NotificationUserDeviceTokens", "Dawem");
+                    b.ToTable("NotificationUserFCMTokens", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendance", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
+                        .WithMany("EmployeeAttendances")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4344,13 +5174,20 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
-                        .WithMany()
+                        .WithMany("EmployeeAttendanceChecks")
                         .HasForeignKey("SummonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
+                        .WithMany()
+                        .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("EmployeeAttendance");
 
                     b.Navigation("Summon");
+
+                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.DepartmentManagerDelegator", b =>
@@ -4392,7 +5229,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "GroupManager")
                         .WithMany()
-                        .HasForeignKey("GroupManagerId")
+                        .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Company");
@@ -4530,7 +5367,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Employee", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
+                        .WithMany("Employees")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4549,6 +5386,12 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("JobTitleId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Country", "MobileCountry")
+                        .WithMany()
+                        .HasForeignKey("MobileCountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.Entities.Schedules.Schedule", "Schedule")
                         .WithMany("Employees")
                         .HasForeignKey("ScheduleId")
@@ -4561,6 +5404,8 @@ namespace Dawem.Data.Migrations
                     b.Navigation("DirectManager");
 
                     b.Navigation("JobTitle");
+
+                    b.Navigation("MobileCountry");
 
                     b.Navigation("Schedule");
                 });
@@ -4576,7 +5421,8 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
                         .WithMany("GroupEmployees")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
 
@@ -4657,7 +5503,8 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
                         .WithMany("Zones")
                         .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Core.Zone", "Zone")
                         .WithMany()
@@ -4765,32 +5612,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("PermissionScreen");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Providers.Branch", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("Branches")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Lookups.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Providers.Branch", "MainBranch")
-                        .WithMany()
-                        .HasForeignKey("MainBranchId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Country");
-
-                    b.Navigation("MainBranch");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.Company", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Lookups.Country", "Country")
@@ -4799,24 +5620,56 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "PreferredLanguage")
+                        .WithMany()
+                        .HasForeignKey("PreferredLanguageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Country");
+
+                    b.Navigation("PreferredLanguage");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyAttachment", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany("CompanyAttachments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyBranch", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany("CompanyBranches")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Providers.CompanyIndustry", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany("CompanyIndustries")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.UserBranch", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Branch", "Branch")
-                        .WithMany("UserBranches")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
                         .WithMany("UserBranches")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("User");
                 });
@@ -4975,7 +5828,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.Schedule", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4992,7 +5845,7 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", "Shift")
-                        .WithMany()
+                        .WithMany("ScheduleDays")
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -5004,7 +5857,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlan", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
+                        .WithMany("SchedulePlans")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5023,7 +5876,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanDepartment", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Department", "Department")
-                        .WithMany()
+                        .WithMany("SchedulePlanDepartments")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5061,7 +5914,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanGroup", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Core.Group", "Group")
-                        .WithMany()
+                        .WithMany("SchedulePlanGroups")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -5139,6 +5992,36 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Subscriptions.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Plan");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.SubscriptionLog", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Subscriptions.Subscription", "Subscription")
+                        .WithMany("SubscriptionLogs")
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
@@ -5338,11 +6221,6 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.MyUser", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
@@ -5353,11 +6231,17 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Branch");
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Country", "MobileCountry")
+                        .WithMany()
+                        .HasForeignKey("MobileCountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("MobileCountry");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.RoleClaim", b =>
@@ -5434,10 +6318,10 @@ namespace Dawem.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserDeviceToken", b =>
+            modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserFCMToken", b =>
                 {
                     b.HasOne("Dawem.Domain.RealTime.Firebase.NotificationUser", "NotificationUser")
-                        .WithMany("NotificationUserDeviceTokens")
+                        .WithMany("NotificationUserFCMTokens")
                         .HasForeignKey("NotificationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5456,6 +6340,8 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("GroupManagerDelegators");
 
+                    b.Navigation("SchedulePlanGroups");
+
                     b.Navigation("Zones");
                 });
 
@@ -5466,6 +6352,8 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("ManagerDelegators");
+
+                    b.Navigation("SchedulePlanDepartments");
 
                     b.Navigation("Zones");
                 });
@@ -5497,14 +6385,21 @@ namespace Dawem.Data.Migrations
                     b.Navigation("PermissionScreenActions");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Providers.Branch", b =>
-                {
-                    b.Navigation("UserBranches");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Providers.Company", b =>
                 {
-                    b.Navigation("Branches");
+                    b.Navigation("CompanyAttachments");
+
+                    b.Navigation("CompanyBranches");
+
+                    b.Navigation("CompanyIndustries");
+
+                    b.Navigation("EmployeeAttendances");
+
+                    b.Navigation("Employees");
+
+                    b.Navigation("SchedulePlans");
+
+                    b.Navigation("Schedules");
 
                     b.Navigation("Summons");
                 });
@@ -5550,6 +6445,16 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanLogEmployees");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", b =>
+                {
+                    b.Navigation("ScheduleDays");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
+                {
+                    b.Navigation("SubscriptionLogs");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
                 {
                     b.Navigation("SummonSanctions");
@@ -5557,6 +6462,8 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Summon", b =>
                 {
+                    b.Navigation("EmployeeAttendanceChecks");
+
                     b.Navigation("SummonDepartments");
 
                     b.Navigation("SummonEmployees");
@@ -5589,7 +6496,7 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUser", b =>
                 {
-                    b.Navigation("NotificationUserDeviceTokens");
+                    b.Navigation("NotificationUserFCMTokens");
                 });
 #pragma warning restore 612, 618
         }

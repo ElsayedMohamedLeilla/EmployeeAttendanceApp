@@ -1,12 +1,10 @@
 ﻿using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
@@ -17,7 +15,6 @@ using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Dtos.Shared;
-using Dawem.Models.DtosMappers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
@@ -159,7 +156,7 @@ namespace Dawem.BusinessLogic.Provider
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync();
 
-                durationInDays =  await repositoryManager.DawemSettingRepository
+                durationInDays = await repositoryManager.DawemSettingRepository
                         .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlanTrialDurationInDays)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
@@ -325,7 +322,7 @@ namespace Dawem.BusinessLogic.Provider
             #region Business Validation
 
             var user = await accountBLValidation.SignInValidation(model);
-           
+
             #endregion
 
             #region Get User Role

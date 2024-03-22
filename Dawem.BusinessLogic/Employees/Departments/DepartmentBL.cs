@@ -424,7 +424,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             EmptyExcelDraftModelDTO departmentHeaderDraftDTO = new();
             departmentHeaderDraftDTO.FileName = AmgadKeys.DepartmentEmptyDraft;
             departmentHeaderDraftDTO.Obj = new DepartmentHeaderDraftDTO();
-            departmentHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Department;
+            departmentHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Departments;
             return ExcelManager.ExportEmptyDraft(departmentHeaderDraftDTO);
         }
 
@@ -435,10 +435,10 @@ namespace Dawem.BusinessLogic.Employees.Departments
             iniValidationModelDTO.FileStream = importedFile;
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1 });//department Name can't be null
-            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Department;
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Departments;
             string[] ExpectedHeaders = { "ParentDepartment", "ManagerName", "DepartmentName", "IsActive" };
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
-            iniValidationModelDTO.Lang = requestInfo.Lang;
+            iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated
             #endregion
             Dictionary<string, string> result = new();
@@ -480,7 +480,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                         Temp.InsertedFromExcel = true;
                         if (Temp.ManagerId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
                             return result;
                         }
                         else if (Temp.ParentId == 0)

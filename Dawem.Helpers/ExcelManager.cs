@@ -74,7 +74,7 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(15, 1).Style.Font.FontColor = XLColor.Red;
 
             }
-            else if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.Department)
+            else if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.Departments)
             {
                 readmeSheet.Cell(5, 1).Value = "3. Ensure all required fields are populated DepartmentName";
                 readmeSheet.Cell(6, 1).Value = "4. if deparmenparentName is entered make sure that it already exist in db";
@@ -102,6 +102,32 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(7, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(8, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(9, 1).Style.Font.FontColor = XLColor.Red;
+            }
+            else if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.Zones)
+            {
+                readmeSheet.Cell(5, 1).Value = "3. Ensure all required fields are populated DepartmentName";
+                readmeSheet.Cell(6, 1).Value = "4. Latitude & Longtude & Raduis Must be Double";
+                readmeSheet.Cell(7, 1).Value = "5. follow up any validation message and solve the problem thrown to insert file successfully";
+                readmeSheet.Cell(8, 1).Value = "6. Save the file.";
+                // Apply formatting to the "Read Me" sheet
+                readmeSheet.Cell(1, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(2, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(3, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(4, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(5, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(6, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(7, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(8, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(2, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(1, 1).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(2, 1).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(3, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(4, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(5, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(6, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(7, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(8, 1).Style.Font.FontColor = XLColor.Red;
             }
 
             readmeSheet.Columns().AdjustToContents();

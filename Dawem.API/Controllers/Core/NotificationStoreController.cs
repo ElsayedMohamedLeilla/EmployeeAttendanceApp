@@ -103,9 +103,9 @@ namespace Dawem.API.Controllers.Core
             return Success(await notificationStoreBL.GetUnreadNotification(criteria));
         }
 
-        [Route("send")]
+        [Route("CreateSendNotification")]
         [HttpPost]
-        public async Task<IActionResult> SendNotification([FromQuery] List<int> UserIds, NotificationType notificationType, NotificationStatus notificationStatus)
+        public async Task<IActionResult> CreateSendNotification([FromQuery] List<int> UserIds, NotificationType notificationType, NotificationStatus notificationStatus)
         {
             if (UserIds.Count == 0)
             {

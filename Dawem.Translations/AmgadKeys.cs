@@ -11,8 +11,10 @@ namespace Dawem.Translations
         public const string NotificationIcons = "NotificationIcons";
         public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
         public const string DepartmentEmptyDraft = "DepartmentEmptyDraft";
+        public const string MissMatchDataType = "MissMatchDataType";
 
         
+
 
         public const string Success = "Success";
 
@@ -182,8 +184,24 @@ namespace Dawem.Translations
         public const string AnnualVacationBalanceCanNotBeNegativeValue = "AnnualVacationBalanceCanNotBeNegativeValue";
         public const string EmployeeEnteredSuccessfully = "EmployeeEnteredSuccessfully";
         public const string DepartmentEnteredSuccessfully = "DepartmentEnteredSuccessfully";
+        public const string ZoneEmptyDraft = "ZoneEmptyDraft";
+
+
+
+
+
+
+        public const string TheSameLatitudeLongtudeRaduisIsUsedBy = "TheSameLatitudeLongtudeRaduisIsUsedBy";
+        public const string ThisLatitudeNotValid = "ThisLatitudeNotValid";
+        public const string ThisLongtudeNotValid = "ThisLongtudeNotValid";
+        public const string ThisRaduisNotValid = "ThisRaduisNotValid";
 
         
+
+
+
+
+
 
 
 

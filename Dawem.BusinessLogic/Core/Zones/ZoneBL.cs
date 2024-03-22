@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Core;
@@ -6,14 +7,18 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Core.Zones;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Departments;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Core.Zones;
 using Dawem.Translations;
+using FollowUp.Validation.BusinessValidation.General;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Core.Zones
@@ -265,6 +270,124 @@ namespace Dawem.BusinessLogic.Core.Zones
             };
 
             #endregion
+        }
+
+        public async Task<MemoryStream> ExportDraft()
+        {
+            EmptyExcelDraftModelDTO zoneHeaderDraftDTO = new();
+            zoneHeaderDraftDTO.FileName = AmgadKeys.ZoneEmptyDraft;
+            zoneHeaderDraftDTO.Obj = new ZoneHeaderDraftDTO();
+            zoneHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Zones;
+            return ExcelManager.ExportEmptyDraft(zoneHeaderDraftDTO);
+        }
+
+        public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
+        {
+            #region Fill IniValidationModelDTO
+            IniValidationModelDTO iniValidationModelDTO = new();
+            iniValidationModelDTO.FileStream = importedFile;
+            iniValidationModelDTO.MaxRowCount = 0;
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3 });//Zone Name Lat Long can't be null
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
+            string[] ExpectedHeaders = { "ZoneName", "Latitude", "Longitude", "Radius", "IsActive" };
+            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            iniValidationModelDTO.Lang = requestInfo?.Lang;
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 3 });//Zone Name lat long  can't be duplicated
+            #endregion
+            Dictionary<string, string> result = new();
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
+            if (validationMessages.Count > 0)
+            {
+                foreach (var kvp in validationMessages)
+                {
+                    result.Add(kvp.Key, kvp.Value);
+                }
+            }
+            else
+            {
+                List<Zone> ImportedList = new();
+                Zone Temp = new();
+                using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
+                var worksheet = workbook.Worksheet(1);
+                var getNextCode = await repositoryManager.EmployeeRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync();
+                foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
+                {
+                    #region Check Valid Lat Long Reduis
+                    double tempLatitude;
+                    double tempLongtude;
+                    double tempRaduis;
+
+                    Temp = new();
+                    // check if the enterted value is valid double for lat long radius
+                    if (double.TryParse(row.Cell(2).GetString().Trim(), out tempLatitude))
+                    {
+                        if (double.TryParse(row.Cell(3).GetString().Trim(), out tempLongtude))
+                        {
+                            if (double.TryParse(row.Cell(4).GetString().Trim(), out tempRaduis))
+                            {
+
+                            }
+                            else
+                            {
+                                result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.ThisRaduisNotValid + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                return result;
+                            }
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.ThisLongtudeNotValid, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.ThisLatitudeNotValid, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
+
+                    var foundZoneInDB = await repositoryManager.ZoneRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).FirstOrDefaultAsync();
+                    if (foundZoneInDB == null) // Name not found
+                    {
+                        foundZoneInDB = await repositoryManager.ZoneRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Latitude == tempLatitude && e.Longitude == tempLongtude && e.Radius == tempRaduis).FirstOrDefaultAsync();
+                        if (foundZoneInDB == null) 
+                        {
+                            getNextCode++;
+                            Temp.Code = getNextCode;
+                            Temp.AddedApplicationType = ApplicationType.Web;
+                            Temp.Name = row.Cell(1).GetString().Trim();
+                            Temp.Latitude = tempLatitude;
+                            Temp.Longitude = tempLongtude;
+                            Temp.Radius = tempRaduis;
+                            Temp.IsActive = bool.Parse(row.Cell(5).GetString());
+                            Temp.CompanyId = requestInfo.CompanyId;
+                            Temp.AddedDate = DateTime.Now;
+                            Temp.AddUserId = requestInfo.UserId;
+                            Temp.InsertedFromExcel = true;
+                            ImportedList.Add(Temp);
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.TheSameLatitudeLongtudeRaduisIsUsedBy, requestInfo?.Lang) + LeillaKeys.Space + foundZoneInDB.Name  + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNameIsDuplicated , requestInfo.Lang ) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                }
+                repositoryManager.ZoneRepository.BulkInsert(ImportedList);
+                await unitOfWork.SaveAsync();
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo?.Lang));
+            }
+            return result;
         }
     }
 }

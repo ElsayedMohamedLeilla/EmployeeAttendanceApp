@@ -17,5 +17,9 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Delete(int ZoneId);
         Task<GetZonesInformationsResponseDTO> GetZonesInformations();
+
+        public Task<MemoryStream> ExportDraft();
+        public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
+
     }
 }

@@ -16,6 +16,7 @@ namespace Dawem.Domain.Entities.Core
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public double? Radius { get; set; }
+        public bool InsertedFromExcel { get; set; }
 
     }
 }

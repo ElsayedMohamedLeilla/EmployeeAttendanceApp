@@ -10,8 +10,13 @@ namespace Dawem.Models.AutoMapper
         public CompanyMapProfile()
         {
             CreateMap<CreateCompanyModel, Company>().
+                ForMember(dest => dest.CompanyIndustries, opt => opt.MapFrom(src => src.Industries)).
+                ForMember(dest => dest.CompanyBranches, opt => opt.MapFrom(src => src.Branches)).
                 AfterMap(MapCompany);
+
             CreateMap<UpdateCompanyModel, Company>().
+                ForMember(dest => dest.CompanyIndustries, opt => opt.MapFrom(src => src.Industries)).
+                ForMember(dest => dest.CompanyBranches, opt => opt.MapFrom(src => src.Branches)).
                 AfterMap(MapCompany);
 
             CreateMap<CompanyIndustryModel, CompanyIndustry>();

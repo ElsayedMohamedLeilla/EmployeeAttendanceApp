@@ -21,6 +21,7 @@
         public const string Phone = "Phone";
         public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
+        public const string LogoImageName = "LogoImageName";
         public const string FileName = "FileName";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
         public const string AnErrorOccuredPleaseContactYourSystemAdministrator = "An error occured - please contact your system administrator.";
@@ -555,7 +556,6 @@
         public const string SorryStartDateMustLessThanOrEqualEndDate = "Sorry!!StartDateMustLessThanOrEqualEndDate!";
         public const string SorryYouMustEnterValidFollowUpEmail = "Sorry!!YouMustEnterValidFollowUpEmail!";
         public const string SorryDurationInDaysMustEqualPeriodBetweenStartDateAndEndDate = "Sorry!!DurationInDaysMustEqualPeriodBetweenStartDateAndEndDate!";
-
         public const string SorryErrorHappenWhileUploadLogoImage = "Sorry!!ErrorHappenWhileUploadLogoImage!";
         public const string SorryYouMustChoosePreferredLanguageWhenChooseImportDefaultData = "Sorry!!YouMustChoosePreferredLanguageWhenChooseImportDefaultData!";
         public const string SorryYouMustEnterBranchName = "Sorry!!YouMustEnterBranchName!";
@@ -566,7 +566,8 @@
         public const string DoneUpdateSubscriptionSuccessfully = "DoneUpdateSubscriptionSuccessfully";
         public const string DoneCreateCompanySuccessfully = "DoneCreateCompanySuccessfully";
         public const string DoneUpdateCompanySuccessfully = "DoneUpdateCompanySuccessfully";
-        
+        public const string SorryCompanyNameIsDuplicated = "Sorry!!CompanyNameIsDuplicated!";
+
     }
 
 }

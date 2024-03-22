@@ -471,7 +471,8 @@ namespace Dawem.Data
                      .SelectMany(t => t.GetProperties())
                      .Where(p => p.ClrType == typeof(string)
                      && (p.Name.Contains(LeillaKeys.ProfileImageName)
-                     || p.Name.Contains(LeillaKeys.FileName)));
+                     || p.Name.Contains(LeillaKeys.FileName)
+                     || p.Name.Contains(LeillaKeys.LogoImageName)));
 
             foreach (var property in allStringPropertiesWithFileOrImageName)
             {
@@ -540,7 +541,7 @@ namespace Dawem.Data
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<Translation> Translations { get; set; }
-        public DbSet<CompanyBranch> Branches { get; set; }
+        public DbSet<CompanyBranch> CompanyBranches { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Group> Groups { get; set; }

@@ -23,15 +23,7 @@ namespace Dawem.Repository.UserManagement
         {
             var userPredicate = PredicateBuilder.New<MyUser>(true);
 
-            if (requestInfo.IsMainBranch && criteria.ForGridView)
-            {
-
-                userPredicate = userPredicate.And(x => x.BranchId == requestInfo.BranchId);
-            }
-            else
-            {
-                userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestInfo.BranchId));
-            }
+            userPredicate = userPredicate.And(x => x.UserBranches.Any(a => a.BranchId == requestInfo.BranchId));
 
             if (criteria.Id is not null)
             {

@@ -8,7 +8,6 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int CountryId { get; set; }
         public int? PreferredLanguageId { get; set; }
         public string Name { get; set; }
-        public string LogoName { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
         public string HeadquarterLocation { get; set; }

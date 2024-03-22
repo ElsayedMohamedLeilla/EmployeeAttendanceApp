@@ -495,8 +495,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<TokenDto> FormateToken(int? userId, int branchId, string token)
         {
-            UserDTOMapper.InitUserContext(requestHeaderContext);
-            UserDTO user = UserDTOMapper.Map(await repositoryManager.UserRepository.GetByIdAsync(userId));
 
 
             #region Get Token

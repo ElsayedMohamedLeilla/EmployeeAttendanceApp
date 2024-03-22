@@ -407,6 +407,8 @@
         public const string DoneCreateAssignmentRequestSuccessfully = "DoneCreateAssignmentRequestSuccessfully";
         public const string DoneUpdateAssignmentRequestSuccessfully = "DoneUpdateAssignmentRequestSuccessfully";
         public const string SorryEnterCorrectFileName = "Sorry!!EnterCorrectFileName!";
+        public const string SorryFileSizeMustNotExceedTenMegaByte = "Sorry!!FileSizeMustNotExceedTenMegaByte!";
+        public const string SorryImageSizeMustNotExceedFiveMegaByte = "Sorry!!ImageSizeMustNotExceedFiveMegaByte!";
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
         public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";

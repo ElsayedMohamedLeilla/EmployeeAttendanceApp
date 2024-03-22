@@ -1,12 +1,10 @@
 ﻿using Dawem.Contract.BusinessLogicCore;
-using Dawem.Helpers;
 using Dawem.Models.Dtos.Others;
 using Dawem.Models.Exceptions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using System.Drawing;
 
 namespace Dawem.BusinessLogicCore
 {
@@ -27,9 +25,20 @@ namespace Dawem.BusinessLogicCore
         public async Task<UploadResult> UploadFile(IFormFile file, string FolderName)
         {
             UploadResult uploadResult;
-
+            var sizeInMB = (decimal)file.Length / 1024 / 1024;
             if (file.FileName.Contains('#'))
                 throw new BusinessValidationException(LeillaKeys.SorryEnterCorrectFileName);
+
+            if (file.ContentType.Contains(LeillaKeys.Image))
+            {
+                if (sizeInMB > 5) // bigger than 5 mega
+                    throw new BusinessValidationException(LeillaKeys.SorryImageSizeMustNotExceedFiveMegaByte);
+            }
+            else
+            {
+                if (sizeInMB > 10) // bigger than 10 mega
+                    throw new BusinessValidationException(LeillaKeys.SorryFileSizeMustNotExceedTenMegaByte);
+            }
 
             try
             {
@@ -47,17 +56,7 @@ namespace Dawem.BusinessLogicCore
                 }
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    if (file.ContentType.Contains(LeillaKeys.Image) && file.Length > 300000)
-                    {
-                        await file.CopyToAsync(stream);
-                        var img = Image.FromStream(stream);
-                        var resizedimg = ImageHelper.ResizeImage(img, 300, 300);
-                        resizedimg.Save(filePath);
-                    }
-                    else
-                    {
-                        await file.CopyToAsync(stream);
-                    }
+                    await file.CopyToAsync(stream);
                 }
                 uploadResult = new()
                 {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.Requests;
 using Dawem.Contract.BusinessLogic.Companies;
 using Dawem.Contract.BusinessLogicCore;
 using Dawem.Contract.BusinessValidation.Employees;
@@ -202,10 +201,12 @@ namespace Dawem.BusinessLogic.Companies
                 ? getCompany.LogoImageName : null;
             getCompany.ModifiedApplicationType = requestInfo.ApplicationType;
 
+            await unitOfWork.SaveAsync();
+
             #region Handle Update Industries
 
             var existIndustriesDbList = await repositoryManager.CompanyIndustryRepository
-                    .GetByCondition(e => e.CompanyId == getCompany.Id)
+                    .Get(e => e.CompanyId == getCompany.Id)
                     .ToListAsync();
 
             var existingIndustriesIds = existIndustriesDbList.Select(e => e.Id)
@@ -252,7 +253,7 @@ namespace Dawem.BusinessLogic.Companies
             #region Handle Update Branches
 
             var existBranchesDbList = await repositoryManager.CompanyBranchRepository
-                    .GetByCondition(e => e.CompanyId == getCompany.Id)
+                    .Get(e => e.CompanyId == getCompany.Id)
                     .ToListAsync();
 
             var existingBranchesIds = existBranchesDbList.Select(e => e.Id)
@@ -464,7 +465,7 @@ namespace Dawem.BusinessLogic.Companies
                         FileName = a.FileName,
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.AssignmentRequests),
                     }).ToList()
-                    
+
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCompanyNotFound);
 
             return company;

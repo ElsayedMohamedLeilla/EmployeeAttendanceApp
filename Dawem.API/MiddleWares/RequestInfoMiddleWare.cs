@@ -37,8 +37,6 @@ namespace Dawem.API.MiddleWares
 
             try
             {
-
-
                 string token = httpContext.Request.Headers[LeillaKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {

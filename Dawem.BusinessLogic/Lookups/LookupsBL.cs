@@ -15,7 +15,6 @@ using LinqKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using static NodaTime.TimeZones.TzdbZone1970Location;
 
 namespace Dawem.BusinessLogic.Lookups
 {
@@ -42,7 +41,7 @@ namespace Dawem.BusinessLogic.Lookups
 
         public async Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria)
         {
-            var countryPredicate = PredicateBuilder.New<Domain.Entities.Lookups.Country>(true);
+            var countryPredicate = PredicateBuilder.New<Country>(true);
 
             var getCurrentCountryCode = await GetCurrentCountryInfo();
 
@@ -70,7 +69,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = countryRepository.OrderBy(query, nameof(Domain.Entities.Lookups.Country.Order), "asc");
+            var queryOrdered = countryRepository.OrderBy(query, nameof(Country.Order), "asc");
 
             #endregion
 

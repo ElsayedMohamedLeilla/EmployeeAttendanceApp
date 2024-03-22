@@ -18,7 +18,7 @@ namespace Dawem.Validation.FluentValidation.Employees.Departments
                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyEmail);
 
             RuleFor(model => model.Industries).
-                 Must(iList=> iList.All(i=> !string.IsNullOrEmpty(i) && !string.IsNullOrWhiteSpace(i))).
+                 Must(iList=> iList.All(i=> !string.IsNullOrEmpty(i.Name) && !string.IsNullOrWhiteSpace(i.Name))).
                  When(model => model.Industries != null && model.Industries.Count() > 0).
                  WithMessage(LeillaKeys.SorryYouMustEnterIndustryName);
 

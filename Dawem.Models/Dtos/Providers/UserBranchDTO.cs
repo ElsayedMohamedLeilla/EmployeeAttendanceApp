@@ -13,7 +13,5 @@ namespace Dawem.Models.Dtos.Providers
 
         public int BranchId { get; set; }
         public string BranchGlobalName { get; set; }
-
-        public virtual BranchDTO branch { get; set; }
     }
 }

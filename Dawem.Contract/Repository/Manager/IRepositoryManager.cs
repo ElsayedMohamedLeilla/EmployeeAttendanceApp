@@ -22,6 +22,9 @@ namespace Dawem.Contract.Repository.Manager
         ILanguageRepository LanguageRepository { get; }
         ICurrencyRepository CurrencyRepository { get; }
         ICompanyRepository CompanyRepository { get; }
+        ICompanyBranchRepository CompanyBranchRepository { get; }
+        ICompanyAttachmentRepository CompanyAttachmentRepository { get; }
+        ICompanyIndustryRepository CompanyIndustryRepository { get; }
         ISubscriptionRepository SubscriptionRepository { get; }
         ISubscriptionLogRepository SubscriptionLogRepository { get; }
         IPlanRepository PlanRepository { get; }
@@ -32,7 +35,6 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionScreenActionRepository PermissionScreenActionRepository { get; }
         IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
-        IBranchRepository BranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
         IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }

@@ -19,6 +19,7 @@
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
         public const string FileName = "FileName";
         public const string PartNumberAlreadyExists = "Part number '{0}' already exists.";
@@ -74,6 +75,7 @@
         public const string LeftBracket = "(";
         public const string RightBracket = ")";
         public const string SpaceThenDashThenSpace = " - ";
+        public const string Dash = "-";
         public const string QuestionMark = "?";
         public const string Email = "Email";
         public const string EmailConfirmationToken = "Email Confirmation Token";
@@ -539,23 +541,29 @@
         public const string SorryYouMustEnterPlanId = "Sorry!!YouMustEnterPlanId!";
         public const string DoneCreatePlanSuccessfully = "DoneCreatePlanSuccessfully";
         public const string DoneUpdatePlanSuccessfully = "DoneUpdatePlanSuccessfully";
-
         public const string SorryYouMustChoosePlan = "Sorry!!YouMustChoosePlan!";
         public const string SorryYouMustChooseCompany = "Sorry!!YouMustChooseCompany!";
         public const string SorryYouMustEnterDurationInDays = "Sorry!!YouMustEnterDurationInDays!";
         public const string SorryYouMustChooseSubscriptionStatus = "Sorry!!YouMustChooseSubscriptionStatus!";
         public const string SorryYouMustEnterStartDate = "Sorry!!YouMustEnterStartDate!";
         public const string SorryYouMustEnterEndDate = "Sorry!!YouMustEnterEndDate!";
-        public const string SorryYouMustEnterFollowUpEmail = "Sorry!!YouMustEnterFollowUpEmaile!";
+        public const string SorryYouMustEnterFollowUpEmail = "Sorry!!YouMustEnterFollowUpEmail!";
         public const string SorryYouMustEnterSubscriptionId = "Sorry!!YouMustEnterSubscriptionId!";
-
         public const string SorryYouChooseCountry = "Sorry!!YouChooseCountry!";
         public const string SorryYouMustEnterIndustryName = "Sorry!!YouMustEnterIndustryName!";
         public const string SorryThereIsSubscriptionAlreadyWithThisCompany = "Sorry!!ThereIsSubscriptionAlreadyWithThisCompany!";
         public const string SorryStartDateMustLessThanOrEqualEndDate = "Sorry!!StartDateMustLessThanOrEqualEndDate!";
         public const string SorryYouMustEnterValidFollowUpEmail = "Sorry!!YouMustEnterValidFollowUpEmail!";
         public const string SorryDurationInDaysMustEqualPeriodBetweenStartDateAndEndDate = "Sorry!!DurationInDaysMustEqualPeriodBetweenStartDateAndEndDate!";
+
+        public const string SorryErrorHappenWhileUploadLogoImage = "Sorry!!ErrorHappenWhileUploadLogoImage!";
+        public const string SorryYouMustChoosePreferredLanguageWhenChooseImportDefaultData = "Sorry!!YouMustChoosePreferredLanguageWhenChooseImportDefaultData!";
+        public const string SorryYouMustEnterBranchName = "Sorry!!YouMustEnterBranchName!";
+        public const string SorryCompanyNotFound = "Sorry!!CompanyNotFound!";
+        public const string SorryErrorHappenWhileUploadCompanyAttachements = "Sorry!!ErrorHappenWhileUploadCompanyAttachements!";
+        public const string SorrySubscriptionNotFound = "Sorry!!SubscriptionNotFound!";
+
         
     }
-    
+
 }

@@ -21,13 +21,13 @@ namespace Dawem.BusinessLogic.Provider
     public class BranchBL : IBranchBL
     {
         private IUnitOfWork<ApplicationDBContext> unitOfWork;
-        private readonly IBranchRepository branchRepository;
+        private readonly ICompanyBranchRepository branchRepository;
         private readonly RequestInfo requestHeaderContext;
         private readonly IBranchBLValidation branchBLValidation;
         private readonly IUserBranchBL userBranchBL;
 
         public BranchBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-               RequestInfo _userContext, IBranchRepository _branchRepository,
+               RequestInfo _userContext, ICompanyBranchRepository _branchRepository,
                IBranchBLValidation _BranchValidatorBL, IUserBranchBL _userBranchBL)
         {
             unitOfWork = _unitOfWork;
@@ -76,7 +76,7 @@ namespace Dawem.BusinessLogic.Provider
 
             return branchInfo;
         }
-        public async Task<GetBranchesResponseModel> Get(GetBranchesCriteria criteria)
+        public async Task<GetBranchesResponseModel> Get(GetCompanyBranchesCriteria criteria)
         {
             var query = branchRepository.GetAsQueryable(criteria, nameof(CompanyBranch.Country));
 

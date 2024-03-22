@@ -9,7 +9,7 @@ namespace Dawem.Contract.BusinessLogic.Provider
     {
         Task<int> Create(BranchDTO branch);
         Task<BranchDTO> GetInfo(GetBranchInfoCriteria criteria);
-        Task<GetBranchesResponseModel> Get(GetBranchesCriteria criteria);
+        Task<GetBranchesResponseModel> Get(GetCompanyBranchesCriteria criteria);
         Task<bool> Update(BranchDTO branch);
         Task<bool> Delete(int Id);
     }

@@ -20,7 +20,7 @@ namespace Dawem.API.Controllers.Provider
 
 
         [HttpPost]
-        public async Task<ActionResult> Get(GetBranchesCriteria criteria)
+        public async Task<ActionResult> Get(GetCompanyBranchesCriteria criteria)
         {
             var result = await branchBL.Get(criteria);
             return Success(result, result.TotalCount);

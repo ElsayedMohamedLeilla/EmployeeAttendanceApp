@@ -54,7 +54,9 @@ namespace Dawem.Repository.Managers
         private IPermissionScreenRepository permissionScreenRepository;
         private IPermissionScreenActionRepository permissionScreenActionRepository;
         private IUserBranchRepository userBranchRepository;
-        private IBranchRepository branchRepository;
+        private ICompanyBranchRepository companyBranchRepository;
+        private ICompanyAttachmentRepository companyAttachmentRepository;
+        private ICompanyIndustryRepository companyIndustryRepository;
         private IUserTokenRepository userTokenRepository;
         private ICompanyRepository companyRepository;
         private ISubscriptionRepository subscriptionRepository;
@@ -134,6 +136,12 @@ namespace Dawem.Repository.Managers
             currencyRepository ??= new CurrencyRepository(unitOfWork, generalSetting);
         public ICompanyRepository CompanyRepository =>
          companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
+        public ICompanyBranchRepository CompanyBranchRepository =>
+         companyBranchRepository ??= new CompanyBranchRepository(unitOfWork, requestInfo, generalSetting);
+        public ICompanyAttachmentRepository CompanyAttachmentRepository =>
+         companyAttachmentRepository ??= new CompanyAttachmentRepository(unitOfWork, generalSetting);
+        public ICompanyIndustryRepository CompanyIndustryRepository =>
+         companyIndustryRepository ??= new CompanyIndustryRepository(unitOfWork, generalSetting);
         public ISubscriptionRepository SubscriptionRepository =>
         subscriptionRepository ??= new SubscriptionRepository(unitOfWork, generalSetting);
 
@@ -156,8 +164,6 @@ namespace Dawem.Repository.Managers
          permissionLogRepository ??= new PermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
-        public IBranchRepository BranchRepository =>
-         branchRepository ??= new BranchRepository(unitOfWork, requestInfo, generalSetting);
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
         public IScreenRepository ScreenRepository =>

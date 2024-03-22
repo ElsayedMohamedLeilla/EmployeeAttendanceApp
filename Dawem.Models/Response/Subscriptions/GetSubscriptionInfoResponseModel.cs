@@ -5,8 +5,8 @@ namespace Dawem.Models.Response.Employees.Departments
     public class GetSubscriptionInfoResponseModel
     {
         public int Code { get; set; }
-        public int PlanName { get; set; }
-        public int CompanyName { get; set; }
+        public string PlanName { get; set; }
+        public string CompanyName { get; set; }
         public int DurationInDays { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

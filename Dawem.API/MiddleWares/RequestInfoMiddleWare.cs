@@ -27,7 +27,7 @@ namespace Dawem.API.MiddleWares
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo,
             UserManagerRepository userManager, IRepositoryManager repositoryManager,
-            IBranchRepository branchRepository, IOptions<Jwt> appSettings)
+            ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
 

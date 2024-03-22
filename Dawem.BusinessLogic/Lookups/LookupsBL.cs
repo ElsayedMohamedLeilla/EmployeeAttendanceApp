@@ -152,7 +152,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = languageRepository.OrderBy(query, nameof(Currency.Id), LeillaKeys.Asc);
+            var queryOrdered = languageRepository.OrderBy(query, nameof(Language.Id), LeillaKeys.Asc);
 
             #endregion
 

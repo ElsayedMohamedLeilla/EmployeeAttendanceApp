@@ -7,7 +7,7 @@
         public string IdentityCode { get; set; }
         public string Name { get; set; }
         public string LogoImagePath { get; set; }
-        public int NumberOfEmployees { get; set; }
         public int TotalNumberOfEmployees { get; set; }
+        public bool IsActive { get; set; }
     }
 }

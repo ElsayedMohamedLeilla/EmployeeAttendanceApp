@@ -5,6 +5,7 @@ namespace Dawem.Models.Response.Employees.Departments
     public class GetSubscriptionByIdResponseModel
     {
         public int Id { get; set; }
+        public int Code { get; set; }
         public int PlanId { get; set; }
         public int CompanyId { get; set; }
         public int DurationInDays { get; set; }

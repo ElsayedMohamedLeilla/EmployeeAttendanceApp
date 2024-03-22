@@ -1,4 +1,7 @@
-﻿namespace Dawem.Models.Response.Employees.Employees
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Others;
+
+namespace Dawem.Models.Response.Employees.Employees
 {
     public class GetCompanyByIdResponseModel
     {
@@ -17,5 +20,9 @@
         public string Email { get; set; }
         public int NumberOfEmployees { get; set; }
         public int TotalNumberOfEmployees { get; set; }
+        public bool IsActive { get; set; }
+        public List<CompanyIndustryModel> Industries { get; set; }
+        public List<CompanyBranchModel> Branches { get; set; }
+        public List<FileDTO> Attachments { get; set; }
     }
 }

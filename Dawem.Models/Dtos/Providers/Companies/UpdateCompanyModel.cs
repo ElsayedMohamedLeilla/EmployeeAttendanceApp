@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.Generals;
-using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Dawem.Models.Dtos.Employees.Employees
 {
@@ -17,8 +15,9 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public bool ImportDefaultData { get; set; }
         public string LogoImageName { get; set; }
         public IFormFile LogoImageFile { get; set; }
-        public List<string> Industries { get; set; }
-        public List<string> AttachmentsNames { get; set; }
+        public List<CompanyIndustryModel> Industries { get; set; }
+        public List<CompanyBranchModel> Branches { get; set; }
         public List<IFormFile> Attachments { get; set; }
+        public List<string> AttachmentsNames { get; set; }
     }
 }

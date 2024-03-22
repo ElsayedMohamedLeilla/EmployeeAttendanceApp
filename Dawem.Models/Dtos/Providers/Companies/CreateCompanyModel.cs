@@ -17,10 +17,11 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public int NumberOfEmployees { get; set; }
         public int TotalNumberOfEmployees { get; set; }
         public bool ImportDefaultData { get; set; }
-        public List<string> Industries { get; set; }
+        public List<CompanyIndustryModel> Industries { get; set; }
+        public List<CompanyBranchModel> Branches { get; set; }
         public IFormFile LogoImageFile { get; set; }
+        public List<IFormFile> Attachments { get; set; }
         [JsonIgnore]
         public List<string> AttachmentsNames { get; set; }
-        public List<IFormFile> Attachments { get; set; }
     }
 }

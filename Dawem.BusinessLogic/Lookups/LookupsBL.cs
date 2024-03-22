@@ -67,7 +67,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = countryRepository.OrderBy(query, nameof(Domain.Entities.Lookups.Country.Order), "asc");
+            var queryOrdered = countryRepository.OrderBy(query, nameof(Country.Order), "asc");
 
             #endregion
 

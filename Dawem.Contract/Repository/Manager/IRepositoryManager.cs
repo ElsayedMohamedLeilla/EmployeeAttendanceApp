@@ -18,19 +18,23 @@ namespace Dawem.Contract.Repository.Manager
 {
     public interface IRepositoryManager
     {
+        ICountryRepository CountryRepository { get; }
+        ILanguageRepository LanguageRepository { get; }
+        ICurrencyRepository CurrencyRepository { get; }
         ICompanyRepository CompanyRepository { get; }
+        ICompanyBranchRepository CompanyBranchRepository { get; }
+        ICompanyAttachmentRepository CompanyAttachmentRepository { get; }
+        ICompanyIndustryRepository CompanyIndustryRepository { get; }
         ISubscriptionRepository SubscriptionRepository { get; }
         ISubscriptionLogRepository SubscriptionLogRepository { get; }
         IPlanRepository PlanRepository { get; }
         IDawemSettingRepository DawemSettingRepository { get; }
-        ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }
         IPermissionScreenActionRepository PermissionScreenActionRepository { get; }
         IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
-        IBranchRepository BranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
         IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }

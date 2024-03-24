@@ -12,7 +12,6 @@ namespace Dawem.Domain.Entities.Subscriptions
         public int MinNumberOfEmployees { get; set; }
         public int MaxNumberOfEmployees { get; set; }
         public decimal EmployeeCost { get; set; }
-        public int GracePeriodPercentage { get; set; } // will removed
         public bool IsTrial { get; set; }
     }
 

@@ -48,12 +48,15 @@ namespace Dawem.Repository.Managers
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
+        private ILanguageRepository languageRepository;
         private IPermissionLogRepository permissionLogRepository;
         private IPermissionRepository permissionRepository;
         private IPermissionScreenRepository permissionScreenRepository;
         private IPermissionScreenActionRepository permissionScreenActionRepository;
         private IUserBranchRepository userBranchRepository;
-        private IBranchRepository branchRepository;
+        private ICompanyBranchRepository companyBranchRepository;
+        private ICompanyAttachmentRepository companyAttachmentRepository;
+        private ICompanyIndustryRepository companyIndustryRepository;
         private IUserTokenRepository userTokenRepository;
         private ICompanyRepository companyRepository;
         private ISubscriptionRepository subscriptionRepository;
@@ -61,6 +64,7 @@ namespace Dawem.Repository.Managers
         private IPlanRepository planRepository;
         private IDawemSettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
+        private ICurrencyRepository currencyRepository;
         private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
         private ITranslationRepository translationRepository;
@@ -124,9 +128,20 @@ namespace Dawem.Repository.Managers
             generalSetting = _generalSetting;
             requestInfo = _requestHeaderContext;
         }
-
+        public ICountryRepository CountryRepository =>
+            countryRepository ??= new CountryRepository(unitOfWork, generalSetting);
+        public ILanguageRepository LanguageRepository =>
+            languageRepository ??= new LanguageRepository(unitOfWork, generalSetting);
+        public ICurrencyRepository CurrencyRepository =>
+            currencyRepository ??= new CurrencyRepository(unitOfWork, generalSetting);
         public ICompanyRepository CompanyRepository =>
          companyRepository ??= new CompanyRepository(unitOfWork, generalSetting);
+        public ICompanyBranchRepository CompanyBranchRepository =>
+         companyBranchRepository ??= new CompanyBranchRepository(unitOfWork, requestInfo, generalSetting);
+        public ICompanyAttachmentRepository CompanyAttachmentRepository =>
+         companyAttachmentRepository ??= new CompanyAttachmentRepository(unitOfWork, generalSetting);
+        public ICompanyIndustryRepository CompanyIndustryRepository =>
+         companyIndustryRepository ??= new CompanyIndustryRepository(unitOfWork, generalSetting);
         public ISubscriptionRepository SubscriptionRepository =>
         subscriptionRepository ??= new SubscriptionRepository(unitOfWork, generalSetting);
 
@@ -137,8 +152,6 @@ namespace Dawem.Repository.Managers
 
         public IDawemSettingRepository DawemSettingRepository =>
          dawemSettingRepository ??= new DawemSettingRepository(unitOfWork, generalSetting);
-        public ICountryRepository CountryRepository =>
-         countryRepository ??= new CountryRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IPermissionRepository PermissionRepository =>
@@ -151,8 +164,6 @@ namespace Dawem.Repository.Managers
          permissionLogRepository ??= new PermissionLogRepository(unitOfWork, requestInfo);
         public IUserBranchRepository UserBranchRepository =>
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
-        public IBranchRepository BranchRepository =>
-         branchRepository ??= new BranchRepository(unitOfWork, requestInfo, generalSetting);
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
         public IScreenRepository ScreenRepository =>
@@ -282,5 +293,8 @@ namespace Dawem.Repository.Managers
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
         public INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository =>
             notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
+
+        
+
     }
 }

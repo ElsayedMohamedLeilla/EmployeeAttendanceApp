@@ -18,7 +18,7 @@ using Dawem.Models.Dtos.Excel.Departments;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
-using FollowUp.Validation.BusinessValidation.General;
+using Dawem.Validation.BusinessValidation.ExcelValidations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Employees.Departments

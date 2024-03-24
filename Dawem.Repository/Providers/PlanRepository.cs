@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Employees.Departments;
+using Dawem.Models.Dtos.Subscriptions.Plans;
 using Dawem.Models.Generic;
 using LinqKit;
 

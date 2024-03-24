@@ -80,7 +80,7 @@ namespace Dawem.BusinessLogic.Requests
                     if (attachment != null && attachment.Length > 0)
                     {
                         var result = await uploadBLC.UploadFile(attachment, LeillaKeys.AssignmentRequests)
-                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements);
                         fileNames.Add(result.FileName);
                     }
                 }
@@ -107,7 +107,7 @@ namespace Dawem.BusinessLogic.Requests
 
             #endregion
 
-            var request = mapper.Map<Domain.Entities.Requests.Request>(model);
+            var request = mapper.Map<Request>(model);
             request.CompanyId = requestInfo.CompanyId;
             request.AddUserId = requestInfo.UserId;
             request.EmployeeId = employeeId ?? 0;
@@ -165,7 +165,7 @@ namespace Dawem.BusinessLogic.Requests
                     if (attachment != null && attachment.Length > 0)
                     {
                         var result = await uploadBLC.UploadFile(attachment, LeillaKeys.AssignmentRequests)
-                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements); ;
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadRequestAttachements);
                         newFileNames.Add(result.FileName);
                     }
                 }

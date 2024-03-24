@@ -16,9 +16,6 @@ namespace Dawem.Domain.Entities.UserManagement
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
-        public int? BranchId { get; set; }
-        [ForeignKey(nameof(BranchId))]
-        public virtual Branch Branch { get; set; }
 
         public int? EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]

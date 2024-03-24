@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="AutoMapper\Lookups\" />
+    <Folder Include="Validations\" />
   </ItemGroup>
 
 </Project>

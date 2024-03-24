@@ -1,52 +1,254 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Contract.BusinessLogic.Summons;
+using Dawem.Contract.BusinessLogic.Subscriptions;
 using Dawem.Contract.BusinessLogicCore;
-using Dawem.Contract.BusinessValidation.Summons;
-using Dawem.Contract.RealTime.Firebase;
+using Dawem.Contract.BusinessValidation.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
+using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Dtos.Subscriptions;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Subscriptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Summons
+namespace Dawem.BusinessLogic.Subscriptions
 {
     public class SubscriptionBL : ISubscriptionBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly ISummonBLValidation summonBLValidation;
+        private readonly ISubscriptionBLValidation subscriptionBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
-        private readonly IMailBL mailBL;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
-
-
+        private readonly IMailBL mailBL;
 
         public SubscriptionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper, IMailBL _mailBL,
+            IMapper _mapper,
+            IMailBL _mailBL,
            RequestInfo _requestHeaderContext,
-           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           IUploadBLC _uploadBLC,
+
+           ISubscriptionBLValidation _subscriptionBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            summonBLValidation = _summonBLValidation;
+            subscriptionBLValidation = _subscriptionBLValidation;
             mapper = _mapper;
-            mailBL = _mailBL;
             uploadBLC = _uploadBLC;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            mailBL = _mailBL;
         }
+        public async Task<int> Create(CreateSubscriptionModel model)
+        {
+            #region Business Validation
 
+            await subscriptionBLValidation.CreateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Insert Subscription
+
+            #region Set Subscription Code
+
+            var getNextCode = await repositoryManager.SubscriptionRepository
+                .Get()
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+            #endregion
+
+            var subscription = mapper.Map<Subscription>(model);
+            subscription.CompanyId = requestInfo.CompanyId;
+            subscription.AddUserId = requestInfo.UserId;
+            subscription.AddedApplicationType = requestInfo.ApplicationType;
+            subscription.Code = getNextCode;
+            repositoryManager.SubscriptionRepository.Insert(subscription);
+
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return subscription.Id;
+
+            #endregion
+        }
+        public async Task<bool> Update(UpdateSubscriptionModel model)
+        {
+            #region Business Validation
+
+            await subscriptionBLValidation.UpdateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Update Subscription
+
+            var getSubscription = await repositoryManager.SubscriptionRepository.
+                GetEntityByConditionWithTrackingAsync(subscription => !subscription.IsDeleted
+            && subscription.Id == model.Id);
+
+            if (getSubscription != null)
+            {
+                getSubscription.PlanId = model.PlanId;
+                getSubscription.CompanyId = model.CompanyId;
+                getSubscription.DurationInDays = model.DurationInDays;
+                getSubscription.StartDate = model.StartDate;
+                getSubscription.EndDate = model.EndDate;
+                getSubscription.Status = model.Status;
+                getSubscription.RenewalCount = model.RenewalCount;
+                getSubscription.FollowUpEmail = model.FollowUpEmail;
+                getSubscription.ModifiedDate = DateTime.Now;
+                getSubscription.ModifyUserId = requestInfo.UserId;
+                getSubscription.Notes = model.Notes;
+
+                await unitOfWork.SaveAsync();
+
+                #region Handle Response
+                await unitOfWork.CommitAsync();
+                return true;
+                #endregion
+            }
+            #endregion
+
+            else
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+
+
+        }
+        public async Task<GetSubscriptionsResponse> Get(GetSubscriptionsCriteria criteria)
+        {
+            var subscriptionRepository = repositoryManager.SubscriptionRepository;
+            var query = subscriptionRepository.GetAsQueryable(criteria);
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
+            #region paging
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+            #region sorting
+            var queryOrdered = subscriptionRepository.OrderBy(query, nameof(Subscription.Id), LeillaKeys.Desc);
+            #endregion
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            #endregion
+
+            #region Handle Response
+
+            var subscriptionsList = await queryPaged.Select(subscription => new GetSubscriptionsResponseModel
+            {
+                Id = subscription.Id,
+                Code = subscription.Code,
+                PlanName = isArabic ? subscription.Plan.NameAr : subscription.Plan.NameEn,
+                CompanyName = subscription.Company.Name,
+                EndDate = subscription.EndDate,
+                Status = subscription.Status,
+                StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang)
+            }).ToListAsync();
+
+            return new GetSubscriptionsResponse
+            {
+                Subscriptions = subscriptionsList,
+                TotalCount = await query.CountAsync()
+            };
+            #endregion
+
+        }
+        public async Task<GetSubscriptionInfoResponseModel> GetInfo(int subscriptionId)
+        {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+            var subscription = await repositoryManager.SubscriptionRepository.Get(e => e.Id == subscriptionId && !e.IsDeleted)
+                .Select(subscription => new GetSubscriptionInfoResponseModel
+                {
+                    Code = subscription.Code,
+                    CompanyName = subscription.Company.Name,
+                    PlanName = isArabic ? subscription.Plan.NameAr : subscription.Plan.NameEn,
+                    DurationInDays = subscription.DurationInDays,
+                    StartDate = subscription.StartDate,
+                    EndDate = subscription.EndDate,
+                    Status = subscription.Status,
+                    StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang),
+                    FollowUpEmail = subscription.FollowUpEmail,
+                    RenewalCount = subscription.RenewalCount,
+                    Notes = subscription.Notes
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+
+            return subscription;
+        }
+        public async Task<GetSubscriptionByIdResponseModel> GetById(int subscriptionId)
+        {
+            var subscription = await repositoryManager.SubscriptionRepository.Get(e => e.Id == subscriptionId && !e.IsDeleted)
+                .Select(subscription => new GetSubscriptionByIdResponseModel
+                {
+                    Id = subscription.Id,
+                    Code = subscription.Code,
+                    CompanyId = subscription.CompanyId,
+                    PlanId = subscription.PlanId,
+                    DurationInDays = subscription.DurationInDays,
+                    StartDate = subscription.StartDate,
+                    EndDate = subscription.EndDate,
+                    Status = subscription.Status,
+                    FollowUpEmail = subscription.FollowUpEmail,
+                    RenewalCount = subscription.RenewalCount,
+                    Notes = subscription.Notes
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+
+            return subscription;
+
+        }
+        public async Task<bool> Delete(int subscriptiond)
+        {
+            var subscription = await repositoryManager.SubscriptionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == subscriptiond) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+            subscription.Delete();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Enable(int subscriptionId)
+        {
+            var subscription = await repositoryManager.SubscriptionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == subscriptionId) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+            subscription.Enable();
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Disable(DisableModelDTO model)
+        {
+            var group = await repositoryManager.SubscriptionRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+            group.Disable(model.DisableReason);
+            await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<GetSubscriptionsInformationsResponseDTO> GetSubscriptionsInformations()
+        {
+            var subscriptionRepository = repositoryManager.SubscriptionRepository;
+            var query = subscriptionRepository.Get(subscription => subscription.CompanyId == requestInfo.CompanyId);
+
+            #region Handle Response
+
+            return new GetSubscriptionsInformationsResponseDTO
+            {
+                TotalCount = await query.Where(subscription => !subscription.IsDeleted).CountAsync(),
+                ActiveCount = await query.Where(subscription => !subscription.IsDeleted && subscription.IsActive).CountAsync(),
+                NotActiveCount = await query.Where(subscription => !subscription.IsDeleted && !subscription.IsActive).CountAsync(),
+                DeletedCount = await query.Where(subscription => subscription.IsDeleted).CountAsync()
+            };
+
+            #endregion
+        }
         public async Task HandleSubscriptions()
         {
             try
@@ -55,10 +257,10 @@ namespace Dawem.BusinessLogic.Summons
 
                 var getWillExpiredSubscriptions = await repositoryManager.SubscriptionRepository
                             .GetWithTracking(s => !s.IsDeleted &&
-                            ((DateTime.Now.Date >= s.EndDate.Date && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpired)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 1 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter1Days)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 3 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter3Days)) ||
-                            (EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 7 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter7Days))))
+                            (DateTime.Now.Date >= s.EndDate.Date && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpired) ||
+                            EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 1 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter1Days) ||
+                            EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 3 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter3Days) ||
+                            EF.Functions.DateDiffDay(DateTime.Now.Date, s.EndDate.Date) == 7 && !s.SubscriptionLogs.Any(l => l.EndDate.Date == s.EndDate.Date && l.LogType == SubscriptionLogType.SendEmailAboutExpirationAfter7Days)))
                             .ToListAsync();
 
                 if (getWillExpiredSubscriptions != null && getWillExpiredSubscriptions.Count > 0)

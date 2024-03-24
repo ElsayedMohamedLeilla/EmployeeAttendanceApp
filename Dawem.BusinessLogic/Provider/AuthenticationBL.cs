@@ -1,12 +1,10 @@
 ﻿using Dawem.Contract.BusinessLogic.Permissions;
 using Dawem.Contract.BusinessLogic.Provider;
 using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.BusinessValidation.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
@@ -17,7 +15,6 @@ using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Identities;
 using Dawem.Models.Dtos.Providers;
 using Dawem.Models.Dtos.Shared;
-using Dawem.Models.DtosMappers;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
@@ -44,12 +41,10 @@ namespace Dawem.BusinessLogic.Provider
         private readonly IHttpContextAccessor accessor;
         private readonly LinkGenerator generator;
         private readonly IAccountBLValidation accountBLValidation;
-        private readonly ISubscriptionBLValidationCore subscriptionBLValidationCore;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            ISubscriptionBLValidationCore _subscriptionBLValidationCore,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings,
             IPermissionBL _permissionBL,
@@ -61,7 +56,6 @@ namespace Dawem.BusinessLogic.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
-            subscriptionBLValidationCore = _subscriptionBLValidationCore;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
             permissionBL = _permissionBL;
@@ -162,7 +156,7 @@ namespace Dawem.BusinessLogic.Provider
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync();
 
-                durationInDays =  await repositoryManager.DawemSettingRepository
+                durationInDays = await repositoryManager.DawemSettingRepository
                         .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlanTrialDurationInDays)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
@@ -201,25 +195,6 @@ namespace Dawem.BusinessLogic.Provider
 
             #endregion
 
-            #region Insert Branch
-
-            Branch branch = new()
-            {
-                CompanyId = companyId,
-                Email = model.CompanyEmail,
-                IsActive = true,
-                AdminUserId = user.Id,
-                Name = model.CompanyName,
-                IsMainBranch = true,
-                CountryId = model.CompanyCountryId,
-                Address = model.CompanyAddress,
-            };
-
-            repositoryManager.BranchRepository.Insert(branch);
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
             #region Insert Department And Employee
 
             var employee = repositoryManager.EmployeeRepository.Insert(new Employee
@@ -244,24 +219,9 @@ namespace Dawem.BusinessLogic.Provider
             #region Update User
 
             var getUser = repositoryManager.UserRepository.GetByID(user.Id);
-            getUser.BranchId = branch.Id;
             getUser.CompanyId = insertedCompany.Id;
             getUser.EmployeeId = employee.Id;
 
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
-            #region Insert User Branch
-
-            var userBranch = new UserBranch()
-            {
-
-                UserId = user.Id,
-                BranchId = branch.Id
-            };
-
-            repositoryManager.UserBranchRepository.Insert(userBranch);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -362,7 +322,7 @@ namespace Dawem.BusinessLogic.Provider
             #region Business Validation
 
             var user = await accountBLValidation.SignInValidation(model);
-           
+
             #endregion
 
             #region Get User Role
@@ -532,8 +492,6 @@ namespace Dawem.BusinessLogic.Provider
         }
         public async Task<TokenDto> FormateToken(int? userId, int branchId, string token)
         {
-            UserDTOMapper.InitUserContext(requestHeaderContext);
-            UserDTO user = UserDTOMapper.Map(await repositoryManager.UserRepository.GetByIdAsync(userId));
 
 
             #region Get Token

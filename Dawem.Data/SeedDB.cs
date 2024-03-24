@@ -1,5 +1,5 @@
-﻿using Dawem.Domain.Entities.Lookups;
-using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Domain.Entities.Dawem;
+using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
@@ -193,7 +193,38 @@ namespace Dawem.Data
                 context.DawemSettings.AddRange(dawemSettings);
                 context.SaveChanges();
             }
-            
+
+
+            #endregion
+
+            #region Handle Languages
+
+            var languages = new List<Language>();
+
+            if (!context.Languages.Any())
+            {
+                languages.AddRange(new List<Language>()
+                {   new () { Name = "Arabic", NativeName = "العربية", ISO2 = "ar" , ISO3="ara" , IsActive = true},
+                    new () { Name = "English", NativeName = "English", ISO2 = "en" , ISO3="eng" , IsActive = true},
+                    new () { Name = "Chinese", NativeName = "汉语", ISO2 = "zh" , ISO3="zho" , IsActive = false},
+                    new () { Name = "Spanish", NativeName = "Español", ISO2 = "es" , ISO3="spa" , IsActive = false},
+                    new () { Name = "Russian", NativeName = "Русский", ISO2 = "ru" , ISO3="rus", IsActive = false },
+                    new () { Name = "Hindi", NativeName = "हिन्दी", ISO2 = "hi" , ISO3="hin", IsActive = false },
+                    new () { Name = "Japanese", NativeName = "日本語", ISO2 = "ja" , ISO3="jpn", IsActive = false },
+                    new () { Name = "German", NativeName = "Deutsch", ISO2 = "de" , ISO3="due" , IsActive = false},
+                    new () { Name = "French", NativeName = "Français", ISO2 = "fr" , ISO3="fra" , IsActive = false},
+                    new () { Name = "Portuguese", NativeName = "Português", ISO2 = "pt" , ISO3="por" , IsActive = false},
+                    new () { Name = "Korean", NativeName = "한국어", ISO2 = "ko" , ISO3="kor" , IsActive = false},
+                    new () { Name = "Turkish", NativeName = "Türkçe", ISO2 = "tr" , ISO3="tur", IsActive = false },
+                    new () { Name = "Italian", NativeName = "Italiano", ISO2 = "it" , ISO3="ita" , IsActive = false},
+                    new () { Name = "Indonesian", NativeName = "Bahasa Indonesia", ISO2 = "id" , ISO3="ind" , IsActive = false},
+                    new () { Name = "Bengali", NativeName = "বাংলা", ISO2 = "bn" , ISO3="ben" , IsActive = false},
+                    new () { Name = "Punjabi", NativeName = "ਪੰਜਾਬੀ", ISO2 = "pa" , ISO3="pan" , IsActive = false}
+                });
+
+                context.Languages.AddRange(languages);
+                context.SaveChanges();
+            }
 
             #endregion
 

@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Employees.Departments;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Response.Employees.Departments;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Subscriptions.Plans;
+using Dawem.Models.Response.Subscriptions.Plans;
 
-namespace Dawem.Contract.BusinessLogic.Employees.Plan
+namespace Dawem.Contract.BusinessLogic.Subscriptions
 {
     public interface IPlanBL
     {

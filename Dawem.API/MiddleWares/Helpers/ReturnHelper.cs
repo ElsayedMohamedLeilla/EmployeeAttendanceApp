@@ -5,7 +5,7 @@ using Dawem.Translations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Dawem.Helpers
+namespace Dawem.API.MiddleWares.Helpers
 {
     public static class ReturnHelper
     {

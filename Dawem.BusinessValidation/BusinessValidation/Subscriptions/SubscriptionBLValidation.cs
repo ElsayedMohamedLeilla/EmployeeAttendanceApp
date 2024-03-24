@@ -1,9 +1,13 @@
-﻿using Dawem.Contract.BusinessValidation.Employees;
+﻿using Dawem.Contract.BusinessValidation.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Subscriptions;
+using Dawem.Models.Exceptions;
+using Dawem.Translations;
+using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.Employees
+namespace Dawem.Validation.BusinessValidation.Subscriptions
 {
 
     public class SubscriptionBLValidation : ISubscriptionBLValidation
@@ -15,6 +19,29 @@ namespace Dawem.Validation.BusinessValidation.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
+        public async Task<bool> CreateValidation(CreateSubscriptionModel model)
+        {
+            var checkSubscriptionDuplicate = await repositoryManager
+                .SubscriptionRepository.Get(c => !c.IsDeleted && c.CompanyId == model.CompanyId)
+                .AnyAsync();
+            if (checkSubscriptionDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsSubscriptionAlreadyWithThisCompany);
+            }
 
+            return true;
+        }
+        public async Task<bool> UpdateValidation(UpdateSubscriptionModel model)
+        {
+            var checkSubscriptionDuplicate = await repositoryManager
+                .SubscriptionRepository.Get(c => !c.IsDeleted && c.CompanyId == model.CompanyId && c.Id != model.Id)
+                .AnyAsync();
+            if (checkSubscriptionDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsSubscriptionAlreadyWithThisCompany);
+            }
+
+            return true;
+        }
     }
 }

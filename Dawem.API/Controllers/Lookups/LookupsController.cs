@@ -28,11 +28,15 @@ namespace Dawem.API.Controllers.Lookups
         [HttpPost]
         public async Task<ActionResult> GetCurrencies(GetCurrenciesCriteria criteria)
         {
-
             var currencieRes = await lookupsBL.GetCurrencies(criteria);
             return Success(currencieRes);
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetLanguages([FromQuery] GetLanguagesCriteria criteria)
+        {
+            var languagesReult = await lookupsBL.GetLanguages(criteria);
+            return Success(languagesReult);
+        }
 
 
     }

@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Employees.Departments
+﻿namespace Dawem.Models.Response.Subscriptions.Plans
 {
     public class GetPlanInfoResponseModel
     {
@@ -8,7 +8,6 @@
         public int MinNumberOfEmployees { get; set; }
         public int MaxNumberOfEmployees { get; set; }
         public decimal EmployeeCost { get; set; }
-        public int GracePeriodPercentage { get; set; }
         public bool IsTrial { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }

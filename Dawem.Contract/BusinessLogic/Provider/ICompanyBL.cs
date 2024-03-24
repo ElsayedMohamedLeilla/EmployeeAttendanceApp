@@ -1,9 +1,20 @@
-﻿using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Providers.Companies;
+using Dawem.Models.Response.Providers.Companies;
 
 namespace Dawem.Contract.BusinessLogic.Provider
 {
     public interface ICompanyBL
     {
-        Task<Company> Create(Company company);
+        Task<int> Create(CreateCompanyModel model);
+        Task<bool> Update(UpdateCompanyModel model);
+        Task<GetCompanyInfoResponseModel> GetInfo(int companyId);
+        Task<GetCompanyByIdResponseModel> GetById(int companyId);
+        Task<GetCompaniesResponse> Get(GetCompaniesCriteria model);
+        Task<GetCompaniesForDropDownResponse> GetForDropDown(GetCompaniesCriteria model);
+        Task<bool> Disable(DisableModelDTO model);
+        Task<bool> Enable(int companyId);
+        Task<bool> Delete(int companyId);
+        Task<GetCompaniesInformationsResponseDTO> GetCompaniesInformations();
     }
 }

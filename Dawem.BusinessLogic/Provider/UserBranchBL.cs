@@ -91,15 +91,14 @@ namespace Dawem.BusinessLogic.Provider
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
 
-            var query = repositoryManager.UserBranchRepository.Get(a => a.UserId == user.Id, IncludeProperties: nameof(UserBranch.Branch));
+            var query = repositoryManager.UserBranchRepository.Get(a => a.UserId == user.Id);
             var queryPaged = criteria.GetPagingEnabled() ? query.Skip(skip).Take(take) : query;
 
             #endregion
 
             var userBranches = queryPaged.Select(c => new BranchLiteDTO()
             {
-                Id = c.BranchId,
-                GlobalName = c.Branch.Name
+                Id = c.BranchId
             }).ToList();
 
             return new GetUserBranchesResponseModel
@@ -115,7 +114,7 @@ namespace Dawem.BusinessLogic.Provider
             var userBranch = new List<UserBranch>();
 
             var userBranches = await repositoryManager.UserBranchRepository
-                .Get(user => user.UserId == userId, IncludeProperties: nameof(UserBranch.Branch))
+                .Get(user => user.UserId == userId)
                 .ToListAsync();
 
             if (userBranches == null || userBranches.Count() <= 0)
@@ -131,7 +130,7 @@ namespace Dawem.BusinessLogic.Provider
             var userBranch = new List<UserBranch>();
 
             var userBranches = await repositoryManager.UserBranchRepository
-                .Get(user => user.BranchId == branchId, IncludeProperties: nameof(UserBranch.Branch))
+                .Get(user => user.BranchId == branchId)
                 .ToListAsync();
 
             if (userBranches == null || userBranches.Count() <= 0)

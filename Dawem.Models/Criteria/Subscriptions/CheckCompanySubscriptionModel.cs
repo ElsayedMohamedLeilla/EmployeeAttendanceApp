@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Criteria.Others
+namespace Dawem.Models.Criteria.Subscriptions
 {
     public class CheckCompanySubscriptionModel
     {

@@ -3930,14 +3930,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("ModifyUserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("NameAr")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("NameEn")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Notes")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -3945,6 +3937,70 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Plans", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanNameTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("PlanNameTranslations", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
@@ -5991,6 +6047,25 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanNameTranslation", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Subscriptions.Plan", "Plan")
+                        .WithMany("PlanNameTranslations")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Plan");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
@@ -6445,6 +6520,11 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", b =>
                 {
                     b.Navigation("ScheduleDays");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Plan", b =>
+                {
+                    b.Navigation("PlanNameTranslations");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>

@@ -3,12 +3,12 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Enums.Generals;
-using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
 using Dawem.Models.Generic;
 using LinqKit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Repository.Employees
 {
@@ -155,7 +155,7 @@ namespace Dawem.Repository.Employees
             }
 
             predicate = predicate.And(employee =>
-            
+
             (employee.ScheduleId > 0 && employee.Schedule.ScheduleDays != null &&
             employee.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
 
@@ -169,7 +169,7 @@ namespace Dawem.Repository.Employees
                 employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId))) && sp.DateFrom.Date <= criteria.DateTo.Date &&
                 (sp.DateFrom.Date >= criteria.DateFrom.Date ||
                 sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())));
-           
+
             if (criteria.Id != null)
             {
                 predicate = predicate.And(e => e.Id == criteria.Id);
@@ -190,7 +190,96 @@ namespace Dawem.Repository.Employees
             {
                 predicate = predicate.And(e => criteria.EmployeesIds.Contains(e.Id));
             }
+            if (criteria.FilterType is not null)
+            {
+                switch (criteria.FilterType.Value)
+                {
+                    case ReportFilterType.ActualAttend:
 
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(e => e.EmployeeAttendances != null &&
+                            e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(e => e.EmployeeAttendances != null &&
+                            e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() <= criteria.FilterTypeTo);
+                        break;
+                    case ReportFilterType.EarlyDepartures:
+                        break;
+                    case ReportFilterType.LateArrivals:
+                        break;
+                    case ReportFilterType.OverTime:
+                        break;
+                    case ReportFilterType.Vacations:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeRequests != null &&
+                            employee.EmployeeRequests.Any(er => !er.IsDeleted &&
+                            er.Status == RequestStatus.Accepted && er.Type == RequestType.Vacation) &&
+                            employee.EmployeeRequests.Where(er => !er.IsDeleted && er.Type == RequestType.Vacation &&
+                            er.Status == RequestStatus.Accepted &&
+                            (er.Date.Date >= criteria.DateFrom && er.RequestVacation.DateTo.Date <= criteria.DateTo ||
+                            er.Date.Date <= criteria.DateFrom && er.RequestVacation.DateTo.Date >= criteria.DateFrom ||
+                            er.Date.Date <= criteria.DateTo && er.RequestVacation.DateTo.Date >= criteria.DateTo)).
+                            Select(ev => EF.Functions.DateDiffDay(ev.Date < criteria.DateFrom ? criteria.DateFrom : ev.Date,
+                            ev.RequestVacation.DateTo > criteria.DateTo ? criteria.DateTo : ev.Date) + 1
+                            ).Sum() >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeRequests != null && 
+                            employee.EmployeeRequests.Any(er => !er.IsDeleted &&
+                            er.Status == RequestStatus.Accepted && er.Type == RequestType.Vacation) &&
+                            employee.EmployeeRequests.Where(er => !er.IsDeleted && er.Type == RequestType.Vacation &&
+                            er.Status == RequestStatus.Accepted &&
+                            (er.Date.Date >= criteria.DateFrom && er.RequestVacation.DateTo.Date <= criteria.DateTo ||
+                            er.Date.Date <= criteria.DateFrom && er.RequestVacation.DateTo.Date >= criteria.DateFrom ||
+                            er.Date.Date <= criteria.DateTo && er.RequestVacation.DateTo.Date >= criteria.DateTo)).
+                            Select(ev => EF.Functions.DateDiffDay(ev.Date < criteria.DateFrom ? criteria.DateFrom : ev.Date,
+                            ev.RequestVacation.DateTo > criteria.DateTo ? criteria.DateTo : ev.Date) + 1
+                            ).Sum() <= criteria.FilterTypeTo);
+
+                        break;
+                    case ReportFilterType.WorkingHours:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks != null &&
+                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
+                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut)).
+                            SelectMany(e => e.EmployeeAttendanceChecks).
+                            GroupBy(e=> e.EmployeeAttendanceId).
+                            Select(ea => EF.Functions.
+                            DateDiffMinute((DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time,
+                            (DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60m).
+                            Sum() >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks != null &&
+                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
+                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut)).
+                            SelectMany(e => e.EmployeeAttendanceChecks).
+                            GroupBy(e => e.EmployeeAttendanceId).
+                            Select(ea => EF.Functions.
+                            DateDiffMinute((DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time,
+                            (DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60m).
+                            Sum() <= criteria.FilterTypeTo);
+
+                        break;
+                    default:
+                        break;
+                }
+            }
             predicate = predicate.And(inner);
             var Query = Get(predicate);
             return Query;

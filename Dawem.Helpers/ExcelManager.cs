@@ -37,10 +37,9 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(9, 1).Value = "7. if DirectManagerName name is entered make sure that it already exist in db";
                 readmeSheet.Cell(10, 1).Value = "8. AttendanceType May Be One Of this (FullAttendance Or PartialAttendance Or FreeOrShiftAttendance)";
                 readmeSheet.Cell(11, 1).Value = "9. EmployeeType May Be One Of this (Military Or CivilService Or Contract Or ContractFromCompany)";
-                readmeSheet.Cell(12, 1).Value = "10. AnnualVacationBalance Cant be negative value";
-                readmeSheet.Cell(13, 1).Value = "11. EmployeeNumber , EmployeeName , Email , MobilNumber is unique for every employee";
-                readmeSheet.Cell(14, 1).Value = "12. follow up any validation message and solve the problem thrown to insert file successfully";
-                readmeSheet.Cell(15, 1).Value = "13. Save the file.";
+                readmeSheet.Cell(13, 1).Value = "10. EmployeeNumber , EmployeeName , Email , MobilNumber is unique for every employee";
+                readmeSheet.Cell(14, 1).Value = "11. follow up any validation message and solve the problem thrown to insert file successfully";
+                readmeSheet.Cell(15, 1).Value = "12. Save the file.";
                 readmeSheet.Cell(1, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(2, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(3, 1).Style.Font.Bold = true;

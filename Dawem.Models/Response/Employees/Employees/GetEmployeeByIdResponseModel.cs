@@ -17,7 +17,6 @@ namespace Dawem.Models.Response.Employees.Employees
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
-        public int? AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
         public string Email { get; set; }
         public int MobileCountryId { get; set; }

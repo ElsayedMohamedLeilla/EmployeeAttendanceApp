@@ -171,7 +171,6 @@ namespace Dawem.BusinessLogic.Employees
             getEmployee.DirectManagerId = model.DirectManagerId;
             getEmployee.ScheduleId = model.ScheduleId;
             getEmployee.EmployeeNumber = model.EmployeeNumber;
-            getEmployee.AnnualVacationBalance = model.AnnualVacationBalance;
             getEmployee.Email = model.Email;
             getEmployee.AllowChangeFingerprintMobileCode = model.AllowChangeFingerprintMobileCode;
             getEmployee.MobileNumber = model.MobileNumber;
@@ -256,7 +255,6 @@ namespace Dawem.BusinessLogic.Employees
                 IsActive = e.IsActive,
                 JoiningDate = e.JoiningDate,
                 EmployeeNumber = e.EmployeeNumber,
-                AnnualVacationBalance = e.AnnualVacationBalance,
                 ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees)
             }).ToListAsync();
 
@@ -326,7 +324,6 @@ namespace Dawem.BusinessLogic.Employees
                     Address = e.Address,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
-                    AnnualVacationBalance = e.AnnualVacationBalance,
                     JobTitleName = e.JobTitle.Name,
                     ScheduleName = e.Schedule.Name,
                     EmployeeNumber = e.EmployeeNumber,
@@ -385,7 +382,6 @@ namespace Dawem.BusinessLogic.Employees
                     Address = e.Address,
                     IsActive = e.IsActive,
                     JoiningDate = e.JoiningDate,
-                    AnnualVacationBalance = e.AnnualVacationBalance,
                     JobTitleId = e.JobTitleId,
                     ScheduleId = e.ScheduleId,
                     AttendanceType = e.AttendanceType,
@@ -501,7 +497,7 @@ namespace Dawem.BusinessLogic.Employees
             string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
                                         , "ScheduleName",
                                          "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
-                                         "AttendanceType","EmployeeType","AnnualVacationBalance","IsActive"};
+                                         "AttendanceType","EmployeeType","IsActive"};
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
@@ -558,7 +554,6 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
                                     Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
                                     Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                                    Temp.AnnualVacationBalance = int.Parse(row.Cell(13).GetString());
                                     Temp.IsActive = bool.Parse(row.Cell(14).GetString());
                                     Temp.CompanyId = requestInfo.CompanyId;
                                     Temp.AddedDate = DateTime.Now;
@@ -584,11 +579,6 @@ namespace Dawem.BusinessLogic.Employees
                                     else if (Temp.DirectManagerId == 0)
                                     {
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
-                                        return result;
-                                    }
-                                    else if (Temp.AnnualVacationBalance < 0)
-                                    {
-                                        result.Add(AmgadKeys.WrongData, TranslationHelper.GetTranslation(AmgadKeys.AnnualVacationBalanceCanNotBeNegativeValue + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
                                         return result;
                                     }
                                     else

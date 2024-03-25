@@ -1168,9 +1168,6 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("AllowChangeFingerprintMobileCode")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("AnnualVacationBalance")
-                        .HasColumnType("int");
-
                     b.Property<int>("AttendanceType")
                         .HasColumnType("int");
 
@@ -2013,6 +2010,9 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -4038,6 +4038,10 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("DurationInDays")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("EmployeeCost")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -4064,6 +4068,9 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("NumberOfEmployees")
+                        .HasColumnType("int");
+
                     b.Property<int>("PlanId")
                         .HasColumnType("int");
 
@@ -4075,6 +4082,10 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
                     b.HasKey("Id");
 

@@ -19,7 +19,6 @@ namespace Dawem.Models.Dtos.Employees.Employees
         public IFormFile ProfileImageFile { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
-        public int? AnnualVacationBalance { get; set; }
         public bool AllowChangeFingerprintMobileCode { get; set; }
         public bool IsActive { get; set; }
         public int EmployeeNumber { get; set; }

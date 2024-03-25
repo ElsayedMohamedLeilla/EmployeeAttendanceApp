@@ -13,7 +13,6 @@
         public string ScheduleName { get; set; }
         public string AttendanceTypeName { get; set; }
         public string EmployeeTypeName { get; set; }
-        public int? AnnualVacationBalance { get; set; }
         public DateTime JoiningDate { get; set; }
         public string Email { get; set; }
         public string MobileCountryFlagPath { get; set; }

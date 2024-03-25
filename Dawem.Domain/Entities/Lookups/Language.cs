@@ -10,5 +10,6 @@ namespace Dawem.Domain.Entities.Lookups
         public string NativeName { get; set; }
         public string ISO2 { get; set; }
         public string ISO3 { get; set; }
+        public int Order { get; set; }
     }
 }

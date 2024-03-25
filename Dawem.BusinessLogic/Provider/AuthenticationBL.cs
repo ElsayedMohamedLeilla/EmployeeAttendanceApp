@@ -147,6 +147,7 @@ namespace Dawem.BusinessLogic.Provider
             #region Handle Trial Or Subscription
 
             int? planId = null;
+            decimal employeeCost = 0;
             var durationInDays = 0;
 
             if (model.IsTrial)
@@ -154,6 +155,11 @@ namespace Dawem.BusinessLogic.Provider
                 planId = await repositoryManager.PlanRepository
                     .Get(p => !p.IsDeleted && p.IsTrial)
                     .Select(p => p.Id)
+                    .FirstOrDefaultAsync();
+
+                employeeCost = await repositoryManager.PlanRepository
+                    .Get(p => !p.IsDeleted && p.IsTrial)
+                    .Select(p => p.EmployeeCost)
                     .FirstOrDefaultAsync();
 
                 durationInDays = await repositoryManager.DawemSettingRepository
@@ -169,6 +175,12 @@ namespace Dawem.BusinessLogic.Provider
                     model.NumberOfEmployees <= p.MaxNumberOfEmployees)
                     .Select(p => p.Id)
                     .FirstOrDefaultAsync();
+
+                employeeCost = await repositoryManager.PlanRepository
+                   .Get(p => !p.IsDeleted && model.NumberOfEmployees >= p.MinNumberOfEmployees &&
+                   model.NumberOfEmployees <= p.MaxNumberOfEmployees)
+                   .Select(p => p.EmployeeCost)
+                   .FirstOrDefaultAsync();
 
                 durationInDays = model.SubscriptionDurationInMonths.Value * 30;
             }
@@ -188,7 +200,10 @@ namespace Dawem.BusinessLogic.Provider
                 EndDate = DateTime.Now.AddDays(durationInDays),
                 Status = SubscriptionStatus.Created,
                 RenewalCount = 1,
-                FollowUpEmail = insertedCompany.Email
+                FollowUpEmail = insertedCompany.Email,
+                NumberOfEmployees = insertedCompany.NumberOfEmployees,
+                EmployeeCost = employeeCost,
+                TotalAmount = insertedCompany.NumberOfEmployees * employeeCost
             });
 
             #endregion

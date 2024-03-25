@@ -82,6 +82,7 @@ namespace Dawem.API.Controllers.Core
             }
             return Success(await notificationStoreBL.GetNotifications(criteria));
         }
+       
         [HttpGet]
         public async Task<ActionResult> GetUnreadNotificationCount()
         {
@@ -94,7 +95,7 @@ namespace Dawem.API.Controllers.Core
             return Success(await notificationStoreBL.GetUnViewedNotificationCount());
         }
         [HttpGet]
-        public async Task<ActionResult> GetUnreadNotificationByUserId([FromQuery] GetNotificationStoreCriteria criteria)
+        public async Task<ActionResult> GetUnreadNotifications([FromQuery] GetNotificationStoreCriteria criteria)
         {
             if (criteria == null)
             {

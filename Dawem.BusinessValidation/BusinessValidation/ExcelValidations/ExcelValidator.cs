@@ -78,7 +78,7 @@ namespace Dawem.Validation.BusinessValidation.ExcelValidations
                     {
                         string cellReferences = string.Join(", ", kvp.Value.Select(row => $"A{row}"));
                         validationMessages.Add($"{AmgadKeys.DuplicateColumnValueProblem}{kvp.Key}",
-                            TranslationHelper.GetTranslation($"{AmgadKeys.DuplicateColumnValueFound} ({cellReferences})", iniValidationDTO.Lang));
+                             $"{(TranslationHelper.GetTranslation(AmgadKeys.DuplicateColumnValueFound, iniValidationDTO.Lang))} ({cellReferences})");
                     }
                 }
             }
@@ -103,7 +103,7 @@ namespace Dawem.Validation.BusinessValidation.ExcelValidations
             int index = 0;
             foreach (var nullColumn in nullColumns)
             {
-                validationMessages.Add(AmgadKeys.NullColumnsProblem + index++, $"(Cell {nullColumn.Item2}) " + AmgadKeys.CannotBeNull);
+                validationMessages.Add(AmgadKeys.NullColumnsProblem + index++, $"(Cell {nullColumn.Item2}) " + TranslationHelper.GetTranslation(AmgadKeys.CannotBeNull, iniValidationDTO.Lang));
             }
 
             return validationMessages;

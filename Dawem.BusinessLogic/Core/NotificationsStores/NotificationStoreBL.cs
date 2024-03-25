@@ -138,7 +138,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
 
             #region sorting
 
-            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.Id), LeillaKeys.Desc);
+            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.AddedDate), LeillaKeys.Desc);
 
             #endregion
 
@@ -192,7 +192,7 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
 
             #region sorting
 
-            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.Id), LeillaKeys.Desc);
+            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.AddedDate), LeillaKeys.Desc);
 
             #endregion
 
@@ -238,6 +238,52 @@ namespace Dawem.BusinessLogic.Core.NotificationsStores
             await unitOfWork.SaveAsync();
             return  true;
 
+        }
+
+        public async Task<GetNotificationStoreResponseDTO> GetUnreadNotifications(GetNotificationStoreCriteria criteria)
+        {
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId)
+                .FirstOrDefault().EmployeeId;
+            criteria.EmployeeID = employeeId;
+            var NotificationStoreRepository = repositoryManager.NotificationStoreRepository;
+            var query = NotificationStoreRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.AddedDate), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+
+            var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
+            {
+                Id = notificatioStore.Id,
+                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
+                IconUrl = notificatioStore.ImageUrl,
+                Priority = notificatioStore.Priority,
+                IsRead = notificatioStore.IsRead,
+                Date = notificatioStore.AddedDate,
+                NotificationType = notificatioStore.NotificationType,
+                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
+                Status = notificatioStore.Status,
+                EmployeeId = notificatioStore.EmployeeId
+
+            }).ToListAsync();
+
+            return new GetNotificationStoreResponseDTO()
+            {
+                NotificationStores = NotificationStoreList.OrderBy(s => s.Date).ToList(),
+                TotalCount = await queryOrdered.CountAsync()
+            };
         }
     }
 }

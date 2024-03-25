@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees.Department;
+﻿using Dawem.BusinessLogic.Employees;
+using Dawem.Contract.BusinessLogic.Employees.Department;
 using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Translations;
@@ -126,15 +127,24 @@ namespace Dawem.API.Controllers.Employees
 
         [HttpPost]
         [RequestSizeLimit(10 * 2048 * 2048)] // Max 20 MB
-        public async Task<ActionResult> CreateImportDataFromExcel(IFormFile file)
+        public async Task<IActionResult> CreateImportDataFromExcel(IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest(AmgadKeys.NoFileUploaded);
             }
+
             using Stream fileStream = file.OpenReadStream();
             Dictionary<string, string> result = await departmentBL.ImportDataFromExcelToDB(fileStream);
-            return Ok(result);
+
+            if (result.ContainsKey(AmgadKeys.Success))
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return StatusCode(400, result);
+            }
         }
     }
 }

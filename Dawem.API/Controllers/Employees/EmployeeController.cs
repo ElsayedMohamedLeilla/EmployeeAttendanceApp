@@ -129,22 +129,30 @@ namespace Dawem.API.Controllers.Employees
         public async Task<ActionResult> CreateExportDraft()
         {
             var stream = await employeeBL.ExportDraft();
-            //stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", AmgadKeys.EmployeeEmptyDraft);
         }
 
         [HttpPost]
         [RequestSizeLimit(10 * 2048 * 2048)] // Max 20 MB
-        //[DisableRequestSizeLimit]
-        public async Task<ActionResult> CreateImportDataFromExcel(IFormFile file)
+                                             //[DisableRequestSizeLimit]
+        public async Task<IActionResult> CreateImportDataFromExcel(IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest(AmgadKeys.NoFileUploaded);
             }
+
             using Stream fileStream = file.OpenReadStream();
             Dictionary<string, string> result = await employeeBL.ImportDataFromExcelToDB(fileStream);
-            return Ok(result);
+
+            if (result.ContainsKey(AmgadKeys.Success))
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return StatusCode(400, result);
+            }
         }
 
 

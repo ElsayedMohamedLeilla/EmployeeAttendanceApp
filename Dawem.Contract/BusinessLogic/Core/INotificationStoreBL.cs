@@ -17,5 +17,6 @@ namespace Dawem.Contract.BusinessLogic.Core
         Task<GetNotificationStoreResponseDTO> GetUnreadNotification(GetNotificationStoreCriteria criteria);
         Task<int> GetUnViewedNotificationCount();
 
+
     }
 }

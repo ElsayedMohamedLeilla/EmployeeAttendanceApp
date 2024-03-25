@@ -531,10 +531,10 @@ namespace Dawem.BusinessLogic.Employees
                         foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(2).GetString())).FirstOrDefaultAsync();
                         if (foundEmployeeInDB == null) // Name Not Found
                         {
-                            foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(8).GetString())).FirstOrDefaultAsync();
+                            foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.MobileNumber == (row.Cell(8).GetString())).FirstOrDefaultAsync();
                             if (foundEmployeeInDB == null) // mobile Number Not Found
                             {
-                                foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == (row.Cell(7).GetString())).FirstOrDefaultAsync();
+                                foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Email == (row.Cell(7).GetString())).FirstOrDefaultAsync();
                                 if (foundEmployeeInDB == null) // Email Not Found
                                 {
 
@@ -562,25 +562,26 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.InsertedFromExcel = true;
                                     if (Temp.DepartmentId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo?.Lang)  + LeillaKeys.Space +TranslationHelper.GetTranslation(AmgadKeys.NotFound , requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber , requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
 
                                     }
                                     else if (Temp.JobTitleId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisJobTitle + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisJobTitle, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
                                     else if (Temp.ScheduleId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisSchedule + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisSchedule, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
                                     else if (Temp.DirectManagerId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
+                                   
                                     else
                                     {
                                         ImportedList.Add(Temp);
@@ -588,31 +589,31 @@ namespace Dawem.BusinessLogic.Employees
                                 }
                                 else
                                 {
-                                    result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Email + LeillaKeys.Space + AmgadKeys.ThisEmailIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                    result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.Email + LeillaKeys.Space + TranslationHelper.GetTranslation( AmgadKeys.ThisEmailIsUsedByEmployee , requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space +TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber,requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                     return result;
                                 }
                             }
                             else
                             {
-                                result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.MobileNumber + LeillaKeys.Space + AmgadKeys.ThisMobileNumberIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                                result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.MobileNumber + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ThisMobileNumberIsUsedByEmployee, requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                 return result;
                             }
                         }
                         else
                         {
-                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisNameIsUsedByEmployee + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                            result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ThisNameIsUsedByEmployee, requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                     }
                     else
                     {
-                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundEmployeeInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                        result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.EmployeeNumber + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ThisEmployeeNumberIsUsedByEmployee, requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
                 }
                 repositoryManager.EmployeeRepository.BulkInsert(ImportedList);
                 await unitOfWork.SaveAsync();
-                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo?.Lang));
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully , requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.EmployeeEnteredSuccessfully,requestInfo?.Lang));
             }
             return result;
         }

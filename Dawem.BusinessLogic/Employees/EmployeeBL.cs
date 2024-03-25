@@ -581,11 +581,7 @@ namespace Dawem.BusinessLogic.Employees
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
-                                    else if (Temp.AnnualVacationBalance < 0)
-                                    {
-                                        result.Add(AmgadKeys.WrongData, TranslationHelper.GetTranslation(AmgadKeys.AnnualVacationBalanceCanNotBeNegativeValue , requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
-                                        return result;
-                                    }
+                                   
                                     else
                                     {
                                         ImportedList.Add(Temp);

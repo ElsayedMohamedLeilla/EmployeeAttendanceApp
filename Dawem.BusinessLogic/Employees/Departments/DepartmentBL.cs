@@ -436,7 +436,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1 });//department Name can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Departments;
-            string[] ExpectedHeaders = { "ParentDepartment", "ManagerName", "DepartmentName", "IsActive" };
+            string[] ExpectedHeaders = { "DepartmentName" ,"ParentDepartment", "ManagerName", "IsActive" };
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated

@@ -554,7 +554,7 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
                                     Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
                                     Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                                    Temp.IsActive = bool.Parse(row.Cell(14).GetString());
+                                    Temp.IsActive = bool.Parse(row.Cell(13).GetString());
                                     Temp.CompanyId = requestInfo.CompanyId;
                                     Temp.AddedDate = DateTime.Now;
                                     Temp.AddUserId = requestInfo.UserId;
@@ -564,7 +564,6 @@ namespace Dawem.BusinessLogic.Employees
                                     {
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo?.Lang)  + LeillaKeys.Space +TranslationHelper.GetTranslation(AmgadKeys.NotFound , requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber , requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
-
                                     }
                                     else if (Temp.JobTitleId == 0)
                                     {

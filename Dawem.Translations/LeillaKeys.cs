@@ -569,7 +569,11 @@
         public const string DoneCreateCompanySuccessfully = "DoneCreateCompanySuccessfully";
         public const string DoneUpdateCompanySuccessfully = "DoneUpdateCompanySuccessfully";
         public const string SorryCompanyNameIsDuplicated = "Sorry!!CompanyNameIsDuplicated!";
-
+        public const string SorryYouMustChooseLanguageWithName = "Sorry!!YouMustChooseLanguageWithName!";
+        public const string SorryYouMustEnterName = "Sorry!!YouMustEnterName!";
+        public const string SorryYouMustNotRepeatLanguagesWithNames = "Sorry!!YouMustNotRepeatLanguagesWithNames!";
+        public const string SorryYouMustEnterNamesInArabicAndEnglishLanguages = "Sorry!!YouMustEnterNamesInArabicAndEnglishLanguages!";
+        
     }
 
 }

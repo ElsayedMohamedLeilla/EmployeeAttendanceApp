@@ -14,7 +14,6 @@
         public DateTime JoiningDate { get; set; }
         public string AttendanceType { get; set; }
         public string EmployeeType { get; set; }
-        public int AnnualVacationBalance { get; set; }
         public bool IsActive { get; set; }
     }
 }

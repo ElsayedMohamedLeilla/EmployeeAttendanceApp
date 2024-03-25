@@ -3,6 +3,7 @@ using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -55,6 +56,37 @@ namespace Dawem.Data
                 context.SaveChanges();
             }
 
+            #region Handle Languages
+
+            var languages = new List<Language>();
+
+            if (!context.Languages.Any())
+            {
+                languages.AddRange(new List<Language>()
+                {   new () { Name = "Arabic", NativeName = "العربية", ISO2 = "ar" , ISO3="ara" , IsActive = true, Order = 1},
+                    new () { Name = "English", NativeName = "English", ISO2 = "en" , ISO3="eng" , IsActive = true, Order = 2},
+                    new () { Name = "Chinese", NativeName = "汉语", ISO2 = "zh" , ISO3="zho" , IsActive = false, Order = 6},
+                    new () { Name = "Spanish", NativeName = "Español", ISO2 = "es" , ISO3="spa" , IsActive = false, Order = 7},
+                    new () { Name = "Russian", NativeName = "Русский", ISO2 = "ru" , ISO3="rus", IsActive = false, Order = 8 },
+                    new () { Name = "Hindi", NativeName = "हिन्दी", ISO2 = "hi" , ISO3="hin", IsActive = false , Order = 3},
+                    new () { Name = "Japanese", NativeName = "日本語", ISO2 = "ja" , ISO3="jpn", IsActive = false , Order = 9},
+                    new () { Name = "German", NativeName = "Deutsch", ISO2 = "de" , ISO3="due" , IsActive = false, Order = 10},
+                    new () { Name = "French", NativeName = "Français", ISO2 = "fr" , ISO3="fra" , IsActive = false, Order = 11},
+                    new () { Name = "Portuguese", NativeName = "Português", ISO2 = "pt" , ISO3="por" , IsActive = false, Order = 12},
+                    new () { Name = "Korean", NativeName = "한국어", ISO2 = "ko" , ISO3="kor" , IsActive = false, Order = 13},
+                    new () { Name = "Turkish", NativeName = "Türkçe", ISO2 = "tr" , ISO3="tur", IsActive = false , Order = 4},
+                    new () { Name = "Italian", NativeName = "Italiano", ISO2 = "it" , ISO3="ita" , IsActive = false, Order = 14},
+                    new () { Name = "Indonesian", NativeName = "Bahasa Indonesia", ISO2 = "id" , ISO3="ind" , IsActive = false, Order = 5},
+                    new () { Name = "Bengali", NativeName = "বাংলা", ISO2 = "bn" , ISO3="ben" , IsActive = false, Order = 15},
+                    new () { Name = "Punjabi", NativeName = "ਪੰਜਾਬੀ", ISO2 = "pa" , ISO3="pan" , IsActive = false, Order = 16}
+                });
+
+                context.Languages.AddRange(languages);
+                context.SaveChanges();
+            }
+
+            #endregion
+
             #region Handle Plans
 
             var allPlansCount = context.Plans.Count();
@@ -67,39 +99,87 @@ namespace Dawem.Data
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "التجريبية",
-                    NameEn = "Trial",
                     EmployeeCost = 0,
                     IsTrial = true,
                     MinNumberOfEmployees = 1,
-                    MaxNumberOfEmployees = 2
+                    MaxNumberOfEmployees = 2,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "ar").Id,
+                            Name ="التجريبية"
+                        },
+                         new ()
+                        {
+                             LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "en").Id,
+                             Name ="Trial"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "الاساسية",
-                    NameEn = "Basic",
+                    EmployeeCost = 5,
                     MinNumberOfEmployees = 1,
-                    MaxNumberOfEmployees = 100
+                    MaxNumberOfEmployees = 100,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "ar").Id,
+                            Name ="الاساسية"
+                        },
+                         new ()
+                        {
+                             LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "en").Id,
+                             Name ="Basic"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "المتوسطة",
-                    NameEn = "Medium",
+                    EmployeeCost = 4,
                     MinNumberOfEmployees = 101,
-                    MaxNumberOfEmployees = 500
+                    MaxNumberOfEmployees = 500,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "ar").Id,
+                            Name ="المتوسطة"
+                        },
+                         new ()
+                        {
+                             LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "en").Id,
+                             Name ="Medium"
+                        }
+                    }
                 });
 
                 plans.Add(new()
                 {
                     Code = code++,
-                    NameAr = "المتقدمة",
-                    NameEn = "Advanced",
+                    EmployeeCost = 3,
                     MinNumberOfEmployees = 501,
-                    MaxNumberOfEmployees = 1000
+                    MaxNumberOfEmployees = 1000,
+                    PlanNameTranslations = new()
+                    {
+                        new ()
+                        {
+                            LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "ar").Id,
+                            Name ="المتقدمة"
+                        },
+                         new ()
+                        {
+                             LanguageId = context.Languages.FirstOrDefault(l=>l.ISO2 == "en").Id,
+                             Name ="Advanced"
+                        }
+                    }
+
                 });
 
                 context.Plans.AddRange(plans);
@@ -118,8 +198,8 @@ namespace Dawem.Data
 
                 var getAllCompanies = context.Companies.ToList();
                 var code = 0;
-                var getBasicPlanId = context.Plans
-                    .FirstOrDefault(p => p.NameEn == "Medium")?.Id ?? 0;
+                var getBasicPlan = context.Plans
+                    .FirstOrDefault(p => p.PlanNameTranslations.Any(pt => pt.Name == "Medium"));
 
                 foreach (var company in getAllCompanies)
                 {
@@ -127,13 +207,16 @@ namespace Dawem.Data
                     subscriptions.Add(new()
                     {
                         CompanyId = company.Id,
-                        PlanId = getBasicPlanId,
+                        PlanId = getBasicPlan?.Id ?? 0,
                         Code = code,
                         DurationInDays = 6 * 30,
                         StartDate = DateTime.Now,
                         EndDate = DateTime.Now.AddDays(6 * 30),
                         Status = SubscriptionStatus.Active,
                         RenewalCount = 1,
+                        EmployeeCost = getBasicPlan.EmployeeCost,
+                        NumberOfEmployees = company.NumberOfEmployees,
+                        TotalAmount = getBasicPlan.EmployeeCost * company.NumberOfEmployees,
                         FollowUpEmail = company.Email
                     });
                 }
@@ -194,37 +277,6 @@ namespace Dawem.Data
                 context.SaveChanges();
             }
 
-
-            #endregion
-
-            #region Handle Languages
-
-            var languages = new List<Language>();
-
-            if (!context.Languages.Any())
-            {
-                languages.AddRange(new List<Language>()
-                {   new () { Name = "Arabic", NativeName = "العربية", ISO2 = "ar" , ISO3="ara" , IsActive = true},
-                    new () { Name = "English", NativeName = "English", ISO2 = "en" , ISO3="eng" , IsActive = true},
-                    new () { Name = "Chinese", NativeName = "汉语", ISO2 = "zh" , ISO3="zho" , IsActive = false},
-                    new () { Name = "Spanish", NativeName = "Español", ISO2 = "es" , ISO3="spa" , IsActive = false},
-                    new () { Name = "Russian", NativeName = "Русский", ISO2 = "ru" , ISO3="rus", IsActive = false },
-                    new () { Name = "Hindi", NativeName = "हिन्दी", ISO2 = "hi" , ISO3="hin", IsActive = false },
-                    new () { Name = "Japanese", NativeName = "日本語", ISO2 = "ja" , ISO3="jpn", IsActive = false },
-                    new () { Name = "German", NativeName = "Deutsch", ISO2 = "de" , ISO3="due" , IsActive = false},
-                    new () { Name = "French", NativeName = "Français", ISO2 = "fr" , ISO3="fra" , IsActive = false},
-                    new () { Name = "Portuguese", NativeName = "Português", ISO2 = "pt" , ISO3="por" , IsActive = false},
-                    new () { Name = "Korean", NativeName = "한국어", ISO2 = "ko" , ISO3="kor" , IsActive = false},
-                    new () { Name = "Turkish", NativeName = "Türkçe", ISO2 = "tr" , ISO3="tur", IsActive = false },
-                    new () { Name = "Italian", NativeName = "Italiano", ISO2 = "it" , ISO3="ita" , IsActive = false},
-                    new () { Name = "Indonesian", NativeName = "Bahasa Indonesia", ISO2 = "id" , ISO3="ind" , IsActive = false},
-                    new () { Name = "Bengali", NativeName = "বাংলা", ISO2 = "bn" , ISO3="ben" , IsActive = false},
-                    new () { Name = "Punjabi", NativeName = "ਪੰਜਾਬੀ", ISO2 = "pa" , ISO3="pan" , IsActive = false}
-                });
-
-                context.Languages.AddRange(languages);
-                context.SaveChanges();
-            }
 
             #endregion
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Subscriptions;
+using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Dtos.Subscriptions.Plans;
 
 namespace Dawem.Models.AutoMapper.Subscriptions
@@ -8,9 +9,13 @@ namespace Dawem.Models.AutoMapper.Subscriptions
     {
         public PlansMapProfile()
         {
-            CreateMap<CreatePlanModel, Plan>();
-            CreateMap<UpdatePlanModel, Plan>();
+            CreateMap<CreatePlanModel, Plan>().
+                ForMember(dest => dest.PlanNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
+            CreateMap<UpdatePlanModel, Plan>().
+                ForMember(dest => dest.PlanNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
 
+
+            CreateMap<NameTranslationModel, PlanNameTranslation>();
         }
     }
 }

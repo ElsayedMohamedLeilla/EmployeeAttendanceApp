@@ -21,6 +21,9 @@ namespace Dawem.Domain.Entities.Subscriptions
         public SubscriptionStatus Status { get; set; }
         public int RenewalCount { get; set; }
         public string FollowUpEmail { get; set; }
+        public int NumberOfEmployees { get; set; }
+        public decimal EmployeeCost { get; set; }
+        public decimal TotalAmount { get; set; }
         public List<SubscriptionLog> SubscriptionLogs { get; set; }
     }
 }

@@ -370,15 +370,15 @@ namespace Dawem.BusinessLogic.Provider
 
             #region Handle Response
 
-            var companiesList = await queryPaged.Select(e => new GetCompaniesResponseModel
+            var companiesList = await queryPaged.Select(company => new GetCompaniesResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                IdentityCode = e.IdentityCode,
-                IsActive = e.IsActive,
-                TotalNumberOfEmployees = e.TotalNumberOfEmployees,
-                LogoImagePath = uploadBLC.GetFilePath(e.LogoImageName, LeillaKeys.Companies)
+                Id = company.Id,
+                Code = company.Code,
+                Name = company.Name,
+                IdentityCode = company.IdentityCode,
+                IsActive = company.IsActive,
+                TotalNumberOfEmployees = company.TotalNumberOfEmployees,
+                LogoImagePath = uploadBLC.GetFilePath(company.LogoImageName, LeillaKeys.Companies)
             }).ToListAsync();
 
             return new GetCompaniesResponse
@@ -488,6 +488,8 @@ namespace Dawem.BusinessLogic.Provider
                     HeadquarterPostalCode = company.HeadquarterPostalCode,
                     NumberOfEmployees = company.NumberOfEmployees,
                     TotalNumberOfEmployees = company.TotalNumberOfEmployees,
+                    LogoImageName= company.LogoImageName,
+                    LogoImagePath = uploadBLC.GetFilePath(company.LogoImageName, LeillaKeys.Companies),
                     IsActive = company.IsActive,
                     Industries = company.CompanyIndustries
                     .Select(industry => new CompanyIndustryModel

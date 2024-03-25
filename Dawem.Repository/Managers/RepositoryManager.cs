@@ -62,6 +62,7 @@ namespace Dawem.Repository.Managers
         private ISubscriptionRepository subscriptionRepository;
         private ISubscriptionLogRepository subscriptionLogRepository;
         private IPlanRepository planRepository;
+        private IPlanNameTranslationRepository planNameTranslationRepository;
         private IDawemSettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
         private ICurrencyRepository currencyRepository;
@@ -149,6 +150,10 @@ namespace Dawem.Repository.Managers
         subscriptionLogRepository ??= new SubscriptionLogRepository(unitOfWork, generalSetting);
         public IPlanRepository PlanRepository =>
         planRepository ??= new PlanRepository(unitOfWork, generalSetting, requestInfo);
+        public IPlanNameTranslationRepository PlanNameTranslationRepository =>
+        planNameTranslationRepository ??= new PlanNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+
+        
 
         public IDawemSettingRepository DawemSettingRepository =>
          dawemSettingRepository ??= new DawemSettingRepository(unitOfWork, generalSetting);

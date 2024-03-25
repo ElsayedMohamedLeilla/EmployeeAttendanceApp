@@ -46,8 +46,7 @@ namespace Dawem.Domain.Entities.Employees
         public bool AllowChangeFingerprintMobileCode { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
-        public EmployeeType EmployeeType { get; set; }
-        public int? AnnualVacationBalance { get; set; }       
+        public EmployeeType EmployeeType { get; set; }    
         public List<GroupEmployee> EmployeeGroups { get; set; }
         public List<ZoneEmployee> Zones { get; set; }
         public List<VacationBalance> VacationBalances { get; set; }

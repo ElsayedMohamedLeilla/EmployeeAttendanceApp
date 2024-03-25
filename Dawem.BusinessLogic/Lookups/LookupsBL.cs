@@ -35,10 +35,9 @@ namespace Dawem.BusinessLogic.Lookups
             uploadBLC = _uploadBLC;
             repositoryManager = _repositoryManager;
         }
-
         public async Task<List<CountryLiteDTO>> GetCountries(GetCountriesCriteria criteria)
         {
-            var countryPredicate = PredicateBuilder.New<Domain.Entities.Lookups.Country>(true);
+            var countryPredicate = PredicateBuilder.New<Country>(true);
             var countryRepository = repositoryManager.CountryRepository;
 
             var getCurrentCountryCode = await GetCurrentCountryInfo();
@@ -152,7 +151,7 @@ namespace Dawem.BusinessLogic.Lookups
 
             #region sorting
 
-            var queryOrdered = languageRepository.OrderBy(query, nameof(Language.Id), LeillaKeys.Asc);
+            var queryOrdered = languageRepository.OrderBy(query, nameof(Language.Order), LeillaKeys.Asc);
 
             #endregion
 

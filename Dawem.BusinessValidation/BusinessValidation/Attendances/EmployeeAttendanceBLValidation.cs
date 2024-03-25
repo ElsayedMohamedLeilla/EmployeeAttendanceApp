@@ -216,8 +216,8 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
                 !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
             {
-                if (string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode))
+                if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }

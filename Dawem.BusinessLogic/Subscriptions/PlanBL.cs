@@ -189,7 +189,8 @@ namespace Dawem.BusinessLogic.Subscriptions
                 Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 EmployeeCost = plan.EmployeeCost,
                 IsTrial = plan.IsTrial,
-                IsActive = plan.IsActive
+                IsActive = plan.IsActive,
+                SubscriptionsCount = plan.Subscriptions.Count
             }).ToListAsync();
 
             return new GetPlansResponse
@@ -249,6 +250,7 @@ namespace Dawem.BusinessLogic.Subscriptions
                     EmployeeCost = plan.EmployeeCost,
                     IsActive = plan.IsActive,
                     Notes = plan.Notes,
+                    SubscriptionsCount = plan.Subscriptions.Count,
                     NameTranslations = plan.PlanNameTranslations.
                     Select(pt =>
                     new NameTranslationModel

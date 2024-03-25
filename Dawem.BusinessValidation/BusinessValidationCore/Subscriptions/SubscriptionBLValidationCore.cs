@@ -93,6 +93,5 @@ namespace Dawem.Validation.BusinessValidationCore.Subscriptions
             return result;
 
         }
-
     }
 }

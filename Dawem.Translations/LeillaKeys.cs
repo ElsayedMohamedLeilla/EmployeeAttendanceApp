@@ -573,6 +573,7 @@
         public const string SorryYouMustEnterName = "Sorry!!YouMustEnterName!";
         public const string SorryYouMustNotRepeatLanguagesWithNames = "Sorry!!YouMustNotRepeatLanguagesWithNames!";
         public const string SorryYouMustEnterNamesInArabicAndEnglishLanguages = "Sorry!!YouMustEnterNamesInArabicAndEnglishLanguages!";
+        public const string SorryThereIsAlreadyTrialPlanYouMustAddOneTrialPlan = "Sorry!!ThereIsAlreadyTrialPlanYouMustAddOneTrialPlan!";
         
     }
 

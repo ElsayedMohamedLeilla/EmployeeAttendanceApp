@@ -7,5 +7,6 @@ namespace Dawem.Models.Dtos.Reports.AttendanceSummaryReport
         public List<int> EmployeesIds { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public DateTime DateTo { get; set; }
     }
 }

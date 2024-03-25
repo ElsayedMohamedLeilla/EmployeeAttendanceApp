@@ -17,6 +17,7 @@ using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Subscriptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace Dawem.BusinessLogic.Subscriptions
 {
@@ -151,7 +152,7 @@ namespace Dawem.BusinessLogic.Subscriptions
             {
                 Id = subscription.Id,
                 Code = subscription.Code,
-                PlanName = isArabic ? subscription.Plan.NameAr : subscription.Plan.NameEn,
+                PlanName = subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 CompanyName = subscription.Company.Name,
                 EndDate = subscription.EndDate,
                 Status = subscription.Status,
@@ -174,7 +175,7 @@ namespace Dawem.BusinessLogic.Subscriptions
                 {
                     Code = subscription.Code,
                     CompanyName = subscription.Company.Name,
-                    PlanName = isArabic ? subscription.Plan.NameAr : subscription.Plan.NameEn,
+                    PlanName = subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     DurationInDays = subscription.DurationInDays,
                     StartDate = subscription.StartDate,
                     EndDate = subscription.EndDate,

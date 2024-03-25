@@ -9,6 +9,7 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Shared;
 using Dawem.Models.Dtos.Subscriptions.Plans;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Subscriptions.Plans;
@@ -93,34 +94,77 @@ namespace Dawem.BusinessLogic.Subscriptions
             #region Update Plan
 
             var getPlan = await repositoryManager.PlanRepository.GetEntityByConditionWithTrackingAsync(plan => !plan.IsDeleted
-            && plan.Id == model.Id);
+            && plan.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
 
-            if (getPlan != null)
+            getPlan.IsTrial = model.IsTrial;
+            getPlan.IsActive = model.IsActive;
+            getPlan.ModifiedDate = DateTime.Now;
+            getPlan.ModifyUserId = requestInfo.UserId;
+            getPlan.MinNumberOfEmployees = model.MinNumberOfEmployees;
+            getPlan.MaxNumberOfEmployees = model.MaxNumberOfEmployees;
+            getPlan.EmployeeCost = model.EmployeeCost;
+            getPlan.Notes = model.Notes;
+
+            await unitOfWork.SaveAsync();
+
+            #region Handle Update Name Translations
+
+            var exisNameTranslationsDbList = await repositoryManager.PlanNameTranslationRepository
+                    .Get(e => e.PlanId == getPlan.Id)
+                    .ToListAsync();
+
+            var existingNameTranslationsIds = exisNameTranslationsDbList.Select(e => e.Id)
+                .ToList();
+
+            var addedPlanNameTranslations = model.NameTranslations != null ? model.NameTranslations
+                .Where(ge => !existingNameTranslationsIds.Contains(ge.Id))
+                .Select(ge => new PlanNameTranslation
+                {
+                    PlanId = model.Id,
+                    LanguageId = ge.LanguageId,
+                    Name = ge.Name,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList() : new List<PlanNameTranslation>();
+
+            var removedPlanNameTranslationsIds = exisNameTranslationsDbList
+                .Where(ge => model.NameTranslations == null || !model.NameTranslations.Select(i => i.Id).Contains(ge.Id))
+                .Select(ge => ge.Id)
+                .ToList();
+
+            var removedPlanNameTranslations = exisNameTranslationsDbList
+                .Where(e => removedPlanNameTranslationsIds.Contains(e.Id))
+                .ToList();
+
+            var updatedPlanNameTranslations = exisNameTranslationsDbList.
+                Where(nt => model.NameTranslations != null && model.NameTranslations.
+                Any(mi => mi.Id == nt.Id && (mi.Name != nt.Name || mi.LanguageId != nt.LanguageId))).
+                ToList();
+
+            if (removedPlanNameTranslations.Count > 0)
+                repositoryManager.PlanNameTranslationRepository.BulkDeleteIfExist(removedPlanNameTranslations);
+            if (addedPlanNameTranslations.Count > 0)
+                repositoryManager.PlanNameTranslationRepository.BulkInsert(addedPlanNameTranslations);
+            if (updatedPlanNameTranslations.Count > 0)
             {
-                getPlan.NameAr = model.NameAr;
-                getPlan.NameEn = model.NameEn;
-                getPlan.IsTrial = model.IsTrial;
-                getPlan.IsActive = model.IsActive;
-                getPlan.ModifiedDate = DateTime.Now;
-                getPlan.ModifyUserId = requestInfo.UserId;
-                getPlan.MinNumberOfEmployees = model.MinNumberOfEmployees;
-                getPlan.MaxNumberOfEmployees = model.MaxNumberOfEmployees;
-                getPlan.EmployeeCost = model.EmployeeCost;
-                getPlan.Notes = model.Notes;
-
-                await unitOfWork.SaveAsync();
-
-                #region Handle Response
-                await unitOfWork.CommitAsync();
-                return true;
-                #endregion
+                updatedPlanNameTranslations.ForEach(i =>
+                {
+                    i.Name = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
+                    i.LanguageId = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.LanguageId ?? 0;
+                });
+                repositoryManager.PlanNameTranslationRepository.BulkUpdate(updatedPlanNameTranslations);
             }
+
             #endregion
 
-            else
-                throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
+            #endregion
 
+            #region Handle Response
 
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
         }
         public async Task<GetPlansResponse> Get(GetPlansCriteria criteria)
         {
@@ -142,8 +186,7 @@ namespace Dawem.BusinessLogic.Subscriptions
             {
                 Id = plan.Id,
                 Code = plan.Code,
-                NameAr = plan.NameAr,
-                NameEn = plan.NameEn,
+                Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 EmployeeCost = plan.EmployeeCost,
                 IsTrial = plan.IsTrial,
                 IsActive = plan.IsActive
@@ -178,10 +221,10 @@ namespace Dawem.BusinessLogic.Subscriptions
 
             #region Handle Response
 
-            var plansList = await queryPaged.Select(e => new GetPlansForDropDownResponseModel
+            var plansList = await queryPaged.Select(plan => new GetPlansForDropDownResponseModel
             {
-                Id = e.Id,
-                Name = e.NameAr
+                Id = plan.Id,
+                Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
             }).ToListAsync();
 
             return new GetPlansForDropDownResponse
@@ -199,14 +242,20 @@ namespace Dawem.BusinessLogic.Subscriptions
                 .Select(plan => new GetPlanInfoResponseModel
                 {
                     Code = plan.Code,
-                    NameAr = plan.NameAr,
-                    NameEn = plan.NameEn,
+                    Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsTrial = plan.IsTrial,
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
                     EmployeeCost = plan.EmployeeCost,
                     IsActive = plan.IsActive,
-                    Notes = plan.Notes
+                    Notes = plan.Notes,
+                    NameTranslations = plan.PlanNameTranslations.
+                    Select(pt =>
+                    new NameTranslationModel
+                    {
+                        Name = pt.Name,
+                        LanguageId = pt.LanguageId
+                    }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
 
             return plan;
@@ -218,14 +267,20 @@ namespace Dawem.BusinessLogic.Subscriptions
                 {
                     Id = plan.Id,
                     Code = plan.Code,
-                    NameAr = plan.NameAr,
-                    NameEn = plan.NameEn,
                     IsTrial = plan.IsTrial,
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
                     EmployeeCost = plan.EmployeeCost,
                     IsActive = plan.IsActive,
-                    Notes = plan.Notes
+                    Notes = plan.Notes,
+                    NameTranslations = plan.PlanNameTranslations.
+                    Select(pt =>
+                    new NameTranslationModel
+                    {
+                        Id = pt.Id,
+                        Name = pt.Name,
+                        LanguageId = pt.LanguageId
+                    }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
 
             return plan;

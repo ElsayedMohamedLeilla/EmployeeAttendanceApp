@@ -11,7 +11,7 @@ namespace Dawem.Validation.FluentValidation.Subscriptions.Plans
 
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt != null && nt.Count > 0 ).
-                WithMessage(LeillaKeys.SorryYouMustEnterAtLeastOneName);
+                WithMessage(LeillaKeys.SorryYouMustEnterPlanName);
 
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt.All(n => n.LanguageId > 0)).
@@ -20,6 +20,10 @@ namespace Dawem.Validation.FluentValidation.Subscriptions.Plans
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt.All(n => !string.IsNullOrEmpty(n.Name) && !string.IsNullOrWhiteSpace(n.Name))).
                 WithMessage(LeillaKeys.SorryYouMustEnterName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.GroupBy(nt => nt.LanguageId).ToList().All(g => g.Count() == 1)).
+                WithMessage(LeillaKeys.SorryYouMustNotRepeatLanguagesWithNames);
 
             RuleFor(model => model.MinNumberOfEmployees).
                 Must(n => n > 0).

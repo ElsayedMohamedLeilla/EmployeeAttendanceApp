@@ -13,5 +13,4 @@ namespace Dawem.Domain.Entities.Subscriptions
         public bool IsTrial { get; set; }
         public List<PlanNameTranslation> PlanNameTranslations { get; set; }
     }
-
 }

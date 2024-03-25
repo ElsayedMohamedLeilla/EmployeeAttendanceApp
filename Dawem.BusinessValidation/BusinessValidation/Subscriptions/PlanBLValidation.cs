@@ -21,12 +21,24 @@ namespace Dawem.Validation.BusinessValidation.Subscriptions
         }
         public async Task<bool> CreateValidation(CreatePlanModel model)
         {
-            /*var checkPlanDuplicate = await repositoryManager
-                .PlanRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId && c.Name == model.Name).AnyAsync();
-            if (checkPlanDuplicate)
+
+            #region Validate Arabic And English Languages
+
+            var getArabicAndEnglishLanguages = await repositoryManager.LanguageRepository.
+                Get(l => l.ISO2 == LeillaKeys.Ar || l.ISO2 == LeillaKeys.En).
+                ToListAsync();
+            if (getArabicAndEnglishLanguages != null && getArabicAndEnglishLanguages.Count == 2)
             {
-                throw new BusinessValidationException(LeillaKeys.SorryPlanNameIsDuplicated);
-            }*/
+                var languagesIds = getArabicAndEnglishLanguages.Select(l => l.Id).ToList();
+                var checkArAndEnCount = model.NameTranslations.Where(nt => languagesIds.Contains(nt.LanguageId)).Count() == 2;
+
+                if (!checkArAndEnCount)
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterNamesInArabicAndEnglishLanguages);
+
+            }
+
+            #endregion
+
 
             var checkPlanOverlap = await repositoryManager
                 .PlanRepository.Get(c => !c.IsDeleted && (model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&

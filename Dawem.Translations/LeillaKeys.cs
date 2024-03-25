@@ -573,7 +573,9 @@
         public const string SorryYouMustEnterName = "Sorry!!YouMustEnterName!";
         public const string SorryYouMustNotRepeatLanguagesWithNames = "Sorry!!YouMustNotRepeatLanguagesWithNames!";
         public const string SorryYouMustEnterNamesInArabicAndEnglishLanguages = "Sorry!!YouMustEnterNamesInArabicAndEnglishLanguages!";
-        
+        public const string SorryThereIsAlreadyTrialPlanYouMustAddOneTrialPlan = "Sorry!!ThereIsAlreadyTrialPlanYouMustAddOneTrialPlan!";
+        public const string SorryYouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType = "Sorry!!YouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType!";
+        public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
     }
 
 }

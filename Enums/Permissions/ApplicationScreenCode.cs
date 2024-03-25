@@ -44,6 +44,7 @@
         Summon,
         SummonMissingLog,
         NotificationStore,
-        AttendanceSummaryReport
+        AttendanceSummaryReport,
+        Company
     }
 }

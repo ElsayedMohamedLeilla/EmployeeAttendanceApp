@@ -385,7 +385,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                 }
                 repositoryManager.ZoneRepository.BulkInsert(ImportedList);
                 await unitOfWork.SaveAsync();
-                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.EmployeeEnteredSuccessfully, requestInfo?.Lang));
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully , requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ZoneEnteredSuccessfully,requestInfo?.Lang));
             }
             return result;
         }

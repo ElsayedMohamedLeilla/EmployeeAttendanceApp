@@ -480,12 +480,12 @@ namespace Dawem.BusinessLogic.Employees.Departments
                         Temp.InsertedFromExcel = true;
                         if (Temp.ManagerId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo?.Lang));
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryThisEmployeeNotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber , requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                         else if (Temp.ParentId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment + LeillaKeys.Space + AmgadKeys.NotFound + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound , requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber , requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                         else
@@ -495,13 +495,13 @@ namespace Dawem.BusinessLogic.Employees.Departments
                     }
                     else
                     {
-                        result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(foundDepartmentInDB.Name + LeillaKeys.Space + AmgadKeys.ThisEmployeeNumberIsUsedByEmployee + LeillaKeys.Space + LeillaKeys.Space + AmgadKeys.OnRowNumber + LeillaKeys.Space + row.RowNumber(), requestInfo.Lang));
+                        result.Add(AmgadKeys.DuplicationInDBProblem, foundDepartmentInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ThisDepartmentIsUsedBefore , requestInfo?.Lang) + LeillaKeys.Space  + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber,requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
                 }
                 repositoryManager.DepartmentRepository.BulkInsert(ImportedList);
                 await unitOfWork.SaveAsync();
-                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + AmgadKeys.DepartmentEnteredSuccessfully, requestInfo.Lang));
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully , requestInfo.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.DepartmentEnteredSuccessfully , requestInfo?.Lang));
             }
             return result;
         }

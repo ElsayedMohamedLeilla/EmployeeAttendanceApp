@@ -151,7 +151,7 @@ namespace Dawem.Translations
         public const string ValidationError = "ValidationError";
         public const string FileProblem = "FileProblem";
         public const string ExportedSuccessfully = "ExportedSuccessfully";
-        public const string Headersdonotmatchtheexpectedvalues = "HeadersDonotMatchTheExpectedValues";
+        public const string Headersdonotmatchtheexpectedvalues = "Headersdonotmatchtheexpectedvalues";
         public const string RowCountExceedsTheExpected = "RowCountExceedsTheExpected";
         public const string FileExtentionNotValidOnlyExcelFilesAllawed = "FileExtentionNotValidOnlyExcelFilesAllawed";
         public const string ImportedSuccessfully = "ImportedSuccessfully";
@@ -185,18 +185,17 @@ namespace Dawem.Translations
         public const string EmployeeEnteredSuccessfully = "EmployeeEnteredSuccessfully";
         public const string DepartmentEnteredSuccessfully = "DepartmentEnteredSuccessfully";
         public const string ZoneEmptyDraft = "ZoneEmptyDraft";
-
-
-
-
-
-
         public const string TheSameLatitudeLongtudeRaduisIsUsedBy = "TheSameLatitudeLongtudeRaduisIsUsedBy";
         public const string ThisLatitudeNotValid = "ThisLatitudeNotValid";
         public const string ThisLongtudeNotValid = "ThisLongtudeNotValid";
         public const string ThisRaduisNotValid = "ThisRaduisNotValid";
+        public const string ThisDepartmentIsUsedBefore = "ThisDepartmentIsUsedBefore";
+        public const string ZoneEnteredSuccessfully = "ZoneEnteredSuccessfully";
 
         
+
+
+
 
 
 

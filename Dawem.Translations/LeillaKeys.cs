@@ -332,6 +332,7 @@
         public const string EndOfWeekVacations = "EndOfWeekVacations:";
         public const string DoneCheckInSuccessfully = "DoneCheckInSuccessfully";
         public const string DoneCheckOutSuccessfully = "DoneCheckOutSuccessfully";
+        public const string DoneMakeSummonSuccessfully = "DoneMakeSummonSuccessfully";
         public const string SorryYouMustEnterTheLatitude = "Sorry!!YouMustEnterTheLatitude!";
         public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
         public const string SorryYouMustEnterCorrectLatitude = "Sorry!!YouMustEnterCorrectLatitude!";
@@ -576,6 +577,7 @@
         public const string SorryThereIsAlreadyTrialPlanYouMustAddOneTrialPlan = "Sorry!!ThereIsAlreadyTrialPlanYouMustAddOneTrialPlan!";
         public const string SorryYouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType = "Sorry!!YouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType!";
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
+        public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!"; 
     }
 
 }

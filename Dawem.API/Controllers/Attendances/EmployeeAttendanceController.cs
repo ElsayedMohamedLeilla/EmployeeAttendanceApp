@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Attendances;
+using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
@@ -25,8 +26,10 @@ namespace Dawem.API.Controllers.Attendances
                 return BadRequest();
             }
             var fingerPrintType = await employeeAttendanceBL.CreateFingerPrint(model);
-            var messageCode = fingerPrintType == Enums.Generals.FingerPrintType.CheckIn ?
-                 LeillaKeys.DoneCheckInSuccessfully : LeillaKeys.DoneCheckOutSuccessfully;
+            var messageCode = fingerPrintType == FingerPrintType.CheckIn ?
+                 LeillaKeys.DoneCheckInSuccessfully : fingerPrintType == FingerPrintType.Summon ? 
+                 LeillaKeys.DoneMakeSummonSuccessfully :
+                 LeillaKeys.DoneCheckOutSuccessfully;
             return Success(fingerPrintType, messageCode: messageCode);
         }
         [HttpGet]

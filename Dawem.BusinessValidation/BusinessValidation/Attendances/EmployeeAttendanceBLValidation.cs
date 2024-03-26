@@ -191,22 +191,27 @@ namespace Dawem.Validation.BusinessValidation.Attendances
 
             if (model.Type == FingerPrintType.Summon)
             {
-                var getSummon = await repositoryManager.SummonRepository
-                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDate >= s.DateAndTime &&
-                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDate) <= s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDate) <= s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDate) <= s.AllowedTime)) &&
+                summonId = await repositoryManager.SummonRepository
+                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.DateAndTime &&
+                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
                     ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                     (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
                     (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
                     (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
+                    .Select(s=>s.Id)
                     .FirstOrDefaultAsync();
 
-                if (getSummon == null)
+                if (summonId <= 0)
                     throw new BusinessValidationException(LeillaKeys.SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon);
-                else
-                    summonId = getSummon.Id;
 
+                var checkDoneBefore = await repositoryManager.EmployeeAttendanceCheckRepository.
+                    Get(c => !c.IsDeleted && c.SummonId == summonId && c.FingerPrintType == FingerPrintType.Summon).
+                    AnyAsync();
+
+                if (checkDoneBefore)
+                    throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneThisSummonBefore);
             }
 
             #endregion

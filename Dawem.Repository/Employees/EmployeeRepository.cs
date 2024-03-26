@@ -209,6 +209,37 @@ namespace Dawem.Repository.Employees
                             ea.LocalDate.Date <= criteria.DateTo.Date).Count() <= criteria.FilterTypeTo);
                         break;
                     case ReportFilterType.EarlyDepartures:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks != null && ea.EmployeeAttendanceChecks.
+                            Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) && ea.EmployeeAttendanceChecks.
+                            First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time < ea.ShiftCheckOutTime).
+                            SelectMany(e => e.EmployeeAttendanceChecks).
+                            GroupBy(e => e.EmployeeAttendanceId). 
+                            Select(group => EF.Functions.
+                            DateDiffMinute((DateTime)(object)group.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time,
+                            (DateTime)(object)group.First().EmployeeAttendance.ShiftCheckOutTime) / 60m).
+                            Sum() >= criteria.FilterTypeFrom.Value);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks != null && ea.EmployeeAttendanceChecks.
+                            Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) && ea.EmployeeAttendanceChecks.
+                            First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time < ea.ShiftCheckOutTime).
+                            SelectMany(e => e.EmployeeAttendanceChecks).
+                            GroupBy(e => e.EmployeeAttendanceId).
+                            Select(group => EF.Functions.
+                            DateDiffMinute((DateTime)(object)group.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time,
+                            (DateTime)(object)group.First().EmployeeAttendance.ShiftCheckOutTime) / 60m).
+                            Sum() <= criteria.FilterTypeTo.Value);
+
                         break;
                     case ReportFilterType.LateArrivals:
                         break;
@@ -230,7 +261,7 @@ namespace Dawem.Repository.Employees
                             ).Sum() >= criteria.FilterTypeFrom);
 
                         if (criteria.FilterTypeTo > 0)
-                            predicate = predicate.And(employee => employee.EmployeeRequests != null && 
+                            predicate = predicate.And(employee => employee.EmployeeRequests != null &&
                             employee.EmployeeRequests.Any(er => !er.IsDeleted &&
                             er.Status == RequestStatus.Accepted && er.Type == RequestType.Vacation) &&
                             employee.EmployeeRequests.Where(er => !er.IsDeleted && er.Type == RequestType.Vacation &&
@@ -254,7 +285,7 @@ namespace Dawem.Repository.Employees
                             ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
                             ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut)).
                             SelectMany(e => e.EmployeeAttendanceChecks).
-                            GroupBy(e=> e.EmployeeAttendanceId).
+                            GroupBy(e => e.EmployeeAttendanceId).
                             Select(ea => EF.Functions.
                             DateDiffMinute((DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time,
                             (DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60m).

@@ -28,6 +28,7 @@ namespace Dawem.Domain.Entities.Attendances
         public DateTime LocalDate { get; set; }
         public TimeOnly ShiftCheckInTime { get; set; }
         public TimeOnly ShiftCheckOutTime { get; set; }
+        public decimal? TotalWorkingHours { get; set; }
         public int AllowedMinutes { get; set; }
         public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
     }

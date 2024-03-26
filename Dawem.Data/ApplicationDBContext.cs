@@ -516,6 +516,17 @@ namespace Dawem.Data
 
             #endregion
 
+
+
+
+            #region Computed Columns
+
+            builder.Entity<EmployeeAttendance>().
+                Property(e => e.TotalWorkingHours).
+                HasComputedColumnSql("dbo.TotalWorkingHours(Id)");
+
+            #endregion
+
         }
 
         public DbSet<Language> Languages { get; set; }

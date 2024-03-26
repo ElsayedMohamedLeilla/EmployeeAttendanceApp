@@ -516,14 +516,23 @@ namespace Dawem.Data
 
             #endregion
 
-
-
-
             #region Computed Columns
 
             builder.Entity<EmployeeAttendance>().
                 Property(e => e.TotalWorkingHours).
                 HasComputedColumnSql("dbo.TotalWorkingHours(Id)");
+
+            builder.Entity<EmployeeAttendance>().
+                Property(e => e.TotalLateArrivalsHours).
+                HasComputedColumnSql("dbo.TotalLateArrivalsHours(Id)");
+
+            builder.Entity<EmployeeAttendance>().
+                Property(e => e.TotalEarlyDeparturesHours).
+                HasComputedColumnSql("dbo.TotalEarlyDeparturesHours(Id)");
+
+            builder.Entity<EmployeeAttendance>().
+                Property(e => e.TotalOverTimeHours).
+                HasComputedColumnSql("dbo.TotalOverTimeHours(Id)");
 
             #endregion
 

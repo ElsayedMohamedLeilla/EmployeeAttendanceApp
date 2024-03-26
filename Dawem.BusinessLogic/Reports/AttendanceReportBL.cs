@@ -313,9 +313,9 @@ namespace Dawem.BusinessLogic.Reports
 
                     EmployeeAttendanceChecks = ea.EmployeeAttendanceChecks
                     .Where(eac => !eac.IsDeleted && (eac.FingerPrintType == FingerPrintType.CheckIn &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckIn)
+                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(eac => eac.Time) || eac.FingerPrintType == FingerPrintType.CheckOut &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckOut)
+                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(eac => eac.Time)))
                     .Select(eac => new
                     {
@@ -386,22 +386,22 @@ namespace Dawem.BusinessLogic.Reports
                     ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) &&
                     ea.EmployeeAttendanceChecks.FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time < ea.ShiftCheckOutTime)
                             .Select(ea => (ea.ShiftCheckOutTime - ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time).TotalHours.ToDecimal())
+                            .LastOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time).TotalHours.ToDecimal())
                             .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
                     WorkingHoursCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
                     ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
                     ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut))
                             .Select(ea => (ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time).TotalHours.ToDecimal())
+                            .LastOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.EmployeeAttendanceChecks
+                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time).TotalMilliseconds.ToDecimal() / 3600000)
                             .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
                     OverTimeCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
                     ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) &&
-                    ea.EmployeeAttendanceChecks.FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time > ea.ShiftCheckOutTime)
+                    ea.EmployeeAttendanceChecks.LastOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time > ea.ShiftCheckOutTime)
                             .Select(ea => (ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.ShiftCheckOutTime).TotalHours.ToDecimal())
+                            .LastOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.ShiftCheckOutTime).TotalHours.ToDecimal())
                             .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
                     VacationsCount = (employee.Vacations != null ? employee.Vacations.Count : 0)

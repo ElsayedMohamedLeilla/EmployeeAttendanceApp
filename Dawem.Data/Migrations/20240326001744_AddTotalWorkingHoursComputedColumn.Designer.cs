@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240326001744_AddTotalWorkingHoursComputedColumn")]
+    partial class AddTotalWorkingHoursComputedColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,24 +97,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int>("ShiftId")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalEarlyDeparturesHours")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)")
-                        .HasComputedColumnSql("dbo.TotalEarlyDeparturesHours(Id)");
-
-                    b.Property<decimal?>("TotalLateArrivalsHours")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)")
-                        .HasComputedColumnSql("dbo.TotalLateArrivalsHours(Id)");
-
-                    b.Property<decimal?>("TotalOverTimeHours")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasPrecision(30, 20)
-                        .HasColumnType("decimal(30,20)")
-                        .HasComputedColumnSql("dbo.TotalOverTimeHours(Id)");
 
                     b.Property<decimal?>("TotalWorkingHours")
                         .ValueGeneratedOnAddOrUpdate()

@@ -200,19 +200,76 @@ namespace Dawem.Repository.Employees
                             predicate = predicate.And(e => e.EmployeeAttendances != null &&
                             e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
-                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() >= criteria.FilterTypeFrom);
+                            ea.LocalDate.Date <= criteria.DateTo.Date && 
+                            ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
+                            (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut))).
+                            Count() >= criteria.FilterTypeFrom);
 
                         if (criteria.FilterTypeTo > 0)
                             predicate = predicate.And(e => e.EmployeeAttendances != null &&
                             e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
-                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() <= criteria.FilterTypeTo);
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
+                            (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut))).
+                            Count() >= criteria.FilterTypeTo);
                         break;
                     case ReportFilterType.EarlyDepartures:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalEarlyDeparturesHours > 0).
+                            Sum(e => e.TotalEarlyDeparturesHours) >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalEarlyDeparturesHours > 0).
+                            Sum(e => e.TotalEarlyDeparturesHours) <= criteria.FilterTypeTo);
+
                         break;
                     case ReportFilterType.LateArrivals:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalLateArrivalsHours > 0).
+                            Sum(e => e.TotalLateArrivalsHours) >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalLateArrivalsHours > 0).
+                            Sum(e => e.TotalLateArrivalsHours) <= criteria.FilterTypeTo);
+
                         break;
                     case ReportFilterType.OverTime:
+
+                        if (criteria.FilterTypeFrom > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalOverTimeHours > 0).
+                            Sum(e => e.TotalOverTimeHours) >= criteria.FilterTypeFrom);
+
+                        if (criteria.FilterTypeTo > 0)
+                            predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
+                            employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
+                            ea.LocalDate.Date >= criteria.DateFrom.Date &&
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.TotalOverTimeHours > 0).
+                            Sum(e => e.TotalOverTimeHours) <= criteria.FilterTypeTo);
+
                         break;
                     case ReportFilterType.Vacations:
 
@@ -230,7 +287,7 @@ namespace Dawem.Repository.Employees
                             ).Sum() >= criteria.FilterTypeFrom);
 
                         if (criteria.FilterTypeTo > 0)
-                            predicate = predicate.And(employee => employee.EmployeeRequests != null && 
+                            predicate = predicate.And(employee => employee.EmployeeRequests != null &&
                             employee.EmployeeRequests.Any(er => !er.IsDeleted &&
                             er.Status == RequestStatus.Accepted && er.Type == RequestType.Vacation) &&
                             employee.EmployeeRequests.Where(er => !er.IsDeleted && er.Type == RequestType.Vacation &&
@@ -250,30 +307,16 @@ namespace Dawem.Repository.Employees
                             employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
                             ea.LocalDate.Date <= criteria.DateTo.Date &&
-                            ea.EmployeeAttendanceChecks != null &&
-                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
-                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut)).
-                            SelectMany(e => e.EmployeeAttendanceChecks).
-                            GroupBy(e=> e.EmployeeAttendanceId).
-                            Select(ea => EF.Functions.
-                            DateDiffMinute((DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time,
-                            (DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60m).
-                            Sum() >= criteria.FilterTypeFrom);
+                            ea.TotalWorkingHours > 0).
+                            Sum(e => e.TotalWorkingHours) >= criteria.FilterTypeFrom);
 
                         if (criteria.FilterTypeTo > 0)
                             predicate = predicate.And(employee => employee.EmployeeAttendances != null &&
                             employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
                             ea.LocalDate.Date <= criteria.DateTo.Date &&
-                            ea.EmployeeAttendanceChecks != null &&
-                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
-                            ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut)).
-                            SelectMany(e => e.EmployeeAttendanceChecks).
-                            GroupBy(e => e.EmployeeAttendanceId).
-                            Select(ea => EF.Functions.
-                            DateDiffMinute((DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time,
-                            (DateTime)(object)ea.First(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60m).
-                            Sum() <= criteria.FilterTypeTo);
+                            ea.TotalWorkingHours > 0).
+                            Sum(e => e.TotalWorkingHours) <= criteria.FilterTypeTo);
 
                         break;
                     default:

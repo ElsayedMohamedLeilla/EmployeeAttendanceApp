@@ -1,5 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Reports;
+﻿using Dawem.Contract.BusinessLogic.Reports;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Employees;
@@ -311,11 +310,16 @@ namespace Dawem.BusinessLogic.Reports
                     ea.ShiftCheckOutTime,
                     ea.AllowedMinutes,
 
+                    ea.TotalWorkingHours,
+                    ea.TotalEarlyDeparturesHours,
+                    ea.TotalLateArrivalsHours,
+                    ea.TotalOverTimeHours,
+
                     EmployeeAttendanceChecks = ea.EmployeeAttendanceChecks
                     .Where(eac => !eac.IsDeleted && (eac.FingerPrintType == FingerPrintType.CheckIn &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckIn)
+                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(eac => eac.Time) || eac.FingerPrintType == FingerPrintType.CheckOut &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => eac.FingerPrintType == FingerPrintType.CheckOut)
+                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(eac => eac.Time)))
                     .Select(eac => new
                     {
@@ -375,34 +379,21 @@ namespace Dawem.BusinessLogic.Reports
 
                     ActualAttendCount = employee.EmployeeAttendances.Count() + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Day, requestInfo.Lang),
 
-                    LateArrivalsCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
-                         ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
-                         ea.EmployeeAttendanceChecks.FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time > ea.ShiftCheckInTime.AddMinutes(ea.AllowedMinutes))
-                                .Select(ea => (ea.EmployeeAttendanceChecks
-                                .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time - ea.ShiftCheckInTime.AddMinutes(ea.AllowedMinutes)).TotalHours.ToDecimal())
-                                .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+                    LateArrivalsCount = Math.Round(employee.EmployeeAttendances.
+                    Where(ea => ea.TotalLateArrivalsHours > 0).Sum(ea => ea.TotalLateArrivalsHours.Value), 2) +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
-                    EarlyDeparturesCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
-                    ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) &&
-                    ea.EmployeeAttendanceChecks.FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time < ea.ShiftCheckOutTime)
-                            .Select(ea => (ea.ShiftCheckOutTime - ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time).TotalHours.ToDecimal())
-                            .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+                    EarlyDeparturesCount = Math.Round(employee.EmployeeAttendances.
+                    Where(ea => ea.TotalEarlyDeparturesHours > 0).Sum(ea => ea.TotalEarlyDeparturesHours.Value), 2) +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
-                    WorkingHoursCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
-                    ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckIn) &&
-                    ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut))
-                            .Select(ea => (ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckIn).Time).TotalHours.ToDecimal())
-                            .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+                    WorkingHoursCount = Math.Round(employee.EmployeeAttendances.
+                    Where(ea => ea.TotalWorkingHours > 0).Sum(ea => ea.TotalWorkingHours.Value), 2) +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
-                    OverTimeCount = Math.Round(employee.EmployeeAttendances.Where(ea =>
-                    ea.EmployeeAttendanceChecks.Any(eac => eac.FingerPrintType == FingerPrintType.CheckOut) &&
-                    ea.EmployeeAttendanceChecks.FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time > ea.ShiftCheckOutTime)
-                            .Select(ea => (ea.EmployeeAttendanceChecks
-                            .FirstOrDefault(eac => eac.FingerPrintType == FingerPrintType.CheckOut).Time - ea.ShiftCheckOutTime).TotalHours.ToDecimal())
-                            .Sum(), 2) + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+                    OverTimeCount = Math.Round(employee.EmployeeAttendances.
+                    Where(ea => ea.TotalOverTimeHours > 0).Sum(ea => ea.TotalOverTimeHours.Value), 2) +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
                     VacationsCount = (employee.Vacations != null ? employee.Vacations.Count : 0)
                     + LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Day, requestInfo.Lang),

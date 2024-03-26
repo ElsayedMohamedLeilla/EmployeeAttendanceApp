@@ -4,6 +4,7 @@
     {
         Employees,
         Departments,
-        Zones
+        Zones,
+        EmployeeAttendance
     }
 }

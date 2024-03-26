@@ -200,13 +200,19 @@ namespace Dawem.Repository.Employees
                             predicate = predicate.And(e => e.EmployeeAttendances != null &&
                             e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
-                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() >= criteria.FilterTypeFrom);
+                            ea.LocalDate.Date <= criteria.DateTo.Date && 
+                            ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
+                            (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut))).
+                            Count() >= criteria.FilterTypeFrom);
 
                         if (criteria.FilterTypeTo > 0)
                             predicate = predicate.And(e => e.EmployeeAttendances != null &&
                             e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
-                            ea.LocalDate.Date <= criteria.DateTo.Date).Count() <= criteria.FilterTypeTo);
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
+                            ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
+                            (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut))).
+                            Count() >= criteria.FilterTypeTo);
                         break;
                     case ReportFilterType.EarlyDepartures:
 

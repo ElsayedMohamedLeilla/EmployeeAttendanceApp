@@ -55,8 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\uploads\AssignmentRequests\" />
+    <Folder Include="wwwroot\uploads\Companies\" />
+    <Folder Include="wwwroot\uploads\Employees\" />
     <Folder Include="wwwroot\uploads\ExcelEmptyDrafts\" />
     <Folder Include="wwwroot\uploads\JustificationRequests\" />
+    <Folder Include="wwwroot\uploads\Users\" />
     <Folder Include="wwwroot\uploads\VacationRequests\" />
   </ItemGroup>
 

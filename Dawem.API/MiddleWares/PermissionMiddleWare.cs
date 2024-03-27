@@ -9,8 +9,6 @@ using Dawem.Models.Criteria.Others;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Dawem.API.MiddleWares
 {
@@ -62,7 +60,7 @@ namespace Dawem.API.MiddleWares
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
                                    requestInfo?.Lang) + LeillaKeys.RightBracket +
-                                   LeillaKeys.Space + 
+                                   LeillaKeys.Space +
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Screen.Value.ToString() + LeillaKeys.Screen,

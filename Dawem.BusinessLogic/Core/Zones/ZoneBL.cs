@@ -289,10 +289,10 @@ namespace Dawem.BusinessLogic.Core.Zones
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3 });//Zone Name Lat Long can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
-            string[] ExpectedHeaders = { "ZoneName", "Latitude", "Longitude", "Radius", "IsActive" };
-            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+           // string[] ExpectedHeaders = { "ZoneName", "Latitude", "Longitude", "Radius", "IsActive" };
+            iniValidationModelDTO.ExpectedHeaders = typeof(ZoneHeaderDraftDTO).GetProperties().Select(prop=> prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
-            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 3 });//Zone Name lat long  can't be duplicated
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//Zone Name lat long  can't be duplicated
             #endregion
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
@@ -309,7 +309,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                 Zone Temp = new();
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
-                var getNextCode = await repositoryManager.EmployeeRepository
+                var getNextCode = await repositoryManager.ZoneRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
@@ -373,7 +373,7 @@ namespace Dawem.BusinessLogic.Core.Zones
                         }
                         else
                         {
-                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.TheSameLatitudeLongtudeRaduisIsUsedBy, requestInfo?.Lang) + LeillaKeys.Space + foundZoneInDB.Name + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            result.Add(AmgadKeys.DuplicationInDBProblem, TranslationHelper.GetTranslation(AmgadKeys.TheSameLatitudeLongtudeRaduisIsUsedBy, requestInfo?.Lang) + LeillaKeys.Space + foundZoneInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                     }

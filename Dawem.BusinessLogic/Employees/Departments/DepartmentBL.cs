@@ -15,6 +15,7 @@ using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
 using Dawem.Models.Dtos.Excel.Departments;
+using Dawem.Models.Dtos.Excel.Zones;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Departments;
 using Dawem.Translations;
@@ -436,8 +437,8 @@ namespace Dawem.BusinessLogic.Employees.Departments
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1 });//department Name can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Departments;
-            string[] ExpectedHeaders = { "DepartmentName" ,"ParentDepartment", "ManagerName", "IsActive" };
-            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            //string[] ExpectedHeaders = { "DepartmentName" ,"ParentDepartment", "ManagerName", "IsActive" };
+            iniValidationModelDTO.ExpectedHeaders = typeof(DepartmentHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated
             #endregion
@@ -463,7 +464,7 @@ namespace Dawem.BusinessLogic.Employees.Departments
                .MaxAsync();
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
-                    var foundDepartmentInDB = await repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString()).FirstOrDefaultAsync();
+                    var foundDepartmentInDB = await repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).FirstOrDefaultAsync();
                     if (foundDepartmentInDB == null) // Department Name not found
                     {
                         getNextCode++;

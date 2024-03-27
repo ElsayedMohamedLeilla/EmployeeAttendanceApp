@@ -11,6 +11,8 @@ namespace Dawem.Translations
         public const string NotificationIcons = "NotificationIcons";
         public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
         public const string DepartmentEmptyDraft = "DepartmentEmptyDraft";
+        public const string EmployeeAttendanceEmptyDraft = "EmployeeAttendanceEmptyDraft";
+
         public const string MissMatchDataType = "MissMatchDataType";
 
         
@@ -191,8 +193,13 @@ namespace Dawem.Translations
         public const string ThisRaduisNotValid = "ThisRaduisNotValid";
         public const string ThisDepartmentIsUsedBefore = "ThisDepartmentIsUsedBefore";
         public const string ZoneEnteredSuccessfully = "ZoneEnteredSuccessfully";
+        public const string SorryThisLocalDateIsNotValid = "Sorry!!ThisLocalDateIsNotValid!";
+        public const string SorryThisTimeIsNotValid = "Sorry!!ThisTimeIsNotValid!";
+        public const string EmployeeAttendanceEnteredSuccessfully = "EmployeeAttendanceEnteredSuccessfully";
 
         
+
+
 
 
 

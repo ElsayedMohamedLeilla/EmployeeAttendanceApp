@@ -470,10 +470,10 @@ namespace Dawem.BusinessLogic.Employees.Departments
                         Temp = new();
                         Temp.Code = getNextCode;
                         Temp.AddedApplicationType = ApplicationType.Web;
-                        Temp.Name = row.Cell(2).GetString();
-                        Temp.ManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                        Temp.Name = row.Cell(1).GetString().Trim();
+                        Temp.ManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                         Temp.IsActive = bool.Parse(row.Cell(4).GetString());
-                        Temp.ParentId = repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.IsActive && e.Name == row.Cell(2).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
+                        Temp.ParentId = repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(2).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                         Temp.CompanyId = requestInfo.CompanyId;
                         Temp.AddedDate = DateTime.Now;
                         Temp.AddUserId = requestInfo.UserId;

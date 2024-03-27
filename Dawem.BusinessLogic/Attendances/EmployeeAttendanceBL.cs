@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Attendances;
+﻿using ClosedXML.Excel;
+using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Contract.BusinessValidation.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -9,10 +10,13 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Dashboard;
 using Dawem.Translations;
+using Dawem.Validation.BusinessValidation.ExcelValidations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Attendances
@@ -66,7 +70,7 @@ namespace Dawem.BusinessLogic.Attendances
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress,
-                    RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ? 
+                    RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                     RecognitionWay.FingerPrint : model.RecognitionWay
                 });
 
@@ -124,7 +128,7 @@ namespace Dawem.BusinessLogic.Attendances
                         Latitude = model.Latitude,
                         Longitude = model.Longitude,
                         IpAddress = requestInfo.RemoteIpAddress,
-                        RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ? 
+                        RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                         RecognitionWay.FingerPrint : model.RecognitionWay
                     } }
                 };
@@ -677,6 +681,193 @@ namespace Dawem.BusinessLogic.Attendances
 
             #endregion
 
+        }
+
+        public async Task<MemoryStream> ExportDraft()
+        {
+            EmptyExcelDraftModelDTO employeeAttendanceHeaderDraftDTO = new();
+            employeeAttendanceHeaderDraftDTO.FileName = AmgadKeys.EmployeeAttendanceEmptyDraft;
+            employeeAttendanceHeaderDraftDTO.Obj = new EmployeeAttendanceHeaderDraftDTO();
+            employeeAttendanceHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.EmployeeAttendance;
+            return ExcelManager.ExportEmptyDraft(employeeAttendanceHeaderDraftDTO);
+        }
+
+        public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
+        {
+            #region Fill IniValidationModelDTO
+            IniValidationModelDTO iniValidationModelDTO = new();
+            iniValidationModelDTO.FileStream = importedFile;
+            iniValidationModelDTO.MaxRowCount = 0;
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3, 4, 5, 6 });//Zone Name Lat Long can't be null
+            iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
+            string[] ExpectedHeaders = { "EmployeeName", "LocalDate",
+                                         "Latitude", "Longitude", "FingerPrintType" ,
+                                         "RecognitionWay"
+                                       };
+            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            iniValidationModelDTO.Lang = requestInfo?.Lang;
+            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 2 });//EmployeeAttendance  LocalDate Time  can't be duplicated
+            #endregion
+            Dictionary<string, string> result = new();
+            var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
+            if (validationMessages.Count > 0)
+            {
+                foreach (var kvp in validationMessages)
+                {
+                    result.Add(kvp.Key, kvp.Value);
+                }
+            }
+            else
+            {
+                List<EmployeeAttendance> ImportedList = new();
+                List<EmployeeAttendanceCheck> CImportedList = new();
+                EmployeeAttendance Temp = new();
+                EmployeeAttendanceCheck CTemp = new();
+                using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
+                var worksheet = workbook.Worksheet(1);
+                #region Set Employee Attendance code
+                var getNextCode = await repositoryManager.EmployeeAttendanceRepository
+                    .Get(e => e.CompanyId == requestInfo.CompanyId)
+                    .Select(e => e.Code)
+                    .DefaultIfEmpty()
+                    .MaxAsync();
+
+                #endregion
+                foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
+                {
+                    getNextCode++;
+                    #region Check Valid Lat Long
+                    double tempLatitude;
+                    double tempLongtude;
+                    DateTime localDate;
+                    Temp = new();
+                    int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
+                    #endregion
+                    if (employeeId != 0)
+                    {
+                        if (DateTime.TryParse(row.Cell(2).GetString().Trim(), out localDate))
+                        {
+                            if (double.TryParse(row.Cell(3).GetString().Trim(), out tempLatitude))
+                            {
+                                if (double.TryParse(row.Cell(4).GetString().Trim(), out tempLongtude))
+                                {
+
+                                }
+                                else
+                                {
+                                    result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.ThisLongtudeNotValid, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                                    return result;
+                                }
+                            }
+                            else
+                            {
+                                result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.ThisLatitudeNotValid, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                                return result;
+                            }
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryThisLocalDateIsNotValid, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(LeillaKeys.SorryEmployeeNotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+
+                    #region Business Validation
+                    FingerprintModel model = new()
+                    {
+                        Latitude = tempLatitude,
+                        Longitude = tempLongtude,
+                        RecognitionWay = row.Cell(6).GetString() == "FingerPrint" ? RecognitionWay.FingerPrint :
+                                         row.Cell(6).GetString() == "FaceRecognition" ? RecognitionWay.FaceRecognition :
+                                         row.Cell(6).GetString() == "PinRecognition" ? RecognitionWay.PinRecognition :
+                                         row.Cell(6).GetString() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
+                                         row.Cell(6).GetString() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
+                                         RecognitionWay.NotSet,
+                        Type = row.Cell(9).GetString() == "CheckIn" ? FingerPrintType.CheckIn :
+                                         row.Cell(5).GetString() == "CheckOut" ? FingerPrintType.CheckOut :
+                                         row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
+                                         row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
+                                         row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
+                                         FingerPrintType.CheckIn,
+
+
+
+                    };
+                    var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
+                    #endregion
+                    var getAttandanceId = await repositoryManager
+                                         .EmployeeAttendanceRepository
+                                         .Get(e => !e.IsDeleted && e.EmployeeId == employeeId
+                                          && e.LocalDate.Date == localDate.Date)
+                                         .Select(a => a.Id)
+                                         .FirstOrDefaultAsync();
+
+
+                    if (getAttandanceId > 0)
+                    {
+                        CImportedList.Add(new EmployeeAttendanceCheck
+                        {
+                            EmployeeAttendanceId = getAttandanceId,
+                            SummonId = validationResult.SummonId,
+                            ZoneId = validationResult.ZoneId,
+                            FingerPrintType = validationResult.FingerPrintType,
+                            IsActive = true,
+                            Time = TimeOnly.FromTimeSpan(localDate.TimeOfDay),
+                            Latitude = model.Latitude,
+                            Longitude = model.Longitude,
+                            IpAddress = requestInfo.RemoteIpAddress,
+                            RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
+                            RecognitionWay.FingerPrint : model.RecognitionWay,
+                            InsertedFromExcel = true
+
+                        });
+                    }
+                    else
+                    {
+                        #region Insert Employee Attendance
+                        var employeeAttendance = new EmployeeAttendance
+                        {
+                            InsertedFromExcel = true,
+                            Code = getNextCode,
+                            CompanyId = requestInfo.CompanyId,
+                            ScheduleId = validationResult.ScheduleId,
+                            ShiftId = validationResult.ShiftId,
+                            ShiftCheckInTime = validationResult.ShiftCheckInTime,
+                            ShiftCheckOutTime = validationResult.ShiftCheckOutTime,
+                            AllowedMinutes = validationResult.AllowedMinutes,
+                            AddedApplicationType = requestInfo.ApplicationType,
+                            AddUserId = requestInfo.UserId,
+                            LocalDate = localDate,
+                            EmployeeId = employeeId,
+                            IsActive = true,
+                            EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
+                            FingerPrintType = validationResult.FingerPrintType,
+                            IsActive = true,
+                            ZoneId = validationResult.ZoneId,
+                            Time = TimeOnly.FromTimeSpan(validationResult.LocalDate.TimeOfDay),
+                            Latitude = model.Latitude,
+                            Longitude = model.Longitude,
+                            IpAddress = requestInfo.RemoteIpAddress,
+                            RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
+                            RecognitionWay.FingerPrint : model.RecognitionWay }}
+                        };
+
+                        ImportedList.Add(employeeAttendance);
+                        #endregion
+                    }
+                }
+                repositoryManager.EmployeeAttendanceRepository.BulkInsert(ImportedList);
+                repositoryManager.EmployeeAttendanceCheckRepository.BulkInsert(CImportedList);
+                await unitOfWork.SaveAsync();
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully, requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.EmployeeAttendanceEnteredSuccessfully, requestInfo?.Lang));
+            }
+            return result;
         }
     }
 }

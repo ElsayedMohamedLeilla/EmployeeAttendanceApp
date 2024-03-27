@@ -20,25 +20,31 @@ namespace Dawem.Validation.BusinessValidation.ExcelValidations
             if (iniValidationDTO.MaxRowCount <= 0 && iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees)
             {
                 validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.YouDonotAllowToAddAnyEmployee, iniValidationDTO.Lang));
+                return validationMessages;
+
             }
             if (!IsvalidExcel)
             {
                 validationMessages.Add(AmgadKeys.FileProblem, TranslationHelper.GetTranslation(AmgadKeys.FileExtentionNotValidOnlyExcelFilesAllawed, iniValidationDTO.Lang));
+                return validationMessages;
             }
             // Check header
             else if (!iniValidationDTO.ExpectedHeaders.SequenceEqual(actualHeaders))
             {
                 validationMessages.Add(AmgadKeys.HeaderProblem, TranslationHelper.GetTranslation(AmgadKeys.Headersdonotmatchtheexpectedvalues, iniValidationDTO.Lang));
+                return validationMessages;
             }
             // Check row count
             else if (rowCount > iniValidationDTO.MaxRowCount + 1 && iniValidationDTO.ExcelExportScreen == ExcelExportScreen.Employees) // add 1 to exclude header from count
             {
                 validationMessages.Add(AmgadKeys.RowCountProblem, TranslationHelper.GetTranslation(AmgadKeys.RowCountExceedsTheExpected, iniValidationDTO.Lang));
+                return validationMessages;
             }
             // if no data found
             else if (rowCount == 1)
             {
                 validationMessages.Add(AmgadKeys.EmptyDataProblem, TranslationHelper.GetTranslation(AmgadKeys.NoDataImportedInFileTheFileIsEmpty, iniValidationDTO.Lang));
+                return validationMessages;
             }
             else
             {
@@ -81,6 +87,7 @@ namespace Dawem.Validation.BusinessValidation.ExcelValidations
                              $"{(TranslationHelper.GetTranslation(AmgadKeys.DuplicateColumnValueFound, iniValidationDTO.Lang))} ({cellReferences})");
                     }
                 }
+                
             }
             List<Tuple<int, string>> nullColumns = new List<Tuple<int, string>>();
             foreach (int columnIndex in iniValidationDTO.ColumnIndexToCheckNull)

@@ -34,5 +34,7 @@ namespace Dawem.Domain.Entities.Attendances
         public decimal? TotalOverTimeHours { get; set; }
         public int AllowedMinutes { get; set; }
         public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
+
+        public bool InsertedFromExcel { get; set; }
     }
 }

@@ -29,6 +29,8 @@ namespace Dawem.Domain.Entities.Attendances
         public string IpAddress { get; set; }
         public FingerPrintType FingerPrintType { get; set; }
         public RecognitionWay RecognitionWay { get; set; }
+        public bool InsertedFromExcel { get; set; }
+
 
     }
 }

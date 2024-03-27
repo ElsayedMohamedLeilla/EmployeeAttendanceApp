@@ -15,5 +15,8 @@ namespace Dawem.Contract.BusinessLogic.Attendances
         Task<bool> Delete(DeleteEmployeeAttendanceModel model);
         Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations();
 
+        public Task<MemoryStream> ExportDraft();
+        public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
+
     }
 }

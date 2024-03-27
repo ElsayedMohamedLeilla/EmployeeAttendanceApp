@@ -12,6 +12,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
+using Dawem.Models.Dtos.Excel.Departments;
 using Dawem.Models.Dtos.Excel.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
@@ -491,14 +492,14 @@ namespace Dawem.BusinessLogic.Employees
             iniValidationModelDTO.FileStream = importedFile;
             iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
                                                - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
-            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2,3,4,5,6, 7,8,9,10,11,12,13 });//employee Number & Name & Email
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
 
-            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
-                                        , "ScheduleName",
-                                         "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
-                                         "AttendanceType","EmployeeType","IsActive"};
-            iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
+            //string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
+            //                            , "ScheduleName",
+            //                             "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
+            //                             "AttendanceType","EmployeeType","IsActive"};
+            iniValidationModelDTO.ExpectedHeaders = typeof(EmployeeHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number
             #endregion
@@ -548,13 +549,13 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.JobTitleId = repositoryManager.JobTitleRepository.Get(j => j.IsActive && !j.IsDeleted && j.CompanyId == requestInfo.CompanyId && j.Name == row.Cell(4).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Name == row.Cell(5).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(6).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
-                                    Temp.Email = row.Cell(7).GetString();
-                                    Temp.MobileNumber = row.Cell(8).GetString();
-                                    Temp.Address = row.Cell(9).GetString();
-                                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
-                                    Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
-                                    Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                                    Temp.IsActive = bool.Parse(row.Cell(13).GetString());
+                                    Temp.Email = row.Cell(7).GetString().Trim();
+                                    Temp.MobileNumber = row.Cell(8).GetString().Trim();
+                                    Temp.Address = row.Cell(9).GetString().Trim();
+                                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString().Trim());
+                                    Temp.AttendanceType = row.Cell(11).GetString().Trim() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString().Trim() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString().Trim() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
+                                    Temp.EmployeeType = row.Cell(12).GetString().Trim() == "Military" ? EmployeeType.Military : row.Cell(8).GetString().Trim() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString().Trim() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString().Trim() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
+                                    Temp.IsActive = bool.Parse(row.Cell(13).GetString().Trim());
                                     Temp.CompanyId = requestInfo.CompanyId;
                                     Temp.AddedDate = DateTime.Now;
                                     Temp.AddUserId = requestInfo.UserId;

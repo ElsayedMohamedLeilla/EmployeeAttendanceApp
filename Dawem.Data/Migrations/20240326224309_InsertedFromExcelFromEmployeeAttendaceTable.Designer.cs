@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240326224309_InsertedFromExcelFromEmployeeAttendaceTable")]
+    partial class InsertedFromExcelFromEmployeeAttendaceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4297,15 +4300,15 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("EndDateAndTimeUTC")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool?>("ForAllEmployees")
                         .HasColumnType("bit");
@@ -4319,9 +4322,6 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LocalDateAndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
 
@@ -4334,9 +4334,6 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("StartDateAndTimeUTC")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("TimeType")
                         .HasColumnType("int");
@@ -4544,7 +4541,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("SummonGroups", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonLog", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonMissingLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4563,6 +4560,9 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -4572,15 +4572,6 @@ namespace Dawem.Data.Migrations
                     b.Property<string>("DisableReason")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("DoneDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("DoneSummon")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("DoneTakeActions")
-                        .HasColumnType("bit");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -4609,16 +4600,17 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("SummonId");
 
-                    b.ToTable("SummonLogs", "Dawem");
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique();
+
+                    b.ToTable("SummonMissingLogs", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonLogSanction", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonMissingLogSanction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -4636,6 +4628,9 @@ namespace Dawem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
@@ -4666,7 +4661,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("SummonLogId")
+                    b.Property<int>("SummonMissingLogId")
                         .HasColumnType("int");
 
                     b.Property<int>("SummonSanctionId")
@@ -4674,11 +4669,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SummonLogId");
+                    b.HasIndex("SummonMissingLogId");
 
                     b.HasIndex("SummonSanctionId");
 
-                    b.ToTable("SummonLogSanctions", "Dawem");
+                    b.ToTable("SummonMissingLogSanctions", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonNotifyWay", b =>
@@ -6248,7 +6243,7 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Summon");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonLog", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonMissingLog", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
                         .WithMany()
@@ -6263,7 +6258,7 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Summons.Summon", "Summon")
-                        .WithMany("SummonLogs")
+                        .WithMany("SummonMissingLogs")
                         .HasForeignKey("SummonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -6275,11 +6270,11 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Summon");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonLogSanction", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonMissingLogSanction", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Summons.SummonLog", "SummonLog")
-                        .WithMany("SummonLogSanctions")
-                        .HasForeignKey("SummonLogId")
+                    b.HasOne("Dawem.Domain.Entities.Summons.SummonMissingLog", "SummonMissingLog")
+                        .WithMany("SummonMissingLogSanctions")
+                        .HasForeignKey("SummonMissingLogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -6289,7 +6284,7 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("SummonLog");
+                    b.Navigation("SummonMissingLog");
 
                     b.Navigation("SummonSanction");
                 });
@@ -6598,16 +6593,16 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("SummonGroups");
 
-                    b.Navigation("SummonLogs");
+                    b.Navigation("SummonMissingLogs");
 
                     b.Navigation("SummonNotifyWays");
 
                     b.Navigation("SummonSanctions");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonLog", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Summons.SummonMissingLog", b =>
                 {
-                    b.Navigation("SummonLogSanctions");
+                    b.Navigation("SummonMissingLogSanctions");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.MyUser", b =>

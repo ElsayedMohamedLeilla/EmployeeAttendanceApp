@@ -14,6 +14,9 @@ namespace Dawem.Models.Response.Summons.Summons
         public List<string> Groups { get; set; }
         public List<string> Departments { get; set; }
         public List<string> Sanctions { get; set; }
+        public SummonStatus SummonStatus { get; set; }
+        public string SummonStatusName { get; set; }
+        public int NumberOfTargetedEmployees { get; set; }
         public bool IsActive { get; set; }
     }
 }

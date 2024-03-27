@@ -120,16 +120,16 @@ namespace Dawem.Data
          .HasForeignKey(p => p.CompanyId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonMissingLog>()
+            builder.Entity<SummonLog>()
          .HasOne(p => p.Summon)
-         .WithMany(b => b.SummonMissingLogs)
+         .WithMany(b => b.SummonLogs)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonMissingLogSanction>()
-         .HasOne(p => p.SummonMissingLog)
-         .WithMany(b => b.SummonMissingLogSanctions)
-         .HasForeignKey(p => p.SummonMissingLogId)
+            builder.Entity<SummonLogSanction>()
+         .HasOne(p => p.SummonLog)
+         .WithMany(b => b.SummonLogSanctions)
+         .HasForeignKey(p => p.SummonLogId)
          .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<PermissionScreen>()

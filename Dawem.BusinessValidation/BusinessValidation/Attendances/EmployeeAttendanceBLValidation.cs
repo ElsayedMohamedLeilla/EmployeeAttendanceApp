@@ -192,10 +192,10 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             if (model.Type == FingerPrintType.Summon)
             {
                 summonId = await repositoryManager.SummonRepository
-                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.DateAndTime &&
-                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
+                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.LocalDateAndTime &&
+                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
                     ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                     (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
                     (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
@@ -344,10 +344,10 @@ namespace Dawem.Validation.BusinessValidation.Attendances
             #region Check If Summon
 
             var checkIfHasSummon = await repositoryManager.SummonRepository
-                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.DateAndTime &&
-                   ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
-                   (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
-                   (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
+                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.LocalDateAndTime &&
+                   ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                   (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) ||
+                   (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime)) &&
                    !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                    (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||

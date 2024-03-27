@@ -111,7 +111,8 @@ namespace Dawem.Repository.Managers
         private INotificationStoreRepository notificationStoreRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private ISummonRepository summonRepository;
-        private ISummonMissingLogRepository summonMissingLogRepository;
+        private ISummonLogSanctionRepository summonLogSanctionRepository;
+        private ISummonLogRepository summonLogRepository;
         private ISummonNotifyWayRepository summonNotifyWayRepository;
         private ISummonEmployeeRepository summonEmployeeRepository;
         private ISummonGroupRepository summonGroupRepository;
@@ -279,8 +280,11 @@ namespace Dawem.Repository.Managers
         public ISummonRepository SummonRepository =>
             summonRepository ??= new SummonRepository(unitOfWork, generalSetting, requestInfo);
 
-        public ISummonMissingLogRepository SummonMissingLogRepository =>
-            summonMissingLogRepository ??= new SummonMissingLogRepository(unitOfWork, generalSetting, requestInfo);
+        public ISummonLogSanctionRepository SummonLogSanctionRepository =>
+            summonLogSanctionRepository ??= new SummonLogSanctionRepository(unitOfWork, generalSetting, requestInfo);
+
+        public ISummonLogRepository SummonLogRepository =>
+            summonLogRepository ??= new SummonLogRepository(unitOfWork, generalSetting, requestInfo);
 
         public ISummonNotifyWayRepository SummonNotifyWayRepository =>
             summonNotifyWayRepository ??= new SummonNotifyWayRepository(unitOfWork, generalSetting);

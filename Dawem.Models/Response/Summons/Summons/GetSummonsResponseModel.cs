@@ -9,6 +9,9 @@ namespace Dawem.Models.Response.Summons.Summons
         public ForType ForType { get; set; }
         public string ForTypeName { get; set; }
         public DateTime DateAndTime { get; set; }
+        public SummonStatus SummonStatus { get; set; }
+        public string SummonStatusName { get; set; }
+        public int NumberOfTargetedEmployees { get; set; }
         public bool IsActive { get; set; }
     }
 }

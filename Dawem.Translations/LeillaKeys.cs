@@ -504,7 +504,7 @@
         public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
-        public const string SorrySummonMissingLogNotFound = "Sorry!!SummonMissingLogNotFound!";
+        public const string SorrySummonLogNotFound = "Sorry!!SummonLogNotFound!";
         public const string TimeType = "TimeType";
         public const string SorryRequestTypeNotFound = "Sorry!!RequestTypeNotFound!";
         public const string NoteDayAttendanceWasCanceledDueToFailureInSummons = "Note-DayAttendanceWasCanceledDueToFailureInSummons";

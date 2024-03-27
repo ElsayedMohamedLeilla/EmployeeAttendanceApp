@@ -18,7 +18,7 @@ namespace Dawem.Validation.FluentValidation.Summons.Summons
                 .When(model => model.ForType != ForType.Employees)
                 .WithMessage(LeillaKeys.SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees);
 
-            RuleFor(model => model.DateAndTime).Must(d => d != default)
+            RuleFor(model => model.LocalDateAndTime).Must(d => d != default)
                .WithMessage(LeillaKeys.SorryYouMustEnterSummonDateAndTime);
 
             RuleFor(model => model.AllowedTime)

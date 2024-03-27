@@ -42,7 +42,7 @@
         Zone,
         Sanction,
         Summon,
-        SummonMissingLog,
+        SummonLog,
         NotificationStore,
         AttendanceSummaryReport,
         Company

@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.AssignmentTypes;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Employees.AssignmentTypes;
+using Dawem.Models.Response.Dawem.Employees.AssignmentTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

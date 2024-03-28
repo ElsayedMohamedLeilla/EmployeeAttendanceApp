@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Requests;
-using Dawem.Models.Dtos.Dawem.Requests;
-using Dawem.Models.Dtos.Dawem.Requests.Justifications;
+using Dawem.Models.Requests;
+using Dawem.Models.Requests.Justifications;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

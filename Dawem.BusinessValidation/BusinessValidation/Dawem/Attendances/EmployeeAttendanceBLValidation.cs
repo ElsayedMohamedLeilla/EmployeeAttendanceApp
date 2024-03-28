@@ -5,9 +5,9 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Attendances;
-using Dawem.Models.Response.Core.Zones;
-using Dawem.Models.Response.Schedules.Schedules;
+using Dawem.Models.Response.Dawem.Attendances;
+using Dawem.Models.Response.Dawem.Core.Zones;
+using Dawem.Models.Response.Dawem.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,7 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.Zones;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Response.Core.Zones;
+using Dawem.Models.Response.Dawem.Core.Zones;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

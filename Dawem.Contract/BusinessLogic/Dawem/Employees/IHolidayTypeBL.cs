@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.HolidayTypes;
-using Dawem.Models.Response.Employees.HolidayTypes;
+using Dawem.Models.Response.Dawem.Employees.HolidayTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees
 {

@@ -16,7 +16,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Departments;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Dawem.Employees.Departments;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Microsoft.EntityFrameworkCore;

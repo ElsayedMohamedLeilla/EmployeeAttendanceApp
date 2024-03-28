@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.JobTitles;
-using Dawem.Models.Response.Employees.JobTitles;
+using Dawem.Models.Response.Dawem.Employees.JobTitles;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees
 {

@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others.VacationBalances;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Others.VacationBalances;
+using Dawem.Models.Response.Dawem.Others.VacationBalances;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

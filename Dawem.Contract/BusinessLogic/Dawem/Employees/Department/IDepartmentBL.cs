@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Departments;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Response.Employees.Departments;
+using Dawem.Models.Response.Dawem.Employees.Departments;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees.Department
 {

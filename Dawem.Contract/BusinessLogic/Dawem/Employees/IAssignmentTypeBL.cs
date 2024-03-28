@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.AssignmentTypes;
-using Dawem.Models.Response.Employees.AssignmentTypes;
+using Dawem.Models.Response.Dawem.Employees.AssignmentTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees
 {

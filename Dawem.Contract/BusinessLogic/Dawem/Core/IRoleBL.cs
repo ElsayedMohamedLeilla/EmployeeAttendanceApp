@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Criteria.Core;
-using Dawem.Models.Response.Core.Roles;
+using Dawem.Models.Response.Dawem.Core.Roles;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

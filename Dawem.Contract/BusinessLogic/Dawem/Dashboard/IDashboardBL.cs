@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Dashboard;
-using Dawem.Models.Response.Dashboard;
+using Dawem.Models.Response.Dawem.Dashboard;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Dashboard
 {

@@ -13,7 +13,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Summons.Summons;
+using Dawem.Models.Response.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

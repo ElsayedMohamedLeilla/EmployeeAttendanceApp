@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
-using Dawem.Models.Response.Core.VacationsTypes;
+using Dawem.Models.Response.Dawem.Core.VacationsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Dawem.Requests.Vacations;
+﻿using Dawem.Models.Requests.Vacations;
 using Dawem.Translations;
 using FluentValidation;
 

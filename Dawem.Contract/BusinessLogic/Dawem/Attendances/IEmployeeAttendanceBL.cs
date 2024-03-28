@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Attendances;
-using Dawem.Models.Response.Attendances;
-using Dawem.Models.Response.Dashboard;
+using Dawem.Models.Response.Dawem.Attendances;
+using Dawem.Models.Response.Dawem.Dashboard;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
 {

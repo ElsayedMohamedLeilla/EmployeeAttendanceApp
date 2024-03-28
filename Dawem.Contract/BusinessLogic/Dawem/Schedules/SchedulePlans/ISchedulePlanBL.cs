@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
-using Dawem.Models.Response.Schedules.SchedulePlans;
+using Dawem.Models.Response.Dawem.Schedules.SchedulePlans;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Schedules.SchedulePlans
 {

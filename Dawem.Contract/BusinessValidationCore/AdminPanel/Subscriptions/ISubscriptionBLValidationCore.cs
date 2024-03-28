@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Criteria.Subscriptions;
-using Dawem.Models.Response.Subscriptions;
+using Dawem.Models.Response.Dawem.Subscriptions;
 
 namespace Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions
 {

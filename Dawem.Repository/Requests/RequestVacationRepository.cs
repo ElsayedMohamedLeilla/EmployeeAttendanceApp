@@ -4,8 +4,8 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Dawem.Requests.Vacations;
 using Dawem.Models.Generic;
+using Dawem.Models.Requests.Vacations;
 using LinqKit;
 
 namespace Dawem.Repository.Requests

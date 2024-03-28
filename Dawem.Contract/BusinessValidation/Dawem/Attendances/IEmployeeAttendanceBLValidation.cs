@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Attendances;
-using Dawem.Models.Response.Attendances;
+using Dawem.Models.Response.Dawem.Attendances;
 
 namespace Dawem.Contract.BusinessValidation.Dawem.Attendances
 {

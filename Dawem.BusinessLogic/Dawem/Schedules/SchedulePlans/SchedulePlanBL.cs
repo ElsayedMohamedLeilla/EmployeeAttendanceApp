@@ -11,8 +11,8 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Schedules.SchedulePlanLogs;
-using Dawem.Models.Response.Schedules.SchedulePlans;
+using Dawem.Models.Response.Dawem.Schedules.SchedulePlanLogs;
+using Dawem.Models.Response.Dawem.Schedules.SchedulePlans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

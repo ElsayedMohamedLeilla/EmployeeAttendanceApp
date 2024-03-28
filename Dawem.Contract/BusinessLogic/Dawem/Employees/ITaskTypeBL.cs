@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.TaskTypes;
-using Dawem.Models.Response.Employees.TaskTypes;
+using Dawem.Models.Response.Dawem.Employees.TaskTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees
 {

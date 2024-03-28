@@ -1,5 +1,4 @@
 ﻿using Dawem.Domain.Entities.Providers;
-using Dawem.Models.Criteria.Others;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Provider
 {

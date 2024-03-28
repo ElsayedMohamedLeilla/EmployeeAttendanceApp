@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Dawem.Requests.Permissions;
+﻿using Dawem.Models.Requests.Permissions;
 using Dawem.Translations;
 using FluentValidation;
 

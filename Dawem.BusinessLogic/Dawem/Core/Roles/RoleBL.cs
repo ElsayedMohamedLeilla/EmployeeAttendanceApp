@@ -7,7 +7,7 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Response.Core.Roles;
+using Dawem.Models.Response.Dawem.Core.Roles;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.JustificationsTypes;
-using Dawem.Models.Response.Core.JustificationsTypes;
+using Dawem.Models.Response.Dawem.Core.JustificationsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

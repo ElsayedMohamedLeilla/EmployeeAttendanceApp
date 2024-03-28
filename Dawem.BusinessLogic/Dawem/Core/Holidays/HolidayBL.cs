@@ -12,7 +12,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.Holidays;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Core.Holidays;
+using Dawem.Models.Response.Dawem.Core.Holidays;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;

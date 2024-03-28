@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Sanctions;
-using Dawem.Models.Response.Summons.Sanctions;
+using Dawem.Models.Response.Dawem.Summons.Sanctions;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Summons
 {

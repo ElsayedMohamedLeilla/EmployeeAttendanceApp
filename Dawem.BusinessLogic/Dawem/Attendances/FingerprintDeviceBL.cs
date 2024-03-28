@@ -11,7 +11,7 @@ using Dawem.Models.Dtos.Dawem.Attendances.FingerprintDevices;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response;
-using Dawem.Models.Response.Attendances.FingerprintDevices;
+using Dawem.Models.Response.Dawem.Attendances.FingerprintDevices;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

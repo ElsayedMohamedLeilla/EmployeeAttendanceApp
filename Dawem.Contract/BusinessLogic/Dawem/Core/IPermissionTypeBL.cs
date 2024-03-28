@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.PermissionsTypes;
-using Dawem.Models.Response.Core.PermissionsTypes;
+using Dawem.Models.Response.Dawem.Core.PermissionsTypes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

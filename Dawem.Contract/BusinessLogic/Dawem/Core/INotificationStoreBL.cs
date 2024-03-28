@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Response.Core.NotificationsStores;
+using Dawem.Models.Response.Dawem.Core.NotificationsStores;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {

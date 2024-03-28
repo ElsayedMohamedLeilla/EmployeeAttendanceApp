@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Others.VacationBalances;
-using Dawem.Models.Response.Others.VacationBalances;
+using Dawem.Models.Response.Dawem.Others.VacationBalances;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Others
 {

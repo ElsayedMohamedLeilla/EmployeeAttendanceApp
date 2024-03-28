@@ -12,7 +12,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Providers.Companies;
+using Dawem.Models.Response.Dawem.Providers.Companies;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Providers;
 using Microsoft.EntityFrameworkCore;

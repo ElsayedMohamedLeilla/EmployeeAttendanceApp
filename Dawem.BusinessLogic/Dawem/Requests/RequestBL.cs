@@ -8,10 +8,10 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
-using Dawem.Models.Dtos.Dawem.Requests;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Requests;
-using Dawem.Models.Response.Requests.Requests;
+using Dawem.Models.Requests;
+using Dawem.Models.Response.Dawem.Requests;
+using Dawem.Models.Response.Dawem.Requests.Requests;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

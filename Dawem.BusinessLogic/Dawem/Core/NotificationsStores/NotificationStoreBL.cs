@@ -11,7 +11,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Core.NotificationsStores;
+using Dawem.Models.Response.Dawem.Core.NotificationsStores;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.AspNetCore.SignalR;

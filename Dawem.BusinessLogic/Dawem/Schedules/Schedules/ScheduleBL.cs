@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Schedules.Schedules;
+using Dawem.Models.Response.Dawem.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

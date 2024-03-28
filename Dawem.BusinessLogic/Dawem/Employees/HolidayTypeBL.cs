@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.HolidayTypes;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Employees.HolidayTypes;
+using Dawem.Models.Response.Dawem.Employees.HolidayTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

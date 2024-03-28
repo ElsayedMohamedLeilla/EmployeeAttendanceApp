@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Dawem.Requests;
-using Dawem.Models.Response.Requests.Requests;
+﻿using Dawem.Models.Requests;
+using Dawem.Models.Response.Dawem.Requests.Requests;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Requests
 {

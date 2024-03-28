@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
-using Dawem.Models.Response.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Response.Dawem.Schedules.ShiftWorkingTimes;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Schedules.ShiftWorkingTime
 {

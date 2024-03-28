@@ -5,8 +5,8 @@ using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Dashboard;
-using Dawem.Models.Dtos.Dawem.Requests;
 using Dawem.Models.Generic;
+using Dawem.Models.Requests;
 using LinqKit;
 
 namespace Dawem.Repository.Requests

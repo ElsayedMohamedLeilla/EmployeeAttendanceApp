@@ -31,8 +31,8 @@
   <ItemGroup>
     <Folder Include="AutoMapper\AdminPanel\" />
     <Folder Include="Dtos\AdminPanel\" />
-    <Folder Include="Response\AdminPanel\" />
-    <Folder Include="Response\Dawem\" />
+    <Folder Include="Dtos\Dawem\Response\AdminPanel\" />
+    <Folder Include="Dtos\Dawem\Response\Dawem\" />
   </ItemGroup>
 
 </Project>

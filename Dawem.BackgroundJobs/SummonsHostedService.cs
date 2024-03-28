@@ -6,7 +6,7 @@ using NCrontab;
 namespace Dawem.BackgroundJobs
 {
     // test CrontabSchedule in => https://crontab.cronhub.io/
-    public class SummonsMissingHostedService : BackgroundService
+    public class SummonsHostedService : BackgroundService
     {
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
@@ -14,7 +14,7 @@ namespace Dawem.BackgroundJobs
 
         private string Schedule => "*/10 * * * * *"; // Fire every 10 seconds
 
-        public SummonsMissingHostedService(IServiceScopeFactory _serviceScopeFactory)
+        public SummonsHostedService(IServiceScopeFactory _serviceScopeFactory)
         {
             _schedule = CrontabSchedule.Parse(Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.UtcNow);
@@ -35,11 +35,11 @@ namespace Dawem.BackgroundJobs
         }
         private async Task Process()
         {
-            Console.WriteLine("Handle Summons " + DateTime.UtcNow.ToString("F"));
+            Console.WriteLine("Handle Summons Logs" + DateTime.UtcNow.ToString("F"));
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 var summonBL = scope.ServiceProvider.GetRequiredService<ISummonBL>();
-                await summonBL.HandleSummonMissingLog();
+                await summonBL.HandleSummonLog();
             }
         }
     }

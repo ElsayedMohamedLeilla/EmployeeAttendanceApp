@@ -10,17 +10,17 @@ using LinqKit;
 
 namespace Dawem.Repository.Summons
 {
-    public class SummonMissingLogRepository : GenericRepository<SummonMissingLog>, ISummonMissingLogRepository
+    public class SummonLogRepository : GenericRepository<SummonLog>, ISummonLogRepository
     {
         private readonly RequestInfo _requestInfo;
-        public SummonMissingLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
+        public SummonLogRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
             _requestInfo = requestInfo;
         }
-        public IQueryable<SummonMissingLog> GetAsQueryable(GetSummonMissingLogsCriteria criteria)
+        public IQueryable<SummonLog> GetAsQueryable(GetSummonLogsCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<SummonMissingLog>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<SummonMissingLog>(true);
+            var predicate = PredicateBuilder.New<SummonLog>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<SummonLog>(true);
 
             predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
@@ -40,10 +40,6 @@ namespace Dawem.Repository.Summons
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
-            }
-            if (criteria.Code is not null)
-            {
-                predicate = predicate.And(e => e.Code == criteria.Code);
             }
             if (criteria.IsActive != null)
             {

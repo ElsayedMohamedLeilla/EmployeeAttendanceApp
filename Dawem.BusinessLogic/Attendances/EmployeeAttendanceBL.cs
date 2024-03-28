@@ -73,6 +73,23 @@ namespace Dawem.BusinessLogic.Attendances
                     RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                     RecognitionWay.FingerPrint : model.RecognitionWay
                 });
+
+                #region Summon Log
+
+                if (validationResult.FingerPrintType == FingerPrintType.Summon)
+                {
+                    var getSummonLog = await repositoryManager.SummonLogRepository
+                        .GetEntityByConditionWithTrackingAsync(s => !s.IsDeleted && s.SummonId == validationResult.SummonId &&
+                        s.EmployeeId == validationResult.EmployeeId);
+                    if (getSummonLog != null)
+                    {
+                        getSummonLog.DoneSummon = true;
+                        getSummonLog.DoneDate = requestInfo.LocalDateTime;
+                        await unitOfWork.SaveAsync();
+                    }
+                } 
+
+                #endregion
             }
             //checkin
             else

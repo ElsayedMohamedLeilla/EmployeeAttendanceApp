@@ -21,5 +21,16 @@ namespace Dawem.Helpers
 
             return allDates;
         }
+        public static DateTime GetLocalDateTime(string timeZoneId)
+        {
+            var localDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, timeZoneId).DateTime;
+            return localDateTime;
+        }
+        public static DateTime GetUTSDateTime(DateTime localDate, string timeZoneId)
+        {
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            var UTCDateTime = TimeZoneInfo.ConvertTimeToUtc(localDate, timeZoneInfo);
+            return UTCDateTime;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Dtos.Summons.Summons
 {
-    public class GetSummonMissingLogsCriteria : BaseCriteria
+    public class GetSummonLogsCriteria : BaseCriteria
     {
     }
 }

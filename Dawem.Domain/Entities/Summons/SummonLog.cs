@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Summons
 {
-    [Table(nameof(SummonMissingLog) + LeillaKeys.S)]
-    public class SummonMissingLog : BaseEntity
+    [Table(nameof(SummonLog) + LeillaKeys.S)]
+    public class SummonLog : BaseEntity
     {
         #region Forign Key
         public int CompanyId { get; set; }
@@ -19,7 +19,9 @@ namespace Dawem.Domain.Entities.Summons
         [ForeignKey(nameof(SummonId))]
         public Summon Summon { get; set; }
         #endregion
-        public int Code { get; set; }
-        public List<SummonMissingLogSanction> SummonMissingLogSanctions { get; set; }
+        public bool DoneSummon { get; set; }
+        public bool DoneTakeActions { get; set; }
+        public DateTime? DoneDate { get; set; }
+        public List<SummonLogSanction> SummonLogSanctions { get; set; }
     }
 }

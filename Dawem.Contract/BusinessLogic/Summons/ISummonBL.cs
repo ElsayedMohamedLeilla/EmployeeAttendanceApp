@@ -15,6 +15,6 @@ namespace Dawem.Contract.BusinessLogic.Summons
         Task<bool> Enable(int summonId);
         Task<bool> Delete(int summonId);
         Task<GetSummonsInformationsResponseDTO> GetSummonsInformations();
-        Task HandleSummonMissingLog();
+        Task HandleSummonLog();
     }
 }

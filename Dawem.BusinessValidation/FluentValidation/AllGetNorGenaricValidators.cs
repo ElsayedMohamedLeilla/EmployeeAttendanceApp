@@ -63,9 +63,9 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetSummonMissingLogsCriteriaValidator : AbstractValidator<GetSummonMissingLogsCriteria>
+    public class GetSummonLogsCriteriaValidator : AbstractValidator<GetSummonLogsCriteria>
     {
-        public GetSummonMissingLogsCriteriaValidator()
+        public GetSummonLogsCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

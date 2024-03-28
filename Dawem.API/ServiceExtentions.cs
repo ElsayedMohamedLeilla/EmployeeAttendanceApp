@@ -138,7 +138,7 @@ namespace Dawem.API
         public static void ConfigureBackGroundService(this IServiceCollection services)
         {
             services.AddHostedService<SchedulePlanBackgroundJobHostedService>();
-            //services.AddHostedService<SummonsMissingHostedService>();
+            services.AddHostedService<SummonsHostedService>();
             services.AddHostedService<SubscriptionHostedService>();
             //services.AddSingleton<CancellationTokenSource>();
         }

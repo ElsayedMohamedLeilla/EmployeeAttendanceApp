@@ -6,17 +6,14 @@ using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Firebase;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Summons.Summons;
-using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,6 +43,7 @@ namespace Dawem.BusinessLogic.Summons
             uploadBLC = _uploadBLC;
             notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
         }
+
         public async Task<int> Create(CreateSummonModel model)
         {
             #region Business Validation
@@ -72,6 +70,48 @@ namespace Dawem.BusinessLogic.Summons
             var summon = mapper.Map<Summon>(model);
 
             summon.AddUserId = requestInfo.UserId;
+
+            #region Handle End Date
+
+            var getTimeZoneId = await repositoryManager.CompanyRepository.
+                Get(c => !c.IsDeleted && c.Id == requestInfo.CompanyId && c.Country.TimeZoneId != null).
+                Select(c => c.Country.TimeZoneId).
+                FirstOrDefaultAsync();
+            var utcDateTime = DateHelper.GetUTSDateTime(summon.LocalDateAndTime, getTimeZoneId);
+            summon.StartDateAndTimeUTC = utcDateTime;
+
+            switch (model.TimeType)
+            {
+                case TimeType.Second:
+                    summon.EndDateAndTimeUTC = utcDateTime.AddSeconds(model.AllowedTime);
+                    break;
+                case TimeType.Minute:
+                    summon.EndDateAndTimeUTC = utcDateTime.AddMinutes(model.AllowedTime);
+                    break;
+                case TimeType.Hour:
+                    summon.EndDateAndTimeUTC = utcDateTime.AddHours(model.AllowedTime);
+                    break;
+                default:
+                    break;
+            }
+
+            #endregion
+
+            #region Handle Summon Log
+
+            summon.SummonLogs = await repositoryManager
+                    .EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == companyId &&
+                    ((model.ForAllEmployees.HasValue && model.ForAllEmployees.Value) ||
+                    (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                    (model.Groups != null && e.EmployeeGroups.Any(eg => model.Groups.Contains(eg.GroupId))) ||
+                    (model.Departments != null && e.DepartmentId > 0 && model.Departments.Contains(e.DepartmentId.Value))))
+                    .Select(e => new SummonLog
+                    {
+                        CompanyId = companyId,
+                        EmployeeId = e.Id
+                    }).ToListAsync();
+
+            #endregion
 
             #region Handle Company Id
 
@@ -199,16 +239,29 @@ namespace Dawem.BusinessLogic.Summons
 
             #region Update Summon
 
+            var companyId = requestInfo.CompanyId;
             var getSummon = await repositoryManager.SummonRepository
                 .GetEntityByConditionWithTrackingAsync(summon => !summon.IsDeleted
                 && summon.Id == model.Id);
+
+            #region Handle Summon Log
+
+            var newSummonLogEmployees = await repositoryManager
+                    .EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == companyId &&
+                    ((model.ForAllEmployees.HasValue && model.ForAllEmployees.Value) ||
+                    (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                    (model.Groups != null && e.EmployeeGroups.Any(eg => model.Groups.Contains(eg.GroupId))) ||
+                    (model.Departments != null && e.DepartmentId > 0 && model.Departments.Contains(e.DepartmentId.Value))))
+                    .Select(e => e.Id).ToListAsync();
+
+            #endregion
 
 
             if (getSummon != null)
             {
                 getSummon.ForType = model.ForType;
                 getSummon.ForAllEmployees = model.ForAllEmployees;
-                getSummon.DateAndTime = model.DateAndTime;
+                getSummon.LocalDateAndTime = model.LocalDateAndTime;
                 getSummon.AllowedTime = model.AllowedTime;
                 getSummon.TimeType = model.TimeType;
                 getSummon.IsActive = model.IsActive;
@@ -232,6 +285,10 @@ namespace Dawem.BusinessLogic.Summons
                 var existNotifyWaysDbList = await repositoryManager.SummonNotifyWayRepository
                                 .GetByCondition(e => !e.IsDeleted & e.SummonId == getSummon.Id)
                                 .ToListAsync();
+                var existSummonLogsDbList = await repositoryManager.SummonLogRepository
+                                .GetByCondition(e => !e.IsDeleted & e.SummonId == getSummon.Id)
+                                .ToListAsync();
+
 
                 switch (model.ForType)
                 {
@@ -348,9 +405,7 @@ namespace Dawem.BusinessLogic.Summons
                     {
                         CompanyId = requestInfo.CompanyId,
                         SummonId = model.Id,
-                        SanctionId = actionId,
-                        ModifyUserId = requestInfo.UserId,
-                        ModifiedDate = DateTime.UtcNow
+                        SanctionId = actionId
                     })
                     .ToList();
 
@@ -375,9 +430,7 @@ namespace Dawem.BusinessLogic.Summons
                     {
                         CompanyId = requestInfo.CompanyId,
                         SummonId = model.Id,
-                        NotifyWay = notifyWay,
-                        ModifyUserId = requestInfo.UserId,
-                        ModifiedDate = DateTime.UtcNow
+                        NotifyWay = notifyWay
                     })
                     .ToList();
 
@@ -389,6 +442,30 @@ namespace Dawem.BusinessLogic.Summons
                     repositoryManager.SummonNotifyWayRepository.BulkDeleteIfExist(notifyWaysToRemove);
                 if (addedNotifyWays.Count > 0)
                     repositoryManager.SummonNotifyWayRepository.BulkInsert(addedNotifyWays);
+
+                #endregion
+
+                #region Handle Summon Logs
+
+                var existingSummonLogsIds = existSummonLogsDbList.Select(e => e.EmployeeId).ToList();
+
+                var addedSummonLogs = newSummonLogEmployees
+                    .Where(employeeId => !existingSummonLogsIds.Contains(employeeId))
+                    .Select(employeeId => new SummonLog
+                    {
+                        CompanyId = requestInfo.CompanyId,
+                        SummonId = model.Id,
+                        EmployeeId = employeeId
+                    }).ToList();
+
+                var summonLogsToRemove = existSummonLogsDbList
+                    .Where(sl => !newSummonLogEmployees.Contains(sl.EmployeeId))
+                    .ToList();
+
+                if (summonLogsToRemove.Count > 0)
+                    repositoryManager.SummonLogRepository.BulkDeleteIfExist(summonLogsToRemove);
+                if (addedSummonLogs.Count > 0)
+                    repositoryManager.SummonLogRepository.BulkInsert(addedSummonLogs);
 
                 #endregion
 
@@ -412,6 +489,7 @@ namespace Dawem.BusinessLogic.Summons
         {
             var summonRepository = repositoryManager.SummonRepository;
             var query = summonRepository.GetAsQueryable(criteria);
+            var utcDate = DateTime.UtcNow;
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
@@ -429,8 +507,15 @@ namespace Dawem.BusinessLogic.Summons
                 Id = s.Id,
                 Code = s.Code,
                 ForType = s.ForType,
-                DateAndTime = s.DateAndTime,
+                DateAndTime = s.LocalDateAndTime,
                 ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
+                NumberOfTargetedEmployees = s.SummonLogs.Count,
+                SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
                 IsActive = s.IsActive
             }).ToListAsync();
             return new GetSummonsResponse
@@ -443,12 +528,13 @@ namespace Dawem.BusinessLogic.Summons
         }
         public async Task<GetSummonInfoResponseModel> GetInfo(int summonId)
         {
+            var utcDate = DateTime.UtcNow;
             var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
                 .Select(s => new GetSummonInfoResponseModel
                 {
                     Code = s.Code,
                     ForAllEmployees = s.ForAllEmployees,
-                    DateAndTime = s.DateAndTime,
+                    DateAndTime = s.LocalDateAndTime,
                     AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
                     ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                     NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(n => TranslationHelper.GetTranslation(n.NotifyWay.ToString() + LeillaKeys.NotifyWay, requestInfo.Lang)).ToList() : null,
@@ -456,6 +542,13 @@ namespace Dawem.BusinessLogic.Summons
                     Groups = s.SummonGroups.Count > 0 ? s.SummonGroups.Select(e => e.Group.Name).ToList() : null,
                     Departments = s.SummonDepartments.Count > 0 ? s.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
                     Sanctions = s.SummonSanctions.Count > 0 ? s.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
+                    NumberOfTargetedEmployees = s.SummonLogs.Count,
+                    SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                    SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
                     IsActive = s.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
@@ -470,7 +563,7 @@ namespace Dawem.BusinessLogic.Summons
                     Code = s.Code,
                     ForType = s.ForType,
                     ForAllEmployees = s.ForAllEmployees,
-                    DateAndTime = s.DateAndTime,
+                    DateAndTime = s.LocalDateAndTime,
                     AllowedTime = s.AllowedTime,
                     TimeType = s.TimeType,
                     NotifyWays = s.SummonNotifyWays.Count > 0 ? s.SummonNotifyWays.Select(e => e.NotifyWay).ToList() : null,
@@ -525,101 +618,36 @@ namespace Dawem.BusinessLogic.Summons
 
             #endregion
         }
-        public async Task HandleSummonMissingLog()
+        public async Task HandleSummonLog()
         {
             try
             {
-                var timeZones = await repositoryManager.CountryRepository
-                .Get(c => !c.IsDeleted && c.TimeZoneId != null)
-                .Select(c => c.TimeZoneId)
-                .Distinct()
-                .ToListAsync();
+                var utcDateTime = DateTime.UtcNow;
 
-                var timeZonesDates = timeZones.Select(t => new
-                {
-                    TimeZoneId = t,
-                    LocalDateTime = StringHelper.GetLocalDateTime(t)
-                }).ToList();
-
-                var maxLocalDate = timeZonesDates.Max(t => t.LocalDateTime);
-
-                var tempGetEmployeesMissing = await repositoryManager
-                    .EmployeeRepository.Get(e => !e.IsDeleted && e.Company.Country.TimeZoneId != null &&
-                    e.Company.Summons.Any(s => !s.IsDeleted &&
-                    maxLocalDate >= s.DateAndTime &&
-                    ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, maxLocalDate) > s.AllowedTime)) &&
-                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
-                    (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
-                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
-                    (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) &&
-                    !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id)))
-                    .Select(e => new
+                var getEmployeesMissingList = await repositoryManager
+                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && summonLog.Company.Country.TimeZoneId != null &&
+                    !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
+                    Select(summonLog => new
                     {
-                        EmployeeId = e.Id,
-                        e.CompanyId,
-                        e.Company.Country.TimeZoneId,
-                        Summons = e.Company.Summons.Where(s => !s.IsDeleted && maxLocalDate >= s.DateAndTime &&
-                        ((s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.DateAndTime, maxLocalDate) > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.DateAndTime, maxLocalDate) > s.AllowedTime)) &&
-                        ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
-                        (s.SummonEmployees != null && s.SummonEmployees.Any(se => !se.IsDeleted && se.EmployeeId == e.Id)) ||
-                        (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == e.Id))) ||
-                        (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(de => !de.IsDeleted && de.Id == e.Id)))) && !s.SummonMissingLogs.Any(sml => sml.EmployeeId == e.Id))
-                        .Select(s => new
-                        {
-                            SummonId = s.Id,
-                            SummonSanctions = s.SummonSanctions
+                        summonLog.Id,
+                        SummonSanctions = summonLog.Summon.SummonSanctions
                             .Select(ss => new { ss.Id, SanctionType = ss.Sanction.Type }),
-                            s.TimeType,
-                            s.AllowedTime,
-                            s.DateAndTime,
-                            s.SummonEmployees,
-                            WillCanceledEmployeeAttendanceId = s.SummonSanctions
-                            .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && e.EmployeeAttendances
-                            .Any(ea => !ea.IsDeleted && ea.IsActive && ea.LocalDate.Date == s.DateAndTime.Date) ?
-                            e.EmployeeAttendances.FirstOrDefault(ea => !ea.IsDeleted && ea.IsActive &&
-                            ea.LocalDate.Date == s.DateAndTime.Date).Id : (int?)null
-                        }).ToList()
+                        EmployeeId = summonLog.Id,
+                        WillCanceledEmployeeAttendanceId = summonLog.Summon.SummonSanctions
+                            .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && summonLog.Employee.EmployeeAttendances
+                            .Any(ea => !ea.IsDeleted && ea.IsActive && ea.LocalDate.Date == summonLog.Summon.LocalDateAndTime.Date) ?
+                            summonLog.Employee.EmployeeAttendances.FirstOrDefault(ea => !ea.IsDeleted && ea.IsActive &&
+                            ea.LocalDate.Date == summonLog.Summon.LocalDateAndTime.Date).Id : (int?)null
                     }).ToListAsync();
 
-                var getEmployeesMissing = tempGetEmployeesMissing
-                    .Where(e => e.Summons.Any(s => StringHelper.GetLocalDateTime(e.TimeZoneId) > s.DateAndTime &&
-                    ((s.TimeType == TimeType.Second && (maxLocalDate - s.DateAndTime).TotalSeconds > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Minute && (maxLocalDate - s.DateAndTime).TotalMinutes > s.AllowedTime) ||
-                    (s.TimeType == TimeType.Hour && (maxLocalDate - s.DateAndTime).TotalHours > s.AllowedTime))))
-                    .Select(e => new
-                    {
-                        e.EmployeeId,
-                        e.CompanyId,
-                        Summons = e.Summons.Where(s => StringHelper.GetLocalDateTime(e.TimeZoneId) >= s.DateAndTime &&
-                        ((s.TimeType == TimeType.Second && (maxLocalDate - s.DateAndTime).TotalSeconds > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Minute && (maxLocalDate - s.DateAndTime).TotalMinutes > s.AllowedTime) ||
-                        (s.TimeType == TimeType.Hour && (maxLocalDate - s.DateAndTime).TotalHours > s.AllowedTime)))
-                        .Select(s => new
-                        {
-                            s.SummonId,
-                            s.SummonSanctions,
-                            s.DateAndTime,
-                            s.WillCanceledEmployeeAttendanceId
-                        }).ToList()
-                    }).ToList();
-
-                if (getEmployeesMissing != null && getEmployeesMissing.Count > 0)
+                if (getEmployeesMissingList != null && getEmployeesMissingList.Count > 0)
                 {
-                    var summonMissingLogs = new List<SummonMissingLog>();
-
-                    var employeesMissingGroupedByCompany =
-                        getEmployeesMissing.GroupBy(e => e.CompanyId).ToList();
-
                     #region Handle Cancel Employee Attendances
 
-                    var willCanceledEmployeeAttendanceIds = getEmployeesMissing
-                        .Where(e => e.Summons.Any(ss => ss.WillCanceledEmployeeAttendanceId > 0))
-                        .SelectMany(s => s.Summons.Where(es => es.WillCanceledEmployeeAttendanceId > 0)
-                        .Select(ss => ss.WillCanceledEmployeeAttendanceId.Value)).ToList();
+                    var willCanceledEmployeeAttendanceIds = getEmployeesMissingList.
+                        Where(e => e.WillCanceledEmployeeAttendanceId > 0).
+                        Select(e => e.WillCanceledEmployeeAttendanceId.Value).
+                        ToList();
 
                     if (willCanceledEmployeeAttendanceIds.Count > 0)
                     {
@@ -639,61 +667,44 @@ namespace Dawem.BusinessLogic.Summons
 
                     #endregion
 
+                    #region Handle Summons Logs
 
+                    var getEmployeesMissingIds = getEmployeesMissingList.
+                                    Select(m => m.Id).ToList();
 
+                    var getSummonLogs = await repositoryManager.
+                        SummonLogRepository.GetWithTracking(summonLog => getEmployeesMissingIds.Contains(summonLog.Id)).
+                        ToListAsync();
 
-                    foreach (var employeesMissingGroup in employeesMissingGroupedByCompany)
+                    getSummonLogs.ForEach(m =>
                     {
-                        #region Set Summon code
+                        m.DoneTakeActions = true;
+                    });
 
-                        var getMaxCode = await repositoryManager.SummonMissingLogRepository
-                            .Get(e => e.CompanyId == employeesMissingGroup.Key)
-                            .Select(e => e.Code)
-                            .DefaultIfEmpty()
-                            .MaxAsync();
+                    var addedSummonLogSanctions = new List<SummonLogSanction>();
 
-                        #endregion
-
-                        foreach (var employeesMissing in employeesMissingGroup)
-                        {
-                            foreach (var summon in employeesMissing.Summons)
+                    foreach (var employeesMissingGroup in getEmployeesMissingList)
+                    {
+                        addedSummonLogSanctions.
+                            AddRange(employeesMissingGroup.SummonSanctions.
+                            Select(ss => new SummonLogSanction()
                             {
-                                getMaxCode++;
-
-                                summonMissingLogs.Add(new SummonMissingLog()
-                                {
-                                    Code = getMaxCode,
-                                    CompanyId = employeesMissing.CompanyId,
-                                    EmployeeId = employeesMissing.EmployeeId,
-                                    SummonId = summon.SummonId,
-                                    SummonMissingLogSanctions = summon.SummonSanctions
-                                    .Select(ss => new SummonMissingLogSanction()
-                                    {
-                                        SummonSanctionId = ss.Id,
-                                        Done = ss.SanctionType == SanctionType.CancelDayFingerprint
-                                    }).ToList()
-                                });
-
-                            }
-                        }
+                                SummonSanctionId = ss.Id,
+                                Done = ss.SanctionType == SanctionType.CancelDayFingerprint
+                            }).ToList());
                     }
 
-                    repositoryManager.SummonMissingLogRepository.BulkInsert(summonMissingLogs);
-                    _ = unitOfWork.SaveAsync();
+                    repositoryManager.SummonLogSanctionRepository.BulkInsert(addedSummonLogSanctions);
+                    await unitOfWork.SaveAsync(); 
+
+                    #endregion
+
+                    #region Send Notification To Employees Missing Summon
+
+                    // here
+
+                    #endregion
                 }
-
-
-                #region Send Notification To Employees Missing Summon
-
-                // here
-
-                #endregion
-
-
-                var exception1 = 0;
-                var exception2 = 0;
-                var exception3 = 0;
-                var exception4 = 0;
             }
             catch (Exception ex)
             {

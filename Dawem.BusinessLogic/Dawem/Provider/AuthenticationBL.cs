@@ -1,6 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
-using Dawem.Contract.BusinessValidation;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -28,6 +27,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Dawem.Contract.BusinessValidation.Dawem.Others;
 
 namespace Dawem.BusinessLogic.Dawem.Provider
 {

@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation;
+﻿using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.UserManagement;

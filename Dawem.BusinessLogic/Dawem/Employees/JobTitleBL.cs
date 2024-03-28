@@ -19,26 +19,26 @@ namespace Dawem.BusinessLogic.Dawem.Employees
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IJobTitleBLValidation departmentBLValidation;
+        private readonly IJobTitleBLValidation responsibilityBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         public JobTitleBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
-           IJobTitleBLValidation _departmentBLValidation)
+           IJobTitleBLValidation _responsibilityBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            departmentBLValidation = _departmentBLValidation;
+            responsibilityBLValidation = _responsibilityBLValidation;
             mapper = _mapper;
         }
         public async Task<int> Create(CreateJobTitleModel model)
         {
             #region Business Validation
 
-            await departmentBLValidation.CreateValidation(model);
+            await responsibilityBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -54,12 +54,12 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 .MaxAsync() + 1;
             #endregion
 
-            var department = mapper.Map<JobTitle>(model);
-            department.CompanyId = requestInfo.CompanyId;
-            department.AddUserId = requestInfo.UserId;
+            var responsibility = mapper.Map<JobTitle>(model);
+            responsibility.CompanyId = requestInfo.CompanyId;
+            responsibility.AddUserId = requestInfo.UserId;
 
-            department.Code = getNextCode;
-            repositoryManager.JobTitleRepository.Insert(department);
+            responsibility.Code = getNextCode;
+            repositoryManager.JobTitleRepository.Insert(responsibility);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -67,7 +67,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return department.Id;
+            return responsibility.Id;
 
             #endregion
 
@@ -75,7 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         public async Task<bool> Update(UpdateJobTitleModel model)
         {
             #region Business Validation
-            await departmentBLValidation.UpdateValidation(model);
+            await responsibilityBLValidation.UpdateValidation(model);
             #endregion
 
             unitOfWork.CreateTransaction();
@@ -107,21 +107,21 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetJobTitlesResponse> Get(GetJobTitlesCriteria criteria)
         {
-            var departmentRepository = repositoryManager.JobTitleRepository;
-            var query = departmentRepository.GetAsQueryable(criteria);
+            var responsibilityRepository = repositoryManager.JobTitleRepository;
+            var query = responsibilityRepository.GetAsQueryable(criteria);
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(JobTitle.Id), LeillaKeys.Desc);
+            var queryOrdered = responsibilityRepository.OrderBy(query, nameof(JobTitle.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
 
-            var departmentsList = await queryPaged.Select(e => new GetJobTitlesResponseModel
+            var responsibilitysList = await queryPaged.Select(e => new GetJobTitlesResponseModel
             {
                 Id = e.Id,
                 Code = e.Code,
@@ -130,7 +130,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             }).ToListAsync();
             return new GetJobTitlesResponse
             {
-                JobTitles = departmentsList,
+                JobTitles = responsibilitysList,
                 TotalCount = await query.CountAsync()
             };
             #endregion
@@ -139,8 +139,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         public async Task<GetJobTitlesForDropDownResponse> GetForDropDown(GetJobTitlesCriteria criteria)
         {
             criteria.IsActive = true;
-            var departmentRepository = repositoryManager.JobTitleRepository;
-            var query = departmentRepository.GetAsQueryable(criteria);
+            var responsibilityRepository = repositoryManager.JobTitleRepository;
+            var query = responsibilityRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -148,7 +148,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = departmentRepository.OrderBy(query, nameof(JobTitle.Id), LeillaKeys.Desc);
+            var queryOrdered = responsibilityRepository.OrderBy(query, nameof(JobTitle.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -157,7 +157,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Handle Response
 
-            var departmentsList = await queryPaged.Select(e => new GetJobTitlesForDropDownResponseModel
+            var responsibilitysList = await queryPaged.Select(e => new GetJobTitlesForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
@@ -165,7 +165,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             return new GetJobTitlesForDropDownResponse
             {
-                JobTitles = departmentsList,
+                JobTitles = responsibilitysList,
                 TotalCount = await query.CountAsync()
             };
 
@@ -174,7 +174,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetJobTitleInfoResponseModel> GetInfo(int JobTitleId)
         {
-            var department = await repositoryManager.JobTitleRepository.Get(e => e.Id == JobTitleId && !e.IsDeleted)
+            var responsibility = await repositoryManager.JobTitleRepository.Get(e => e.Id == JobTitleId && !e.IsDeleted)
                 .Select(e => new GetJobTitleInfoResponseModel
                 {
                     Code = e.Code,
@@ -182,11 +182,11 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
 
-            return department;
+            return responsibility;
         }
         public async Task<GetJobTitleByIdResponseModel> GetById(int JobTitleId)
         {
-            var department = await repositoryManager.JobTitleRepository.Get(e => e.Id == JobTitleId && !e.IsDeleted)
+            var responsibility = await repositoryManager.JobTitleRepository.Get(e => e.Id == JobTitleId && !e.IsDeleted)
                 .Select(e => new GetJobTitleByIdResponseModel
                 {
                     Id = e.Id,
@@ -195,14 +195,14 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
 
-            return department;
+            return responsibility;
 
         }
-        public async Task<bool> Delete(int departmentd)
+        public async Task<bool> Delete(int responsibilityd)
         {
-            var department = await repositoryManager.JobTitleRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == departmentd) ??
+            var responsibility = await repositoryManager.JobTitleRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == responsibilityd) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
-            department.Delete();
+            responsibility.Delete();
             await unitOfWork.SaveAsync();
             return true;
         }

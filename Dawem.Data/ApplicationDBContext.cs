@@ -565,6 +565,7 @@ namespace Dawem.Data
         public DbSet<SchedulePlanLogEmployee> SchedulePlanBackgroundJobLogEmployees { get; set; }
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Responsibility> Responsibilities { get; set; }
         public DbSet<NotificationUser> FirebaseUsers { get; set; }
         public DbSet<NotificationUserFCMToken> FirebaseUserFCMTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }

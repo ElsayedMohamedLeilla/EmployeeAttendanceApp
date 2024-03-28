@@ -31,8 +31,8 @@ namespace Dawem.API.MiddleWares
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
 
-            var userId = 0;
-            var companyId = 0;
+            int userId = 0;
+            int companyId = 0;
             int applicationType = 0;
 
             try
@@ -78,6 +78,7 @@ namespace Dawem.API.MiddleWares
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
                 requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
+                requestInfo.IsAdminPanel = requestInfo.User.IsForAdminPanel;
             }
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))

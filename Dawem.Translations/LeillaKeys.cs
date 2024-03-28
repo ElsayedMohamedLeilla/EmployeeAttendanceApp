@@ -92,7 +92,8 @@
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string BLValidationCore = "BLValidationCore";
-        public const string ApiControllerAction = "api/[controller]/[action]";
+        public const string DawemApiControllerAction = "api/[controller]/[action]";
+        public const string AdminPanelApiControllerAction = "api/adminpanel/[controller]/[action]";
         public const string Comma = ",";
         public const string CommaThenSpace = ", ";
         public const string Dot = ".";

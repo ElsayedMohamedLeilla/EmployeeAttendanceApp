@@ -11,7 +11,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Models.Dtos.Excel;
-using Dawem.Models.Dtos.Excel.Employees;
+using Dawem.Models.Dtos.Excel.EmployeeAttendances;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Dashboard;

@@ -1,5 +1,4 @@
 ﻿using Dawem.Helpers;
-using Dawem.Models.Dtos.Employees.Departments;
 using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Translations;
 using FluentValidation;

@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.Generals;
-using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Dawem.Models.Dtos.Employees.Employees
 {

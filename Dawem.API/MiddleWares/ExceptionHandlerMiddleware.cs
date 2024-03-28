@@ -1,4 +1,4 @@
-﻿using Dawem.API.MiddleWares.Helpers;
+﻿using Dawem.API.Helpers;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
@@ -10,7 +10,6 @@ using Dawem.Translations;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Net;
 
 namespace Dawem.API.MiddleWares
@@ -114,6 +113,6 @@ namespace Dawem.API.MiddleWares
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
         }
-       
+
     }
 }

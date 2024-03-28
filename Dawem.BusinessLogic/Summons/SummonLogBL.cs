@@ -6,7 +6,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Summons.Summons;
 using Dawem.Models.Exceptions;
-using Dawem.Models.Response.Summons.Summons;
+using Dawem.Models.Response.Summons.SummonLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

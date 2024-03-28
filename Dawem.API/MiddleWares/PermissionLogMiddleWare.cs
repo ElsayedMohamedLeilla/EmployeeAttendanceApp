@@ -1,11 +1,10 @@
-﻿using Dawem.API.MiddleWares.Helpers;
+﻿using Dawem.API.Helpers;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Models.Context;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.API.MiddleWares
 {

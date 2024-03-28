@@ -1,6 +1,4 @@
 ﻿using Dawem.Enums.Generals;
-using System.Globalization;
-using System.Text.Json.Serialization;
 
 namespace Dawem.Models.Dtos.Core.Holidays
 {

@@ -3,13 +3,11 @@ using Dawem.Contract.BusinessLogic.Core;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Permissions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Response.Core.Roles;
-using Dawem.Repository.Others;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Dawem.Translations
+﻿namespace Dawem.Translations
 {
     public static class AmgadKeys
     {

@@ -534,6 +534,18 @@ namespace Dawem.Data
                 Property(e => e.TotalOverTimeHours).
                 HasComputedColumnSql("dbo.TotalOverTimeHours(Id)");
 
+            builder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.TotalWorkingHours(Id)"));
+
+            builder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.TotalLateArrivalsHours(Id)"));
+
+            builder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.TotalEarlyDeparturesHours(Id)"));
+
+            builder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.TotalOverTimeHours(Id)"));
+
             #endregion
 
         }

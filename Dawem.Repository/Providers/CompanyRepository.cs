@@ -1,10 +1,7 @@
 ﻿using Dawem.Contract.Repository.Provider;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Enums.Generals;
-using Dawem.Models.Context;
 using Dawem.Models.Dtos.Providers.Companies;
 using Dawem.Models.Generic;
 using LinqKit;

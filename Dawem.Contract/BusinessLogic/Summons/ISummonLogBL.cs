@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Dtos.Summons.Summons;
-using Dawem.Models.Response.Summons.Summons;
+using Dawem.Models.Response.Summons.SummonLogs;
 
 namespace Dawem.Contract.BusinessLogic.Summons
 {

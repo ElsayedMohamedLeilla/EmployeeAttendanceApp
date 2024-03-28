@@ -14,7 +14,6 @@ using Dawem.Models.Response.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation;
 using Dawem.Validation.FluentValidation.Schedules.ShiftWorkingTimes;
-using Google.Api.Gax;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Schedules.Schedules

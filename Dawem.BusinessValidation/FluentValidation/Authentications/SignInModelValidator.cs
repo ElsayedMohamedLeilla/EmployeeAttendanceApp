@@ -1,7 +1,6 @@
 ﻿using Dawem.Models.Dtos.Identities;
 using Dawem.Translations;
 using FluentValidation;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Dawem.Validation.FluentValidation.Authentications
 {

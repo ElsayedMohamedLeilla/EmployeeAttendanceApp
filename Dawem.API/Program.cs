@@ -28,7 +28,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using System.Configuration;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);

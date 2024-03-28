@@ -3,7 +3,6 @@ using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 

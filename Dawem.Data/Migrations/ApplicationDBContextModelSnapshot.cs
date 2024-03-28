@@ -133,7 +133,16 @@ namespace Dawem.Data.Migrations
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
-                    b.ToTable("EmployeeAttendances", "Dawem");
+                    b.ToTable("EmployeeAttendances", "Dawem", t =>
+                        {
+                            t.HasTrigger("dbo.TotalEarlyDeparturesHours(Id)");
+
+                            t.HasTrigger("dbo.TotalLateArrivalsHours(Id)");
+
+                            t.HasTrigger("dbo.TotalOverTimeHours(Id)");
+
+                            t.HasTrigger("dbo.TotalWorkingHours(Id)");
+                        });
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendanceCheck", b =>

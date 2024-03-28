@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Summons.Summons
+namespace Dawem.Models.Response.Summons.SummonLogs
 {
     public class GetSummonLogInfoResponseModel
     {

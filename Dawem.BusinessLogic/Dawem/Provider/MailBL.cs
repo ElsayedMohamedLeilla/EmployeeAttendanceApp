@@ -2,7 +2,7 @@
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Translations;
 using NuGet.Packaging;
 using System.Net;

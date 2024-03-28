@@ -3,7 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Subscriptions;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Subscriptions;
 using Dawem.Translations;
 

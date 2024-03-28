@@ -3,7 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Requests.Justifications;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

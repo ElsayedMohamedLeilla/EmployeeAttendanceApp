@@ -5,7 +5,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Summons.SummonLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

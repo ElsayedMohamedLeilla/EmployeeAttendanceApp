@@ -12,7 +12,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Dtos.Dawem.Requests;
 using Dawem.Models.Dtos.Dawem.Requests.Justifications;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Justifications;
 using Dawem.Translations;

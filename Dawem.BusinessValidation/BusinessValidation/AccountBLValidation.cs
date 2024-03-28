@@ -6,7 +6,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Identities;
 using Dawem.Models.Dtos.Dawem.Providers;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

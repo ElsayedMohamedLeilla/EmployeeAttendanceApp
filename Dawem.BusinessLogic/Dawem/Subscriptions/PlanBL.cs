@@ -11,7 +11,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

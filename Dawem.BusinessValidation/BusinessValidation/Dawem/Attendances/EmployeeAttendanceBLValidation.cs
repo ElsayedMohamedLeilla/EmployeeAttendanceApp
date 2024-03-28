@@ -4,7 +4,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Attendances;
 using Dawem.Models.Response.Core.Zones;
 using Dawem.Models.Response.Schedules.Schedules;

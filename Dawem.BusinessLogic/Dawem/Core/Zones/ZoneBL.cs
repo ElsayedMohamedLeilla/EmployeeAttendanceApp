@@ -15,7 +15,7 @@ using Dawem.Models.Dtos.Dawem.Core.Zones;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Zones;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Core.Zones;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;

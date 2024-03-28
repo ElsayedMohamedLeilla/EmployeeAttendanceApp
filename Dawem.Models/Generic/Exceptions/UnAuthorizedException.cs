@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Exceptions
+﻿namespace Dawem.Models.Generic.Exceptions
 {
     public class UnAuthorizedException : Exception
     {

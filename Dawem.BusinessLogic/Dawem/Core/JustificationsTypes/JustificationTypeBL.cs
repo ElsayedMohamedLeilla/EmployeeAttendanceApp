@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.JustificationsTypes;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Core.JustificationsTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

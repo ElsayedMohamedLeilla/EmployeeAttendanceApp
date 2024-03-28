@@ -11,7 +11,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Employees.Users;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;

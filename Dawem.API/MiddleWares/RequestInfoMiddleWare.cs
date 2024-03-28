@@ -3,8 +3,8 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Exceptions;
 using Dawem.Models.Generic;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -95,7 +95,7 @@ namespace Dawem.API.MiddleWares
         {
             var leapYearPattern = IslamicLeapYearPattern.Base15;
             var epoch = IslamicEpoch.Astronomical;
-            var hijriCalendar = CalendarSystem.GetIslamicCalendar(leapYearPattern,epoch);
+            var hijriCalendar = CalendarSystem.GetIslamicCalendar(leapYearPattern, epoch);
             var now = SystemClock.Instance.GetCurrentInstant();
             var localDateTimeInHijri = now.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).WithCalendar(hijriCalendar);
             return localDateTimeInHijri.LocalDateTime;

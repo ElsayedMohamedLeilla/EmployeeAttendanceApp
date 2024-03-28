@@ -15,7 +15,7 @@ using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Identities;
 using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;

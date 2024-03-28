@@ -13,7 +13,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;

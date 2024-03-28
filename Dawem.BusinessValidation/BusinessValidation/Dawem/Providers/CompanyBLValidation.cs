@@ -2,7 +2,7 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

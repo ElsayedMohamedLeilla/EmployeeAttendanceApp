@@ -8,7 +8,7 @@ using Dawem.Domain.Entities.Employees;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.TaskTypes;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Employees.TaskTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

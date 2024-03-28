@@ -14,7 +14,7 @@ using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Dtos.Dawem.Requests;
 using Dawem.Models.Dtos.Dawem.Requests.Assignments;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Requests;
 using Dawem.Models.Response.Requests.Assignments;
 using Dawem.Translations;

@@ -3,7 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

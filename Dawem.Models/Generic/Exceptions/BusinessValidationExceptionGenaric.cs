@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Dawem.Models.Exceptions
+namespace Dawem.Models.Generic.Exceptions
 {
     public class BusinessValidationExceptionGenaric<T> : Exception
     {

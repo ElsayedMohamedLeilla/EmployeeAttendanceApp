@@ -3,7 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.Groups;
-using Dawem.Models.Exceptions;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

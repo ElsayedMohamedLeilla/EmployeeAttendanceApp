@@ -1,5 +1,4 @@
-﻿using Dawem.BusinessLogic.Employees;
-using Dawem.Contract.BusinessLogic.Attendances;
+﻿using Dawem.Contract.BusinessLogic.Attendances;
 using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Attendances;
 using Dawem.Translations;
@@ -28,7 +27,7 @@ namespace Dawem.API.Controllers.Attendances
             }
             var fingerPrintType = await employeeAttendanceBL.CreateFingerPrint(model);
             var messageCode = fingerPrintType == FingerPrintType.CheckIn ?
-                 LeillaKeys.DoneCheckInSuccessfully : fingerPrintType == FingerPrintType.Summon ? 
+                 LeillaKeys.DoneCheckInSuccessfully : fingerPrintType == FingerPrintType.Summon ?
                  LeillaKeys.DoneMakeSummonSuccessfully :
                  LeillaKeys.DoneCheckOutSuccessfully;
             return Success(fingerPrintType, messageCode: messageCode);
@@ -91,7 +90,7 @@ namespace Dawem.API.Controllers.Attendances
         public async Task<ActionResult> CreateExportDraft()
         {
             var stream = await employeeAttendanceBL.ExportDraft();
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", AmgadKeys.EmployeeEmptyDraft);
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", AmgadKeys.EmployeeAttendanceEmptyDraft);
         }
 
         [HttpPost]

@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
+using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Excel;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using System.Reflection;
 
 namespace Dawem.Helpers
@@ -127,6 +129,40 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(6, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(7, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(8, 1).Style.Font.FontColor = XLColor.Red;
+            }
+            else if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.EmployeeAttendance)
+            {
+                readmeSheet.Cell(5, 1).Value = "3. Ensure all required fields are populated EmployeeName";
+                readmeSheet.Cell(6, 1).Value = "4. Latitude & Longtude Must be Double";
+                readmeSheet.Cell(7, 1).Value = "5. follow up any validation message and solve the problem thrown to insert file successfully";
+                readmeSheet.Cell(8, 1).Value = "6. FingerPrintType Must Be Of This (CheckIn , CheckOut , BreakIn ,BreakOut Or Summon";
+                readmeSheet.Cell(9, 1).Value = "7. RecognitionWay Must Be Of This (NotSet ,FingerPrint , FaceRecognition , VoiceRecognition ,PaternRecognition , PinRecognition or PasswordRecognition ";
+                readmeSheet.Cell(10, 1).Value = "8. Save the file.";
+                // Apply formatting to the "Read Me" sheet
+                readmeSheet.Cell(1, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(2, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(3, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(4, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(5, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(6, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(7, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(8, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(9, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(10, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(2, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(1, 1).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(2, 1).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(3, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(4, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(5, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(6, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(7, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(8, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(9, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(10, 1).Style.Font.FontColor = XLColor.Red;
+
+
             }
 
             readmeSheet.Columns().AdjustToContents();

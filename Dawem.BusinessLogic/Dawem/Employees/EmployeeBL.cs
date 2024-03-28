@@ -474,7 +474,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #endregion
         }
-
         public async Task<MemoryStream> ExportDraft()
         {
             EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
@@ -615,6 +614,35 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully, requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.EmployeeEnteredSuccessfully, requestInfo?.Lang));
             }
             return result;
+        }
+        public async Task<bool> UpdateSpecificDataForEmployee(UpdateSpecificModelDTO model)
+        {
+            unitOfWork.CreateTransaction();
+            #region Upload Profile Image
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+                imageName = result.FileName;
+            }
+            #endregion
+            #region Update Employee
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
+            && employee.Id == model.Id);
+            getEmployee.ModifiedDate = DateTime.Now;
+            getEmployee.ModifyUserId = requestInfo.UserId;
+            getEmployee.Address = model.Address;
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+                ? getEmployee.ProfileImageName : null;
+            getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
+            await unitOfWork.SaveAsync();
+            #endregion
+            #region Handle Response
+            await unitOfWork.CommitAsync();
+            return true;
+            #endregion
         }
     }
 }

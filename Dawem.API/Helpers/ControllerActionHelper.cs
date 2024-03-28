@@ -1,6 +1,7 @@
 ﻿using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Response.Others;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;

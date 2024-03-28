@@ -18,5 +18,6 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         Task<GetEmployeesInformationsResponseDTO> GetEmployeesInformations();
         public Task<MemoryStream> ExportDraft();
         public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
+        Task<bool> UpdateSpecificDataForEmployee(UpdateSpecificModelDTO model);
     }
 }

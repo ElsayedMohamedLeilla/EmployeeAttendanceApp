@@ -12,7 +12,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Employees.Employees;
 using Dawem.Models.Dtos.Excel;
-using Dawem.Models.Dtos.Excel.Departments;
 using Dawem.Models.Dtos.Excel.Employees;
 using Dawem.Models.Exceptions;
 using Dawem.Models.Response.Employees.Employees;
@@ -213,16 +212,11 @@ namespace Dawem.BusinessLogic.Employees
                 repositoryManager.ZoneEmployeeRepository.BulkInsert(addedEmployeeZones);
 
             #endregion
-
             await unitOfWork.SaveAsync();
-
             #endregion
-
             #region Handle Response
-
             await unitOfWork.CommitAsync();
             return true;
-
             #endregion
         }
         public async Task<GetEmployeesResponse> Get(GetEmployeesCriteria criteria)
@@ -492,7 +486,7 @@ namespace Dawem.BusinessLogic.Employees
             iniValidationModelDTO.FileStream = importedFile;
             iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
                                                - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
-            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2,3,4,5,6, 7,8,9,10,11,12,13 });//employee Number & Name & Email
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 });//employee Number & Name & Email
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
 
             //string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
@@ -563,7 +557,7 @@ namespace Dawem.BusinessLogic.Employees
                                     Temp.InsertedFromExcel = true;
                                     if (Temp.DepartmentId == 0)
                                     {
-                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo?.Lang)  + LeillaKeys.Space +TranslationHelper.GetTranslation(AmgadKeys.NotFound , requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber , requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
                                     else if (Temp.JobTitleId == 0)
@@ -581,7 +575,7 @@ namespace Dawem.BusinessLogic.Employees
                                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDirectManager, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                         return result;
                                     }
-                                   
+
                                     else
                                     {
                                         ImportedList.Add(Temp);
@@ -589,7 +583,7 @@ namespace Dawem.BusinessLogic.Employees
                                 }
                                 else
                                 {
-                                    result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.Email + LeillaKeys.Space + TranslationHelper.GetTranslation( AmgadKeys.ThisEmailIsUsedByEmployee , requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space +TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber,requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                                    result.Add(AmgadKeys.DuplicationInDBProblem, foundEmployeeInDB.Email + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.ThisEmailIsUsedByEmployee, requestInfo?.Lang) + LeillaKeys.Space + foundEmployeeInDB.Name + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                                     return result;
                                 }
                             }
@@ -613,9 +607,39 @@ namespace Dawem.BusinessLogic.Employees
                 }
                 repositoryManager.EmployeeRepository.BulkInsert(ImportedList);
                 await unitOfWork.SaveAsync();
-                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully , requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.EmployeeEnteredSuccessfully,requestInfo?.Lang));
+                result.Add(AmgadKeys.Success, TranslationHelper.GetTranslation(AmgadKeys.ImportedSuccessfully, requestInfo?.Lang) + LeillaKeys.Space + ImportedList.Count + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.EmployeeEnteredSuccessfully, requestInfo?.Lang));
             }
             return result;
+        }
+
+        public async Task<bool> UpdateSpecificDataForEmployee(UpdateSpecificModelDTO model)
+        {
+            unitOfWork.CreateTransaction();
+            #region Upload Profile Image
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+                imageName = result.FileName;
+            }
+            #endregion
+            #region Update Employee
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
+            && employee.Id == model.Id);
+            getEmployee.ModifiedDate = DateTime.Now;
+            getEmployee.ModifyUserId = requestInfo.UserId;
+            getEmployee.Address = model.Address;
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+                ? getEmployee.ProfileImageName : null;
+            getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
+            await unitOfWork.SaveAsync();
+            #endregion
+            #region Handle Response
+            await unitOfWork.CommitAsync();
+            return true;
+            #endregion
         }
     }
 }

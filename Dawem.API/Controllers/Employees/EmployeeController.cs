@@ -47,6 +47,19 @@ namespace Dawem.API.Controllers.Employees
             var result = await employeeBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateEmployeeSuccessfully);
         }
+        [HttpPut, DisableRequestSizeLimit]
+        public async Task<ActionResult> UpdateSpecificData([FromForm] UpdateEmployeeWithImageModel formData)
+        {
+            if (formData == null || formData.UpdateEmployeeModelString == null)
+            {
+                return BadRequest();
+            }
+
+            var model = JsonConvert.DeserializeObject<UpdateSpecificModelDTO>(formData.UpdateEmployeeModelString);
+            model.ProfileImageFile = formData.ProfileImageFile;
+            var result = await employeeBL.UpdateSpecificDataForEmployee(model);
+            return Success(result, messageCode: LeillaKeys.DoneUpdateEmployeeSuccessfully);
+        }
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetEmployeesCriteria criteria)
         {

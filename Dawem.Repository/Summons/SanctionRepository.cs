@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Summons.Sanctions;
+using Dawem.Models.Dtos.Dawem.Summons.Sanctions;
 using Dawem.Models.Generic;
 using LinqKit;
 

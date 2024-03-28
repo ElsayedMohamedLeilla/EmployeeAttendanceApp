@@ -1,7 +1,7 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Attendances;
-using Dawem.Models.Dtos.Attendances;
-using Dawem.Models.Dtos.Dashboard;
+using Dawem.Models.Dtos.Dawem.Attendances;
+using Dawem.Models.Dtos.Dawem.Dashboard;
 
 namespace Dawem.Contract.Repository.Attendances
 {

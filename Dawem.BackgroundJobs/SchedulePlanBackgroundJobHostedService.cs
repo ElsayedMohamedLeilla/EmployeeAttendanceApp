@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.SchedulePlans;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Schedules.SchedulePlans;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NCrontab;

@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Core;
-using Dawem.Models.Dtos.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Dawem.Attendances.FingerprintDevices;
 
 namespace Dawem.Contract.Repository.Attendances
 {

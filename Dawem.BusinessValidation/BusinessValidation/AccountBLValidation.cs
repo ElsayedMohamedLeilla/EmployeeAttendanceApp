@@ -1,11 +1,11 @@
 ﻿using Dawem.Contract.BusinessValidation;
-using Dawem.Contract.BusinessValidationCore.Subscriptions;
+using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Subscriptions;
-using Dawem.Models.Dtos.Identities;
-using Dawem.Models.Dtos.Providers;
+using Dawem.Models.Dtos.Dawem.Identities;
+using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;

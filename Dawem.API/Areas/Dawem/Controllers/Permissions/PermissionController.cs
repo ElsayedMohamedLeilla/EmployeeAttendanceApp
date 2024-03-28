@@ -1,9 +1,9 @@
 ﻿using Dawem.API.Helpers;
-using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
-using Dawem.Models.Dtos.Permissions.Permissions;
+using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Providers;
+﻿using Dawem.Models.Dtos.Dawem.Providers;
 
 namespace Dawem.Models.Response.Providers
 {

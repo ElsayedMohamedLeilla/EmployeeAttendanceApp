@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AutoMapper\Lookups\**" />
+    <Compile Remove="Validations\**" />
+    <EmbeddedResource Remove="AutoMapper\Lookups\**" />
+    <EmbeddedResource Remove="Validations\**" />
+    <None Remove="AutoMapper\Lookups\**" />
+    <None Remove="Validations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Collection" Version="9.0.0" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.11" />
@@ -20,8 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AutoMapper\Lookups\" />
-    <Folder Include="Validations\" />
+    <Folder Include="AutoMapper\AdminPanel\" />
+    <Folder Include="Dtos\AdminPanel\" />
+    <Folder Include="Response\AdminPanel\" />
+    <Folder Include="Response\Dawem\" />
   </ItemGroup>
 
 </Project>

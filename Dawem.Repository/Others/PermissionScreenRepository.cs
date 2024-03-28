@@ -5,7 +5,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Permissions.Permissions;
+using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Translations;
 using LinqKit;
 

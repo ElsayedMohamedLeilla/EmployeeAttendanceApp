@@ -1,5 +1,5 @@
 ﻿using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Translations;
 using FluentValidation.Results;
 

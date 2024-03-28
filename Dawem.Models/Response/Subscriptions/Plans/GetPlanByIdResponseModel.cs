@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Shared;
+﻿using Dawem.Models.Dtos.Dawem.Shared;
 
 namespace Dawem.Models.Response.Subscriptions.Plans
 {

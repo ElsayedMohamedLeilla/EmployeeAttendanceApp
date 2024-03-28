@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogicCore;
+﻿using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Translations;

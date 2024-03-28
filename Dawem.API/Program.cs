@@ -1,15 +1,15 @@
 using Dawem.API;
 using Dawem.API.MiddleWares;
 using Dawem.BusinessLogic;
-using Dawem.BusinessLogic.Localization;
-using Dawem.BusinessLogic.RealTime.SignalR;
+using Dawem.BusinessLogic.Dawem.Localization;
+using Dawem.BusinessLogic.Dawem.RealTime.SignalR;
 using Dawem.BusinessLogicCore;
 using Dawem.Contract.RealTime.Firebase;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
-using Dawem.Models.AutoMapper;
+using Dawem.Models.AutoMapper.Dawem;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Repository;
@@ -17,7 +17,7 @@ using Dawem.Repository.Managers;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation;
-using Dawem.Validation.FluentValidation.Authentications;
+using Dawem.Validation.FluentValidation.Dawem.Authentications;
 using FirebaseAdmin;
 using FluentValidation;
 using Google.Apis.Auth.OAuth2;
@@ -102,7 +102,7 @@ builder.Services.ConfigureBusinessLogicCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 builder.Services.ConfigureBackGroundService();
-builder.Services.ConfigureGlobals(builder.Configuration); 
+builder.Services.ConfigureGlobals(builder.Configuration);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

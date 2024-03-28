@@ -4,8 +4,8 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Attendances;
-using Dawem.Models.Dtos.Dashboard;
+using Dawem.Models.Dtos.Dawem.Attendances;
+using Dawem.Models.Dtos.Dawem.Dashboard;
 using Dawem.Models.Generic;
 using LinqKit;
 

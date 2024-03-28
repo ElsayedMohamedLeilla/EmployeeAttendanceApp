@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AdminPanel\" />
+  </ItemGroup>
+
 </Project>

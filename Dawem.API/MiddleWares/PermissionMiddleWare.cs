@@ -1,5 +1,5 @@
 ﻿using Dawem.API.Helpers;
-using Dawem.Contract.BusinessLogic.Permissions;
+using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;

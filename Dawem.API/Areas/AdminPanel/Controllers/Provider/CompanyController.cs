@@ -1,7 +1,7 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Providers.Companies;
+using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

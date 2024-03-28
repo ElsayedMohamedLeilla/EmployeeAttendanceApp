@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Response.Others;
 using Dawem.Translations;

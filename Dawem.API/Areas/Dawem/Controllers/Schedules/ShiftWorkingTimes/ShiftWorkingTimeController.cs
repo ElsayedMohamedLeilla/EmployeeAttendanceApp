@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Schedules.ShiftWorkingTime;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Schedules.ShiftWorkingTime;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

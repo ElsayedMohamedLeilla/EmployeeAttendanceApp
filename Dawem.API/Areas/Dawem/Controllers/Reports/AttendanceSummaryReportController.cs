@@ -1,5 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Reports;
-using Dawem.Models.Dtos.Reports.AttendanceSummaryReport;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
+using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

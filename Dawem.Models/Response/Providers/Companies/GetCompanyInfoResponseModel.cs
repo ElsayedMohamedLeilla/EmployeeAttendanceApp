@@ -1,5 +1,5 @@
-﻿using Dawem.Models.Dtos.Others;
-using Dawem.Models.Dtos.Providers.Companies;
+﻿using Dawem.Models.Dtos.Dawem.Others;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 
 namespace Dawem.Models.Response.Providers.Companies
 {

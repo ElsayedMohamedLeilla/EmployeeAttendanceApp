@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Provider;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Domain.Entities.Lookups;
-using Dawem.Models.Dtos.Lookups;
+using Dawem.Models.Dtos.Dawem.Lookups;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

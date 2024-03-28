@@ -1,8 +1,8 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.RealTime.Firebase;
 using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

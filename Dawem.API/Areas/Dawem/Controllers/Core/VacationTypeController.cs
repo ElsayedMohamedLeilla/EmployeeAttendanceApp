@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Core.VacationsTypes;
+using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Requests.Assignments;
+using Dawem.Models.Dtos.Dawem.Requests.Assignments;
 
 namespace Dawem.Contract.Repository.Requests
 {

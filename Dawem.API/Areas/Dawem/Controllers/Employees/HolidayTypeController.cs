@@ -1,5 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Employees;
-using Dawem.Models.Dtos.Employees.HolidayTypes;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Employees;
+using Dawem.Models.Dtos.Dawem.Employees.HolidayTypes;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

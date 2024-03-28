@@ -1,5 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Others;
-using Dawem.Models.Dtos.Others.VacationBalances;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Others;
+using Dawem.Models.Dtos.Dawem.Others.VacationBalances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

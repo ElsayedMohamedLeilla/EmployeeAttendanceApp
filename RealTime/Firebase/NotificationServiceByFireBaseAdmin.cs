@@ -1,12 +1,12 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
-using Dawem.Contract.BusinessLogic.Provider;
-using Dawem.Contract.BusinessLogicCore;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
+using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Core.NotificationsStores;
-using Dawem.Models.Dtos.Shared;
+using Dawem.Models.Dtos.Dawem.Core.NotificationsStores;
+using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;

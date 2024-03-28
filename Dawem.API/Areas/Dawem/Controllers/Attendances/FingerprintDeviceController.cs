@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Attendances;
-using Dawem.Models.Dtos.Attendances.FingerprintDevices;
-using Dawem.Models.Dtos.Employees.Employees;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Attendances;
+using Dawem.Models.Dtos.Dawem.Attendances.FingerprintDevices;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

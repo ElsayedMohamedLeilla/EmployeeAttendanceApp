@@ -1,6 +1,6 @@
 ﻿using Dawem.BackgroundJobs;
-using Dawem.BusinessLogic.Lookups;
-using Dawem.Contract.BusinessLogic.Lookups;
+using Dawem.BusinessLogic.Dawem.Lookups;
+using Dawem.Contract.BusinessLogic.Dawem.Lookups;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;

@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Models.Dtos.Providers.Companies;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Models.Generic;
 using LinqKit;
 

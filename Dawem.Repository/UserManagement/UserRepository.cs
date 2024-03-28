@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
-using Dawem.Models.Dtos.Employees.Users;
+using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.Generic;
 using Dawem.Translations;
 using LinqKit;

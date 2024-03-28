@@ -1,5 +1,5 @@
 ﻿using Dawem.API.Helpers;
-using Dawem.Contract.BusinessValidationCore.Subscriptions;
+using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;

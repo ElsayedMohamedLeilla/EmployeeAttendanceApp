@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Lookups;
+﻿using Dawem.Models.Dtos.Dawem.Lookups;
 
 namespace Dawem.Models.Response.Lookups
 {

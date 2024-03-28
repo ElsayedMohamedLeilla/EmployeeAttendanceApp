@@ -7,14 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BusinessLogic\UserManagement\**" />
+    <Compile Remove="BusinessValidation\Lookups\**" />
+    <EmbeddedResource Remove="BusinessLogic\UserManagement\**" />
+    <EmbeddedResource Remove="BusinessValidation\Lookups\**" />
+    <None Remove="BusinessLogic\UserManagement\**" />
+    <None Remove="BusinessValidation\Lookups\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dawem.Data\Dawem.Data.csproj" />
     <ProjectReference Include="..\Dawem.Domain\Dawem.Domain.csproj" />
     <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessLogic\UserManagement\" />
-    <Folder Include="BusinessValidation\Lookups\" />
+    <Folder Include="BusinessLogicCore\AdminPanel\" />
+    <Folder Include="BusinessLogic\AdminPanel\" />
+    <Folder Include="BusinessValidationCore\Dawem\" />
+    <Folder Include="BusinessValidation\AdminPanel\" />
   </ItemGroup>
 
   <ItemGroup>

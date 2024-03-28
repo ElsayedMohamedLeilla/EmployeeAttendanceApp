@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Attendances;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Attendances;
 using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Attendances;
+using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

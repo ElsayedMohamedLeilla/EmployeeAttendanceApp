@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Requests;
-using Dawem.Models.Dtos.Requests.Vacations;
+using Dawem.Models.Dtos.Dawem.Requests.Vacations;
 
 namespace Dawem.Contract.Repository.Requests
 {

@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Core;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Models.Criteria.Core;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;

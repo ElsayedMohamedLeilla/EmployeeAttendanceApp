@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FluentValidation\Lookups\**" />
+    <EmbeddedResource Remove="FluentValidation\Lookups\**" />
+    <EntityDeploy Remove="FluentValidation\Lookups\**" />
+    <None Remove="FluentValidation\Lookups\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.7.1" />
   </ItemGroup>
 
@@ -19,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FluentValidation\Lookups\" />
+    <Folder Include="BusinessValidationCore\Dawem\" />
+    <Folder Include="BusinessValidation\AdminPanel\" />
+    <Folder Include="FluentValidation\AdminPanel\" />
     <Folder Include="Lookups\" />
   </ItemGroup>
 

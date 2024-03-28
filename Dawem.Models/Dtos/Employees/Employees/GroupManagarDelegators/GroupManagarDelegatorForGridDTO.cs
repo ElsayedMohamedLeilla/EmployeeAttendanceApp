@@ -1,8 +1,0 @@
-﻿namespace Dawem.Models.Dtos.Employees.Employees.GroupManagarDelegators
-{
-    public class GroupManagarDelegatorForGridDTO
-    {
-        public string EmployeeName { get; set; }
-
-    }
-}

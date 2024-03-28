@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Summons;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Summons.Summons;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Summons;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

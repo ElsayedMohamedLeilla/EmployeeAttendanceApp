@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Schedules.Schedules;
+﻿using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 
 namespace Dawem.Models.Response.Schedules.Schedules
 {

@@ -1,6 +1,6 @@
-﻿using Dawem.Contract.BusinessLogic.Subscriptions;
-using Dawem.Models.Dtos.Employees.Employees;
-using Dawem.Models.Dtos.Subscriptions.Plans;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

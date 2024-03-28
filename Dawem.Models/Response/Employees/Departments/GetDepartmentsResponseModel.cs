@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Employees.Departments;
+﻿using Dawem.Models.Dtos.Dawem.Employees.Departments;
 
 namespace Dawem.Models.Response.Employees.Departments
 {

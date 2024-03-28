@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Others;
+﻿using Dawem.Models.Dtos.Dawem.Others;
 
 namespace Dawem.Models.Response.Requests.Assignments
 {

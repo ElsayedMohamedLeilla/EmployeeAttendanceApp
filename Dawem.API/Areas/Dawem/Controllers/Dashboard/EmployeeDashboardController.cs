@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Dashboard;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Dashboard;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Models.Generic;
 using LinqKit;
 

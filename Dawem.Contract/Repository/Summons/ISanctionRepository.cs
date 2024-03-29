@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Summons;
-using Dawem.Models.Dtos.Summons.Sanctions;
+using Dawem.Models.Dtos.Dawem.Summons.Sanctions;
 
 namespace Dawem.Contract.Repository.Summons
 {

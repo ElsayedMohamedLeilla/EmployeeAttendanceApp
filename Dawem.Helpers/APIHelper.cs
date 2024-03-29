@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Response.Others;
+﻿using Dawem.Models.Response.Dawem.Others;
 
 namespace Dawem.Helpers
 {

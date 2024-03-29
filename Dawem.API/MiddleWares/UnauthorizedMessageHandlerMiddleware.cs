@@ -1,4 +1,4 @@
-﻿using Dawem.API.MiddleWares.Helpers;
+﻿using Dawem.API.Helpers;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
@@ -6,8 +6,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Generic;
 using Dawem.Translations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Dawem.API.MiddleWares
 {

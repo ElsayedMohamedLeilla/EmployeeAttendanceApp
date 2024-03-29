@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Models.Dtos.Schedules.SchedulePlans;
+using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
 
 namespace Dawem.Contract.Repository.Schedules.SchedulePlans
 {

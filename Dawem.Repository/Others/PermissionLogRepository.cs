@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Permissions.PermissionLogs;
+using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
 using LinqKit;
 
 namespace Dawem.Repository.Others

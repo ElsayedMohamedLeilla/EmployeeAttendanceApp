@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Models.Dtos.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
 
 namespace Dawem.Contract.Repository.Schedules.Schedules
 {

@@ -133,7 +133,16 @@ namespace Dawem.Data.Migrations
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
-                    b.ToTable("EmployeeAttendances", "Dawem");
+                    b.ToTable("EmployeeAttendances", "Dawem", t =>
+                        {
+                            t.HasTrigger("dbo.TotalEarlyDeparturesHours(Id)");
+
+                            t.HasTrigger("dbo.TotalLateArrivalsHours(Id)");
+
+                            t.HasTrigger("dbo.TotalOverTimeHours(Id)");
+
+                            t.HasTrigger("dbo.TotalWorkingHours(Id)");
+                        });
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Attendances.EmployeeAttendanceCheck", b =>
@@ -792,6 +801,77 @@ namespace Dawem.Data.Migrations
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("PermissionTypes", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Responsibility", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsForAdminPanel")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL");
+
+                    b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL AND [Name] IS NOT NULL");
+
+                    b.ToTable("Responsibilitys", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.VacationType", b =>
@@ -4874,6 +4954,9 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsForAdminPanel")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -5405,6 +5488,16 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Responsibility", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Company");
                 });

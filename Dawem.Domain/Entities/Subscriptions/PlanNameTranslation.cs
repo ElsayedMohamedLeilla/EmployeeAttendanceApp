@@ -1,5 +1,4 @@
-﻿using Dawem.Domain.Entities.Lookups;
-using Dawem.Translations;
+﻿using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Subscriptions

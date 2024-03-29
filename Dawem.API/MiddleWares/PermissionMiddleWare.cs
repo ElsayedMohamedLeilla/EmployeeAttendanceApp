@@ -1,5 +1,5 @@
-﻿using Dawem.API.MiddleWares.Helpers;
-using Dawem.Contract.BusinessLogic.Permissions;
+﻿using Dawem.API.Helpers;
+using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
@@ -60,7 +60,7 @@ namespace Dawem.API.MiddleWares
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
                                    requestInfo?.Lang) + LeillaKeys.RightBracket +
-                                   LeillaKeys.Space +
+                                   LeillaKeys.Space + 
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Screen.Value.ToString() + LeillaKeys.Screen,

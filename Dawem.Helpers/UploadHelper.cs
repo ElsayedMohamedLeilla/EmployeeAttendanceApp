@@ -1,4 +1,4 @@
-﻿using Dawem.Models.Dtos.Others;
+﻿using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

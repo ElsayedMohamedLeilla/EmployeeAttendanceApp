@@ -1,0 +1,11 @@
+﻿using Dawem.Models.Dtos.Dawem.Lookups;
+
+namespace Dawem.Contract.BusinessLogic.Dawem.Provider
+{
+    public interface IScreenBL
+    {
+        Task<int> Create(CreatedScreen screen);
+        Task<List<ScreenDto>> GetAllDescendantScreens(int id);
+        Task<bool> Delete(int id);
+    }
+}

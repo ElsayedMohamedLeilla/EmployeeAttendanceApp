@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Providers;
-using Dawem.Models.Dtos.Providers.Companies;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 
 namespace Dawem.Contract.Repository.Provider
 {

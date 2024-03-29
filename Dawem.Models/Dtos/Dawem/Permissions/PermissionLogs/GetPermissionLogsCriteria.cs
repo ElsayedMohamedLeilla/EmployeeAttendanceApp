@@ -1,0 +1,12 @@
+﻿using Dawem.Enums.Permissions;
+using Dawem.Models.Criteria;
+
+namespace Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs
+{
+    public class GetPermissionLogsCriteria : BaseCriteria
+    {
+        public int? UserId { get; set; }
+        public ApplicationScreenCode? ScreenCode { get; set; }
+        public ApplicationAction? ActionCode { get; set; }
+    }
+}

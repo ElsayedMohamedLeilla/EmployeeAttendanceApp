@@ -23,6 +23,6 @@ namespace Dawem.Models.Context
         public bool IsMainBranch { get; set; }
         public DateTime LocalDateTime { get; set; }
         public LocalDateTime LocalHijriDateTime { get; set; }
-
+        public bool IsAdminPanel { get; set; }
     }
 }

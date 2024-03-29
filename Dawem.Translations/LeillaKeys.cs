@@ -92,7 +92,8 @@
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string BLValidationCore = "BLValidationCore";
-        public const string ApiControllerAction = "api/[controller]/[action]";
+        public const string DawemApiControllerAction = "api/[controller]/[action]";
+        public const string AdminPanelApiControllerAction = "api/adminpanel/[controller]/[action]";
         public const string Comma = ",";
         public const string CommaThenSpace = ", ";
         public const string Dot = ".";
@@ -577,7 +578,15 @@
         public const string SorryThereIsAlreadyTrialPlanYouMustAddOneTrialPlan = "Sorry!!ThereIsAlreadyTrialPlanYouMustAddOneTrialPlan!";
         public const string SorryYouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType = "Sorry!!YouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType!";
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
-        public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!"; 
+        public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
+
+
+        public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
+        public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
+        public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
+        public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
+        public const string DoneUpdateResponsibilitySuccessfully = "DoneUpdateResponsibilitySuccessfully";
+        
     }
 
 }

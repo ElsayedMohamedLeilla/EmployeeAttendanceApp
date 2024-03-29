@@ -9,10 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Dawem\Data\**" />
+    <Compile Remove="Areas\Dawem\Models\**" />
+    <Compile Remove="Areas\Dawem\Views\**" />
     <Compile Remove="wwwroot\Test\**" />
+    <Content Remove="Areas\Dawem\Data\**" />
+    <Content Remove="Areas\Dawem\Models\**" />
+    <Content Remove="Areas\Dawem\Views\**" />
     <Content Remove="wwwroot\Test\**" />
+    <EmbeddedResource Remove="Areas\Dawem\Data\**" />
+    <EmbeddedResource Remove="Areas\Dawem\Models\**" />
+    <EmbeddedResource Remove="Areas\Dawem\Views\**" />
     <EmbeddedResource Remove="wwwroot\Test\**" />
+    <EntityDeploy Remove="Areas\Dawem\Data\**" />
+    <EntityDeploy Remove="Areas\Dawem\Models\**" />
+    <EntityDeploy Remove="Areas\Dawem\Views\**" />
     <EntityDeploy Remove="wwwroot\Test\**" />
+    <None Remove="Areas\Dawem\Data\**" />
+    <None Remove="Areas\Dawem\Models\**" />
+    <None Remove="Areas\Dawem\Views\**" />
     <None Remove="wwwroot\Test\**" />
   </ItemGroup>
 
@@ -56,10 +71,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Dawem\Controllers\" />
-    <Folder Include="Areas\Dawem\Data\" />
-    <Folder Include="Areas\Dawem\Models\" />
-    <Folder Include="Areas\Dawem\Views\" />
     <Folder Include="wwwroot\uploads\AssignmentRequests\" />
     <Folder Include="wwwroot\uploads\Companies\" />
     <Folder Include="wwwroot\uploads\Employees\" />

@@ -627,7 +627,7 @@ namespace Dawem.BusinessLogic.Employees
             #region Update Employee
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
-            && employee.Id == model.Id);
+            && employee.Id == requestInfo.EmployeeId);
             getEmployee.ModifiedDate = DateTime.Now;
             getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.Address = model.Address;

@@ -63,7 +63,15 @@ namespace Dawem.API.MiddleWares
                 response.State = ResponseStatus.UnAuthorized;
                 response.Message = string.IsNullOrEmpty(ex.Message) ? LeillaKeys.UnAuthorized : ex.Message;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            }
+            catch (ForbiddenException ex)
+            {
+                statusCode = (int)HttpStatusCode.Forbidden;
+                response.State = ResponseStatus.Forbidden;
+                response.Message = string.IsNullOrEmpty(ex.Message) ? 
+                    TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang) : 
+                    ex.Message;
+                await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
             catch (NotRegisteredUserException)
             {

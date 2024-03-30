@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
     public class ScreenController : BaseController
     {
         private readonly IScreenBL screenBL;

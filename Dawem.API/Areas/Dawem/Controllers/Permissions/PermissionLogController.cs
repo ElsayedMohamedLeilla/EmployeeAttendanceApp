@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
     public class PermissionLogController : BaseController
     {

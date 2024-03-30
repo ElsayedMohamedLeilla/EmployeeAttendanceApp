@@ -23,24 +23,24 @@ namespace Dawem.API.MiddleWares
 
             await _request.Invoke(context);
 
-            if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
+            if (context.Response.StatusCode == StatusCodes.Status401Unauthorized && !context.Response.HasStarted)
             {
                 int statusCode = StatusCodes.Status401Unauthorized;
                 var response = new ErrorResponse
                 {
-                    State = ResponseStatus.Forbidden,
+                    State = ResponseStatus.UnAuthorized,
                     Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourAccessDataIsIncorrectPleaseCheckYourUserNameAndPassword,
                            requestInfo?.Lang)
                 };
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
-            else if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
+            else if (context.Response.StatusCode == StatusCodes.Status403Forbidden && !context.Response.HasStarted)
             {
                 int statusCode = StatusCodes.Status403Forbidden;
                 var response = new ErrorResponse
                 {
-                    State = ResponseStatus.UnAuthorized,
+                    State = ResponseStatus.Forbidden,
                     Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouAreForbiddenToAccessRequestedData,
                            requestInfo?.Lang)
                 };

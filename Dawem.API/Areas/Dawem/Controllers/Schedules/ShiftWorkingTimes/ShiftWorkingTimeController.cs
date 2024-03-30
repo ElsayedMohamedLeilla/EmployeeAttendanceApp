@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules.ShiftWorkingTimes
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class ShiftWorkingTimeController : BaseController
     {
         private readonly IShiftWorkingTimeBL shiftWorkingTimeBL;

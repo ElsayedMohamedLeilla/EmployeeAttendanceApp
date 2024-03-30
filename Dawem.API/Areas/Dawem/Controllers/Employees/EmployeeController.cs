@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Employees
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class EmployeeController : BaseController
     {
         private readonly IEmployeeBL employeeBL;

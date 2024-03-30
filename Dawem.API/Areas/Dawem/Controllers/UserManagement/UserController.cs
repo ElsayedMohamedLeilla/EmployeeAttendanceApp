@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class UserController : BaseController
     {
         private readonly IUserBL userBL;

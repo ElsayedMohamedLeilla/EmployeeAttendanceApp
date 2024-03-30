@@ -19,6 +19,7 @@
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string AdminPanel = "adminpanel";
         public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
         public const string LogoImageName = "LogoImageName";

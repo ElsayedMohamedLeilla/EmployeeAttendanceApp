@@ -12,24 +12,31 @@ namespace Dawem.API.Helpers
         public static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponse response)
         {
             unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
+            if (!context.Response.HasStarted)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
+                context.Response.StatusCode = statusCode;
+                context.Response.ContentType = LeillaKeys.ApplicationJson;
+                var settings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
+            }
+            
         }
         public static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponseGenaric<int> response)
         {
             unitOfWork.Rollback();
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = LeillaKeys.ApplicationJson;
-            var settings = new JsonSerializerSettings
+            if (!context.Response.HasStarted)
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
+                context.Response.StatusCode = statusCode;
+                context.Response.ContentType = LeillaKeys.ApplicationJson;
+                var settings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
+            }
         }
     }
 }

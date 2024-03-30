@@ -30,6 +30,7 @@ namespace Dawem.API.MiddleWares
             ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.RequestPath = httpContext.Request.Path;
 
             int userId = 0;
             int companyId = 0;
@@ -78,7 +79,8 @@ namespace Dawem.API.MiddleWares
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
                 requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
-                requestInfo.IsAdminPanel = requestInfo.User.IsForAdminPanel;
+                requestInfo.IsAdminPanel = requestInfo.User.IsForAdminPanel/* && 
+                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel)*/;
             }
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))

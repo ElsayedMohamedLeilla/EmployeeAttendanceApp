@@ -2,7 +2,7 @@ using Dawem.Contract.Repository.Localization;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Localization;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.Localizations
 {

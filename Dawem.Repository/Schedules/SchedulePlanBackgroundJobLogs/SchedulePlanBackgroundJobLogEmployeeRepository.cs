@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs
 {

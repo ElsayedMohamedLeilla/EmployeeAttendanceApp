@@ -4,10 +4,10 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Core.JustificationsTypes
+namespace Dawem.Repository.Core
 {
     public class ResponsibilityRepository : GenericRepository<Responsibility>, IResponsibilityRepository
     {

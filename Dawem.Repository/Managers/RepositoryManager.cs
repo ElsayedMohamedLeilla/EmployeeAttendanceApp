@@ -17,7 +17,7 @@ using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Repository.Attendances;
 using Dawem.Repository.Core;
 using Dawem.Repository.Core.Groups;

@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Dashboard
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+
+
     public class DashboardController : BaseController
     {
         private readonly IDashboardBL dashboardBL;

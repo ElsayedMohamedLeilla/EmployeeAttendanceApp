@@ -8,7 +8,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Dtos.Dawem.Lookups;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using IPinfo;
 using LinqKit;

@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances.FingerprintDevices;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
 namespace Dawem.Repository.Attendances

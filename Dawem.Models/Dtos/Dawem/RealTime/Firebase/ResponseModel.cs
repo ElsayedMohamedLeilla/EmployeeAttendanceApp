@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Dawem.Models.RealTime.Firebase
+namespace Dawem.Models.DTOs.Dawem.RealTime.Firebase
 {
     public class ResponseModel
     {

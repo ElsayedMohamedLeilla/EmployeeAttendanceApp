@@ -1,6 +1,6 @@
 ﻿using Dawem.Data.UnitOfWork;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dawem.Data

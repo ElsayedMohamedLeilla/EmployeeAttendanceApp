@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

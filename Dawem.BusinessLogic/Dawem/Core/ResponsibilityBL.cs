@@ -9,11 +9,11 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
 using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Response.Dawem.Employees.JobTitles;
+using Dawem.Models.Response.Dawem.Core.Responsibilities;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Dawem.Employees
+namespace Dawem.BusinessLogic.Dawem.Core
 {
     public class ResponsibilityBL : IResponsibilityBL
     {
@@ -49,8 +49,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #region Set Responsibility Code
 
             var getNextCode = await repositoryManager.ResponsibilityRepository
-                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.IsAdminPanel && e.CompanyId == null))
+                .Get(e => !requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId ||
+                requestInfo.IsAdminPanel && e.CompanyId == null)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -217,7 +217,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             var responsibilityRepository = repositoryManager.ResponsibilityRepository;
             var query = responsibilityRepository.
-                Get(responsibility => ((requestInfo.IsAdminPanel && responsibility.CompanyId == null) ||
+                Get(responsibility => (requestInfo.IsAdminPanel && responsibility.CompanyId == null ||
                 responsibility.CompanyId == requestInfo.CompanyId) &&
                 !responsibility.IsDeleted && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel);
 

@@ -1,10 +1,11 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
+﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Core
+namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
     public class AdminPanelResponsibilityController : BaseController

@@ -3,9 +3,9 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 
-namespace Dawem.Repository.Core.JustificationsTypes
+namespace Dawem.Repository.Core
 {
     public class UserResponsibilityRepository : GenericRepository<UserResponsibility>, IUserResponsibilityRepository
     {

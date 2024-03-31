@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240330035108_Responsibility")]
+    partial class Responsibility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -872,66 +875,6 @@ namespace Dawem.Data.Migrations
                         .HasFilter("[CompanyId] IS NOT NULL AND [Name] IS NOT NULL");
 
                     b.ToTable("Responsibilities", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.UserResponsibility", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("ResponsibilityId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResponsibilityId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserResponsibilities", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.VacationType", b =>
@@ -2322,7 +2265,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("ResponsibilityId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -2330,7 +2273,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResponsibilityId");
+                    b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
 
@@ -5562,25 +5505,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.UserResponsibility", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Core.Responsibility", "Responsibility")
-                        .WithMany("ResponsibilityUsers")
-                        .HasForeignKey("ResponsibilityId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
-                        .WithMany("UserResponsibilities")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Responsibility");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Core.VacationType", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
@@ -5828,9 +5752,9 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Core.Responsibility", "Responsibility")
+                    b.HasOne("Dawem.Domain.Entities.UserManagement.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("ResponsibilityId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
@@ -5840,7 +5764,7 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("Responsibility");
+                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });
@@ -6638,11 +6562,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Zones");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.Responsibility", b =>
-                {
-                    b.Navigation("ResponsibilityUsers");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.Department", b =>
                 {
                     b.Navigation("Children");
@@ -6790,8 +6709,6 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.MyUser", b =>
                 {
                     b.Navigation("UserBranches");
-
-                    b.Navigation("UserResponsibilities");
 
                     b.Navigation("UserRoles");
                 });

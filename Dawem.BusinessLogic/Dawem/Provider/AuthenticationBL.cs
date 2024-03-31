@@ -353,7 +353,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 UserId = user.Id,
                 UserName = user.UserName,
                 RememberMe = model.RememberMe,
-                Roles = roles,
+                Responsibilities = roles,
                 CompanyId = user.CompanyId,
                 ApplicationType = model.ApplicationType
             };
@@ -479,9 +479,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             {
                 claimsIdentity.AddClaim(new Claim(LeillaKeys.RememberMe, LeillaKeys.True));
             }
-            if (criteria.Roles != null)
+            if (criteria.Responsibilities != null)
             {
-                claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                claimsIdentity.AddClaims(criteria.Responsibilities.Select(role => new Claim(ClaimTypes.Role, role)));
             }
 
             JwtSecurityTokenHandler tokenHandler = new();

@@ -30,7 +30,7 @@
         RequestPermission,
         RequestTask,
         RequestVacation,
-        Role,
+        Responsibility,
         Schedule,
         SchedulePlan,
         SchedulePlanLog,

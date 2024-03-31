@@ -46,19 +46,22 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Insert Responsibility
 
-            #region Set Responsibility code
+            #region Set Responsibility Code
+
             var getNextCode = await repositoryManager.ResponsibilityRepository
-                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.IsAdminPanel && e.CompanyId == null))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
+
             #endregion
 
             var responsibility = mapper.Map<Responsibility>(model);
             responsibility.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
             responsibility.AddUserId = requestInfo.UserId;
-
             responsibility.Code = getNextCode;
+            responsibility.IsForAdminPanel = requestInfo.IsAdminPanel;
             repositoryManager.ResponsibilityRepository.Insert(responsibility);
             await unitOfWork.SaveAsync();
 
@@ -174,7 +177,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetResponsibilityInfoResponseModel> GetInfo(int ResponsibilityId)
         {
-            var responsibility = await repositoryManager.ResponsibilityRepository.Get(e => e.Id == ResponsibilityId && !e.IsDeleted)
+            var responsibility = await repositoryManager.ResponsibilityRepository.
+                Get(e => e.Id == ResponsibilityId && !e.IsDeleted && !e.IsDeleted && e.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(e => new GetResponsibilityInfoResponseModel
                 {
                     Code = e.Code,
@@ -186,7 +190,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetResponsibilityByIdResponseModel> GetById(int ResponsibilityId)
         {
-            var responsibility = await repositoryManager.ResponsibilityRepository.Get(e => e.Id == ResponsibilityId && !e.IsDeleted)
+            var responsibility = await repositoryManager.ResponsibilityRepository.
+                Get(e => e.Id == ResponsibilityId && !e.IsDeleted && e.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(e => new GetResponsibilityByIdResponseModel
                 {
                     Id = e.Id,
@@ -200,7 +205,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<bool> Delete(int responsibilityd)
         {
-            var responsibility = await repositoryManager.ResponsibilityRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == responsibilityd) ??
+            var responsibility = await repositoryManager.ResponsibilityRepository.
+                GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == responsibilityd &&
+                !d.IsDeleted && d.IsForAdminPanel == requestInfo.IsAdminPanel) ??
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
             responsibility.Delete();
             await unitOfWork.SaveAsync();
@@ -210,8 +217,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             var responsibilityRepository = repositoryManager.ResponsibilityRepository;
             var query = responsibilityRepository.
-                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId || 
-                responsibility.CompanyId == null);
+                Get(responsibility => ((requestInfo.IsAdminPanel && responsibility.CompanyId == null) ||
+                responsibility.CompanyId == requestInfo.CompanyId) &&
+                !responsibility.IsDeleted && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             #region Handle Response
 

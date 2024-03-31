@@ -77,6 +77,7 @@ namespace Dawem.Repository.Managers
         private IHolidayTypeRepository holidayTypeRepository;
         private IJustificationsTypeRepository justificationsTypeRepository;
         private IResponsibilityRepository responsibilityRepository;
+        private IUserResponsibilityRepository userResponsibilityRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
@@ -195,6 +196,8 @@ namespace Dawem.Repository.Managers
         justificationsTypeRepository ??= new JustificationsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IResponsibilityRepository ResponsibilityRepository =>
         responsibilityRepository ??= new ResponsibilityRepository(unitOfWork, generalSetting, requestInfo);
+        public IUserResponsibilityRepository UserResponsibilityRepository =>
+        userResponsibilityRepository ??= new UserResponsibilityRepository(unitOfWork, generalSetting, requestInfo);
         public IVacationsTypeRepository VacationsTypeRepository =>
         vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IPermissionsTypeRepository PermissionsTypeRepository =>

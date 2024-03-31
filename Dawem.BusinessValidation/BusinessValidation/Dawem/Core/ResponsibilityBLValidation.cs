@@ -21,7 +21,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
         {
             var checkResponsibilityDuplicate = await repositoryManager.
                 ResponsibilityRepository.
-                Get(c => (c.CompanyId == requestInfo.CompanyId || c.CompanyId == null) &&
+                Get(c => ((requestInfo.IsAdminPanel && c.CompanyId == null) || c.CompanyId == requestInfo.CompanyId) &&
                 c.Name == model.Name &&
                 c.IsForAdminPanel == requestInfo.IsAdminPanel).
                 AnyAsync();
@@ -37,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
         {
             var checkResponsibilityDuplicate = await repositoryManager
                 .ResponsibilityRepository.
-                Get(c => (c.CompanyId == requestInfo.CompanyId || c.CompanyId == null) &&
+                Get(c => ((requestInfo.IsAdminPanel && c.CompanyId == null) || c.CompanyId == requestInfo.CompanyId) &&
                 c.Name == model.Name &&
                 c.IsForAdminPanel == requestInfo.IsAdminPanel && c.Id != model.Id).AnyAsync();
             if (checkResponsibilityDuplicate)

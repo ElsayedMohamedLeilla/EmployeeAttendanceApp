@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Others
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController]
+   
     public class BrowseController : BaseController
     {
         private readonly IWebHostEnvironment webHostEnvironment;

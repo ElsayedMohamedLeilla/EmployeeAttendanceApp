@@ -21,14 +21,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         public async Task<bool> CreateValidation(CreatePermissionModel model)
         {
-            if (model.RoleId != null)
+            if (model.ResponsibilityId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.RoleId == model.RoleId).AnyAsync();
+                c.ResponsibilityId == model.ResponsibilityId).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
-                    throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionResponsibilityIsDuplicated);
                 }
             }
             else if (model.UserId != null)
@@ -52,14 +52,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         public async Task<bool> UpdateValidation(UpdatePermissionModel model)
         {
-            if (model.RoleId != null)
+            if (model.ResponsibilityId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.RoleId == model.RoleId && c.Id != model.Id).AnyAsync();
+                c.ResponsibilityId == model.ResponsibilityId && c.Id != model.Id).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
-                    throw new BusinessValidationException(LeillaKeys.SorryPermissionRoleIsDuplicated);
+                    throw new BusinessValidationException(LeillaKeys.SorryPermissionResponsibilityIsDuplicated);
                 }
             }
             else if (model.UserId != null)

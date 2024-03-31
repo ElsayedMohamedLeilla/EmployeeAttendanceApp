@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize] 
     public class ResponsibilityController : BaseController
     {
         private readonly IResponsibilityBL responsibilityBL;

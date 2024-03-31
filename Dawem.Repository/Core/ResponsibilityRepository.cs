@@ -22,7 +22,15 @@ namespace Dawem.Repository.Core.JustificationsTypes
             var predicate = PredicateBuilder.New<Responsibility>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Responsibility>(true);
 
-            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId && requestInfo.CompanyId > 0);
+            if (requestInfo.IsAdminPanel)
+            {
+                predicate = predicate.And(e => e.CompanyId == null);
+            }
+            else
+            {
+                predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            }
+
             predicate = predicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

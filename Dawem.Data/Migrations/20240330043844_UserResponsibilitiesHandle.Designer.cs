@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240330043844_UserResponsibilitiesHandle")]
+    partial class UserResponsibilitiesHandle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2322,7 +2325,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("ResponsibilityId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -2330,7 +2333,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResponsibilityId");
+                    b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
 
@@ -5573,7 +5576,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
                         .WithMany("UserResponsibilities")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Responsibility");
@@ -5828,9 +5831,9 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Core.Responsibility", "Responsibility")
+                    b.HasOne("Dawem.Domain.Entities.UserManagement.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("ResponsibilityId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
@@ -5840,7 +5843,7 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("Responsibility");
+                    b.Navigation("Role");
 
                     b.Navigation("User");
                 });

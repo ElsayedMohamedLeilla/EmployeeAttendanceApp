@@ -28,8 +28,9 @@ namespace Dawem.Validation.FluentValidation.Dawem.Employees.User
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
-            RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
-               WithMessage(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+            RuleFor(user => user.Responsibilities).
+                Must(r => r != null && r.Count > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
 
             RuleFor(user => user.Password).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterPassword);

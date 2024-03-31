@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Dawem;
+﻿using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.UserManagement;
@@ -15,31 +16,96 @@ namespace Dawem.Data
             var context = serviceProvider.GetRequiredService<ApplicationDBContext>();
             context.Database.EnsureCreated();
 
-            var rolesToSeed = new List<Role>
+            var rolesToSeed = new List<Domain.Entities.UserManagement.Role>
             {
-                new() { Name = "FULLACCESS", NormalizedName = "FULLACCESS" ,ConcurrencyStamp =null},
-                new() { Name = "ADMIN", NormalizedName = "ADMIN",ConcurrencyStamp =null},
-                new() { Name = "EMPLOYEE", NormalizedName = "EMPLOYEE",ConcurrencyStamp =null},
-                new() { Name = "USER", NormalizedName = "USER",ConcurrencyStamp =null},
-                new() { Name = "MANAGER", NormalizedName = "MANAGER",ConcurrencyStamp =null},
-                new() { Name = "DEVELOPER", NormalizedName = "DEVELOPER",ConcurrencyStamp =null},
-                new() { Name = "SUPPORT", NormalizedName = "SUPPORT",ConcurrencyStamp =null},
-                new() { Name = "CUSTOMER", NormalizedName = "CUSTOMER",ConcurrencyStamp =null},
-                new() { Name = "VIEWER", NormalizedName = "VIEWER",ConcurrencyStamp =null},
-                new() { Name = "DOCTOR", NormalizedName = "DOCTOR",ConcurrencyStamp =null},
-                new() { Name = "NURSE", NormalizedName = "NURSE",ConcurrencyStamp =null},
-                new() { Name = "MEDICALASSISTANT", NormalizedName = "MEDICALASSISTANT",ConcurrencyStamp =null},
-                new() { Name = "PHARMACIST", NormalizedName = "PHARMACIST",ConcurrencyStamp =null},
-                new() { Name = "RECEPTIONIST", NormalizedName = "RECEPTIONIST",ConcurrencyStamp =null},
-                new() { Name = "SECURITYOFFICER", NormalizedName = "SECURITYOFFICER",ConcurrencyStamp =null},
-                new() { Name = "HOUSEKEEPING", NormalizedName = "HOUSEKEEPING",ConcurrencyStamp =null},
-                new() { Name = "ITSUPPORT", NormalizedName = "ITSUPPORT",ConcurrencyStamp =null},
+                new() { Name = "FULLACCESS", NormalizedName = "FULLACCESS" , ConcurrencyStamp =null},
+                new() { Name = "ADMIN", NormalizedName = "ADMIN", ConcurrencyStamp =null},
+                new() { Name = "EMPLOYEE", NormalizedName = "EMPLOYEE", ConcurrencyStamp =null},
+                new() { Name = "USER", NormalizedName = "USER", ConcurrencyStamp =null},
+                new() { Name = "MANAGER", NormalizedName = "MANAGER", ConcurrencyStamp =null},
+                new() { Name = "DEVELOPER", NormalizedName = "DEVELOPER", ConcurrencyStamp =null},
+                new() { Name = "SUPPORT", NormalizedName = "SUPPORT", ConcurrencyStamp =null},
+                new() { Name = "CUSTOMER", NormalizedName = "CUSTOMER", ConcurrencyStamp =null},
+                new() { Name = "VIEWER", NormalizedName = "VIEWER", ConcurrencyStamp =null},
+                new() { Name = "DOCTOR", NormalizedName = "DOCTOR", ConcurrencyStamp =null},
+                new() { Name = "NURSE", NormalizedName = "NURSE", ConcurrencyStamp =null},
+                new() { Name = "MEDICALASSISTANT", NormalizedName = "MEDICALASSISTANT", ConcurrencyStamp =null},
+                new() { Name = "PHARMACIST", NormalizedName = "PHARMACIST", ConcurrencyStamp =null},
+                new() { Name = "RECEPTIONIST", NormalizedName = "RECEPTIONIST", ConcurrencyStamp =null},
+                new() { Name = "SECURITYOFFICER", NormalizedName = "SECURITYOFFICER", ConcurrencyStamp =null},
+                new() { Name = "HOUSEKEEPING", NormalizedName = "HOUSEKEEPING", ConcurrencyStamp =null},
+                new() { Name = "ITSUPPORT", NormalizedName = "ITSUPPORT", ConcurrencyStamp =null},
 
             };
             if (!context.Roles.Any())
             {
                 context.Roles.AddRange(rolesToSeed);
                 context.SaveChanges();
+            }
+
+            if (context.Roles.Any() && !context.Responsibilities.Any())
+            {
+                var roles = context.Roles.ToList();
+                var companies = context.Companies.ToList();
+                var responsibilities = new List<Domain.Entities.Core.Responsibility>();
+                int getNextCode = 0;
+
+                foreach (var company in companies)
+                {
+                    #region Set Employee code
+
+                    getNextCode = context.Responsibilities
+                        .Where(e => e.CompanyId == company.Id)
+                        .Select(e => e.Code)
+                        .DefaultIfEmpty()
+                        .Max();
+
+                    #endregion
+
+                    responsibilities = new List<Domain.Entities.Core.Responsibility>();
+
+                    foreach (var role in roles)
+                    {
+                        getNextCode++;
+                        responsibilities.Add(new Domain.Entities.Core.Responsibility
+                        {
+                            Name = role.Name,
+                            Code = getNextCode,
+                            CompanyId = company.Id
+                        });
+                    }
+
+                    context.Responsibilities.AddRange(responsibilities);
+                    context.SaveChanges();
+                }
+
+                responsibilities = new List<Domain.Entities.Core.Responsibility>();
+
+                #region Set Employee code
+
+                getNextCode = context.Responsibilities
+                    .Where(e => e.CompanyId == null)
+                    .Select(e => e.Code)
+                    .DefaultIfEmpty()
+                    .Max();
+
+                #endregion
+
+                foreach (var role in roles)
+                {
+                    getNextCode++;
+                    responsibilities.Add(new Domain.Entities.Core.Responsibility
+                    {
+                        Name = role.Name,
+                        Code = getNextCode,
+                        IsForAdminPanel = true
+                    });
+                }
+
+                context.Responsibilities.AddRange(responsibilities);
+                context.SaveChanges();
+
+
             }
 
 

@@ -97,25 +97,28 @@ namespace Dawem.Repository.Employees
 
                         break;
                     case FilterEmployeeStatus.InTaskOrAssignment:
-                        predicate = predicate.And(employee => employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
-                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending)
+                        predicate = predicate.And(employee => employee.EmployeeTasks.Any(task => !task.IsDeleted
+                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || 
+                        task.RequestTask.Request.Status == RequestStatus.Pending)
                         && clientLocalDate.Date >= task.RequestTask.Request.Date
                         && clientLocalDate.Date <= task.RequestTask.DateTo)
-                        &&
-                        !employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
-                        && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
-                        && request.RequestTask.Request.Type == RequestType.Assignment
+                        ||
+                        employee.EmployeeRequests.Any(request => !request.IsDeleted
+                        && (request.Status == RequestStatus.Accepted || 
+                        request.Status == RequestStatus.Pending)
+                        && request.Type == RequestType.Assignment
                         && clientLocalDate.Date >= request.Date.Date
-                        && clientLocalDate.Date <= request.Date.Date));
+                        && clientLocalDate.Date <= request.RequestAssignment.DateTo.Date));
 
                         break;
                     case FilterEmployeeStatus.InVacationOrOutside:
                         predicate = predicate.And(employee =>
-                        employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
-                        && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
-                        && request.RequestTask.Request.Type == RequestType.Vacation
+                        employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestVacation.IsDeleted
+                        && (request.Status == RequestStatus.Accepted || 
+                        request.Status == RequestStatus.Pending)
+                        && request.Type == RequestType.Vacation
                         && clientLocalDate.Date >= request.Date.Date
-                        && clientLocalDate.Date <= request.Date.Date));
+                        && clientLocalDate.Date <= request.RequestVacation.DateTo.Date));
 
                         break;
                     default:

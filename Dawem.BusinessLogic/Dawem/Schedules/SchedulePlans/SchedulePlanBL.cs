@@ -10,7 +10,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Schedules.SchedulePlanLogs;
 using Dawem.Models.Response.Dawem.Schedules.SchedulePlans;
 using Dawem.Translations;

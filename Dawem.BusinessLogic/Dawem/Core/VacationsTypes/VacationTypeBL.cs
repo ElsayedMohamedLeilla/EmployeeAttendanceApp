@@ -8,7 +8,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Core.VacationsTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

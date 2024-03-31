@@ -582,14 +582,12 @@
         public const string SorryYouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType = "Sorry!!YouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType!";
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
         public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
-
-
         public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
         public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
         public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
         public const string DoneUpdateResponsibilitySuccessfully = "DoneUpdateResponsibilitySuccessfully";
-
+        public const string SorryYouMustEnterResponsibilityId = "Sorry!!YouMustEnterResponsibilityId!";
     }
 
 }

@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

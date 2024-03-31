@@ -4,7 +4,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 
 namespace Dawem.API.MiddleWares

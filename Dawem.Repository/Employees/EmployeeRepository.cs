@@ -6,8 +6,8 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
-using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,13 +99,13 @@ namespace Dawem.Repository.Employees
                         break;
                     case FilterEmployeeStatus.InTaskOrAssignment:
                         predicate = predicate.And(employee => employee.EmployeeTasks.Any(task => !task.IsDeleted
-                        && (task.RequestTask.Request.Status == RequestStatus.Accepted || 
+                        && (task.RequestTask.Request.Status == RequestStatus.Accepted ||
                         task.RequestTask.Request.Status == RequestStatus.Pending)
                         && clientLocalDate.Date >= task.RequestTask.Request.Date
                         && clientLocalDate.Date <= task.RequestTask.DateTo)
                         ||
                         employee.EmployeeRequests.Any(request => !request.IsDeleted
-                        && (request.Status == RequestStatus.Accepted || 
+                        && (request.Status == RequestStatus.Accepted ||
                         request.Status == RequestStatus.Pending)
                         && request.Type == RequestType.Assignment
                         && clientLocalDate.Date >= request.Date.Date
@@ -115,7 +115,7 @@ namespace Dawem.Repository.Employees
                     case FilterEmployeeStatus.InVacationOrOutside:
                         predicate = predicate.And(employee =>
                         employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestVacation.IsDeleted
-                        && (request.Status == RequestStatus.Accepted || 
+                        && (request.Status == RequestStatus.Accepted ||
                         request.Status == RequestStatus.Pending)
                         && request.Type == RequestType.Vacation
                         && clientLocalDate.Date >= request.Date.Date
@@ -204,7 +204,7 @@ namespace Dawem.Repository.Employees
                             predicate = predicate.And(e => e.EmployeeAttendances != null &&
                             e.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                             ea.LocalDate.Date >= criteria.DateFrom.Date &&
-                            ea.LocalDate.Date <= criteria.DateTo.Date && 
+                            ea.LocalDate.Date <= criteria.DateTo.Date &&
                             ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
                             (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut))).
                             Count() >= criteria.FilterTypeFrom);
@@ -339,7 +339,7 @@ namespace Dawem.Repository.Employees
 
             var inner = PredicateBuilder.New<Employee>(true);
 
-            
+
 
             predicate = predicate.And(employee =>
 

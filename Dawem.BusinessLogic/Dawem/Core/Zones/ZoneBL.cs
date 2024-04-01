@@ -289,7 +289,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3 });//Zone Name Lat Long can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
-            string[] ExpectedHeaders = { "ZoneName", "Latitude", "Longitude", "Radius", "IsActive" };
+            string[] ExpectedHeaders = typeof(ZoneHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 3 });//Zone Name lat long  can't be duplicated
@@ -364,9 +364,9 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
                             Temp.Latitude = tempLatitude;
                             Temp.Longitude = tempLongtude;
                             Temp.Radius = tempRaduis;
-                            Temp.IsActive = bool.Parse(row.Cell(5).GetString());
+                            Temp.IsActive = row.Cell(5).GetString().Trim() == string.Empty ? false : bool.Parse(row.Cell(5).GetString().Trim());
                             Temp.CompanyId = requestInfo.CompanyId;
-                            Temp.AddedDate = DateTime.Now;
+                            Temp.AddedDate = DateTime.UtcNow;
                             Temp.AddUserId = requestInfo.UserId;
                             Temp.InsertedFromExcel = true;
                             ImportedList.Add(Temp);

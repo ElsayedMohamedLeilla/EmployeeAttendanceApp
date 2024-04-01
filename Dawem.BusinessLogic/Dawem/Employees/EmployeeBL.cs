@@ -493,11 +493,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                                - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
-
-            string[] ExpectedHeaders = { "EmployeeNumber", "EmployeeName", "DepartmentName", "JobTitle"
-                                        , "ScheduleName",
-                                         "DirectManagerName","Email","MobileNumber","Address","JoiningDate",
-                                         "AttendanceType","EmployeeType","IsActive"};
+            string[] ExpectedHeaders = typeof(EmployeeHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1, 2, 7, 8 });//employee Number & Name & Email & Mobile Number

@@ -14,6 +14,8 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Employees.Employees;
+using Dawem.Models.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
@@ -625,23 +627,73 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 imageName = result.FileName;
+                var userResult = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+                   ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+                imageName = result.FileName;
+
             }
             #endregion
             #region Update Employee
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
             && employee.Id == requestInfo.EmployeeId);
-            getEmployee.ModifiedDate = DateTime.Now;
+            getEmployee.ModifiedDate = DateTime.UtcNow;
             getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
+
+            var getUser = await repositoryManager.UserRepository
+             .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
+           && employee.EmployeeId == requestInfo.EmployeeId && employee.Id ==  requestInfo.User.Id);
+            getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+                ? getEmployee.ProfileImageName : null;
+            getUser.ModifiedApplicationType = requestInfo.ApplicationType;
+            getUser.ModifiedDate = DateTime.UtcNow;
+            getUser.ModifyUserId = requestInfo.UserId;
             await unitOfWork.SaveAsync();
             #endregion
             #region Handle Response
             await unitOfWork.CommitAsync();
             return true;
+            #endregion
+        }
+
+        public async Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria criteria)
+        {
+            var employeeRepository = repositoryManager.EmployeeRepository;
+            var query = employeeRepository.GetAsQueryableForEmployeeSchedulePlan(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+
+            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var employeesList = await queryPaged.Select(e => new GetCurrentEmployeeScheduleInPeriodDTO
+            {
+
+
+            }).ToListAsync();
+
+            return new GetEmployeesSchedulePlanResponse
+            {
+                EmployeeSchedulePlan = employeesList,
+                TotalCount = await query.CountAsync()
+            };
+
             #endregion
         }
     }

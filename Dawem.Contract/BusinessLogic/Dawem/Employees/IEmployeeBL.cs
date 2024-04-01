@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.Response.Dawem.Employees.Employees;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Employees
@@ -19,5 +20,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         public Task<MemoryStream> ExportDraft();
         public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
         Task<bool> UpdateSpecificDataForEmployee(UpdateSpecificModelDTO model);
+        Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria model);
+
+
     }
 }

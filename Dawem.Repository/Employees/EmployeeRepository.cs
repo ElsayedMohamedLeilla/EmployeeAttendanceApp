@@ -7,6 +7,8 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.DTOs.Dawem.Generic;
+using Dawem.Models.DTOs.Dawem.Employees.Employees;
+using Dawem.Models.Generic;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -331,5 +333,52 @@ namespace Dawem.Repository.Employees
             return Query;
 
         }
+        public IQueryable<Employee> GetAsQueryableForEmployeeSchedulePlan(GetEmployeeSchedulePlanCritria criteria)
+        {
+            var predicate = PredicateBuilder.New<Employee>(a => !a.IsDeleted);
+            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+
+            var inner = PredicateBuilder.New<Employee>(true);
+
+            
+
+            predicate = predicate.And(employee =>
+
+            (employee.Id == criteria.EmployeeId && employee.ScheduleId > 0 && employee.Schedule.ScheduleDays != null &&
+            employee.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0)) ||
+
+            employee.Company.SchedulePlans
+                .Any(sp => !sp.IsDeleted &&
+                ((sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                sp.SchedulePlanEmployee.EmployeeId == employee.Id) || (employee.DepartmentId != null &&
+                sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
+                sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId) || (employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
+                employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId))) && sp.DateFrom.Date <= criteria.DateTo.Date &&
+                (sp.DateFrom.Date >= criteria.DateFrom.Date ||
+                sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date < criteria.DateFrom.Date).Max())));
+
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            if (criteria.Ids != null && criteria.Ids.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
+            }
+            if (criteria.IsActive is not null)
+            {
+                predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Code is not null)
+            {
+                predicate = predicate.And(e => e.Code == criteria.Code);
+            }
+            predicate = predicate.And(inner);
+            var Query = Get(predicate);
+            return Query;
+
+        }
+
     }
 }

@@ -394,6 +394,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         }
         public async Task<bool> Update(UpdateUserModel model)
         {
+
             #region Model Validation
 
             var updateUserModelValidator = new UpdateUserModelValidator();

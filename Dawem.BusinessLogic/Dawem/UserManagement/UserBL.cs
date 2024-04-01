@@ -217,7 +217,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
         }
-        private async Task<string> GetVerificationCode(int companyId)
+        private async Task<string> GetVerificationCode(int? companyId)
         {
             var isVerificationCodeRepeated = false;
             var getNewVerificationCode = StringHelper.RandomNumber(6);
@@ -268,8 +268,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Set User code
 
             var getNextCode = await repositoryManager.UserRepository
-                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.IsAdminPanel && e.CompanyId == null))
+                .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -284,7 +283,6 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.Code = getNextCode;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
-            user.IsForAdminPanel = requestInfo.IsAdminPanel;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -311,6 +309,78 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 }
                 await unitOfWork.SaveAsync();
             }*/
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return user.Id;
+
+            #endregion
+
+        }
+        public async Task<int> AdminPanelCreate(AdminPanelCreateUserModel model)
+        {
+            #region Model Validation
+
+            var createUserModel = new AdminPanelCreateUserModelValidator();
+            var createUserModelResult = createUserModel.Validate(model);
+            if (!createUserModelResult.IsValid)
+            {
+                var error = createUserModelResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await userBLValidation.AdminPanelCreateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Upload Profile Image
+
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
+                imageName = result.FileName;
+            }
+
+            #endregion
+
+            #region Insert User
+
+            #region Set User code
+
+            var getNextCode = await repositoryManager.UserRepository
+                .Get(e => !e.IsDeleted && e.IsForAdminPanel && e.CompanyId == null)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
+            #endregion
+
+            var user = mapper.Map<MyUser>(model);
+            user.AddUserId = requestInfo.UserId;
+            user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
+            user.ProfileImageName = imageName;
+            user.Code = getNextCode;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            user.IsForAdminPanel = true;
+
+            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
+            if (!createUserResponse.Succeeded)
+            {
+                unitOfWork.Rollback();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+            }
 
             #endregion
 
@@ -359,7 +429,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Update User
 
             var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
-            && user.Id == model.Id);
+            && user.Id == model.Id && user.CompanyId == requestInfo.CompanyId && !user.IsForAdminPanel);
 
             getUser.Name = model.Name;
             getUser.EmployeeId = model.EmployeeId;
@@ -472,6 +542,110 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             #endregion
         }
+        public async Task<bool> AdminPanelUpdate(AdminPanelUpdateUserModel model)
+        {
+            #region Model Validation
+
+            var updateUserModelValidator = new AdminPanelUpdateUserModelValidator();
+            var updateUserModelValidatorResult = updateUserModelValidator.Validate(model);
+            if (!updateUserModelValidatorResult.IsValid)
+            {
+                var error = updateUserModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await userBLValidation.AdminPanelUpdateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Upload Profile Image
+
+            string imageName = null;
+            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+                imageName = result.FileName;
+            }
+
+            #endregion
+
+            #region Update User
+
+            var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
+            && user.Id == model.Id && user.CompanyId == null && user.IsForAdminPanel);
+
+            getUser.Name = model.Name;
+            getUser.Email = model.Email;
+            getUser.UserName = model.Email;
+            getUser.IsActive = model.IsActive;
+            getUser.IsAdmin = model.IsAdmin;
+            getUser.ModifiedDate = DateTime.Now;
+            getUser.ModifyUserId = requestInfo.UserId;
+            getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+                ? getUser.ProfileImageName : null;
+
+            var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
+
+            if (!updateUserResponse.Succeeded)
+            {
+                await unitOfWork.RollbackAsync();
+                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
+            }
+
+            await unitOfWork.SaveAsync();
+
+            #region Update Responsibilities
+
+            var existDbList = repositoryManager.UserResponsibilityRepository
+                    .GetByCondition(e => e.UserId == getUser.Id)
+                    .ToList();
+
+            var existingResponsibilityIds = existDbList.Select(e => e.ResponsibilityId).ToList();
+
+            var addedUserResponsibilities = model.Responsibilities != null ? model.Responsibilities
+                .Where(responsibilityId => !existingResponsibilityIds.Contains(responsibilityId))
+                .Select(responsibilityId => new UserResponsibility
+                {
+                    UserId = model.Id,
+                    ResponsibilityId = responsibilityId,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList() : new List<UserResponsibility>();
+
+            var responsibilitiesToRemove = existDbList
+                .Where(ge => model.Responsibilities == null || !model.Responsibilities.Contains(ge.ResponsibilityId))
+                .Select(ge => ge.ResponsibilityId)
+                .ToList();
+
+            var removedUserResponsibilities = repositoryManager.UserResponsibilityRepository
+                .GetByCondition(e => e.UserId == model.Id && responsibilitiesToRemove.Contains(e.ResponsibilityId))
+                .ToList();
+
+            if (removedUserResponsibilities.Count > 0)
+                repositoryManager.UserResponsibilityRepository.BulkDeleteIfExist(removedUserResponsibilities);
+            if (addedUserResponsibilities.Count > 0)
+                repositoryManager.UserResponsibilityRepository.BulkInsert(addedUserResponsibilities);
+
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
+        }
         public async Task<GetUsersResponse> Get(GetUsersCriteria criteria)
         {
             var userRepository = repositoryManager.UserRepository;
@@ -555,7 +729,11 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             var isArabic = requestInfo.Lang == LeillaKeys.Ar;
 
-            var user = await repositoryManager.UserRepository.Get(e => e.Id == userId && !e.IsDeleted)
+            var user = await repositoryManager.UserRepository.
+                Get(user => user.Id == userId && !user.IsDeleted && 
+                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && user.CompanyId == null)))
                 .Select(user => new GetUserInfoResponseModel
                 {
                     Code = user.Code,
@@ -576,7 +754,11 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         }
         public async Task<GetUserByIdResponseModel> GetById(int userId)
         {
-            var user = await repositoryManager.UserRepository.Get(e => e.Id == userId && !e.IsDeleted)
+            var user = await repositoryManager.UserRepository.
+                Get(user => user.Id == userId && !user.IsDeleted &&
+                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && user.CompanyId == null)))
                 .Select(user => new GetUserByIdResponseModel
                 {
                     Id = user.Id,
@@ -596,9 +778,52 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             return user;
 
         }
+        public async Task<AdminPanelGetUserInfoResponseModel> AdminPanelGetInfo(int userId)
+        {
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
+
+            var user = await repositoryManager.UserRepository.
+                Get(user => user.Id == userId && !user.IsDeleted &&
+                   user.IsForAdminPanel && user.CompanyId == null)
+                .Select(user => new AdminPanelGetUserInfoResponseModel
+                {
+                    Code = user.Code,
+                    Name = user.Name,
+                    IsActive = user.IsActive,
+                    IsAdmin = user.IsAdmin,
+                    Email = user.Email,
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImageName = user.ProfileImageName,
+                    Responsibilities = user.UserResponsibilities.Select(ur => ur.Responsibility.Name).ToList()
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+            return user;
+        }
+        public async Task<AdminPanelGetUserByIdResponseModel> AdminPanelGetById(int userId)
+        {
+            var user = await repositoryManager.UserRepository.
+                Get(user => user.Id == userId && !user.IsDeleted &&
+                  !user.IsForAdminPanel && user.CompanyId == null)
+                .Select(user => new AdminPanelGetUserByIdResponseModel
+                {
+                    Id = user.Id,
+                    Code = user.Code,
+                    Name = user.Name,
+                    IsActive = user.IsActive,
+                    IsAdmin = user.IsAdmin,
+                    Email = user.Email,
+                    Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+
+            return user;
+
+        }
         public async Task<bool> Delete(int userId)
         {
-            MyUser user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == userId) ??
+            MyUser user = await repositoryManager.UserRepository.
+                GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted && user.Id == userId &&
+                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && user.CompanyId == null))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             user.Delete();
             await unitOfWork.SaveAsync();
@@ -607,7 +832,9 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         public async Task<GetUsersInformationsResponseDTO> GetUsersInformations()
         {
             var userRepository = repositoryManager.UserRepository;
-            var query = userRepository.Get(user => user.CompanyId == requestInfo.CompanyId);
+            var query = userRepository.Get(user => user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && user.CompanyId == null)));
 
             #region Handle Response
 

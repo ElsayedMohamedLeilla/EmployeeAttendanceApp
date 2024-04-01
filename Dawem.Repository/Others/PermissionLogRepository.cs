@@ -21,8 +21,6 @@ namespace Dawem.Repository.Others
 
             var inner = PredicateBuilder.New<PermissionLog>(true);
 
-            outerpredicate = outerpredicate.And(x => x.CompanyId == requestInfo.CompanyId);
-
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -33,6 +31,17 @@ namespace Dawem.Repository.Others
                     inner = inner.Or(x => x.Id == id);
                 }
             }
+
+            if (requestInfo.IsAdminPanel)
+            {
+                outerpredicate = outerpredicate.And(e => e.CompanyId == null);
+            }
+            else
+            {
+                outerpredicate = outerpredicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            }
+
+            outerpredicate = outerpredicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             if (criteria.Id != null)
             {

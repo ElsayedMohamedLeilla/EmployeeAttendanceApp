@@ -67,7 +67,16 @@ namespace Dawem.Repository.UserManagement
             var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MyUser>(true);
 
-            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            if (requestInfo.IsAdminPanel)
+            {
+                predicate = predicate.And(e => e.CompanyId == null);
+            }
+            else
+            {
+                predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            }
+
+            predicate = predicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

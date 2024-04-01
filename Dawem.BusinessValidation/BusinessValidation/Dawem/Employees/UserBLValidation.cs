@@ -138,7 +138,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         public async Task<bool> CreateValidation(CreateUserModel model)
         {
             var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
                 c.Name == model.Name).AnyAsync();
             if (checkUserDuplicate)
             {
@@ -191,7 +191,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         public async Task<bool> UpdateValidation(UpdateUserModel model)
         {
             var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
+                .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkUserDuplicate)
             {
@@ -235,6 +235,54 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
                 {
                     throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
+            }
+
+            #endregion
+
+            return true;
+        }
+        public async Task<bool> AdminPanelCreateValidation(AdminPanelCreateUserModel model)
+        {
+            var checkUserDuplicate = await repositoryManager
+                .UserRepository.Get(c => !c.IsDeleted && c.IsForAdminPanel && c.CompanyId == null &&
+                c.Name == model.Name).AnyAsync();
+            if (checkUserDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
+            }
+
+            #region Validate Email
+
+            var checkEmailDuplicate = await repositoryManager.UserRepository
+            .Get(u => u.Email == model.Email.Trim()).AnyAsync();
+
+            if (checkEmailDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            }
+
+            #endregion
+
+            return true;
+        }
+        public async Task<bool> AdminPanelUpdateValidation(AdminPanelUpdateUserModel model)
+        {
+            var checkUserDuplicate = await repositoryManager
+                .UserRepository.Get(c => !c.IsDeleted && c.IsForAdminPanel && c.CompanyId == null &&
+                c.Name == model.Name && c.Id != model.Id).AnyAsync();
+            if (checkUserDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
+            }
+
+            #region Validate Email
+
+            var checkEmailDuplicate = await repositoryManager.UserRepository
+            .Get(u => u.Id != model.Id && u.Email == model.Email.Trim()).AnyAsync();
+
+            if (checkEmailDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
             }
 
             #endregion

@@ -10,7 +10,7 @@ namespace Dawem.Domain.Entities.Permissions
     public class PermissionLog : BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.UtcNow;
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
         public int UserId { get; set; }
@@ -18,5 +18,6 @@ namespace Dawem.Domain.Entities.Permissions
         public virtual MyUser User { get; set; }
         public ApplicationScreenCode ScreenCode { get; set; }
         public ApplicationAction ActionCode { get; set; }
+        public bool IsForAdminPanel { get; set; }
     }
 }

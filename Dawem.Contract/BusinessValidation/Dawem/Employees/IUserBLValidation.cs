@@ -9,5 +9,7 @@ namespace Dawem.Contract.BusinessValidation.Dawem.Employees
         Task<bool> SendVerificationCodeValidation(SendVerificationCodeModel model);
         Task<bool> CreateValidation(CreateUserModel model);
         Task<bool> UpdateValidation(UpdateUserModel model);
+        Task<bool> AdminPanelCreateValidation(AdminPanelCreateUserModel model);
+        Task<bool> AdminPanelUpdateValidation(AdminPanelUpdateUserModel model);
     }
 }

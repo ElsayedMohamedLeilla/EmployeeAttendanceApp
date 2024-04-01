@@ -50,8 +50,9 @@ namespace Dawem.BusinessLogic.Dawem.Core
             #region Set Responsibility Code
 
             var getNextCode = await repositoryManager.ResponsibilityRepository
-                .Get(e => !requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId ||
-                requestInfo.IsAdminPanel && e.CompanyId == null)
+                .Get(responsibility => !responsibility.IsDeleted && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel && 
+                ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -88,6 +89,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
 
             var getResponsibility = await repositoryManager.ResponsibilityRepository
                  .GetEntityByConditionWithTrackingAsync(responsibility => !responsibility.IsDeleted &&
+                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
                 ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))
                  && responsibility.Id == model.Id);
@@ -181,9 +183,10 @@ namespace Dawem.BusinessLogic.Dawem.Core
         public async Task<GetResponsibilityInfoResponseModel> GetInfo(int ResponsibilityId)
         {
             var responsibility = await repositoryManager.ResponsibilityRepository.
-                Get(res => res.Id == ResponsibilityId && !res.IsDeleted && 
+                Get(res => res.Id == ResponsibilityId && !res.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && res.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && res.CompanyId == null)) && res.IsForAdminPanel == requestInfo.IsAdminPanel)
+                (requestInfo.CompanyId <= 0 && res.CompanyId == null)) && 
+                res.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(e => new GetResponsibilityInfoResponseModel
                 {
                     Code = e.Code,
@@ -197,7 +200,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
         {
             var responsibility = await repositoryManager.ResponsibilityRepository.
                 Get(res => res.Id == ResponsibilityId && ((requestInfo.CompanyId > 0 && res.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && res.CompanyId == null)) && 
+                (requestInfo.CompanyId <= 0 && res.CompanyId == null)) &&
                 !res.IsDeleted && res.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(e => new GetResponsibilityByIdResponseModel
                 {
@@ -226,7 +229,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
         {
             var responsibility = await repositoryManager.ResponsibilityRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
-                && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) || 
+                && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null))
                 && d.IsForAdminPanel == requestInfo.IsAdminPanel && d.Id == responsibilityd) ??
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
@@ -251,8 +254,9 @@ namespace Dawem.BusinessLogic.Dawem.Core
             var responsibilityRepository = repositoryManager.ResponsibilityRepository;
             var query = responsibilityRepository.
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
-                !responsibility.IsDeleted && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel);
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))
+                && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                !responsibility.IsDeleted);
 
             #region Handle Response
 

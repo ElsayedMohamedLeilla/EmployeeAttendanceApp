@@ -462,6 +462,43 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             return tokenData;
         }
+        public async Task<TokenDto> AdminPanelSignIn(AdminPanelSignInModel model)
+        {
+            #region Business Validation
+
+            var user = await accountBLValidation.AdminPanelSignInValidation(model);
+
+            #endregion
+
+            #region Get User Role
+
+            var roles = await userManagerRepository.GetRolesAsync(user);
+
+            #endregion
+
+            #region Get Token Model
+
+            TokenModel tokenModelSearchCriteria = new()
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                RememberMe = model.RememberMe,
+                Responsibilities = roles,
+                ApplicationType = model.ApplicationType
+            };
+
+            var tokenData = await GetTokenModel(tokenModelSearchCriteria);
+
+            #endregion
+
+            var permissionsResponse = await permissionBL
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel {IsForAdminPanel = true, UserId = user.Id });
+
+            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
+            tokenData.IsAdmin = permissionsResponse.IsAdmin;
+
+            return tokenData;
+        }
         public async Task<TokenDto> GetTokenModel(TokenModel criteria)
         {
             #region Create Token
@@ -580,7 +617,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         }
         public async Task<bool> RequestResetPassword(RequestResetPasswordModel model)
         {
-            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             if (!user.EmailConfirmed)
@@ -620,7 +657,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         }
         public async Task<bool> ChangePassword(ChangePasswordModel model)
         {
-            var user = await userManagerRepository.FindByNameAsync(model.UserEmail) ??
+            var user = await userManagerRepository.FindByEmailAsync(model.UserEmail) ??
                 throw new BusinessValidationException(LeillaKeys.SorryCannotFindUserWithEnteredEmail);
 
             bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, model.OldPassword);

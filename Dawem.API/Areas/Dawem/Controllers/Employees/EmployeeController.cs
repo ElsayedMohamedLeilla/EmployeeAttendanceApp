@@ -48,7 +48,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
             var result = await employeeBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateEmployeeSuccessfully);
         }
-        [HttpPost, DisableRequestSizeLimit]
+        [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> UpdateSpecificData([FromForm] UpdateEmployeeWithImageModel formData)
         {
             if (formData == null || formData.UpdateEmployeeModelString == null)

@@ -436,7 +436,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1 });//department Name can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Departments;
-            //string[] ExpectedHeaders = { "DepartmentName" ,"ParentDepartment", "ManagerName", "IsActive" };
             iniValidationModelDTO.ExpectedHeaders = typeof(DepartmentHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 1 });//department Name can't be duplicated
@@ -472,7 +471,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                         Temp.AddedApplicationType = ApplicationType.Web;
                         Temp.Name = row.Cell(1).GetString().Trim();
                         Temp.ManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(3).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
-                        Temp.IsActive = bool.Parse(row.Cell(4).GetString());
+                        Temp.IsActive = row.Cell(4).GetString().Trim() == string.Empty ? false : bool.Parse(row.Cell(4).GetString().Trim());
                         Temp.ParentId = repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(2).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                         Temp.CompanyId = requestInfo.CompanyId;
                         Temp.AddedDate = DateTime.Now;

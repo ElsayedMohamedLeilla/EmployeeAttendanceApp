@@ -10,7 +10,7 @@ public class AdminPanelAuthorizeAttribute : AuthorizeAttribute, IAuthorizationFi
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var requestInfo = context.HttpContext.RequestServices.GetService<RequestInfo>();
-        if (!requestInfo.IsAdminPanel)
+        if (!requestInfo.IsAdminPanelRequest || !requestInfo.IsAdminPanelUser)
         {
             throw new ForbiddenException(LeillaKeys.SorryYouAreForbiddenToAccessRequestedData);
         }

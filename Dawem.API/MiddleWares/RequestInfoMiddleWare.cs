@@ -74,15 +74,18 @@ namespace Dawem.API.MiddleWares
                 // do nothing if jwt validation fails
             }
 
-            requestInfo.IsAdminPanel = (requestInfo?.User?.IsForAdminPanel !=null && requestInfo.User.IsForAdminPanel) ||
-                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
-
+           
             if (userId > 0)
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
                 requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;         
                 requestInfo.CompanyId = requestInfo.IsAdminPanel ? 0 : requestInfo.CompanyId;
             }
+
+            requestInfo.IsAdminPanel = (requestInfo?.User != null && requestInfo.User.IsForAdminPanel) ||
+                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
+            requestInfo.IsAdminPanelRequest = requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
+            requestInfo.IsAdminPanelUser = requestInfo?.User != null && requestInfo.User.IsForAdminPanel;
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))
             {

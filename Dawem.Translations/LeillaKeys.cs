@@ -588,6 +588,7 @@
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
         public const string DoneUpdateResponsibilitySuccessfully = "DoneUpdateResponsibilitySuccessfully";
         public const string SorryYouMustEnterResponsibilityId = "Sorry!!YouMustEnterResponsibilityId!";
+        public const string SorrySomeOrAllResponsibilitiesNotFound = "Sorry!!SomeOrAllResponsibilitiesNotFound!";
     }
 
 }

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
-
     [AllowAnonymous]
     public class AuthenticationController : BaseController
     {

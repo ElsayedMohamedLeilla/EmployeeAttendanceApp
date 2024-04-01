@@ -75,6 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
                 .Select(employee => employee.JobTitle.Name)
                 .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
+
             if (requestInfo.User == null)
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 

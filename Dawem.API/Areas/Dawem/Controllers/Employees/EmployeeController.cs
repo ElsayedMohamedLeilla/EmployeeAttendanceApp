@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Employees;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
             var result = await employeeBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateEmployeeSuccessfully);
         }
-        [HttpPut, DisableRequestSizeLimit]
+        [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult> UpdateSpecificData([FromForm] UpdateEmployeeWithImageModel formData)
         {
             if (formData == null || formData.UpdateEmployeeModelString == null)
@@ -166,6 +167,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
             {
                 return StatusCode(400, result);
             }
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentEmployeeSchedulePlanInCurrentMonth([FromQuery] GetEmployeeSchedulePlanCritria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var employeesresponse = await employeeBL.GetCurrentEmployeeShedulePlanInPeriod(criteria);
+            return Success(employeesresponse.EmployeeSchedulePlan, employeesresponse.TotalCount);
         }
 
 

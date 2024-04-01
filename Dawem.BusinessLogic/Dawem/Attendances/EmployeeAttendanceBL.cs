@@ -700,10 +700,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             iniValidationModelDTO.MaxRowCount = 0;
             iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 3, 4, 5, 6 });//Zone Name Lat Long can't be null
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
-            //string[] ExpectedHeaders = { "EmployeeName", "LocalDate",
-            //                             "Latitude", "Longitude", "FingerPrintType" ,
-            //                             "RecognitionWay"
-            //                           };
             iniValidationModelDTO.ExpectedHeaders = typeof(EmployeeAttendanceHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
             iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 2 });//EmployeeAttendance  LocalDate Time  can't be duplicated

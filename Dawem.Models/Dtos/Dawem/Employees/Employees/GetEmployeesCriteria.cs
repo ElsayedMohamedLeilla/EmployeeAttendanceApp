@@ -12,5 +12,7 @@ namespace Dawem.Models.Dtos.Dawem.Employees.Employees
         public bool? WithoutCurrentEmployee { get; set; }
         public int? EmployeeNumber { get; set; }
         public FilterEmployeeStatus? Status { get; set; }
+      
+
     }
 }

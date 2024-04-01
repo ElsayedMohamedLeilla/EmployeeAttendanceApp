@@ -11,7 +11,7 @@ using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.AutoMapper.Dawem;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Repository;
 using Dawem.Repository.Managers;
 using Dawem.Repository.UserManagement;

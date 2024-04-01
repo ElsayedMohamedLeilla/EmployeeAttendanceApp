@@ -5,7 +5,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
 namespace Dawem.Repository.Summons

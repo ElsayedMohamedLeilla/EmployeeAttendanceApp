@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Dawem.Requests;
 using Dawem.Models.Context;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Requests

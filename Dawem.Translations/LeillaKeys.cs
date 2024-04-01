@@ -19,6 +19,7 @@
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string AdminPanel = "adminpanel";
         public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
         public const string LogoImageName = "LogoImageName";
@@ -41,6 +42,8 @@
         public const string IES = "ies";
         public const string Uploads = "uploads";
         public const string Employees = "Employees";
+        public const string Responsibilities = "Responsibilities";
+        public const string UserResponsibilities = "UserResponsibilities";
         public const string AllCountriesFlags = "AllCountriesFlags";
         public const string PNG = ".png";
         public const string TaskRequests = "TaskRequests";
@@ -254,7 +257,7 @@
         public const string SorryTaskTypeNotFound = "Sorry!!TaskTypeNotFound!";
         public const string DoneCreateTaskTypeSuccessfully = "DoneCreateTaskTypeSuccessfully";
         public const string DoneUpdateTaskTypeSuccessfully = "DoneUpdateTaskTypeSuccessfully";
-        public const string SorryYouMustEnterOneRoleAtLeast = "Sorry!!YouMustEnterOneRoleAtLeast!";
+        public const string SorryYouMustEnterOneResponsibilityAtLeast = "Sorry!!YouMustEnterOneResponsibilityAtLeast!";
         public const string SorryHolidayTypeNameIsDuplicated = "Sorry!!HolidayTypeNameIsDuplicated!";
         public const string SorryYouMustEnterHolidayTypeName = "Sorry!!YouMustEnterHolidayTypeName!";
         public const string SorryYouMustEnterHolidayTypeId = "Sorry!!YouMustEnterHolidayTypeId!";
@@ -453,13 +456,13 @@
         public const string Send = "Send";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";
-        public const string SorryYouMustChooseRoleForPermission = "Sorry!!YouMustChooseRoleForPermission!";
+        public const string SorryYouMustChooseResponsibilityForPermission = "Sorry!!YouMustChooseResponsibilityForPermission!";
         public const string SorryYouMustChooseOneScreenAtLeast = "Sorry!!YouMustChooseOneScreenAtLeast!";
         public const string SorryYouMustEnterCorrectScreenCode = "Sorry!!YouMustEnterCorrectScreenCode!";
         public const string SorryYouMustChooseOneActionAtLeast = "Sorry!!YouMustChooseOneActionAtLeast!";
         public const string SorryYouMustEnterCorrectAction = "Sorry!!YouMustEnterCorrectAction!";
         public const string SorryYouMustEnterPermissionId = "Sorry!!YouMustEnterPermissionId!";
-        public const string SorryPermissionRoleIsDuplicated = "Sorry!!PermissionRoleIsDuplicated!";
+        public const string SorryPermissionResponsibilityIsDuplicated = "Sorry!!PermissionResponsibilityIsDuplicated!";
         public const string SorryPermissionNotFound = "Sorry!!PermissionNotFound!";
         public const string SorryYouMustNotDuplicateScreens = "Sorry!!YouMustNotDuplicateScreens!";
         public const string SorryYouMustNotDuplicateScreenActions = "Sorry!!YouMustNotDuplicateScreenActions!";
@@ -470,10 +473,10 @@
         public const string ActionName = "ActionName:";
         public const string PermissionForType = "PermissionForType";
         public const string SorryChooseCorrectTypeToApplyPermission = "Sorry!!ChooseCorrectTypeToApplyPermission!";
-        public const string SorryYouMustChooseRoleForPermissionWithTypeRole = "Sorry!!YouMustChooseRoleForPermissionWithTypeRole!";
+        public const string SorryYouMustChooseResponsibilityForPermissionWithTypeResponsibility = "Sorry!!YouMustChooseResponsibilityForPermissionWithTypeResponsibility!";
         public const string SorryYouMustChooseUserForPermissionWithTypeUser = "Sorry!!YouMustChooseUserForPermissionWithTypeUser!";
-        public const string SorryYouMustNotChooseRoleForPermissionWithTypeUser = "Sorry!!YouMustNotChooseRoleForPermissionWithTypeUser!";
-        public const string SorryYouMustNotChooseUserForPermissionWithTypeRole = "Sorry!!YouMustNotChooseUserForPermissionWithTypeRole!";
+        public const string SorryYouMustNotChooseResponsibilityForPermissionWithTypeUser = "Sorry!!YouMustNotChooseResponsibilityForPermissionWithTypeUser!";
+        public const string SorryYouMustNotChooseUserForPermissionWithTypeResponsibility = "Sorry!!YouMustNotChooseUserForPermissionWithTypeResponsibility!";
         public const string SorryPermissionUserIsDuplicated = "Sorry!!PermissionUserIsDuplicated!";
         public const string SorryYouMustNotSetForAllEmployeesWhenTypeNotEmployees = "Sorry!!YouMustNotSetForAllEmployeesWhenTypeNotEmployees!";
         public const string SorryYouMustEnterSummonDateAndTime = "Sorry!!YouMustEnterSummonDateAndTime!";
@@ -495,8 +498,8 @@
         public const string DoneCreateSanctionSuccessfully = "DoneCreateSanctionSuccessfully";
         public const string DoneUpdateSanctionSuccessfully = "DoneUpdateSanctionSuccessfully";
         public const string SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen = "Sorry!!YouMustSelectViewingActionWhenSelectAnyActionForAnyScreen!";
-        public const string SorryYouMustChooseRoleOrUser = "Sorry!!YouMustChooseRoleOrUser!";
-        public const string SorryYouMustNotChooseRoleAndUserAtTheSameTime = "Sorry!!YouMustNotChooseRoleAndUserAtTheSameTime!";
+        public const string SorryYouMustChooseResponsibilityOrUser = "Sorry!!YouMustChooseResponsibilityOrUser!";
+        public const string SorryYouMustNotChooseResponsibilityAndUserAtTheSameTime = "Sorry!!YouMustNotChooseResponsibilityAndUserAtTheSameTime!";
         public const string SanctionType = "SanctionType";
         public const string NotifyWay = "NotifyWay";
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
@@ -579,14 +582,12 @@
         public const string SorryYouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType = "Sorry!!YouMustEnterFilterTypeFromOrFilterTypeToWhenChooseFilterType!";
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
         public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
-
-
         public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
         public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
         public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
         public const string DoneUpdateResponsibilitySuccessfully = "DoneUpdateResponsibilitySuccessfully";
-        
+        public const string SorryYouMustEnterResponsibilityId = "Sorry!!YouMustEnterResponsibilityId!";
     }
 
 }

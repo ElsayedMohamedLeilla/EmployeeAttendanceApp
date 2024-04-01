@@ -1,5 +1,5 @@
 ﻿using Dawem.Enums.Generals;
-using Dawem.Models.RealTime.Firebase;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 
 namespace Dawem.Contract.RealTime.Firebase
 {

@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Models.Dtos.Dawem.Others;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

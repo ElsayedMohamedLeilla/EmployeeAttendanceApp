@@ -7,7 +7,7 @@ using Dawem.Domain.Entities.Schedules;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlanBackgroundJobLogs;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Schedules.SchedulePlanLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

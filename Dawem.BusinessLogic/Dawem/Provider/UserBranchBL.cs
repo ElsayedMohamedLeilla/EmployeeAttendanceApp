@@ -4,7 +4,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Models.Context;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

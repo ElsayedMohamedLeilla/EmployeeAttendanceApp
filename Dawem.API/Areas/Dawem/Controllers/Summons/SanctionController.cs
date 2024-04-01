@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Summons
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class SanctionController : BaseController
     {
         private readonly ISanctionBL sanctionBL;

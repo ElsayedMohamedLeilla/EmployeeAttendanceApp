@@ -12,7 +12,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.EmployeeAttendances;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
 using Dawem.Translations;

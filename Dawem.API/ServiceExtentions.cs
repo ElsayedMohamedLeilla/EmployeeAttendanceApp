@@ -4,7 +4,7 @@ using Dawem.Contract.BusinessLogic.Dawem.Lookups;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

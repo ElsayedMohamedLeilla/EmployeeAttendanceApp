@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(Responsibility) + LeillaKeys.S)]
+    [Table(LeillaKeys.Responsibilities)]
     public class Responsibility : BaseEntity
     {
         public int? CompanyId { get; set; }
@@ -13,5 +13,6 @@ namespace Dawem.Domain.Entities.Core
         public int Code { get; set; }
         public string Name { get; set; }
         public bool IsForAdminPanel { get; set; }
+        public List<UserResponsibility> ResponsibilityUsers { get; set; }
     }
 }

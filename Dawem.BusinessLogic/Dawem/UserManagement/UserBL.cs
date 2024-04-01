@@ -6,12 +6,13 @@ using Dawem.Contract.BusinessValidation.Dawem.Employees;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Employees.Users;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
@@ -64,7 +65,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Set User code And Verification Code
 
             var getNextCode = await repositoryManager.UserRepository
-                .Get(e => e.CompanyId == model.CompanyId)
+                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.IsAdminPanel && e.CompanyId == null))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -89,14 +91,14 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
-            var Roles = new List<string>() { LeillaKeys.RoleEMPLOYEE, LeillaKeys.RoleUSER };
+            /*var Roles = new List<string>() { LeillaKeys.RoleEMPLOYEE, LeillaKeys.RoleUSER };
             var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, Roles);
             if (!assignRolesResult.Succeeded)
             {
                 unitOfWork.Rollback();
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
-            await unitOfWork.SaveAsync();
+            await unitOfWork.SaveAsync();*/
 
 
             #endregion
@@ -266,7 +268,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Set User code
 
             var getNextCode = await repositoryManager.UserRepository
-                .Get(e => e.CompanyId == requestInfo.CompanyId)
+                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.IsAdminPanel && e.CompanyId == null))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -281,6 +284,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.Code = getNextCode;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
+            user.IsForAdminPanel = requestInfo.IsAdminPanel;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -289,24 +293,24 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
-            if (model.Roles != null)
+            /*if (model.Responsibilities != null)
             {
-                var getUserRoles = await repositoryManager.RoleRepository
-                    .Get(r => model.Roles.Contains(r.Id))
+                var getUserResponsibilities = await repositoryManager.ResponsibilityRepository
+                    .Get(r => model.Responsibilities.Contains(r.Id))
                     .Select(r => r.Name)
                     .ToListAsync();
 
-                if (getUserRoles == null || getUserRoles.Count == 0)
-                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+                if (getUserResponsibilities == null || getUserResponsibilities.Count == 0)
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
 
-                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, getUserRoles);
+                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, getUserResponsibilities);
                 if (!assignRolesResult.Succeeded)
                 {
                     unitOfWork.Rollback();
                     throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
                 }
                 await unitOfWork.SaveAsync();
-            }
+            }*/
 
             #endregion
 
@@ -380,10 +384,42 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             await unitOfWork.SaveAsync();
 
-            #region Update Roles
+            #region Update Responsibilities
 
-            var getUserRolesFromDB = await userManagerRepository.GetRolesAsync(getUser);
-            if ((model.Roles == null || model.Roles.Count == 0) && getUserRolesFromDB != null && getUserRolesFromDB.Count > 0)
+            var existDbList = repositoryManager.UserResponsibilityRepository
+                    .GetByCondition(e => e.UserId == getUser.Id)
+                    .ToList();
+
+            var existingResponsibilityIds = existDbList.Select(e => e.ResponsibilityId).ToList();
+
+            var addedUserResponsibilities = model.Responsibilities != null ? model.Responsibilities
+                .Where(responsibilityId => !existingResponsibilityIds.Contains(responsibilityId))
+                .Select(responsibilityId => new UserResponsibility
+                {
+                    UserId = model.Id,
+                    ResponsibilityId = responsibilityId,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList() : new List<UserResponsibility>();
+
+            var responsibilitiesToRemove = existDbList
+                .Where(ge => model.Responsibilities == null || !model.Responsibilities.Contains(ge.ResponsibilityId))
+                .Select(ge => ge.ResponsibilityId)
+                .ToList();
+
+            var removedUserResponsibilities = repositoryManager.UserResponsibilityRepository
+                .GetByCondition(e => e.UserId == model.Id && responsibilitiesToRemove.Contains(e.ResponsibilityId))
+                .ToList();
+
+            if (removedUserResponsibilities.Count > 0)
+                repositoryManager.UserResponsibilityRepository.BulkDeleteIfExist(removedUserResponsibilities);
+            if (addedUserResponsibilities.Count > 0)
+                repositoryManager.UserResponsibilityRepository.BulkInsert(addedUserResponsibilities);
+
+            await unitOfWork.SaveAsync();
+
+            /*var getUserRolesFromDB = await userManagerRepository.GetRolesAsync(getUser);
+            if ((model.Responsibilities == null || model.Responsibilities.Count == 0) && getUserRolesFromDB != null && getUserRolesFromDB.Count > 0)
             {
                 var removeRolesResult = await userManagerRepository.RemoveFromRolesAsync(getUser, getUserRolesFromDB);
                 if (!removeRolesResult.Succeeded)
@@ -392,15 +428,16 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUpdatingUser);
                 }
             }
-            if (model.Roles != null)
+
+            if (model.Responsibilities != null)
             {
                 var getUserRoles = await repositoryManager.RoleRepository
-                    .Get(r => model.Roles.Contains(r.Id))
+                    .Get(r => model.Responsibilities.Contains(r.Id))
                     .Select(r => r.Name)
                     .ToListAsync();
 
                 if (getUserRoles == null || getUserRoles.Count == 0)
-                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
 
                 var getWillDeletedUserRoles = getUserRolesFromDB.Where(dbr => !getUserRoles.Contains(dbr)).ToList();
                 if (getWillDeletedUserRoles != null && getWillDeletedUserRoles.Count > 0)
@@ -423,7 +460,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     }
                 }
                 await unitOfWork.SaveAsync();
-            }
+            }*/
 
             #endregion
 
@@ -534,7 +571,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileNumber = user.MobileNumber,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     ProfileImageName = user.ProfileImageName,
-                    Roles = user.UserRoles.Select(ur => TranslationHelper.GetTranslation(ur.Role.Name, requestInfo.Lang)).ToList()
+                    Responsibilities = user.UserResponsibilities.Select(ur => ur.Responsibility.Name).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
             return user;
         }
@@ -554,7 +591,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
-                    Roles = user.UserRoles.Select(ur => ur.RoleId).ToList()
+                    Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             return user;

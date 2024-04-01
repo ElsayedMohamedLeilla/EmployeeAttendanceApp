@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.RealTime.Firebase
+namespace Dawem.Models.DTOs.Dawem.RealTime.Firebase
 {
     public class TokensModel
     {

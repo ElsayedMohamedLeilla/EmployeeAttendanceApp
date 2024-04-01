@@ -14,8 +14,7 @@ using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Identities;
 using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.Generic.Exceptions;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +27,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Dawem.Contract.BusinessValidation.Dawem.Others;
+using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.BusinessLogic.Dawem.Provider
 {
@@ -353,7 +353,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 UserId = user.Id,
                 UserName = user.UserName,
                 RememberMe = model.RememberMe,
-                Roles = roles,
+                Responsibilities = roles,
                 CompanyId = user.CompanyId,
                 ApplicationType = model.ApplicationType
             };
@@ -479,9 +479,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             {
                 claimsIdentity.AddClaim(new Claim(LeillaKeys.RememberMe, LeillaKeys.True));
             }
-            if (criteria.Roles != null)
+            if (criteria.Responsibilities != null)
             {
-                claimsIdentity.AddClaims(criteria.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                claimsIdentity.AddClaims(criteria.Responsibilities.Select(role => new Claim(ClaimTypes.Role, role)));
             }
 
             JwtSecurityTokenHandler tokenHandler = new();

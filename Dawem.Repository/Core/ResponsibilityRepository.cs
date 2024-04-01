@@ -4,10 +4,10 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Core.JustificationsTypes
+namespace Dawem.Repository.Core
 {
     public class ResponsibilityRepository : GenericRepository<Responsibility>, IResponsibilityRepository
     {
@@ -22,7 +22,15 @@ namespace Dawem.Repository.Core.JustificationsTypes
             var predicate = PredicateBuilder.New<Responsibility>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Responsibility>(true);
 
-            predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId && requestInfo.CompanyId > 0);
+            if (requestInfo.IsAdminPanel)
+            {
+                predicate = predicate.And(e => e.CompanyId == null);
+            }
+            else
+            {
+                predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            }
+
             predicate = predicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

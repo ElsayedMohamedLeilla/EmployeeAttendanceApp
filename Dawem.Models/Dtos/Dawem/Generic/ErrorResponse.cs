@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Generic
+namespace Dawem.Models.DTOs.Dawem.Generic
 {
     public class ErrorResponse
     {

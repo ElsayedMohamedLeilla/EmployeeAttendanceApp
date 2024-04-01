@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Employees
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentBL departmentBL;

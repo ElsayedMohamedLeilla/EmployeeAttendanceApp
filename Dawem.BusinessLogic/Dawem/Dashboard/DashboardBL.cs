@@ -6,7 +6,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Dashboard;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Dashboard;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -247,15 +247,17 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
             #region Task Or Assignment
 
             var inTaskOrAssignmentCount = await query.Where(employee =>
-            employee.EmployeeTasks.Any(task => !task.IsDeleted && !task.RequestTask.Request.IsDeleted
-                && (task.RequestTask.Request.Status == RequestStatus.Accepted || task.RequestTask.Request.Status == RequestStatus.Pending)
+            employee.EmployeeTasks.Any(task => !task.IsDeleted
+                && (task.RequestTask.Request.Status == RequestStatus.Accepted || 
+                task.RequestTask.Request.Status == RequestStatus.Pending)
                 && clientLocalDate.Date >= task.RequestTask.Request.Date
                  && clientLocalDate.Date <= task.RequestTask.DateTo)
 
                 ||
 
-                employee.EmployeeRequests.Any(request => !request.IsDeleted && !request.RequestTask.Request.IsDeleted
-                && (request.RequestTask.Request.Status == RequestStatus.Accepted || request.RequestTask.Request.Status == RequestStatus.Pending)
+                employee.EmployeeRequests.Any(request => !request.IsDeleted
+                && (request.Status == RequestStatus.Accepted || 
+                request.Status == RequestStatus.Pending)
                 && request.Type == RequestType.Assignment
                 && clientLocalDate.Date >= request.Date.Date
                  && clientLocalDate.Date <= request.RequestAssignment.DateTo)).CountAsync();

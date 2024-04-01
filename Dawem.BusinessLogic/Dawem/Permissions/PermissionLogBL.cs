@@ -4,7 +4,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Permissions.PermissionLogs;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

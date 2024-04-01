@@ -2,7 +2,7 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,9 +21,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
         {
             var checkResponsibilityDuplicate = await repositoryManager.
                 ResponsibilityRepository.
-                Get(c => (c.CompanyId == requestInfo.CompanyId || c.CompanyId == null) &&
-                c.Name == model.Name &&
-                c.IsForAdminPanel == requestInfo.IsAdminPanel).
+                Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
+                responsibility.Name == model.Name &&
+                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel).
                 AnyAsync();
 
             if (checkResponsibilityDuplicate)
@@ -37,9 +38,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
         {
             var checkResponsibilityDuplicate = await repositoryManager
                 .ResponsibilityRepository.
-                Get(c => (c.CompanyId == requestInfo.CompanyId || c.CompanyId == null) &&
-                c.Name == model.Name &&
-                c.IsForAdminPanel == requestInfo.IsAdminPanel && c.Id != model.Id).AnyAsync();
+                Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
+                responsibility.Name == model.Name &&
+                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel && responsibility.Id != model.Id).AnyAsync();
             if (checkResponsibilityDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNameIsDuplicated);

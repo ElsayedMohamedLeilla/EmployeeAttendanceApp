@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class RequestController : BaseController
     {
         private readonly IRequestBL requestBL;

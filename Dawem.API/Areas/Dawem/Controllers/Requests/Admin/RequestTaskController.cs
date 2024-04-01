@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class RequestTaskController : BaseController
     {
         private readonly IRequestTaskBL requestTaskBL;

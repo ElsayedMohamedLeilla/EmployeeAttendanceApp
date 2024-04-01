@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Dawem.Models.Generic
+namespace Dawem.Models.DTOs.Dawem.Generic
 {
     public class BasicCountryInfo
     {

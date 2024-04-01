@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     public class ResponsibilityController : BaseController
     {
         private readonly IResponsibilityBL responsibilityBL;
@@ -77,6 +76,24 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
                 return BadRequest();
             }
             return Success(await responsibilityBL.Delete(responsibilityId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Enable(int responsibilityId)
+        {
+            if (responsibilityId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await responsibilityBL.Enable(responsibilityId));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
+        {
+            if (model.Id < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await responsibilityBL.Disable(model));
         }
         [HttpGet]
         public async Task<ActionResult> GetResponsibilitiesInformations()

@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.Attendances
 {

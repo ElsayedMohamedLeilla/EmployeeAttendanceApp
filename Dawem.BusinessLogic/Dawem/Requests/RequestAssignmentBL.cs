@@ -12,7 +12,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Others;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Assignments;
 using Dawem.Models.Response.Dawem.Requests;

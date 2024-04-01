@@ -14,7 +14,7 @@ using Dawem.Models.Dtos.Dawem.Core.Groups;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Employees.Employees.GroupEmployees;
 using Dawem.Models.Dtos.Dawem.Employees.Employees.GroupManagarDelegators;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Core.Groups;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;

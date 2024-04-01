@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Provider
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
     [AllowAnonymous]
     public class AuthenticationController : BaseController
     {
@@ -75,7 +75,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             var response = await authenticationBL.ResetPassword(model);
             return Success(response, messageCode: LeillaKeys.DoneResetPasswordSuccessfully);
         }
-        [Authorize]
+        
         [HttpPost]
         public async Task<ActionResult> ChangePassword(ChangePasswordModel resetPasswordModel)
         {

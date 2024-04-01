@@ -2,7 +2,7 @@
 {
     public class CheckAndGetPermissionModel
     {
-        public int? RoleId { get; set; }
+        public int? ResponsibilityId { get; set; }
         public int? UserId { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Vacations;
 using Dawem.Models.Response.Dawem.Requests;

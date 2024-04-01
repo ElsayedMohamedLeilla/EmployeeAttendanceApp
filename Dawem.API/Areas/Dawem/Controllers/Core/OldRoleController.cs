@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
-    public class RoleController : BaseController
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
+    public class OldRoleController : BaseController
     {
         private readonly IRoleBL RoleBL;
-        public RoleController(IRoleBL _RoleBL)
+        public OldRoleController(IRoleBL _RoleBL)
         {
             RoleBL = _RoleBL;
         }

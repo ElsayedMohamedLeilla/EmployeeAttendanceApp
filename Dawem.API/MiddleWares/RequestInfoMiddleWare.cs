@@ -3,8 +3,8 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Generic;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +30,7 @@ namespace Dawem.API.MiddleWares
             ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.RequestPath = httpContext.Request.Path;
 
             int userId = 0;
             int companyId = 0;
@@ -78,7 +79,10 @@ namespace Dawem.API.MiddleWares
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
                 requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
-                requestInfo.IsAdminPanel = requestInfo.User.IsForAdminPanel;
+                requestInfo.IsAdminPanel = requestInfo.User.IsForAdminPanel/* && 
+                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel)*/;
+
+                requestInfo.CompanyId = requestInfo.IsAdminPanel ? 0 : requestInfo.CompanyId;
             }
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))

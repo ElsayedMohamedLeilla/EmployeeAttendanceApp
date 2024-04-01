@@ -3,7 +3,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
 namespace Dawem.Repository.Core.Roles

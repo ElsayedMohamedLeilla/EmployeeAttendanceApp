@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Employees;
+﻿using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
@@ -39,6 +40,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public string MobileNumber { get; set; }
         public string ProfileImageName { get; set; }
         public List<UserRole> UserRoles { get; set; }
+        public List<UserResponsibility> UserResponsibilities { get; set; }
         public List<UserBranch> UserBranches { get; set; }
         public bool Status { get; set; }
         public bool IsDeleted { get; set; } = false;

@@ -11,7 +11,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -141,11 +141,11 @@ namespace Dawem.BusinessLogic.Dawem.Subscriptions
                 Any(mi => mi.Id == nt.Id && (mi.Name != nt.Name || mi.LanguageId != nt.LanguageId))).
                 ToList();
 
-            if (removedPlanNameTranslations.Count > 0)
+            if (removedPlanNameTranslations.Count() > 0)
                 repositoryManager.PlanNameTranslationRepository.BulkDeleteIfExist(removedPlanNameTranslations);
-            if (addedPlanNameTranslations.Count > 0)
+            if (addedPlanNameTranslations.Count() > 0)
                 repositoryManager.PlanNameTranslationRepository.BulkInsert(addedPlanNameTranslations);
-            if (updatedPlanNameTranslations.Count > 0)
+            if (updatedPlanNameTranslations.Count() > 0)
             {
                 updatedPlanNameTranslations.ForEach(i =>
                 {

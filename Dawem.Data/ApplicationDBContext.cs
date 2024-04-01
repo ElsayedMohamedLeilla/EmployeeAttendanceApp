@@ -14,7 +14,7 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -100,13 +100,20 @@ namespace Dawem.Data
             builder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
             builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
-            builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).
+                OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<PlanNameTranslation>()
-         .HasOne(p => p.Plan)
-         .WithMany(b => b.PlanNameTranslations)
-         .HasForeignKey(p => p.PlanId)
-         .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<UserResponsibility>().
+                HasOne(p => p.User).
+                WithMany(b => b.UserResponsibilities).
+                HasForeignKey(p => p.UserId).
+                OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PlanNameTranslation>().
+                HasOne(p => p.Plan).
+                WithMany(b => b.PlanNameTranslations).
+                HasForeignKey(p => p.PlanId).
+                OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<CompanyBranch>()
              .HasOne(p => p.Company)
@@ -566,6 +573,7 @@ namespace Dawem.Data
         public DbSet<ScheduleDay> ScheduleDays { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Responsibility> Responsibilities { get; set; }
+        public DbSet<UserResponsibility> UserResponsibilities { get; set; }
         public DbSet<NotificationUser> FirebaseUsers { get; set; }
         public DbSet<NotificationUserFCMToken> FirebaseUserFCMTokens { get; set; }
         public DbSet<GroupEmployee> GroupEmployees { get; set; }

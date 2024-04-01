@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Generic.Exceptions
+﻿namespace Dawem.Models.DTOs.Dawem.Generic.Exceptions
 {
     public class CartBranchOverlapException : Exception
     {

@@ -9,7 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation;

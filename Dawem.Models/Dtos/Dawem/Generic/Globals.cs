@@ -4,9 +4,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using TimeZoneConverter;
 
-namespace Dawem.Models.Generic
+namespace Dawem.Models.DTOs.Dawem.Generic
 {
-    
+
     public static class Globals
     {
         public static string ToRfc3339String(this DateTime dateTime)
@@ -83,7 +83,7 @@ namespace Dawem.Models.Generic
             new BasicCountryInfo(){ TimeZoneId =LeillaKeys.EgyptStandardTime, CountryId=1938, CultureName =LeillaKeys.En, CurrentCulture = CultureInfo.GetCultureInfo(LeillaKeys.ArEG) }
         };
 
-        public static string? DefualtCountryCode { get; set; }
+        public static string DefualtCountryCode { get; set; }
 
         public static string Base64Encode(string plainText)
         {

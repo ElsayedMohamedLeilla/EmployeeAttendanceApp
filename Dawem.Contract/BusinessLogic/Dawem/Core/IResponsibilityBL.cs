@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Response.Dawem.Employees.JobTitles;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Response.Dawem.Core.Responsibilities;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {
@@ -12,6 +13,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Core
         Task<GetResponsibilitiesResponse> Get(GetResponsibilitiesCriteria model);
         Task<GetResponsibilitiesForDropDownResponse> GetForDropDown(GetResponsibilitiesCriteria model);
         Task<bool> Delete(int responsibilityId);
+        Task<bool> Enable(int responsibilityId);
+        Task<bool> Disable(DisableModelDTO model);
         Task<GetResponsibilitiesInformationsResponseDTO> GetResponsibilitiesInformations();
     }
 }

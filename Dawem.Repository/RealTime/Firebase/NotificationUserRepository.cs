@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.RealTime.Firebase;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.RealTime.Firebase
 {

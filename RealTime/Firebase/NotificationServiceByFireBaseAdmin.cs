@@ -7,7 +7,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Core.NotificationsStores;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.RealTime.Firebase;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using FirebaseAdmin.Messaging;

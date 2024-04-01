@@ -6,7 +6,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Dashboard;
-using Dawem.Models.Generic;
+using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
 namespace Dawem.Repository.Attendances

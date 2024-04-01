@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Reports
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
-    [Authorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    
+    
     public class AttendanceSummaryReportController : BaseController
     {
         private readonly IAttendanceSummaryReportBL attendanceSummaryReportBL;

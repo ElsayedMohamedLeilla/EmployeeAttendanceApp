@@ -12,13 +12,13 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
             RuleFor(model => model.ForType).IsInEnum()
                .WithMessage(LeillaKeys.SorryChooseCorrectTypeToApplyPermission);
 
-            RuleFor(model => model.RoleId).GreaterThan(0)
+            RuleFor(model => model.ResponsibilityId).GreaterThan(0)
                 .When(m => m.ForType == ForRoleOrUser.Role)
-                .WithMessage(LeillaKeys.SorryYouMustChooseRoleForPermissionWithTypeRole);
+                .WithMessage(LeillaKeys.SorryYouMustChooseResponsibilityForPermissionWithTypeResponsibility);
 
-            RuleFor(model => model.RoleId).Null()
+            RuleFor(model => model.ResponsibilityId).Null()
                 .When(m => m.ForType == ForRoleOrUser.User)
-                .WithMessage(LeillaKeys.SorryYouMustNotChooseRoleForPermissionWithTypeUser);
+                .WithMessage(LeillaKeys.SorryYouMustNotChooseResponsibilityForPermissionWithTypeUser);
 
             RuleFor(model => model.UserId).GreaterThan(0)
                 .When(m => m.ForType == ForRoleOrUser.User)
@@ -26,13 +26,13 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
 
             RuleFor(model => model.UserId).Null()
                .When(m => m.ForType == ForRoleOrUser.Role)
-               .WithMessage(LeillaKeys.SorryYouMustNotChooseUserForPermissionWithTypeRole);
+               .WithMessage(LeillaKeys.SorryYouMustNotChooseUserForPermissionWithTypeResponsibility);
 
             RuleFor(model => model.Id).GreaterThan(0)
                 .WithMessage(LeillaKeys.SorryYouMustEnterPermissionId);
 
-            RuleFor(model => model.RoleId).GreaterThan(0)
-                .WithMessage(LeillaKeys.SorryYouMustChooseRoleForPermission);
+            RuleFor(model => model.ResponsibilityId).GreaterThan(0)
+                .WithMessage(LeillaKeys.SorryYouMustChooseResponsibilityForPermission);
 
             RuleFor(model => model.PermissionScreens)
                 .Must(model => model != null && model.Count > 0)

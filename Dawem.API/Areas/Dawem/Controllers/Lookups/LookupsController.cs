@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Lookups
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController]
     public class LookupsController : BaseController
     {
         private readonly ILookupsBL lookupsBL;

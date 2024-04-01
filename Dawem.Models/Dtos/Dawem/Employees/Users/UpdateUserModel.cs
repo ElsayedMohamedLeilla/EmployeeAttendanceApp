@@ -12,7 +12,7 @@ namespace Dawem.Models.Dtos.Dawem.Employees.Users
         public string MobileNumber { get; set; }
         public string ProfileImageName { get; set; }
         public IFormFile ProfileImageFile { get; set; }
-        public List<int> Roles { get; set; }
+        public List<int> Responsibilities { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsActive { get; set; }
     }

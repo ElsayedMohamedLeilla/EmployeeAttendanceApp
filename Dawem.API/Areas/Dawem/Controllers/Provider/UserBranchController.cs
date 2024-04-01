@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Provider
 {
-    [Route(LeillaKeys.DawemApiControllerAction)]
-    [ApiController]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController] 
     public class UserBranchController : BaseController
     {
         private readonly IUserBranchBL userbranchBL;

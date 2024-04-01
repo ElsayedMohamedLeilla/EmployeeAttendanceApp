@@ -30,8 +30,8 @@ namespace Dawem.Validation.FluentValidation.Dawem.Employees.User
             RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
                 WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
-            RuleFor(user => user.Roles).Must(r => r != null && r.Count > 0).
-               WithMessage(LeillaKeys.SorryYouMustEnterOneRoleAtLeast);
+            RuleFor(user => user.Responsibilities).Must(r => r != null && r.Count > 0).
+               WithMessage(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
 
             RuleFor(model => model.ProfileImageFile)
                   .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))

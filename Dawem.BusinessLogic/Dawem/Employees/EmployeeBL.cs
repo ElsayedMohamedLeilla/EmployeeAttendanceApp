@@ -13,9 +13,8 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
-using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
-using Dawem.Models.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
@@ -646,7 +645,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             var getUser = await repositoryManager.UserRepository
              .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
-           && employee.EmployeeId == requestInfo.EmployeeId && employee.Id ==  requestInfo.User.Id);
+           && employee.EmployeeId == requestInfo.EmployeeId && employee.Id == requestInfo.User.Id);
             getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             getUser.ModifiedApplicationType = requestInfo.ApplicationType;

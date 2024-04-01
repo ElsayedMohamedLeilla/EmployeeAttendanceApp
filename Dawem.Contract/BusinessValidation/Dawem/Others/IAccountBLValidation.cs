@@ -8,5 +8,6 @@ namespace Dawem.Contract.BusinessValidation.Dawem.Others
     {
         Task<bool> SignUpValidation(SignUpModel model);
         Task<MyUser> SignInValidation(SignInModel model);
+        Task<MyUser> AdminPanelSignInValidation(AdminPanelSignInModel model);
     }
 }

@@ -10,8 +10,12 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         Task<bool> SendVerificationCode(SendVerificationCodeModel model);
         Task<int> Create(CreateUserModel model);
         Task<bool> Update(UpdateUserModel model);
+        Task<int> AdminPanelCreate(AdminPanelCreateUserModel model);
+        Task<bool> AdminPanelUpdate(AdminPanelUpdateUserModel model);
         Task<GetUserInfoResponseModel> GetInfo(int userId);
         Task<GetUserByIdResponseModel> GetById(int userId);
+        Task<AdminPanelGetUserInfoResponseModel> AdminPanelGetInfo(int userId);
+        Task<AdminPanelGetUserByIdResponseModel> AdminPanelGetById(int userId);
         Task<GetUsersResponse> Get(GetUsersCriteria model);
         Task<GetUsersForDropDownResponse> GetForDropDown(GetUsersCriteria model);
         Task<bool> Delete(int userId);

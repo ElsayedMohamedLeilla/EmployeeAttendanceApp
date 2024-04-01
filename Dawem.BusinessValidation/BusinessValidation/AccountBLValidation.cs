@@ -83,8 +83,35 @@ namespace Dawem.Validation.BusinessValidation
             #region Try Find User
 
             var user = await repositoryManager.UserRepository
-                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && (model.CompanyId <= 0 ||
-                (u.Company != null && u.Company.Id == model.CompanyId))) ??
+                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && !u.IsForAdminPanel && 
+                model.CompanyId == u.CompanyId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+
+            #endregion
+
+            #region Check Password
+
+            bool checkPasswordAsyncRes = await userManagerRepository.CheckPasswordAsync(user, model.Password);
+            if (!checkPasswordAsyncRes)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryPasswordIncorrectEnterCorrectPasswordForSelectedUser);
+            }
+
+            #endregion
+
+            if (!user.EmailConfirmed)
+            {
+                throw new BusinessValidationExceptionGenaric<int>(LeillaKeys.SorryEmailNotConfirmedPleaseCheckYourEmail) { Data = user.Id };
+            }
+
+            return user;
+        }
+        public async Task<MyUser> AdminPanelSignInValidation(AdminPanelSignInModel model)
+        {
+            #region Try Find User
+
+            var user = await repositoryManager.UserRepository
+                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && u.IsForAdminPanel && u.CompanyId == null) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion

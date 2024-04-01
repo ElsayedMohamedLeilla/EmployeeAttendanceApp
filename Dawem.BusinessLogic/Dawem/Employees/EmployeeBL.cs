@@ -550,7 +550,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                     Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
                                     Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
                                     Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                                    Temp.IsActive = bool.Parse(row.Cell(13).GetString());
+                                    Temp.IsActive = row.Cell(13).GetString().Trim() == string.Empty ? false : bool.Parse(row.Cell(13).GetString().Trim());
                                     Temp.CompanyId = requestInfo.CompanyId;
                                     Temp.AddedDate = DateTime.Now;
                                     Temp.AddUserId = requestInfo.UserId;

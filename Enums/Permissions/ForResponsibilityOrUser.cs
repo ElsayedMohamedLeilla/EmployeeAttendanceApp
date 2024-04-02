@@ -1,8 +1,8 @@
 ﻿namespace Dawem.Enums.Permissions
 {
-    public enum ForRoleOrUser
+    public enum ForResponsibilityOrUser
     {
-        Role,
+        Responsibility,
         User
     }
 }

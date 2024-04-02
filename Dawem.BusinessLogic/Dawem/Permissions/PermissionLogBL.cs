@@ -54,7 +54,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         public async Task<GetPermissionLogInfoResponseModel> GetInfo(int permissionLogId)
         {
-            var permissionLog = await repositoryManager.PermissionLogRepository.Get(e => e.Id == permissionLogId && !e.IsDeleted)
+            var permissionLog = await repositoryManager.PermissionLogRepository.
+                Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted && 
+                ((requestInfo.CompanyId > 0 && permissionLog.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && permissionLog.CompanyId == null)) &&
+                permissionLog.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,

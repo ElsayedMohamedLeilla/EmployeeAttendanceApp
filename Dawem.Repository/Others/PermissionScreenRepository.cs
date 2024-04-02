@@ -31,7 +31,7 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                var screenCodes = Enum.GetValues(typeof(ApplicationScreenCode)).Cast<ApplicationScreenCode>()
+                var screenCodes = Enum.GetValues(typeof(ApplicationScreenCode)).Cast<int>()
                     .ToList()
                     .Select(applicationScreenCode=> new
                     {

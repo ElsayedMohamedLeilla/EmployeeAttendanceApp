@@ -35,14 +35,16 @@ namespace Dawem.API.MiddleWares
 
             if (httpContext != null && userId > 0 && !string.IsNullOrWhiteSpace(controllerName) && !string.IsNullOrWhiteSpace(actionName))
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
+                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.IsAdminPanel);
                 if (mapResult.Screen != null && mapResult.Method != null)
                 {
                     var model = new CheckUserPermissionModel
                     {
+                        CompanyId = requestInfo.CompanyId,
                         UserId = userId,
                         ScreenCode = mapResult.Screen.Value,
-                        ActionCode = mapResult.Method.Value
+                        ActionCode = mapResult.Method.Value,
+                        IsForAdminPanel = requestInfo.IsAdminPanel
                     };
 
                     var checkPermissionResponse = await permissionBL.CheckUserPermission(model);

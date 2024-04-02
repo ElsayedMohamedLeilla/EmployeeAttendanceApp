@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
     [AllowAnonymous]
-    public class AuthenticationController : BaseController
+    public class AuthenticationController : AdminPanelControllerBase
     {
         private readonly IAuthenticationBL authenticationBL;
         private readonly IMailBL mailBL;

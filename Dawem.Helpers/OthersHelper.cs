@@ -41,5 +41,9 @@
 
             return splitValues.All(r => byte.TryParse(r, out tempForParsing));
         }
+        public static dynamic Cast(dynamic obj, Type castTo)
+        {
+            return Convert.ChangeType(obj, castTo);
+        }
     }
 }

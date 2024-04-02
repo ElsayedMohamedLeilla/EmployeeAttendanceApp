@@ -36,7 +36,9 @@ namespace Dawem.API.MiddleWares
 
             if (userId > 0 && companyId > 0 && controllerName != null && actionName != null)
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
+                var mapResult = ControllerActionHelper.
+                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.IsAdminPanel);
+
                 if (mapResult.Screen != null && mapResult.Method != null)
                 {
                     var permissionLogRepository = repositoryManager.PermissionLogRepository;

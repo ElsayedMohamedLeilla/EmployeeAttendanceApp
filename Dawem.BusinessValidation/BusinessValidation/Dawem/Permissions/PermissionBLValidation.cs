@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
@@ -21,11 +22,19 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         public async Task<bool> CreateValidation(CreatePermissionModel model)
         {
+            #region Vaildate Permission Screens
+
+            ValidatePermissionScreens(model.PermissionScreens);
+
+            #endregion
+
             if (model.ResponsibilityId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.ResponsibilityId == model.ResponsibilityId).AnyAsync();
+                .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
+                permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryPermissionResponsibilityIsDuplicated);
@@ -34,8 +43,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             else if (model.UserId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.UserId == model.UserId).AnyAsync();
+                .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
+                permission.UserId == model.UserId).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryPermissionUserIsDuplicated);
@@ -52,11 +63,20 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         public async Task<bool> UpdateValidation(UpdatePermissionModel model)
         {
+            #region Vaildate Permission Screens
+
+            ValidatePermissionScreens(model.PermissionScreens);
+
+            #endregion
+
             if (model.ResponsibilityId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.ResponsibilityId == model.ResponsibilityId && c.Id != model.Id).AnyAsync();
+                .PermissionRepository.Get(permission => permission.Id != model.Id &&
+                permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
+                permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryPermissionResponsibilityIsDuplicated);
@@ -65,8 +85,11 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             else if (model.UserId != null)
             {
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(c => c.CompanyId == requestInfo.CompanyId &&
-                c.UserId == model.UserId && c.Id != model.Id).AnyAsync();
+                .PermissionRepository.Get(permission => permission.Id != model.Id && !permission.IsDeleted &&
+                permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
+                permission.UserId == model.UserId).AnyAsync();
                 if (checkPermissionDuplicate)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryPermissionUserIsDuplicated);
@@ -82,12 +105,31 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             return true;
         }
+        private void ValidatePermissionScreens(List<PermissionScreenModel> PermissionScreens)
+        {
+            bool check = false;
 
+            if (requestInfo.IsAdminPanel)
+            {
+                check = PermissionScreens.Any(ps => !Enum.IsDefined(typeof(AdminPanelApplicationScreenCode), ps.ScreenCode));
+            }
+            else
+            {
+                check = PermissionScreens.Any(ps => !Enum.IsDefined(typeof(ApplicationScreenCode), ps.ScreenCode));
+            }
+
+            if (check)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
+            }
+        }
         private void ValidatePermissionScreenAvailableActions(List<PermissionScreenModel> permissionScreens)
         {
             #region Validate Available Actions
 
-            var allScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions;
+            var allScreensWithAvailableActions = requestInfo.IsAdminPanel ?
+                APIHelper.AdminPanelAllScreensWithAvailableActions :
+                APIHelper.AllScreensWithAvailableActions;
 
             if (allScreensWithAvailableActions != null)
             {

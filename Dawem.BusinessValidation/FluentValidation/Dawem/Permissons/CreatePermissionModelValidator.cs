@@ -13,19 +13,19 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
                 .WithMessage(LeillaKeys.SorryChooseCorrectTypeToApplyPermission);
 
             RuleFor(model => model.ResponsibilityId).GreaterThan(0)
-                .When(m => m.ForType == ForRoleOrUser.Role)
+                .When(m => m.ForType == ForResponsibilityOrUser.Responsibility)
                 .WithMessage(LeillaKeys.SorryYouMustChooseResponsibilityForPermissionWithTypeResponsibility);
 
             RuleFor(model => model.ResponsibilityId).Null()
-                .When(m => m.ForType == ForRoleOrUser.User)
+                .When(m => m.ForType == ForResponsibilityOrUser.User)
                 .WithMessage(LeillaKeys.SorryYouMustNotChooseResponsibilityForPermissionWithTypeUser);
 
             RuleFor(model => model.UserId).GreaterThan(0)
-                .When(m => m.ForType == ForRoleOrUser.User)
+                .When(m => m.ForType == ForResponsibilityOrUser.User)
                 .WithMessage(LeillaKeys.SorryYouMustChooseUserForPermissionWithTypeUser);
 
             RuleFor(model => model.UserId).Null()
-               .When(m => m.ForType == ForRoleOrUser.Role)
+               .When(m => m.ForType == ForResponsibilityOrUser.Responsibility)
                .WithMessage(LeillaKeys.SorryYouMustNotChooseUserForPermissionWithTypeResponsibility);
 
             RuleFor(model => model.PermissionScreens)
@@ -44,9 +44,6 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
     {
         public CreatePermissionScreenModelValidator()
         {
-            RuleFor(model => model.ScreenCode).IsInEnum()
-                .WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
-
             RuleFor(model => model.PermissionScreenActions)
                 .Must(model => model != null && model.Count > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseOneActionAtLeast);

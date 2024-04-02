@@ -4,7 +4,7 @@ namespace Dawem.Models.Response.Dawem.Others
 {
     public class MapControllerAndActionResponse
     {
-        public ApplicationScreenCode? Screen { get; set; }
+        public int? Screen { get; set; }
         public ApplicationAction? Method { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class TaskTypeController : BaseController
+    public class TaskTypeController : DawemControllerBase
     {
         private readonly ITaskTypeBL taskTypeBL;
 

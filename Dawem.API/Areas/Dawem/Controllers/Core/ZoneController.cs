@@ -12,7 +12,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class ZoneController : BaseController
+    public class ZoneController : DawemControllerBase
     {
         private readonly IZoneBL zoneBL;
         public ZoneController(IZoneBL _ZoneBL)

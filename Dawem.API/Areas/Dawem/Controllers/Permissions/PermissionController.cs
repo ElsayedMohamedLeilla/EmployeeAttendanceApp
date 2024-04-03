@@ -13,7 +13,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class PermissionController : BaseController
+    public class PermissionController : DawemControllerBase
     {
         private readonly IPermissionBL permissionBL;
         private readonly RequestInfo requestInfo;

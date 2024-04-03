@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     [AllowAnonymous]
-    public class AuthenticationController : BaseController
+    public class AuthenticationController : DawemControllerBase
     {
         private readonly IAuthenticationBL authenticationBL;
         private readonly IMailBL mailBL;

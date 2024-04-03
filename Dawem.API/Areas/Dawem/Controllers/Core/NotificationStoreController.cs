@@ -13,7 +13,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class NotificationStoreController : BaseController
+    public class NotificationStoreController : DawemControllerBase
     {
         private readonly INotificationStoreBL notificationStoreBL;
         private readonly INotificationServiceByFireBaseAdmin notificationService;

@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class EmployeeRequestController : BaseController
+    public class EmployeeRequestController : DawemControllerBase
     {
         private readonly IRequestBL requestBL;
 

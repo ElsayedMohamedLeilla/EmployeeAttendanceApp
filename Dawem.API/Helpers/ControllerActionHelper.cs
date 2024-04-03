@@ -1,4 +1,5 @@
-﻿using Dawem.Enums.Permissions;
+﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
@@ -82,20 +83,24 @@ namespace Dawem.API.Helpers
                 {
                     ScreenCode = (int)screenCode,
                     ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
-                    AvailableActions = GetScreenAvailableActions(screenCode.ToString())
+                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.IsAdminPanel)
                 };
 
                 response.Screens.Add(screensWithAvailableActionsDTO);
             }
             return response;
         }
-        public static List<ApplicationAction> GetScreenAvailableActions(string screenName)
+        public static List<ApplicationAction> GetScreenAvailableActions(string screenName, bool isAdminPanel)
         {
             var actions = new List<ApplicationAction>();
 
             var assembly = Assembly.GetExecutingAssembly();
-            var controllerType = assembly.GetTypes()
-                .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
+            var controllerType = isAdminPanel ?  
+                assembly.GetTypes()
+                .Where(type => typeof(AdminPanelControllerBase).IsAssignableFrom(type))
+                .FirstOrDefault(c => c.Name == screenName + LeillaKeys.Controller) :
+                assembly.GetTypes()
+                .Where(type => typeof(DawemControllerBase).IsAssignableFrom(type))
                 .FirstOrDefault(c => c.Name == screenName + LeillaKeys.Controller);
 
             if (controllerType != null)

@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class HolidayTypeController : BaseController
+    public class HolidayTypeController : DawemControllerBase
     {
         private readonly IHolidayTypeBL holidayTypeBL;
 

@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class RequestVacationController : BaseController
+    public class RequestVacationController : DawemControllerBase
     {
         private readonly IRequestVacationBL requestVacationBL;
 

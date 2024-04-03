@@ -30,6 +30,16 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             if (model.ResponsibilityId != null)
             {
+                var checkResponsibility = await repositoryManager.ResponsibilityRepository.Get(responsibility =>
+                responsibility.Id == model.ResponsibilityId && !responsibility.IsDeleted &&
+                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))).AnyAsync();
+                if (!checkResponsibility)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
+                }
+
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
@@ -42,6 +52,16 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             }
             else if (model.UserId != null)
             {
+                var checkUser = await repositoryManager.UserRepository.Get(user =>
+                user.Id == model.UserId && !user.IsDeleted &&
+                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && user.CompanyId == null))).AnyAsync();
+                if (!checkUser)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+                }
+
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
@@ -141,6 +161,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
                 if (screenWithNotAvailableAction != null)
                 {
+                    dynamic screenCode = requestInfo.IsAdminPanel ?
+                    (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenCode :
+                    (ApplicationScreenCode)screenWithNotAvailableAction.ScreenCode;
+
                     var actionNotAvailable = screenWithNotAvailableAction.PermissionScreenActions
                         .FirstOrDefault(a => !allScreensWithAvailableActions.Screens
                         .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(a.ActionCode));
@@ -148,7 +172,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                     var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
                         + LeillaKeys.Space +
                         TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
-                        + TranslationHelper.GetTranslation(screenWithNotAvailableAction.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
                         + TranslationHelper.GetTranslation(actionNotAvailable.ActionCode.ToString(), requestInfo.Lang)

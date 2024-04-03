@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class RequestPermissionController : BaseController
+    public class RequestPermissionController : DawemControllerBase
     {
         private readonly IRequestPermissionBL requestPermissionBL;
 

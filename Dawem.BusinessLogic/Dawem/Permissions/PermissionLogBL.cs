@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
@@ -40,7 +41,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             {
                 Id = pl.Id,
                 UserName = pl.User.Name,
-                ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.IsAdminPanel) + LeillaKeys.Screen, requestInfo.Lang),
                 IsActive = pl.IsActive,
             }).ToListAsync();
 
@@ -55,20 +56,27 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         public async Task<GetPermissionLogInfoResponseModel> GetInfo(int permissionLogId)
         {
             var permissionLog = await repositoryManager.PermissionLogRepository.
-                Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted && 
+                Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && permissionLog.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permissionLog.CompanyId == null)) &&
                 permissionLog.IsForAdminPanel == requestInfo.IsAdminPanel)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,
-                    ScreenName = TranslationHelper.GetTranslation(pl.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                    ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.IsAdminPanel) + LeillaKeys.Screen, requestInfo.Lang),
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
                     Date = pl.Date,
                     IsActive = pl.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permissionLog;
+        }
+        private static string GetScreenName(int screenCode, bool isAdminPanel)
+        {
+            dynamic screenCodeEnum = isAdminPanel ?
+                    (AdminPanelApplicationScreenCode)screenCode :
+                    (ApplicationScreenCode)screenCode;
+            return screenCodeEnum.ToString();
         }
     }
 

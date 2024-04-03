@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class DepartmentController : BaseController
+    public class DepartmentController : DawemControllerBase
     {
         private readonly IDepartmentBL departmentBL;
 

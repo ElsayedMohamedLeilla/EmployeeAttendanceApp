@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Summons
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class SummonController : BaseController
+    public class SummonController : DawemControllerBase
     {
         private readonly ISummonBL summonBL;
 

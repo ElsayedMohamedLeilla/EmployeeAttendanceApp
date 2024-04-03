@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Summons
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class SanctionController : BaseController
+    public class SanctionController : DawemControllerBase
     {
         private readonly ISanctionBL sanctionBL;
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    public class SchedulePlanController : BaseController
+    public class SchedulePlanController : DawemControllerBase
     {
         private readonly ISchedulePlanBL schedulePlanBL;
 

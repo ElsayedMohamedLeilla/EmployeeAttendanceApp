@@ -5,6 +5,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -13,6 +14,7 @@ using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
 using Dawem.Translations;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Permissions
@@ -59,7 +61,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             #endregion
 
             var permission = mapper.Map<Permission>(model);
-            permission.CompanyId = requestInfo.CompanyId;
+            permission.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
             permission.AddUserId = requestInfo.UserId;
             permission.IsForAdminPanel = requestInfo.IsAdminPanel;
             permission.Code = getNextCode;
@@ -234,7 +236,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     .Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                        ScreenName = TranslationHelper.GetTranslation(GetScreenName(ps.ScreenCode, requestInfo.IsAdminPanel) + LeillaKeys.Screen, requestInfo.Lang),
                         PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = psa.ActionCode,
@@ -245,6 +247,13 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permission;
+        }
+        private static string GetScreenName(int screenCode, bool isAdminPanel)
+        {
+            dynamic screenCodeEnum = isAdminPanel ?
+                    (AdminPanelApplicationScreenCode)screenCode :
+                    (ApplicationScreenCode)screenCode;
+            return screenCodeEnum.ToString();
         }
         public async Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria criteria)
         {

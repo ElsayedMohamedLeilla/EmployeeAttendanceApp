@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class RequestJustificationController : BaseController
+    public class RequestJustificationController : DawemControllerBase
     {
         private readonly IRequestJustificationBL requestJustificationBL;
 

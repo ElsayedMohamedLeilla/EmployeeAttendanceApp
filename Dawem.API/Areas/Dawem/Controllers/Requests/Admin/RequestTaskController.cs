@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class RequestTaskController : BaseController
+    public class RequestTaskController : DawemControllerBase
     {
         private readonly IRequestTaskBL requestTaskBL;
 

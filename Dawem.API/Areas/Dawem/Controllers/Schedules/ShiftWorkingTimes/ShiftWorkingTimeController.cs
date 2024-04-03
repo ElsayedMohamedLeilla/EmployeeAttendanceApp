@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules.ShiftWorkingTimes
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class ShiftWorkingTimeController : BaseController
+    public class ShiftWorkingTimeController : DawemControllerBase
     {
         private readonly IShiftWorkingTimeBL shiftWorkingTimeBL;
         public ShiftWorkingTimeController(IShiftWorkingTimeBL _ShiftWorkingTimeBL)

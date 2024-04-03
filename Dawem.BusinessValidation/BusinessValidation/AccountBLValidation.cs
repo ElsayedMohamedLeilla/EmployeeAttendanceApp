@@ -84,7 +84,7 @@ namespace Dawem.Validation.BusinessValidation
 
             var user = await repositoryManager.UserRepository
                 .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && !u.IsForAdminPanel && 
-                model.CompanyId == u.CompanyId) ??
+                (model.CompanyId <= 0 || model.CompanyId == u.CompanyId)) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion

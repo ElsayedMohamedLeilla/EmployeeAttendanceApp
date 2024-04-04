@@ -19,6 +19,7 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Core.Zones;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Core.Zones
@@ -307,15 +308,32 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
             {
                 List<Zone> ImportedList = new();
                 Zone Temp = new();
+                bool IsActive;
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
                 var getNextCode = await repositoryManager.EmployeeRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync();
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
+                    #region Validate IsActive 
+                    if (row.Cell(5).GetString().Trim() == string.Empty)
+                    {
+                        IsActive = false;
+                    }
+
+                    else if (bool.TryParse(row.Cell(5).GetString().Trim(), out IsActive))
+                    {
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryIsActiveNotValidBoolean, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
                     #region Check Valid Lat Long Reduis
                     double tempLatitude;
                     double tempLongtude;
@@ -364,7 +382,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
                             Temp.Latitude = tempLatitude;
                             Temp.Longitude = tempLongtude;
                             Temp.Radius = tempRaduis;
-                            Temp.IsActive = row.Cell(5).GetString().Trim() == string.Empty ? false : bool.Parse(row.Cell(5).GetString().Trim());
+                            Temp.IsActive = IsActive;
                             Temp.CompanyId = requestInfo.CompanyId;
                             Temp.AddedDate = DateTime.UtcNow;
                             Temp.AddUserId = requestInfo.UserId;

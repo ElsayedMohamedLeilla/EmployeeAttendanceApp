@@ -20,6 +20,7 @@ using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Dawem.BusinessLogic.Dawem.Employees
 {
@@ -477,9 +478,13 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<MemoryStream> ExportDraft()
         {
+            #region  Get All Country with Name and IOS3
+            var coutries = await repositoryManager.CountryRepository.Get(c => !c.IsDeleted && c.IsActive).Select(prop => new { prop.NameEn, prop.Iso3 }).ToListAsync();
+            #endregion
             EmptyExcelDraftModelDTO employeeHeaderDraftDTO = new();
             employeeHeaderDraftDTO.FileName = AmgadKeys.EmployeeEmptyDraft;
             employeeHeaderDraftDTO.Obj = new EmployeeHeaderDraftDTO();
+            employeeHeaderDraftDTO.ReadMeObj = coutries;
             employeeHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.Employees;
 
             return ExcelManager.ExportEmptyDraft(employeeHeaderDraftDTO);
@@ -491,7 +496,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             iniValidationModelDTO.FileStream = importedFile;
             iniValidationModelDTO.MaxRowCount = await repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(cc => cc.NumberOfEmployees).FirstOrDefaultAsync()
                                                - await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId).Select(ee => ee.Id).CountAsync(); // will be configured
-            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7 });//employee Number & Name & Email
+            iniValidationModelDTO.ColumnIndexToCheckNull.AddRange(new int[] { 1, 2, 7, 8, 14 });//employee Number & Name & Email && Mobile Number & MobileCode
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Employees;
             string[] ExpectedHeaders = typeof(EmployeeHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.ExpectedHeaders = ExpectedHeaders;
@@ -511,19 +516,127 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             else
             {
                 List<Employee> ImportedList = new();
+                int MobileNumber,EmployeeNumber;
+                DateTime JoiningDate;
+                bool IsActive;
+                string[] zoneNames;
                 Employee Temp = new();
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
                 var getNextCode = await repositoryManager.EmployeeRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync();
+
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
+                    //EGY for egypt
+                    var foundCountryInDB = await repositoryManager.CountryRepository.Get(e => !e.IsDeleted && e.Iso3 == row.Cell(14).GetString()).FirstOrDefaultAsync();
+                    if (foundCountryInDB == null) //validate on Mobile Number code
+                    {
+                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    if (int.TryParse(row.Cell(8).GetString().Trim(), out MobileNumber))
+                    {
+                        if (MobileNumber.ToString().Length != foundCountryInDB.PhoneLength + 1)
+                        {
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidAcceptNumbersOnly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+
+                    #region Validate Joining Date
+                    if (row.Cell(10).GetString().Trim() == string.Empty)
+                    {
+                        JoiningDate = DateTime.MinValue;
+                    }
+
+                    else if (DateTime.TryParse(row.Cell(10).GetString().Trim(), out JoiningDate))
+                    {
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryTheJoiningDateNotValidDate, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
+                    #region Validate IsActive 
+                    if (row.Cell(13).GetString().Trim() == string.Empty)
+                    {
+                        IsActive = false;
+                    }
+
+                    else if (bool.TryParse(row.Cell(13).GetString().Trim(), out IsActive))
+                    {
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryIsActiveNotValidBoolean, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
+                    #region Validate Employee Number 
+                   
+
+                    if (int.TryParse(row.Cell(1).GetString().Trim(), out EmployeeNumber))
+                    {
+
+                    }
+                    else
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryEmployeeNumberNotValidAcceptOnlyNumber, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
+                    #region Validate Employee Type 
+                    if (row.Cell(12).GetString().Trim() != "Military" || row.Cell(12).GetString().Trim() != "CivilService" || row.Cell(12).GetString().Trim() != "Contract" || row.Cell(12).GetString().Trim() != "Contract" || row.Cell(12).GetString().Trim() != "ContractFromCompany")
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryEmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+
+                    #endregion
+                    #region Validate Attendance Type 
+                    if (row.Cell(11).GetString().Trim() != "FullAttendance" || row.Cell(11).GetString().Trim() != "PartialAttendance" ||  row.Cell(11).GetString().Trim() != "FreeOrShiftAttendance")
+                    {
+                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    #endregion
+                    #region Map Zones
+                    zoneNames = row.Cell(15).GetString().Trim().Split(",");
+                    for (int i = 0; i < zoneNames.Count(); i++)
+                    {
+                        var foundZoneDb = repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
+                        if (foundZoneDb != null)
+                        {
+                            Temp.Zones.Add(new ZoneEmployee
+                            {
+                                ZoneId = foundZoneDb.Id
+                            });
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.MissingData, zoneNames[i].Trim() + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+                    }
+                    #endregion
+
+
                     var foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.EmployeeNumber == int.Parse(row.Cell(1).GetString())).FirstOrDefaultAsync();
                     if (foundEmployeeInDB == null) // employee number not found
                     {
+
                         foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(2).GetString()).FirstOrDefaultAsync();
                         if (foundEmployeeInDB == null) // Name Not Found
                         {
@@ -545,16 +658,16 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                     Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Name == row.Cell(5).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(6).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.Email = row.Cell(7).GetString();
-                                    Temp.MobileNumber = row.Cell(8).GetString();
-                                    Temp.Address = row.Cell(9).GetString();
-                                    Temp.JoiningDate = DateTime.Parse(row.Cell(10).GetString());
+                                    Temp.MobileNumber = MobileNumber.ToString();
+                                    Temp.Address = row.Cell(9).GetString().Trim();
+                                    Temp.JoiningDate = JoiningDate;
                                     Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;
                                     Temp.EmployeeType = row.Cell(12).GetString() == "Military" ? EmployeeType.Military : row.Cell(8).GetString() == "CivilService" ? EmployeeType.CivilService : row.Cell(8).GetString() == "Contract" ? EmployeeType.Military : row.Cell(8).GetString() == "ContractFromCompany" ? EmployeeType.ContractFromCompany : EmployeeType.Military;
-                                    Temp.IsActive = row.Cell(13).GetString().Trim() == string.Empty ? false : bool.Parse(row.Cell(13).GetString().Trim());
+                                    Temp.IsActive = IsActive;
                                     Temp.CompanyId = requestInfo.CompanyId;
                                     Temp.AddedDate = DateTime.Now;
                                     Temp.AddUserId = requestInfo.UserId;
-                                    Temp.MobileCountryId = 65;
+                                    Temp.MobileCountryId = foundCountryInDB.Id;
                                     Temp.InsertedFromExcel = true;
                                     if (Temp.DepartmentId == 0)
                                     {
@@ -616,15 +729,16 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             unitOfWork.CreateTransaction();
             #region Upload Profile Image
-            string imageName = null;
+            string UserimageName = null;
+            string EmployeeimageName = null;
             if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
             {
                 var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
-                imageName = result.FileName;
+                EmployeeimageName = result.FileName;
                 var userResult = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
-                imageName = result.FileName;
+                UserimageName = userResult.FileName;
 
             }
             #endregion
@@ -635,15 +749,15 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             getEmployee.ModifiedDate = DateTime.UtcNow;
             getEmployee.ModifyUserId = requestInfo.UserId;
             getEmployee.Address = model.Address;
-            getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
+            getEmployee.ProfileImageName = !string.IsNullOrEmpty(EmployeeimageName) ? EmployeeimageName : !string.IsNullOrEmpty(model.ProfileImageName)
                 ? getEmployee.ProfileImageName : null;
             getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
 
             var getUser = await repositoryManager.UserRepository
              .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
            && employee.EmployeeId == requestInfo.EmployeeId && employee.Id == requestInfo.User.Id);
-            getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
-                ? getEmployee.ProfileImageName : null;
+            getUser.ProfileImageName = !string.IsNullOrEmpty(UserimageName) ? UserimageName : !string.IsNullOrEmpty(model.ProfileImageName)
+                ? getUser.ProfileImageName : null;
             getUser.ModifiedApplicationType = requestInfo.ApplicationType;
             getUser.ModifiedDate = DateTime.UtcNow;
             getUser.ModifyUserId = requestInfo.UserId;

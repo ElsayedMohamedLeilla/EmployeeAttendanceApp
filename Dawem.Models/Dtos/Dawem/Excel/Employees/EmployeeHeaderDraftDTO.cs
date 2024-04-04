@@ -15,5 +15,8 @@
         public string AttendanceType { get; set; }
         public string EmployeeType { get; set; }
         public bool IsActive { get; set; }
+        public int MobileCountryCode { get; set; }
+        public string ZoneNames { get; set; }
+
     }
 }

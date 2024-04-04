@@ -194,8 +194,22 @@
         public const string SorryThisLocalDateIsNotValid = "Sorry!!ThisLocalDateIsNotValid!";
         public const string SorryThisTimeIsNotValid = "Sorry!!ThisTimeIsNotValid!";
         public const string EmployeeAttendanceEnteredSuccessfully = "EmployeeAttendanceEnteredSuccessfully";
+        
+        public const string SorryMobileCountryCodeNotValidAcceptNumbersOnly = "Sorry!!MobileCountryCodeNotValidAcceptNumbersOnly";
+        public const string SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions = "Sorry!!MobileCountryCodeNotValidOrNotExistPleaseSeeInstructions";
+
+        public const string SorryTheMobileLenghtOfCountry = "Sorry!!TheMobileLenghtOfCountry";
+
+        public const string MustBe = "MustBe";
+        public const string SorryTheJoiningDateNotValidDate = "Sorry!!TheJoiningDateNotValidDate";
+        public const string SorryIsActiveNotValidBoolean = "Sorry!!IsActiveNotValidBoolean";
+        public const string SorryEmployeeNumberNotValidAcceptOnlyNumber = "Sorry!!EmployeeNumberNotValidAcceptOnlyNumber";
+        public const string SorryEmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!EmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
+        public const string SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!AttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
 
         
+
+
 
 
 

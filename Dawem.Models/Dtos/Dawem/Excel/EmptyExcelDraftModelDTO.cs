@@ -7,5 +7,7 @@ namespace Dawem.Models.Dtos.Dawem.Excel
         public object Obj { get; set; }
         public string FileName { get; set; }
         public ExcelExportScreen ExcelExportScreen { get; set; }
+        public object ReadMeObj { get; set; }
+
     }
 }

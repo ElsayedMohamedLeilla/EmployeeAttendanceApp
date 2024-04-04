@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Excel;
+using Dawem.Models.Dtos.Dawem.Lookups;
 using System.Reflection;
 
 namespace Dawem.Helpers
@@ -26,7 +27,7 @@ namespace Dawem.Helpers
             readmeSheet.Cell(1, 1).Value = "***********  Instructions  ***********";
             readmeSheet.Cell(2, 1).Value = "** Please Follow This instructions Carefully  **";
             readmeSheet.Cell(3, 1).Value = "1. Headers Name Can't be changed.";
-            readmeSheet.Cell(4, 1).Value = "2. IsActive Accepted Only true or false";
+            readmeSheet.Cell(4, 1).Value = "2. IsActive Accepted Only true or false if empty the default value is false";
 
             if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.Employees)
             {
@@ -37,9 +38,10 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(9, 1).Value = "7. if DirectManagerName name is entered make sure that it already exist in db";
                 readmeSheet.Cell(10, 1).Value = "8. AttendanceType May Be One Of this (FullAttendance Or PartialAttendance Or FreeOrShiftAttendance)";
                 readmeSheet.Cell(11, 1).Value = "9. EmployeeType May Be One Of this (Military Or CivilService Or Contract Or ContractFromCompany)";
-                readmeSheet.Cell(13, 1).Value = "10. EmployeeNumber , EmployeeName , Email , MobilNumber is unique for every employee";
-                readmeSheet.Cell(14, 1).Value = "11. follow up any validation message and solve the problem thrown to insert file successfully";
-                readmeSheet.Cell(15, 1).Value = "12. Save the file.";
+                readmeSheet.Cell(12, 1).Value = "10. ZoneName Is Seperated By comma for example zone1,zone2 ... Make Sure The Name Is Found In DB";
+                readmeSheet.Cell(13, 1).Value = "11. EmployeeNumber , EmployeeName , Email , MobilNumber is unique for every employee";
+                readmeSheet.Cell(14, 1).Value = "12. follow up any validation message and solve the problem thrown to insert file successfully";
+                readmeSheet.Cell(15, 1).Value = "13. Save the file.";
                 readmeSheet.Cell(1, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(2, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(3, 1).Style.Font.Bold = true;
@@ -54,6 +56,8 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(12, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(13, 1).Style.Font.Bold = true;
                 readmeSheet.Cell(14, 1).Style.Font.Bold = true;
+                readmeSheet.Cell(15, 1).Style.Font.Bold = true;
+
                 readmeSheet.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 readmeSheet.Cell(2, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 readmeSheet.Cell(1, 1).Style.Font.FontColor = XLColor.Redwood;
@@ -71,6 +75,50 @@ namespace Dawem.Helpers
                 readmeSheet.Cell(13, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(14, 1).Style.Font.FontColor = XLColor.Red;
                 readmeSheet.Cell(15, 1).Style.Font.FontColor = XLColor.Red;
+                readmeSheet.Cell(1, 3).Value = "***********  Countries Code ***********";
+                readmeSheet.Cell(2, 3).Value = "** This Code will Entered in MobileCountryCode  **";
+                readmeSheet.Cell(3, 3).Value = "** Country  **";
+                readmeSheet.Cell(3, 4).Value = "** Code  **";
+
+                readmeSheet.Cell(1, 3).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(2, 3).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(3, 3).Style.Font.FontColor = XLColor.Redwood;
+                readmeSheet.Cell(3, 4).Style.Font.FontColor = XLColor.Redwood;
+
+                readmeSheet.Cell(1, 3).Style.Font.Bold = true;
+                readmeSheet.Cell(2, 3).Style.Font.Bold = true;
+                readmeSheet.Cell(3, 3).Style.Font.Bold = true;
+                readmeSheet.Cell(3, 4).Style.Font.Bold = true;
+                readmeSheet.Cell(1, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(2, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(3, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                readmeSheet.Cell(3, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+
+
+                int row = 4;
+
+                if (headerDraftDTO.ReadMeObj is IEnumerable<object> enumerable)
+                {
+                    foreach (var item in enumerable)
+                    {
+                        var propertiess = item.GetType().GetProperties();
+
+                        readmeSheet.Cell(row, 3).Value = propertiess.First(prop => prop.Name == "NameEn").GetValue(item)?.ToString();
+                        readmeSheet.Cell(row, 4).Value = propertiess.First(prop => prop.Name == "Iso3").GetValue(item)?.ToString();
+                        readmeSheet.Cell(row, 3).Style.Font.FontColor = XLColor.Red;
+                        readmeSheet.Cell(row, 4).Style.Font.FontColor = XLColor.Red;
+                        readmeSheet.Cell(row, 3).Style.Font.Bold = true;
+                        readmeSheet.Cell(row, 4).Style.Font.Bold = true;
+                        readmeSheet.Cell(row, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        readmeSheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        row++;
+
+                    }
+                }
+
+
 
             }
             else if (headerDraftDTO.ExcelExportScreen == ExcelExportScreen.Departments)
@@ -165,7 +213,7 @@ namespace Dawem.Helpers
 
             readmeSheet.Columns().AdjustToContents();
             // Create a memory stream to hold the Excel file content
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
             // Save the workbook to the memory stream
             workbook.SaveAs(stream);
             // Rewind the stream to the beginning so it can be read from the start

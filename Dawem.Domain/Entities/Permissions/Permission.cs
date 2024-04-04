@@ -13,7 +13,7 @@ namespace Dawem.Domain.Entities.Permissions
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
-        public ForRoleOrUser ForType { get; set; }
+        public ForResponsibilityOrUser ForType { get; set; }
         public int? ResponsibilityId { get; set; }
         [ForeignKey(nameof(ResponsibilityId))]
         public virtual Responsibility Responsibility { get; set; }

@@ -3,6 +3,7 @@ using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -35,15 +36,21 @@ namespace Dawem.API.MiddleWares
 
             if (httpContext != null && userId > 0 && !string.IsNullOrWhiteSpace(controllerName) && !string.IsNullOrWhiteSpace(actionName))
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
+                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.IsAdminPanel);
                 if (mapResult.Screen != null && mapResult.Method != null)
                 {
                     var model = new CheckUserPermissionModel
                     {
+                        CompanyId = requestInfo.CompanyId,
                         UserId = userId,
                         ScreenCode = mapResult.Screen.Value,
-                        ActionCode = mapResult.Method.Value
+                        ActionCode = mapResult.Method.Value,
+                        IsForAdminPanel = requestInfo.IsAdminPanel
                     };
+
+                    dynamic screenCode = requestInfo.IsAdminPanel ?
+                    (AdminPanelApplicationScreenCode)mapResult.Screen.Value :
+                    (ApplicationScreenCode)mapResult.Screen.Value;
 
                     var checkPermissionResponse = await permissionBL.CheckUserPermission(model);
                     if (checkPermissionResponse)
@@ -60,10 +67,10 @@ namespace Dawem.API.MiddleWares
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
                                    requestInfo?.Lang) + LeillaKeys.RightBracket +
-                                   LeillaKeys.Space + 
+                                   LeillaKeys.Space +
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
-                                   TranslationHelper.GetTranslation(mapResult.Screen.Value.ToString() + LeillaKeys.Screen,
+                                   TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen,
                                    requestInfo?.Lang) + LeillaKeys.RightBracket
                         };
 

@@ -5,7 +5,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Others
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController]
    
-    public class BrowseController : BaseController
+    public class BrowseController : DawemControllerBase
     {
         private readonly IWebHostEnvironment webHostEnvironment;
 

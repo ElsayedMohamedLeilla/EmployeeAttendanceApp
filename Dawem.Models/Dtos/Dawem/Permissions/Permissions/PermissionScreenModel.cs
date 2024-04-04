@@ -1,10 +1,7 @@
-﻿using Dawem.Enums.Permissions;
-
-namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
+﻿namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
 {
-    public class PermissionScreenModel
+    public class PermissionScreenModel : BasePermissionScreenModel
     {
-        public ApplicationScreenCode ScreenCode { get; set; }
-        public List<PermissionScreenActionModel> PermissionScreenActions { get; set; }
+        public int ScreenCode { get; set; }
     }
 }

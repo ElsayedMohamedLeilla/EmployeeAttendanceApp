@@ -22,7 +22,7 @@ namespace Dawem.Domain.Entities.UserManagement
         [ForeignKey(nameof(EmployeeId))]
         public virtual Employee Employee { get; set; }
 
-        public int MobileCountryId { get; set; }
+        public int? MobileCountryId { get; set; }
         [ForeignKey(nameof(MobileCountryId))]
         public Country MobileCountry { get; set; }
 

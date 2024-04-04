@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class AttendanceSummaryReportController : BaseController
+    public class AttendanceSummaryReportController : DawemControllerBase
     {
         private readonly IAttendanceSummaryReportBL attendanceSummaryReportBL;
         public AttendanceSummaryReportController(IAttendanceSummaryReportBL _attendanceSummaryReportBL)

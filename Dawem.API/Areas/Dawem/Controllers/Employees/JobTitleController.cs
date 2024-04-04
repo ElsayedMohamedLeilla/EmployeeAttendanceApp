@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class JobTitleController : BaseController
+    public class JobTitleController : DawemControllerBase
     {
         private readonly IJobTitleBL jobTitleBL;
 

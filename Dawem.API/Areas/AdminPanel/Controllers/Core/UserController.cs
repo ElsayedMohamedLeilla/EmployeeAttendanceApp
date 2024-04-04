@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Dawem.API.Areas.AdminPanel.Controllers.Core.UserManagement
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
-    public class UserController : BaseController
+    public class UserController : AdminPanelControllerBase
     {
         private readonly IUserBL userBL;
 

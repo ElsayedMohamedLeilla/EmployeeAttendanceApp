@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
-    public class ResponsibilityController : BaseController
+    public class ResponsibilityController : AdminPanelControllerBase
     {
         private readonly IResponsibilityBL responsibilityBL;
         public ResponsibilityController(IResponsibilityBL _responsibilityBL)

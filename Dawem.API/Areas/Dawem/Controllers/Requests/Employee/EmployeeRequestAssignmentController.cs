@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class EmployeeRequestAssignmentController : BaseController
+    public class EmployeeRequestAssignmentController : DawemControllerBase
     {
         private readonly IRequestAssignmentBL requestAssignmentBL;
 

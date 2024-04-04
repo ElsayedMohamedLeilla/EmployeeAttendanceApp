@@ -12,7 +12,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class GroupController : BaseController
+    public class GroupController : DawemControllerBase
     {
         private readonly IGroupBL groupBL;
         public GroupController(IGroupBL _GroupBL)

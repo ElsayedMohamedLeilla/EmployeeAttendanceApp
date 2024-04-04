@@ -1,12 +1,7 @@
-﻿using Dawem.Enums.Permissions;
-using Dawem.Models.Criteria;
-
-namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
+﻿namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
 {
-    public class GetPermissionScreensCriteria : BaseCriteria
+    public class GetPermissionScreensCriteria : BaseGetPermissionScreensCriteria
     {
-        public int PermissionId { get; set; }
-        public ApplicationScreenCode? ScreenCode { get; set; }
-        public ApplicationAction? ActionCode { get; set; }
+        public int? ScreenCode { get; set; }
     }
 }

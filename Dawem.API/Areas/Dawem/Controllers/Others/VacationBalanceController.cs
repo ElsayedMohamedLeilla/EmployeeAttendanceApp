@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Others
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class VacationBalanceController : BaseController
+    public class VacationBalanceController : DawemControllerBase
     {
         private readonly IVacationBalanceBL vacationBalanceBL;
 

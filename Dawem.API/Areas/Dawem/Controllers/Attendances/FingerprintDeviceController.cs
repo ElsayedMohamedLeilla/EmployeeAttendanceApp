@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class FingerprintDeviceController : BaseController
+    public class FingerprintDeviceController : DawemControllerBase
     {
         private readonly IFingerprintDeviceBL fingerprintDeviceBL;
 

@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
-    public class ScreenController : BaseController
+    public class ScreenController : DawemControllerBase
     {
         private readonly IScreenBL screenBL;
 

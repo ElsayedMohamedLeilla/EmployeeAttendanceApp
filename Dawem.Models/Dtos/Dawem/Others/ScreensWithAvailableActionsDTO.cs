@@ -8,7 +8,7 @@ namespace Dawem.Models.Dtos.Dawem.Others
         {
             AvailableActions = new List<ApplicationAction>();
         }
-        public ApplicationScreenCode ScreenCode { get; set; }
+        public int ScreenCode { get; set; }
         public string ScreenName { get; set; }
         public List<ApplicationAction> AvailableActions { get; set; }
     }

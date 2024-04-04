@@ -5,6 +5,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 {
@@ -186,6 +187,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 
             #endregion
 
+            #region Validate Responsibilities
+
+            var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
+                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && !responsibility.IsForAdminPanel &&
+                model.Responsibilities.Contains(responsibility.Id)).
+                Select(responsibility => responsibility.Id).
+                ToListAsync();
+
+            if (checkResponsibilitiesIds.Count != model.Responsibilities.Count)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorrySomeOrAllResponsibilitiesNotFound);
+            }
+
+            #endregion
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateUserModel model)
@@ -239,6 +255,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 
             #endregion
 
+            #region Validate Responsibilities
+
+            var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
+                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && !responsibility.IsForAdminPanel &&
+                model.Responsibilities.Contains(responsibility.Id)).
+                Select(responsibility => responsibility.Id).
+                ToListAsync();
+
+            if (checkResponsibilitiesIds.Count != model.Responsibilities.Count)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorrySomeOrAllResponsibilitiesNotFound);
+            }
+
+            #endregion
+
             return true;
         }
         public async Task<bool> AdminPanelCreateValidation(AdminPanelCreateUserModel model)
@@ -263,6 +294,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 
             #endregion
 
+            #region Validate Responsibilities
+
+            var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
+                Get(responsibility => responsibility.CompanyId == null && responsibility.IsForAdminPanel &&
+                model.Responsibilities.Contains(responsibility.Id)).
+                Select(responsibility => responsibility.Id).
+                ToListAsync();
+
+            if (checkResponsibilitiesIds.Count != model.Responsibilities.Count)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorrySomeOrAllResponsibilitiesNotFound);
+            }
+
+            #endregion
+
             return true;
         }
         public async Task<bool> AdminPanelUpdateValidation(AdminPanelUpdateUserModel model)
@@ -283,6 +329,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             if (checkEmailDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            }
+
+            #endregion
+
+            #region Validate Responsibilities
+
+            var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
+                Get(responsibility => responsibility.CompanyId == null && responsibility.IsForAdminPanel &&
+                model.Responsibilities.Contains(responsibility.Id)).
+                Select(responsibility => responsibility.Id).
+                ToListAsync();
+
+            if (checkResponsibilitiesIds.Count != model.Responsibilities.Count)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorrySomeOrAllResponsibilitiesNotFound);
             }
 
             #endregion

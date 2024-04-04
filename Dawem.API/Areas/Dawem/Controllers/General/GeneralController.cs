@@ -8,7 +8,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.General
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class GeneralController : BaseController
+    public class GeneralController : DawemControllerBase
     {
         private readonly IGeneralBL generalBL;
         public GeneralController(IGeneralBL _generalBL)

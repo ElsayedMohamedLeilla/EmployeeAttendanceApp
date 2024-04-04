@@ -1,16 +1,15 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
+﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Subscriptions
+namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
-    public class PlanController : BaseController
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    public class PlanController : AdminPanelControllerBase
     {
         private readonly IPlanBL planBL;
 

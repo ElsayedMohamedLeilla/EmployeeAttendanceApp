@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Criteria.Others;
+using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
 
@@ -16,6 +17,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Permissions
         Task<bool> Delete(int permissionId);
         Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations();
         Task<bool> CheckUserPermission(CheckUserPermissionModel model);
+        Task<bool> Enable(int permissionId);
+        Task<bool> Disable(DisableModelDTO model);
         Task<GetUserPermissionsResponseModel> GetCurrentUserPermissions(GetCurrentUserPermissionsModel? model = null);
     }
 }

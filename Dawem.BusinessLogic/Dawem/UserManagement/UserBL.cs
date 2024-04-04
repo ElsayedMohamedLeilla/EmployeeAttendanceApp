@@ -731,10 +731,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             var isArabic = requestInfo.Lang == LeillaKeys.Ar;
 
             var user = await repositoryManager.UserRepository.
-                Get(user => user.Id == userId && !user.IsDeleted && 
-                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
-                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && user.CompanyId == null)))
+                Get(user => user.Id == userId && !user.IsDeleted &&
+                !user.IsForAdminPanel && user.CompanyId == requestInfo.CompanyId)
                 .Select(user => new GetUserInfoResponseModel
                 {
                     Code = user.Code,
@@ -757,9 +755,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
-                ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && user.CompanyId == null)))
+                !user.IsForAdminPanel && user.CompanyId == requestInfo.CompanyId)
                 .Select(user => new GetUserByIdResponseModel
                 {
                     Id = user.Id,
@@ -769,7 +765,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
-                    MobileCountryId = user.MobileCountryId,
+                    MobileCountryId = user.MobileCountryId ?? 0,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
                     ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
@@ -803,7 +799,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                  !user.IsForAdminPanel && user.CompanyId == null)
+                  user.IsForAdminPanel && user.CompanyId == null)
                 .Select(user => new AdminPanelGetUserByIdResponseModel
                 {
                     Id = user.Id,
@@ -812,6 +808,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     IsActive = user.IsActive,
                     IsAdmin = user.IsAdmin,
                     Email = user.Email,
+                    ProfileImageName = user.ProfileImageName,
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 

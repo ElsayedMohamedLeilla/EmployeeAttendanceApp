@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     [Authorize(Roles = LeillaKeys.RoleFULLACCESS)]
-    public class PermissionLogController : BaseController
+    public class PermissionLogController : DawemControllerBase
     {
         private readonly IPermissionLogBL permissionLogBL;
 

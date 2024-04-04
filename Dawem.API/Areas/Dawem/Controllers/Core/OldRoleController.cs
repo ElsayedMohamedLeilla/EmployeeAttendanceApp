@@ -10,7 +10,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class OldRoleController : BaseController
+    public class OldRoleController : DawemControllerBase
     {
         private readonly IRoleBL RoleBL;
         public OldRoleController(IRoleBL _RoleBL)

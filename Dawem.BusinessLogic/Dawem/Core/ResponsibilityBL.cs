@@ -255,8 +255,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             var query = responsibilityRepository.
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))
-                && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
-                !responsibility.IsDeleted);
+                && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel);
 
             #region Handle Response
 

@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules.Schedules
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class ScheduleController : BaseController
+    public class ScheduleController : DawemControllerBase
     {
         private readonly IScheduleBL scheduleBL;
 

@@ -6,7 +6,7 @@ namespace Dawem.Models.Response.Dawem.Permissions.Permissions
     {
         public int Id { get; set; }
         public int Code { get; set; }
-        public ForRoleOrUser ForType { get; set; }
+        public ForResponsibilityOrUser ForType { get; set; }
         public string ForTypeName { get; set; }
         public string ResponsibilityOrUserName { get; set; }
         public int AllowedScreensCount { get; set; }

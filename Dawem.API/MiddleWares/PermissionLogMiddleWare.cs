@@ -23,7 +23,9 @@ namespace Dawem.API.MiddleWares
             await _next.Invoke(context: httpContext);
 
             var userId = requestInfo.UserId;
-            var companyId = requestInfo.CompanyId;
+            var isAdminPanel = requestInfo.IsAdminPanel;
+            int? companyId = isAdminPanel ? null : requestInfo.CompanyId;
+            
 
             var controllerActionDescriptor = httpContext
                     ?.GetEndpoint()
@@ -34,9 +36,11 @@ namespace Dawem.API.MiddleWares
             var actionName = controllerActionDescriptor?.ActionName;
 
 
-            if (userId > 0 && companyId > 0 && controllerName != null && actionName != null)
+            if (userId > 0 && (companyId > 0 || isAdminPanel) && controllerName != null && actionName != null)
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName);
+                var mapResult = ControllerActionHelper.
+                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.IsAdminPanel);
+
                 if (mapResult.Screen != null && mapResult.Method != null)
                 {
                     var permissionLogRepository = repositoryManager.PermissionLogRepository;
@@ -47,6 +51,7 @@ namespace Dawem.API.MiddleWares
                         UserId = userId,
                         ActionCode = mapResult.Method.Value,
                         ScreenCode = mapResult.Screen.Value,
+                        IsForAdminPanel = isAdminPanel
                     };
 
                     permissionLogRepository.Insert(permissionLog);

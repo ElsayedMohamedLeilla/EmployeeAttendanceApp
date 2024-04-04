@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
     [AllowAnonymous]
-    public class AuthenticationController : BaseController
+    public class AuthenticationController : AdminPanelControllerBase
     {
         private readonly IAuthenticationBL authenticationBL;
         private readonly IMailBL mailBL;
@@ -42,7 +42,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core
             var response = await authenticationBL.ResetPassword(model);
             return Success(response, messageCode: LeillaKeys.DoneResetPasswordSuccessfully);
         }
-
         [HttpPost]
         public async Task<ActionResult> ChangePassword(ChangePasswordModel resetPasswordModel)
         {
@@ -58,10 +57,5 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core
             var result = await authenticationBL.ChangePassword(resetPasswordModel);
             return Success(result, messageCode: LeillaKeys.DoneChangePasswordSuccessfully);
         }
-
-
-
-
-
     }
 }

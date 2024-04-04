@@ -363,7 +363,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id });
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id, IsForAdminPanel = false });
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;

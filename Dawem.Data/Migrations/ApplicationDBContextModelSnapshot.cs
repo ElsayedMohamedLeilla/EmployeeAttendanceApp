@@ -5030,7 +5030,7 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("MobileCountryId")
+                    b.Property<int?>("MobileCountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("MobileNumber")
@@ -6532,8 +6532,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Lookups.Country", "MobileCountry")
                         .WithMany()
                         .HasForeignKey("MobileCountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Company");
 

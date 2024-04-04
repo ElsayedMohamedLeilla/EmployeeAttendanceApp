@@ -9,7 +9,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
 
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    public class ResponsibilityController : BaseController
+    public class ResponsibilityController : DawemControllerBase
     {
         private readonly IResponsibilityBL responsibilityBL;
         public ResponsibilityController(IResponsibilityBL _responsibilityBL)

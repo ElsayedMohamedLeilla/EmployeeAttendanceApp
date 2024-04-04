@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class JustificationTypeController : BaseController
+    public class JustificationTypeController : DawemControllerBase
     {
         private readonly IJustificationTypeBL justificationTypeBL;
         public JustificationTypeController(IJustificationTypeBL _justificationTypeBL)

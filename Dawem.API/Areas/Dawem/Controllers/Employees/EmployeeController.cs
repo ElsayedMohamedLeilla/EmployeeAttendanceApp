@@ -14,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
         ]
     
     
-    public class EmployeeController : BaseController
+    public class EmployeeController : DawemControllerBase
     {
         private readonly IEmployeeBL employeeBL;
 

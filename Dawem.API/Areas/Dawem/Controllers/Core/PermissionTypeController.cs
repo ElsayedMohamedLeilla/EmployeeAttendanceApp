@@ -11,7 +11,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class PermissionTypeController : BaseController
+    public class PermissionTypeController : DawemControllerBase
     {
         private readonly IPermissionTypeBL permissionTypeBL;
         public PermissionTypeController(IPermissionTypeBL _permissionTypeBL)

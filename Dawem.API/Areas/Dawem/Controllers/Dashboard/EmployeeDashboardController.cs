@@ -8,7 +8,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Dashboard
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
     
     
-    public class EmployeeDashboardController : BaseController
+    public class EmployeeDashboardController : DawemControllerBase
     {
         private readonly IDashboardBL dashboardBL;
         public EmployeeDashboardController(IDashboardBL _dashboardBL)

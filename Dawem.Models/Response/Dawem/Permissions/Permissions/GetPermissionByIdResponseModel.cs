@@ -5,7 +5,7 @@ namespace Dawem.Models.Response.Dawem.Permissions.Permissions
     public class GetPermissionByIdResponseModel
     {
         public int Id { get; set; }
-        public ForRoleOrUser ForType { get; set; }
+        public ForResponsibilityOrUser ForType { get; set; }
         public int? ResponsibilityId { get; set; }
         public int? UserId { get; set; }
         public int Code { get; set; }

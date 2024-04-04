@@ -83,6 +83,7 @@ namespace Dawem.Repository.UserManagement
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
                 inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Email != null && x.Email.ToLower().Trim().Contains(criteria.FreeText));
                 inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))

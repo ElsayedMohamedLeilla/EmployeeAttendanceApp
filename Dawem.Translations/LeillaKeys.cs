@@ -79,6 +79,7 @@
         public const string LeftBracket = "(";
         public const string RightBracket = ")";
         public const string SpaceThenDashThenSpace = " - ";
+        public const string ColonsThenSpace = ": ";
         public const string Dash = "-";
         public const string QuestionMark = "?";
         public const string Email = "Email";
@@ -540,6 +541,8 @@
         public const string YouAreOnTrialSubscription = "YouAreOnTrialSubscription";
         public const string SorryPlanNotFound = "Sorry!!PlanNotFound!";
         public const string SorryPlanNameIsDuplicated = "Sorry!!PlanNameIsDuplicated!";
+        public const string DuplicatedPlanName = "DuplicatedPlanName";
+        public const string DuplicatedPlanLanguage = "DuplicatedPlanLanguage";
         public const string SorryPlanOverlapWithOtherPlanInNumberOfEmployees = "Sorry!!PlanOverlapWithOtherPlanInNumberOfEmployees!";
         public const string SorryYouMustEnterPlanName = "Sorry!!YouMustEnterPlanName!";
         public const string SorryYouMustEnterPlanMinNumberOfEmployees = "Sorry!!YouMustEnterPlanMinNumberOfEmployees!";

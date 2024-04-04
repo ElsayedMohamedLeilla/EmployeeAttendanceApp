@@ -26,11 +26,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Subscriptions
         }
         public async Task<bool> CreateValidation(CreatePlanModel model)
         {
-            #region Validate Arabic And English Languages
-
-            await nameTranslationBLValidationCore.NameTranslationsValidation(model.NameTranslations);
-
-            #endregion
 
             var checkPlanOverlap = await repositoryManager
                 .PlanRepository.Get(c => !c.IsDeleted && (model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
@@ -56,16 +51,16 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Subscriptions
 
             #endregion
 
-            return true;
-        }
-        public async Task<bool> UpdateValidation(UpdatePlanModel model)
-        {
             #region Validate Arabic And English Languages
 
             await nameTranslationBLValidationCore.NameTranslationsValidation(model.NameTranslations);
 
             #endregion
 
+            return true;
+        }
+        public async Task<bool> UpdateValidation(UpdatePlanModel model)
+        {
             var checkPlanOverlap = await repositoryManager
                 .PlanRepository.Get(c => !c.IsDeleted && (model.MinNumberOfEmployees >= c.MinNumberOfEmployees &&
                 model.MinNumberOfEmployees <= c.MaxNumberOfEmployees || model.MaxNumberOfEmployees >= c.MinNumberOfEmployees &&
@@ -88,6 +83,12 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Subscriptions
                     throw new BusinessValidationException(LeillaKeys.SorryThereIsAlreadyTrialPlanYouMustAddOneTrialPlan);
                 }
             }
+
+            #endregion
+
+            #region Validate Arabic And English Languages
+
+            await nameTranslationBLValidationCore.NameTranslationsValidation(model.NameTranslations);
 
             #endregion
 

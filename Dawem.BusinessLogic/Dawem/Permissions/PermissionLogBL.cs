@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -41,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             {
                 Id = pl.Id,
                 UserName = pl.User.Name,
-                ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.IsAdminPanel) + LeillaKeys.Screen, requestInfo.Lang),
+                ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.Type) + LeillaKeys.Screen, requestInfo.Lang),
                 IsActive = pl.IsActive,
             }).ToListAsync();
 
@@ -59,11 +60,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && permissionLog.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permissionLog.CompanyId == null)) &&
-                permissionLog.IsForAdminPanel == requestInfo.IsAdminPanel)
+                permissionLog.Type == requestInfo.Type)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,
-                    ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.IsAdminPanel) + LeillaKeys.Screen, requestInfo.Lang),
+                    ScreenName = TranslationHelper.GetTranslation(GetScreenName(pl.ScreenCode, requestInfo.Type) + LeillaKeys.Screen, requestInfo.Lang),
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
                     Date = pl.Date,
                     IsActive = pl.IsActive
@@ -71,11 +72,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
 
             return permissionLog;
         }
-        private static string GetScreenName(int screenCode, bool isAdminPanel)
+        private static string GetScreenName(int screenCode, AuthenticationType type)
         {
-            dynamic screenCodeEnum = isAdminPanel ?
+            dynamic screenCodeEnum = type == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)screenCode :
-                    (ApplicationScreenCode)screenCode;
+                    (DawemAdminApplicationScreenCode)screenCode;
             return screenCodeEnum.ToString();
         }
     }

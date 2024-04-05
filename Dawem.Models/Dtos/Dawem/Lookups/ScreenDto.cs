@@ -16,7 +16,7 @@ namespace Dawem.Models.Dtos.Dawem.Lookups
 
 
         public int? ParentId { get; set; }
-        public ApplicationScreenCode Parent { get; set; }
+        public DawemAdminApplicationScreenCode Parent { get; set; }
         public int Level { get; set; }
 
         public int Order { get; set; }

@@ -50,7 +50,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public ApplicationType? ModifiedApplicationType { get; set; }
         public string VerificationCode { get; set; }
         public DateTime VerificationCodeSendDate { get; set; }
-        public bool IsForAdminPanel { get; set; }
+        public AuthenticationType Type { get; set; }
         public void Delete()
         {
             IsDeleted = true;

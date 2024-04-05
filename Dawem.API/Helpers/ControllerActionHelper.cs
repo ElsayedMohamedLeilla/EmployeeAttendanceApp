@@ -1,4 +1,5 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -12,16 +13,16 @@ namespace Dawem.API.Helpers
 {
     public static class ControllerActionHelper
     {
-        public static MapControllerAndActionResponse MapControllerAndAction(string controllerName, string actionName, bool isAdminPanel)
+        public static MapControllerAndActionResponse MapControllerAndAction(string controllerName, string actionName, AuthenticationType type)
         {
             var response = new MapControllerAndActionResponse();
 
             int? screen = null;
             ApplicationAction? method = null;
 
-            var allScreenCodes = isAdminPanel ?
+            var allScreenCodes = type == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
-                Enum.GetValues(typeof(ApplicationScreenCode)).Cast<int>().ToList();
+                Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
 
             screen = allScreenCodes.FirstOrDefault(s => s.ToString() + LeillaKeys.Controller == controllerName);
 
@@ -69,33 +70,33 @@ namespace Dawem.API.Helpers
         {
             var response = new GetAllScreensWithAvailableActionsResponse();
 
-            var allScreenCodes = requestInfo.IsAdminPanel ?
+            var allScreenCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
-                Enum.GetValues(typeof(ApplicationScreenCode)).Cast<int>().ToList();
+                Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
 
             foreach (var tempScreenCode in allScreenCodes)
             {
-                dynamic screenCode = requestInfo.IsAdminPanel ?
+                dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)tempScreenCode:
-                    (ApplicationScreenCode)tempScreenCode;
+                    (DawemAdminApplicationScreenCode)tempScreenCode;
 
                 var screensWithAvailableActionsDTO = new ScreensWithAvailableActionsDTO
                 {
                     ScreenCode = (int)screenCode,
                     ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
-                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.IsAdminPanel)
+                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.Type)
                 };
 
                 response.Screens.Add(screensWithAvailableActionsDTO);
             }
             return response;
         }
-        public static List<ApplicationAction> GetScreenAvailableActions(string screenName, bool isAdminPanel)
+        public static List<ApplicationAction> GetScreenAvailableActions(string screenName, AuthenticationType type)
         {
             var actions = new List<ApplicationAction>();
 
             var assembly = Assembly.GetExecutingAssembly();
-            var controllerType = isAdminPanel ?  
+            var controllerType = type == AuthenticationType.AdminPanel ?  
                 assembly.GetTypes()
                 .Where(type => typeof(AdminPanelControllerBase).IsAssignableFrom(type))
                 .FirstOrDefault(c => c.Name == screenName + LeillaKeys.Controller) :

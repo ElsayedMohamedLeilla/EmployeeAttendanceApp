@@ -8,7 +8,7 @@ namespace Dawem.Models.Dtos.Dawem.Others
         public DateTime AddedDate { get; set; } = DateTime.UtcNow;
         public int? UserId { get; set; }
         public int? GroupId { get; set; }
-        public ApplicationScreenCode ActionPlace { get; set; }
+        public DawemAdminApplicationScreenCode ActionPlace { get; set; }
         public ApplicationAction ActionType { get; set; }
     }
 }

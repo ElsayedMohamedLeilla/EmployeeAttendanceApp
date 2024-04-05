@@ -24,7 +24,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.Name == model.Name &&
-                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel).
+                responsibility.Type == requestInfo.Type).
                 AnyAsync();
 
             if (checkResponsibilityDuplicate)
@@ -41,7 +41,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.Name == model.Name &&
-                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel && responsibility.Id != model.Id).AnyAsync();
+                responsibility.Type == requestInfo.Type && responsibility.Id != model.Id).AnyAsync();
             if (checkResponsibilityDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNameIsDuplicated);

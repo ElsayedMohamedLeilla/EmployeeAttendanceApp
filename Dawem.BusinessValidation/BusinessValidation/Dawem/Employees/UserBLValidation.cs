@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Dawem.Employees;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
@@ -190,7 +191,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             #region Validate Responsibilities
 
             var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
-                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && !responsibility.IsForAdminPanel &&
+                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && responsibility.Type == AuthenticationType.DawemAdmin &&
                 model.Responsibilities.Contains(responsibility.Id)).
                 Select(responsibility => responsibility.Id).
                 ToListAsync();
@@ -258,7 +259,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             #region Validate Responsibilities
 
             var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
-                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && !responsibility.IsForAdminPanel &&
+                Get(responsibility => responsibility.CompanyId == requestInfo.CompanyId && responsibility.Type == AuthenticationType.DawemAdmin &&
                 model.Responsibilities.Contains(responsibility.Id)).
                 Select(responsibility => responsibility.Id).
                 ToListAsync();
@@ -275,7 +276,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         public async Task<bool> AdminPanelCreateValidation(AdminPanelCreateUserModel model)
         {
             var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => !c.IsDeleted && c.IsForAdminPanel && c.CompanyId == null &&
+                .UserRepository.Get(c => !c.IsDeleted && c.Type == AuthenticationType.AdminPanel && c.CompanyId == null &&
                 c.Name == model.Name).AnyAsync();
             if (checkUserDuplicate)
             {
@@ -297,7 +298,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             #region Validate Responsibilities
 
             var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
-                Get(responsibility => responsibility.CompanyId == null && responsibility.IsForAdminPanel &&
+                Get(responsibility => responsibility.CompanyId == null && responsibility.Type == AuthenticationType.AdminPanel &&
                 model.Responsibilities.Contains(responsibility.Id)).
                 Select(responsibility => responsibility.Id).
                 ToListAsync();
@@ -314,7 +315,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         public async Task<bool> AdminPanelUpdateValidation(AdminPanelUpdateUserModel model)
         {
             var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => !c.IsDeleted && c.IsForAdminPanel && c.CompanyId == null &&
+                .UserRepository.Get(c => !c.IsDeleted && c.Type == AuthenticationType.AdminPanel && c.CompanyId == null &&
                 c.Name == model.Name && c.Id != model.Id).AnyAsync();
             if (checkUserDuplicate)
             {
@@ -336,7 +337,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             #region Validate Responsibilities
 
             var checkResponsibilitiesIds = await repositoryManager.ResponsibilityRepository.
-                Get(responsibility => responsibility.CompanyId == null && responsibility.IsForAdminPanel &&
+                Get(responsibility => responsibility.CompanyId == null && responsibility.Type == AuthenticationType.AdminPanel &&
                 model.Responsibilities.Contains(responsibility.Id)).
                 Select(responsibility => responsibility.Id).
                 ToListAsync();

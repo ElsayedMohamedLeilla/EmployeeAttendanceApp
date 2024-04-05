@@ -23,7 +23,7 @@ namespace Dawem.Models.Context
         public bool IsMainBranch { get; set; }
         public DateTime LocalDateTime { get; set; }
         public LocalDateTime LocalHijriDateTime { get; set; }
-        public bool IsAdminPanel { get; set; }
+        public AuthenticationType Type { get; set; }
         public bool IsAdminPanelRequest { get; set; }
         public bool IsAdminPanelUser { get; set; }
         public bool NotAuthorized { get; set;}

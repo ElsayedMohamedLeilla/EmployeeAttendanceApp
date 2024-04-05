@@ -18,7 +18,7 @@ namespace Dawem.Models.Criteria
         public bool ForGridView { get; set; }
         public bool? IsActive { get; set; }
         public bool IsExport { get; set; }
-        public bool IsForAdminPanel { get; set; }
+        public AuthenticationType Type { get; set; }
         public bool GetPagingEnabled()
         {
             return PagingEnabled && !IsExport;

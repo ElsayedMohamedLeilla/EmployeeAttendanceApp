@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using LinqKit;
@@ -20,16 +21,16 @@ namespace Dawem.Repository.Others
             var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Permission>(true);
 
-            if (requestInfo.IsAdminPanel)
+            if (requestInfo.Type == AuthenticationType.AdminPanel)
             {
                 predicate = predicate.And(e => e.CompanyId == null);
             }
-            else
+            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            predicate = predicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
+            predicate = predicate.And(e => e.Type == requestInfo.Type);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

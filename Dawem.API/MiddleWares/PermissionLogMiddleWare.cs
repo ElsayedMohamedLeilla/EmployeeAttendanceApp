@@ -3,6 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
@@ -23,8 +24,8 @@ namespace Dawem.API.MiddleWares
             await _next.Invoke(context: httpContext);
 
             var userId = requestInfo.UserId;
-            var isAdminPanel = requestInfo.IsAdminPanel;
-            int? companyId = isAdminPanel ? null : requestInfo.CompanyId;
+            var type = requestInfo.Type;
+            int? companyId = type == AuthenticationType.AdminPanel ? null : requestInfo.CompanyId;
             
 
             var controllerActionDescriptor = httpContext
@@ -36,10 +37,10 @@ namespace Dawem.API.MiddleWares
             var actionName = controllerActionDescriptor?.ActionName;
 
 
-            if (userId > 0 && (companyId > 0 || isAdminPanel) && controllerName != null && actionName != null)
+            if (userId > 0 && (companyId > 0 || type == AuthenticationType.AdminPanel) && controllerName != null && actionName != null)
             {
                 var mapResult = ControllerActionHelper.
-                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.IsAdminPanel);
+                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
 
                 if (mapResult.Screen != null && mapResult.Method != null)
                 {
@@ -51,7 +52,7 @@ namespace Dawem.API.MiddleWares
                         UserId = userId,
                         ActionCode = mapResult.Method.Value,
                         ScreenCode = mapResult.Screen.Value,
-                        IsForAdminPanel = isAdminPanel
+                        Type = type
                     };
 
                     permissionLogRepository.Insert(permissionLog);

@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -32,7 +33,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkResponsibility = await repositoryManager.ResponsibilityRepository.Get(responsibility =>
                 responsibility.Id == model.ResponsibilityId && !responsibility.IsDeleted &&
-                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                responsibility.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))).AnyAsync();
                 if (!checkResponsibility)
@@ -41,7 +42,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                .PermissionRepository.Get(permission => permission.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -54,7 +55,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkUser = await repositoryManager.UserRepository.Get(user =>
                 user.Id == model.UserId && !user.IsDeleted &&
-                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                user.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))).AnyAsync();
                 if (!checkUser)
@@ -63,7 +64,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                .PermissionRepository.Get(permission => permission.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -93,7 +94,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id &&
-                permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                permission.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -106,7 +107,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id && !permission.IsDeleted &&
-                permission.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                permission.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -129,13 +130,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         {
             bool check = false;
 
-            if (requestInfo.IsAdminPanel)
+            if (requestInfo.Type == AuthenticationType.AdminPanel)
             {
                 check = PermissionScreens.Any(ps => !Enum.IsDefined(typeof(AdminPanelApplicationScreenCode), ps.ScreenCode));
             }
-            else
+            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
             {
-                check = PermissionScreens.Any(ps => !Enum.IsDefined(typeof(ApplicationScreenCode), ps.ScreenCode));
+                check = PermissionScreens.Any(ps => !Enum.IsDefined(typeof(DawemAdminApplicationScreenCode), ps.ScreenCode));
             }
 
             if (check)
@@ -147,7 +148,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         {
             #region Validate Available Actions
 
-            var allScreensWithAvailableActions = requestInfo.IsAdminPanel ?
+            var allScreensWithAvailableActions = requestInfo.Type == AuthenticationType.AdminPanel ?
                 APIHelper.AdminPanelAllScreensWithAvailableActions :
                 APIHelper.AllScreensWithAvailableActions;
 
@@ -161,9 +162,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
                 if (screenWithNotAvailableAction != null)
                 {
-                    dynamic screenCode = requestInfo.IsAdminPanel ?
+                    dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenCode :
-                    (ApplicationScreenCode)screenWithNotAvailableAction.ScreenCode;
+                    (DawemAdminApplicationScreenCode)screenWithNotAvailableAction.ScreenCode;
 
                     var actionNotAvailable = screenWithNotAvailableAction.PermissionScreenActions
                         .FirstOrDefault(a => !allScreensWithAvailableActions.Screens

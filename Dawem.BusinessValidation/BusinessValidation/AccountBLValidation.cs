@@ -83,7 +83,7 @@ namespace Dawem.Validation.BusinessValidation
             #region Try Find User
 
             var user = await repositoryManager.UserRepository
-                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && !u.IsForAdminPanel && 
+                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && u.Type == AuthenticationType.DawemAdmin &&
                 (model.CompanyId <= 0 || model.CompanyId == u.CompanyId)) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
@@ -111,7 +111,7 @@ namespace Dawem.Validation.BusinessValidation
             #region Try Find User
 
             var user = await repositoryManager.UserRepository
-                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && u.IsForAdminPanel && u.CompanyId == null) ??
+                .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && u.Type == AuthenticationType.AdminPanel && u.CompanyId == null) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
             #endregion

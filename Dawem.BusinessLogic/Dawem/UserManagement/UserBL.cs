@@ -8,6 +8,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
@@ -65,8 +66,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Set User code And Verification Code
 
             var getNextCode = await repositoryManager.UserRepository
-                .Get(e => (!requestInfo.IsAdminPanel && e.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.IsAdminPanel && e.CompanyId == null))
+                .Get(e => (requestInfo.Type == AuthenticationType.DawemAdmin && e.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.Type == AuthenticationType.AdminPanel && e.CompanyId == null))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -283,6 +284,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.Code = getNextCode;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
+            user.Type = AuthenticationType.DawemAdmin;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -359,7 +361,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Set User code
 
             var getNextCode = await repositoryManager.UserRepository
-                .Get(e => !e.IsDeleted && e.IsForAdminPanel && e.CompanyId == null)
+                .Get(e => !e.IsDeleted && e.Type == AuthenticationType.AdminPanel && e.CompanyId == null)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
@@ -373,7 +375,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.Code = getNextCode;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
-            user.IsForAdminPanel = true;
+            user.Type = AuthenticationType.AdminPanel;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
@@ -430,7 +432,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Update User
 
             var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
-            && user.Id == model.Id && user.CompanyId == requestInfo.CompanyId && !user.IsForAdminPanel);
+            && user.Id == model.Id && user.CompanyId == requestInfo.CompanyId && user.Type == AuthenticationType.DawemAdmin);
 
             getUser.Name = model.Name;
             getUser.EmployeeId = model.EmployeeId;
@@ -580,7 +582,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Update User
 
             var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
-            && user.Id == model.Id && user.CompanyId == null && user.IsForAdminPanel);
+            && user.Id == model.Id && user.CompanyId == null && user.Type == AuthenticationType.AdminPanel);
 
             getUser.Name = model.Name;
             getUser.Email = model.Email;
@@ -732,7 +734,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                !user.IsForAdminPanel && user.CompanyId == requestInfo.CompanyId)
+                user.Type == AuthenticationType.DawemAdmin && user.CompanyId == requestInfo.CompanyId)
                 .Select(user => new GetUserInfoResponseModel
                 {
                     Code = user.Code,
@@ -755,7 +757,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                !user.IsForAdminPanel && user.CompanyId == requestInfo.CompanyId)
+                user.Type == AuthenticationType.DawemAdmin && user.CompanyId == requestInfo.CompanyId)
                 .Select(user => new GetUserByIdResponseModel
                 {
                     Id = user.Id,
@@ -781,7 +783,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                   user.IsForAdminPanel && user.CompanyId == null)
+                   user.Type == AuthenticationType.AdminPanel && user.CompanyId == null)
                 .Select(user => new AdminPanelGetUserInfoResponseModel
                 {
                     Code = user.Code,
@@ -799,7 +801,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             var user = await repositoryManager.UserRepository.
                 Get(user => user.Id == userId && !user.IsDeleted &&
-                  user.IsForAdminPanel && user.CompanyId == null)
+                  user.Type == AuthenticationType.AdminPanel && user.CompanyId == null)
                 .Select(user => new AdminPanelGetUserByIdResponseModel
                 {
                     Id = user.Id,
@@ -820,7 +822,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             MyUser user = await repositoryManager.UserRepository.
                 GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted && user.Id == userId &&
-                user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                user.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
@@ -831,7 +833,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         public async Task<GetUsersInformationsResponseDTO> GetUsersInformations()
         {
             var userRepository = repositoryManager.UserRepository;
-            var query = userRepository.Get(user => user.IsForAdminPanel == requestInfo.IsAdminPanel &&
+            var query = userRepository.Get(user => user.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null)));
 

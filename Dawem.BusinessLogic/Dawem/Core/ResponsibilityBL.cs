@@ -50,7 +50,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             #region Set Responsibility Code
 
             var getNextCode = await repositoryManager.ResponsibilityRepository
-                .Get(responsibility => !responsibility.IsDeleted && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel && 
+                .Get(responsibility => !responsibility.IsDeleted && responsibility.Type == requestInfo.Type && 
                 ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)))
                 .Select(e => e.Code)
@@ -63,7 +63,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             responsibility.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
             responsibility.AddUserId = requestInfo.UserId;
             responsibility.Code = getNextCode;
-            responsibility.IsForAdminPanel = requestInfo.IsAdminPanel;
+            responsibility.Type = requestInfo.Type;
             repositoryManager.ResponsibilityRepository.Insert(responsibility);
             await unitOfWork.SaveAsync();
 
@@ -89,7 +89,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
 
             var getResponsibility = await repositoryManager.ResponsibilityRepository
                  .GetEntityByConditionWithTrackingAsync(responsibility => !responsibility.IsDeleted &&
-                responsibility.IsForAdminPanel == requestInfo.IsAdminPanel &&
+                responsibility.Type == requestInfo.Type &&
                 ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))
                  && responsibility.Id == model.Id);
@@ -186,7 +186,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                 Get(res => res.Id == ResponsibilityId && !res.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && res.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && res.CompanyId == null)) && 
-                res.IsForAdminPanel == requestInfo.IsAdminPanel)
+                res.Type == requestInfo.Type)
                 .Select(e => new GetResponsibilityInfoResponseModel
                 {
                     Code = e.Code,
@@ -201,7 +201,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             var responsibility = await repositoryManager.ResponsibilityRepository.
                 Get(res => res.Id == ResponsibilityId && ((requestInfo.CompanyId > 0 && res.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && res.CompanyId == null)) &&
-                !res.IsDeleted && res.IsForAdminPanel == requestInfo.IsAdminPanel)
+                !res.IsDeleted && res.Type == requestInfo.Type)
                 .Select(e => new GetResponsibilityByIdResponseModel
                 {
                     Id = e.Id,
@@ -219,7 +219,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == responsibilityd
                 && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null)) &&
-                !d.IsDeleted && d.IsForAdminPanel == requestInfo.IsAdminPanel) ??
+                !d.IsDeleted && d.Type == requestInfo.Type) ??
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
             responsibility.Delete();
             await unitOfWork.SaveAsync();
@@ -231,7 +231,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
                 && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null))
-                && d.IsForAdminPanel == requestInfo.IsAdminPanel && d.Id == responsibilityd) ??
+                && d.Type == requestInfo.Type && d.Id == responsibilityd) ??
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
             responsibility.Enable();
             await unitOfWork.SaveAsync();
@@ -243,7 +243,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted
                 && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null))
-                && d.IsForAdminPanel == requestInfo.IsAdminPanel && d.IsActive && d.Id == model.Id) ??
+                && d.Type == requestInfo.Type && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
             responsibility.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
@@ -255,7 +255,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             var query = responsibilityRepository.
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))
-                && responsibility.IsForAdminPanel == requestInfo.IsAdminPanel);
+                && responsibility.Type == requestInfo.Type);
 
             #region Handle Response
 

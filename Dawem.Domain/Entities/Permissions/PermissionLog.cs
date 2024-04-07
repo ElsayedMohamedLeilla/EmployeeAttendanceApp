@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +19,6 @@ namespace Dawem.Domain.Entities.Permissions
         public virtual MyUser User { get; set; }
         public int ScreenCode { get; set; }
         public ApplicationAction ActionCode { get; set; }
-        public bool IsForAdminPanel { get; set; }
+        public AuthenticationType Type { get; set; }
     }
 }

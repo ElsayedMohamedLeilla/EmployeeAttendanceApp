@@ -11,22 +11,6 @@ namespace Dawem.Validation.FluentValidation.Dawem.Subscriptions.Plans
             RuleFor(model => model.Id).GreaterThan(0).
                     WithMessage(LeillaKeys.SorryYouMustEnterPlanId);
 
-            RuleFor(model => model.NameTranslations).
-                Must(nt => nt != null && nt.Count > 0).
-                WithMessage(LeillaKeys.SorryYouMustEnterPlanName);
-
-            RuleFor(model => model.NameTranslations).
-                Must(nt => nt.All(n => n.LanguageId > 0)).
-                WithMessage(LeillaKeys.SorryYouMustChooseLanguageWithName);
-
-            RuleFor(model => model.NameTranslations).
-                Must(nt => nt.All(n => !string.IsNullOrEmpty(n.Name) && !string.IsNullOrWhiteSpace(n.Name))).
-                WithMessage(LeillaKeys.SorryYouMustEnterName);
-
-            RuleFor(model => model.NameTranslations).
-                Must(nt => nt.GroupBy(nt => nt.LanguageId).ToList().All(g => g.Count() == 1)).
-                WithMessage(LeillaKeys.SorryYouMustNotRepeatLanguagesWithNames);
-
             RuleFor(model => model.MinNumberOfEmployees).
                 Must(n => n > 0).
                 WithMessage(LeillaKeys.SorryYouMustEnterPlanMinNumberOfEmployees);
@@ -42,6 +26,22 @@ namespace Dawem.Validation.FluentValidation.Dawem.Subscriptions.Plans
             RuleFor(model => model).
                 Must(x => x.MinNumberOfEmployees <= x.MaxNumberOfEmployees).
                 WithMessage(LeillaKeys.SorryPlanMinNumberOfEmployeesMustLessThanOrEqualMaxNumberOfEmployees);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt != null && nt.Count > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterPlanName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.All(n => n.LanguageId > 0)).
+                WithMessage(LeillaKeys.SorryYouMustChooseLanguageWithName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.All(n => !string.IsNullOrEmpty(n.Name) && !string.IsNullOrWhiteSpace(n.Name))).
+                WithMessage(LeillaKeys.SorryYouMustEnterName);
+
+            RuleFor(model => model.NameTranslations).
+                Must(nt => nt.GroupBy(nt => nt.LanguageId).ToList().All(g => g.Count() == 1)).
+                WithMessage(LeillaKeys.SorryYouMustNotRepeatLanguagesWithNames);
         }
     }
 }

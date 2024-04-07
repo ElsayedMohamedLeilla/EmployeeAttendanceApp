@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Enums.Permissions
 {
-    public enum ApplicationScreenCode
+    public enum DawemAdminApplicationScreenCode
     {
         AssignmentType,
         Dashboard,

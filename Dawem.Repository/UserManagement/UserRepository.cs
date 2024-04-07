@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
@@ -67,16 +68,16 @@ namespace Dawem.Repository.UserManagement
             var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MyUser>(true);
 
-            if (requestInfo.IsAdminPanel)
+            if (requestInfo.Type == AuthenticationType.AdminPanel)
             {
                 predicate = predicate.And(e => e.CompanyId == null);
             }
-            else
+            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            predicate = predicate.And(e => e.IsForAdminPanel == requestInfo.IsAdminPanel);
+            predicate = predicate.And(e => e.Type == requestInfo.Type);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

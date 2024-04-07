@@ -301,7 +301,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 ea.LocalDate.Date >= criteria.DateFrom.Date
                 && ea.LocalDate.Date <= criteria.DateTo.Date &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
-                (eac.FingerPrintType == FingerPrintType.CheckIn || eac.FingerPrintType == FingerPrintType.CheckOut)))
+                eac.FingerPrintType == FingerPrintType.CheckIn && eac.Time < ea.ShiftCheckOutTime) &&
+                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
+                (eac.FingerPrintType == FingerPrintType.CheckOut && eac.Time > ea.ShiftCheckInTime)))
                 .Select(ea => new
                 {
                     ea.Id,

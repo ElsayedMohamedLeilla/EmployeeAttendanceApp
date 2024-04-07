@@ -78,14 +78,25 @@ namespace Dawem.API.MiddleWares
             if (userId > 0)
             {
                 requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
+
+
+                if ((requestInfo?.User != null && requestInfo.User.Type == AuthenticationType.AdminPanel) ||
+                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel))
+                {
+                    requestInfo.Type = AuthenticationType.AdminPanel;
+                }
+                else
+                {
+                    requestInfo.Type = AuthenticationType.DawemAdmin;
+                }
+
+
                 requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;         
-                requestInfo.CompanyId = requestInfo.IsAdminPanel ? 0 : requestInfo.CompanyId;
+                requestInfo.CompanyId = requestInfo.Type == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 
-            requestInfo.IsAdminPanel = (requestInfo?.User != null && requestInfo.User.IsForAdminPanel) ||
-                    requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
             requestInfo.IsAdminPanelRequest = requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
-            requestInfo.IsAdminPanelUser = requestInfo?.User != null && requestInfo.User.IsForAdminPanel;
+            requestInfo.IsAdminPanelUser = requestInfo?.User != null && requestInfo.User.Type == AuthenticationType.AdminPanel;
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))
             {

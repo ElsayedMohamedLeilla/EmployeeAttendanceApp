@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
@@ -33,6 +34,31 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterNamesInArabicAndEnglishLanguages);
 
             }
+
+            #region Validate Duplication
+
+            foreach (var nameTranslation in NameTranslations)
+            {
+                var checkNameDuplicate = await repositoryManager.PlanNameTranslationRepository.
+                    Get(pt => nameTranslation.Name == pt.Name &&
+                    nameTranslation.LanguageId == pt.LanguageId).
+                    Select(l => new
+                    {
+                        l.Name,
+                        LanguageName = l.Language.NativeName
+                    }).FirstOrDefaultAsync();
+
+                if (checkNameDuplicate != null)
+                {
+                    throw new BusinessValidationException(messageCode: null,
+                        message: TranslationHelper.GetTranslation(LeillaKeys.SorryPlanNameIsDuplicated, requestInfo.Lang) +
+                        LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanName, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
+                        checkNameDuplicate.Name + LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanLanguage, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
+                        checkNameDuplicate.LanguageName);
+                }
+            }
+
+            #endregion
 
             return true;
         }

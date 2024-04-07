@@ -47,7 +47,7 @@ namespace Dawem.Data
             {
                 var roles = context.Roles.ToList();
                 var companies = context.Companies.ToList();
-                var responsibilities = new List<Domain.Entities.Core.Responsibility>();
+                var responsibilities = new List<Responsibility>();
                 int getNextCode = 0;
 
                 foreach (var company in companies)
@@ -62,16 +62,17 @@ namespace Dawem.Data
 
                     #endregion
 
-                    responsibilities = new List<Domain.Entities.Core.Responsibility>();
+                    responsibilities = new List<Responsibility>();
 
                     foreach (var role in roles)
                     {
                         getNextCode++;
-                        responsibilities.Add(new Domain.Entities.Core.Responsibility
+                        responsibilities.Add(new Responsibility
                         {
                             Name = role.Name,
                             Code = getNextCode,
-                            CompanyId = company.Id
+                            CompanyId = company.Id,
+                            Type = AuthenticationType.DawemAdmin
                         });
                     }
 
@@ -79,7 +80,7 @@ namespace Dawem.Data
                     context.SaveChanges();
                 }
 
-                responsibilities = new List<Domain.Entities.Core.Responsibility>();
+                responsibilities = new List<Responsibility>();
 
                 #region Set Employee code
 
@@ -94,11 +95,11 @@ namespace Dawem.Data
                 foreach (var role in roles)
                 {
                     getNextCode++;
-                    responsibilities.Add(new Domain.Entities.Core.Responsibility
+                    responsibilities.Add(new Responsibility
                     {
                         Name = role.Name,
                         Code = getNextCode,
-                        IsForAdminPanel = true
+                        Type = AuthenticationType.AdminPanel
                     });
                 }
 

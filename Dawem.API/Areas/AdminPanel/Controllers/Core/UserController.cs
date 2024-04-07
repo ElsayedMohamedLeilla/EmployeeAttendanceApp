@@ -96,6 +96,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core.UserManagement
             return Success(await userBL.AdminPanelGetById(userId));
         }
         [HttpDelete]
+        
         public async Task<ActionResult> Delete(int userId)
         {
             if (userId < 1)

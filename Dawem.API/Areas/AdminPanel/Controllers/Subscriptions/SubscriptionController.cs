@@ -61,6 +61,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(await subscriptionBL.GetById(subscriptionId));
         }
         [HttpDelete]
+        
         public async Task<ActionResult> Delete(int subscriptionId)
         {
             if (subscriptionId < 1)

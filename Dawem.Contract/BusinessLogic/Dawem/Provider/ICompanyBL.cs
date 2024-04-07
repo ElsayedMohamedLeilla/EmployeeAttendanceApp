@@ -8,8 +8,10 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Provider
     {
         Task<int> Create(CreateCompanyModel model);
         Task<bool> Update(UpdateCompanyModel model);
+        Task<bool> Update(AdminPanelUpdateCompanyModel model);
         Task<GetCompanyInfoResponseModel> GetInfo(int companyId);
         Task<GetCompanyByIdResponseModel> GetById(int companyId);
+        Task<AdminPanelGetCompanyByIdResponseModel> GetById();
         Task<GetCompaniesResponse> Get(GetCompaniesCriteria model);
         Task<GetCompaniesForDropDownResponse> GetForDropDown(GetCompaniesCriteria model);
         Task<bool> Disable(DisableModelDTO model);

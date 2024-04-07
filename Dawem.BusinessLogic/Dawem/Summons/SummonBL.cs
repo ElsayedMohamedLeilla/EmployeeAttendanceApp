@@ -548,7 +548,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                     IsActive = s.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 

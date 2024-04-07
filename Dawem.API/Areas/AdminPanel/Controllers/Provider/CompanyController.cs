@@ -42,7 +42,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
                 return BadRequest();
             }
 
-            var model = JsonConvert.DeserializeObject<UpdateCompanyModel>(formData.UpdateCompanyModelString);
+            var model = JsonConvert.DeserializeObject<AdminPanelUpdateCompanyModel>(formData.UpdateCompanyModelString);
             model.LogoImageFile = formData.LogoImageFile;
             model.Attachments = formData.Attachments;
             var result = await companyBL.Update(model);
@@ -79,13 +79,9 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(await companyBL.GetInfo(companyId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int companyId)
+        public async Task<ActionResult> GetById()
         {
-            if (companyId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await companyBL.GetById(companyId));
+            return Success(await companyBL.GetById());
         }
         [HttpPut]
         public async Task<ActionResult> Enable(int companyId)
@@ -106,6 +102,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(await companyBL.Disable(model));
         }
         [HttpDelete]
+        
         public async Task<ActionResult> Delete(int companyId)
         {
             if (companyId < 1)

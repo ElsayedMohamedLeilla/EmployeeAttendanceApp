@@ -444,7 +444,8 @@
         public const string CurrentBalanceForEmployee = "CurrentBalanceForEmployee:";
         public const string SorryYouMustEnterCorrectVacationType = "Sorry!!YouMustEnterCorrectVacationType!";
         public const string Controller = "Controller";
-        public const string Screen = "Screen";
+        public const string AdminPanelScreen = "AdminPanelScreen";
+        public const string DawemScreen = "DawemScreen";
         public const string Create = "Create";
         public const string Update = "Update";
         public const string Delete = "Delete";

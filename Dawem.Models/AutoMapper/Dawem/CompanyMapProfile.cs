@@ -18,6 +18,11 @@ namespace Dawem.Models.AutoMapper.Dawem
                 ForMember(dest => dest.CompanyBranches, opt => opt.MapFrom(src => src.Branches)).
                 AfterMap(MapCompany);
 
+            CreateMap<AdminPanelUpdateCompanyModel, Company>().
+                ForMember(dest => dest.CompanyIndustries, opt => opt.MapFrom(src => src.Industries)).
+                ForMember(dest => dest.CompanyBranches, opt => opt.MapFrom(src => src.Branches)).
+                AfterMap(MapCompany);
+
             CreateMap<CompanyIndustryModel, CompanyIndustry>();
             CreateMap<CompanyBranchModel, CompanyBranch>();
 
@@ -33,6 +38,15 @@ namespace Dawem.Models.AutoMapper.Dawem
             }
         }
         private void MapCompany(UpdateCompanyModel source, Company destination, ResolutionContext context)
+        {
+            if (source.AttachmentsNames != null && source.AttachmentsNames.Count > 0)
+            {
+                destination.CompanyAttachments = source.AttachmentsNames
+                .Select(fileName => new CompanyAttachment { FileName = fileName })
+                .ToList();
+            }
+        }
+        private void MapCompany(AdminPanelUpdateCompanyModel source, Company destination, ResolutionContext context)
         {
             if (source.AttachmentsNames != null && source.AttachmentsNames.Count > 0)
             {

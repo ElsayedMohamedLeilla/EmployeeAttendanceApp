@@ -52,6 +52,9 @@ namespace Dawem.API.MiddleWares
                     (AdminPanelApplicationScreenCode)mapResult.Screen.Value :
                     (DawemAdminApplicationScreenCode)mapResult.Screen.Value;
 
+                    var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
                     var checkPermissionResponse = await permissionBL.CheckUserPermission(model);
                     if (checkPermissionResponse)
                     {
@@ -70,7 +73,7 @@ namespace Dawem.API.MiddleWares
                                    LeillaKeys.Space +
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
                                    requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
-                                   TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen,
+                                   TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix,
                                    requestInfo?.Lang) + LeillaKeys.RightBracket
                         };
 

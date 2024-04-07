@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -31,12 +32,15 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
+                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
                 var screenCodes = Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>()
                     .ToList()
                     .Select(applicationScreenCode=> new
                     {
                         ScreenCode = applicationScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(applicationScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
+                        ScreenName = TranslationHelper.GetTranslation(applicationScreenCode.ToString() + screenNameSuffix, requestInfo.Lang)
                     })
                     .ToList()
                     .Where(s=> s.ScreenName.ToLower().Trim().Contains(criteria.FreeText))

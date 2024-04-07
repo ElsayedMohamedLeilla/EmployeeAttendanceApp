@@ -80,10 +80,13 @@ namespace Dawem.API.Helpers
                     (AdminPanelApplicationScreenCode)tempScreenCode:
                     (DawemAdminApplicationScreenCode)tempScreenCode;
 
+                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
                 var screensWithAvailableActionsDTO = new ScreensWithAvailableActionsDTO
                 {
                     ScreenCode = (int)screenCode,
-                    ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                    ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang),
                     AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.Type)
                 };
 

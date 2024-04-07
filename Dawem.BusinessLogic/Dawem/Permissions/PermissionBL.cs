@@ -220,6 +220,9 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
+            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
             var permission = await repositoryManager.PermissionRepository.Get(permission => permission.Id == permissionId
             && !permission.IsDeleted && ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
@@ -237,7 +240,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     .Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(GetScreenName(ps.ScreenCode, requestInfo.Type) + LeillaKeys.Screen, requestInfo.Lang),
+                        ScreenName = TranslationHelper.GetTranslation(GetScreenName(ps.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
                         PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = psa.ActionCode,
@@ -281,10 +284,13 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
 
             #region Handle Response
 
+            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
             var permissionScreensList = await queryPaged.Select(ps => new GetPermissionScreenInfoModel
             {
                 ScreenCode = ps.ScreenCode,
-                ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang),
+                ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + screenNameSuffix, requestInfo.Lang),
                 PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                 {
                     ActionCode = psa.ActionCode,
@@ -502,6 +508,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var currentCompanyId = model?.CompanyId;
             var lang = requestInfo.Lang;
             var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
+            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
 
             var isUserIsAdmin = await repositoryManager.UserRepository
                .Get(p => !p.IsDeleted && p.IsActive &&
@@ -529,7 +537,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     .Select(g => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = g.First().ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, lang),
+                        ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + screenNameSuffix, lang),
                         PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
                         .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
                         {
@@ -566,7 +574,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                         .Select(g => new PermissionScreenResponseWithNamesModel
                         {
                             ScreenCode = g.First().ScreenCode,
-                            ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + LeillaKeys.Screen, lang),
+                            ScreenName = TranslationHelper.GetTranslation(g.First().ScreenCode.ToString() + screenNameSuffix, lang),
                             PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
                             .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
                             {

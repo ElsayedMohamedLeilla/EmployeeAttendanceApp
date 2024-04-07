@@ -69,6 +69,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core
             return Success(await responsibilityBL.GetById(responsibilityId));
         }
         [HttpDelete]
+        
         public async Task<ActionResult> Delete(int responsibilityId)
         {
             if (responsibilityId < 1)

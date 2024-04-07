@@ -458,6 +458,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
                 bool IsActive;
+                string[] zoneNames;
+                string[] delegatorNames;
+
                 var getNextCode = await repositoryManager.DepartmentRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted)
                .Select(e => e.Code)
@@ -482,6 +485,44 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                         return result;
                     }
                     #endregion
+                    #region Map Zones
+                    zoneNames = row.Cell(5).GetString().Trim().Split(",");
+                    for (int i = 0; i < zoneNames.Count(); i++)
+                    {
+                        var foundZoneDb = repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
+                        if (foundZoneDb != null)
+                        {
+                            Temp.Zones.Add(new ZoneDepartment
+                            {
+                                ZoneId = foundZoneDb.Id
+                            });
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.MissingData, zoneNames[i].Trim() + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+                    }
+                    #endregion
+                    #region Map Delegators
+                    delegatorNames = row.Cell(6).GetString().Trim().Split(",");
+                    for (int i = 0; i < delegatorNames.Count(); i++)
+                    {
+                        var foundEmpDb = repositoryManager.EmployeeRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == delegatorNames[i].Trim()).FirstOrDefaultAsync();
+                        if (foundEmpDb != null)
+                        {
+                            Temp.ManagerDelegators.Add(new DepartmentManagerDelegator
+                            {
+                                EmployeeId = foundEmpDb.Id
+                            });
+                        }
+                        else
+                        {
+                            result.Add(AmgadKeys.MissingData, zoneNames[i].Trim() + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.SorryZoneNotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            return result;
+                        }
+                    }
+                    #endregion
                     var foundDepartmentInDB = await repositoryManager.DepartmentRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).FirstOrDefaultAsync();
                     if (foundDepartmentInDB == null) // Department Name not found
                     {
@@ -504,7 +545,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                         }
                         else if (Temp.ParentId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.ThisDepartment, requestInfo.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.NotFound, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(LeillaKeys.SorryDepartmentNotFound, requestInfo.Lang) + LeillaKeys.Space +  TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                         else

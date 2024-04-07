@@ -7,6 +7,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
+using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -20,7 +21,6 @@ using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Dawem.BusinessLogic.Dawem.Employees
 {
@@ -516,7 +516,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             else
             {
                 List<Employee> ImportedList = new();
-                int MobileNumber,EmployeeNumber;
+                int MobileNumber, EmployeeNumber;
                 DateTime JoiningDate;
                 bool IsActive;
                 string[] zoneNames;
@@ -538,19 +538,17 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
-                    if (int.TryParse(row.Cell(8).GetString().Trim(), out MobileNumber))
+
+                    if (row.Cell(8).GetString().Trim().Length != foundCountryInDB.PhoneLength + 1)
                     {
-                        if (MobileNumber.ToString().Length != foundCountryInDB.PhoneLength + 1)
-                        {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
-                            return result;
-                        }
-                    }
-                    else
-                    {
-                        result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidAcceptNumbersOnly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
+                    //else
+                    //{
+                    //    result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidAcceptNumbersOnly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                    //    return result;
+                    //}
 
                     #region Validate Joining Date
                     if (row.Cell(10).GetString().Trim() == string.Empty)
@@ -585,7 +583,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     }
                     #endregion
                     #region Validate Employee Number 
-                   
+
 
                     if (int.TryParse(row.Cell(1).GetString().Trim(), out EmployeeNumber))
                     {
@@ -606,7 +604,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
                     #endregion
                     #region Validate Attendance Type 
-                    if (row.Cell(11).GetString().Trim() != "FullAttendance" || row.Cell(11).GetString().Trim() != "PartialAttendance" ||  row.Cell(11).GetString().Trim() != "FreeOrShiftAttendance")
+                    if (row.Cell(11).GetString().Trim() != "FullAttendance" || row.Cell(11).GetString().Trim() != "PartialAttendance" || row.Cell(11).GetString().Trim() != "FreeOrShiftAttendance")
                     {
                         result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
@@ -771,39 +769,77 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
         public async Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria criteria)
         {
-            var employeeRepository = repositoryManager.EmployeeRepository;
-            var query = employeeRepository.GetAsQueryableForEmployeeSchedulePlan(criteria);
 
-            #region paging
+            criteria.EmployeeId = requestInfo.EmployeeId;
+            criteria.DateFrom = DateTime.UtcNow;
+            //criteria.DateTo = criteria.DateFrom.AddDays(30);
+            criteria.DateTo = criteria.DateFrom.AddDays(100);
 
-            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-            int take = PagingHelper.Take(criteria.PageSize);
-
-            #region sorting
-
-            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
-
-            #endregion
-
-            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-            #endregion
-
-            #region Handle Response
-
-            var employeesList = await queryPaged.Select(e => new GetCurrentEmployeeScheduleInPeriodDTO
+            // Retrieve the schedule plans for the specified employee within the current month
+            // Retrieve the schedule plans for the specified employee within the current month
+            var employeeSchedulePlans = await repositoryManager.EmployeeRepository.Get(sp =>
+                sp.Id == criteria.EmployeeId &&
+                !sp.IsDeleted &&
+                sp.IsActive &&
+                sp.CompanyId == requestInfo.CompanyId &&
+                sp.SchedulePlanEmployees.Any(spe =>
+                    spe.SchedulePlan.DateFrom.Date >= criteria.DateFrom && // Start of the month
+                    spe.SchedulePlan.DateFrom.Date <= criteria.DateTo     // End of the month
+                )
+            ).Select(employee => new
             {
-
-
+                Employee = employee,
+                SchedulePlans = employee.SchedulePlanEmployees
+                    .Where(spe =>
+                        spe.SchedulePlan.DateFrom.Date >= criteria.DateFrom && // Start of the month
+                        spe.SchedulePlan.DateFrom.Date <= criteria.DateTo     // End of the month
+                    )
+                    .OrderBy(spe => spe.SchedulePlan.DateFrom)
+                    .Select(spe => new
+                    {
+                        SchedulePlan = spe.SchedulePlan,
+                        Schedule = spe.SchedulePlan.Schedule, // Include the Schedule object
+                                                              // CheckInTime = spe.CheckInTime, // Adjust property names as needed
+                                                              // CheckOutTime = spe.CheckOutTime // Adjust property names as needed
+                    })
             }).ToListAsync();
 
+            // Extract and return the projected employee details along with associated schedule plans
+            var projectedEmployeeDetails = employeeSchedulePlans.SelectMany(item => item.SchedulePlans.Select(schedulePlan =>
+                new GetCurrentEmployeeScheduleInPeriodDTO
+                {
+                    Name = item.Employee.Name, // Replace with actual property path
+                    DayName = schedulePlan.SchedulePlan.DateFrom.DayOfWeek.ToString(),
+                    Date = schedulePlan.SchedulePlan.DateFrom,
+                    ScheduleName = schedulePlan.Schedule.Name, // Replace with actual property path
+                                                               // CheckInTime = schedulePlan.SchedulePlan.Schedule.ScheduleDays..CheckInTime,
+                                                               // CheckOutTime = schedulePlan.CheckOutTime
+                })).OrderBy(scheduleDetail => scheduleDetail.Date).ToList();
+
+            #region Handle Response
             return new GetEmployeesSchedulePlanResponse
             {
-                EmployeeSchedulePlan = employeesList,
-                TotalCount = await query.CountAsync()
+                EmployeeSchedulePlan = projectedEmployeeDetails,
+                TotalCount = projectedEmployeeDetails.Count()
             };
-
             #endregion
+            // return new GetEmployeesSchedulePlanResponse();
+        }
+
+        // Helper method to get the end date of the current schedule plan
+        DateTime GetEndDate(List<SchedulePlan> lSchedulPlan, SchedulePlan currentPlan, DateTime overallEndDate)
+        {
+            // Get the next schedule plan after the current one
+            var nextPlan = lSchedulPlan.FirstOrDefault(sp => sp.DateFrom > currentPlan.DateFrom);
+
+            // If there's a next plan, return its start date - 1 day
+            if (nextPlan != null)
+            {
+                return nextPlan.DateFrom.AddDays(-1);
+            }
+
+            // If there's no next plan, return the overall end date
+            return overallEndDate;
         }
     }
 }

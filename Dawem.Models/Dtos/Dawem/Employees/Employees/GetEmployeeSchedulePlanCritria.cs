@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.DTOs.Dawem.Employees.Employees
 {
-    public class GetEmployeeSchedulePlanCritria :BaseCriteria
+    public class GetEmployeeSchedulePlanCritria 
     {
         public int EmployeeId { get; set; }
         public DateTime DateFrom { get; set; }

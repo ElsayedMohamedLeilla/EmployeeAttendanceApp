@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class EmployeeRequestController : DawemControllerBase
     {
         private readonly IRequestBL requestBL;

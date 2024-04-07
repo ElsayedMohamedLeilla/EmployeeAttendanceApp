@@ -11,8 +11,6 @@ using Newtonsoft.Json.Serialization;
 
 namespace Dawem.API.Areas.Dawem.Controllers
 {
-
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController]
     public class BaseController : ControllerBase
     {
         private readonly RequestInfo requestHeaderContext;

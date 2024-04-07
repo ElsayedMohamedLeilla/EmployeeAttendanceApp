@@ -7,13 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class RequestController : DawemControllerBase
     {
         private readonly IRequestBL requestBL;
-
-
         public RequestController(IRequestBL _requestBL)
         {
             requestBL = _requestBL;

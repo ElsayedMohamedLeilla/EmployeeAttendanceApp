@@ -71,6 +71,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\AdminPanel\" />
+    <Folder Include="Areas\Dawem\Controllers\Dashboard\" />
     <Folder Include="wwwroot\uploads\AssignmentRequests\" />
     <Folder Include="wwwroot\uploads\Companies\" />
     <Folder Include="wwwroot\uploads\Employees\" />

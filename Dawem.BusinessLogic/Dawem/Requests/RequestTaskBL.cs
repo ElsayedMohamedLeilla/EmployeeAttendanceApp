@@ -23,6 +23,7 @@ using Dawem.Models.Response.Dawem.Requests.Tasks;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Tasks;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Requests
@@ -134,6 +135,10 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             #endregion
 
             #region Save Notification In DB
+            if(employeeId != 0)
+            {
+                model.TaskEmployeeIds.Add(employeeId ?? 0);
+            }
             for (int i = 0; i < model.TaskEmployeeIds.Count; i++)
             {
                 var getNotificationNextCode = await repositoryManager.NotificationStoreRepository

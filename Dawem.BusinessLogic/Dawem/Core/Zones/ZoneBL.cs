@@ -311,8 +311,8 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
                 bool IsActive;
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
-                var getNextCode = await repositoryManager.EmployeeRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted)
+                var getNextCode = await repositoryManager.ZoneRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted && e.IsActive)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync();

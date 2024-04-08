@@ -206,8 +206,11 @@
         public const string SorryEmployeeNumberNotValidAcceptOnlyNumber = "Sorry!!EmployeeNumberNotValidAcceptOnlyNumber";
         public const string SorryEmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!EmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
         public const string SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!AttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
+      
+        public const string SorryEmployeeMobileNumberIsDuplicated = "Sorry!!EmployeeMobileNumberIsDuplicated";
+        public const string SorryEmployeeEmailIsDuplicated = "Sorry!!EmployeeEmailIsDuplicated";
 
-        
+
 
 
 

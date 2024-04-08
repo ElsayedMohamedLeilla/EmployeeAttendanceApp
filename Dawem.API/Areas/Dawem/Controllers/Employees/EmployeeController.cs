@@ -151,7 +151,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
 
         [HttpPost]
         [RequestSizeLimit(10 * 2048 * 2048)] // Max 20 MB
-                                             //[DisableRequestSizeLimit]
         public async Task<IActionResult> CreateImportDataFromExcel(IFormFile file)
         {
             if (file == null || file.Length == 0)

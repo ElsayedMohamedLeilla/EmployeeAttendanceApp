@@ -10,8 +10,7 @@ namespace Dawem.Contract.Repository.Employees
     {
         IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria);
         IQueryable<Employee> GetAsQueryableForAttendanceSummary(AttendanceSummaryCritria criteria);
-        IQueryable<Employee> GetAsQueryableForEmployeeSchedulePlan(GetEmployeeSchedulePlanCritria criteria);
 
-        
+
     }
 }

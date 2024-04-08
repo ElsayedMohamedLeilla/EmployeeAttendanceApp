@@ -2,6 +2,5 @@
 {
     public class UpdateCompanyModel : BaseCompanyModel
     {
-        public int Id { get; set; }
     }
 }

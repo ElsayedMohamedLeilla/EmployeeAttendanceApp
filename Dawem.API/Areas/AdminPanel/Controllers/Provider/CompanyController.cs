@@ -79,9 +79,13 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(await companyBL.GetInfo(companyId));
         }
         [HttpGet]
-        public async Task<ActionResult> GetById()
+        public async Task<ActionResult> GetById([FromQuery] int companyId)
         {
-            return Success(await companyBL.GetById());
+            if (companyId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await companyBL.GetById(companyId));
         }
         [HttpPut]
         public async Task<ActionResult> Enable(int companyId)

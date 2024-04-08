@@ -9,10 +9,6 @@ namespace Dawem.Validation.FluentValidation.Dawem.Providers
     {
         public UpdateCompanyModelValidator()
         {
-            RuleFor(model => model.Id).
-                GreaterThan(0).
-                WithMessage(LeillaKeys.SorryYouMustEnterPlanId);
-
             RuleFor(model => model.Email).
                  NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyEmail);

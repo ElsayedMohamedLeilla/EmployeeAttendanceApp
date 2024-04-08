@@ -18,7 +18,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Summons
         {
             summonBL = _summonBL;
         }
-
         [HttpPost]
         public async Task<ActionResult> Create(CreateSummonModel model)
         {

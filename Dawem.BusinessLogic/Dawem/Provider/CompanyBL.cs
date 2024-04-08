@@ -131,6 +131,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         {
             #region Model Validation
 
+            var companyId = requestInfo.CompanyId;
             var updateCompanyModelValidator = new UpdateCompanyModelValidator();
             var updateCompanyModelValidatorResult = updateCompanyModelValidator.Validate(model);
             if (!updateCompanyModelValidatorResult.IsValid)
@@ -186,7 +187,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             var getCompany = await repositoryManager.CompanyRepository
                 .GetEntityByConditionWithTrackingAsync(company => !company.IsDeleted
-            && company.Id == model.Id);
+            && company.Id == companyId);
             getCompany.ModifiedDate = DateTime.Now;
             getCompany.ModifyUserId = requestInfo.UserId;
             getCompany.Email = model.Email;
@@ -216,7 +217,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 .Where(ge => !existingIndustriesIds.Contains(ge.Id))
                 .Select(ge => new CompanyIndustry
                 {
-                    CompanyId = model.Id,
+                    CompanyId = companyId,
                     Name = ge.Name,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
@@ -263,7 +264,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 .Where(ge => !existingBranchesIds.Contains(ge.Id))
                 .Select(ge => new CompanyBranch
                 {
-                    CompanyId = model.Id,
+                    CompanyId = companyId,
                     Name = ge.Name,
                     Address = ge.Address,
                     Location = ge.Location,
@@ -352,7 +353,6 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         {
             #region Model Validation
 
-            model.Id = requestInfo.CompanyId;
             var updateCompanyModelValidator = new AdminPanelUpdateCompanyModelValidator();
             var updateCompanyModelValidatorResult = updateCompanyModelValidator.Validate(model);
             if (!updateCompanyModelValidatorResult.IsValid)

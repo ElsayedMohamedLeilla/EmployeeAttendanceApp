@@ -11,7 +11,7 @@ namespace Dawem.Validation.FluentValidation.Dawem.Providers
         {
             RuleFor(model => model.Id).
                 GreaterThan(0).
-                WithMessage(LeillaKeys.SorryYouMustEnterPlanId);
+                WithMessage(LeillaKeys.SorryYouMustEnterCompanyId);
 
             RuleFor(model => model.Email).
                  NotNull().

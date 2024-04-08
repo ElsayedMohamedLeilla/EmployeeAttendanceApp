@@ -33,13 +33,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             return Success(result, messageCode: LeillaKeys.DoneUpdateCompanySuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int companyId)
+        public async Task<ActionResult> GetById()
         {
-            if (companyId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await companyBL.GetById(companyId));
+            return Success(await companyBL.GetById());
         }
     }
 }

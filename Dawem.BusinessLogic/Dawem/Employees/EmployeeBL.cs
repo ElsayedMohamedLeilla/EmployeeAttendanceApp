@@ -516,7 +516,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             else
             {
                 List<Employee> ImportedList = new();
-                int MobileNumber, EmployeeNumber;
+                int  EmployeeNumber;
                 DateTime JoiningDate;
                 bool IsActive;
                 string[] zoneNames;
@@ -544,12 +544,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
-                    //else
-                    //{
-                    //    result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidAcceptNumbersOnly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
-                    //    return result;
-                    //}
-
+                   
                     #region Validate Joining Date
                     if (row.Cell(10).GetString().Trim() == string.Empty)
                     {
@@ -596,7 +591,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     }
                     #endregion
                     #region Validate Employee Type 
-                    if (row.Cell(12).GetString().Trim() != "Military" || row.Cell(12).GetString().Trim() != "CivilService" || row.Cell(12).GetString().Trim() != "Contract" || row.Cell(12).GetString().Trim() != "Contract" || row.Cell(12).GetString().Trim() != "ContractFromCompany")
+                    if (row.Cell(12).GetString().Trim() != "Military" && row.Cell(12).GetString().Trim() != "CivilService" && row.Cell(12).GetString().Trim() != "Contract" && row.Cell(12).GetString().Trim() != "Contract" && row.Cell(12).GetString().Trim() != "ContractFromCompany")
                     {
                         result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryEmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
@@ -604,7 +599,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
                     #endregion
                     #region Validate Attendance Type 
-                    if (row.Cell(11).GetString().Trim() != "FullAttendance" || row.Cell(11).GetString().Trim() != "PartialAttendance" || row.Cell(11).GetString().Trim() != "FreeOrShiftAttendance")
+                    if (row.Cell(11).GetString().Trim() != "FullAttendance" && row.Cell(11).GetString().Trim() != "PartialAttendance" && row.Cell(11).GetString().Trim() != "FreeOrShiftAttendance")
                     {
                         result.Add(AmgadKeys.MissMatchDataType, TranslationHelper.GetTranslation(AmgadKeys.SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
@@ -656,7 +651,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                     Temp.ScheduleId = repositoryManager.ScheduleRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.Name == row.Cell(5).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.DirectManagerId = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(6).GetString().Trim()).Select(e => e.Id).FirstOrDefault();
                                     Temp.Email = row.Cell(7).GetString();
-                                    Temp.MobileNumber = MobileNumber.ToString();
+                                    Temp.MobileNumber = row.Cell(8).GetString().Trim();
                                     Temp.Address = row.Cell(9).GetString().Trim();
                                     Temp.JoiningDate = JoiningDate;
                                     Temp.AttendanceType = row.Cell(11).GetString() == "FullAttendance" ? AttendanceType.FullAttendance : row.Cell(11).GetString() == "PartialAttendance" ? AttendanceType.PartialAttendance : row.Cell(11).GetString() == "FreeOrShiftAttendance" ? AttendanceType.FreeOrShiftAttendance : AttendanceType.FullAttendance;

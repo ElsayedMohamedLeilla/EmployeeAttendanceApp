@@ -625,7 +625,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var utcDateTime = DateTime.UtcNow;
 
                 var getEmployeesMissingList = await repositoryManager
-                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && summonLog.Company.Country.TimeZoneId != null &&
+                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && 
+                    summonLog.Company.Country.TimeZoneId != null &&
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {

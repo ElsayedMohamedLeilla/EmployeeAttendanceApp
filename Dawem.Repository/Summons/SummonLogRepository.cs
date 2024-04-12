@@ -3,6 +3,7 @@ using Dawem.Contract.Repository.Summons;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Summons;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -44,6 +45,32 @@ namespace Dawem.Repository.Summons
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.SummonDoneStatus != null)
+            {
+                switch (criteria.SummonDoneStatus.Value)
+                {
+                    case SummonDoneStatus.Done:
+                        predicate = predicate.And(e => e.DoneSummon);
+                        break;
+                    case SummonDoneStatus.NotDone:
+                        predicate = predicate.And(e => !e.DoneSummon);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (criteria.SummonDate != null)
+            {
+                predicate = predicate.And(e => e.Summon.LocalDateAndTime.Date == criteria.SummonDate.Value.Date);
+            }
+            if (criteria.EmployeeNumber != null)
+            {
+                predicate = predicate.And(e => e.Employee.EmployeeNumber == criteria.EmployeeNumber.Value);
+            }
+            if (criteria.SummonCode != null)
+            {
+                predicate = predicate.And(e => e.Summon.Code == criteria.SummonCode.Value);
             }
 
             predicate = predicate.And(inner);

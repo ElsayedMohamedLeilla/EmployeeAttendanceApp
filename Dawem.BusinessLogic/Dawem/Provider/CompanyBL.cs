@@ -131,7 +131,229 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         {
             #region Model Validation
 
+            var companyId = requestInfo.CompanyId;
             var updateCompanyModelValidator = new UpdateCompanyModelValidator();
+            var updateCompanyModelValidatorResult = updateCompanyModelValidator.Validate(model);
+            if (!updateCompanyModelValidatorResult.IsValid)
+            {
+                var error = updateCompanyModelValidatorResult.Errors.FirstOrDefault();
+                throw new BusinessValidationException(error.ErrorMessage);
+            }
+
+            #endregion
+
+            #region Business Validation
+
+            await companyBLValidation.UpdateValidation(model);
+
+            #endregion
+
+            unitOfWork.CreateTransaction();
+
+            #region Upload Logo Image
+
+            string imageName = null;
+            if (model.LogoImageFile != null && model.LogoImageFile.Length > 0)
+            {
+                var result = await uploadBLC.UploadFile(model.LogoImageFile, LeillaKeys.Companies)
+                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadLogoImage);
+                imageName = result.FileName;
+            }
+
+            #endregion
+
+            #region Upload Files
+
+            var newFileNames = new List<string>();
+
+            if (model.Attachments != null && model.Attachments.Count > 0)
+            {
+                newFileNames = new List<string>();
+
+                foreach (var attachment in model.Attachments)
+                {
+                    if (attachment != null && attachment.Length > 0)
+                    {
+                        var result = await uploadBLC.UploadFile(attachment, LeillaKeys.Companies)
+                            ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadCompanyAttachements);
+                        newFileNames.Add(result.FileName);
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Update Company
+
+            var getCompany = await repositoryManager.CompanyRepository
+                .GetEntityByConditionWithTrackingAsync(company => !company.IsDeleted
+            && company.Id == companyId);
+            getCompany.ModifiedDate = DateTime.Now;
+            getCompany.ModifyUserId = requestInfo.UserId;
+            getCompany.Email = model.Email;
+            getCompany.PreferredLanguageId = model.PreferredLanguageId;
+            getCompany.WebSite = model.WebSite;
+            getCompany.HeadquarterAddress = model.HeadquarterAddress;
+            getCompany.HeadquarterLocation = model.HeadquarterLocation;
+            getCompany.HeadquarterPostalCode = model.HeadquarterPostalCode;
+            getCompany.TotalNumberOfEmployees = model.TotalNumberOfEmployees;
+            getCompany.ImportDefaultData = model.ImportDefaultData;
+            getCompany.LogoImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.LogoImageName)
+                ? getCompany.LogoImageName : null;
+            getCompany.ModifiedApplicationType = requestInfo.ApplicationType;
+
+            await unitOfWork.SaveAsync();
+
+            #region Handle Update Industries
+
+            var existIndustriesDbList = await repositoryManager.CompanyIndustryRepository
+                    .Get(e => e.CompanyId == getCompany.Id)
+                    .ToListAsync();
+
+            var existingIndustriesIds = existIndustriesDbList.Select(e => e.Id)
+                .ToList();
+
+            var addedCompanyIndustries = model.Industries != null ? model.Industries
+                .Where(ge => !existingIndustriesIds.Contains(ge.Id))
+                .Select(ge => new CompanyIndustry
+                {
+                    CompanyId = companyId,
+                    Name = ge.Name,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList() : new List<CompanyIndustry>();
+
+            var removedCompanyIndustriesIds = existIndustriesDbList
+                .Where(ge => model.Industries == null || !model.Industries.Select(i => i.Id).Contains(ge.Id))
+                .Select(ge => ge.Id)
+                .ToList();
+
+            var removedCompanyIndustries = existIndustriesDbList
+                .Where(e => removedCompanyIndustriesIds.Contains(e.Id))
+                .ToList();
+
+            var updatedCompanyIndustries = existIndustriesDbList.
+                Where(i => model.Industries != null && model.Industries.Any(mi => mi.Id == i.Id && mi.Name != i.Name)).
+                ToList();
+
+            if (removedCompanyIndustries.Count > 0)
+                repositoryManager.CompanyIndustryRepository.BulkDeleteIfExist(removedCompanyIndustries);
+            if (addedCompanyIndustries.Count > 0)
+                repositoryManager.CompanyIndustryRepository.BulkInsert(addedCompanyIndustries);
+            if (updatedCompanyIndustries.Count > 0)
+            {
+                updatedCompanyIndustries.ForEach(i =>
+                {
+                    i.Name = model.Industries.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
+                });
+                repositoryManager.CompanyIndustryRepository.BulkUpdate(updatedCompanyIndustries);
+            }
+
+            #endregion
+
+            #region Handle Update Branches
+
+            var existBranchesDbList = await repositoryManager.CompanyBranchRepository
+                    .Get(e => e.CompanyId == getCompany.Id)
+                    .ToListAsync();
+
+            var existingBranchesIds = existBranchesDbList.Select(e => e.Id)
+                .ToList();
+
+            var addedCompanyBranches = model.Branches != null ? model.Branches
+                .Where(ge => !existingBranchesIds.Contains(ge.Id))
+                .Select(ge => new CompanyBranch
+                {
+                    CompanyId = companyId,
+                    Name = ge.Name,
+                    Address = ge.Address,
+                    Location = ge.Location,
+                    PostalCode = ge.PostalCode,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList() : new List<CompanyBranch>();
+
+            var removedCompanyBranchesIds = existBranchesDbList
+                .Where(ge => model.Branches == null || !model.Branches.Select(i => i.Id).Contains(ge.Id))
+                .Select(ge => ge.Id)
+                .ToList();
+
+            var removedCompanyBranches = existBranchesDbList
+                .Where(e => removedCompanyBranchesIds.Contains(e.Id))
+                .ToList();
+
+            var updatedCompanyBranches = existBranchesDbList.
+                Where(i => model.Branches != null && model.Branches.Any(mi => mi.Id == i.Id &&
+                (mi.Name != i.Name || mi.Address != i.Address || mi.Location != i.Location || mi.PostalCode != i.PostalCode))).
+                ToList();
+
+            if (removedCompanyBranches.Count > 0)
+                repositoryManager.CompanyBranchRepository.BulkDeleteIfExist(removedCompanyBranches);
+            if (addedCompanyBranches.Count > 0)
+                repositoryManager.CompanyBranchRepository.BulkInsert(addedCompanyBranches);
+            if (updatedCompanyBranches.Count > 0)
+            {
+                updatedCompanyBranches.ForEach(i =>
+                {
+                    i.Name = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
+                    i.Address = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Address;
+                    i.Location = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Location;
+                    i.PostalCode = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.PostalCode;
+                });
+                repositoryManager.CompanyBranchRepository.BulkUpdate(updatedCompanyBranches);
+            }
+
+            #endregion
+
+            #region Update Attachements 
+
+            var existAttachementsDbList = await repositoryManager.CompanyAttachmentRepository
+                    .Get(e => e.CompanyId == getCompany.Id)
+                    .ToListAsync();
+
+            var existingFileNames = existAttachementsDbList.Select(e => e.FileName).ToList();
+
+            var addedAttachements = newFileNames
+                .Select(fileName => new CompanyAttachment
+                {
+                    CompanyId = getCompany.Id,
+                    FileName = fileName,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList();
+
+            var removedFileNames = existAttachementsDbList
+                .Where(ge => model.AttachmentsNames == null || !model.AttachmentsNames.Contains(ge.FileName))
+                .Select(ge => ge.FileName)
+                .ToList();
+
+            var removedAttachments = await repositoryManager.CompanyAttachmentRepository
+                .Get(e => e.CompanyId == getCompany.Id && removedFileNames.Contains(e.FileName))
+                .ToListAsync();
+
+            if (removedAttachments.Count > 0)
+                repositoryManager.CompanyAttachmentRepository.BulkDeleteIfExist(removedAttachments);
+            if (addedAttachements.Count > 0)
+                repositoryManager.CompanyAttachmentRepository.BulkInsert(addedAttachements);
+
+            #endregion
+
+            await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
+            await unitOfWork.CommitAsync();
+            return true;
+
+            #endregion
+        }
+        public async Task<bool> Update(AdminPanelUpdateCompanyModel model)
+        {
+            #region Model Validation
+
+            var updateCompanyModelValidator = new AdminPanelUpdateCompanyModelValidator();
             var updateCompanyModelValidatorResult = updateCompanyModelValidator.Validate(model);
             if (!updateCompanyModelValidatorResult.IsValid)
             {
@@ -476,6 +698,54 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 .Select(company => new GetCompanyByIdResponseModel
                 {
                     Id = company.Id,
+                    Code = company.Code,
+                    Name = company.Name,
+                    CountryId = company.CountryId,
+                    PreferredLanguageId = company.PreferredLanguageId,
+                    Email = company.Email,
+                    IdentityCode = company.IdentityCode,
+                    WebSite = company.WebSite,
+                    HeadquarterAddress = company.HeadquarterAddress,
+                    HeadquarterLocation = company.HeadquarterLocation,
+                    HeadquarterPostalCode = company.HeadquarterPostalCode,
+                    NumberOfEmployees = company.NumberOfEmployees,
+                    TotalNumberOfEmployees = company.TotalNumberOfEmployees,
+                    LogoImageName = company.LogoImageName,
+                    LogoImagePath = uploadBLC.GetFilePath(company.LogoImageName, LeillaKeys.Companies),
+                    IsActive = company.IsActive,
+                    Industries = company.CompanyIndustries
+                    .Select(industry => new CompanyIndustryModel
+                    {
+                        Id = industry.Id,
+                        Name = industry.Name
+                    })
+                    .ToList(),
+                    Branches = company.CompanyBranches
+                    .Select(branch => new CompanyBranchModel
+                    {
+                        Id = branch.Id,
+                        Name = branch.Name,
+                        Address = branch.Address,
+                        Location = branch.Location,
+                        PostalCode = branch.PostalCode,
+                    }).ToList(),
+                    Attachments = company.CompanyAttachments
+                    .Select(a => new FileDTO
+                    {
+                        FileName = a.FileName,
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.AssignmentRequests),
+                    }).ToList()
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCompanyNotFound);
+
+            return company;
+        }
+        public async Task<AdminPanelGetCompanyByIdResponseModel> GetById()
+        {
+            var companyId = requestInfo.CompanyId;
+
+            var company = await repositoryManager.CompanyRepository.Get(company => company.Id == companyId && !company.IsDeleted)
+                .Select(company => new AdminPanelGetCompanyByIdResponseModel
+                {
                     Code = company.Code,
                     Name = company.Name,
                     CountryId = company.CountryId,

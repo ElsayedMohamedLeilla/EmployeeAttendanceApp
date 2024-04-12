@@ -5,13 +5,21 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Dawem.Providers
 {
-    public class UpdateCompanyModelValidator : AbstractValidator<UpdateCompanyModel>
+    public class AdminPanelUpdateCompanyModelValidator : AbstractValidator<AdminPanelUpdateCompanyModel>
     {
-        public UpdateCompanyModelValidator()
+        public AdminPanelUpdateCompanyModelValidator()
         {
+            RuleFor(model => model.Id).
+                GreaterThan(0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCompanyId);
+
             RuleFor(model => model.Email).
                  NotNull().
                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyEmail);
+
+            RuleFor(model => model.Name).
+                NotNull().
+                WithMessage(LeillaKeys.SorryYouMustEnterCompanyName);
 
             RuleFor(model => model.Industries).
                  Must(iList => iList.All(i => !string.IsNullOrEmpty(i.Name) && !string.IsNullOrWhiteSpace(i.Name))).
@@ -31,6 +39,10 @@ namespace Dawem.Validation.FluentValidation.Dawem.Providers
                Must(p => p > 0).
                When(model => model.ImportDefaultData).
                WithMessage(LeillaKeys.SorryYouMustChoosePreferredLanguageWhenChooseImportDefaultData);
+
+            RuleFor(model => model.NumberOfEmployees).
+                Must(n => n > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterNumberOfEmployees);
         }
     }
 }

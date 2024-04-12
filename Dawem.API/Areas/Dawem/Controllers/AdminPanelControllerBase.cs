@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
     public class AdminPanelControllerBase : BaseController
     {
     }

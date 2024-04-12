@@ -43,5 +43,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Providers
 
             return true;
         }
+        public async Task<bool> UpdateValidation(AdminPanelUpdateCompanyModel model)
+        {
+            /*var checkCompanyDuplicate = await repositoryManager
+                .CompanyRepository.Get(c => !c.IsDeleted && c.Name == model.Name && c.Id != model.Id)
+                .AnyAsync();
+            if (checkCompanyDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryCompanyNameIsDuplicated);
+            }*/
+
+            return true;
+        }
     }
 }

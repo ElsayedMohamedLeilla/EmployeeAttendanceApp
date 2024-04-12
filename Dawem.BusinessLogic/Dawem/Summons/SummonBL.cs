@@ -515,7 +515,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 IsActive = s.IsActive
             }).ToListAsync();
             return new GetSummonsResponse
@@ -548,7 +548,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                     IsActive = s.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
@@ -625,7 +625,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var utcDateTime = DateTime.UtcNow;
 
                 var getEmployeesMissingList = await repositoryManager
-                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && summonLog.Company.Country.TimeZoneId != null &&
+                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && 
+                    summonLog.Company.Country.TimeZoneId != null &&
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {

@@ -6,5 +6,6 @@ namespace Dawem.Contract.BusinessValidation.Dawem.Providers
     {
         Task<bool> CreateValidation(CreateCompanyModel model);
         Task<bool> UpdateValidation(UpdateCompanyModel model);
+        Task<bool> UpdateValidation(AdminPanelUpdateCompanyModel model);
     }
 }

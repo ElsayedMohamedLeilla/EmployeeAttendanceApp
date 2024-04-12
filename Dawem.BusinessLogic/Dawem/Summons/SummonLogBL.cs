@@ -55,7 +55,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > sml.Summon.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < sml.Summon.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 SanctionsCount = sml.SummonLogSanctions.Count
             }).ToListAsync();
 
@@ -86,7 +86,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > sml.Summon.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < sml.Summon.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString() , requestInfo.Lang),
                     DoneDate = sml.DoneDate
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonLogNotFound);
 

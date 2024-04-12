@@ -170,10 +170,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                         .FirstOrDefault(a => !allScreensWithAvailableActions.Screens
                         .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(a.ActionCode));
 
+                    var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
                     var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
                         + LeillaKeys.Space +
                         TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
-                        + TranslationHelper.GetTranslation(screenCode.ToString() + LeillaKeys.Screen, requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
                         + TranslationHelper.GetTranslation(actionNotAvailable.ActionCode.ToString(), requestInfo.Lang)

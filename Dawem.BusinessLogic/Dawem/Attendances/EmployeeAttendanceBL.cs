@@ -791,6 +791,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                          row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
                                          row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
                                          FingerPrintType.CheckIn,
+                        FromExcel = true
 
 
 

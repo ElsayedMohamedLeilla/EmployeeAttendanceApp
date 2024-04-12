@@ -312,7 +312,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.Zones
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
                 var getNextCode = await repositoryManager.ZoneRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted && e.IsActive)
+               .Get(e => e.CompanyId == requestInfo.CompanyId && !e.IsDeleted)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync();

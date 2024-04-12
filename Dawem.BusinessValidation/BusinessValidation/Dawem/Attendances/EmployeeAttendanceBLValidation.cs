@@ -217,18 +217,20 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             #endregion
 
             #region Validate Fingerprint Device Code
-
-            if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
-                !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
+            if (model.FromExcel == false)
             {
-                if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
+                if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
+                    !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
                 {
-                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
-                }
-                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
-                {
-                    throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
+                    if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
+                        string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
+                    {
+                        throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
+                    }
+                    else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
+                    {
+                        throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
+                    }
                 }
             }
 

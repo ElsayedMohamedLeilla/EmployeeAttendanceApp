@@ -4,12 +4,11 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Generic;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Net;
 
 namespace Dawem.API.MiddleWares
@@ -68,8 +67,8 @@ namespace Dawem.API.MiddleWares
             {
                 statusCode = (int)HttpStatusCode.Forbidden;
                 response.State = ResponseStatus.Forbidden;
-                response.Message = string.IsNullOrEmpty(ex.Message) ? 
-                    TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang) : 
+                response.Message = string.IsNullOrEmpty(ex.Message) ?
+                    TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang) :
                     ex.Message;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }

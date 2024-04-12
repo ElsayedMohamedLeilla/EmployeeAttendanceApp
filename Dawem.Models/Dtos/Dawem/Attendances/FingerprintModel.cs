@@ -9,5 +9,7 @@ namespace Dawem.Models.Dtos.Dawem.Attendances
         public FingerPrintType Type { get; set; }
         public RecognitionWay RecognitionWay { get; set; }
         public string FingerprintMobileCode { get; set; }
+
+        public bool FromExcel { get; set; } = false;
     }
 }

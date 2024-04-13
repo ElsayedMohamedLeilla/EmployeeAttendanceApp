@@ -6,6 +6,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
@@ -574,6 +575,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         {
             var companyRepository = repositoryManager.CompanyRepository;
             var query = companyRepository.GetAsQueryable(criteria);
+            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
 
             #region paging
 
@@ -597,9 +599,12 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 Id = company.Id,
                 Code = company.Code,
                 Name = company.Name,
-                IdentityCode = company.IdentityCode,
+                CountryName = isArabic ? company.Country.NameAr : company.Country.NameEn,
+                SubscriptionTypeName = TranslationHelper.
+                GetTranslation(nameof(SubscriptionType) + LeillaKeys.Dash +
+                (company.Subscription.Plan.IsTrial ? LeillaKeys.Trial : LeillaKeys.Subscription), requestInfo.Lang),
                 IsActive = company.IsActive,
-                TotalNumberOfEmployees = company.TotalNumberOfEmployees,
+                NumberOfEmployees = company.NumberOfEmployees,
                 LogoImagePath = uploadBLC.GetFilePath(company.LogoImageName, LeillaKeys.Companies)
             }).ToListAsync();
 
@@ -664,6 +669,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     Email = company.Email,
                     IdentityCode = company.IdentityCode,
                     WebSite = company.WebSite,
+                    SubscriptionTypeName = TranslationHelper.
+                    GetTranslation(LeillaKeys.SubscriptionType + LeillaKeys.Dash +
+                    (company.Subscription.Plan.IsTrial ? LeillaKeys.Trial : LeillaKeys.Subscription), requestInfo.Lang),
                     HeadquarterAddress = company.HeadquarterAddress,
                     HeadquarterLocation = company.HeadquarterLocation,
                     HeadquarterPostalCode = company.HeadquarterPostalCode,

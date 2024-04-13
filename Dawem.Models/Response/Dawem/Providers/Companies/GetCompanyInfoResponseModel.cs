@@ -13,6 +13,7 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public string LogoImageName { get; set; }
         public string LogoImagePath { get; set; }
         public string WebSite { get; set; }
+        public string SubscriptionTypeName { get; set; }
         public string HeadquarterAddress { get; set; }
         public string HeadquarterLocation { get; set; }
         public string HeadquarterPostalCode { get; set; }

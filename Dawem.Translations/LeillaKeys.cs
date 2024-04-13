@@ -593,6 +593,9 @@
         public const string DoneUpdateResponsibilitySuccessfully = "DoneUpdateResponsibilitySuccessfully";
         public const string SorryYouMustEnterResponsibilityId = "Sorry!!YouMustEnterResponsibilityId!";
         public const string SorrySomeOrAllResponsibilitiesNotFound = "Sorry!!SomeOrAllResponsibilitiesNotFound!";
+        public const string SubscriptionType = "SubscriptionType";
+        public const string Subscription = "Subscription";
+        public const string Trial = "Trial";
     }
 
 }

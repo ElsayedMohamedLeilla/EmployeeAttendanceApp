@@ -624,8 +624,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             {
                 var utcDateTime = DateTime.UtcNow;
 
-                var getEmployeesMissingList = await repositoryManager
-                    .SummonLogRepository.GetWithTracking(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && 
+                var getMissingEmployeesList = await repositoryManager
+                    .SummonLogRepository.Get(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && 
                     summonLog.Company.Country.TimeZoneId != null &&
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
@@ -641,11 +641,11 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             ea.LocalDate.Date == summonLog.Summon.LocalDateAndTime.Date).Id : (int?)null
                     }).ToListAsync();
 
-                if (getEmployeesMissingList != null && getEmployeesMissingList.Count > 0)
+                if (getMissingEmployeesList != null && getMissingEmployeesList.Count > 0)
                 {
                     #region Handle Cancel Employee Attendances
 
-                    var willCanceledEmployeeAttendanceIds = getEmployeesMissingList.
+                    var willCanceledEmployeeAttendanceIds = getMissingEmployeesList.
                         Where(e => e.WillCanceledEmployeeAttendanceId > 0).
                         Select(e => e.WillCanceledEmployeeAttendanceId.Value).
                         ToList();
@@ -670,7 +670,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     #region Handle Summons Logs
 
-                    var getEmployeesMissingIds = getEmployeesMissingList.
+                    var getEmployeesMissingIds = getMissingEmployeesList.
                                     Select(m => m.Id).ToList();
 
                     var getSummonLogs = await repositoryManager.
@@ -682,14 +682,17 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         m.DoneTakeActions = true;
                     });
 
+                    await unitOfWork.SaveAsync();
+
                     var addedSummonLogSanctions = new List<SummonLogSanction>();
 
-                    foreach (var employeesMissingGroup in getEmployeesMissingList)
+                    foreach (var missingEmployee   in getMissingEmployeesList)
                     {
                         addedSummonLogSanctions.
-                            AddRange(employeesMissingGroup.SummonSanctions.
+                            AddRange(missingEmployee.SummonSanctions.
                             Select(ss => new SummonLogSanction()
                             {
+                                SummonLogId = missingEmployee.Id,
                                 SummonSanctionId = ss.Id,
                                 Done = ss.SanctionType == SanctionType.CancelDayFingerprint
                             }).ToList());

@@ -6,6 +6,7 @@ using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Subscriptions;
 using Dawem.Translations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
@@ -23,71 +24,116 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
         public async Task<CheckCompanySubscriptionResponseModel> CheckCompanySubscription(CheckCompanySubscriptionModel model)
         {
             var subscriptionRepository = repositoryManager.SubscriptionRepository;
+            var companyRepository = repositoryManager.CompanyRepository;
             var dawemSettingRepository = repositoryManager.DawemSettingRepository;
             var result = new CheckCompanySubscriptionResponseModel();
 
-            var getSubscription = await subscriptionRepository.
+            var checkCompanyStaus = await companyRepository.
+                Get(s => s.Id == model.CompanyId && !s.IsActive).AnyAsync();
+
+            if (checkCompanyStaus)
+            {
+                switch (model.FromType)
+                {
+                    case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+
+                        result.Result = false;
+                        result.ErrorType = CheckCompanySubscriptionErrorType.CompanyNotActive;
+                        break;
+
+                    case CheckCompanySubscriptionFromType.LogIn:
+
+                        throw new BusinessValidationException(LeillaKeys.SorryYourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry);
+
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                var getSubscription = await subscriptionRepository.
                 GetEntityByConditionAsync(s => s.CompanyId == model.CompanyId);
 
-            if (getSubscription != null)
-            {
-                var isSubscriptionExpired = false;
-                if (DateTime.Now.Date >= getSubscription.EndDate.Date)
+                if (getSubscription != null)
                 {
-                    var getPlansGracePeriodPercentage = (await dawemSettingRepository.
-                        GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
-                        Integer;
-
-                    var extraDays = 0;
-
-                    if (getPlansGracePeriodPercentage != null)
-                    {
-                        extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
-                    }
-
-                    var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
-
-                    if (DateTime.Now.Date >= newEndDate)
+                    var isSubscriptionExpired = false;
+                    if (getSubscription.IsWaitingForApproval)
                     {
                         switch (model.FromType)
                         {
                             case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
 
                                 result.Result = false;
-                                result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionExpired;
-                                isSubscriptionExpired = true;
+                                result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionIsWaitingForApproval;
 
                                 break;
                             case CheckCompanySubscriptionFromType.LogIn:
 
-                                throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal);
+                                throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionStatusOnDawemIsWaitingForApprovalPleaseContactDawemSupportTeamForInquiry);
 
                             default:
                                 break;
                         }
-
                     }
-                }
-                if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
-                {
-                    switch (model.FromType)
+                    else
                     {
-                        case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+                        if (DateTime.Now.Date >= getSubscription.EndDate.Date)
+                        {
+                            var getPlansGracePeriodPercentage = (await dawemSettingRepository.
+                                GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
+                                Integer;
 
-                            result.Result = false;
-                            result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionNotActive;
+                            var extraDays = 0;
 
-                            break;
-                        case CheckCompanySubscriptionFromType.LogIn:
+                            if (getPlansGracePeriodPercentage != null)
+                            {
+                                extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
+                            }
 
-                            throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry);
+                            var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
 
-                        default:
-                            break;
+                            if (DateTime.Now.Date >= newEndDate)
+                            {
+                                switch (model.FromType)
+                                {
+                                    case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+
+                                        result.Result = false;
+                                        result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionExpired;
+                                        isSubscriptionExpired = true;
+
+                                        break;
+                                    case CheckCompanySubscriptionFromType.LogIn:
+
+                                        throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal);
+
+                                    default:
+                                        break;
+                                }
+
+                            }
+                        }
+                        if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
+                        {
+                            switch (model.FromType)
+                            {
+                                case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+
+                                    result.Result = false;
+                                    result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionNotActive;
+
+                                    break;
+                                case CheckCompanySubscriptionFromType.LogIn:
+
+                                    throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry);
+
+                                default:
+                                    break;
+                            }
+
+                        }
                     }
-
                 }
-
             }
 
             return result;

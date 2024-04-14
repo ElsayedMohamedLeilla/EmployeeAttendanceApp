@@ -196,14 +196,15 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 PlanId = planId.Value,
                 Code = getNextSubscriptionCode,
                 DurationInDays = durationInDays,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(durationInDays),
+                StartDate = DateTime.UtcNow.Date,
+                EndDate = DateTime.UtcNow.Date.AddDays(durationInDays),
                 Status = SubscriptionStatus.Created,
                 RenewalCount = 1,
                 FollowUpEmail = insertedCompany.Email,
                 NumberOfEmployees = insertedCompany.NumberOfEmployees,
                 EmployeeCost = employeeCost,
-                TotalAmount = insertedCompany.NumberOfEmployees * employeeCost
+                TotalAmount = insertedCompany.NumberOfEmployees * employeeCost,
+                IsWaitingForApproval = true
             });
 
             #endregion
@@ -363,7 +364,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id, Type = AuthenticationType.DawemAdmin });
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id, AuthenticationType = AuthenticationType.DawemAdmin });
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;
@@ -492,7 +493,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel {Type = AuthenticationType.AdminPanel, UserId = user.Id });
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel {AuthenticationType = AuthenticationType.AdminPanel, UserId = user.Id });
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;

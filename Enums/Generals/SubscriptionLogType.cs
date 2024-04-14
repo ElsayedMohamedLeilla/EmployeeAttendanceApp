@@ -10,6 +10,7 @@
         Deactivated,
         Created,
         Confirmed,
-        Activated
+        Activated,
+        SendEmailAboutApproved
     }
 }

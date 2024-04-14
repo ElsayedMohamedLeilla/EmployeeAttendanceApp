@@ -17,7 +17,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         {
             subscriptionBL = _subscriptionBL;
         }
-
         [HttpPost]
         public async Task<ActionResult> Create(CreateSubscriptionModel model)
         {
@@ -27,7 +26,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         [HttpPut]
         public async Task<ActionResult> Update(UpdateSubscriptionModel model)
         {
-
             var result = await subscriptionBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateSubscriptionSuccessfully);
         }
@@ -38,9 +36,9 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             {
                 return BadRequest();
             }
-            var departmensresponse = await subscriptionBL.Get(criteria);
+            var subscriptionsResponse = await subscriptionBL.Get(criteria);
 
-            return Success(departmensresponse.Subscriptions, departmensresponse.TotalCount);
+            return Success(subscriptionsResponse.Subscriptions, subscriptionsResponse.TotalCount);
         }
         [HttpGet]
         public async Task<ActionResult> GetInfo([FromQuery] int subscriptionId)
@@ -60,8 +58,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             }
             return Success(await subscriptionBL.GetById(subscriptionId));
         }
-        [HttpDelete]
-        
+        [HttpDelete]   
         public async Task<ActionResult> Delete(int subscriptionId)
         {
             if (subscriptionId < 1)
@@ -70,7 +67,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             }
             return Success(await subscriptionBL.Delete(subscriptionId));
         }
-
         [HttpPut]
         public async Task<ActionResult> Enable(int subscriptionId)
         {
@@ -88,6 +84,15 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
                 return BadRequest();
             }
             return Success(await subscriptionBL.Disable(model));
+        }
+        [HttpPut]
+        public async Task<ActionResult> Approve(ApproveSubscriptionModel model)
+        {
+            if (model is null)
+            {
+                return BadRequest();
+            }
+            return Success(await subscriptionBL.Approve(model));
         }
         [HttpGet]
         public async Task<ActionResult> GetSubscriptionsInformations()

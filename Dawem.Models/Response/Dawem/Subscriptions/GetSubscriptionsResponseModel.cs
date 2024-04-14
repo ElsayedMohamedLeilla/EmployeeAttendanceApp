@@ -11,5 +11,6 @@ namespace Dawem.Models.Response.Dawem.Subscriptions
         public DateTime EndDate { get; set; }
         public SubscriptionStatus Status { get; set; }
         public string StatusName { get; set; }
+        public bool IsWaitingForApproval { get; set; }
     }
 }

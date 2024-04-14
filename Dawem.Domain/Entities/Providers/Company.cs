@@ -1,8 +1,11 @@
 ﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
+using Dawem.Domain.Entities.UserManagement;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Providers
@@ -25,6 +28,10 @@ namespace Dawem.Domain.Entities.Providers
         public List<CompanyAttachment> CompanyAttachments { get; set; }
         public virtual List<CompanyBranch> CompanyBranches { get; set; }
         public virtual List<CompanyIndustry> CompanyIndustries { get; set; }
+        public Subscription Subscription { get; set; }
+        public List<FingerprintDevice> FingerprintDevices { get; set; }
+        public List<Zone> Zones { get; set; }
+        public List<MyUser> Users { get; set; }
         #endregion
         public string IdentityCode { get; set; }
         public int Code { get; set; }

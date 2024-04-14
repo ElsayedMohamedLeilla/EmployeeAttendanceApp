@@ -13,6 +13,7 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public string LogoImageName { get; set; }
         public string LogoImagePath { get; set; }
         public string WebSite { get; set; }
+        public string SubscriptionTypeName { get; set; }
         public string HeadquarterAddress { get; set; }
         public string HeadquarterLocation { get; set; }
         public string HeadquarterPostalCode { get; set; }
@@ -23,6 +24,8 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public List<CompanyBranchModel> Branches { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
-
+        public int NumberOfZones { get; set; }
+        public int NumberOfFingerprintDevices { get; set; }
+        public int NumberOfUsers { get; set; }
     }
 }

@@ -57,10 +57,20 @@ namespace Dawem.API.MiddleWares
                                 messageCode = LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry;
 
                                 break;
+                            case CheckCompanySubscriptionErrorType.CompanyNotActive:
+
+                                messageCode = LeillaKeys.SorryYourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry;
+
+                                break;
+                            case CheckCompanySubscriptionErrorType.SubscriptionIsWaitingForApproval:
+
+                                messageCode = LeillaKeys.SorryYourSubscriptionStatusOnDawemIsWaitingForApprovalPleaseContactDawemSupportTeamForInquiry;
+
+                                break;
                             default:
                                 break;
                         }
-
+                        
                         var response = new ErrorResponse
                         {
                             State = ResponseStatus.ValidationError,

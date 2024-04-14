@@ -181,13 +181,15 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 ? getEmployee.ProfileImageName : null;
             getEmployee.ModifiedApplicationType = requestInfo.ApplicationType;
 
+            await unitOfWork.SaveAsync();
+
             #region Update ZoneEmployee
 
-            List<ZoneEmployee> existDbList = repositoryManager.ZoneEmployeeRepository
+            var existDbList = repositoryManager.ZoneEmployeeRepository
                     .GetByCondition(e => e.EmployeeId == getEmployee.Id)
                     .ToList();
 
-            List<int> existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
+            var existingZoneIds = existDbList.Select(e => e.ZoneId).ToList();
 
             var addedEmployeeZones = model.Zones != null ? model.Zones
                 .Where(ge => !existingZoneIds.Contains(ge.ZoneId))
@@ -199,12 +201,12 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     ModifiedDate = DateTime.UtcNow
                 }).ToList() : new List<ZoneEmployee>();
 
-            List<int> ZonesToRemove = existDbList
+            var ZonesToRemove = existDbList
                 .Where(ge => model.ZoneIds == null || !model.ZoneIds.Contains(ge.ZoneId))
                 .Select(ge => ge.ZoneId)
                 .ToList();
 
-            List<ZoneEmployee> removedEmployeeZones = repositoryManager.ZoneEmployeeRepository
+            var removedEmployeeZones = repositoryManager.ZoneEmployeeRepository
                 .GetByCondition(e => e.EmployeeId == model.Id && ZonesToRemove.Contains(e.ZoneId))
                 .ToList();
 

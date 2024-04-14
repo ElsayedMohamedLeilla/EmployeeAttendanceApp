@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
@@ -49,6 +50,32 @@ namespace Dawem.Repository.Providers
             if (criteria.Code is not null)
             {
                 predicate = predicate.And(e => e.Code == criteria.Code);
+            }
+            if (criteria.SubscriptionType is not null)
+            {
+                switch (criteria.SubscriptionType.Value)
+                {
+                    case SubscriptionType.Subscription:
+                        predicate = predicate.And(e => !e.Subscription.Plan.IsTrial);
+                        break;
+                    case SubscriptionType.Trial:
+                        predicate = predicate.And(e => e.Subscription.Plan.IsTrial);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (criteria.NumberOfEmployeesFrom is not null)
+            {
+                predicate = predicate.And(e => e.NumberOfEmployees >= criteria.NumberOfEmployeesFrom);
+            }
+            if (criteria.NumberOfEmployeesTo is not null)
+            {
+                predicate = predicate.And(e => e.NumberOfEmployees <= criteria.NumberOfEmployeesTo);
+            }
+            if (criteria.CountryId is not null)
+            {
+                predicate = predicate.And(e => e.CountryId <= criteria.CountryId);
             }
 
             predicate = predicate.And(inner);

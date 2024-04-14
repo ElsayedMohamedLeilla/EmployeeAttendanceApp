@@ -535,6 +535,7 @@
         public const string SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain = "Sorry!!TheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain!";
         public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
         public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
+        public const string SorryYourSubscriptionStatusOnDawemIsWaitingForApprovalPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourSubscriptionStatusOnDawemIsWaitingForApprovalPleaseContactDawemSupportTeamForInquiry!";
         public const string SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal!";
         public const string SorryYourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!";
         public const string SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!";

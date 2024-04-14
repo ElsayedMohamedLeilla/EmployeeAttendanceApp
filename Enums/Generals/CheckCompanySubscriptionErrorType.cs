@@ -4,6 +4,7 @@
     {
         SubscriptionExpired,
         SubscriptionNotActive,
-        CompanyNotActive
+        CompanyNotActive,
+        SubscriptionIsWaitingForApproval
     }
 }

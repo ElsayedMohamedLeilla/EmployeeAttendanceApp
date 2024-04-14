@@ -6,7 +6,7 @@ using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Subscriptions;
 using Dawem.Translations;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
@@ -57,35 +57,75 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
                 if (getSubscription != null)
                 {
                     var isSubscriptionExpired = false;
-                    if (DateTime.Now.Date >= getSubscription.EndDate.Date)
+                    if (getSubscription.IsWaitingForApproval)
                     {
-                        var getPlansGracePeriodPercentage = (await dawemSettingRepository.
-                            GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
-                            Integer;
-
-                        var extraDays = 0;
-
-                        if (getPlansGracePeriodPercentage != null)
+                        switch (model.FromType)
                         {
-                            extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
+                            case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+
+                                result.Result = false;
+                                result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionIsWaitingForApproval;
+
+                                break;
+                            case CheckCompanySubscriptionFromType.LogIn:
+
+                                throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionStatusOnDawemIsWaitingForApprovalPleaseContactDawemSupportTeamForInquiry);
+
+                            default:
+                                break;
                         }
+                    }
+                    else
+                    {
+                        if (DateTime.Now.Date >= getSubscription.EndDate.Date)
+                        {
+                            var getPlansGracePeriodPercentage = (await dawemSettingRepository.
+                                GetEntityByConditionAsync(d => !d.IsDeleted && d.Type == DawemSettingType.PlansGracePeriodPercentage))?.
+                                Integer;
 
-                        var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
+                            var extraDays = 0;
 
-                        if (DateTime.Now.Date >= newEndDate)
+                            if (getPlansGracePeriodPercentage != null)
+                            {
+                                extraDays = getPlansGracePeriodPercentage.Value * getSubscription.DurationInDays / 100;
+                            }
+
+                            var newEndDate = getSubscription.EndDate.AddDays(extraDays).Date;
+
+                            if (DateTime.Now.Date >= newEndDate)
+                            {
+                                switch (model.FromType)
+                                {
+                                    case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
+
+                                        result.Result = false;
+                                        result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionExpired;
+                                        isSubscriptionExpired = true;
+
+                                        break;
+                                    case CheckCompanySubscriptionFromType.LogIn:
+
+                                        throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal);
+
+                                    default:
+                                        break;
+                                }
+
+                            }
+                        }
+                        if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
                         {
                             switch (model.FromType)
                             {
                                 case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
 
                                     result.Result = false;
-                                    result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionExpired;
-                                    isSubscriptionExpired = true;
+                                    result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionNotActive;
 
                                     break;
                                 case CheckCompanySubscriptionFromType.LogIn:
 
-                                    throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal);
+                                    throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry);
 
                                 default:
                                     break;
@@ -93,26 +133,6 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
 
                         }
                     }
-                    if (getSubscription.Status != SubscriptionStatus.Active && !isSubscriptionExpired)
-                    {
-                        switch (model.FromType)
-                        {
-                            case CheckCompanySubscriptionFromType.SubscriptionMiddleWare:
-
-                                result.Result = false;
-                                result.ErrorType = CheckCompanySubscriptionErrorType.SubscriptionNotActive;
-
-                                break;
-                            case CheckCompanySubscriptionFromType.LogIn:
-
-                                throw new BusinessValidationException(LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry);
-
-                            default:
-                                break;
-                        }
-
-                    }
-
                 }
             }
 

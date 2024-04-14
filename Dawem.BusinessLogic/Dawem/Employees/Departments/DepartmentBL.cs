@@ -19,7 +19,6 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Employees.Departments;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Employees.Departments
@@ -545,7 +544,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                         }
                         else if (Temp.ParentId == 0)
                         {
-                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(LeillaKeys.SorryDepartmentNotFound, requestInfo.Lang) + LeillaKeys.Space +  TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                            result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(LeillaKeys.SorryDepartmentNotFound, requestInfo.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                             return result;
                         }
                         else

@@ -607,9 +607,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     #endregion
                     #region Map Zones
                     zoneNames = row.Cell(15).GetString().Trim().Split(",");
+                    Temp.Zones = new List<ZoneEmployee>();
                     for (int i = 0; i < zoneNames.Count(); i++)
                     {
-                        var foundZoneDb = repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
+                        var foundZoneDb =await repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
                         if (foundZoneDb != null)
                         {
                             Temp.Zones.Add(new ZoneEmployee

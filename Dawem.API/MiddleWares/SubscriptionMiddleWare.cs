@@ -57,6 +57,11 @@ namespace Dawem.API.MiddleWares
                                 messageCode = LeillaKeys.SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry;
 
                                 break;
+                            case CheckCompanySubscriptionErrorType.CompanyNotActive:
+
+                                messageCode = LeillaKeys.SorryYourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry;
+
+                                break;
                             default:
                                 break;
                         }

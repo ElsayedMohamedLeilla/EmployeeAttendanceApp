@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;
+using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Subscriptions;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
@@ -17,7 +18,6 @@ namespace Dawem.Repository.Providers
         {
             var predicate = PredicateBuilder.New<Subscription>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Subscription>(true);
-
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -46,6 +46,58 @@ namespace Dawem.Repository.Providers
             if (criteria.Code is not null)
             {
                 predicate = predicate.And(e => e.Code == criteria.Code);
+            }
+            if (criteria.Status is not null)
+            {
+                predicate = predicate.And(e => e.Status == criteria.Status);
+            }
+            if (criteria.Type is not null)
+            {
+                switch (criteria.Type.Value)
+                {
+                    case SubscriptionType.Subscription:
+                        predicate = predicate.And(e => !e.Plan.IsTrial);
+                        break;
+                    case SubscriptionType.Trial:
+                        predicate = predicate.And(e => e.Plan.IsTrial);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (criteria.EndsAfterDaysFrom > 0)
+            {
+                var utcDate = DateTime.UtcNow.Date;
+                predicate = predicate.And(e => (e.EndDate.Date - utcDate).TotalDays >= criteria.EndsAfterDaysFrom);
+            }
+            if (criteria.EndsAfterDaysTo > 0)
+            {
+                var utcDate = DateTime.UtcNow.Date;
+                predicate = predicate.And(e => (e.EndDate.Date - utcDate).TotalDays <= criteria.EndsAfterDaysTo);
+            }
+            if (criteria.StartDateFrom is not null)
+            {
+                predicate = predicate.And(e => e.StartDate >= criteria.StartDateFrom);
+            }
+            if (criteria.StartDateTo is not null)
+            {
+                predicate = predicate.And(e => e.StartDate <= criteria.StartDateTo);
+            }
+            if (criteria.EndDateFrom is not null)
+            {
+                predicate = predicate.And(e => e.EndDate >= criteria.EndDateFrom);
+            }
+            if (criteria.EndDateTo is not null)
+            {
+                predicate = predicate.And(e => e.EndDate <= criteria.EndDateTo);
+            }
+            if (criteria.DurationInDaysFrom is not null)
+            {
+                predicate = predicate.And(e => e.DurationInDays >= criteria.DurationInDaysFrom);
+            }
+            if (criteria.DurationInDaysTo is not null)
+            {
+                predicate = predicate.And(e => e.DurationInDays <= criteria.DurationInDaysTo);
             }
 
             predicate = predicate.And(inner);

@@ -3,6 +3,7 @@
     public enum CheckCompanySubscriptionErrorType
     {
         SubscriptionExpired,
-        SubscriptionNotActive
+        SubscriptionNotActive,
+        CompanyNotActive
     }
 }

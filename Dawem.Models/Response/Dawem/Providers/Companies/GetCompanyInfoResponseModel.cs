@@ -24,6 +24,8 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public List<CompanyBranchModel> Branches { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
-
+        public int NumberOfZones { get; set; }
+        public int NumberOfFingerprintDevices { get; set; }
+        public int NumberOfUsers { get; set; }
     }
 }

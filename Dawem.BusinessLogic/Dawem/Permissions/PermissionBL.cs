@@ -432,11 +432,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;
             var currentUserId = model?.UserId ?? requestInfo.UserId;
-            var currentCompanyId = model.Type == AuthenticationType.AdminPanel ? null : model.CompanyId;
+            var currentCompanyId = model.AuthenticationType == AuthenticationType.AdminPanel ? null : model.CompanyId;
 
             var isUserIsAdmin = await repositoryManager.UserRepository
               .Get(p => !p.IsDeleted && p.IsActive &&
-              p.Type == model.Type &&
+              p.Type == model.AuthenticationType &&
               p.CompanyId == currentCompanyId && p.IsAdmin &&
               p.Id == currentUserId).AnyAsync();
 
@@ -451,7 +451,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserHasPermissions = await repositoryManager.PermissionRepository
                     .Get(p => !p.IsDeleted && p.IsActive &&
                     p.CompanyId == currentCompanyId
-                    && p.Type == model.Type && p.UserId == currentUserId).AnyAsync();
+                    && p.Type == model.AuthenticationType && p.UserId == currentUserId).AnyAsync();
 
                 var getUserResponsibilitiesIds = await userResponsibilityRepository
                     .Get(u => u.UserId == currentUserId)
@@ -461,7 +461,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserResponsibilitiesHasPermissions = await repositoryManager.PermissionRepository
                             .Get(p => !p.IsDeleted && p.IsActive &&
                             p.CompanyId == currentCompanyId
-                             && p.Type == model.Type &&
+                             && p.Type == model.AuthenticationType &&
                             p.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(p.ResponsibilityId.Value)).AnyAsync();
 
                 if (isUserHasPermissions)
@@ -470,7 +470,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                         Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted &&
                         !p.PermissionScreen.Permission.IsDeleted &&
                         p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
-                        p.PermissionScreen.Permission.Type == model.Type &&
+                        p.PermissionScreen.Permission.Type == model.AuthenticationType &&
                         p.PermissionScreen.ScreenCode == model.ScreenCode &&
                         p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.UserId == model.UserId).
                         AnyAsync();
@@ -481,7 +481,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                                  .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted &&
                                  !p.PermissionScreen.Permission.IsDeleted &&
                                  p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
-                                 p.PermissionScreen.Permission.Type == model.Type &&
+                                 p.PermissionScreen.Permission.Type == model.AuthenticationType &&
                                  p.PermissionScreen.ScreenCode == model.ScreenCode
                                  && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.ResponsibilityId > 0
                                  && getUserResponsibilitiesIds.Contains(p.PermissionScreen.Permission.ResponsibilityId.Value)).AnyAsync();
@@ -504,7 +504,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var isUserIsAdmin = await repositoryManager.UserRepository
                .Get(p => !p.IsDeleted && p.IsActive &&
                p.CompanyId == currentCompanyId
-                && p.Type == model.Type && p.IsAdmin &&
+                && p.Type == model.AuthenticationType && p.IsAdmin &&
                p.Id == currentUserId).AnyAsync();
 
             if (isUserIsAdmin)
@@ -517,7 +517,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserHasPermission = await repositoryManager.PermissionRepository
                     .Get(p => !p.IsDeleted && p.IsActive &&
                     p.CompanyId == currentCompanyId
-                    && p.Type == model.Type && p.UserId == currentUserId).AnyAsync();
+                    && p.Type == model.AuthenticationType && p.UserId == currentUserId).AnyAsync();
 
                 var getUserResponsibilitiesIds = await userResponsibilityRepository
                     .Get(u => u.UserId == currentUserId)
@@ -526,14 +526,14 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserResponsibilitiesHasPermission = await repositoryManager.PermissionRepository
                             .Get(p => !p.IsDeleted && p.IsActive &&
                             p.CompanyId == currentCompanyId
-                             && p.Type == model.Type &&
+                             && p.Type == model.AuthenticationType &&
                             p.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(p.ResponsibilityId.Value)).AnyAsync();
 
                 if (isUserHasPermission)
                 {
                     var getUserPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                     && ps.Permission.CompanyId == currentCompanyId
-                    && ps.Permission.Type == model.Type &&
+                    && ps.Permission.Type == model.AuthenticationType &&
                     ps.Permission.UserId == currentUserId)
                         .GroupBy(ps => ps.ScreenCode)
                         .Select(g => new PermissionScreenResponseWithNamesModel
@@ -555,7 +555,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     var getResponsibilitiesPermissions = await permissionScreenRepository.
                         Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted &&
                         ps.Permission.CompanyId == currentCompanyId &&
-                        ps.Permission.Type == model.Type &&
+                        ps.Permission.Type == model.AuthenticationType &&
                         ps.Permission.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(ps.Permission.ResponsibilityId.Value)).
                         GroupBy(ps => ps.ScreenCode).
                         Select(g => new PermissionScreenResponseWithNamesModel

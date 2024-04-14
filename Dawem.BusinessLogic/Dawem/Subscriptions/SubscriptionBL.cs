@@ -182,6 +182,7 @@ namespace Dawem.BusinessLogic.Dawem.Subscriptions
                     StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang),
                     FollowUpEmail = subscription.FollowUpEmail,
                     RenewalCount = subscription.RenewalCount,
+                    IsWaitingForApproval = subscription.IsWaitingForApproval,
                     Notes = subscription.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
 
@@ -230,6 +231,62 @@ namespace Dawem.BusinessLogic.Dawem.Subscriptions
                 throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
+            return true;
+        }
+        public async Task<bool> Approve(ApproveSubscriptionModel model)
+        {
+            var subscription = await repositoryManager.SubscriptionRepository.
+                GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsWaitingForApproval &&
+                d.Id == model.SubscriptionId) ??
+                throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
+
+            subscription.IsWaitingForApproval = false;
+            subscription.Status = SubscriptionStatus.Active;
+            subscription.StartDate = model.ActivationStartDate;
+            subscription.EndDate = model.ActivationStartDate.AddDays(subscription.DurationInDays);
+
+            await unitOfWork.SaveAsync();
+
+            #region Send Email About Approve
+
+
+            var verifyEmail = new VerifyEmailModel
+            {
+                Email = subscription.FollowUpEmail,
+                Subject = "تنبيه لإشتراكك علي داوم",
+                Body = @"<meta charset='UTF-8'>
+                                            <title>تم قبول إشتراكك علي داوم</title>
+                                            <style>
+                                            body { direction: rtl; }
+                                            </style>
+                                            </head>
+                                            <body>
+                                            <h1>مرحباً</h1>
+                                            <h2> تم قبول إشتراكك علي داوم بنجاح.</h2>
+                                            <h2> تقدر تسجل الدخول و تستخدم داوم الان.</h2>
+                                            <h1>تاريخ بداية الإشتراك:  " + subscription.StartDate.ToString("dd-MM-yyyy") + @"</h1>
+                                            <h1>تاريخ انتهاء الإشتراك:  " + subscription.EndDate.ToString("dd-MM-yyyy") + @"</h1>
+                                            <p>فريق خدمة العملاء لشركة داوم يتطلع لخدمتك.</p>
+                                            <p>للتواصل معنا:</p>
+                                            <p> البريد الإلكتروني: <a href='mailto:dawem.app.developers@gmail.com'>dawem.app.developers@gmail.com</a></p>
+                                            <p> الهاتف: (+20)01234567
+                                            </body>
+                                            </html>"
+            };
+            await mailBL.SendEmail(verifyEmail);
+
+            repositoryManager.SubscriptionLogRepository.Insert(new()
+            {
+                SubscriptionId = subscription.Id,
+                EndDate = subscription.EndDate,
+                LogType = SubscriptionLogType.SendEmailAboutApproved,
+                LogTypeName = nameof(SubscriptionLogType.SendEmailAboutApproved)
+            });
+
+            #endregion
+
+            await unitOfWork.SaveAsync();
+
             return true;
         }
         public async Task<GetSubscriptionsInformationsResponseDTO> GetSubscriptionsInformations()

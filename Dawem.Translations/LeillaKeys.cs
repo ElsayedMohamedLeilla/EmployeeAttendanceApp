@@ -536,6 +536,7 @@
         public const string SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt = "Sorry!!InternalErrorHappenedPleaseContactDawemSupportToSolveIt!";
         public const string SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly = "Sorry!!YouMustEnterCorrectMobileNumberContainsNumbersOnly!";
         public const string SorryYourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal = "Sorry!!YourSubscriptionOnDawemIsExpiredPleaseContactDawemSupportTeamForRenewal!";
+        public const string SorryYourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourCompanyStatusIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!";
         public const string SorryYourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry = "Sorry!!YourSubscriptionIsNotActiveRightNowPleaseContactDawemSupportTeamForInquiry!";
         public const string SorryYouMustNotEnterSubscriptionDurationInMonthsWhenChooseTrial = "Sorry!!YouMustNotEnterSubscriptionDurationInMonthsWhenChooseTrial!";
         public const string SorrySubscriptionPlanNotFound = "Sorry!!SubscriptionPlanNotFound!";
@@ -596,6 +597,7 @@
         public const string SubscriptionType = "SubscriptionType";
         public const string Subscription = "Subscription";
         public const string Trial = "Trial";
+        public const string SorryYouMustEnterSubscriptionActivationStartDate = "Sorry!!YouMustEnterSubscriptionActivationStartDate!";
     }
 
 }

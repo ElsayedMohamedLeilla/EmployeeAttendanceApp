@@ -677,6 +677,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     HeadquarterPostalCode = company.HeadquarterPostalCode,
                     NumberOfEmployees = company.NumberOfEmployees,
                     TotalNumberOfEmployees = company.TotalNumberOfEmployees,
+                    NumberOfFingerprintDevices = company.FingerprintDevices.Count,
+                    NumberOfUsers = company.Users.Count,
+                    NumberOfZones = company.Zones.Count,
                     IsActive = company.IsActive,
                     Industries = company.CompanyIndustries
                     .Select(industry => industry.Name)

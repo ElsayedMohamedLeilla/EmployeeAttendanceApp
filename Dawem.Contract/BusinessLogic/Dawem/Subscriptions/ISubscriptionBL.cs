@@ -13,6 +13,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Subscriptions
         Task<GetSubscriptionsResponse> Get(GetSubscriptionsCriteria model);
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Enable(int subscriptionId);
+        Task<bool> Approve(ApproveSubscriptionModel model);
         Task<bool> Delete(int subscriptionId);
         Task<GetSubscriptionsInformationsResponseDTO> GetSubscriptionsInformations();
         Task HandleSubscriptions();

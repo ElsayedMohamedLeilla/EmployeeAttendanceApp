@@ -24,6 +24,7 @@ namespace Dawem.Domain.Entities.Subscriptions
         public int NumberOfEmployees { get; set; }
         public decimal EmployeeCost { get; set; }
         public decimal TotalAmount { get; set; }
+        public bool IsWaitingForApproval { get; set; }
         public List<SubscriptionLog> SubscriptionLogs { get; set; }
     }
 }

@@ -45,7 +45,7 @@ namespace Dawem.API.MiddleWares
                         UserId = userId,
                         ScreenCode = mapResult.Screen.Value,
                         ActionCode = mapResult.Method.Value,
-                        Type = requestInfo.Type
+                        AuthenticationType = requestInfo.Type
                     };
 
                     dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?

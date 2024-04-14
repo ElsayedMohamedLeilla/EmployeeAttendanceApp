@@ -14,6 +14,7 @@ namespace Dawem.Models.Response.Dawem.Subscriptions
         public string StatusName { get; set; }
         public int RenewalCount { get; set; }
         public string FollowUpEmail { get; set; }
+        public bool IsWaitingForApproval { get; set; }
         public string Notes { get; set; }
     }
 }

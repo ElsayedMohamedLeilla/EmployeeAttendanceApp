@@ -599,6 +599,14 @@
         public const string Subscription = "Subscription";
         public const string Trial = "Trial";
         public const string SorryYouMustEnterSubscriptionActivationStartDate = "Sorry!!YouMustEnterSubscriptionActivationStartDate!";
-    }
 
+        public const string SorryYouMustEnterSubscriptionPaymentId = "Sorry!!YouMustEnterSubscriptionPaymentId!";
+        public const string SorryYouMustEnterSubscriptionPaymentAmount = "Sorry!!YouMustEnterSubscriptionPaymentAmount!";
+        public const string SorryYouMustChooseSubscription = "Sorry!!YouMustChooseSubscription!";
+        public const string SorryYouMustEnterSubscriptionPaymentDate = "Sorry!!YouMustEnterSubscriptionPaymentDate!";
+        public const string SorryYouMustEnterSubscriptionPaymentId1 = "Sorry!!YouMustEnterSubscriptionPaymentId!";
+        public const string SorrySubscriptionPaymentNotFound = "Sorry!!SubscriptionPaymentNotFound!";
+        public const string DoneCreateSubscriptionPaymentSuccessfully = "DoneCreateSubscriptionPaymentSuccessfully";
+        public const string DoneUpdateSubscriptionPaymentSuccessfully = "DoneUpdateSubscriptionPaymentSuccessfully";
+    }
 }

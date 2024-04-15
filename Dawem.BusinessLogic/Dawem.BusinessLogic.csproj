@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AdminPanel\" />
     <Folder Include="Dawem\RealTime\Firebase\" />
   </ItemGroup>
 

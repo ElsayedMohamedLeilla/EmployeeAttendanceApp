@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="BusinessValidationCore\Dawem\" />
-    <Folder Include="BusinessValidation\AdminPanel\" />
     <Folder Include="FluentValidation\AdminPanel\" />
     <Folder Include="Lookups\" />
   </ItemGroup>

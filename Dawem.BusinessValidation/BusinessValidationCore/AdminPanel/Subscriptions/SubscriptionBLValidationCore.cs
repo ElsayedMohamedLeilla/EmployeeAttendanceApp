@@ -4,7 +4,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Subscriptions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
-using Dawem.Models.Response.Dawem.Subscriptions;
+using Dawem.Models.Response.AdminPanel.Subscriptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

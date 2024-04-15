@@ -1,5 +1,5 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
+using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Translations;

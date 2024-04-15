@@ -1,7 +1,9 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
+using Dawem.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions;
+using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,18 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
                 return BadRequest();
             }
             var subscriptionsResponse = await subscriptionBL.Get(criteria);
+
+            return Success(subscriptionsResponse.Subscriptions, subscriptionsResponse.TotalCount);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetSubscriptionsCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var subscriptionsResponse = await subscriptionBL.GetForDropDown(criteria);
 
             return Success(subscriptionsResponse.Subscriptions, subscriptionsResponse.TotalCount);
         }

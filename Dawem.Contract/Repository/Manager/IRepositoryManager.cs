@@ -27,6 +27,7 @@ namespace Dawem.Contract.Repository.Manager
         ICompanyIndustryRepository CompanyIndustryRepository { get; }
         ISubscriptionRepository SubscriptionRepository { get; }
         ISubscriptionLogRepository SubscriptionLogRepository { get; }
+        ISubscriptionPaymentRepository SubscriptionPaymentRepository { get; }
         IPlanRepository PlanRepository { get; }
         IPlanNameTranslationRepository PlanNameTranslationRepository { get; }
         IDawemSettingRepository DawemSettingRepository { get; }

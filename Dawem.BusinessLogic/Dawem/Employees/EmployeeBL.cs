@@ -171,6 +171,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             getEmployee.EmployeeType = model.EmployeeType;
             getEmployee.JobTitleId = model.JobTitleId;
             getEmployee.DirectManagerId = model.DirectManagerId;
+            getEmployee.MobileCountryId = model.MobileCountryId;
             getEmployee.ScheduleId = model.ScheduleId;
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.Email = model.Email;

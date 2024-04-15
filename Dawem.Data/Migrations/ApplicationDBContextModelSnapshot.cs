@@ -4348,6 +4348,71 @@ namespace Dawem.Data.Migrations
                     b.ToTable("SubscriptionLogs", "Dawem");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.SubscriptionPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SubscriptionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("SubscriptionPayments", "Dawem");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
                 {
                     b.Property<int>("Id")
@@ -6328,6 +6393,17 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Subscription");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.SubscriptionPayment", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Subscriptions.Subscription", "Subscription")
+                        .WithMany("SubscriptionPayments")
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Subscription");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
@@ -6776,6 +6852,8 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
                 {
                     b.Navigation("SubscriptionLogs");
+
+                    b.Navigation("SubscriptionPayments");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Summons.Sanction", b =>

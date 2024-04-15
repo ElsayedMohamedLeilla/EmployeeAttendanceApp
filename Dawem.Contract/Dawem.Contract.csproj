@@ -23,9 +23,7 @@
 
   <ItemGroup>
     <Folder Include="BusinessLogicCore\AdminPanel\" />
-    <Folder Include="BusinessLogic\AdminPanel\" />
     <Folder Include="BusinessValidationCore\Dawem\" />
-    <Folder Include="BusinessValidation\AdminPanel\" />
   </ItemGroup>
 
   <ItemGroup>

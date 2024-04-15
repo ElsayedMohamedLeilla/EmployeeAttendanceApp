@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Subscriptions;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NCrontab;

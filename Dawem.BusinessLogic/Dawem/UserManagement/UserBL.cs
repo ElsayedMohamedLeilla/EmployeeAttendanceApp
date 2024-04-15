@@ -252,36 +252,40 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             unitOfWork.CreateTransaction();
 
-            #region Upload Profile Image
+            //#region Upload Profile Image
 
-            string imageName = null;
-            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
-            {
-                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
-                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
-                imageName = result.FileName;
-            }
+            //string imageName = null;
+            //if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            //{
+            //    var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+            //        ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage); ;
+            //    imageName = result.FileName;
+            //}
 
-            #endregion
+            //#endregion
 
             #region Insert User
 
-            #region Set User code
+            //#region Set User code
 
-            var getNextCode = await repositoryManager.UserRepository
-                .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
-                .Select(e => e.Code)
-                .DefaultIfEmpty()
-                .MaxAsync() + 1;
+            //var getNextCode = await repositoryManager.UserRepository
+            //    .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
+            //    .Select(e => e.Code)
+            //    .DefaultIfEmpty()
+            //    .MaxAsync() + 1;
 
+            //#endregion
+            #region GetEmployee
+            var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
+            !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
 
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
             user.AddUserId = requestInfo.UserId;
-            user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
-            user.ProfileImageName = imageName;
-            user.Code = getNextCode;
+            user.UserName = foundEmployee.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
+            user.ProfileImageName = foundEmployee.ProfileImageName;
+            user.Code = foundEmployee.Code;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
             user.Type = AuthenticationType.DawemAdmin;
@@ -417,34 +421,38 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             unitOfWork.CreateTransaction();
 
-            #region Upload Profile Image
+            //#region Upload Profile Image
 
-            string imageName = null;
-            if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
-            {
-                var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
-                    ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
-                imageName = result.FileName;
-            }
+            //string imageName = null;
+            //if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+            //{
+            //    var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+            //        ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+            //    imageName = result.FileName;
+            //}
 
-            #endregion
+            //#endregion
 
             #region Update User
 
             var getUser = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
             && user.Id == model.Id && user.CompanyId == requestInfo.CompanyId && user.Type == AuthenticationType.DawemAdmin);
 
-            getUser.Name = model.Name;
+            #region GetEmployee
+            var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
+            !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
+            #endregion
+
+            getUser.Name = foundEmployee.Name;
             getUser.EmployeeId = model.EmployeeId;
-            getUser.Email = model.Email;
-            getUser.UserName = model.Email;
-            getUser.MobileNumber = model.MobileNumber;
-            getUser.IsActive = model.IsActive;
+            getUser.Email = foundEmployee.Email;
+            getUser.UserName = foundEmployee.Email;
+            getUser.MobileNumber = foundEmployee.MobileNumber;
+            getUser.IsActive = foundEmployee.IsActive;
             getUser.IsAdmin = model.IsAdmin;
             getUser.ModifiedDate = DateTime.Now;
             getUser.ModifyUserId = requestInfo.UserId;
-            getUser.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
-                ? getUser.ProfileImageName : null;
+            getUser.ProfileImageName = foundEmployee.ProfileImageName;
 
             var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
 
@@ -846,6 +854,24 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 NotActiveCount = await query.Where(user => !user.IsDeleted && !user.IsActive).CountAsync(),
                 DeletedCount = await query.Where(user => user.IsDeleted).CountAsync()
             };
+
+            #endregion
+        }
+
+        public async Task<string> GetUserNameByEmployeeId(int employeeId)
+        {
+            #region Get User Name
+
+            var getUserName = await repositoryManager.EmployeeRepository
+                .Get(e =>  e.CompanyId == requestInfo.CompanyId && e.Id == employeeId)
+                .Select(e => e.Email)
+                .FirstOrDefaultAsync();
+
+            if(getUserName == null)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryCannotConnectThisEmployeeWithUserBecausehisEmailIsNull);
+            }
+            return getUserName;
 
             #endregion
         }

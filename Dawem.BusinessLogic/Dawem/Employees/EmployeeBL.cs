@@ -348,9 +348,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             var isArabic = requestInfo?.Lang == LeillaKeys.Ar;
 
-            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)
                 .Select(u => u.EmployeeId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+                .FirstOrDefaultAsync();
 
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetCurrentEmployeeInfoResponseModel
@@ -410,6 +410,15 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == employeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
             employee.Enable();
+
+            #region Enable Related user
+            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted  && d.EmployeeId == employeeId).ToListAsync();
+            foreach (var user in users)
+            {
+                user.IsActive = true;
+                await unitOfWork.SaveAsync();
+            }
+            #endregion
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -417,7 +426,18 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
             employee.Disable(model.DisableReason);
+            #region Disable Related user
+            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.IsActive && d.EmployeeId == model.Id).ToListAsync();
+            foreach (var user in users)
+            {
+                user.DisableReason = "Employee Disabled";
+                user.IsActive = false;
+                await unitOfWork.SaveAsync();
+            }
+            #endregion
+
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -426,6 +446,15 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
             employee.Delete();
+            #region Enable Related user
+            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
+            foreach (var user in users)
+            {
+                user.IsDeleted = true;
+                await unitOfWork.SaveAsync();
+            }
+            #endregion
+
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -609,6 +638,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     #endregion
                     #region Map Zones
                     zoneNames = row.Cell(15).GetString().Trim().Split(",");
+                    Temp = new();
                     Temp.Zones = new List<ZoneEmployee>();
                     for (int i = 0; i < zoneNames.Count(); i++)
                     {
@@ -643,7 +673,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                 if (foundEmployeeInDB == null) // Email Not Found
                                 {
 
-                                    Temp = new();
+                                    
                                     getNextCode++;
                                     Temp.Code = getNextCode;
                                     Temp.AddedApplicationType = ApplicationType.Web;
@@ -732,9 +762,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 var result = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Employees)
                     ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
                 EmployeeimageName = result.FileName;
-                var userResult = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
-                   ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
-                UserimageName = userResult.FileName;
+                //var userResult = await uploadBLC.UploadFile(model.ProfileImageFile, LeillaKeys.Users)
+                //   ?? throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileUploadProfileImage);
+                //UserimageName = userResult.FileName;
 
             }
             #endregion
@@ -752,8 +782,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var getUser = await repositoryManager.UserRepository
              .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted && employee.IsActive
            && employee.EmployeeId == requestInfo.EmployeeId && employee.Id == requestInfo.User.Id);
-            getUser.ProfileImageName = !string.IsNullOrEmpty(UserimageName) ? UserimageName : !string.IsNullOrEmpty(model.ProfileImageName)
-                ? getUser.ProfileImageName : null;
+            getUser.ProfileImageName = getEmployee.ProfileImageName;
             getUser.ModifiedApplicationType = requestInfo.ApplicationType;
             getUser.ModifiedDate = DateTime.UtcNow;
             getUser.ModifyUserId = requestInfo.UserId;

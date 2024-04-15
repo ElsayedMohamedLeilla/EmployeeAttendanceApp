@@ -171,7 +171,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<int> GetUnreadNotificationCount()
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ?? 0;
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
             var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsRead && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             return notification.Count;
         }
@@ -223,13 +223,13 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<int> GetUnViewedNotificationCount()
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ?? 0;
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ;
             var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsViewed && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             return notification.Count;
         }
         public async Task<bool> MarkAsViewed()
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ?? 0;
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
             var notifications = await repositoryManager.NotificationStoreRepository.GetWithTracking(n => !n.IsViewed && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             for (int i = 0; i < notifications.Count; i++)
             {

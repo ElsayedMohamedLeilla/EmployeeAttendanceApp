@@ -28,9 +28,9 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
         }
         public async Task<GetHeaderInformationsResponseModel> GetHeaderInformations()
         {
-            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)
                .Select(u => u.EmployeeId)
-               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+               .FirstOrDefaultAsync();
 
             var currentEmployeeName = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(employee => employee.Name).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
@@ -67,9 +67,9 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
         }
         public async Task<EmployeeGetHeaderInformationsResponseModel> EmployeeGetHeaderInformations()
         {
-            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)
                .Select(u => u.EmployeeId)
-               .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+               .FirstOrDefaultAsync();
 
             var currentEmployeeJobTitleName = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(employee => employee.JobTitle.Name)
@@ -105,7 +105,7 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
             {
                 Name = requestInfo.User.Name,
                 JobTitleName = currentEmployeeJobTitleName,
-                ProfileImagePath = uploadBLC.GetFilePath(requestInfo.User.ProfileImageName, LeillaKeys.Users)
+                ProfileImagePath = uploadBLC.GetFilePath(requestInfo.User.ProfileImageName, LeillaKeys.Employees)
             };
 
             #endregion

@@ -18,7 +18,7 @@ namespace Dawem.Domain.Entities.UserManagement
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
 
-        public int? EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public virtual Employee Employee { get; set; }
 

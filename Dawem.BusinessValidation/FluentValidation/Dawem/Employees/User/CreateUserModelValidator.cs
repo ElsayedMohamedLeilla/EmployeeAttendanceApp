@@ -9,28 +9,32 @@ namespace Dawem.Validation.FluentValidation.Dawem.Employees.User
     {
         public CreateUserModelValidator()
         {
-            RuleFor(user => user.Name).NotNull().
-                  WithMessage(LeillaKeys.SorryYouMustEnterUserName);
-            RuleFor(user => user.Email).NotNull().
-                 WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+            //RuleFor(user => user.Name).NotNull().
+            //      WithMessage(LeillaKeys.SorryYouMustEnterUserName);
+            //RuleFor(user => user.Email).NotNull().
+            //     WithMessage(LeillaKeys.SorryYouMustEnterEmail);
 
-            RuleFor(user => user.MobileNumber).NotNull().
-                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+            //RuleFor(user => user.MobileNumber).NotNull().
+            //     WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
 
-            RuleFor(model => model.MobileNumber).
-                Must(m => m.IsDigitsOnly()).
-                WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
+            //RuleFor(model => model.MobileNumber).
+            //    Must(m => m.IsDigitsOnly()).
+            //    WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
 
-            RuleFor(user => user.MobileCountryId)
-                .GreaterThan(0)
-                .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+            //RuleFor(user => user.MobileCountryId)
+            //    .GreaterThan(0)
+            //    .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
 
-            RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
-                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
+            //RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
+            //    WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
             RuleFor(user => user.Responsibilities).
                 Must(r => r != null && r.Count > 0).
                 WithMessage(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
+
+            RuleFor(user => user.EmployeeId).
+               Must(r => r > 0).
+               WithMessage(AmgadKeys.SorryYouMustChooseEmployeeToThisUser);
 
             RuleFor(user => user.Password).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterPassword);
@@ -43,10 +47,10 @@ namespace Dawem.Validation.FluentValidation.Dawem.Employees.User
             RuleFor(user => user).Must(user => user.Password == user.ConfirmPassword).
                   WithMessage(LeillaKeys.SorryPasswordAndConfirmPasswordMustEqual);
 
-            RuleFor(model => model.ProfileImageFile)
-                  .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
-                  .When(model => model.ProfileImageFile != null)
-                  .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
+            //RuleFor(model => model.ProfileImageFile)
+            //      .Must(file => file != null && file.Length > 0 && file.ContentType.Contains(LeillaKeys.Image))
+            //      .When(model => model.ProfileImageFile != null)
+            //      .WithMessage(LeillaKeys.SorryYouMustUploadImagesOnly);
         }
     }
 }

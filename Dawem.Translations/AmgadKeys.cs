@@ -197,18 +197,19 @@
         
         public const string SorryMobileCountryCodeNotValidAcceptNumbersOnly = "Sorry!!MobileCountryCodeNotValidAcceptNumbersOnly";
         public const string SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions = "Sorry!!MobileCountryCodeNotValidOrNotExistPleaseSeeInstructions";
-
         public const string SorryTheMobileLenghtOfCountry = "Sorry!!TheMobileLenghtOfCountry";
-
         public const string MustBe = "MustBe";
         public const string SorryTheJoiningDateNotValidDate = "Sorry!!TheJoiningDateNotValidDate";
         public const string SorryIsActiveNotValidBoolean = "Sorry!!IsActiveNotValidBoolean";
         public const string SorryEmployeeNumberNotValidAcceptOnlyNumber = "Sorry!!EmployeeNumberNotValidAcceptOnlyNumber";
         public const string SorryEmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!EmployeeTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
         public const string SorryAttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly = "Sorry!!AttendanceTypeNotValidPleaseFollowTheInsructionToInsertItCorrectly";
-      
         public const string SorryEmployeeMobileNumberIsDuplicated = "Sorry!!EmployeeMobileNumberIsDuplicated";
         public const string SorryEmployeeEmailIsDuplicated = "Sorry!!EmployeeEmailIsDuplicated";
+        public const string SorryYouMustChooseEmployeeToThisUser = "Sorry!!YouMustChooseEmployeeToThisUser";
+        public const string SorryCannotConnectThisEmployeeWithUserBecausehisEmailIsNull = "Sorry!!CannotConnectThisEmployeeWithUserBecausehisEmailIsNull";
+
+        
 
 
 

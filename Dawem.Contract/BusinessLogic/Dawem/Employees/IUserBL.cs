@@ -20,5 +20,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         Task<GetUsersForDropDownResponse> GetForDropDown(GetUsersCriteria model);
         Task<bool> Delete(int userId);
         Task<GetUsersInformationsResponseDTO> GetUsersInformations();
+        Task<string> GetUserNameByEmployeeId(int employeeId);
+
+
     }
 }

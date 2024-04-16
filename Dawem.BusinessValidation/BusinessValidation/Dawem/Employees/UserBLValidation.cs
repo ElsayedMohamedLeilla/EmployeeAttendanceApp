@@ -20,7 +20,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
         }
-        public async Task<int?> SignUpValidation(UserSignUpModel model)
+        public async Task<int> SignUpValidation(UserSignUpModel model)
         {
             #region Validate Email
 
@@ -65,7 +65,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 
             #endregion
 
-            return getEmployeeId;
+            return getEmployeeId ?? 0;
         }
         public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
         {
@@ -139,41 +139,45 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         }
         public async Task<bool> CreateValidation(CreateUserModel model)
         {
-            var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
-                c.Name == model.Name).AnyAsync();
-            if (checkUserDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
-            }
+            //var checkUserDuplicate = await repositoryManager
+            //    .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
+            //    c.Name == model.Name).AnyAsync();
+            //if (checkUserDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
+            //}
 
-            #region Validate Email
+            //#region Validate Email
 
-            var checkEmailDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.Email == model.Email.Trim()).AnyAsync();
+            //var checkEmailDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.Email == model.Email.Trim()).AnyAsync();
 
-            if (checkEmailDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
-            }
+            //if (checkEmailDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            //}
 
-            #endregion
+          //  #endregion
 
-            #region Validate Mobile Number
+            //#region Validate Mobile Number
 
-            var checkMobileDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.MobileNumber == model.MobileNumber.Trim())
-            .AnyAsync();
+            //var checkMobileDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.MobileNumber == model.MobileNumber.Trim())
+            //.AnyAsync();
 
-            if (checkMobileDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
-            }
+            //if (checkMobileDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+            //}
 
-            #endregion
+            //#endregion
 
             #region Validate Employee
 
+            if(model.EmployeeId == 0)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryYouMustChooseEmployeeToThisUser);
+            }
             if (model.EmployeeId > 0)
             {
                 var checkEmployee = await repositoryManager.EmployeeRepository
@@ -207,41 +211,44 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         }
         public async Task<bool> UpdateValidation(UpdateUserModel model)
         {
-            var checkUserDuplicate = await repositoryManager
-                .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
-                c.Name == model.Name && c.Id != model.Id).AnyAsync();
-            if (checkUserDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
-            }
+            //var checkUserDuplicate = await repositoryManager
+            //    .UserRepository.Get(c => !c.IsDeleted && c.CompanyId == requestInfo.CompanyId &&
+            //    c.Name == model.Name && c.Id != model.Id).AnyAsync();
+            //if (checkUserDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserNameIsDuplicated);
+            //}
 
-            #region Validate Email
+            //#region Validate Email
 
-            var checkEmailDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.Id != model.Id && u.Email == model.Email.Trim()).AnyAsync();
+            //var checkEmailDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.Id != model.Id && u.Email == model.Email.Trim()).AnyAsync();
 
-            if (checkEmailDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
-            }
+            //if (checkEmailDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            //}
 
-            #endregion
+            //#endregion
 
-            #region Validate Mobile Number
+            //#region Validate Mobile Number
 
-            var checkMobileDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.Id != model.Id && u.MobileNumber == model.MobileNumber.Trim())
-            .AnyAsync();
+            //var checkMobileDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.Id != model.Id && u.MobileNumber == model.MobileNumber.Trim())
+            //.AnyAsync();
 
-            if (checkMobileDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
-            }
+            //if (checkMobileDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+            //}
 
-            #endregion
+            //#endregion
 
             #region Validate Employee
-
+            if (model.EmployeeId == 0)
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryYouMustChooseEmployeeToThisUser);
+            }
             if (model.EmployeeId > 0)
             {
                 var checkEmployee = await repositoryManager.EmployeeRepository

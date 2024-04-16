@@ -37,28 +37,28 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
             return Success(await userBL.SendVerificationCode(model), messageCode: LeillaKeys.DoneSendVerificationCodeSuccessfully);
         }
         [HttpPost, DisableRequestSizeLimit]
-        public async Task<ActionResult> Create([FromForm] CreateUserWithImageModel formData)
+        public async Task<ActionResult> Create([FromBody] CreateUserModel model)
         {
-            if (formData == null || formData.CreateUserModelString == null)
+            if (model == null)
             {
                 return BadRequest();
             }
 
-            var model = JsonConvert.DeserializeObject<CreateUserModel>(formData.CreateUserModelString);
-            model.ProfileImageFile = formData.ProfileImageFile;
+            //var model = JsonConvert.DeserializeObject<CreateUserModel>(model.CreateUserModelString);
+            //model.ProfileImageFile = model.ProfileImageFile;
             var result = await userBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateUserSuccessfully);
         }
         [HttpPut, DisableRequestSizeLimit]
-        public async Task<ActionResult> Update([FromForm] UpdateUserWithImageModel formData)
+        public async Task<ActionResult> Update([FromBody] UpdateUserModel model)
         {
-            if (formData == null || formData.UpdateUserModelString == null)
+            if (model == null)
             {
                 return BadRequest();
             }
 
-            var model = JsonConvert.DeserializeObject<UpdateUserModel>(formData.UpdateUserModelString);
-            model.ProfileImageFile = formData.ProfileImageFile;
+            //var model = JsonConvert.DeserializeObject<UpdateUserModel>(model.UpdateUserModelString);
+            //model.ProfileImageFile = model.ProfileImageFile;
             var result = await userBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateUserSuccessfully);
         }
@@ -116,5 +116,13 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
         {
             return Success(await userBL.GetUsersInformations());
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetUserNameByEmployeeId([FromQuery]  int employeeId)
+        {
+            return Success(await userBL.GetUserNameByEmployeeId(employeeId));
+        }
+
+        
     }
 }

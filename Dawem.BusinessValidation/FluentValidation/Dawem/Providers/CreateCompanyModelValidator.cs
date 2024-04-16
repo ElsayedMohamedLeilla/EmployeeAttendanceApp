@@ -45,6 +45,14 @@ namespace Dawem.Validation.FluentValidation.Dawem.Providers
                  When(model => model.Branches != null && model.Branches.Count() > 0).
                  WithMessage(LeillaKeys.SorryYouMustEnterBranchName);
 
+            RuleFor(model => model).Must(model => model.HeadquarterLocationLatitude.IsValidLatitude()).
+                When(model => model.HeadquarterLocationLatitude != null).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectLatitude);
+
+            RuleFor(model => model).Must(model => model.HeadquarterLocationLongitude.IsValidLongitude()).
+                When(model => model.HeadquarterLocationLongitude != null).
+                   WithMessage(LeillaKeys.SorryYouMustEnterCorrectLongitude);
+
         }
     }
 }

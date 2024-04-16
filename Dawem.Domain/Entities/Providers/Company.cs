@@ -39,7 +39,8 @@ namespace Dawem.Domain.Entities.Providers
         public string LogoImageName { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
-        public string HeadquarterLocation { get; set; }
+        public double? HeadquarterLocationLatitude { get; set; }
+        public double? HeadquarterLocationLongtude { get; set; }
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
         public int NumberOfEmployees { get; set; }

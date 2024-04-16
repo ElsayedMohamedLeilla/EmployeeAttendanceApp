@@ -7,7 +7,8 @@ namespace Dawem.Domain.Entities.Dawem
     [Table(nameof(DawemSetting) + LeillaKeys.S)]
     public class DawemSetting : BaseEntity
     {
-        public DawemSettingType Type { get; set; }
+        public AuthenticationType Type { get; set; }
+        public DawemSettingType SettingType { get; set; }
         public string TypeName { get; set; }
         public DawemSettingGroupType GroupType { get; set; }
         public string GroupTypeName { get; set; }

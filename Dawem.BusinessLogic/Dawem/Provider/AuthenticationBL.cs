@@ -163,7 +163,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     .FirstOrDefaultAsync();
 
                 durationInDays = await repositoryManager.DawemSettingRepository
-                        .Get(d => !d.IsDeleted && d.Type == DawemSettingType.PlanTrialDurationInDays)
+                        .Get(d => !d.IsDeleted && d.SettingType == DawemSettingType.PlanTrialDurationInDays)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
 

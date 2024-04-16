@@ -2,7 +2,7 @@
 {
     public enum DawemSettingType
     {
-        PlansGracePeriodPercentage,
+        PlanGracePeriodPercentage,
         PlanTrialDurationInDays,
         PlanTrialEmployeesCount
     }

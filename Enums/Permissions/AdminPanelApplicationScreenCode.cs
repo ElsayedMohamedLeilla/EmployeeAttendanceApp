@@ -8,6 +8,7 @@
         Responsibility,
         Plan,
         Subscription,
-        User
+        User,
+        SubscriptionPayment
     }
 }

@@ -71,7 +71,6 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             #endregion
 
             var subscription = mapper.Map<Subscription>(model);
-            subscription.CompanyId = requestInfo.CompanyId;
             subscription.AddUserId = requestInfo.UserId;
             subscription.AddedApplicationType = requestInfo.ApplicationType;
             subscription.Code = getNextCode;
@@ -116,6 +115,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 getSubscription.FollowUpEmail = model.FollowUpEmail;
                 getSubscription.ModifiedDate = DateTime.Now;
                 getSubscription.ModifyUserId = requestInfo.UserId;
+                getSubscription.IsActive = model.IsActive;
                 getSubscription.Notes = model.Notes;
 
                 await unitOfWork.SaveAsync();
@@ -129,7 +129,6 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             else
                 throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
-
 
         }
         public async Task<GetSubscriptionsResponse> Get(GetSubscriptionsCriteria criteria)
@@ -157,6 +156,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 CompanyName = subscription.Company.Name,
                 EndDate = subscription.EndDate,
                 Status = subscription.Status,
+                IsActive = subscription.IsActive,
                 StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang)
             }).ToListAsync();
 
@@ -222,6 +222,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     FollowUpEmail = subscription.FollowUpEmail,
                     RenewalCount = subscription.RenewalCount,
                     IsWaitingForApproval = subscription.IsWaitingForApproval,
+                    IsActive = subscription.IsActive,
                     Notes = subscription.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
 
@@ -242,6 +243,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     Status = subscription.Status,
                     FollowUpEmail = subscription.FollowUpEmail,
                     RenewalCount = subscription.RenewalCount,
+                    IsActive = subscription.IsActive,
                     Notes = subscription.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySubscriptionNotFound);
 
@@ -331,7 +333,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         public async Task<GetSubscriptionsInformationsResponseDTO> GetSubscriptionsInformations()
         {
             var subscriptionRepository = repositoryManager.SubscriptionRepository;
-            var query = subscriptionRepository.Get(subscription => subscription.CompanyId == requestInfo.CompanyId);
+            var query = subscriptionRepository.Get();
 
             #region Handle Response
 

@@ -12,5 +12,6 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions
         public SubscriptionStatus Status { get; set; }
         public string StatusName { get; set; }
         public bool IsWaitingForApproval { get; set; }
+        public bool IsActive { get; set; }
     }
 }

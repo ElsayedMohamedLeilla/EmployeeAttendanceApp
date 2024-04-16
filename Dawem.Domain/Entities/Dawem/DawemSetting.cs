@@ -16,5 +16,6 @@ namespace Dawem.Domain.Entities.Dawem
         public string String { get; set; }
         public int? Integer { get; set; }
         public decimal? Decimal { get; set; }
+        public bool? Bool { get; set; }
     }
 }

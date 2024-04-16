@@ -39,7 +39,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
             var checkEmployeeEmailDuplicate = await repositoryManager
                .EmployeeRepository.Get(c => c.CompanyId == requestInfo.CompanyId && c.Email == model.Email.Trim()).AnyAsync();
 
-            if (checkEmployeePhoneNumberDuplicate)
+            if (checkEmployeeEmailDuplicate)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryEmployeeEmailIsDuplicated);
             }

@@ -85,6 +85,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
 
             return Success(employeesresponse.Employees, employeesresponse.TotalCount);
         }
+        public async Task<ActionResult> GetForDropDownEmployeeNotHaveUser([FromQuery] GetEmployeesCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var employeesresponse = await employeeBL.GetForDropDownEmployeeNotHaveUser(criteria);
+
+            return Success(employeesresponse.Employees, employeesresponse.TotalCount);
+        }
         [HttpGet]
         public async Task<ActionResult> GetInfo([FromQuery] int employeeId)
         {
@@ -140,8 +150,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
         {
             return Success(await employeeBL.GetEmployeesInformations());
         }
-
-
         [HttpGet]
         public async Task<ActionResult> CreateExportDraft()
         {

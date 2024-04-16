@@ -43,7 +43,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
             {
                 return BadRequest();
             }
-
             //var model = JsonConvert.DeserializeObject<CreateUserModel>(model.CreateUserModelString);
             //model.ProfileImageFile = model.ProfileImageFile;
             var result = await userBL.Create(model);

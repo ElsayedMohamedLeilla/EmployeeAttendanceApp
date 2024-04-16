@@ -310,6 +310,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #endregion
 
         }
+
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
             var isArabic = requestInfo.Lang == LeillaKeys.Ar;
@@ -413,7 +414,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employee.Enable();
 
             #region Enable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted  && d.EmployeeId == employeeId).ToListAsync();
+            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
             foreach (var user in users)
             {
                 user.IsActive = true;
@@ -548,7 +549,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             else
             {
                 List<Employee> ImportedList = new();
-                int  EmployeeNumber;
+                int EmployeeNumber;
                 DateTime JoiningDate;
                 bool IsActive;
                 string[] zoneNames;
@@ -576,7 +577,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                         result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
-                   
+
                     #region Validate Joining Date
                     if (row.Cell(10).GetString().Trim() == string.Empty)
                     {
@@ -643,7 +644,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     Temp.Zones = new List<ZoneEmployee>();
                     for (int i = 0; i < zoneNames.Count(); i++)
                     {
-                        var foundZoneDb =await repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
+                        var foundZoneDb = await repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
                         if (foundZoneDb != null)
                         {
                             Temp.Zones.Add(new ZoneEmployee
@@ -674,7 +675,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                 if (foundEmployeeInDB == null) // Email Not Found
                                 {
 
-                                    
+
                                     getNextCode++;
                                     Temp.Code = getNextCode;
                                     Temp.AddedApplicationType = ApplicationType.Web;
@@ -868,6 +869,43 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             // If there's no next plan, return the overall end date
             return overallEndDate;
+        }
+        public async Task<GetEmployeesForDropDownResponse> GetForDropDownEmployeeNotHaveUser(GetEmployeesCriteria criteria)
+        {
+            List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
+            u.IsActive & u.CompanyId == requestInfo.CompanyId
+            && u.EmployeeId != 0
+            ).Select(e => e.EmployeeId).ToListAsync();
+
+            var employeeList = await repositoryManager.EmployeeRepository.Get(e =>
+                !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo=> eo.Id)
+                .ToListAsync();
+
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            var queryPaged = criteria.GetPagingEnabled() ? employeeList.Skip(skip).Take(take) : employeeList;
+
+            #endregion
+
+            #region Handle Response
+
+            var employeesList =  queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
+            {
+                Id = e.Id,
+                Name = e.Name
+            }).ToList();
+
+            return new GetEmployeesForDropDownResponse
+            {
+                Employees = employeesList,
+                TotalCount =  employeeList.Count()
+            };
+
+            #endregion
         }
     }
 }

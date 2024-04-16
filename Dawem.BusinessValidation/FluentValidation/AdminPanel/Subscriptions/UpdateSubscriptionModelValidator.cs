@@ -33,11 +33,11 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions
                 WithMessage(LeillaKeys.SorryYouMustEnterStartDate);
 
             RuleFor(model => model.EndDate).
-                IsInEnum().
+                Must(d => d != default).
                 WithMessage(LeillaKeys.SorryYouMustEnterEndDate);
 
             RuleFor(model => model.FollowUpEmail).
-               IsInEnum().
+               NotNull().
                WithMessage(LeillaKeys.SorryYouMustEnterFollowUpEmail);
         }
     }

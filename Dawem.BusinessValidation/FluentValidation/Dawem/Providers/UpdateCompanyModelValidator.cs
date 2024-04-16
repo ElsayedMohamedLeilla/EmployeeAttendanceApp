@@ -31,6 +31,14 @@ namespace Dawem.Validation.FluentValidation.Dawem.Providers
                Must(p => p > 0).
                When(model => model.ImportDefaultData).
                WithMessage(LeillaKeys.SorryYouMustChoosePreferredLanguageWhenChooseImportDefaultData);
+
+            RuleFor(model => model).Must(model => model.HeadquarterLocationLatitude.IsValidLatitude()).
+                When(model => model.HeadquarterLocationLatitude != null).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectLatitude);
+
+            RuleFor(model => model).Must(model => model.HeadquarterLocationLongitude.IsValidLongitude()).
+                When(model => model.HeadquarterLocationLongitude != null).
+                   WithMessage(LeillaKeys.SorryYouMustEnterCorrectLongitude);
         }
     }
 }

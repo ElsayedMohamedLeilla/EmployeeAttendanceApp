@@ -8,8 +8,8 @@ namespace Dawem.Models.AutoMapper.Dawem.Subscriptions
     {
         public SubscriptionPaymentsMapProfile()
         {
-            CreateMap<CreatePlanModel, SubscriptionPayment>();
-            CreateMap<UpdatePlanModel, SubscriptionPayment>();
+            CreateMap<CreateSubscriptionPaymentModel, SubscriptionPayment>();
+            CreateMap<UpdateSubscriptionPaymentModel, SubscriptionPayment>();
         }
     }
 }

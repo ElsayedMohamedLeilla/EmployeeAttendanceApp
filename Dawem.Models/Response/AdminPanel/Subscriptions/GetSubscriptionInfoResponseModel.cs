@@ -16,5 +16,6 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions
         public string FollowUpEmail { get; set; }
         public bool IsWaitingForApproval { get; set; }
         public string Notes { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -15,11 +15,12 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public string LogoImagePath { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
-        public string HeadquarterLocation { get; set; }
+        public double? HeadquarterLocationLatitude { get; set; }
+        public double? HeadquarterLocationLongtude { get; set; }
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
         public int NumberOfEmployees { get; set; }
-        public int TotalNumberOfEmployees { get; set; }
+        public int? TotalNumberOfEmployees { get; set; }
         public bool IsActive { get; set; }
         public List<CompanyIndustryModel> Industries { get; set; }
         public List<CompanyBranchModel> Branches { get; set; }

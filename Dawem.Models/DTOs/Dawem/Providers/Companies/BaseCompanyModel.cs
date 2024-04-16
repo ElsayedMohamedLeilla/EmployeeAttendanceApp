@@ -9,10 +9,11 @@ namespace Dawem.Models.Dtos.Dawem.Providers.Companies
         public int? PreferredLanguageId { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
-        public string HeadquarterLocation { get; set; }
+        public double? HeadquarterLocationLatitude { get; set; }
+        public double? HeadquarterLocationLongitude { get; set; }
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
-        public int TotalNumberOfEmployees { get; set; }
+        public int? TotalNumberOfEmployees { get; set; }
         public bool ImportDefaultData { get; set; }
         public List<CompanyIndustryModel> Industries { get; set; }
         public List<CompanyBranchModel> Branches { get; set; }

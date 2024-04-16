@@ -10,6 +10,11 @@
                 yield return new DateTime(year, month, day);
             }
         }
+        public static bool IsValidLatitude(this double? latitude)
+            => -90 <= latitude && latitude <= 90;
+
+        public static bool IsValidLongitude(this double? longitude)
+            => -180 <= longitude && longitude <= 180;
         public static bool IsValidLatitude(this double latitude)
             => -90 <= latitude && latitude <= 90;
 

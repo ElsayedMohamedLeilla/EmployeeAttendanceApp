@@ -297,12 +297,13 @@ namespace Dawem.Data
 
             var dawemSettings = new List<DawemSetting>();
 
-            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlansGracePeriodPercentage) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanGracePeriodPercentage) == null)
             {
                 dawemSettings.Add(new()
                 {
-                    Type = DawemSettingType.PlansGracePeriodPercentage,
-                    TypeName = nameof(DawemSettingType.PlansGracePeriodPercentage),
+                    Type = AuthenticationType.AdminPanel,
+                    SettingType = DawemSettingType.PlanGracePeriodPercentage,
+                    TypeName = nameof(DawemSettingType.PlanGracePeriodPercentage),
                     GroupType = DawemSettingGroupType.Plans,
                     GroupTypeName = nameof(DawemSettingGroupType.Plans),
                     ValueType = DawemSettingValueType.Integer,
@@ -310,11 +311,12 @@ namespace Dawem.Data
                     Integer = 5
                 });
             }
-            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialDurationInDays) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanTrialDurationInDays) == null)
             {
                 dawemSettings.Add(new()
                 {
-                    Type = DawemSettingType.PlanTrialDurationInDays,
+                    Type = AuthenticationType.AdminPanel,
+                    SettingType = DawemSettingType.PlanTrialDurationInDays,
                     TypeName = nameof(DawemSettingType.PlanTrialDurationInDays),
                     GroupType = DawemSettingGroupType.Plans,
                     GroupTypeName = nameof(DawemSettingGroupType.Plans),
@@ -323,11 +325,12 @@ namespace Dawem.Data
                     Integer = 3
                 });
             }
-            if (context.DawemSettings.FirstOrDefault(d => d.Type == DawemSettingType.PlanTrialEmployeesCount) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanTrialEmployeesCount) == null)
             {
                 dawemSettings.Add(new()
                 {
-                    Type = DawemSettingType.PlanTrialEmployeesCount,
+                    Type = AuthenticationType.AdminPanel,
+                    SettingType = DawemSettingType.PlanTrialEmployeesCount,
                     TypeName = nameof(DawemSettingType.PlanTrialEmployeesCount),
                     GroupType = DawemSettingGroupType.Plans,
                     GroupTypeName = nameof(DawemSettingGroupType.Plans),

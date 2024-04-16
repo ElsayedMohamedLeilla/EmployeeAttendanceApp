@@ -14,6 +14,7 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions
         public SubscriptionStatus Status { get; set; }
         public int RenewalCount { get; set; }
         public string FollowUpEmail { get; set; }
+        public bool IsActive { get; set; }
         public string Notes { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240416201528_Updates")]
+    partial class Updates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2628,7 +2631,7 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("PreferredLanguageId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TotalNumberOfEmployees")
+                    b.Property<int>("TotalNumberOfEmployees")
                         .HasColumnType("int");
 
                     b.Property<string>("WebSite")

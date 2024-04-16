@@ -195,7 +195,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             getCompany.PreferredLanguageId = model.PreferredLanguageId;
             getCompany.WebSite = model.WebSite;
             getCompany.HeadquarterAddress = model.HeadquarterAddress;
-            getCompany.HeadquarterLocation = model.HeadquarterLocation;
+            getCompany.HeadquarterLocationLatitude = model.HeadquarterLocationLatitude;
+            getCompany.HeadquarterLocationLongtude = model.HeadquarterLocationLongitude;
             getCompany.HeadquarterPostalCode = model.HeadquarterPostalCode;
             getCompany.TotalNumberOfEmployees = model.TotalNumberOfEmployees;
             getCompany.ImportDefaultData = model.ImportDefaultData;
@@ -268,7 +269,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     CompanyId = companyId,
                     Name = ge.Name,
                     Address = ge.Address,
-                    Location = ge.Location,
+                    Latitude = ge.Latitude,
+                    Longitude = ge.Longitude,
                     PostalCode = ge.PostalCode,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
@@ -285,7 +287,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             var updatedCompanyBranches = existBranchesDbList.
                 Where(i => model.Branches != null && model.Branches.Any(mi => mi.Id == i.Id &&
-                (mi.Name != i.Name || mi.Address != i.Address || mi.Location != i.Location || mi.PostalCode != i.PostalCode))).
+                (mi.Name != i.Name || mi.Address != i.Address || mi.Latitude != i.Latitude ||
+                mi.Longitude != i.Longitude || mi.PostalCode != i.PostalCode))).
                 ToList();
 
             if (removedCompanyBranches.Count > 0)
@@ -298,7 +301,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 {
                     i.Name = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
                     i.Address = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Address;
-                    i.Location = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Location;
+                    i.Latitude = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Latitude;
+                    i.Longitude = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Longitude;
                     i.PostalCode = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.PostalCode;
                 });
                 repositoryManager.CompanyBranchRepository.BulkUpdate(updatedCompanyBranches);
@@ -416,7 +420,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             getCompany.PreferredLanguageId = model.PreferredLanguageId;
             getCompany.WebSite = model.WebSite;
             getCompany.HeadquarterAddress = model.HeadquarterAddress;
-            getCompany.HeadquarterLocation = model.HeadquarterLocation;
+            getCompany.HeadquarterLocationLatitude = model.HeadquarterLocationLatitude;
+            getCompany.HeadquarterLocationLongtude = model.HeadquarterLocationLongitude;
             getCompany.HeadquarterPostalCode = model.HeadquarterPostalCode;
             getCompany.TotalNumberOfEmployees = model.TotalNumberOfEmployees;
             getCompany.ImportDefaultData = model.ImportDefaultData;
@@ -489,7 +494,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     CompanyId = model.Id,
                     Name = ge.Name,
                     Address = ge.Address,
-                    Location = ge.Location,
+                    Latitude = ge.Latitude,
+                    Longitude = ge.Longitude,
                     PostalCode = ge.PostalCode,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
@@ -506,7 +512,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             var updatedCompanyBranches = existBranchesDbList.
                 Where(i => model.Branches != null && model.Branches.Any(mi => mi.Id == i.Id &&
-                (mi.Name != i.Name || mi.Address != i.Address || mi.Location != i.Location || mi.PostalCode != i.PostalCode))).
+                (mi.Name != i.Name || mi.Address != i.Address || mi.Latitude != i.Latitude 
+                || mi.Longitude != i.Longitude || mi.PostalCode != i.PostalCode))).
                 ToList();
 
             if (removedCompanyBranches.Count > 0)
@@ -519,7 +526,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 {
                     i.Name = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
                     i.Address = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Address;
-                    i.Location = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Location;
+                    i.Latitude = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Latitude;
+                    i.Longitude = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.Longitude;
                     i.PostalCode = model.Branches.FirstOrDefault(mi => mi.Id == i.Id)?.PostalCode;
                 });
                 repositoryManager.CompanyBranchRepository.BulkUpdate(updatedCompanyBranches);
@@ -673,7 +681,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     GetTranslation(LeillaKeys.SubscriptionType + LeillaKeys.Dash +
                     (company.Subscription.Plan.IsTrial ? LeillaKeys.Trial : LeillaKeys.Subscription), requestInfo.Lang),
                     HeadquarterAddress = company.HeadquarterAddress,
-                    HeadquarterLocation = company.HeadquarterLocation,
+                    HeadquarterLocationLatitude = company.HeadquarterLocationLatitude,
+                    HeadquarterLocationLongtude = company.HeadquarterLocationLongtude,
                     HeadquarterPostalCode = company.HeadquarterPostalCode,
                     NumberOfEmployees = company.NumberOfEmployees,
                     TotalNumberOfEmployees = company.TotalNumberOfEmployees,
@@ -689,7 +698,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     {
                         Name = branch.Name,
                         Address = branch.Address,
-                        Location = branch.Location,
+                        Latitude = branch.Latitude,
+                        Longitude = branch.Longitude,
                         PostalCode = branch.PostalCode,
                     }).ToList(),
                     Attachments = company.CompanyAttachments
@@ -717,7 +727,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     IdentityCode = company.IdentityCode,
                     WebSite = company.WebSite,
                     HeadquarterAddress = company.HeadquarterAddress,
-                    HeadquarterLocation = company.HeadquarterLocation,
+                    HeadquarterLocationLatitude = company.HeadquarterLocationLatitude,
+                    HeadquarterLocationLongtude = company.HeadquarterLocationLongtude,
                     HeadquarterPostalCode = company.HeadquarterPostalCode,
                     NumberOfEmployees = company.NumberOfEmployees,
                     TotalNumberOfEmployees = company.TotalNumberOfEmployees,
@@ -737,7 +748,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                         Id = branch.Id,
                         Name = branch.Name,
                         Address = branch.Address,
-                        Location = branch.Location,
+                        Latitude = branch.Latitude,
+                        Longitude = branch.Longitude,
                         PostalCode = branch.PostalCode,
                     }).ToList(),
                     Attachments = company.CompanyAttachments
@@ -765,7 +777,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     IdentityCode = company.IdentityCode,
                     WebSite = company.WebSite,
                     HeadquarterAddress = company.HeadquarterAddress,
-                    HeadquarterLocation = company.HeadquarterLocation,
+                    HeadquarterLocationLatitude = company.HeadquarterLocationLatitude,
+                    HeadquarterLocationLongtude = company.HeadquarterLocationLongtude,
                     HeadquarterPostalCode = company.HeadquarterPostalCode,
                     NumberOfEmployees = company.NumberOfEmployees,
                     TotalNumberOfEmployees = company.TotalNumberOfEmployees,
@@ -785,7 +798,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                         Id = branch.Id,
                         Name = branch.Name,
                         Address = branch.Address,
-                        Location = branch.Location,
+                        Latitude = branch.Latitude,
+                        Longitude = branch.Longitude,
                         PostalCode = branch.PostalCode,
                     }).ToList(),
                     Attachments = company.CompanyAttachments

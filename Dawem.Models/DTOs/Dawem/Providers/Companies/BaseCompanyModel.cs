@@ -13,7 +13,7 @@ namespace Dawem.Models.Dtos.Dawem.Providers.Companies
         public double? HeadquarterLocationLongitude { get; set; }
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
-        public int TotalNumberOfEmployees { get; set; }
+        public int? TotalNumberOfEmployees { get; set; }
         public bool ImportDefaultData { get; set; }
         public List<CompanyIndustryModel> Industries { get; set; }
         public List<CompanyBranchModel> Branches { get; set; }

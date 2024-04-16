@@ -20,7 +20,7 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
         public int NumberOfEmployees { get; set; }
-        public int TotalNumberOfEmployees { get; set; }
+        public int? TotalNumberOfEmployees { get; set; }
         public List<string> Industries { get; set; }
         public List<CompanyBranchModel> Branches { get; set; }
         public List<FileDTO> Attachments { get; set; }

@@ -301,6 +301,7 @@ namespace Dawem.Data
             {
                 dawemSettings.Add(new()
                 {
+                    Type = AuthenticationType.AdminPanel,
                     SettingType = DawemSettingType.PlanGracePeriodPercentage,
                     TypeName = nameof(DawemSettingType.PlanGracePeriodPercentage),
                     GroupType = DawemSettingGroupType.Plans,
@@ -314,6 +315,7 @@ namespace Dawem.Data
             {
                 dawemSettings.Add(new()
                 {
+                    Type = AuthenticationType.AdminPanel,
                     SettingType = DawemSettingType.PlanTrialDurationInDays,
                     TypeName = nameof(DawemSettingType.PlanTrialDurationInDays),
                     GroupType = DawemSettingGroupType.Plans,
@@ -327,6 +329,7 @@ namespace Dawem.Data
             {
                 dawemSettings.Add(new()
                 {
+                    Type = AuthenticationType.AdminPanel,
                     SettingType = DawemSettingType.PlanTrialEmployeesCount,
                     TypeName = nameof(DawemSettingType.PlanTrialEmployeesCount),
                     GroupType = DawemSettingGroupType.Plans,

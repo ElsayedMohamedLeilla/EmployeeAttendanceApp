@@ -44,7 +44,7 @@ namespace Dawem.Domain.Entities.Providers
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
         public int NumberOfEmployees { get; set; }
-        public int TotalNumberOfEmployees { get; set; }
+        public int? TotalNumberOfEmployees { get; set; }
         public bool ImportDefaultData { get; set; }
     }
 }

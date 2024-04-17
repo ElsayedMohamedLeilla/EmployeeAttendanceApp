@@ -188,6 +188,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
                 {
                     throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
+                var CheckUser = await repositoryManager.UserRepository
+                                    .Get(e => e.EmployeeId == model.EmployeeId && !e.IsDeleted)
+                                    .AnyAsync();
+                if(CheckUser)
+                {
+                    throw new BusinessValidationException(AmgadKeys.SorrySelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee);
+                }
+
             }
 
             #endregion
@@ -259,6 +267,15 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
                 {
                     throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
+                var checkUser = await repositoryManager.UserRepository
+                                   .Get(e => e.Id != model.Id && e.EmployeeId == model.EmployeeId  && !e.IsDeleted)
+                                   .AnyAsync();
+
+                if (checkUser)
+                {
+                    throw new BusinessValidationException(AmgadKeys.SorrySelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee);
+                }
+
             }
 
             #endregion

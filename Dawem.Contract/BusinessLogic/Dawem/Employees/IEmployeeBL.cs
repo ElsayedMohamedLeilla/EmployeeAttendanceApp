@@ -21,6 +21,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
         Task<bool> UpdateSpecificDataForEmployee(UpdateSpecificModelDTO model);
         Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria model);
+        Task<GetEmployeesForDropDownResponse> GetForDropDownEmployeeNotHaveUser(GetEmployeesCriteria criteria);
 
 
     }

@@ -209,7 +209,10 @@
         public const string SorryYouMustChooseEmployeeToThisUser = "Sorry!!YouMustChooseEmployeeToThisUser";
         public const string SorryCannotConnectThisEmployeeWithUserBecausehisEmailIsNull = "Sorry!!CannotConnectThisEmployeeWithUserBecausehisEmailIsNull";
 
+        public const string SorrySelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee = "Sorry!!SelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee";
+
         
+
 
 
 

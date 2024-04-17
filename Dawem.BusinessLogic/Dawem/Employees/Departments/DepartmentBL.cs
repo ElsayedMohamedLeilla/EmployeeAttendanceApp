@@ -451,7 +451,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
             }
             else
             {
-
                 List<Department> ImportedList = new();
                 Department Temp = new();
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
@@ -486,9 +485,12 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                     #endregion
                     #region Map Zones
                     zoneNames = row.Cell(5).GetString().Trim().Split(",");
+                    Temp = new();
+                    Temp.Zones = new List<ZoneDepartment>();
                     for (int i = 0; i < zoneNames.Count(); i++)
                     {
-                        var foundZoneDb = repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
+                       
+                        var foundZoneDb = await repositoryManager.ZoneRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == zoneNames[i].Trim()).FirstOrDefaultAsync();
                         if (foundZoneDb != null)
                         {
                             Temp.Zones.Add(new ZoneDepartment
@@ -505,9 +507,11 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                     #endregion
                     #region Map Delegators
                     delegatorNames = row.Cell(6).GetString().Trim().Split(",");
+                    Temp.ManagerDelegators = new List<DepartmentManagerDelegator>();
+
                     for (int i = 0; i < delegatorNames.Count(); i++)
                     {
-                        var foundEmpDb = repositoryManager.EmployeeRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == delegatorNames[i].Trim()).FirstOrDefaultAsync();
+                        var foundEmpDb =await repositoryManager.EmployeeRepository.Get(z => !z.IsDeleted && z.IsActive && z.Name == delegatorNames[i].Trim()).FirstOrDefaultAsync();
                         if (foundEmpDb != null)
                         {
                             Temp.ManagerDelegators.Add(new DepartmentManagerDelegator
@@ -526,7 +530,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                     if (foundDepartmentInDB == null) // Department Name not found
                     {
                         getNextCode++;
-                        Temp = new();
                         Temp.Code = getNextCode;
                         Temp.AddedApplicationType = ApplicationType.Web;
                         Temp.Name = row.Cell(1).GetString().Trim();

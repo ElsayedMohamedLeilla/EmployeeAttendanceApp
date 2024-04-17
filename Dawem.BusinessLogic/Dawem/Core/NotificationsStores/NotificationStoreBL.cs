@@ -54,7 +54,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #region sorting
 
-            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.Id), LeillaKeys.Desc);
+            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(NotificationStore.AddedDate), LeillaKeys.Desc);
 
             #endregion
 

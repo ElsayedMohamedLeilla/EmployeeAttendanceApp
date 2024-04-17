@@ -510,9 +510,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 DateAndTime = s.LocalDateAndTime,
                 ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                 NumberOfTargetedEmployees = s.SummonLogs.Count,
-                SummonStatus = utcDate > s.EndDateAndTimeUTC ?
-                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                SummonStatus = GetSummonStatus(s.StartDateAndTimeUTC, s.EndDateAndTimeUTC),
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
@@ -525,6 +523,14 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             };
             #endregion
 
+        }
+        private static SummonStatus GetSummonStatus(DateTime startDateAndTimeUTC, DateTime endDateAndTimeUTC)
+        {
+            var utcDate = DateTime.UtcNow;
+
+            return utcDate > endDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < startDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing;
         }
         public async Task<GetSummonInfoResponseModel> GetInfo(int summonId)
         {
@@ -625,7 +631,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var utcDateTime = DateTime.UtcNow;
 
                 var getMissingEmployeesList = await repositoryManager
-                    .SummonLogRepository.Get(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted && 
+                    .SummonLogRepository.Get(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted &&
                     summonLog.Company.Country.TimeZoneId != null &&
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
@@ -686,7 +692,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     var addedSummonLogSanctions = new List<SummonLogSanction>();
 
-                    foreach (var missingEmployee   in getMissingEmployeesList)
+                    foreach (var missingEmployee in getMissingEmployeesList)
                     {
                         addedSummonLogSanctions.
                             AddRange(missingEmployee.SummonSanctions.

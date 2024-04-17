@@ -46,8 +46,9 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
     {
         public UpdatePermissionScreenModelValidator()
         {
-            RuleFor(model => model.ScreenCode).IsInEnum()
-                .WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
+            RuleFor(model => model.ScreenCode).
+                Must(screenCode => screenCode >= 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
 
             RuleFor(model => model.PermissionScreenActions)
                 .Must(model => model != null && model.Count > 0)

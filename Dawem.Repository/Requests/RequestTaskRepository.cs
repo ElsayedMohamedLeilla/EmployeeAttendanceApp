@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.Repository.Requests;
+﻿using Azure.Core;
+using Dawem.Contract.Repository.Requests;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
@@ -55,7 +56,8 @@ namespace Dawem.Repository.Requests
             }
             if (criteria.EmployeeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == criteria.EmployeeId);
+                predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == criteria.EmployeeId ||
+                (requestTask.TaskEmployees != null && requestTask.TaskEmployees.Any(te => te.EmployeeId == criteria.EmployeeId)));
             }
             if (criteria.TaskTypeId is not null)
             {
@@ -96,8 +98,9 @@ namespace Dawem.Repository.Requests
 
             predicate = predicate.And(requestTask => requestTask.Request.CompanyId == requestInfo.CompanyId);
 
-            predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId);
-
+            predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId || 
+            (requestTask.TaskEmployees != null && requestTask.TaskEmployees.Any(te => te.EmployeeId == requestInfo.EmployeeId)));
+           
             if (criteria.Id != null)
             {
                 predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);

@@ -307,7 +307,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 && a.Request.Date.Year == criteria.Year)
                 .Select(requestAssignment => new
                 {
-                    requestAssignment.Id,
+                    requestAssignment.Request.Id,
                     requestAssignment.Request.Code,
                     requestAssignment.Request.Date,
                     requestAssignment.DateTo,

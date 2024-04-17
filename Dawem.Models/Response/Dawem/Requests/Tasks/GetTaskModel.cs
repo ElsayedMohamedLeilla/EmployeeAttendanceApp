@@ -5,6 +5,7 @@ namespace Dawem.Models.Response.Dawem.Requests.Tasks
     public class GetTaskModel
     {
         public int Id { get; set; }
+        public int RequestId { get; set; }
         public int Code { get; set; }
         public string TaskTypeName { get; set; }
         public string StatusName { get; set; }

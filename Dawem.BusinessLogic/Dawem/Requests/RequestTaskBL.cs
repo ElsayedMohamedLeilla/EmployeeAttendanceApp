@@ -353,7 +353,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             var requestTasksList = await queryPaged.Select(requestTask => new GetRequestTasksResponseModel
             {
-                Id = requestTask.Request.Id,
+                Id = requestTask.Id,
                 Code = requestTask.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
@@ -397,7 +397,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 && a.Request.RequestTask.DateTo.Year == criteria.Year))
                 .Select(requestTask => new
                 {
-                    requestTask.Id,
+                     requestTask.Request.Id,
+                    //requestTask.Id,
                     requestTask.Request.Code,
                     requestTask.Request.Date,
                     requestTask.DateTo,

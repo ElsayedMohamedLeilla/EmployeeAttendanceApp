@@ -7,7 +7,7 @@ namespace Dawem.Models.Response.Dawem.Summons.Summons
         public int Code { get; set; }
         public string ForTypeName { get; set; }
         public bool? ForAllEmployees { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public DateTime LocalDateAndTime { get; set; }
         public string AllowedTimeName { get; set; }
         public List<string> NotifyWays { get; set; }
         public List<string> Employees { get; set; }

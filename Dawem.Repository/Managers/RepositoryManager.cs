@@ -124,6 +124,7 @@ namespace Dawem.Repository.Managers
         private ISanctionRepository sanctionRepository;
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
+        private IEmployeeOTPRepository employeeOTPRepository;
 
 
 
@@ -312,8 +313,9 @@ namespace Dawem.Repository.Managers
             notificationUserRepository ??= new NotificationUserRepository(unitOfWork, generalSetting);
         public INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository =>
             notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
+        public IEmployeeOTPRepository EmployeeOTPRepository =>
+           employeeOTPRepository ??= new EmployeeOTPRepository(unitOfWork, generalSetting);
 
-        
 
     }
 }

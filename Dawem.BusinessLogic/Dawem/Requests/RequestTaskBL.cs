@@ -140,6 +140,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             {
                 model.TaskEmployeeIds.Add(employeeId ?? 0);
             }
+
             for (int i = 0; i < model.TaskEmployeeIds.Count; i++)
             {
                 var getNotificationNextCode = await repositoryManager.NotificationStoreRepository

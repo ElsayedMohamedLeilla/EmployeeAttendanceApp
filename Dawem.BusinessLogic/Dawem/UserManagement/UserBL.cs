@@ -51,6 +51,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             uploadBLC = _uploadBLC;
             userManagerRepository = _userManagerRepository;
         }
+
+
         public async Task<int> SignUp(UserSignUpModel model)
         {
             #region Business Validation

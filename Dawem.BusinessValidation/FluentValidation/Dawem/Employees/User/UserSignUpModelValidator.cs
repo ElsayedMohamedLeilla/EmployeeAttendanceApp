@@ -9,31 +9,31 @@ namespace Dawem.Validation.FluentValidation.Dawem.Employees.User
     {
         public UserSignUpModelValidator()
         {
-            RuleFor(user => user.CompanyId).GreaterThan(0).
-                  WithMessage(LeillaKeys.SorryYouMustEnterCompanyId);
+            RuleFor(user => user.CompanyVerficationCode).NotNull().
+                  WithMessage(AmgadKeys.SorryYouMustEnterCompanyVerficationCode);
 
             RuleFor(user => user.EmployeeNumber).GreaterThan(0).
                   WithMessage(LeillaKeys.SorryYouMustEnterEmployeeNumber);
 
-            RuleFor(user => user.Name).NotNull().
-                  WithMessage(LeillaKeys.SorryYouMustEnterUserName);
+            //RuleFor(user => user.Name).NotNull().
+            //      WithMessage(LeillaKeys.SorryYouMustEnterUserName);
 
-            RuleFor(user => user.Email).NotNull().
-                 WithMessage(LeillaKeys.SorryYouMustEnterEmail);
+            //RuleFor(user => user.Email).NotNull().
+            //     WithMessage(LeillaKeys.SorryYouMustEnterEmail);
 
-            RuleFor(user => user.MobileNumber).NotNull().
-                 WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
+            //RuleFor(user => user.MobileNumber).NotNull().
+            //     WithMessage(LeillaKeys.SorryYouMustEnterMobileNumber);
 
-            RuleFor(user => user.MobileCountryId)
-                .GreaterThan(0)
-                .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
+            //RuleFor(user => user.MobileCountryId)
+            //    .GreaterThan(0)
+            //    .WithMessage(LeillaKeys.SorryYouMustChooseMobileCountry);
 
-            RuleFor(model => model.MobileNumber).
-                Must(m => m.IsDigitsOnly()).
-                WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
+            //RuleFor(model => model.MobileNumber).
+            //    Must(m => m.IsDigitsOnly()).
+            //    WithMessage(LeillaKeys.SorryYouMustEnterCorrectMobileNumberContainsNumbersOnly);
 
-            RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
-                WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
+            //RuleFor(user => user.Email).Must(EmailHelper.IsValidEmail).
+            //    WithMessage(LeillaKeys.SorryYouMustEnterValidEmail);
 
             RuleFor(user => user.Password).NotNull().
                    WithMessage(LeillaKeys.SorryYouMustEnterPassword);

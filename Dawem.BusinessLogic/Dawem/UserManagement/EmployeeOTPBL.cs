@@ -114,15 +114,33 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 {
                     Email = getEmployee.Email,
                     Subject = TranslationHelper.GetTranslation(AmgadKeys.ThanksForUsingDawemApplication, requestInfo?.Lang),
-                    Body = TranslationHelper.GetTranslation(AmgadKeys.PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow, requestInfo?.Lang)
-                    + savedOTP
+                    Body = $@"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>OTP Email</title>
+        </head>
+        <body>
+            <p>
+                {TranslationHelper.GetTranslation(AmgadKeys.PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow, requestInfo?.Lang)}
+            </p>
+            <p>
+                <strong>  {LeillaKeys.Space + savedOTP} </strong> 
+            </p>
+            <p>
+                
+                    {TranslationHelper.GetTranslation(AmgadKeys.PleaseManuallyCopyTheOneTimePasswordToCompleteTheSignUpProcess, requestInfo?.Lang)}
+            </p>
+        </body>
+        </html>
+                    "
                 };
 
                 await mailBL.SendEmail(verifyEmail);
             }
             #endregion
             #region Handle Response
-            return savedOtp.OTP;
+            return savedOtp.Id;
             #endregion
 
         }

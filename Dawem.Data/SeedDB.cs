@@ -294,9 +294,7 @@ namespace Dawem.Data
             #endregion
 
             #region Handle Dawem Setting
-
             var dawemSettings = new List<DawemSetting>();
-
             if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanGracePeriodPercentage) == null)
             {
                 dawemSettings.Add(new()
@@ -339,14 +337,11 @@ namespace Dawem.Data
                     Integer = 2
                 });
             }
-
             if (dawemSettings.Count > 0)
             {
                 context.DawemSettings.AddRange(dawemSettings);
                 context.SaveChanges();
             }
-
-
             #endregion
 
             #region Handle country phone numbers length

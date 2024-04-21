@@ -55,71 +55,86 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
         public async Task<int> SignUp(UserSignUpModel model)
         {
-            #region Business Validation
-
-            var employeeId = await userBLValidation.SignUpValidation(model);
-
-            #endregion
-
+            //#region business validation
+            //var employeeid = await userBLValidation.SignUpValidation(model);
+            //#endregion
+            MyUser user = new();
             unitOfWork.CreateTransaction();
 
-            #region Insert User
-
-            #region Set User code And Verification Code
-
-            var getNextCode = await repositoryManager.UserRepository
-                .Get(e => (requestInfo.Type == AuthenticationType.DawemAdmin && e.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.Type == AuthenticationType.AdminPanel && e.CompanyId == null))
-                .Select(e => e.Code)
-                .DefaultIfEmpty()
-                .MaxAsync() + 1;
-
-            string getNewVerificationCode = await GetVerificationCode(model.CompanyId);
-
+            #region get Company
+            var getCompany = repositoryManager.CompanyRepository.Get(e => !e.IsDeleted && e.IsActive && e.IdentityCode == model.CompanyVerficationCode).FirstOrDefault();
             #endregion
 
-            var user = mapper.Map<MyUser>(model);
-            user.UserName = model.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
-            user.Code = getNextCode;
-            user.EmployeeId = employeeId;
-            user.VerificationCode = getNewVerificationCode;
-            user.VerificationCodeSendDate = DateTime.UtcNow;
-            user.IsActive = true;
-            user.EmailConfirmed = user.Email.Contains(LeillaKeys.DawemTest);
+            #region get Employee
+            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
+            #endregion
 
-            var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
-            if (!createUserResponse.Succeeded)
+            #region GetMax OTP
+            var employeeOTPs = repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id);
+            if (employeeOTPs.Any())
             {
-                unitOfWork.Rollback();
-                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+                // Retrieve the OTP with the maximum code
+                var maxOTP = employeeOTPs.OrderByDescending(o => o.Code).First();
+                // Check if the retrieved OTP has expired
+                bool isExpired = maxOTP.ExpirationTime.AddHours(2) < DateTime.Now;
+                if (isExpired)
+                {
+                    if (maxOTP.Code < 5)
+                        throw new BusinessValidationException(AmgadKeys.SorryOTPIsExpiredPleaseTrySignUpAgain);
+                    else
+                        throw new BusinessValidationException(AmgadKeys.SorryOTPIsExpiredAndYouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain);
+                }
+                else
+                {
+                    #region Set User
+                    var getNextCode = await repositoryManager.UserRepository
+                        .Get(e => (requestInfo.Type == AuthenticationType.DawemAdmin && e.CompanyId == requestInfo.CompanyId) ||
+                        (requestInfo.Type == AuthenticationType.AdminPanel && e.CompanyId == null))
+                        .Select(e => e.Code)
+                        .DefaultIfEmpty()
+                        .MaxAsync() + 1;
+                    #endregion
+
+                    user.UserName = getEmployee.Email;
+                    user.Email = getEmployee.Email;
+                    user.MobileNumber = getEmployee.MobileNumber;
+                    user.AddedDate = DateTime.UtcNow;
+                    user.CompanyId = getCompany.Id;
+                    user.MobileCountryId = getEmployee.MobileCountryId;
+                    user.ProfileImageName = getEmployee.ProfileImageName;
+                    user.Code = getNextCode;
+                    user.EmployeeId = getEmployee.Id;
+                    user.VerificationCode = maxOTP.OTP.ToString();
+                    user.IsActive = true;
+                    var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
+                    if (!createUserResponse.Succeeded)
+                    {
+                        unitOfWork.Rollback();
+                        throw new BusinessValidationException(AmgadKeys.SorryErrorHappenWhileSigningUp);
+                    }
+                    #region Send Greetings Email
+
+                    var greetingEmail = new VerifyEmailModel
+                    {
+                        Email = getEmployee.Email,
+                        Subject = TranslationHelper.GetTranslation(LeillaKeys.ThanksForRegistrationOnDawem, requestInfo?.Lang),
+                        Body = $"{getEmployee.Name},\n\n" +
+                               $"{TranslationHelper.GetTranslation(AmgadKeys.WeAreThrilledToWelcomeYouToDawem, requestInfo?.Lang)},\n\n" +
+                               $"{TranslationHelper.GetTranslation(AmgadKeys.BestRegards, requestInfo?.Lang)},\n\n"
+
+                    };
+
+                    await mailBL.SendEmail(greetingEmail);
+
+                    #endregion
+
+                }
             }
-
-            /*var Roles = new List<string>() { LeillaKeys.RoleEMPLOYEE, LeillaKeys.RoleUSER };
-            var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, Roles);
-            if (!assignRolesResult.Succeeded)
+            else
             {
-                unitOfWork.Rollback();
-                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+                throw new BusinessValidationException(AmgadKeys.SorryNoOTPWasFoundForThisUser);
             }
-            await unitOfWork.SaveAsync();*/
-
-
             #endregion
-
-            #region Send Verification Code In Email
-
-            var verifyEmail = new VerifyEmailModel
-            {
-                Email = user.Email,
-                Subject = TranslationHelper.GetTranslation(LeillaKeys.ThanksForRegistrationOnDawem, requestInfo?.Lang),
-                Body = TranslationHelper.GetTranslation(LeillaKeys.YouAreDoneRegistrationSuccessfullyOnDawemYouMustEnterThisVerificationCodeOnDawemToVerifyYourEmailAndCanSignIn, requestInfo?.Lang)
-                + getNewVerificationCode
-            };
-
-            await mailBL.SendEmail(verifyEmail);
-
-            #endregion
-
             #region Handle Response
 
             await unitOfWork.CommitAsync();
@@ -865,11 +880,11 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #region Get User Name
 
             var getUserName = await repositoryManager.EmployeeRepository
-                .Get(e =>  e.CompanyId == requestInfo.CompanyId && e.Id == employeeId)
+                .Get(e => e.CompanyId == requestInfo.CompanyId && e.Id == employeeId)
                 .Select(e => e.Email)
                 .FirstOrDefaultAsync();
 
-            if(getUserName == null)
+            if (getUserName == null)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCannotConnectThisEmployeeWithUserBecausehisEmailIsNull);
             }

@@ -208,10 +208,21 @@
         public const string SorryEmployeeEmailIsDuplicated = "Sorry!!EmployeeEmailIsDuplicated";
         public const string SorryYouMustChooseEmployeeToThisUser = "Sorry!!YouMustChooseEmployeeToThisUser";
         public const string SorryCannotConnectThisEmployeeWithUserBecausehisEmailIsNull = "Sorry!!CannotConnectThisEmployeeWithUserBecausehisEmailIsNull";
-
         public const string SorrySelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee = "Sorry!!SelectedEmployeeAlreadyHaveUserPleaseSelectOtherEmployee";
+        public const string SorryYouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain = "Sorry!!YouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain";
+        public const string SorryEmployeeNumberNotFound = "Sorry!!EmployeeNumberNotFound";
+        public const string SorryThisUserAlreadySignedUp = "Sorry!!ThisUserAlreadySignedUp";
+        public const string SorryCompanyVerificationCodeNotFound = "Sorry!!CompanyVerificationCodeNotFound";
+        public const string ThanksForUsingDawemApplication = "ThanksForUsingDawemApplication";
+        public const string PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow= "PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow";
+        public const string SorryYouMustEnterCompanyVerificationCode = "Sorry!!YouMustEnterCompanyVerificationCode";
+        public const string DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep = "DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep";
 
         
+
+
+
+
 
 
 

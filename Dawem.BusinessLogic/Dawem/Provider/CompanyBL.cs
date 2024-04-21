@@ -806,7 +806,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     .Select(a => new FileDTO
                     {
                         FileName = a.FileName,
-                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.AssignmentRequests),
+                        FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.Companies),
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCompanyNotFound);
 

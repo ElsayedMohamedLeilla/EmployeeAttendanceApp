@@ -342,7 +342,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
 
-
             #region Check If Summon
 
             var checkIfHasSummon = await repositoryManager.SummonRepository
@@ -358,7 +357,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                    .AnyAsync();
 
             #endregion
-
 
             return new GetCurrentFingerPrintInfoResponseModel
             {

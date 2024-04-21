@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -14,6 +15,7 @@ using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Identities;
 using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Shared;
+using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
@@ -26,8 +28,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Dawem.Contract.BusinessValidation.Dawem.Others;
-using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.BusinessLogic.Dawem.Provider
 {
@@ -162,8 +162,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     .Select(p => p.EmployeeCost)
                     .FirstOrDefaultAsync();
 
-                durationInDays = await repositoryManager.DawemSettingRepository
-                        .Get(d => !d.IsDeleted && d.SettingType == DawemSettingType.PlanTrialDurationInDays)
+                durationInDays = await repositoryManager.SettingRepository
+                        .Get(d => !d.IsDeleted && d.SettingType == (int)AdminPanelSettingType.PlanTrialDurationInDays)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
 
@@ -364,7 +364,12 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { CompanyId = user.CompanyId, UserId = user.Id, AuthenticationType = AuthenticationType.DawemAdmin });
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel
+                {
+                    CompanyId = user.CompanyId,
+                    UserId = user.Id,
+                    AuthenticationType = AuthenticationType.DawemAdmin
+                });
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;
@@ -493,7 +498,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel {AuthenticationType = AuthenticationType.AdminPanel, UserId = user.Id });
+                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { AuthenticationType = AuthenticationType.AdminPanel, UserId = user.Id });
 
             tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
             tokenData.IsAdmin = permissionsResponse.IsAdmin;

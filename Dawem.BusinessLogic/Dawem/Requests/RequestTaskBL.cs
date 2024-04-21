@@ -392,7 +392,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             var getEmployeeId = requestInfo?.EmployeeId;
 
             var employeeTasks = await repositoryManager.RequestTaskRepository
-                .Get(a => !a.Request.IsDeleted && a.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId)
+                .Get(a => !a.Request.IsDeleted && (a.Request.EmployeeId == getEmployeeId || 
+                a.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId))
                 && (a.Request.Date.Month == criteria.Month
                 && a.Request.Date.Year == criteria.Year || a.Request.RequestTask.DateTo.Month == criteria.Month
                 && a.Request.RequestTask.DateTo.Year == criteria.Year))

@@ -85,6 +85,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Employees
 
             return Success(employeesresponse.Employees, employeesresponse.TotalCount);
         }
+        [HttpGet]
         public async Task<ActionResult> GetForDropDownEmployeeNotHaveUser([FromQuery] GetEmployeesCriteria criteria)
         {
             if (criteria == null)

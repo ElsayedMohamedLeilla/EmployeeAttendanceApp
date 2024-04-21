@@ -558,7 +558,7 @@ namespace Dawem.Data
         }
 
         public DbSet<Language> Languages { get; set; }
-        public DbSet<DawemSetting> DawemSettings { get; set; }
+        public DbSet<Setting> DawemSettings { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<PlanNameTranslation> PlanNameTranslations { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }

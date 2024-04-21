@@ -11,6 +11,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Settings;
 using Dawem.Contract.Repository.Subscriptions;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
@@ -64,7 +65,7 @@ namespace Dawem.Repository.Managers
         private ISubscriptionPaymentRepository subscriptionPaymentRepository;
         private IPlanRepository planRepository;
         private IPlanNameTranslationRepository planNameTranslationRepository;
-        private IDawemSettingRepository dawemSettingRepository;
+        private ISettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
         private ICurrencyRepository currencyRepository;
         private IScreenRepository screenRepository;
@@ -163,8 +164,8 @@ namespace Dawem.Repository.Managers
 
         
 
-        public IDawemSettingRepository DawemSettingRepository =>
-         dawemSettingRepository ??= new DawemSettingRepository(unitOfWork, generalSetting);
+        public ISettingRepository SettingRepository =>
+         dawemSettingRepository ??= new SettingRepository(unitOfWork, generalSetting);
         public IUserRepository UserRepository =>
          userRepository ??= new UserRepository(requestInfo, unitOfWork, generalSetting);
         public IPermissionRepository PermissionRepository =>

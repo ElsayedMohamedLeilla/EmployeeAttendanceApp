@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Enums.Generals
 {
-    public enum DawemSettingValueType
+    public enum SettingValueType
     {
         String,
         Integer,

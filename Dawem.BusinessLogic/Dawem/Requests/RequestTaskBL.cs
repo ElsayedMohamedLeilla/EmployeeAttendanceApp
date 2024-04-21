@@ -584,9 +584,9 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             return requestTask;
         }
-        public async Task<GetRequestTaskByIdResponseModel> GetById(int RequestTaskId)
+        public async Task<GetRequestTaskByIdResponseModel> GetById(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == RequestTaskId && !e.IsDeleted)
+            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.IsDeleted)
                 .Select(requestTask => new GetRequestTaskByIdResponseModel
                 {
                     Id = requestTask.Request.Id,

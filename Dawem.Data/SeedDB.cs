@@ -339,14 +339,11 @@ namespace Dawem.Data
                     Integer = 2
                 });
             }
-
             if (dawemSettings.Count > 0)
             {
                 context.DawemSettings.AddRange(dawemSettings);
                 context.SaveChanges();
             }
-
-
             #endregion
 
             #region Handle country phone numbers length

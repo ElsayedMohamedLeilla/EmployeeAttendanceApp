@@ -217,8 +217,20 @@
         public const string PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow= "PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow";
         public const string SorryYouMustEnterCompanyVerificationCode = "Sorry!!YouMustEnterCompanyVerificationCode";
         public const string DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep = "DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep";
+        public const string PleaseManuallyCopyTheOneTimePasswordToCompleteTheSignUpProcess = "PleaseManuallyCopyTheOneTimePasswordToCompleteTheSignUpProcess";
+        public const string SorryOTPIsExpiredPleaseTrySignUpAgain = "Sorry!!OTPIsExpiredPleaseTrySignUpAgain";
+        public const string SorryOTPIsExpiredAndYouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain = "Sorry!!OTPIsExpiredAndYouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain";
+        public const string DoneOTPGeneratedSuccessfullyPleaseCheckYourEmailToGetThePasswordToContinueTheSignUpProcess = "DoneOTPGeneratedSuccessfullyPleaseCheckYourEmailToGetThePasswordToContinueTheSignUpProcess";
+        public const string SorryErrorHappenWhileSigningUp = "Sorry!!ErrorHappenWhileSigningUp";
+        public const string BestRegards = "BestRegards";
+        public const string WeAreThrilledToWelcomeYouToDawem = "WeAreThrilledToWelcomeYouToDawem";
+        public const string SorryNoOTPWasFoundForThisUser = "SorryNoOTPWasFoundForThisUser";
+        public const string SorryYouMustEnterCompanyVerficationCode = "Sorry!!YouMustEnterCompanyVerficationCode";
 
         
+
+
+
 
 
 

@@ -24,48 +24,51 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
         {
             #region Validate Email
 
-            var checkEmailDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.CompanyId == model.CompanyId &&
-            u.Email == model.Email.Trim()).AnyAsync();
+            //var checkEmailDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.CompanyId == model.CompanyId &&
+            //u.Email == model.Email.Trim()).AnyAsync();
 
-            if (checkEmailDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
-            }
+            //if (checkEmailDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserEmailIsDuplicatedYouMustEnterUniqueEmail);
+            //}
 
             #endregion
 
             #region Validate Mobile Number
 
-            var checkMobileDuplicate = await repositoryManager.UserRepository
-            .Get(u => u.CompanyId == model.CompanyId &&
-            u.MobileNumber == model.MobileNumber.Trim())
-            .AnyAsync();
+            //var checkMobileDuplicate = await repositoryManager.UserRepository
+            //.Get(u => u.CompanyId == model.CompanyId &&
+            //u.MobileNumber == model.MobileNumber.Trim())
+            //.AnyAsync();
 
-            if (checkMobileDuplicate)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
-            }
+            //if (checkMobileDuplicate)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryUserMobileNumberIsDuplicatedYouMustEnterUniqueMobileNumber);
+            //}
 
             #endregion
 
             #region Employee Number Validation
 
-            int? getEmployeeId = await repositoryManager.EmployeeRepository
-                .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber).AnyAsync() ?
-                await repositoryManager.EmployeeRepository
-                .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber)
-                .Select(e => e.Id)
-                .FirstOrDefaultAsync() : null;
+            //int? getEmployeeId = await repositoryManager.EmployeeRepository
+            //    .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber).AnyAsync() ?
+            //    await repositoryManager.EmployeeRepository
+            //    .Get(e => !e.IsDeleted && e.CompanyId == model.CompanyId && e.EmployeeNumber == model.EmployeeNumber)
+            //    .Select(e => e.Id)
+            //    .FirstOrDefaultAsync() : null;
 
-            if (getEmployeeId == null)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryCannotFindEmployeeWithEnteredEmployeeNumber);
-            }
+            //if (getEmployeeId == null)
+            //{
+            //    throw new BusinessValidationException(LeillaKeys.SorryCannotFindEmployeeWithEnteredEmployeeNumber);
+            //}
 
             #endregion
 
-            return getEmployeeId ?? 0;
+
+
+            //return getEmployeeId ?? 0;
+            return 0;
         }
         public async Task<bool> VerifyEmailValidation(UserVerifyEmailModel model)
         {

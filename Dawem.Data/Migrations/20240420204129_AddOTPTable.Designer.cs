@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240420204129_AddOTPTable")]
+    partial class AddOTPTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1083,7 +1086,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("Zones", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.Setting", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.DawemSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1104,9 +1107,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool?>("Bool")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
 
                     b.Property<decimal?>("Decimal")
                         .HasPrecision(30, 20)
@@ -1171,9 +1171,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("Settings", "Dawem");
+                    b.ToTable("DawemSettings", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
@@ -5763,16 +5761,6 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.Setting", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Company");
                 });

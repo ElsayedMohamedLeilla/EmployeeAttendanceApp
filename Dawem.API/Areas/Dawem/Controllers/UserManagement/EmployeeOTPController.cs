@@ -22,7 +22,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
         [AllowAnonymous]
         public async Task<ActionResult> PreSignUp(PreSignUpDTO model)
         {
-            return Success(await employeeOTPBL.PreSignUp(model), messageCode: AmgadKeys.DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep);
+            return Success(await employeeOTPBL.PreSignUp(model), messageCode: AmgadKeys.DoneOTPGeneratedSuccessfullyPleaseCheckYourEmailToGetThePasswordToContinueTheSignUpProcess);
         }
         
 

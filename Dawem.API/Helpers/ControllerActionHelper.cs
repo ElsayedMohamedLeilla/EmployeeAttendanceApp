@@ -24,7 +24,8 @@ namespace Dawem.API.Helpers
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
                 Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
 
-            screen = allScreenCodes.FirstOrDefault(s => s.ToString() + LeillaKeys.Controller == controllerName);
+
+            screen = allScreenCodes.FirstOrDefault(s => EnumHelper.GetScreenName(s, type) + LeillaKeys.Controller == controllerName);
 
             if (screen != null)
             {

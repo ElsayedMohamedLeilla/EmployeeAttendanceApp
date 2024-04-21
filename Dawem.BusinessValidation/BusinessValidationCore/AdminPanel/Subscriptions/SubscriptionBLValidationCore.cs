@@ -80,7 +80,7 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
                         if (DateTime.Now.Date >= getSubscription.EndDate.Date)
                         {
                             var getPlansGracePeriodPercentage = (await dawemSettingRepository.
-                                GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == AdminPanelSettingType.PlanGracePeriodPercentage))?.
+                                GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == (int)AdminPanelSettingType.PlanGracePeriodPercentage))?.
                                 Integer;
 
                             var extraDays = 0;

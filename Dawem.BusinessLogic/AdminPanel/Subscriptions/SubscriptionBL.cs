@@ -519,7 +519,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 if (getExpiredSubscriptions != null && getExpiredSubscriptions.Count > 0)
                 {
                     var getGracePeriodPercentage = await repositoryManager.SettingRepository
-                        .Get(d => !d.IsDeleted && d.SettingType == AdminPanelSettingType.PlanGracePeriodPercentage)
+                        .Get(d => !d.IsDeleted && d.SettingType == (int)AdminPanelSettingType.PlanGracePeriodPercentage)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
 

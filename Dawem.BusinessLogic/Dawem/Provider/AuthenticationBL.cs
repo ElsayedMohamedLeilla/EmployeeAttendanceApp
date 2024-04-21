@@ -162,8 +162,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     .Select(p => p.EmployeeCost)
                     .FirstOrDefaultAsync();
 
-                durationInDays = await repositoryManager.DawemSettingRepository
-                        .Get(d => !d.IsDeleted && d.SettingType == DawemSettingType.PlanTrialDurationInDays)
+                durationInDays = await repositoryManager.SettingRepository
+                        .Get(d => !d.IsDeleted && d.SettingType == AdminPanelSettingType.PlanTrialDurationInDays)
                         .Select(d => d.Integer)
                         .FirstOrDefaultAsync() ?? 0;
 

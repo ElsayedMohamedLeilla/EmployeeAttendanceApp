@@ -598,6 +598,7 @@
         public const string SubscriptionType = "SubscriptionType";
         public const string Subscription = "Subscription";
         public const string Trial = "Trial";
+        public const string Percentage = "Percentage";
         public const string SorryYouMustEnterSubscriptionActivationStartDate = "Sorry!!YouMustEnterSubscriptionActivationStartDate!";
         public const string SorryYouMustEnterSubscriptionPaymentId = "Sorry!!YouMustEnterSubscriptionPaymentId!";
         public const string SorryYouMustEnterSubscriptionPaymentAmount = "Sorry!!YouMustEnterSubscriptionPaymentAmount!";
@@ -606,5 +607,19 @@
         public const string SorrySubscriptionPaymentNotFound = "Sorry!!SubscriptionPaymentNotFound!";
         public const string DoneCreateSubscriptionPaymentSuccessfully = "DoneCreateSubscriptionPaymentSuccessfully";
         public const string DoneUpdateSubscriptionPaymentSuccessfully = "DoneUpdateSubscriptionPaymentSuccessfully";
+
+
+        public const string SorryYouMustEnterSettings = "Sorry!!YouMustEnterSettings!";
+        public const string SorryYouMustEnterSettingId = "Sorry!!YouMustEnterSettingId!";
+        public const string SorryYouMustEnterSettingType = "Sorry!!YouMustEnterSettingType!";
+        public const string SorrySettingsCountNotCorrect = "Sorry!!SettingsCountNotCorrect!";
+        public const string SorryYouMustEnterCorrectSettingType = "Sorry!!YouMustEnterCorrectSettingType!";
+        public const string SorryYouMustEnterCorrectTextValueForTheSetting = "Sorry!!YouMustEnterCorrectTextValueForTheSetting!";
+        public const string SorryYouMustEnterCorrectNumberValueForTheSetting = "Sorry!!YouMustEnterCorrectNumberValueForTheSetting!";
+        public const string SorryYouMustEnterCorrectBooleanValueForTheSetting = "Sorry!!YouMustEnterCorrectBooleanValueForTheSetting!";
+        public const string SettingName = "SettingName:";
+        public const string SorryYouMustEnterTheValueForTheSetting = "Sorry!!YouMustEnterTheValueForTheSetting!";
+        public const string SorryYouMustEnterCorrectValueForPercentageFrom1To100 = "Sorry!!YouMustEnterCorrectValueForPercentageFrom1To100!";
+        public const string DoneUpdateSettingsSuccessfully = "DoneUpdateSettingsSuccessfully"; 
     }
 }

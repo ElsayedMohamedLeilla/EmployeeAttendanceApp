@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
         {
             var subscriptionRepository = repositoryManager.SubscriptionRepository;
             var companyRepository = repositoryManager.CompanyRepository;
-            var dawemSettingRepository = repositoryManager.DawemSettingRepository;
+            var dawemSettingRepository = repositoryManager.SettingRepository;
             var result = new CheckCompanySubscriptionResponseModel();
 
             var checkCompanyStaus = await companyRepository.
@@ -80,7 +80,7 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
                         if (DateTime.Now.Date >= getSubscription.EndDate.Date)
                         {
                             var getPlansGracePeriodPercentage = (await dawemSettingRepository.
-                                GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == DawemSettingType.PlanGracePeriodPercentage))?.
+                                GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == AdminPanelSettingType.PlanGracePeriodPercentage))?.
                                 Integer;
 
                             var extraDays = 0;

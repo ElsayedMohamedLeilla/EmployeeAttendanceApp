@@ -63,8 +63,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
 
             if (checkIsTrialSubscription)
             {
-                var getPlanTrialEmployeesCount = (await repositoryManager.DawemSettingRepository.
-                            GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == DawemSettingType.PlanTrialEmployeesCount))?.
+                var getPlanTrialEmployeesCount = (await repositoryManager.SettingRepository.
+                            GetEntityByConditionAsync(d => !d.IsDeleted && d.SettingType == AdminPanelSettingType.PlanTrialEmployeesCount))?.
                             Integer ?? 0;
 
                 if (getEmployeesCount >= getPlanTrialEmployeesCount)

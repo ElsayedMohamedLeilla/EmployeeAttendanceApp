@@ -295,47 +295,47 @@ namespace Dawem.Data
 
             #region Handle Dawem Setting
 
-            var dawemSettings = new List<DawemSetting>();
+            var dawemSettings = new List<Setting>();
 
-            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanGracePeriodPercentage) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == (int)AdminPanelSettingType.PlanGracePeriodPercentage) == null)
             {
                 dawemSettings.Add(new()
                 {
                     Type = AuthenticationType.AdminPanel,
-                    SettingType = DawemSettingType.PlanGracePeriodPercentage,
-                    TypeName = nameof(DawemSettingType.PlanGracePeriodPercentage),
-                    GroupType = DawemSettingGroupType.Plans,
-                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
-                    ValueType = DawemSettingValueType.Integer,
-                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    SettingType = (int)AdminPanelSettingType.PlanGracePeriodPercentage,
+                    TypeName = nameof(AdminPanelSettingType.PlanGracePeriodPercentage),
+                    GroupType = (int)AdminPanelSettingGroupType.Plans,
+                    GroupTypeName = nameof(AdminPanelSettingGroupType.Plans),
+                    ValueType = SettingValueType.Integer,
+                    ValueTypeName = nameof(SettingValueType.Integer),
                     Integer = 5
                 });
             }
-            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanTrialDurationInDays) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == (int)AdminPanelSettingType.PlanTrialDurationInDays) == null)
             {
                 dawemSettings.Add(new()
                 {
                     Type = AuthenticationType.AdminPanel,
-                    SettingType = DawemSettingType.PlanTrialDurationInDays,
-                    TypeName = nameof(DawemSettingType.PlanTrialDurationInDays),
-                    GroupType = DawemSettingGroupType.Plans,
-                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
-                    ValueType = DawemSettingValueType.Integer,
-                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    SettingType = (int)AdminPanelSettingType.PlanTrialDurationInDays,
+                    TypeName = nameof(AdminPanelSettingType.PlanTrialDurationInDays),
+                    GroupType = (int)AdminPanelSettingGroupType.Plans,
+                    GroupTypeName = nameof(AdminPanelSettingGroupType.Plans),
+                    ValueType = SettingValueType.Integer,
+                    ValueTypeName = nameof(SettingValueType.Integer),
                     Integer = 3
                 });
             }
-            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == DawemSettingType.PlanTrialEmployeesCount) == null)
+            if (context.DawemSettings.FirstOrDefault(d => d.SettingType == (int)AdminPanelSettingType.PlanTrialEmployeesCount) == null)
             {
                 dawemSettings.Add(new()
                 {
                     Type = AuthenticationType.AdminPanel,
-                    SettingType = DawemSettingType.PlanTrialEmployeesCount,
-                    TypeName = nameof(DawemSettingType.PlanTrialEmployeesCount),
-                    GroupType = DawemSettingGroupType.Plans,
-                    GroupTypeName = nameof(DawemSettingGroupType.Plans),
-                    ValueType = DawemSettingValueType.Integer,
-                    ValueTypeName = nameof(DawemSettingValueType.Integer),
+                    SettingType = (int)AdminPanelSettingType.PlanTrialEmployeesCount,
+                    TypeName = nameof(AdminPanelSettingType.PlanTrialEmployeesCount),
+                    GroupType = (int)AdminPanelSettingGroupType.Plans,
+                    GroupTypeName = nameof(AdminPanelSettingGroupType.Plans),
+                    ValueType = SettingValueType.Integer,
+                    ValueTypeName = nameof(SettingValueType.Integer),
                     Integer = 2
                 });
             }

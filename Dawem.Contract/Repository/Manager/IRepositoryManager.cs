@@ -10,6 +10,7 @@ using Dawem.Contract.Repository.Provider;
 using Dawem.Contract.Repository.Requests;
 using Dawem.Contract.Repository.Schedules.SchedulePlans;
 using Dawem.Contract.Repository.Schedules.Schedules;
+using Dawem.Contract.Repository.Settings;
 using Dawem.Contract.Repository.Subscriptions;
 using Dawem.Contract.Repository.Summons;
 using Dawem.Contract.Repository.UserManagement;
@@ -30,7 +31,7 @@ namespace Dawem.Contract.Repository.Manager
         ISubscriptionPaymentRepository SubscriptionPaymentRepository { get; }
         IPlanRepository PlanRepository { get; }
         IPlanNameTranslationRepository PlanNameTranslationRepository { get; }
-        IDawemSettingRepository DawemSettingRepository { get; }
+        ISettingRepository SettingRepository { get; }
         IUserRepository UserRepository { get; }
         IPermissionRepository PermissionRepository { get; }
         IPermissionScreenRepository PermissionScreenRepository { get; }

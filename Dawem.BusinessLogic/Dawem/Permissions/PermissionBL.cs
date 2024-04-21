@@ -239,7 +239,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     .Select(ps => new PermissionScreenResponseWithNamesModel
                     {
                         ScreenCode = ps.ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(GetScreenName(ps.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
+                        ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(ps.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
                         PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = psa.ActionCode,
@@ -250,13 +250,6 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permission;
-        }
-        private static string GetScreenName(int screenCode, AuthenticationType type)
-        {
-            dynamic screenCodeEnum = type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)screenCode :
-                    (DawemAdminApplicationScreenCode)screenCode;
-            return screenCodeEnum.ToString();
         }
         public async Task<GetPermissionScreensResponse> GetPermissionScreens(GetPermissionScreensCriteria criteria)
         {

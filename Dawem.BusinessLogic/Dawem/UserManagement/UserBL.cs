@@ -66,7 +66,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region get Employee
-            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
+            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted  && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
             #endregion
 
             #region GetMax OTP
@@ -88,8 +88,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 {
                     #region Set User
                     var getNextCode = await repositoryManager.UserRepository
-                        .Get(e => (requestInfo.Type == AuthenticationType.DawemAdmin && e.CompanyId == requestInfo.CompanyId) ||
-                        (requestInfo.Type == AuthenticationType.AdminPanel && e.CompanyId == null))
+                        .Get(e => (e.Type == AuthenticationType.DawemAdmin && e.CompanyId == getCompany.Id && !e.IsDeleted))
                         .Select(e => e.Code)
                         .DefaultIfEmpty()
                         .MaxAsync() + 1;
@@ -106,6 +105,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     user.EmployeeId = getEmployee.Id;
                     user.VerificationCode = maxOTP.OTP.ToString();
                     user.IsActive = true;
+                    user.EmailConfirmed = true;
+                    user.Type = AuthenticationType.DawemAdmin;
                     var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
 
                     if (!createUserResponse.Succeeded)

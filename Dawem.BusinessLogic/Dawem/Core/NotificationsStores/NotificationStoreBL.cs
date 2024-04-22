@@ -73,6 +73,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
                 EmployeeId = notificatioStore.EmployeeId,
+                Date = notificatioStore.AddedDate,
                 ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
                 Status = notificatioStore.Status
 
@@ -208,6 +209,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                 IconUrl = notificatioStore.ImageUrl,
                 Priority = notificatioStore.Priority,
                 IsRead = notificatioStore.IsRead,
+                Date = notificatioStore.AddedDate,
                 EmployeeId = notificatioStore.EmployeeId,
                 ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
                 Status = notificatioStore.Status

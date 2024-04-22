@@ -38,7 +38,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         }
 
 
-        public async Task<int> PreSignUp(PreSignUpDTO model)
+        public async Task<string> PreSignUp(PreSignUpDTO model)
         {
             #region Model Validation
             var PreSignUpModel = new PreSignUpModelValidator();
@@ -150,7 +150,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             }
             #endregion
             #region Handle Response
-            return savedOtp.Id;
+            return getEmployee.Email;
             #endregion
 
         }

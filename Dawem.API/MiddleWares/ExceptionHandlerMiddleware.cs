@@ -82,7 +82,7 @@ namespace Dawem.API.MiddleWares
             }
             catch (DbUpdateException ex)
             {
-                var innerException = (SqlException)ex.InnerException;
+                var innerException = (SqlException)ex.InnerException; 
 
                 if (innerException != null)
                 {

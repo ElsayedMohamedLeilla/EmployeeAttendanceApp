@@ -23,7 +23,6 @@ using Dawem.Models.Response.Dawem.Requests.Tasks;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Tasks;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Requests
@@ -136,7 +135,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Save Notification In DB
 
-            if(employeeId != 0)
+            if (employeeId != 0)
             {
                 model.TaskEmployeeIds.Add(employeeId ?? 0);
             }
@@ -392,14 +391,14 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             var getEmployeeId = requestInfo?.EmployeeId;
 
             var employeeTasks = await repositoryManager.RequestTaskRepository
-                .Get(a => !a.Request.IsDeleted && (a.Request.EmployeeId == getEmployeeId || 
+                .Get(a => !a.Request.IsDeleted && (a.Request.EmployeeId == getEmployeeId ||
                 a.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId))
                 && (a.Request.Date.Month == criteria.Month
                 && a.Request.Date.Year == criteria.Year || a.Request.RequestTask.DateTo.Month == criteria.Month
                 && a.Request.RequestTask.DateTo.Year == criteria.Year))
                 .Select(requestTask => new
                 {
-                     requestTask.Request.Id,
+                    requestTask.Request.Id,
                     //requestTask.Id,
                     requestTask.Request.Code,
                     requestTask.Request.Date,

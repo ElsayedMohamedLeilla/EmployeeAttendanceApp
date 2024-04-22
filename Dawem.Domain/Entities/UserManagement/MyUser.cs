@@ -16,11 +16,11 @@ namespace Dawem.Domain.Entities.UserManagement
 
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
-        public virtual Company Company { get; set; }
+        public Company Company { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
-        public virtual Employee Employee { get; set; }
+        public Employee Employee { get; set; }
 
         public int? MobileCountryId { get; set; }
         [ForeignKey(nameof(MobileCountryId))]

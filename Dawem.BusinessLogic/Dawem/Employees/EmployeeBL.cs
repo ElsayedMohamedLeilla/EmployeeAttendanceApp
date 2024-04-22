@@ -350,9 +350,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             var isArabic = requestInfo?.Lang == LeillaKeys.Ar;
 
-            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)
+            var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId && u.EmployeeId != null)
                 .Select(u => u.EmployeeId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
             var employee = await repositoryManager.EmployeeRepository.Get(e => e.Id == employeeId && !e.IsDeleted)
                 .Select(e => new GetCurrentEmployeeInfoResponseModel
@@ -874,8 +874,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
             u.IsActive & u.CompanyId == requestInfo.CompanyId
-            && u.EmployeeId != 0
-            ).Select(e => e.EmployeeId).ToListAsync();
+            && u.EmployeeId > 0
+            ).Select(e => e.EmployeeId.Value).ToListAsync();
 
             var employeeList = await repositoryManager.EmployeeRepository.Get(e =>
                 !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo=> eo.Id)

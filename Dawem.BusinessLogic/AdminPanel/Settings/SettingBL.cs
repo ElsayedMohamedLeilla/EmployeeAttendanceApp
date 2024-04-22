@@ -119,7 +119,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                         SettingTypeName = TranslationHelper.GetTranslation(settingTypeName + LeillaKeys.Dash + EnumHelper.GetSettingName(setting.SettingType, requestInfo.Type), requestInfo.Lang),
                         ValueType = setting.ValueType,
                         ValueTypeName = TranslationHelper.GetTranslation(setting.ValueTypeName, requestInfo.Lang),
-                        //Value = setting.Value
+                        Value = setting.ValueType == SettingValueType.Integer ? setting.Integer :
+                        setting.ValueType == SettingValueType.Decimal ? setting.Decimal :
+                        setting.ValueType == SettingValueType.String ? setting.String :
+                        setting.ValueType == SettingValueType.Boolean ? setting.Bool : null ,
                     }).ToList()
                 }).ToListAsync();
 

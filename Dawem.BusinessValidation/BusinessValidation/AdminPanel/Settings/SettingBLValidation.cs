@@ -76,38 +76,41 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
                 if (getModelSetting != null)
                 {
+                    var valueString = getModelSetting.Value.ToString();
+                    var type = getModelSetting.Value.GetType();
+
                     switch (setting.ValueType)
                     {
                         case SettingValueType.String:
-                            if (getModelSetting.Value is not string)
+                            if (type.Name != "String")
                             {
                                 var message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouMustEnterCorrectTextValueForTheSetting, requestInfo.Lang);
                                 throw new BusinessValidationException(messageCode: null, message +
-                                    LeillaKeys.SpaceThenDashThenSpace + LeillaKeys.SettingName + settingTypeName + LeillaKeys.Dot);
+                                    LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.SettingName, requestInfo.Lang) + settingTypeName + LeillaKeys.Dot);
                             }
                             break;
                         case SettingValueType.Integer:
-                            if (getModelSetting.Value is not int)
+                            if (type.Name != "Int64")
                             {
                                 var message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouMustEnterCorrectNumberValueForTheSetting, requestInfo.Lang);
                                 throw new BusinessValidationException(messageCode: null, message +
-                                    LeillaKeys.SpaceThenDashThenSpace + LeillaKeys.SettingName + settingTypeName + LeillaKeys.Dot);
+                                    LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.SettingName, requestInfo.Lang) + settingTypeName + LeillaKeys.Dot);
                             }
                             break;
                         case SettingValueType.Decimal:
-                            if (getModelSetting.Value is not decimal)
+                            if (!decimal.TryParse(valueString, out decimal val))
                             {
                                 var message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouMustEnterCorrectNumberValueForTheSetting, requestInfo.Lang);
                                 throw new BusinessValidationException(messageCode: null, message +
-                                    LeillaKeys.SpaceThenDashThenSpace + LeillaKeys.SettingName + settingTypeName + LeillaKeys.Dot);
+                                    LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.SettingName, requestInfo.Lang) + settingTypeName + LeillaKeys.Dot);
                             }
                             break;
                         case SettingValueType.Boolean:
-                            if (getModelSetting.Value is not bool)
+                            if (type.Name != "Boolean")
                             {
                                 var message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouMustEnterCorrectBooleanValueForTheSetting, requestInfo.Lang);
                                 throw new BusinessValidationException(messageCode: null, message +
-                                    LeillaKeys.SpaceThenDashThenSpace + LeillaKeys.SettingName + settingTypeName + LeillaKeys.Dot);
+                                    LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.SettingName, requestInfo.Lang) + settingTypeName + LeillaKeys.Dot);
                             }
                             break;
                         default:
@@ -119,7 +122,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
                 if (settingName.Contains(LeillaKeys.Percentage))
                 {
-                    int value = getModelSetting.Value;
+                    int value = (int)getModelSetting.Value;
                     if (value <= 0 || value > 100)
                     {
                         throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterCorrectValueForPercentageFrom1To100);

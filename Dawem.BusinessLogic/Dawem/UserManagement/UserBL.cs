@@ -88,8 +88,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 {
                     #region Set User
                     var getNextCode = await repositoryManager.UserRepository
-                        .Get(e => (requestInfo.Type == AuthenticationType.DawemAdmin && e.CompanyId == requestInfo.CompanyId) ||
-                        (requestInfo.Type == AuthenticationType.AdminPanel && e.CompanyId == null))
+                        .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
                         .Select(e => e.Code)
                         .DefaultIfEmpty()
                         .MaxAsync() + 1;

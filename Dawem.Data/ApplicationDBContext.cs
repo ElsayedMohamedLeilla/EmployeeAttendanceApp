@@ -404,13 +404,13 @@ namespace Dawem.Data
 
             foreach (var entityType in allNameEntities)
             {
-                var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
+                var companyId = entityType?.GetProperty(nameof(Employee.CompanyId));
                 var name = entityType?.GetProperty(nameof(Employee.Name));
                 var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
 
-                if (entityType != null && compoanyId != null && name != null && isDeleted != null)
+                if (entityType != null && companyId != null && name != null && isDeleted != null)
                 {
-                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
+                    entityType.AddIndex(new List<IMutableProperty> { companyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
                     .IsUnique = true;
                 }
             }
@@ -430,7 +430,7 @@ namespace Dawem.Data
                 var code = entityType?.GetProperty(nameof(Employee.Code));
                 var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
 
-                if (entityType != null && compoanyId != null && code != null && isDeleted != null)
+                if (  entityType != null && compoanyId != null && code != null && isDeleted != null)
                 {
                     entityType.AddIndex(new List<IMutableProperty> { compoanyId, code, isDeleted }, LeillaKeys.UniqueIndexCompanyIdCodeIsDeleted)
                     .IsUnique = true;

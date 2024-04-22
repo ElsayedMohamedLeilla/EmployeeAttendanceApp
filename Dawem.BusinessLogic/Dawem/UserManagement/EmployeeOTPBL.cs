@@ -50,17 +50,16 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             }
             #endregion
 
-
             #region Validate Employee Signed Before
             var getCompany = await repositoryManager.CompanyRepository.GetEntityByConditionWithTrackingAsync(c => !c.IsDeleted
-           && c.IdentityCode == model.CompanyVerificationCode && c.IsActive);
+            && c.IdentityCode == model.CompanyVerificationCode && c.IsActive);
 
             if (getCompany == null) //company verification Code  not found
             {
                 throw new BusinessValidationException(AmgadKeys.SorryCompanyVerificationCodeNotFound);
             }
             var getEmployee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(e => !e.IsDeleted
-           && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id);
+            && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id);
             if (getEmployee == null) // if employee Number not belong to any employee
             {
                 throw new BusinessValidationException(AmgadKeys.SorryEmployeeNumberNotFound);
@@ -71,7 +70,18 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             {
                 throw new BusinessValidationException(AmgadKeys.SorryThisUserAlreadySignedUp);
             }
-
+            var getUserByUserName = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
+              && user.UserName == getEmployee.Email && user.CompanyId == getCompany.Id);
+            if (getUserByUserName != null) // this employee Name already Signed Up
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryThisUserNameAlreadySignedUp);
+            }
+            var getUserByUserEmail = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted
+             && user.Email == getEmployee.Email && user.CompanyId == getCompany.Id);
+            if (getUserByUserEmail != null) // this employee Email already Signed Up
+            {
+                throw new BusinessValidationException(AmgadKeys.SorryThisEmailAlreadySignedUp);
+            }
             #endregion
 
             #region CreateOTP Save DB

@@ -226,8 +226,10 @@
         public const string WeAreThrilledToWelcomeYouToDawem = "WeAreThrilledToWelcomeYouToDawem";
         public const string SorryNoOTPWasFoundForThisUser = "SorryNoOTPWasFoundForThisUser";
         public const string SorryYouMustEnterCompanyVerficationCode = "Sorry!!YouMustEnterCompanyVerficationCode";
+        public const string SorryThisUserNameAlreadySignedUp = "Sorry!!ThisUserNameAlreadySignedUp";
+        public const string SorryThisEmailAlreadySignedUp = "Sorry!!ThisEmailAlreadyTakenSignedUp";
 
-        
+
 
 
 

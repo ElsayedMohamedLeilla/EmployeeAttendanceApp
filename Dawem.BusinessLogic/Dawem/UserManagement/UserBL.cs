@@ -70,7 +70,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region GetMax OTP
-            var employeeOTPs = repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id);
+            var employeeOTPs = await repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id).ToListAsync();
             if (employeeOTPs.Any())
             {
                 // Retrieve the OTP with the maximum code
@@ -107,12 +107,24 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     user.VerificationCode = maxOTP.OTP.ToString();
                     user.IsActive = true;
                     var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
+
                     if (!createUserResponse.Succeeded)
                     {
                         unitOfWork.Rollback();
-                        throw new BusinessValidationException(AmgadKeys.SorryErrorHappenWhileSigningUp);
+                        var error = createUserResponse.Errors.FirstOrDefault();
+                        if (error.Code == "DuplicateUserName")
+                            throw new BusinessValidationException(AmgadKeys.SorryThisUserNameAlreadySignedUp);
+                        else if (error.Code == "DuplicateEmail")
+                            throw new BusinessValidationException(AmgadKeys.SorryThisEmailAlreadySignedUp);
+                        else
+                            throw new BusinessValidationException(AmgadKeys.SorryErrorHappenWhileSigningUp);
+
+
                     }
-                    #region Send Greetings Email
+                    else
+                        repositoryManager.EmployeeOTPRepository.BulkDeleteIfExist(employeeOTPs);
+
+                        #region Send Greetings Email
 
                     var greetingEmail = new VerifyEmailModel
                     {
@@ -136,7 +148,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             }
             #endregion
             #region Handle Response
-
+            await unitOfWork.SaveAsync();
             await unitOfWork.CommitAsync();
             return user.Id;
 

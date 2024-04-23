@@ -372,18 +372,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                        .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                        .OrderBy(check => check.Time)
                        .Select(check => check.Time)
-                       .FirstOrDefault(), requestInfo.Lang),
-                   TimeGap = CalculateTimeGap(
-                     empAttendance.ShiftCheckInTime,
-                     empAttendance.AllowedMinutes,
-                     empAttendance.LocalDate.Date.Add(
-                     empAttendance
-                            .EmployeeAttendanceChecks
-                             .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                             .OrderBy(check => check.Time)
-                             .Select(check => check.Time)
-                             .FirstOrDefault()
-                             .ToTimeSpan()))
+                       .FirstOrDefault(), requestInfo.Lang)
 
                }).ToListAsync();
 
@@ -446,20 +435,20 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 return TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang); ;
             }
         }
-        public static string CalculateTimeGap(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime actualCheckInTime)
+        public static string CalculateDelay(TimeOnly shiftCheckInTime, int allowedMinutes, DateTime actualCheckInTime)
         {
             DateTime scheduledCheckIn = actualCheckInTime.Date.Add(shiftCheckInTime.ToTimeSpan());
             DateTime scheduledCheckInAfterAddAllowedMinute = scheduledCheckIn.AddMinutes(allowedMinutes);
             // Calculate the time gap in minutes
             TimeSpan timeGap = actualCheckInTime - scheduledCheckInAfterAddAllowedMinute;
             // Ensure the time gap is non-negative
-            TimeSpan nonNegativeTimeGap = TimeSpan.FromMinutes(Math.Max(timeGap.TotalMinutes, 0));
+            TimeSpan nonNegativeDelay = TimeSpan.FromMinutes(Math.Max(timeGap.TotalMinutes, 0));
             // Format the non-negative time gap into HH:mm
-            return nonNegativeTimeGap.ToString(@"hh\:mm");
+            return nonNegativeDelay.ToString(@"hh\:mm");
         }
         public async Task<GetEmployeeAttendanceInfoDTO> GetEmployeeAttendancesInfo(int employeeAttendanceId)
         {
-            var result = await repositoryManager.EmployeeAttendanceRepository.Get(s => s.Id == employeeAttendanceId)
+            var result = await repositoryManager.EmployeeAttendanceRepository.Get(s => !s.IsDeleted && s.Id == employeeAttendanceId)
                 .Select(empAttendance => new GetEmployeeAttendanceInfoDTO
                 {
                     EmployeeName = empAttendance.Employee.Name,
@@ -499,17 +488,20 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                        .OrderBy(check => check.Time)
                        .Select(check => check.Time)
                        .FirstOrDefault(), requestInfo.Lang),
-                    TimeGap = CalculateTimeGap(
-                     empAttendance.ShiftCheckInTime,
-                     empAttendance.AllowedMinutes,
-                     empAttendance.LocalDate.Date.Add(
-                     empAttendance
-                            .EmployeeAttendanceChecks
-                             .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                             .OrderBy(check => check.Time)
-                             .Select(check => check.Time)
-                             .FirstOrDefault()
-                             .ToTimeSpan())),
+
+                    LateArrivals = (empAttendance.TotalLateArrivalsHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
+                    EarlyDepartures = (empAttendance.TotalEarlyDeparturesHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
+                    WorkingHours = (empAttendance.TotalWorkingHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
+                    OverTime = (empAttendance.TotalOverTimeHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
+
                     Fingerprints = empAttendance.EmployeeAttendanceChecks
                     .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
                     {
@@ -538,19 +530,13 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
         {
             #region Validation
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository
-                .Get(c => c.Id == requestInfo.CompanyId && !c.IsDeleted)
-                .Select(c => c.Country.TimeZoneId)
-                .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
-
-            var clientLocalDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
-
             var getChecks = await repositoryManager.EmployeeAttendanceCheckRepository
                 .GetWithTracking(c => !c.IsDeleted && c.EmployeeAttendanceId == model.Id &&
-                !c.EmployeeAttendance.IsDeleted && c.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date &&
-                (model.Type == DeleteEmployeeAttendanceType.CheckIn && c.FingerPrintType == FingerPrintType.CheckIn ||
-                model.Type == DeleteEmployeeAttendanceType.CheckOut && c.FingerPrintType == FingerPrintType.CheckOut ||
-                model.Type == DeleteEmployeeAttendanceType.Both))
+                !c.EmployeeAttendance.IsDeleted &&
+                ((model.Type == DeleteEmployeeAttendanceType.CheckIn && c.FingerPrintType == FingerPrintType.CheckIn) ||
+                (model.Type == DeleteEmployeeAttendanceType.CheckOut && c.FingerPrintType == FingerPrintType.CheckOut) ||
+                (model.Type == DeleteEmployeeAttendanceType.Both &&
+                (c.FingerPrintType == FingerPrintType.CheckIn || c.FingerPrintType == FingerPrintType.CheckOut))))
                 .ToListAsync();
 
             if (getChecks == null || getChecks.Count == 0)
@@ -571,7 +557,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             {
                 var getCheckOut = await repositoryManager.EmployeeAttendanceCheckRepository
                 .GetWithTracking(c => !c.IsDeleted && c.EmployeeAttendanceId == model.Id &&
-                !c.EmployeeAttendance.IsDeleted && c.EmployeeAttendance.LocalDate.Date == clientLocalDate.Date &&
+                !c.EmployeeAttendance.IsDeleted &&
                 c.FingerPrintType == FingerPrintType.CheckOut)
                 .AnyAsync();
 

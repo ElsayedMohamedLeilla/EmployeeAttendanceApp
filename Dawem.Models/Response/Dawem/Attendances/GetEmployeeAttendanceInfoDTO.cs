@@ -7,7 +7,10 @@
         public string CheckInTime { get; set; }
         public string CheckOutTime { get; set; }
         public string Status { get; set; }
-        public string TimeGap { get; set; }
+        public string LateArrivals { get; set; }
+        public string EarlyDepartures { get; set; }
+        public string WorkingHours { get; set; }
+        public string OverTime { get; set; }
         public string ZoneName { get; set; }
         public List<GetEmployeeAttendanceInfoFingerprintDTO> Fingerprints { get; set; }
 

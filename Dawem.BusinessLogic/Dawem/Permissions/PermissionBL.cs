@@ -493,7 +493,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var lang = requestInfo.Lang;
             var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = authenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             var isUserIsAdmin = await repositoryManager.UserRepository

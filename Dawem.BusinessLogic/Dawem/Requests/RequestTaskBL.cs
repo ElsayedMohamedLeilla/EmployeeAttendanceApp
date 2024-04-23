@@ -166,7 +166,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             }
             #endregion
             #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & model.TaskEmployeeIds.Contains(s.EmployeeId)).Select(u => u.Id).ToList();
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & model.TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
             if (userIds.Count > 0)
             {
                 await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
@@ -353,7 +353,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             var requestTasksList = await queryPaged.Select(requestTask => new GetRequestTasksResponseModel
             {
-                Id = requestTask.Id,
+                Id = requestTask.Request.Id,
                 Code = requestTask.Request.Code,
                 Employee = new RequestEmployeeModel
                 {
@@ -399,7 +399,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 .Select(requestTask => new
                 {
                     requestTask.Request.Id,
-                    //requestTask.Id,
                     requestTask.Request.Code,
                     requestTask.Request.Date,
                     requestTask.DateTo,
@@ -585,9 +584,9 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             return requestTask;
         }
-        public async Task<GetRequestTaskByIdResponseModel> GetById(int RequestTaskId)
+        public async Task<GetRequestTaskByIdResponseModel> GetById(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == RequestTaskId && !e.IsDeleted)
+            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.IsDeleted)
                 .Select(requestTask => new GetRequestTaskByIdResponseModel
                 {
                     Id = requestTask.Request.Id,
@@ -670,7 +669,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             }
             #endregion
             #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & TaskEmployeeIds.Contains(s.EmployeeId)).Select(u => u.Id).ToList();
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
             if (userIds.Count > 0)
             {
                 await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);

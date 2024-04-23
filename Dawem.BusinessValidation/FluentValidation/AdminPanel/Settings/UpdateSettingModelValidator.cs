@@ -23,7 +23,7 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
                     WithMessage(LeillaKeys.SorryYouMustEnterSettingId);
 
                 RuleFor(model => model.SettingType).
-                    GreaterThan(0).
+                    GreaterThan(-1).
                     WithMessage(LeillaKeys.SorryYouMustEnterSettingType);
             }
         }

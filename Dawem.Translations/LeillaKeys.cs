@@ -607,8 +607,6 @@
         public const string SorrySubscriptionPaymentNotFound = "Sorry!!SubscriptionPaymentNotFound!";
         public const string DoneCreateSubscriptionPaymentSuccessfully = "DoneCreateSubscriptionPaymentSuccessfully";
         public const string DoneUpdateSubscriptionPaymentSuccessfully = "DoneUpdateSubscriptionPaymentSuccessfully";
-
-
         public const string SorryYouMustEnterSettings = "Sorry!!YouMustEnterSettings!";
         public const string SorryYouMustEnterSettingId = "Sorry!!YouMustEnterSettingId!";
         public const string SorryYouMustEnterSettingType = "Sorry!!YouMustEnterSettingType!";

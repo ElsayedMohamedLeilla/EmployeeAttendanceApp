@@ -62,16 +62,16 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 switch (setting.ValueType)
                 {
                     case SettingValueType.String:
-                        setting.String = getModelSetting.Value;
+                        setting.String = (string)getModelSetting.Value;
                         break;
                     case SettingValueType.Integer:
-                        setting.Integer = getModelSetting.Value;
+                        setting.Integer = (int)getModelSetting.Value;
                         break;
                     case SettingValueType.Decimal:
-                        setting.Decimal = getModelSetting.Value;
+                        setting.Decimal = (decimal)getModelSetting.Value;
                         break;
                     case SettingValueType.Boolean:
-                        setting.Bool = getModelSetting.Value;
+                        setting.Bool = (bool)getModelSetting.Value;
                         break;
                     default:
                         break;
@@ -96,7 +96,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             int? companyId = requestInfo.Type == AuthenticationType.DawemAdmin ?
                 requestInfo.CompanyId : null;
 
-            var settingGroupTypeName = requestInfo.Type == AuthenticationType.AdminPanel ? 
+            var settingGroupTypeName = requestInfo.Type == AuthenticationType.AdminPanel ?
                 nameof(AdminPanelSettingGroupType) : nameof(DawemSettingGroupType);
 
             var settingTypeName = requestInfo.Type == AuthenticationType.AdminPanel ?
@@ -119,7 +119,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                         SettingTypeName = TranslationHelper.GetTranslation(settingTypeName + LeillaKeys.Dash + EnumHelper.GetSettingName(setting.SettingType, requestInfo.Type), requestInfo.Lang),
                         ValueType = setting.ValueType,
                         ValueTypeName = TranslationHelper.GetTranslation(setting.ValueTypeName, requestInfo.Lang),
-                        //Value = setting.Value
+                        Value = setting.ValueType == SettingValueType.Integer ? setting.Integer :
+                        setting.ValueType == SettingValueType.Decimal ? setting.Decimal :
+                        setting.ValueType == SettingValueType.String ? setting.String :
+                        setting.ValueType == SettingValueType.Boolean ? setting.Bool : null,
                     }).ToList()
                 }).ToListAsync();
 

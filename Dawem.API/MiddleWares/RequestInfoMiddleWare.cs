@@ -4,7 +4,6 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
-using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +37,8 @@ namespace Dawem.API.MiddleWares
 
             try
             {
+
+                
                 string token = httpContext.Request.Headers[LeillaKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -62,9 +63,13 @@ namespace Dawem.API.MiddleWares
                     var getTimeZoneId = await repositoryManager.CompanyRepository
                         .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
                         .Select(c => c.Country.TimeZoneId)
-                        .FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryTimeZoneNotFound);
+                        .FirstOrDefaultAsync();
 
-                    requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+                    if (!string.IsNullOrEmpty(getTimeZoneId) && !string.IsNullOrWhiteSpace(getTimeZoneId))
+                    {
+                        requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+                    }
+
                     requestInfo.LocalHijriDateTime = GetCurrentLocalHijriDateTime();
                 }
 
@@ -74,10 +79,12 @@ namespace Dawem.API.MiddleWares
                 // do nothing if jwt validation fails
             }
 
-           
+
+            
             if (userId > 0)
             {
-                requestInfo.User = await userManager.FindByIdAsync(userId.ToString());
+                var userIdString = userId.ToString();
+                requestInfo.User = await userManager.FindByIdAsync(userIdString);
 
 
                 if ((requestInfo?.User != null && requestInfo.User.Type == AuthenticationType.AdminPanel) ||
@@ -91,7 +98,7 @@ namespace Dawem.API.MiddleWares
                 }
 
 
-                requestInfo.EmployeeId = requestInfo.User.EmployeeId;         
+                requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
                 requestInfo.CompanyId = requestInfo.Type == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 

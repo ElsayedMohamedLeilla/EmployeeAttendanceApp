@@ -22,7 +22,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
         [AllowAnonymous]
         public async Task<ActionResult> SignUp(UserSignUpModel model)
         {
-            return Success(await userBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+            return Success(await userBL.SignUp(model), messageCode: AmgadKeys.DoneSignUpSuccessfully);
         }
         [HttpPut]
         [AllowAnonymous]

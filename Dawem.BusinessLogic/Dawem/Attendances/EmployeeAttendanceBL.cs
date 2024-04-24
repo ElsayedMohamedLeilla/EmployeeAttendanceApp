@@ -366,6 +366,10 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                        .OrderByDescending(check => check.Time)
                        .Select(check => check.RecognitionWay)
                        .FirstOrDefault(), requestInfo.Lang),
+
+                   WorkingHours = (empAttendance.TotalWorkingHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
                    Status = DetermineAttendanceStatus(empAttendance.ShiftCheckInTime, empAttendance.AllowedMinutes, empAttendance.EmployeeAttendanceChecks
                        .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                        .OrderBy(check => check.Time)

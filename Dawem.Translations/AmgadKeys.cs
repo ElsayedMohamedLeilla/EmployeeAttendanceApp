@@ -229,8 +229,10 @@
         public const string SorryThisUserNameAlreadySignedUp = "Sorry!!ThisUserNameAlreadySignedUp";
         public const string SorryThisEmailAlreadySignedUp = "Sorry!!ThisEmailAlreadyTakenSignedUp";
         public const string DoneSignUpSuccessfully = "DoneSignUpSuccessfully";
+        public const string SorryWrongOTPPleaseUseLastRecieviedOne = "Sorry!!WrongOTPPleaseUseLastRecieviedOne";
 
         
+
 
 
 

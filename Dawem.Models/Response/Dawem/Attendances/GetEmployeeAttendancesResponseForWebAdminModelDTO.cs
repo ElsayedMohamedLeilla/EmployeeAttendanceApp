@@ -8,6 +8,7 @@
         public DateTime Date { get; set; } // attendance Date
         public string CheckInTime { get; set; }
         public string CheckOutTime { get; set; }
+        public string WorkingHours { get; set; }
         public string Status { get; set; }
         public string WayOfRecognition { get; set; }
     }

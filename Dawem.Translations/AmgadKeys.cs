@@ -232,7 +232,20 @@
         public const string SorryWrongOTPPleaseUseLastRecieviedOne = "Sorry!!WrongOTPPleaseUseLastRecieviedOne";
         public const string DoneOTPDeletedSucessfully = "DoneOTPDeletedSucessfully";
 
+        public const string NewPermisionRequest = "NewPermisionRequest";
+        public const string NewPermisionRequestWaitingApproval = "NewPermisionRequestWaitingApproval";
+        public const string YourPermissionRequestIsAccepted = "YourPermissionRequestIsAccepted";
+        public const string YourPermissionRequestIsRejected = "YourPermissionRequestIsRejected";
+        public const string AcceptingPermissionRequest = "AcceptingPermissionRequest";
+        public const string RejectingPermissionRequest = "RejectingPermissionRequest";
+
         
+
+
+
+
+
+
 
 
 

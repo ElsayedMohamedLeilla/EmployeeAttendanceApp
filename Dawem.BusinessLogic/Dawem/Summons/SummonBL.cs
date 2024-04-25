@@ -638,7 +638,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     {
                         summonLog.Id,
                         SummonSanctions = summonLog.Summon.SummonSanctions
-                            .Select(ss => new { ss.Id, SanctionType = ss.Sanction.Type }),
+                            .Select(ss => new
+                            {
+                                ss.Id,
+                                SanctionType = ss.Sanction.Type,
+                                SanctionName = ss.Sanction.Name,
+                                SanctionWarningMessage = ss.Sanction.WarningMessage
+                            }),
                         EmployeeId = summonLog.Id,
                         WillCanceledEmployeeAttendanceId = summonLog.Summon.SummonSanctions
                             .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && summonLog.Employee.EmployeeAttendances
@@ -694,26 +700,43 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     foreach (var missingEmployee in getMissingEmployeesList)
                     {
+                        #region Send Notification To Employees Missing Summon
+
+                        var doneSendNotification = false;
+                        var getNotificationsSancations = missingEmployee.SummonSanctions.
+                            Where(s => s.SanctionType == SanctionType.Notification);
+
+                        if (getNotificationsSancations.Count() > 0)
+                        {
+                            var employeeId = missingEmployee.EmployeeId;
+
+                            foreach (var getNotificationsSancation in getNotificationsSancations)
+                            {
+                                var sanctionName = getNotificationsSancation.SanctionName;
+                                var sanctionWarningMessage = getNotificationsSancation.SanctionWarningMessage;
+
+                                // here
+                            }
+
+                        }
+
+                        #endregion
+
                         addedSummonLogSanctions.
                             AddRange(missingEmployee.SummonSanctions.
                             Select(ss => new SummonLogSanction()
                             {
                                 SummonLogId = missingEmployee.Id,
                                 SummonSanctionId = ss.Id,
-                                Done = ss.SanctionType == SanctionType.CancelDayFingerprint
+                                Done = ss.SanctionType == SanctionType.CancelDayFingerprint ||
+                                (ss.SanctionType == SanctionType.Notification && doneSendNotification)
                             }).ToList());
                     }
 
                     repositoryManager.SummonLogSanctionRepository.BulkInsert(addedSummonLogSanctions);
                     await unitOfWork.SaveAsync();
 
-                    #endregion
-
-                    #region Send Notification To Employees Missing Summon
-
-                    // here
-
-                    #endregion
+                    #endregion               
                 }
             }
             catch (Exception ex)

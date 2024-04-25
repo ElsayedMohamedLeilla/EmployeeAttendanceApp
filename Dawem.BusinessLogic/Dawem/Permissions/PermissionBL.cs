@@ -6,7 +6,6 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
-using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -421,6 +420,9 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
+            if (model.ActionName == LeillaKeys.GetForDropDown)
+                return true;
+
             var permissionRepository = repositoryManager.PermissionRepository;
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;

@@ -5,7 +5,7 @@ namespace Dawem.Domain.Entities.UserManagement
 {
     public class EmployeeOTP : BaseEntity
     {
-        public int Code { get; set; }
+        public int OTPCount { get; set; }
         public int EmployeeId { get; set; }
         public int OTP { get; set; }
         public DateTime ExpirationTime { get; set; }

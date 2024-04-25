@@ -9,5 +9,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Employees
         Task<bool> SendOTPByEmail(SendOTPByEmailDTO model);
         Task<string> GetOTPByEmployeeId(int employeeId);
         Task<bool> Delete(int employeeId);
+        Task<bool> DeleteOTPsByEmployeeNumber(int employeeId);
+
     }
 }

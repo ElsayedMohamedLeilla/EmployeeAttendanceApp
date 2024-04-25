@@ -74,12 +74,16 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             if (employeeOTPs.Any())
             {
                 // Retrieve the OTP with the maximum code
-                var maxOTP = employeeOTPs.OrderByDescending(o => o.Code).First();
+                var maxOTP = employeeOTPs.OrderByDescending(o => o.OTPCount).First();
+                if(model.OTP != maxOTP.OTP)
+                {
+                    throw new BusinessValidationException(AmgadKeys.SorryWrongOTPPleaseUseLastRecieviedOne);
+                }
                 // Check if the retrieved OTP has expired
                 bool isExpired = maxOTP.ExpirationTime.AddHours(2) < DateTime.Now;
                 if (isExpired)
                 {
-                    if (maxOTP.Code < 5)
+                    if (maxOTP.OTPCount < 5)
                         throw new BusinessValidationException(AmgadKeys.SorryOTPIsExpiredPleaseTrySignUpAgain);
                     else
                         throw new BusinessValidationException(AmgadKeys.SorryOTPIsExpiredAndYouHaveExceededTheNumberOfAttemptsPleaseContactTheAdministratorSoYouCanTryAgain);

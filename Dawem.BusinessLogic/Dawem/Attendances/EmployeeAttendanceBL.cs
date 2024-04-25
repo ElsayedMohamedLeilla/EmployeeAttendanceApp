@@ -40,9 +40,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
         public async Task<FingerPrintType> CreateFingerPrint(FingerprintModel model)
         {
             #region Business Validation
-
             var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
-
             #endregion
 
             await unitOfWork.CreateTransactionAsync();

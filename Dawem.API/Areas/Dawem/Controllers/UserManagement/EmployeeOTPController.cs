@@ -3,13 +3,12 @@ using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+
+
     public class EmployeeOTPController : DawemControllerBase
     {
         private readonly IEmployeeOTPBL employeeOTPBL;
@@ -25,8 +24,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.UserManagement
             string output = await employeeOTPBL.PreSignUp(model);
             return Success(output, messageCode: AmgadKeys.DoneOTPGeneratedSuccessfullyPleaseCheckYourEmailToGetThePasswordToContinueTheSignUpProcess);
         }
-        
 
-        
+        [HttpDelete]
+        [DawemAuthorize]
+        public async Task<ActionResult> DeleteOTPByEmployeeId(int employeeId)
+        {
+            bool output = await employeeOTPBL.DeleteOTPsByEmployeeNumber(employeeId);
+            return Success(output, messageCode: AmgadKeys.DoneOTPDeletedSucessfully);
+        }
+
+
+
     }
 }

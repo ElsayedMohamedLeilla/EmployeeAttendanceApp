@@ -21,10 +21,13 @@ namespace Dawem.RealTime.Helper
                 NotificationType.AccecptingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.AccecptingTaskRequest, lang),
                 NotificationType.RejectingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingTaskRequest, lang),
                 NotificationType.JustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),
-                NotificationType.PermisionRequest => TranslationHelper.GetTranslation(AmgadKeys.PermisionRequest, lang),
+                NotificationType.NewPermissionRequent => TranslationHelper.GetTranslation(AmgadKeys.PermisionRequest, lang),
                 NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
+                NotificationType.AcceptingPermissionRequest => TranslationHelper.GetTranslation(AmgadKeys.AcceptingPermissionRequest, lang),
+                NotificationType.RejectingPermissionRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingPermissionRequest, lang),
                 NotificationType.NewSummons => TranslationHelper.GetTranslation(AmgadKeys.NewSummons, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
+
             };
         }
         public static string GetNotificationImage(NotificationStatus type, IUploadBLC uploadBLC)
@@ -62,7 +65,11 @@ namespace Dawem.RealTime.Helper
                 NotificationType.AccecptingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.AccecptingTaskRequest, lang),
                 NotificationType.RejectingTaskRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingTaskRequest, lang),
                 NotificationType.JustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),
-                NotificationType.PermisionRequest => TranslationHelper.GetTranslation(AmgadKeys.PermisionRequest, lang),
+                NotificationType.NewPermissionRequent => TranslationHelper.GetTranslation(AmgadKeys.NewPermisionRequestWaitingApproval, lang),
+                NotificationType.AcceptingPermissionRequest => TranslationHelper.GetTranslation(AmgadKeys.YourPermissionRequestIsAccepted, lang),
+                NotificationType.RejectingPermissionRequest => TranslationHelper.GetTranslation(AmgadKeys.YourPermissionRequestIsRejected, lang),
+
+
                 NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
                 NotificationType.NewSummons => TranslationHelper.GetTranslation(AmgadKeys.NewSummons, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),

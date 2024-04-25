@@ -11,9 +11,12 @@
         RejectingTaskRequest,
 
         JustificationRequest,
-        PermisionRequest,
         AddingInMission,
 
+
+        NewPermissionRequent,
+        AcceptingPermissionRequest,
+        RejectingPermissionRequest,
 
         NewSummons 
 

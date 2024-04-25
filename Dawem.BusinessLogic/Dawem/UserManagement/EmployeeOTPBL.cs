@@ -89,7 +89,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             var getNextCode = await repositoryManager.EmployeeOTPRepository
                   .Get(e => e.EmployeeId == getEmployee.Id && e.CompanyId == getCompany.Id
                    && !e.IsDeleted && e.IsActive)
-                  .Select(e => e.Code)
+                  .Select(e => e.OTPCount)
                   .DefaultIfEmpty()
                   .MaxAsync() + 1;
             if (getNextCode > 5)
@@ -102,7 +102,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             int savedOTP = GenerateRandomOTP();
             savedOtp.AddedApplicationType = requestInfo.ApplicationType;
             savedOtp.AddedDate = DateTime.UtcNow;
-            savedOtp.Code = getNextCode;
+            savedOtp.OTPCount = getNextCode;
             savedOtp.IsVerified = false;
             savedOtp.IsActive = true;
             savedOtp.IsDeleted = false;
@@ -184,6 +184,23 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 otp = otp * 10 + random.Next(0, 10);
             }
             return otp;
+        }
+
+        public async Task<bool> DeleteOTPsByEmployeeNumber(int employeeId)
+        {
+            if(employeeId == 0)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeId);
+            }
+
+            #region get Employee
+            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.Id == employeeId).FirstOrDefault();
+            #endregion
+
+            var employeeOTPs = await repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id).ToListAsync();
+            repositoryManager.EmployeeOTPRepository.BulkDeleteIfExist(employeeOTPs);
+            return true;
+
         }
     }
 }

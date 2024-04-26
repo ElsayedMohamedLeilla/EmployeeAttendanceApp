@@ -620,6 +620,9 @@
         public const string SettingName = "SettingName:";
         public const string SorryYouMustEnterTheValueForTheSetting = "Sorry!!YouMustEnterTheValueForTheSetting!";
         public const string SorryYouMustEnterCorrectValueForPercentageFrom1To100 = "Sorry!!YouMustEnterCorrectValueForPercentageFrom1To100!";
-        public const string DoneUpdateSettingsSuccessfully = "DoneUpdateSettingsSuccessfully"; 
+        public const string DoneUpdateSettingsSuccessfully = "DoneUpdateSettingsSuccessfully";
+        public const string SorryPeriodCanNotGreaterThan30Day = "Sorry!!PeriodCanNotGreaterThan30Day!";
+        public const string SorryThereIsNoScheduleForCurrentEmployee = "Sorry!!ThereIsNoScheduleForCurrentEmployee!";
+        
     }
 }

@@ -10,6 +10,13 @@
                 yield return new DateTime(year, month, day);
             }
         }
+        public static IEnumerable<DateTime> AllDatesInPeriod(DateTime startDate, DateTime endDate)
+        {
+            return Enumerable.Range(0, 1 + endDate.Subtract(startDate).Days).
+                Select(offset => startDate.AddDays(offset)).
+                ToArray();
+        }
+
         public static bool IsValidLatitude(this double? latitude)
             => -90 <= latitude && latitude <= 90;
 
@@ -27,7 +34,7 @@
         }
 
         public static bool IsValidLongitude(this decimal longitude)
-            =>  -180 <= longitude && longitude <= 180;
+            => -180 <= longitude && longitude <= 180;
 
         public static bool ValidateIPv4(string ipString)
         {

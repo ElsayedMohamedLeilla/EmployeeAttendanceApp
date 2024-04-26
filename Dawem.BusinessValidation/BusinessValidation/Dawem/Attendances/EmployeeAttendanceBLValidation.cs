@@ -379,7 +379,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 AvailableZones = availableZonesOutput
             };
         }
-
         public async Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model)
         {
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
@@ -396,6 +395,23 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             return true;
         }
+        public async Task<int> GetEmployeeScheduleValidation()
+        {
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
+                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
+            var checkIfHasSchedule = await repositoryManager.EmployeeRepository
+                .Get(a => !a.IsDeleted && a.Id == getEmployeeId
+                && a.ScheduleId > 0).
+                Select(e => e.ScheduleId).
+                FirstOrDefaultAsync();
+
+            if (checkIfHasSchedule == null)
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoScheduleForCurrentEmployee);
+
+            return checkIfHasSchedule.Value;
+        }
+
 
         #region Get All AvailableZones
         public List<AvailableZoneWithoutRadiusDTO> GetAvailableLatLongForEmployee(List<AvailableZoneDTO> employeeZones)

@@ -376,6 +376,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 isScheduleVacationDay = true;
                 if (scheduleId != null && shiftId == null)
                 {
+                    isScheduleVacationDay = true;
                     weekVacationDays.Add(new DayAndWeekDayModel()
                     {
                         Day = date.Day,

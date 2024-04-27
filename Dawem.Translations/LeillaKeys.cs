@@ -1,7 +1,7 @@
 ﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
-    {
+    {        
         public const string DawemConnectionString = "DawemConnectionString";
         public const string ConnectionStringNotFound = "Connection string 'DawemConnectionString' not found.";
         public const string AllowSpecificOrigins = "_allowSpecificOrigins";
@@ -93,6 +93,7 @@
         public const string BL = "BL";
         public const string BLC = "BLC";
         public const string GetForDropDown = "GetForDropDown";
+        public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
         public const string Image = "image";

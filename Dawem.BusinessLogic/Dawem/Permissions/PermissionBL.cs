@@ -6,7 +6,6 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
-using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -418,7 +417,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        }
+        } 
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
             var permissionRepository = repositoryManager.PermissionRepository;

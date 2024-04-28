@@ -402,6 +402,12 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
                     IsActive = true
                 });
                 employee.ScheduleId = model.ScheduleId;
+
+                #region Notifications
+
+                //here
+
+                #endregion
             }
 
             #region Set Schedule Plan Log code

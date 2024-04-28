@@ -14,5 +14,6 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public string CheckInTime { get; set; }
         public string CheckOutTime { get; set; }
         public string TotalTime { get; set; }
+        public string Notes { get; set; }
     }
 }

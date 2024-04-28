@@ -21,6 +21,8 @@ namespace Dawem.API.MiddleWares
         {
             _next = next;
         }
+        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown };
+        public List<string> ExcludedControllers = new() { LeillaKeys.NotificationStoreController };
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, IPermissionBL permissionBL, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
@@ -34,7 +36,11 @@ namespace Dawem.API.MiddleWares
 
             var userId = requestInfo.UserId;
 
-            if (httpContext != null && userId > 0 && !string.IsNullOrWhiteSpace(controllerName) && !string.IsNullOrWhiteSpace(actionName))
+            if (httpContext != null && userId > 0 && 
+                !string.IsNullOrWhiteSpace(controllerName) && 
+                !string.IsNullOrWhiteSpace(actionName) && 
+                !ExcludedControllers.Contains(controllerName) && 
+                !ExcludedApis.Contains(actionName))
             {
                 var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
                 if (mapResult.Screen != null && mapResult.Method != null)
@@ -45,6 +51,7 @@ namespace Dawem.API.MiddleWares
                         UserId = userId,
                         ScreenCode = mapResult.Screen.Value,
                         ActionCode = mapResult.Method.Value,
+                        ActionName = actionName,
                         AuthenticationType = requestInfo.Type
                     };
 
@@ -67,14 +74,14 @@ namespace Dawem.API.MiddleWares
                         {
                             State = ResponseStatus.Forbidden,
                             Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouDoNotHavePermission,
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
+                                   requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
-                                   requestInfo?.Lang) + LeillaKeys.RightBracket +
+                                   requestInfo.Lang) + LeillaKeys.RightBracket +
                                    LeillaKeys.Space +
                                    TranslationHelper.GetTranslation(LeillaKeys.InScreen,
-                                   requestInfo?.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
+                                   requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix,
-                                   requestInfo?.Lang) + LeillaKeys.RightBracket
+                                   requestInfo.Lang) + LeillaKeys.RightBracket
                         };
 
                         await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);

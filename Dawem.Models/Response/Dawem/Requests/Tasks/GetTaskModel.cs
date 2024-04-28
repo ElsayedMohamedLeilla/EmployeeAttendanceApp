@@ -13,5 +13,6 @@ namespace Dawem.Models.Response.Dawem.Requests.Tasks
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public List<RequestEmployeeModel> Employees { get; set; }
+        public string Notes { get; set; }
     }
 }

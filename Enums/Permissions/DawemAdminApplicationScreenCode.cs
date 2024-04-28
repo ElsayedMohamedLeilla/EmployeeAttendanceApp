@@ -43,7 +43,6 @@
         Sanction,
         Summon,
         SummonLog,
-        NotificationStore,
         AttendanceSummaryReport,
         Company
     }

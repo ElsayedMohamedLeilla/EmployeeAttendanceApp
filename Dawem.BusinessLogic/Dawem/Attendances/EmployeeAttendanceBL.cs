@@ -236,17 +236,21 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                          .ShiftId;
                 }
 
+                var isScheduleVacationDay = false;
+
                 #endregion
 
                 if (scheduleId != null && shiftId == null)
                 {
+                    isScheduleVacationDay = true;
                     weekVacationDays.Add(new DayAndWeekDayModel()
                     {
                         Day = date.Day,
                         WeekDay = (WeekDay)date.DayOfWeek
                     });
                 }
-                else
+
+                if (!isScheduleVacationDay || (employeeAttendance != null && (checkInTime != null || checkOutTime != null)))
                 {
 
                     var employeeAttendanceModel = new GetEmployeeAttendancesResponseModel
@@ -267,7 +271,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             checkOutTime < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,
                             TotalTime = checkOutTime != null ?
-                            TimeOnly.FromTimeSpan(checkOutTime.Value - checkInTime.Value).ToString("HH:mm:ss") : null
+                            TimeOnly.FromTimeSpan(checkOutTime.Value - checkInTime.Value).ToString("HH:mm:ss") : null,
+                            Notes = isScheduleVacationDay ?
+                            TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                         }
                     };
                     employeeAttendanceModel.Attendance.AttendanceStatus =

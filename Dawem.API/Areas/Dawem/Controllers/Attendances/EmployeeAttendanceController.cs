@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Attendances
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize] 
     public class EmployeeAttendanceController : DawemControllerBase
     {
         private readonly IEmployeeAttendanceBL employeeAttendanceBL;

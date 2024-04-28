@@ -369,19 +369,22 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                          .ShiftId;
                 }
 
+                var isScheduleVacationDay = false;
+
                 #endregion
 
                 if (scheduleId != null && shiftId == null)
                 {
+                    isScheduleVacationDay = true;
                     weekVacationDays.Add(new DayAndWeekDayModel()
                     {
                         Day = date.Day,
                         WeekDay = (WeekDay)date.DayOfWeek
                     });
                 }
-                else
-                {
 
+                if (!isScheduleVacationDay || dayAssignments.Count > 0)
+                {
                     var employeeGetRequestAssignmentsResponseModel = new EmployeeGetRequestAssignmentsResponseModel
                     {
                         DayAssignments = new GetAssignmentDayModel
@@ -398,7 +401,9 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                                 DateTo = ds.DateTo,
                                 Status = ds.Status,
                                 StatusName = ds.StatusName,
-                                Employees = ds.Employees
+                                Employees = ds.Employees,
+                                Notes = isScheduleVacationDay ? 
+                                TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                             }).ToList()
                         }
                     };

@@ -29,11 +29,11 @@ namespace Dawem.API.Helpers
 
             if (screen != null)
             {
-                if (actionName.Contains(LeillaKeys.Create) || actionName.Contains(LeillaKeys.Send))
+                if (actionName.Contains(LeillaKeys.Create))
                 {
                     method = ApplicationAction.AdditionAction;
                 }
-                else if (actionName.Contains(LeillaKeys.Update) || actionName.Contains(LeillaKeys.MarkAsRead) || actionName.Contains(AmgadKeys.MarkAsViewed))
+                else if (actionName.Contains(LeillaKeys.Update))
                 {
                     method = ApplicationAction.EditAction;
                 }

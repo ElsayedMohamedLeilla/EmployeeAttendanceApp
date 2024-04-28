@@ -417,13 +417,9 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        }
-        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown, LeillaKeys.MarkAsRead, AmgadKeys.MarkAsViewed, LeillaKeys.Send };
+        } 
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
-            if (ExcludedApis.Contains(model.ActionName))
-                return true;
-
             var permissionRepository = repositoryManager.PermissionRepository;
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;

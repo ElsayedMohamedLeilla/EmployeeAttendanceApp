@@ -77,6 +77,7 @@
     <Folder Include="wwwroot\uploads\Employees\" />
     <Folder Include="wwwroot\uploads\ExcelEmptyDrafts\" />
     <Folder Include="wwwroot\uploads\JustificationRequests\" />
+    <Folder Include="wwwroot\uploads\Reports\AttendanceReports\" />
     <Folder Include="wwwroot\uploads\Users\" />
     <Folder Include="wwwroot\uploads\VacationRequests\" />
   </ItemGroup>

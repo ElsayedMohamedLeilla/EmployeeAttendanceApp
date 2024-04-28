@@ -310,6 +310,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             //#endregion
             #region GetEmployee
+            requestInfo.CompanyId = 17;
             var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
             !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
@@ -328,6 +329,10 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             if (!createUserResponse.Succeeded)
             {
                 unitOfWork.Rollback();
+                var error = createUserResponse.Errors.FirstOrDefault();
+                if (error.Code == "InvalidEmail")
+                    throw new BusinessValidationException(AmgadKeys.SorryTheEmployeeEmailIsInValid);
+                else
                 throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 

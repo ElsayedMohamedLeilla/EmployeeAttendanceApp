@@ -2,9 +2,11 @@
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -15,6 +17,7 @@ using Dawem.Models.Requests;
 using Dawem.Models.Requests.Justifications;
 using Dawem.Models.Response.Dawem.Requests;
 using Dawem.Models.Response.Dawem.Requests.Justifications;
+using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Justifications;
 using Microsoft.EntityFrameworkCore;
@@ -30,13 +33,16 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+
         public RequestJustificationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IRequestBLValidation _requestBLValidation,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestJustificationBLValidation _requestJustificationBLValidation)
+           IRequestJustificationBLValidation _requestJustificationBLValidation,
+           INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestBLValidation = _requestBLValidation;
@@ -45,6 +51,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             requestJustificationBLValidation = _requestJustificationBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+
         }
         public async Task<int> Create(CreateRequestJustificationDTO model)
         {
@@ -123,6 +131,52 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             await unitOfWork.SaveAsync();
 
             #endregion
+
+            var requestEmployee = await repositoryManager
+               .EmployeeRepository.Get(r => r.Id == employeeId)
+               .Select(e => new
+               {
+                   e.Name,
+                   e.DirectManagerId 
+               }).FirstOrDefaultAsync();
+
+            #region Save Notification In DB
+            if(requestEmployee.DirectManagerId > 0)
+            {
+                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+              .Get(e => e.CompanyId == requestInfo.CompanyId)
+              .Select(e => e.Code)
+              .DefaultIfEmpty()
+              .MaxAsync() + 1;
+                var notificationStore = new NotificationStore()
+                {
+                    Code = getNotificationNextCode,
+                    EmployeeId = requestEmployee.DirectManagerId ?? 0,
+                    CompanyId = requestInfo.CompanyId,
+                    AddUserId = requestInfo.UserId,
+                    AddedDate = DateTime.UtcNow,
+                    Status = NotificationStatus.Info,
+                    NotificationType = NotificationType.NewJustificationRequest,
+                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
+                    IsRead = false,
+                    IsActive = true,
+                    Priority = Priority.Medium
+
+                };
+                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+                await unitOfWork.SaveAsync();
+            
+           
+            #endregion
+
+            #region Fire Notification & Email
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
+            if (userIds.Count > 0)
+            {
+                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+            }
+                #endregion
+            }
 
             #region Handle Response
 

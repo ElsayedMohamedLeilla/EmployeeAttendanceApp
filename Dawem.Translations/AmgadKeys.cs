@@ -131,8 +131,6 @@
         public const string AddingInMission = "AddingInMission";
         public const string NewSummons = "NewSummons";
         public const string NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction = "NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction";
-
-
         public const string High = "High";
         public const string Medium = "Medium"; 
         public const string Low = "Low";
@@ -160,7 +158,6 @@
         public const string DoneCreateEmployeeDraftSuccessfully = "DoneCreateEmployeeDraftSuccessfully";
         public const string EmptyDataProblem = "EmptyData";
         public const string NoDataImportedInFileTheFileIsEmpty = "NoDataImportedInFileTheFileIsEmpty";
-
         public const string NewTaskRequest = "NewTaskRequest";
         public const string AccecptingTaskRequest = "AccecptingTaskRequest";
         public const string RejectingTaskRequest = "RejectingTaskRequest";
@@ -194,7 +191,6 @@
         public const string SorryThisLocalDateIsNotValid = "Sorry!!ThisLocalDateIsNotValid!";
         public const string SorryThisTimeIsNotValid = "Sorry!!ThisTimeIsNotValid!";
         public const string EmployeeAttendanceEnteredSuccessfully = "EmployeeAttendanceEnteredSuccessfully";
-        
         public const string SorryMobileCountryCodeNotValidAcceptNumbersOnly = "Sorry!!MobileCountryCodeNotValidAcceptNumbersOnly";
         public const string SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions = "Sorry!!MobileCountryCodeNotValidOrNotExistPleaseSeeInstructions";
         public const string SorryTheMobileLenghtOfCountry = "Sorry!!TheMobileLenghtOfCountry";
@@ -231,13 +227,20 @@
         public const string DoneSignUpSuccessfully = "DoneSignUpSuccessfully";
         public const string SorryWrongOTPPleaseUseLastRecieviedOne = "Sorry!!WrongOTPPleaseUseLastRecieviedOne";
         public const string DoneOTPDeletedSucessfully = "DoneOTPDeletedSucessfully";
-
         public const string NewPermisionRequest = "NewPermisionRequest";
         public const string NewPermisionRequestWaitingApproval = "NewPermisionRequestWaitingApproval";
         public const string YourPermissionRequestIsAccepted = "YourPermissionRequestIsAccepted";
         public const string YourPermissionRequestIsRejected = "YourPermissionRequestIsRejected";
         public const string AcceptingPermissionRequest = "AcceptingPermissionRequest";
         public const string RejectingPermissionRequest = "RejectingPermissionRequest";
+        public const string NewJustificationRequest = "NewJustificationRequest";
+        public const string NewJustificationRequestWaitingApproval = "NewJustificationRequestWaitingApproval";
+        public const string YourJustificationRequestIsAccepted = "YourJustificationRequestIsAccepted";
+        public const string YourJustificationRequestIsRejected = "YourJustificationRequestIsRejected";
+        public const string AcceptingJustificationRequest = "AcceptingJustificationRequest";
+        public const string RejectingJustificationRequest = "RejectingJustificationRequest";
+
+        public const string SorryTheEmployeeEmailIsInValid = "Sorry!!TheEmployeeEmailIsInValid";
 
         
 

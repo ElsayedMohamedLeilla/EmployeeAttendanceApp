@@ -17,5 +17,6 @@ namespace Dawem.Domain.Entities.Lookups
         public string NationalityNameEn { get; set; }
         public string NationalityNameAr { get; set; }
         public int PhoneLength { get; set; }
+        public decimal? TimeZoneToUTC { get; set; }
     }
 }

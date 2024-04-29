@@ -373,7 +373,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
                 #endregion
 
-                isScheduleVacationDay = true;
                 if (scheduleId != null && shiftId == null)
                 {
                     isScheduleVacationDay = true;

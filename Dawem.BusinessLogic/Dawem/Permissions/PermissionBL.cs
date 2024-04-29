@@ -417,12 +417,9 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        }
+        } 
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
-            if (model.ActionName == LeillaKeys.GetForDropDown)
-                return true;
-
             var permissionRepository = repositoryManager.PermissionRepository;
             var permissionScreenActionRepository = repositoryManager.PermissionScreenActionRepository;
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;

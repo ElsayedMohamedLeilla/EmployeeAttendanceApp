@@ -16,7 +16,7 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Permissions;
 using Dawem.Models.Response.Dawem.Requests;
-using Dawem.Models.Response.Dawem.Requests.Permissions;
+using Dawem.Models.Response.Dawem.Requests.Permissions; 
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Permissions;
@@ -518,6 +518,40 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.DecisionDate = DateTime.UtcNow;
 
             await unitOfWork.SaveAsync();
+
+            #region Save Notification In DB
+
+            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync() + 1;
+            var notificationStore = new NotificationStore()
+            {
+                Code = getNotificationNextCode,
+                EmployeeId = request.EmployeeId,
+                CompanyId = requestInfo.CompanyId,
+                AddUserId = requestInfo.UserId,
+                AddedDate = DateTime.UtcNow,
+                Status = NotificationStatus.Info,
+                NotificationType = NotificationType.AcceptingPermissionRequest,
+                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
+                IsRead = false,
+                IsActive = true,
+                Priority = Priority.Medium
+            };
+            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            await unitOfWork.SaveAsync();
+            #endregion
+
+            #region Fire Notification & Email
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == request.EmployeeId).Select(u => u.Id).ToList();
+            if (userIds.Count > 0)
+            {
+                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+            }
+            #endregion
+
             return true;
         }
         public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
@@ -541,6 +575,38 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
+            #region Save Notification In DB
+
+            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+               .Get(e => e.CompanyId == requestInfo.CompanyId)
+               .Select(e => e.Code)
+               .DefaultIfEmpty()
+               .MaxAsync() + 1;
+            var notificationStore = new NotificationStore()
+            {
+                Code = getNotificationNextCode,
+                EmployeeId = request.EmployeeId,
+                CompanyId = requestInfo.CompanyId,
+                AddUserId = requestInfo.UserId,
+                AddedDate = DateTime.UtcNow,
+                Status = NotificationStatus.Error,
+                NotificationType = NotificationType.RejectingPermissionRequest,
+                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
+                IsRead = false,
+                IsActive = true,
+                Priority = Priority.Medium
+            };
+            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            await unitOfWork.SaveAsync();
+            #endregion
+
+            #region Fire Notification & Email
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == request.EmployeeId).Select(u => u.Id).ToList();
+            if (userIds.Count > 0)
+            {
+                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+            }
+            #endregion
             return true;
         }
         public async Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations()

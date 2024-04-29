@@ -31,7 +31,5 @@ namespace Dawem.Domain.Entities.Attendances
         public FingerPrintType FingerPrintType { get; set; }
         public RecognitionWay RecognitionWay { get; set; }
         public bool InsertedFromExcel { get; set; }
-
-
     }
 }

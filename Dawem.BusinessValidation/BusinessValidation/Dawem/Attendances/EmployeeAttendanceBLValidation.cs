@@ -335,10 +335,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 {
                     Id = a.Id,
                     Code = a.Code,
-                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
-                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
-                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
-                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    CheckInDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : default,
+                    CheckOutDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : default,
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
 
@@ -362,17 +362,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 Id = getAttendance?.Id,
                 Code = getAttendance?.Code,
-                CheckInTime = getAttendance?.CheckInTime,
-                CheckOutTime = getAttendance?.CheckOutTime,
+                CheckInDateTime = getAttendance.CheckInDateTime,
+                CheckOutDateTime = getAttendance.CheckOutDateTime,
 
-                DefaultCheckType = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? FingerprintCheckType.CheckIn :
-                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? FingerprintCheckType.NotDefined :
-                getAttendance?.CheckInTime != null ? checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut :
+                DefaultCheckType = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? FingerprintCheckType.CheckIn :
+                getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? FingerprintCheckType.NotDefined :
+                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut :
                 FingerprintCheckType.NotDefined,
 
-                EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :
-                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? EmployeeStatus.AttendThenLeaved :
-                getAttendance?.CheckInTime != null ? EmployeeStatus.AtWork :
+                EmployeeStatus = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? EmployeeStatus.NotAttendYet :
+                getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? EmployeeStatus.AttendThenLeaved :
+                getAttendance?.CheckInDateTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
 
                 LocalDate = clientLocalDateTime,

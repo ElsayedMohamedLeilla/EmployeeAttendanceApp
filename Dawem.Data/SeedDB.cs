@@ -2,13 +2,17 @@
 using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
-using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Dawem.Data
 {
+    public class timezone
+    {
+        public string country_code { get; set; }
+        public decimal? time_zone { get; set; }
+    }
     public class SeedDB
     {
         public static void Initialize(IServiceProvider serviceProvider)
@@ -386,6 +390,45 @@ namespace Dawem.Data
                 }
             }*/
 
+
+            #endregion
+
+
+            #region Handle time zones
+
+            /* var fullPath3 = "C:\\Users\\Leilla\\Downloads\\\\Documents\\time-zone-country-code.json";
+
+             var jsonData3 = System.IO.File.ReadAllText(fullPath3);
+
+             if (!string.IsNullOrWhiteSpace(jsonData3) )
+             {
+                 var timezones = JsonConvert.DeserializeObject<List<timezone>>(jsonData3);
+                 timezones = timezones.ToList();
+
+                 var getAllCountries = context.Countries.ToList();
+
+                 #region Seed timezones
+
+                 for (int i = 0; i < timezones.Count; i++)
+                 {
+                     timezone timezone = timezones[i];
+
+                     var getCurrentCountry = getAllCountries
+                         .FirstOrDefault(c => c.Iso == timezone.country_code);
+
+                     if (getCurrentCountry != null)
+                     {
+                         getCurrentCountry.TimeZoneToUTC = timezone.time_zone;
+                     }
+
+
+
+                 }
+                 context.SaveChanges();
+                 #endregion
+
+             }
+            */
 
             #endregion
 

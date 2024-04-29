@@ -10,8 +10,8 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? SummonId { get; set; }
         public int? ZoneId { get; set; }
         public DateTime LocalDate { get; set; }
-        public TimeOnly ShiftCheckInTime { get; set; }
-        public TimeOnly ShiftCheckOutTime { get; set; }
+        public TimeSpan ShiftCheckInTime { get; set; }
+        public TimeSpan ShiftCheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
         public FingerPrintType FingerPrintType { get; set; }
     }

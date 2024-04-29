@@ -4,8 +4,8 @@
     {
         public string EmployeeName { get; set; }
         public DateTime Date { get; set; }
-        public string CheckInTime { get; set; }
-        public string CheckOutTime { get; set; }
+        public string CheckInDateTime { get; set; }
+        public string CheckOutDateTime { get; set; }
         public string Status { get; set; }
         public string LateArrivals { get; set; }
         public string EarlyDepartures { get; set; }

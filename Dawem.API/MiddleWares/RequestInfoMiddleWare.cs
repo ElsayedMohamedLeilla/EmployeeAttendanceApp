@@ -38,7 +38,7 @@ namespace Dawem.API.MiddleWares
             try
             {
 
-                
+
                 string token = httpContext.Request.Headers[LeillaKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -60,14 +60,15 @@ namespace Dawem.API.MiddleWares
 
                     var currentCompanyId = requestInfo.CompanyId;
 
-                    var getTimeZoneId = await repositoryManager.CompanyRepository
+                    var getTimeZoneToUTC = await repositoryManager.CompanyRepository
                         .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
-                        .Select(c => c.Country.TimeZoneId)
+                        .Select(c => c.Country.TimeZoneToUTC)
                         .FirstOrDefaultAsync();
 
-                    if (!string.IsNullOrEmpty(getTimeZoneId) && !string.IsNullOrWhiteSpace(getTimeZoneId))
+                    if (getTimeZoneToUTC != null)
                     {
-                        requestInfo.LocalDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTimeOffset.UtcNow, getTimeZoneId).DateTime;
+                        var getTimeZoneToUTCDouble = (double)getTimeZoneToUTC;
+                        requestInfo.LocalDateTime = DateTime.UtcNow.AddHours(getTimeZoneToUTCDouble);
                     }
 
                     requestInfo.LocalHijriDateTime = GetCurrentLocalHijriDateTime();
@@ -80,7 +81,7 @@ namespace Dawem.API.MiddleWares
             }
 
 
-            
+
             if (userId > 0)
             {
                 var userIdString = userId.ToString();

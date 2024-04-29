@@ -116,7 +116,7 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
             var clientLocalDateTime = requestInfo.LocalDateTime;
             var clientLocalDate = clientLocalDateTime.Date;
             var clientLocalDateWeekDay = (WeekDay)clientLocalDateTime.DayOfWeek;
-            var clientLocalTimeOnly = TimeOnly.FromTimeSpan(clientLocalDateTime.TimeOfDay);
+            var clientLocalTimeOnly = clientLocalDateTime.TimeOfDay;
             var newDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
 
             var employeeAttendanceRepository = repositoryManager.EmployeeAttendanceRepository;
@@ -176,8 +176,8 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
             employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks.FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn) != null &&
 
             EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
-            (DateTime)(object)employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
-            .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).Time)
+            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
+            .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate)
             > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes)
                 .CountAsync();
 

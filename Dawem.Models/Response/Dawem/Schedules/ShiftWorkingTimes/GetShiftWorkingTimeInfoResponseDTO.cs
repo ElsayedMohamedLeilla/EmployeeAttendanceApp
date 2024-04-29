@@ -6,8 +6,8 @@ namespace Dawem.Models.Response.Dawem.Schedules.ShiftWorkingTimes
     {
         public int Code { get; set; }
         public string Name { get; set; }
-        public TimeOnly CheckInTime { get; set; }
-        public TimeOnly CheckOutTime { get; set; }
+        public TimeSpan CheckInTime { get; set; }
+        public TimeSpan CheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
         public AmPm TimePeriod { get; set; }
         public bool IsActive { get; set; }

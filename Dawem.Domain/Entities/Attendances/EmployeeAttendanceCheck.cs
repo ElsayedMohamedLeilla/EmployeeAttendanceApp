@@ -23,8 +23,9 @@ namespace Dawem.Domain.Entities.Attendances
         public Zone Zone { get; set; }
 
         #endregion
-        public TimeOnly Time { get; set; }
+        public TimeSpan Time { get; set; }
         public DateTime FingerPrintDate { get; set; }
+        public DateTime FingerPrintDateUTC { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string IpAddress { get; set; }

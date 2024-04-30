@@ -585,6 +585,12 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         }
         public async Task<bool> Enable(int summonId)
         {
+            #region Business Validation
+
+            await summonBLValidation.EnableValidation(summonId);
+
+            #endregion
+
             var sanction = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == summonId) ??
                 throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
             sanction.Enable();
@@ -593,15 +599,27 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
+            #region Business Validation
+
+            await summonBLValidation.DisableValidation(model.Id);
+
+            #endregion
+
             var sanction = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
             sanction.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;
         }
-        public async Task<bool> Delete(int summond)
+        public async Task<bool> Delete(int summonId)
         {
-            var summon = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == summond) ??
+            #region Business Validation
+
+            await summonBLValidation.DeleteValidation(summonId);
+
+            #endregion
+
+            var summon = await repositoryManager.SummonRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == summonId) ??
                 throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
             summon.Delete();
             await unitOfWork.SaveAsync();

@@ -6,5 +6,8 @@ namespace Dawem.Contract.BusinessValidation.Dawem.Summons
     {
         Task<bool> CreateValidation(CreateSummonModel model);
         Task<bool> UpdateValidation(UpdateSummonModel model);
+        Task<bool> DeleteValidation(int summonId);
+        Task<bool> EnableValidation(int summonId);
+        Task<bool> DisableValidation(int summonId);
     }
 }

@@ -625,6 +625,9 @@
         public const string DoneUpdateSettingsSuccessfully = "DoneUpdateSettingsSuccessfully";
         public const string SorryPeriodCanNotGreaterThan30Day = "Sorry!!PeriodCanNotGreaterThan30Day!";
         public const string SorryThereIsNoScheduleForCurrentEmployee = "Sorry!!ThereIsNoScheduleForCurrentEmployee!";
-        
+        public const string SorryEditSummonNotAllowedAfterSummonStarted = "Sorry!!EditSummonNotAllowedAfterSummonStarted!";
+        public const string SorryDeleteSummonNotAllowedAfterSummonStarted = "Sorry!!DeleteSummonNotAllowedAfterSummonStarted!";
+        public const string SorryEnableSummonNotAllowedAfterSummonStarted = "Sorry!!EnableSummonNotAllowedAfterSummonStarted!";
+        public const string SorryDisableSummonNotAllowedAfterSummonStarted = "Sorry!!DisableSummonNotAllowedAfterSummonStarted!";
     }
 }

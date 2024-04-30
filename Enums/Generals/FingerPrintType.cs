@@ -2,11 +2,14 @@
 {
     public enum FingerPrintType
     {
+
         CheckIn,
         CheckOut,
         BreakIn,
         BreakOut,
-        Summon
+        Summon,
+        NotSet
+
     }
 
 }

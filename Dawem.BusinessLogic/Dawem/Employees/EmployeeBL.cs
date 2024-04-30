@@ -611,8 +611,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     }
                     #endregion
                     #region Validate Employee Number 
-
-
                     if (int.TryParse(row.Cell(1).GetString().Trim(), out EmployeeNumber))
                     {
 
@@ -674,8 +672,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                                 foundEmployeeInDB = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Email == row.Cell(7).GetString()).FirstOrDefaultAsync();
                                 if (foundEmployeeInDB == null) // Email Not Found
                                 {
-
-
                                     getNextCode++;
                                     Temp.Code = getNextCode;
                                     Temp.AddedApplicationType = ApplicationType.Web;
@@ -878,7 +874,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             ).Select(e => e.EmployeeId.Value).ToListAsync();
 
             var employeeList = await repositoryManager.EmployeeRepository.Get(e =>
-                !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo=> eo.Id)
+                !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo => eo.Id)
                 .ToListAsync();
 
 
@@ -893,7 +889,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Handle Response
 
-            var employeesList =  queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
+            var employeesList = queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
@@ -902,11 +898,20 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             return new GetEmployeesForDropDownResponse
             {
                 Employees = employeesList,
-                TotalCount =  employeeList.Count()
+                TotalCount = employeeList.Count()
             };
 
             #endregion
         }
+
+
+
     }
+
+
+
+
+
+
 }
 

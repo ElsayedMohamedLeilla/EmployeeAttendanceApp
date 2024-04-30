@@ -241,8 +241,16 @@
         public const string RejectingJustificationRequest = "RejectingJustificationRequest";
 
         public const string SorryTheEmployeeEmailIsInValid = "Sorry!!TheEmployeeEmailIsInValid";
+        public const string InvalidExportFormatSpecified = "InvalidExportFormatSpecified";
+        public const string MissMatchValue = "MissMatchValue";
+        public const string RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues = "RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues";
+        public const string FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues = "FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues";
 
         
+
+
+
+
 
 
 

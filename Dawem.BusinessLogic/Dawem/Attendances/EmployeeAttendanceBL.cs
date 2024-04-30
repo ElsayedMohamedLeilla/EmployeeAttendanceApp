@@ -17,6 +17,7 @@ using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Attendances
@@ -696,7 +697,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
             iniValidationModelDTO.ExpectedHeaders = typeof(EmployeeAttendanceHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
-            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 2 });//EmployeeAttendance  LocalDate Time  can't be duplicated
+            iniValidationModelDTO.ColumnsToCheckDuplication = new List<int>();
             #endregion
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
@@ -731,7 +732,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     double tempLongtude;
                     DateTime localDate;
                     Temp = new();
-                    int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
+                    int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
                     #endregion
                     if (employeeId != 0)
                     {
@@ -784,12 +785,33 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                          row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
                                          row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
                                          row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
-                                         FingerPrintType.CheckIn,
+                                         FingerPrintType.NotSet,
                         FromExcel = true
 
 
 
                     };
+
+                    if ((model.RecognitionWay != RecognitionWay.FingerPrint &&
+                        model.RecognitionWay != RecognitionWay.FaceRecognition &&
+                        model.RecognitionWay != RecognitionWay.PinRecognition &&
+                        model.RecognitionWay != RecognitionWay.PaternRecognition &&
+                        model.RecognitionWay != RecognitionWay.VoiceRecognition 
+                        ))
+                    {
+                        result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    if (model.Type != FingerPrintType.CheckIn &&
+                       model.Type != FingerPrintType.CheckOut &&
+                       model.Type != FingerPrintType.Summon &&
+                       model.Type != FingerPrintType.BreakIn &&
+                       model.Type != FingerPrintType.BreakOut)
+                    {
+                        result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+
                     var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
                     #endregion
                     var getAttandanceId = await repositoryManager
@@ -810,6 +832,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             FingerPrintType = validationResult.FingerPrintType,
                             IsActive = true,
                             Time = TimeOnly.FromTimeSpan(localDate.TimeOfDay),
+                            FingerPrintDate = localDate,
                             Latitude = model.Latitude,
                             Longitude = model.Longitude,
                             IpAddress = requestInfo.RemoteIpAddress,
@@ -860,5 +883,75 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             return result;
         }
+
+        public async Task<List<GetEmployeeAttendanceInPeriodReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
+        {
+
+            using (var context = new ApplicationDBContext())
+            {
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@DateFrom",Critria.DateFrom),
+            new SqlParameter("@DateTo", Critria.DateTo),
+            new SqlParameter("@EmployeeID", Critria.EmployeeID),
+            new SqlParameter("@DepartmentId", Critria.DepartmentId),
+            new SqlParameter("@ZoneId", Critria.ZoneId),
+            new SqlParameter("@JobTitleID", Critria.JobTitleID),
+            new SqlParameter("@CompanyID", requestInfo.CompanyId)
+        };
+                var result = context.Database.SqlQueryRaw<GetEmployeeAttendanceInPeriodReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
+
+                return result;
+            }
+
+        }
+
+
+
+        #region Export Report
+        //public byte[] ExportEmployeeAttendanceReport(GetEmployeeAttendanceInPeriodReportParameters parameters)
+        //{
+        //    // Create a new FastReport instance
+        //    FastReport.Report report = new FastReport.Report();
+
+        //    // Load the report template file
+        //    report.Load("your_report.frx");
+
+        //    // Set up the data source parameters
+        //    report.SetParameterValue("EmployeeID", parameters.EmployeeID);
+        //    report.SetParameterValue("DateFrom", parameters.DateFrom);
+        //    report.SetParameterValue("DateTo", parameters.DateTo);
+        //    report.SetParameterValue("DepartmentId", parameters.DepartmentId);
+        //    report.SetParameterValue("ZoneId", parameters.ZoneId);
+        //    report.SetParameterValue("JobTitleID", parameters.JobTitleID);
+        //    report.SetParameterValue("CompanyID", requestInfo.CompanyId);
+
+        //    // Run the report
+        //    report.Prepare();
+
+        //    // Export the report based on the specified format
+        //    switch (parameters.ExportFormat)
+        //    {
+        //        case ExportFormat.ViewOnly:
+        //            //ShowReportInViewer(report);
+        //            break;
+        //        case ExportFormat.PDF:
+        //           // ExportToPdf(report);
+        //            break;
+        //        case ExportFormat.Excel:
+        //           // ExportToExcel(report);
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException(nameof(parameters.ExportFormat), TranslationHelper.GetTranslation(AmgadKeys.InvalidExportFormatSpecified, requestInfo.Lang));
+        //    }
+        //}
+
+
+
+        #endregion
+
+
+
+
     }
 }

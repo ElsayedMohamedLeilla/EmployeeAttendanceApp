@@ -18,6 +18,7 @@ using Dawem.Models.Response.Dawem.Employees.Users;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.User;
+using Google.Apis.Util;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -310,7 +311,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             //#endregion
             #region GetEmployee
-            requestInfo.CompanyId = 17;
+            requestInfo.CompanyId = requestInfo.CompanyId;
             var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
             !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
@@ -318,7 +319,8 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
             user.AddUserId = requestInfo.UserId;
-            user.UserName = foundEmployee.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
+            user.UserName = foundEmployee.Email;
+            user.Email = foundEmployee.Email;
             user.ProfileImageName = foundEmployee.ProfileImageName;
             user.Code = foundEmployee.Code;
             user.EmailConfirmed = true;

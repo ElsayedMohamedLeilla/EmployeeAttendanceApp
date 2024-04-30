@@ -216,6 +216,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             var employee = repositoryManager.EmployeeRepository.Insert(new Employee
             {
                 CompanyId = companyId,
+                MobileNumber = model.UserMobileNumber,
+                MobileCountryId = model.UserMobileCountryId,
                 Department = new Department
                 {
                     CompanyId = companyId,
@@ -312,9 +314,11 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 Name = model.Name,
                 Code = 1,
                 MobileNumber = model.UserMobileNumber,
+                MobileCountryId = model.UserMobileCountryId,
                 IsAdmin = true,
                 IsActive = true,
-                EmailConfirmed = model.UserEmail.Contains(LeillaKeys.DawemTest)
+                EmailConfirmed = model.UserEmail.Contains(LeillaKeys.DawemTest),
+                Type = AuthenticationType.DawemAdmin
             };
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);

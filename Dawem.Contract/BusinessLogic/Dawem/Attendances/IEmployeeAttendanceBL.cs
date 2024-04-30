@@ -20,5 +20,6 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
 
 
 
+        Task<GetEmployeeSchedulesResponse> GetEmployeeSchedules(GetEmployeeSchedulesModel model);
     }
 }

@@ -395,7 +395,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             return true;
         }
-        public async Task<int> GetEmployeeScheduleValidation()
+        public async Task<int> GetCurrentEmployeeScheduleValidation()
         {
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
                  throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);

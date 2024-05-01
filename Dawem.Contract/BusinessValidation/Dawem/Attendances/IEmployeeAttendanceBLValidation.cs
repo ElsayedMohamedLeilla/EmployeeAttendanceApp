@@ -8,6 +8,6 @@ namespace Dawem.Contract.BusinessValidation.Dawem.Attendances
         Task<FingerPrintValidationResponseModel> FingerPrintValidation(FingerprintModel model);
         Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation();
         Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model);
-        Task<int> GetEmployeeScheduleValidation();
+        Task<int> GetCurrentEmployeeScheduleValidation();
     }
 }

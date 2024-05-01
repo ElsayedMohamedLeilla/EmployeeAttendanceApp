@@ -59,13 +59,13 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances
             return Success(response);
         }
         [HttpGet]
-        public async Task<ActionResult> GetEmployeeSchedules([FromQuery] GetEmployeeSchedulesModel model)
+        public async Task<ActionResult> GetCurrentEmployeeSchedules([FromQuery] GetCurrentEmployeeSchedulesModel model)
         {
             if (model == null)
             {
                 return BadRequest();
             }
-            var response = await employeeAttendanceBL.GetEmployeeSchedules(model);
+            var response = await employeeAttendanceBL.GetCurrentEmployeeSchedules(model);
             return Success(response, response.Schedules.Count);
         }
         [HttpGet]
@@ -122,7 +122,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances
                 return StatusCode(400, result);
             }
         }
-
 
     }
 }

@@ -245,8 +245,13 @@
         public const string MissMatchValue = "MissMatchValue";
         public const string RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues = "RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues";
         public const string FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues = "FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues";
+        public const string YourUserNameIs = "YourUserNameIs";
+        public const string NewAccount = "NewAccount";
 
         
+
+
+
 
 
 

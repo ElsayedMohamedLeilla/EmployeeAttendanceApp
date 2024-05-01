@@ -311,7 +311,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             //#endregion
             #region GetEmployee
             requestInfo.CompanyId = requestInfo.CompanyId;
-           // requestInfo.CompanyId = 17;
+            // requestInfo.CompanyId = 17;
             var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
             !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
@@ -344,6 +344,31 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     throw new BusinessValidationException(AmgadKeys.SorryThisEmailAlreadySignedUp);
                 else
                     throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+            }
+            else
+            {
+                var verifyEmail = new VerifyEmailModel
+                {
+                    Email = foundEmployee.Email,
+                    Subject = TranslationHelper.GetTranslation(AmgadKeys.ThanksForUsingDawemApplication, requestInfo?.Lang),
+                    Body = $@"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>{TranslationHelper.GetTranslation(AmgadKeys.NewAccount, requestInfo?.Lang)}</title>
+        </head>
+        <body>
+            <p>
+                {TranslationHelper.GetTranslation(AmgadKeys.YourUserNameIs, requestInfo?.Lang) + LeillaKeys.Space + foundEmployee.Email}
+            </p>
+            <p>
+            </p>
+        </body>
+        </html>
+                    "
+                };
+
+                await mailBL.SendEmail(verifyEmail);
             }
             #endregion
 

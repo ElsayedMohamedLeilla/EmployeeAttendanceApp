@@ -192,7 +192,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Employees
                     throw new BusinessValidationException(LeillaKeys.SorrySelectedEmployeeNotFound);
                 }
                 var CheckUser = await repositoryManager.UserRepository
-                                    .Get(e => e.EmployeeId == model.EmployeeId && !e.IsDeleted)
+                                    .Get(e => e.EmployeeId == model.EmployeeId && !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
                                     .AnyAsync();
                 if(CheckUser)
                 {

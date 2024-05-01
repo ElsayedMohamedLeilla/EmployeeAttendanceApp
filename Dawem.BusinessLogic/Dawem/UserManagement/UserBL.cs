@@ -318,6 +318,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
+            user.EmployeeId = foundEmployee.Id;
             user.AddUserId = requestInfo.UserId;
             user.UserName = foundEmployee.Email;
             user.Email = foundEmployee.Email;
@@ -343,26 +344,6 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 else
                     throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
-
-            /*if (model.Responsibilities != null)
-            {
-                var getUserResponsibilities = await repositoryManager.ResponsibilityRepository
-                    .Get(r => model.Responsibilities.Contains(r.Id))
-                    .Select(r => r.Name)
-                    .ToListAsync();
-
-                if (getUserResponsibilities == null || getUserResponsibilities.Count == 0)
-                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
-
-                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, getUserResponsibilities);
-                if (!assignRolesResult.Succeeded)
-                {
-                    unitOfWork.Rollback();
-                    throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
-                }
-                await unitOfWork.SaveAsync();
-            }*/
-
             #endregion
 
             #region Handle Response

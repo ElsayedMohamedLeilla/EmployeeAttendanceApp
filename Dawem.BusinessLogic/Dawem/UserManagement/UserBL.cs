@@ -319,6 +319,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
             user.EmployeeId = foundEmployee.Id;
+            user.Name = foundEmployee.Name;
             user.AddUserId = requestInfo.UserId;
             user.UserName = foundEmployee.Email;
             user.Email = foundEmployee.Email;

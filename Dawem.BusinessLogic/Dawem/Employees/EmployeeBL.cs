@@ -870,7 +870,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
             u.IsActive & u.CompanyId == requestInfo.CompanyId
-            && u.EmployeeId > 0
+            && (u.EmployeeId > 0 &&  u.EmployeeId == null)
             ).Select(e => e.EmployeeId.Value).ToListAsync();
 
             var employeeList = await repositoryManager.EmployeeRepository.Get(e =>

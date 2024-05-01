@@ -18,7 +18,6 @@ using Dawem.Models.Response.Dawem.Employees.Users;
 using Dawem.Repository.UserManagement;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.User;
-using Google.Apis.Util;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -67,7 +66,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region get Employee
-            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted  && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
+            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
             #endregion
 
             #region GetMax OTP
@@ -76,7 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             {
                 // Retrieve the OTP with the maximum code
                 var maxOTP = employeeOTPs.OrderByDescending(o => o.OTPCount).First();
-                if(model.OTP != maxOTP.OTP)
+                if (model.OTP != maxOTP.OTP)
                 {
                     throw new BusinessValidationException(AmgadKeys.SorryWrongOTPPleaseUseLastRecieviedOne);
                 }
@@ -130,7 +129,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     else
                         repositoryManager.EmployeeOTPRepository.BulkDeleteIfExist(employeeOTPs);
 
-                        #region Send Greetings Email
+                    #region Send Greetings Email
 
                     var greetingEmail = new VerifyEmailModel
                     {
@@ -312,6 +311,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             //#endregion
             #region GetEmployee
             requestInfo.CompanyId = requestInfo.CompanyId;
+           // requestInfo.CompanyId = 17;
             var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
             !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
@@ -335,7 +335,13 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 if (error.Code == "InvalidEmail")
                     throw new BusinessValidationException(AmgadKeys.SorryTheEmployeeEmailIsInValid);
                 else
-                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
+                     if (error.Code == "DuplicateUserName")
+                    throw new BusinessValidationException(AmgadKeys.SorryThisUserNameAlreadySignedUp);
+                else
+                     if (error.Code == "DuplicateEmail")
+                    throw new BusinessValidationException(AmgadKeys.SorryThisEmailAlreadySignedUp);
+                else
+                    throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
             }
 
             /*if (model.Responsibilities != null)

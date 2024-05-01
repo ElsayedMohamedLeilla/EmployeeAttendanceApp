@@ -906,6 +906,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
         }
 
+        public Task<GetEmployeeSchedulesResponse> GetEmployeeSchedules(GetEmployeeSchedulesModel model)
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         #region Export Report

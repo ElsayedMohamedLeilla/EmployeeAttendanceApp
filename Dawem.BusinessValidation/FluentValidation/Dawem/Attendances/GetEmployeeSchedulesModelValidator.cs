@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.Dawem.Attendances
 {
-    public class GetEmployeeSchedulesModelValidator : AbstractValidator<GetEmployeeSchedulesModel>
+    public class GetEmployeeSchedulesModelValidator : AbstractValidator<GetCurrentEmployeeSchedulesModel>
     {
         public GetEmployeeSchedulesModelValidator()
         {

@@ -770,6 +770,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     }
 
                     #region Business Validation
+
                     FingerprintModel model = new()
                     {
                         Latitude = tempLatitude,
@@ -814,6 +815,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                     var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
                     #endregion
+
                     var getAttandanceId = await repositoryManager
                                          .EmployeeAttendanceRepository
                                          .Get(e => !e.IsDeleted && e.EmployeeId == employeeId
@@ -905,14 +907,53 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
 
         }
-
-        public Task<GetEmployeeSchedulesResponse> GetEmployeeSchedules(GetEmployeeSchedulesModel model)
+        public async Task<GetCurrentEmployeeSchedulesResponse> GetCurrentEmployeeSchedules(GetCurrentEmployeeSchedulesModel model)
         {
-            throw new NotImplementedException();
+            var resonse = new GetCurrentEmployeeSchedulesResponse();
+
+            #region Business Validation
+
+            var scheduleId = await employeeAttendanceBLValidation.GetCurrentEmployeeScheduleValidation();
+
+            #endregion
+
+            var allDatesInPeriod = OthersHelper.AllDatesInPeriod(model.DateFrom, model.DateTo).ToList();
+
+            var getScheduleDays = await repositoryManager.ScheduleDayRepository.
+                Get(s => !s.IsDeleted && s.ScheduleId == scheduleId).
+                Select(s => new
+                {
+                    s.WeekDay,
+                    IsVacation = s.ShiftId == null,
+                    StartTime = s.ShiftId > 0 ? (TimeOnly?)s.Shift.CheckInTime : null,
+                    EndTime = s.ShiftId > 0 ? (TimeOnly?)s.Shift.CheckOutTime : null,
+                }).ToListAsync();
+
+            var schedules = allDatesInPeriod.
+                Select(date => new GetEmployeeScheduleResponseModel
+                {
+                    DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
+                    IsVacation = getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).IsVacation,
+                    TimeFrom = getScheduleDays?.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek)?.StartTime != null ?
+                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime.Value.ToString("HH:mm")
+                    + LeillaKeys.Space + TranslationHelper.GetTranslation(getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = getScheduleDays?.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek)?.EndTime != null ?
+                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime.Value.ToString("HH:mm")
+                    + LeillaKeys.Space + TranslationHelper.GetTranslation(getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    WorkingHours = !getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).IsVacation ?
+                    (decimal)((getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime -
+                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime).Value.TotalHours) : null
+                }).ToList();
+
+            resonse.TotalWorkingHours =
+                schedules.Where(d => !d.IsVacation).
+                Sum(d => d.WorkingHours) + LeillaKeys.Space +
+                TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang);
+
+            resonse.Schedules = schedules;
+
+            return resonse;
         }
-
-
-
         #region Export Report
         //public byte[] ExportEmployeeAttendanceReport(GetEmployeeAttendanceInPeriodReportParameters parameters)
         //{

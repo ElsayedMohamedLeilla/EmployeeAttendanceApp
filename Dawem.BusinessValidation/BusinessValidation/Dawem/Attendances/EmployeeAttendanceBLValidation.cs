@@ -118,7 +118,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
             var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == getScheduleId && !schedule.IsDeleted)
-               .Select(schedule => new GetScheduleByIdResponseModel
+               .Select(schedule => new
                {
                    Id = schedule.Id,
                    Code = schedule.Code,

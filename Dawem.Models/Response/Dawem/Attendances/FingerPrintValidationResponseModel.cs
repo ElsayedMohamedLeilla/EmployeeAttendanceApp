@@ -9,7 +9,7 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int ShiftId { get; set; }
         public int? SummonId { get; set; }
         public int? ZoneId { get; set; }
-        public DateTime LocalDate { get; set; }
+        public DateTime LocalDateTime { get; set; }
         public TimeSpan ShiftCheckInTime { get; set; }
         public TimeSpan ShiftCheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }

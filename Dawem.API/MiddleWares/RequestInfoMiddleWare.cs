@@ -99,7 +99,7 @@ namespace Dawem.API.MiddleWares
                 }
 
 
-                requestInfo.EmployeeId = requestInfo.User.EmployeeId ?? 0;
+                requestInfo.EmployeeId = requestInfo?.User?.EmployeeId;
                 requestInfo.CompanyId = requestInfo.Type == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 

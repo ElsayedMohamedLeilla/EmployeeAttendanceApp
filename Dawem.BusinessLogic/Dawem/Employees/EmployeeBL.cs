@@ -799,7 +799,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         public async Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria criteria)
         {
 
-            criteria.EmployeeId = requestInfo.EmployeeId;
+            criteria.EmployeeId = requestInfo.EmployeeId ?? 0;
             criteria.DateFrom = DateTime.UtcNow;
             //criteria.DateTo = criteria.DateFrom.AddDays(30);
             criteria.DateTo = criteria.DateFrom.AddDays(100);

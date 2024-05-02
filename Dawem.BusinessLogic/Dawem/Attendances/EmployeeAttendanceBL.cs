@@ -40,7 +40,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
         public async Task<FingerPrintType> CreateFingerPrint(FingerprintModel model)
         {
             #region Business Validation
+
             var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
+
             #endregion
 
             await unitOfWork.CreateTransactionAsync();
@@ -50,7 +52,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             var getAttandanceId = await repositoryManager
                 .EmployeeAttendanceRepository
                 .Get(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
-                && e.LocalDate.Date == requestInfo.LocalDateTime.Date)
+                && e.LocalDate.Date == validationResult.LocalDateTime.Date)
                 .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
@@ -64,7 +66,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ZoneId = validationResult.ZoneId,
                     FingerPrintType = validationResult.FingerPrintType,
                     IsActive = true,
-                    FingerPrintDate = requestInfo.LocalDateTime,
+                    FingerPrintDate = validationResult.LocalDateTime,
                     FingerPrintDateUTC = DateTime.UtcNow,
                     Latitude = model.Latitude,
                     Longitude = model.Longitude,
@@ -83,7 +85,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     if (getSummonLog != null)
                     {
                         getSummonLog.DoneSummon = true;
-                        getSummonLog.DoneDate = requestInfo.LocalDateTime;
+                        getSummonLog.DoneDate = validationResult.LocalDateTime;
                         await unitOfWork.SaveAsync();
                     }
                 }
@@ -116,14 +118,14 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     AllowedMinutes = validationResult.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,
-                    LocalDate = requestInfo.LocalDateTime,
+                    LocalDate = validationResult.LocalDateTime,
                     EmployeeId = validationResult.EmployeeId,
                     IsActive = true,
                     EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
                         FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
                         ZoneId = validationResult.ZoneId,
-                        FingerPrintDate = requestInfo.LocalDateTime,
+                        FingerPrintDate = validationResult.LocalDateTime,
                         FingerPrintDateUTC = DateTime.UtcNow,
                         Latitude = model.Latitude,
                         Longitude = model.Longitude,
@@ -145,6 +147,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             #region Handle Response
 
             await unitOfWork.CommitAsync();
+
             return validationResult.FingerPrintType;
 
             #endregion

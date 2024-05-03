@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 {
-
     public class EmployeeAttendanceBLValidation : IEmployeeAttendanceBLValidation
     {
         private readonly IRepositoryManager repositoryManager;

@@ -797,7 +797,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         model.RecognitionWay != RecognitionWay.FaceRecognition &&
                         model.RecognitionWay != RecognitionWay.PinRecognition &&
                         model.RecognitionWay != RecognitionWay.PaternRecognition &&
-                        model.RecognitionWay != RecognitionWay.VoiceRecognition 
+                        model.RecognitionWay != RecognitionWay.VoiceRecognition
                         ))
                     {
                         result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
@@ -915,46 +915,138 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             var scheduleId = await employeeAttendanceBLValidation.GetCurrentEmployeeScheduleValidation();
 
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
+                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
             #endregion
 
             var allDatesInPeriod = OthersHelper.AllDatesInPeriod(model.DateFrom, model.DateTo).ToList();
+            var currentEmployeeScheduleDayModel = new CurrentEmployeeScheduleDayModel
+            {
+                ScheduleId = scheduleId,
+                EmployeeId = getEmployeeId,
+                DateFrom = model.DateFrom,
+                DateTo = model.DateTo
+            };
+            var currentEmployeeScheduleDaysAndPlans = await GetCurrentEmployeeScheduleDaysAndPlans(currentEmployeeScheduleDayModel);
+            var getScheduleDays = currentEmployeeScheduleDaysAndPlans.EmployeeScheduleDays;
+            var getSchedulePlans = currentEmployeeScheduleDaysAndPlans.EmployeeSchedulePlans;
 
-            var getScheduleDays = await repositoryManager.ScheduleDayRepository.
-                Get(s => !s.IsDeleted && s.ScheduleId == scheduleId).
-                Select(s => new
+            var dayModel = new CurrentEmployeeScheduleDaysAndPlansResponseModel
+            {
+                EmployeeScheduleDays = getScheduleDays,
+                EmployeeSchedulePlans = getSchedulePlans
+            };
+
+            var schedules = new List<GetEmployeeScheduleResponseModel>();
+
+            for (int i = 0; i < allDatesInPeriod.Count; i++)
+            {
+                var date = allDatesInPeriod[i];
+                var currentEmployeeScheduleDaysAndPlansResponseModel = new CurrentEmployeeScheduleDaysAndPlansResponseModel
                 {
-                    s.WeekDay,
-                    IsVacation = s.ShiftId == null,
-                    StartTime = s.ShiftId > 0 ? (TimeOnly?)s.Shift.CheckInTime : null,
-                    EndTime = s.ShiftId > 0 ? (TimeOnly?)s.Shift.CheckOutTime : null,
-                }).ToListAsync();
-
-            var schedules = allDatesInPeriod.
-                Select(date => new GetEmployeeScheduleResponseModel
+                    EmployeeSchedulePlans = getSchedulePlans,
+                    EmployeeScheduleDays = getScheduleDays,
+                    Date = date
+                };
+                var day = GetCurrentEmployeeScheduleDays(currentEmployeeScheduleDaysAndPlansResponseModel);
+               
+                schedules.Add(new GetEmployeeScheduleResponseModel
                 {
                     DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
-                    IsVacation = getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).IsVacation,
-                    TimeFrom = getScheduleDays?.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek)?.StartTime != null ?
-                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime.Value.ToString("HH:mm")
-                    + LeillaKeys.Space + TranslationHelper.GetTranslation(getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
-                    TimeTo = getScheduleDays?.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek)?.EndTime != null ?
-                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime.Value.ToString("HH:mm")
-                    + LeillaKeys.Space + TranslationHelper.GetTranslation(getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
-                    WorkingHours = !getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).IsVacation ?
-                    (decimal)((getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).EndTime -
-                    getScheduleDays.FirstOrDefault(s => s.WeekDay == (WeekDay)date.DayOfWeek).StartTime).Value.TotalHours) : null
-                }).ToList();
+                    IsVacation = day.IsVacation,
+                    TimeFrom = day?.StartTime != null ? day.StartTime.Value.ToString("HH:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = day?.EndTime != null ? day.EndTime.Value.ToString("HH:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) : null,
+                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) + 
+                    LeillaKeys.Space + 
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null
+                });
+            }
 
             resonse.TotalWorkingHours =
-                schedules.Where(d => !d.IsVacation).
-                Sum(d => d.WorkingHours) + LeillaKeys.Space +
+                Math.Round(schedules.Where(d => !d.IsVacation).Sum(d => d.WorkingHoursNumber) ?? 0, 2) + LeillaKeys.Space +
                 TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang);
 
             resonse.Schedules = schedules;
 
             return resonse;
         }
+        private async Task<CurrentEmployeeScheduleDaysAndPlansResponseModel> GetCurrentEmployeeScheduleDaysAndPlans(CurrentEmployeeScheduleDayModel model)
+        {
+            var getEmployeeScheduleDays = await repositoryManager.ScheduleDayRepository.
+                Get(s => !s.IsDeleted && s.ScheduleId == model.ScheduleId).
+                Select(s => new CurrentEmployeeScheduleShiftResponseModel
+                {
+                    WeekDay = s.WeekDay,
+                    IsVacation = s.ShiftId == null,
+                    StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
+                    EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                }).ToListAsync();
+
+            var getEmployeeSchedulePlans = await repositoryManager.EmployeeRepository.
+                Get(employee => !employee.IsDeleted && employee.Id == model.EmployeeId).
+                Select(employee => new CurrentEmployeeSchedulePlanResponseModel
+                {
+                    SchedulePlans = employee.Company.SchedulePlans.Any(sp => !sp.IsDeleted) ?
+                    employee.Company.SchedulePlans.
+                    Where(sp => !sp.IsDeleted &&
+                    (sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                    sp.SchedulePlanEmployee.EmployeeId == employee.Id || employee.DepartmentId != null &&
+                    sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
+                    sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId || employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                    sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
+                    employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId)) && sp.DateFrom.Date <= model.DateTo.Date &&
+                    (sp.DateFrom.Date >= model.DateFrom.Date ||
+                    sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date <= model.DateFrom.Date).Max())).
+                    Select(sp => new CurrentEmployeeScheduleDayResponseModel
+                    {
+                        DateFrom = sp.DateFrom,
+                        ScheduleDays = sp.Schedule.ScheduleDays.
+                        Where(sd => !sd.IsDeleted).
+                        Select(s => new CurrentEmployeeScheduleShiftResponseModel
+                        {
+                            WeekDay = s.WeekDay,
+                            IsVacation = s.ShiftId == null,
+                            StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
+                            EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                        }).ToList()
+                    }).ToList() : null
+                }).FirstOrDefaultAsync();
+
+            return new CurrentEmployeeScheduleDaysAndPlansResponseModel
+            {
+                EmployeeScheduleDays = getEmployeeScheduleDays,
+                EmployeeSchedulePlans = getEmployeeSchedulePlans.SchedulePlans
+            };
+        }
+        private CurrentEmployeeScheduleShiftResponseModel GetCurrentEmployeeScheduleDays(CurrentEmployeeScheduleDaysAndPlansResponseModel model)
+        {
+            var employeeScheduleDays = model.EmployeeScheduleDays;
+            var employeeSchedulePlans = model.EmployeeSchedulePlans;
+            List<CurrentEmployeeScheduleShiftResponseModel> days = employeeScheduleDays;
+
+            if (employeeSchedulePlans != null && employeeSchedulePlans.Count > 0)
+            {
+                var planScheduleDays = employeeSchedulePlans?.
+                     Where(p => p.DateFrom <= model.Date)?.
+                     MaxBy(p => p.DateFrom)?.
+                     ScheduleDays;
+
+                if (planScheduleDays != null && planScheduleDays.Count > 0)
+                {
+                    days = planScheduleDays;
+                }
+            }
+
+            var day = days.FirstOrDefault(s => s.WeekDay == (WeekDay)model.Date.DayOfWeek);
+            return day;
+        }
+
         #region Export Report
+
         //public byte[] ExportEmployeeAttendanceReport(GetEmployeeAttendanceInPeriodReportParameters parameters)
         //{
         //    // Create a new FastReport instance

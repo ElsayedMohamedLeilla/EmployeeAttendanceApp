@@ -6,6 +6,8 @@ using Dawem.Domain.Entities.Core;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Dawem.Models.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {
@@ -27,9 +29,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         {
             var d = 10;
 
+            var getNextCode = await fingerprintDeviceRepository
+                .Get(e => e.CompanyId == 7)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                Name = "New FingerPrint:" + DateTime.UtcNow,
+                Name = "(iclock/cdata) post" + DateTime.UtcNow,
+                Code = getNextCode,
                 Notes ="Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
@@ -362,11 +371,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         [Route("iclock/devicecmd")]
         public async Task<ActionResult> Test1([FromQuery] PostDataModel query)
         {
-            var d = 10;
+            var getNextCode = await fingerprintDeviceRepository
+                .Get(e => e.CompanyId == 7)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
 
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Name = "(iclock/devicecmd)" + DateTime.UtcNow,
+                Code = getNextCode,
                 Notes = "Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
@@ -383,9 +397,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         {
             var d = 10;
 
+            var getNextCode = await fingerprintDeviceRepository
+                .Get(e => e.CompanyId == 7)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Name = "(iclock/ping)" + DateTime.UtcNow,
+                Code = getNextCode,
                 Notes = "Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
@@ -402,9 +423,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         {
             var d = 10;
 
+            var getNextCode = await fingerprintDeviceRepository
+                .Get(e => e.CompanyId == 7)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Name = "(iclock/getrequest)" + DateTime.UtcNow,
+                Code = getNextCode,
                 Notes = "Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
@@ -421,9 +449,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         {
             var d = 10;
 
+            var getNextCode = await fingerprintDeviceRepository
+                .Get(e => e.CompanyId == 7)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
+
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Name = "(iclock/cdata) get" + DateTime.UtcNow,
+                Code = getNextCode,
                 Notes = "Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,

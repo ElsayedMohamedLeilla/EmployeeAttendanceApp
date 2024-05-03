@@ -70,7 +70,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress,
                     RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                    RecognitionWay.FingerPrint : model.RecognitionWay
+                    RecognitionWay.FingerPrint : model.RecognitionWay,
+                    FingerprintSource = FingerprintSource.MobileDevice
                 });
 
                 #region Summon Log
@@ -128,7 +129,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         Longitude = model.Longitude,
                         IpAddress = requestInfo.RemoteIpAddress,
                         RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                        RecognitionWay.FingerPrint : model.RecognitionWay
+                        RecognitionWay.FingerPrint : model.RecognitionWay,
+                        FingerprintSource = FingerprintSource.MobileDevice
                     } }
                 };
 
@@ -797,7 +799,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         model.RecognitionWay != RecognitionWay.FaceRecognition &&
                         model.RecognitionWay != RecognitionWay.PinRecognition &&
                         model.RecognitionWay != RecognitionWay.PaternRecognition &&
-                        model.RecognitionWay != RecognitionWay.VoiceRecognition 
+                        model.RecognitionWay != RecognitionWay.VoiceRecognition
                         ))
                     {
                         result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
@@ -840,8 +842,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             IpAddress = requestInfo.RemoteIpAddress,
                             RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                             RecognitionWay.FingerPrint : model.RecognitionWay,
-                            InsertedFromExcel = true
-
+                            FingerprintSource = FingerprintSource.ExcelFile
                         });
                     }
                     else

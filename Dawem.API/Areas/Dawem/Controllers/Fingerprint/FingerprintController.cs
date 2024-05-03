@@ -29,7 +29,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 
             fingerprintDeviceRepository.Insert(new FingerprintDevice
             {
-                Name = "New FingerPrint:",
+                Name = "New FingerPrint:" + DateTime.UtcNow,
                 Notes ="Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
@@ -356,6 +356,82 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
                 await LogException(ex);
                 return Ok("Ok");
             }*/
+            return Ok("Ok");
+        }
+        [HttpPost]
+        [Route("iclock/devicecmd")]
+        public async Task<ActionResult> Test1([FromQuery] PostDataModel query)
+        {
+            var d = 10;
+
+            fingerprintDeviceRepository.Insert(new FingerprintDevice
+            {
+                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Notes = "Data:" + JsonConvert.SerializeObject(query),
+                AddedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.Now,
+                CompanyId = 7,
+                SerialNumber = "Hatch"
+            });
+            await unitOfWork.SaveAsync();
+
+            return Ok("Ok");
+        }
+        [HttpGet]
+        [Route("iclock/ping")]
+        public async Task<ActionResult> Test2([FromQuery] PostDataModel query)
+        {
+            var d = 10;
+
+            fingerprintDeviceRepository.Insert(new FingerprintDevice
+            {
+                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Notes = "Data:" + JsonConvert.SerializeObject(query),
+                AddedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.Now,
+                CompanyId = 7,
+                SerialNumber = "Hatch"
+            });
+            await unitOfWork.SaveAsync();
+
+            return Ok("Ok");
+        }
+        [HttpGet]
+        [Route("iclock/getrequest")]
+        public async Task<ActionResult> Test3([FromQuery] PostDataModel query)
+        {
+            var d = 10;
+
+            fingerprintDeviceRepository.Insert(new FingerprintDevice
+            {
+                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Notes = "Data:" + JsonConvert.SerializeObject(query),
+                AddedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.Now,
+                CompanyId = 7,
+                SerialNumber = "Hatch"
+            });
+            await unitOfWork.SaveAsync();
+
+            return Ok("Ok");
+        }
+        [HttpGet]
+        [Route("iclock/cdata")]
+        public async Task<ActionResult> Test4([FromQuery] PostDataModel query)
+        {
+            var d = 10;
+
+            fingerprintDeviceRepository.Insert(new FingerprintDevice
+            {
+                 Name = "New FingerPrint:" + DateTime.UtcNow,
+                Notes = "Data:" + JsonConvert.SerializeObject(query),
+                AddedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.Now,
+                CompanyId = 7,
+                SerialNumber = "Hatch"
+            });
+            await unitOfWork.SaveAsync();
+
             return Ok("Ok");
         }
     }

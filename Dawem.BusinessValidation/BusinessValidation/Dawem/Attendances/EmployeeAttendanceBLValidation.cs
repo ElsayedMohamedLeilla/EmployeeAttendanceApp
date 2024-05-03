@@ -358,9 +358,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     Id = a.Id,
                     Code = a.Code,
                     CheckInDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
-                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : default,
+                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : null,
                     CheckOutDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
-                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : default,
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
 
@@ -443,12 +443,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var getLastFingerprint = await repositoryManager.
                 EmployeeAttendanceCheckRepository.
                 Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId).
+                OrderByDescending(a=>a.Id).
                 Select(check => new
                 {
                     check.FingerPrintDate,
                     check.FingerPrintType,
                     check.EmployeeAttendance.LocalDate
-                }).LastOrDefaultAsync();
+                }).FirstOrDefaultAsync();
 
             var checkIfLastFingerPrintAllow24Hours =
                 getLastFingerprint != null &&
@@ -484,7 +485,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     {
                         the24HoursShift = getLastShiftInfo;
                         clientLocalDate = lastClientLocalDate;
-                        lastClientLocalDate = lastClientLocalDateTime;
+                        clientLocalDateTime  = lastClientLocalDateTime;
                     }
 
                     #endregion

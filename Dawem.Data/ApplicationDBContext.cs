@@ -358,42 +358,7 @@ namespace Dawem.Data
            .HasMany(d => d.Employees)
            .WithOne(e => e.Department)
            .HasForeignKey(e => e.DepartmentId);
-
-
-
-            builder.Entity<ShiftWorkingTime>()
-           .Property(e => e.CheckInTime)
-           .HasConversion(
-               v => v.ToTimeSpan(),
-               v => TimeOnly.FromTimeSpan(v)
-           );
-            builder.Entity<ShiftWorkingTime>()
-          .Property(e => e.CheckOutTime)
-          .HasConversion(
-              v => v.ToTimeSpan(),
-              v => TimeOnly.FromTimeSpan(v)
-
-          );
-
-            builder.Entity<EmployeeAttendanceCheck>()
-          .Property(e => e.Time)
-          .HasConversion(
-              v => v.ToTimeSpan(),
-              v => TimeOnly.FromTimeSpan(v)
-          );
-
-            builder.Entity<EmployeeAttendance>()
-         .Property(e => e.ShiftCheckInTime)
-         .HasConversion(
-             v => v.ToTimeSpan(),
-             v => TimeOnly.FromTimeSpan(v)
-         );
-            builder.Entity<EmployeeAttendance>()
-          .Property(e => e.ShiftCheckOutTime)
-          .HasConversion(
-              v => v.ToTimeSpan(),
-            v => TimeOnly.FromTimeSpan(v)
-            );
+     
 
             #region Add Index To All CompanyId And Name In All Tables
 

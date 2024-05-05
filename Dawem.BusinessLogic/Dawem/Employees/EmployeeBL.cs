@@ -480,7 +480,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
              employee.Schedule.ScheduleDays != null &&
              employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
              employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
-             clientLocalTimeOnly > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
+             clientLocalDateTime.TimeOfDay > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
              (employee.EmployeeAttendances == null || employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) == null))
             .CountAsync();
 
@@ -795,7 +795,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         public async Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria criteria)
         {
 
-            criteria.EmployeeId = requestInfo.EmployeeId;
+            criteria.EmployeeId = requestInfo.EmployeeId ?? 0;
             criteria.DateFrom = DateTime.UtcNow;
             //criteria.DateTo = criteria.DateFrom.AddDays(30);
             criteria.DateTo = criteria.DateFrom.AddDays(100);

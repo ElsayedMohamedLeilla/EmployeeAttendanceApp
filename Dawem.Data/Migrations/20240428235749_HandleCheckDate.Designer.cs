@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240428235749_HandleCheckDate")]
+    partial class HandleCheckDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,7 +98,7 @@ namespace Dawem.Data.Migrations
                     b.Property<TimeSpan>("ShiftCheckOutTime")
                         .HasColumnType("time");
 
-                    b.Property<int?>("ShiftId")
+                    b.Property<int>("ShiftId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("TotalEarlyDeparturesHours")
@@ -183,8 +186,8 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("FingerPrintType")
                         .HasColumnType("int");
 
-                    b.Property<int>("FingerprintSource")
-                        .HasColumnType("int");
+                    b.Property<bool>("InsertedFromExcel")
+                        .HasColumnType("bit");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(50)
@@ -340,9 +343,6 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastSeenDateUTC")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Model")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -382,89 +382,6 @@ namespace Dawem.Data.Migrations
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("FingerprintDevices", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.FingerprintTransaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FingerPrintType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FingerprintDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FingerprintDeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FingerprintUserId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("ScheduleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("FingerprintDeviceId");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.ToTable("FingerprintTransactions", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Group", b =>
@@ -1471,9 +1388,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("EmployeeType")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FingerprintDeviceUserCode")
                         .HasColumnType("int");
 
                     b.Property<string>("FingerprintMobileCode")
@@ -5660,7 +5574,8 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Schedules.ShiftWorkingTime", "Shift")
                         .WithMany()
                         .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
@@ -5723,40 +5638,6 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.FingerprintTransaction", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Core.FingerprintDevice", "FingerprintDevice")
-                        .WithMany()
-                        .HasForeignKey("FingerprintDeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Schedules.Schedule", "Schedule")
-                        .WithMany()
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("FingerprintDevice");
-
-                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Group", b =>

@@ -17,6 +17,7 @@ using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Attendances
@@ -72,7 +73,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress,
                     RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                    RecognitionWay.FingerPrint : model.RecognitionWay
+                    RecognitionWay.FingerPrint : model.RecognitionWay,
+                    FingerprintSource = FingerprintSource.MobileDevice
                 });
 
                 #region Summon Log
@@ -131,7 +133,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         Longitude = model.Longitude,
                         IpAddress = requestInfo.RemoteIpAddress,
                         RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                        RecognitionWay.FingerPrint : model.RecognitionWay
+                        RecognitionWay.FingerPrint : model.RecognitionWay,
+                        FingerprintSource = FingerprintSource.MobileDevice
                     } }
                 };
 
@@ -701,7 +704,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             iniValidationModelDTO.ExcelExportScreen = ExcelExportScreen.Zones;
             iniValidationModelDTO.ExpectedHeaders = typeof(EmployeeAttendanceHeaderDraftDTO).GetProperties().Select(prop => prop.Name).ToArray();
             iniValidationModelDTO.Lang = requestInfo?.Lang;
-            iniValidationModelDTO.ColumnsToCheckDuplication.AddRange(new int[] { 2 });//EmployeeAttendance  LocalDate Time  can't be duplicated
+            iniValidationModelDTO.ColumnsToCheckDuplication = new List<int>();
             #endregion
             Dictionary<string, string> result = new();
             var validationMessages = ExcelValidator.InitialValidate(iniValidationModelDTO);
@@ -736,7 +739,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     double tempLongtude;
                     DateTime localDate;
                     Temp = new();
-                    int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
+                    int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
                     #endregion
                     if (employeeId != 0)
                     {
@@ -774,6 +777,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     }
 
                     #region Business Validation
+
                     FingerprintModel model = new()
                     {
                         Latitude = tempLatitude,
@@ -789,14 +793,36 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                          row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
                                          row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
                                          row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
-                                         FingerPrintType.CheckIn,
+                                         FingerPrintType.NotSet,
                         FromExcel = true
 
 
 
                     };
+
+                    if ((model.RecognitionWay != RecognitionWay.FingerPrint &&
+                        model.RecognitionWay != RecognitionWay.FaceRecognition &&
+                        model.RecognitionWay != RecognitionWay.PinRecognition &&
+                        model.RecognitionWay != RecognitionWay.PaternRecognition &&
+                        model.RecognitionWay != RecognitionWay.VoiceRecognition
+                        ))
+                    {
+                        result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.RecognitionWayValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+                    if (model.Type != FingerPrintType.CheckIn &&
+                       model.Type != FingerPrintType.CheckOut &&
+                       model.Type != FingerPrintType.Summon &&
+                       model.Type != FingerPrintType.BreakIn &&
+                       model.Type != FingerPrintType.BreakOut)
+                    {
+                        result.Add(AmgadKeys.MissMatchValue, TranslationHelper.GetTranslation(AmgadKeys.FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        return result;
+                    }
+
                     var validationResult = await employeeAttendanceBLValidation.FingerPrintValidation(model);
                     #endregion
+
                     var getAttandanceId = await repositoryManager
                                          .EmployeeAttendanceRepository
                                          .Get(e => !e.IsDeleted && e.EmployeeId == employeeId
@@ -820,8 +846,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             IpAddress = requestInfo.RemoteIpAddress,
                             RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                             RecognitionWay.FingerPrint : model.RecognitionWay,
-                            InsertedFromExcel = true
-
+                            FingerprintSource = FingerprintSource.ExcelFile
                         });
                     }
                     else
@@ -866,5 +891,211 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             return result;
         }
+
+        public async Task<List<GetEmployeeAttendanceInPeriodReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
+        {
+
+            using (var context = new ApplicationDBContext())
+            {
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@DateFrom",Critria.DateFrom),
+            new SqlParameter("@DateTo", Critria.DateTo),
+            new SqlParameter("@EmployeeID", Critria.EmployeeID),
+            new SqlParameter("@DepartmentId", Critria.DepartmentId),
+            new SqlParameter("@ZoneId", Critria.ZoneId),
+            new SqlParameter("@JobTitleID", Critria.JobTitleID),
+            new SqlParameter("@CompanyID", requestInfo.CompanyId)
+        };
+                var result = context.Database.SqlQueryRaw<GetEmployeeAttendanceInPeriodReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
+
+                return result;
+            }
+
+        }
+        public async Task<GetCurrentEmployeeSchedulesResponse> GetCurrentEmployeeSchedules(GetCurrentEmployeeSchedulesModel model)
+        {
+            var resonse = new GetCurrentEmployeeSchedulesResponse();
+
+            #region Business Validation
+
+            var scheduleId = await employeeAttendanceBLValidation.GetCurrentEmployeeScheduleValidation();
+
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
+                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
+            #endregion
+
+            var allDatesInPeriod = OthersHelper.AllDatesInPeriod(model.DateFrom, model.DateTo).ToList();
+            var currentEmployeeScheduleDayModel = new CurrentEmployeeScheduleDayModel
+            {
+                ScheduleId = scheduleId,
+                EmployeeId = getEmployeeId,
+                DateFrom = model.DateFrom,
+                DateTo = model.DateTo
+            };
+            var currentEmployeeScheduleDaysAndPlans = await GetCurrentEmployeeScheduleDaysAndPlans(currentEmployeeScheduleDayModel);
+            var getScheduleDays = currentEmployeeScheduleDaysAndPlans.EmployeeScheduleDays;
+            var getSchedulePlans = currentEmployeeScheduleDaysAndPlans.EmployeeSchedulePlans;
+
+            var dayModel = new CurrentEmployeeScheduleDaysAndPlansResponseModel
+            {
+                EmployeeScheduleDays = getScheduleDays,
+                EmployeeSchedulePlans = getSchedulePlans
+            };
+
+            var schedules = new List<GetEmployeeScheduleResponseModel>();
+
+            for (int i = 0; i < allDatesInPeriod.Count; i++)
+            {
+                var date = allDatesInPeriod[i];
+                var currentEmployeeScheduleDaysAndPlansResponseModel = new CurrentEmployeeScheduleDaysAndPlansResponseModel
+                {
+                    EmployeeSchedulePlans = getSchedulePlans,
+                    EmployeeScheduleDays = getScheduleDays,
+                    Date = date
+                };
+                var day = GetCurrentEmployeeScheduleDays(currentEmployeeScheduleDaysAndPlansResponseModel);
+               
+                schedules.Add(new GetEmployeeScheduleResponseModel
+                {
+                    DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
+                    IsVacation = day.IsVacation,
+                    TimeFrom = day?.StartTime != null ? day.StartTime.Value.ToString("HH:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = day?.EndTime != null ? day.EndTime.Value.ToString("HH:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) : null,
+                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) + 
+                    LeillaKeys.Space + 
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null
+                });
+            }
+
+            resonse.TotalWorkingHours =
+                Math.Round(schedules.Where(d => !d.IsVacation).Sum(d => d.WorkingHoursNumber) ?? 0, 2) + LeillaKeys.Space +
+                TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang);
+
+            resonse.Schedules = schedules;
+
+            return resonse;
+        }
+        private async Task<CurrentEmployeeScheduleDaysAndPlansResponseModel> GetCurrentEmployeeScheduleDaysAndPlans(CurrentEmployeeScheduleDayModel model)
+        {
+            var getEmployeeScheduleDays = await repositoryManager.ScheduleDayRepository.
+                Get(s => !s.IsDeleted && s.ScheduleId == model.ScheduleId).
+                Select(s => new CurrentEmployeeScheduleShiftResponseModel
+                {
+                    WeekDay = s.WeekDay,
+                    IsVacation = s.ShiftId == null,
+                    StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
+                    EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                }).ToListAsync();
+
+            var getEmployeeSchedulePlans = await repositoryManager.EmployeeRepository.
+                Get(employee => !employee.IsDeleted && employee.Id == model.EmployeeId).
+                Select(employee => new CurrentEmployeeSchedulePlanResponseModel
+                {
+                    SchedulePlans = employee.Company.SchedulePlans.Any(sp => !sp.IsDeleted) ?
+                    employee.Company.SchedulePlans.
+                    Where(sp => !sp.IsDeleted &&
+                    (sp.SchedulePlanEmployee != null && !sp.SchedulePlanEmployee.IsDeleted &&
+                    sp.SchedulePlanEmployee.EmployeeId == employee.Id || employee.DepartmentId != null &&
+                    sp.SchedulePlanDepartment != null && !sp.SchedulePlanDepartment.IsDeleted &&
+                    sp.SchedulePlanDepartment.DepartmentId == employee.DepartmentId || employee.EmployeeGroups.Any(eg => !eg.IsDeleted) &&
+                    sp.SchedulePlanGroup != null && !sp.SchedulePlanGroup.IsDeleted &&
+                    employee.EmployeeGroups.Any(eg => !eg.IsDeleted && eg.GroupId == sp.SchedulePlanGroup.GroupId)) && sp.DateFrom.Date <= model.DateTo.Date &&
+                    (sp.DateFrom.Date >= model.DateFrom.Date ||
+                    sp.DateFrom.Date == employee.Company.SchedulePlans.Select(csp => csp.DateFrom.Date).Where(date => date <= model.DateFrom.Date).Max())).
+                    Select(sp => new CurrentEmployeeScheduleDayResponseModel
+                    {
+                        DateFrom = sp.DateFrom,
+                        ScheduleDays = sp.Schedule.ScheduleDays.
+                        Where(sd => !sd.IsDeleted).
+                        Select(s => new CurrentEmployeeScheduleShiftResponseModel
+                        {
+                            WeekDay = s.WeekDay,
+                            IsVacation = s.ShiftId == null,
+                            StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
+                            EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                        }).ToList()
+                    }).ToList() : null
+                }).FirstOrDefaultAsync();
+
+            return new CurrentEmployeeScheduleDaysAndPlansResponseModel
+            {
+                EmployeeScheduleDays = getEmployeeScheduleDays,
+                EmployeeSchedulePlans = getEmployeeSchedulePlans.SchedulePlans
+            };
+        }
+        private CurrentEmployeeScheduleShiftResponseModel GetCurrentEmployeeScheduleDays(CurrentEmployeeScheduleDaysAndPlansResponseModel model)
+        {
+            var employeeScheduleDays = model.EmployeeScheduleDays;
+            var employeeSchedulePlans = model.EmployeeSchedulePlans;
+            List<CurrentEmployeeScheduleShiftResponseModel> days = employeeScheduleDays;
+
+            if (employeeSchedulePlans != null && employeeSchedulePlans.Count > 0)
+            {
+                var planScheduleDays = employeeSchedulePlans?.
+                     Where(p => p.DateFrom <= model.Date)?.
+                     MaxBy(p => p.DateFrom)?.
+                     ScheduleDays;
+
+                if (planScheduleDays != null && planScheduleDays.Count > 0)
+                {
+                    days = planScheduleDays;
+                }
+            }
+
+            var day = days.FirstOrDefault(s => s.WeekDay == (WeekDay)model.Date.DayOfWeek);
+            return day;
+        }
+
+        #region Export Report
+
+        //public byte[] ExportEmployeeAttendanceReport(GetEmployeeAttendanceInPeriodReportParameters parameters)
+        //{
+        //    // Create a new FastReport instance
+        //    FastReport.Report report = new FastReport.Report();
+
+        //    // Load the report template file
+        //    report.Load("your_report.frx");
+
+        //    // Set up the data source parameters
+        //    report.SetParameterValue("EmployeeID", parameters.EmployeeID);
+        //    report.SetParameterValue("DateFrom", parameters.DateFrom);
+        //    report.SetParameterValue("DateTo", parameters.DateTo);
+        //    report.SetParameterValue("DepartmentId", parameters.DepartmentId);
+        //    report.SetParameterValue("ZoneId", parameters.ZoneId);
+        //    report.SetParameterValue("JobTitleID", parameters.JobTitleID);
+        //    report.SetParameterValue("CompanyID", requestInfo.CompanyId);
+
+        //    // Run the report
+        //    report.Prepare();
+
+        //    // Export the report based on the specified format
+        //    switch (parameters.ExportFormat)
+        //    {
+        //        case ExportFormat.ViewOnly:
+        //            //ShowReportInViewer(report);
+        //            break;
+        //        case ExportFormat.PDF:
+        //           // ExportToPdf(report);
+        //            break;
+        //        case ExportFormat.Excel:
+        //           // ExportToExcel(report);
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException(nameof(parameters.ExportFormat), TranslationHelper.GetTranslation(AmgadKeys.InvalidExportFormatSpecified, requestInfo.Lang));
+        //    }
+        //}
+
+
+
+        #endregion
+
+
+
+
     }
 }

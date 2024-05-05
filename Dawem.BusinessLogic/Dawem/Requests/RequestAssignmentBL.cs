@@ -382,7 +382,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                         WeekDay = (WeekDay)date.DayOfWeek
                     });
                 }
-
                 if (!isScheduleVacationDay || dayAssignments.Count > 0)
                 {
                     var employeeGetRequestAssignmentsResponseModel = new EmployeeGetRequestAssignmentsResponseModel

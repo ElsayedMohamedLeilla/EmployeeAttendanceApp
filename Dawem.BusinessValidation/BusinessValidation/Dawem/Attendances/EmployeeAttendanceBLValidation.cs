@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 {
-
     public class EmployeeAttendanceBLValidation : IEmployeeAttendanceBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
@@ -525,6 +524,25 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             return true;
         }
+        public async Task<int> GetCurrentEmployeeScheduleValidation()
+        {
+            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
+                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
+            var checkIfHasSchedule = await repositoryManager.EmployeeRepository
+                .Get(a => !a.IsDeleted && a.Id == getEmployeeId
+                && a.ScheduleId > 0).
+                Select(e => e.ScheduleId).
+                FirstOrDefaultAsync();
+
+            if (checkIfHasSchedule == null)
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsNoScheduleForCurrentEmployee);
+
+            return checkIfHasSchedule.Value;
+        }
+
+
+        #region Get All AvailableZones
         public List<AvailableZoneWithoutRadiusDTO> GetAvailableLatLongForEmployee(List<AvailableZoneDTO> employeeZones)
         {
             var availableLatLongList = new List<AvailableZoneWithoutRadiusDTO>();

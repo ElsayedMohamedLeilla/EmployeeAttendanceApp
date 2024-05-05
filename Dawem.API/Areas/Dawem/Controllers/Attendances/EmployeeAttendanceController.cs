@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Attendances;
 using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Attendances;
+using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances
             var response = await employeeAttendanceBL.GetEmployeeAttendancesForWebAdmin(model);
             return Success(response);
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentEmployeeSchedules([FromQuery] GetCurrentEmployeeSchedulesModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            var response = await employeeAttendanceBL.GetCurrentEmployeeSchedules(model);
+            return Success(response, response.Schedules.Count);
+        }
         [HttpGet]
         public async Task<ActionResult> GetInfo([FromQuery] int employeeAttendanceId)
         {

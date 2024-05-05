@@ -66,7 +66,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region get Employee
-            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted  && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
+            var getEmployee = repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.EmployeeNumber == model.EmployeeNumber && e.CompanyId == getCompany.Id).FirstOrDefault();
             #endregion
 
             #region GetMax OTP
@@ -75,7 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             {
                 // Retrieve the OTP with the maximum code
                 var maxOTP = employeeOTPs.OrderByDescending(o => o.OTPCount).First();
-                if(model.OTP != maxOTP.OTP)
+                if (model.OTP != maxOTP.OTP)
                 {
                     throw new BusinessValidationException(AmgadKeys.SorryWrongOTPPleaseUseLastRecieviedOne);
                 }
@@ -129,7 +129,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     else
                         repositoryManager.EmployeeOTPRepository.BulkDeleteIfExist(employeeOTPs);
 
-                        #region Send Greetings Email
+                    #region Send Greetings Email
 
                     var greetingEmail = new VerifyEmailModel
                     {
@@ -310,14 +310,19 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             //#endregion
             #region GetEmployee
+            requestInfo.CompanyId = requestInfo.CompanyId;
+            // requestInfo.CompanyId = 17;
             var foundEmployee = await repositoryManager.EmployeeRepository.Get(e =>
             !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == model.EmployeeId).FirstOrDefaultAsync();
             #endregion
 
             var user = mapper.Map<MyUser>(model);
             user.CompanyId = requestInfo.CompanyId;
+            user.EmployeeId = foundEmployee.Id;
+            user.Name = foundEmployee.Name;
             user.AddUserId = requestInfo.UserId;
-            user.UserName = foundEmployee.Email + LeillaKeys.SpaceThenDashThenSpace + user.CompanyId;
+            user.UserName = foundEmployee.Email;
+            user.Email = foundEmployee.Email;
             user.ProfileImageName = foundEmployee.ProfileImageName;
             user.Code = foundEmployee.Code;
             user.EmailConfirmed = true;
@@ -328,28 +333,43 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             if (!createUserResponse.Succeeded)
             {
                 unitOfWork.Rollback();
-                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
-            }
-
-            /*if (model.Responsibilities != null)
-            {
-                var getUserResponsibilities = await repositoryManager.ResponsibilityRepository
-                    .Get(r => model.Responsibilities.Contains(r.Id))
-                    .Select(r => r.Name)
-                    .ToListAsync();
-
-                if (getUserResponsibilities == null || getUserResponsibilities.Count == 0)
-                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterOneResponsibilityAtLeast);
-
-                var assignRolesResult = await userManagerRepository.AddToRolesAsync(user, getUserResponsibilities);
-                if (!assignRolesResult.Succeeded)
-                {
-                    unitOfWork.Rollback();
+                var error = createUserResponse.Errors.FirstOrDefault();
+                if (error.Code == "InvalidEmail")
+                    throw new BusinessValidationException(AmgadKeys.SorryTheEmployeeEmailIsInValid);
+                else
+                     if (error.Code == "DuplicateUserName")
+                    throw new BusinessValidationException(AmgadKeys.SorryThisUserNameAlreadySignedUp);
+                else
+                     if (error.Code == "DuplicateEmail")
+                    throw new BusinessValidationException(AmgadKeys.SorryThisEmailAlreadySignedUp);
+                else
                     throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser);
-                }
-                await unitOfWork.SaveAsync();
-            }*/
+            }
+            else
+            {
+                var verifyEmail = new VerifyEmailModel
+                {
+                    Email = foundEmployee.Email,
+                    Subject = TranslationHelper.GetTranslation(AmgadKeys.ThanksForUsingDawemApplication, requestInfo?.Lang),
+                    Body = $@"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>{TranslationHelper.GetTranslation(AmgadKeys.NewAccount, requestInfo?.Lang)}</title>
+        </head>
+        <body>
+            <p>
+                {TranslationHelper.GetTranslation(AmgadKeys.YourUserNameIs, requestInfo?.Lang) + LeillaKeys.Space + foundEmployee.Email}
+            </p>
+            <p>
+            </p>
+        </body>
+        </html>
+                    "
+                };
 
+                await mailBL.SendEmail(verifyEmail);
+            }
             #endregion
 
             #region Handle Response

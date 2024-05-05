@@ -82,7 +82,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.ExcelValidations
                     // Add duplicate cell information to validation messages
                     foreach (var kvp in duplicateCells)
                     {
-                        string cellReferences = string.Join(", ", kvp.Value.Select(row => $"A{row}"));
+                        string cellReferences = string.Join(", ", kvp.Value.Select(row => worksheet.Cell(row, kvp.Key).Address.ToString()));
                         validationMessages.Add($"{AmgadKeys.DuplicateColumnValueProblem}{kvp.Key}",
                              $"{TranslationHelper.GetTranslation(AmgadKeys.DuplicateColumnValueFound, iniValidationDTO.Lang)} ({cellReferences})");
                     }

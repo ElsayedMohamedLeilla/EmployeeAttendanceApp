@@ -69,23 +69,23 @@ namespace Dawem.Validation.BusinessValidation
 
             #endregion
 
-            #region Check Company Subscription
-
-            var checkCompanySubscriptionModel = new CheckCompanySubscriptionModel
-            {
-                CompanyId = model.CompanyId,
-                FromType = CheckCompanySubscriptionFromType.LogIn
-            };
-            await subscriptionBLValidationCore.CheckCompanySubscription(checkCompanySubscriptionModel);
-
-            #endregion
-
             #region Try Find User
 
             var user = await repositoryManager.UserRepository
                 .GetEntityByConditionAsync(u => !u.IsDeleted && u.Email == model.Email && u.Type == AuthenticationType.DawemAdmin &&
                 (model.CompanyId <= 0 || model.CompanyId == u.CompanyId)) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
+
+            #endregion
+
+            #region Check Company Subscription
+
+            var checkCompanySubscriptionModel = new CheckCompanySubscriptionModel
+            {
+                CompanyId = user.CompanyId ?? 0,
+                FromType = CheckCompanySubscriptionFromType.LogIn
+            };
+            await subscriptionBLValidationCore.CheckCompanySubscription(checkCompanySubscriptionModel);
 
             #endregion
 

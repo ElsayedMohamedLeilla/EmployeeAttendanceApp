@@ -10,9 +10,11 @@
         AccecptingTaskRequest,
         RejectingTaskRequest,
 
-        JustificationRequest,
-        AddingInMission,
+        NewJustificationRequest,
+        AcceptingJustificationRequest, 
+        RejectingJustificationRequest,
 
+        AddingInMission,
 
         NewPermissionRequent,
         AcceptingPermissionRequest,

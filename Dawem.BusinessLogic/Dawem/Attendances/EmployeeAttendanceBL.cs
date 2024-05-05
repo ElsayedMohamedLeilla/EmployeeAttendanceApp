@@ -1094,8 +1094,5 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
         #endregion
 
-
-
-
     }
 }

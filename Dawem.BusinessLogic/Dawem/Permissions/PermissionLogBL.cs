@@ -2,7 +2,6 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
-using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
@@ -31,11 +30,14 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     LeillaKeys.DawemScreen;
 
             #region paging
+
             int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
             int take = PagingHelper.Take(model.PageSize);
+
             #region sorting
             var queryOrdered = permissionLogRepository.OrderBy(query, nameof(Permission.Id), LeillaKeys.Desc);
             #endregion
+
             var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
@@ -55,7 +57,6 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 TotalCount = await query.CountAsync()
             };
             #endregion
-
         }
         public async Task<GetPermissionLogInfoResponseModel> GetInfo(int permissionLogId)
         {
@@ -72,8 +73,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     UserName = pl.User.Name,
                     ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
-                    Date = pl.Date,
-                    IsActive = pl.IsActive
+                    DateAndTime = pl.Date
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permissionLog;

@@ -38,7 +38,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
                     return BadRequest();
                 }
 
-                model.RequestBody = Request.Body;
+                if (model.Table != "ATTLOG")
+                    return Ok("Ok");
+
                 var result = await fingerprintActionBL.ReadFingerprint(model);
 
                 if (result)

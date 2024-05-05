@@ -9,7 +9,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Text;
 
 namespace Dawem.BusinessLogic.Dawem.Attendances
@@ -41,20 +40,20 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                 repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
                 {
-                    Name = "1111" + model.Table + DateTime.UtcNow,
+                    Name = "1111++" + model.Table + DateTime.UtcNow,
                     Code = getNextCodes,
                     Notes = "Data:" + "###" + model.Table,
                     AddedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.Now,
                     CompanyId = 7,
-                    SerialNumber = "Hatch"
+                    SerialNumber = model.SN + "+" + (model.RequestBody == null ? "Null" : "NotNull")
                 });
                 await unitOfWork.SaveAsync();
 
                 #endregion
 
                 if (model.Table != "ATTLOG")
-                    return false;
+                    return true;
 
                 var getFingerprintDevice = await repositoryManager.FingerprintDeviceRepository.
                     GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.SerialNumber == model.SN &&
@@ -62,28 +61,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                 if (getFingerprintDevice != null && model.RequestBody != null)
                 {
-                    #region Insert Log
-
-                    var getNextCodes2 = await repositoryManager.FingerprintDeviceRepository
-                           .Get(e => e.CompanyId == 7)
-                           .Select(e => e.Code)
-                           .DefaultIfEmpty()
-                           .MaxAsync() + 1;
-
-                    repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
-                    {
-                        Name = "2222" + model.Table + DateTime.UtcNow,
-                        Code = getNextCodes,
-                        Notes = "Data:" + "###" + model.Table,
-                        AddedDate = DateTime.UtcNow,
-                        ModifiedDate = DateTime.Now,
-                        CompanyId = 7,
-                        SerialNumber = "Hatch"
-                    });
-                    await unitOfWork.SaveAsync();
-
-                    #endregion
-
                     string bodyString;
                     var getDeviceCompanyId = getFingerprintDevice.CompanyId;
 
@@ -97,28 +74,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         }
 
                         var dataRows = bodyString.Split("\n").Where(r => !string.IsNullOrEmpty(r)).ToArray();
-
-                        #region Insert Log
-
-                        var getNextCodes3 = await repositoryManager.FingerprintDeviceRepository
-                               .Get(e => e.CompanyId == 7)
-                               .Select(e => e.Code)
-                               .DefaultIfEmpty()
-                               .MaxAsync() + 1;
-
-                        repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
-                        {
-                            Name = "3333" + model.Table + DateTime.UtcNow,
-                            Code = getNextCodes,
-                            Notes = "Data:" + "###" + model.Table,
-                            AddedDate = DateTime.UtcNow,
-                            ModifiedDate = DateTime.Now,
-                            CompanyId = 7,
-                            SerialNumber = "Hatch"
-                        });
-                        await unitOfWork.SaveAsync();
-
-                        #endregion
 
                         if (dataRows != null && dataRows.Length > 0)
                         {
@@ -185,7 +140,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                                 EmployeeAttendanceId = getAttandanceId,
                                                 FingerPrintType = fingerprintType,
                                                 IsActive = true,
-                                                Time = TimeOnly.FromTimeSpan(localDateTime.TimeOfDay),
+                                                FingerPrintDate = localDateTime,
+                                                FingerPrintDateUTC = DateTime.UtcNow,
                                                 RecognitionWay = RecognitionWay.FingerPrint,
                                                 FingerprintSource = FingerprintSource.FingerPrintDevice
                                             });
@@ -212,8 +168,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                                 {
                                                     e.ShiftId,
                                                     AllowedMinutes = e.Shift != null ? e.Shift.AllowedMinutes : (int?)null,
-                                                    CheckInTime = e.Shift != null ? e.Shift.CheckInTime : (TimeOnly?)null,
-                                                    CheckOutTime = e.Shift != null ? e.Shift.CheckOutTime : (TimeOnly?)null,
+                                                    CheckInTime = e.Shift != null ? e.Shift.CheckInTime : (TimeSpan?)null,
+                                                    CheckOutTime = e.Shift != null ? e.Shift.CheckOutTime : (TimeSpan?)null,
                                                 }).
                                                 FirstOrDefaultAsync();
 
@@ -235,7 +191,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                                                     FingerPrintType = fingerprintType,
                                                     IsActive = true,
-                                                    Time = TimeOnly.FromTimeSpan(localDateTime.TimeOfDay),
+                                                    FingerPrintDate = localDateTime,
+                                                    FingerPrintDateUTC = DateTime.UtcNow,
                                                     RecognitionWay = RecognitionWay.FingerPrint,
                                                     FingerprintSource = FingerprintSource.FingerPrintDevice
                                                 } }
@@ -270,7 +227,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                 repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
                 {
-                    Name = "Old Log" + DateTime.UtcNow,
+                    Name = "Exception Log" + DateTime.UtcNow,
                     Code = getNextCodes,
                     Notes = "Data:" + "###" + ex.Message,
                     AddedDate = DateTime.UtcNow,

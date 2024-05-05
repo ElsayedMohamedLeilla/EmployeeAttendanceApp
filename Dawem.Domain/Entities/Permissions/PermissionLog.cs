@@ -10,7 +10,7 @@ namespace Dawem.Domain.Entities.Permissions
     [Table(nameof(PermissionLog) + LeillaKeys.S)]
     public class PermissionLog : BaseEntity
     {
-        public DateTime Date { get; set; } = DateTime.UtcNow;
+        public DateTime DateUTC { get; set; } = DateTime.UtcNow;
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }

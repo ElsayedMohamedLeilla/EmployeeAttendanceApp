@@ -70,7 +70,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Longitude = model.Longitude,
                     IpAddress = requestInfo.RemoteIpAddress,
                     RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                    RecognitionWay.FingerPrint : model.RecognitionWay
+                    RecognitionWay.FingerPrint : model.RecognitionWay,
+                    FingerprintSource = FingerprintSource.MobileDevice
                 });
 
                 #region Summon Log
@@ -128,7 +129,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         Longitude = model.Longitude,
                         IpAddress = requestInfo.RemoteIpAddress,
                         RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
-                        RecognitionWay.FingerPrint : model.RecognitionWay
+                        RecognitionWay.FingerPrint : model.RecognitionWay,
+                        FingerprintSource = FingerprintSource.MobileDevice
                     } }
                 };
 
@@ -840,8 +842,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             IpAddress = requestInfo.RemoteIpAddress,
                             RecognitionWay = model.RecognitionWay == RecognitionWay.NotSet ?
                             RecognitionWay.FingerPrint : model.RecognitionWay,
-                            InsertedFromExcel = true
-
+                            FingerprintSource = FingerprintSource.ExcelFile
                         });
                     }
                     else

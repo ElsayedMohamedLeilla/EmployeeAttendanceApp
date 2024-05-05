@@ -46,7 +46,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 Id = pl.Id,
                 UserName = pl.User.Name,
                 ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
-                IsActive = pl.IsActive,
+                ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang)
             }).ToListAsync();
 
             return new GetPermissionLogsResponse

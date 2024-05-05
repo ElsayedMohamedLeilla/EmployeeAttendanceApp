@@ -1,7 +1,7 @@
 ﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
-    {        
+    {
         public const string DawemConnectionString = "DawemConnectionString";
         public const string ConnectionStringNotFound = "Connection string 'DawemConnectionString' not found.";
         public const string AllowSpecificOrigins = "_allowSpecificOrigins";
@@ -459,6 +459,9 @@
         public const string Enable = "Enable";
         public const string Disable = "Disable";
         public const string MarkAsRead = "MarkAsRead";
+        public const string ReadFingerprintRoute = "iclock/cdata";
+        public const string OK = "OK";
+        public const string Error = "Error";
         public const string Send = "Send";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";

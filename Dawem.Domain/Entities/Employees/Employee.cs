@@ -55,5 +55,6 @@ namespace Dawem.Domain.Entities.Employees
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
         public bool InsertedFromExcel { get; set; } = false;
+        public int? FingerprintDeviceUserCode { get; set; }
     }
 }

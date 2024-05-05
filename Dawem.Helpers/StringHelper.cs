@@ -1,4 +1,5 @@
 ﻿using Dawem.Translations;
+using System.Text;
 
 namespace Dawem.Helpers
 {
@@ -27,6 +28,37 @@ namespace Dawem.Helpers
             }
 
             return true;
+        }
+        public static string FixFingerprintBody(string input, int occurrence)
+        {
+            if (string.IsNullOrEmpty(input) || occurrence <= 0)
+                return input;
+
+            StringBuilder result = new StringBuilder();
+            int spaceCount = 0;
+
+            foreach (char c in input)
+            {
+                if (c == ' ')
+                {
+                    spaceCount++;
+                    if (spaceCount == occurrence)
+                    {
+                        result.Append('\n');
+                        spaceCount = 0;
+                        continue;
+                    }
+                    if (spaceCount == 2)
+                        result.Append(c);
+                    else
+                        result.Append('\t');
+
+                }
+                else
+                    result.Append(c);
+            }
+
+            return result.ToString();
         }
     }
 }

@@ -126,16 +126,13 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Handle Response
 
-            var fingerprintDevicesList = await queryPaged.Select(e => new GetFingerprintDevicesResponseModel
+            var fingerprintDevicesList = await queryPaged.Select(fp => new GetFingerprintDevicesResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                IpAddress = e.IpAddress,
-                PortNumber = e.PortNumber,
-                Model = e.Model,
-                SerialNumber = e.SerialNumber,
-                IsActive = e.IsActive,
+                Id = fp.Id,
+                Code = fp.Code,
+                Name = fp.Name,
+                LastSeenDate = fp.LastSeenDateUTC.AddHours((double?)fp.Company.Country.TimeZoneToUTC ?? 0),
+                IsActive = fp.IsActive
             }).ToListAsync();
             return new GetFingerprintDevicesResponse
             {
@@ -184,15 +181,16 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
         public async Task<GetFingerprintDeviceInfoResponseModel> GetInfo(int fingerprintDeviceId)
         {
             var fingerprintDevice = await repositoryManager.FingerprintDeviceRepository.Get(e => e.Id == fingerprintDeviceId && !e.IsDeleted)
-                .Select(e => new GetFingerprintDeviceInfoResponseModel
+                .Select(fp => new GetFingerprintDeviceInfoResponseModel
                 {
-                    Code = e.Code,
-                    Name = e.Name,
-                    IpAddress = e.IpAddress,
-                    PortNumber = e.PortNumber,
-                    SerialNumber = e.SerialNumber,
-                    Model = e.Model,
-                    IsActive = e.IsActive,
+                    Code = fp.Code,
+                    Name = fp.Name,
+                    IpAddress = fp.IpAddress,
+                    PortNumber = fp.PortNumber,
+                    SerialNumber = fp.SerialNumber,
+                    LastSeenDate = fp.LastSeenDateUTC.AddHours((double?)fp.Company.Country.TimeZoneToUTC ?? 0),
+                    Model = fp.Model,
+                    IsActive = fp.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceNotFound);
 
             return fingerprintDevice;

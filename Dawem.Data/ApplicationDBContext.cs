@@ -589,6 +589,7 @@ namespace Dawem.Data
         public DbSet<PermissionLog> ScreenPermissionLogs { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
+        public DbSet<FingerprintTransaction> FingerprintTransactions { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<CompanyBranch> CompanyBranches { get; set; }
         public DbSet<Company> Companies { get; set; }

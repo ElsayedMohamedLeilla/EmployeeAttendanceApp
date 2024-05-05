@@ -74,6 +74,7 @@ namespace Dawem.Contract.Repository.Manager
         IZoneGroupRepository ZoneGroupRepository { get; }
         IZoneRepository ZoneRepository { get; }
         IFingerprintDeviceRepository FingerprintDeviceRepository { get; }
+        IFingerprintTransactionRepository FingerprintTransactionRepository { get; }
         IRequestRepository RequestRepository { get; }
         IRequestAssignmentRepository RequestAssignmentRepository { get; }
         IRequestAttachmentRepository RequestAttachmentRepository { get; }

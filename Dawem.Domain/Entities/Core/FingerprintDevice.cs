@@ -18,5 +18,6 @@ namespace Dawem.Domain.Entities.Core
         public string PortNumber { get; set; }
         public string Model { get; set; }
         public string SerialNumber { get; set; }
+        public DateTime LastSeenDateUTC { get; set; }
     }
 }

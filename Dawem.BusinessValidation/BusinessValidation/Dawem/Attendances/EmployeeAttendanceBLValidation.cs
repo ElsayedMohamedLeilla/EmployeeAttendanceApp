@@ -612,5 +612,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             }
             return null;
         }
+        #endregion
     }
 }

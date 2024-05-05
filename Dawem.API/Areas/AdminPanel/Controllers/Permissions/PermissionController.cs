@@ -22,8 +22,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
         {
             permissionBL = _permissionBL;
             requestInfo = _requestInfo;
-        }
-        
+        }      
         [HttpPost]
         public async Task<ActionResult> Create(CreatePermissionModel model)
         {
@@ -36,8 +35,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             var result = await permissionBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreatePermissionSuccessfully);
         }
-        [HttpPut]
-        
+        [HttpPut]        
         public async Task<ActionResult> Update(UpdatePermissionModel model)
         {
             #region Set All Screens Available Actions
@@ -49,8 +47,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             var result = await permissionBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdatePermissionSuccessfully);
         }
-        [HttpGet]
-        
+        [HttpGet]        
         public async Task<ActionResult> Get([FromQuery] GetPermissionsCriteria criteria)
         {
             if (criteria == null)
@@ -60,8 +57,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             var response = await permissionBL.Get(criteria);
             return Success(response.Permissions, response.TotalCount);
         }
-        [HttpGet]
-        
+        [HttpGet]       
         public async Task<ActionResult> GetInfo([FromQuery] int permissionId)
         {
             if (permissionId < 1)
@@ -70,8 +66,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.GetInfo(permissionId));
         }
-        [HttpGet]
-        
+        [HttpGet]        
         public async Task<ActionResult> GetPermissionScreens([FromQuery] GetPermissionScreensCriteria criteria)
         {
             if (criteria == null)
@@ -80,8 +75,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.GetPermissionScreens(criteria));
         }
-        [HttpGet]
-        
+        [HttpGet]        
         public async Task<ActionResult> GetById([FromQuery] int permissionId)
         {
             if (permissionId < 1)
@@ -90,8 +84,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.GetById(permissionId));
         }
-        [HttpGet]
-        
+        [HttpGet]        
         public async Task<ActionResult> CheckAndGetPermission([FromQuery] CheckAndGetPermissionModel model)
         {
             if (model == null)
@@ -100,8 +93,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.CheckAndGetPermission(model));
         }
-        [HttpDelete]
-        
+        [HttpDelete]        
         public async Task<ActionResult> Delete(int permissionId)
         {
             if (permissionId < 1)
@@ -110,8 +102,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.Delete(permissionId));
         }
-        [HttpPut]
-        
+        [HttpPut]        
         public async Task<ActionResult> Enable(int responsibilityId)
         {
             if (responsibilityId < 1)
@@ -120,8 +111,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.Enable(responsibilityId));
         }
-        [HttpPut]
-        
+        [HttpPut]        
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
         {
             if (model.Id < 1)
@@ -130,21 +120,30 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             }
             return Success(await permissionBL.Disable(model));
         }
-        [HttpGet]
-        
+        [HttpGet]        
         public async Task<ActionResult> GetPermissionsInformations()
         {
             return Success(await permissionBL.GetPermissionsInformations());
         }
-        [HttpGet]
-        
+        [HttpGet]   
         public ActionResult GetAllScreensWithAvailableActions()
         {
             var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
             return Success(response, response.Screens.Count);
         }
         [HttpGet]
-        
+        public ActionResult GetAllScreens()
+        {
+            var response = ControllerActionHelper.GetAllScreens(requestInfo);
+            return Success(response, response.Screens.Count);
+        }
+        [HttpGet]
+        public ActionResult GetAllActions()
+        {
+            var response = ControllerActionHelper.GetAllActions(requestInfo);
+            return Success(response, response.Actions.Count);
+        }
+        [HttpGet]    
         public async Task<ActionResult> GetCurrentUserPermissions()
         {
             var response = await permissionBL.GetCurrentUserPermissions();

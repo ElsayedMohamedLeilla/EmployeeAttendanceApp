@@ -450,6 +450,8 @@
         public const string Controller = "Controller";
         public const string AdminPanelScreen = "AdminPanelScreen";
         public const string DawemScreen = "DawemScreen";
+        public const string AdminPanelAction = "AdminPanelAction";
+        public const string DawemAction = "DawemAction";
         public const string Create = "Create";
         public const string Update = "Update";
         public const string Delete = "Delete";

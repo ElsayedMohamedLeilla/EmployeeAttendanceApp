@@ -9,6 +9,6 @@ namespace Dawem.Models.Dtos.Dawem.Others
         public int? UserId { get; set; }
         public int? GroupId { get; set; }
         public DawemAdminApplicationScreenCode ActionPlace { get; set; }
-        public ApplicationAction ActionType { get; set; }
+        public DawemAdminApplicationAction ActionType { get; set; }
     }
 }

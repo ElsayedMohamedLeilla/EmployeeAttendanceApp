@@ -245,15 +245,16 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestJustification.JustificationTypeId = model.JustificationTypeId;
             getRequestJustification.ModifiedDate = DateTime.Now;
             getRequestJustification.ModifyUserId = requestInfo.UserId;
             getRequestJustification.DateTo = model.DateTo;
+            getRequestJustification.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
-
-
 
             #region Update Attachements 
 
@@ -458,7 +459,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.JustificationRequests),
                     }).ToList(),
                     Status = requestJustification.Request.Status,
-                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
+                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestJustification.Request.Notes,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestJustification;

@@ -4,6 +4,6 @@ namespace Dawem.Models.Response.Dawem.Permissions.Permissions
 {
     public class PermissionScreenActionResponseModel
     {
-        public ApplicationAction ActionCode { get; set; }
+        public DawemAdminApplicationAction ActionCode { get; set; }
     }
 }

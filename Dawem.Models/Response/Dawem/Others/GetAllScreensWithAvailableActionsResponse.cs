@@ -6,8 +6,8 @@ namespace Dawem.Models.Response.Dawem.Others
     {
         public GetAllScreensWithAvailableActionsResponse()
         {
-            Screens = new List<ScreensWithAvailableActionsDTO>();
+            Screens = new List<ScreenWithAvailableActionsDTO>();
         }
-        public List<ScreensWithAvailableActionsDTO> Screens { get; set; }
+        public List<ScreenWithAvailableActionsDTO> Screens { get; set; }
     }
 }

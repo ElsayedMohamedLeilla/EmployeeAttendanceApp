@@ -238,16 +238,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
-            getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestTask.TaskTypeId = model.TaskTypeId;
             getRequestTask.ModifiedDate = DateTime.Now;
             getRequestTask.ModifyUserId = requestInfo.UserId;
             getRequestTask.DateTo = model.DateTo;
+            getRequestTask.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 
@@ -490,7 +492,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                                 Status = ds.Status,
                                 StatusName = ds.StatusName,
                                 Employees = ds.Employees,
-                                Notes = isScheduleVacationDay ? 
+                                Notes = isScheduleVacationDay ?
                                 TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                             }).ToList()
                         }

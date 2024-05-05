@@ -59,7 +59,7 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreenActions);
 
             RuleFor(model => model.PermissionScreenActions)
-               .Must(model => model.Any(a => a.ActionCode == ApplicationAction.ViewingAction))
+               .Must(model => model.Any(a => a.ActionCode == DawemAdminApplicationAction.ViewingAction))
                .WithMessage(LeillaKeys.SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen);
 
             RuleForEach(x => x.PermissionScreenActions).SetValidator(new UpdatePermissionScreenActionModelValidator());

@@ -15,6 +15,7 @@ namespace Dawem.Models.Response.Dawem.Requests.Justifications
         public string StatusName { get; set; }
         public RequestStatus Status { get; set; }
         public List<FileDTO> Attachments { get; set; }
+        public string Notes { get; set; }
         public bool IsActive { get; set; }
     }
 }

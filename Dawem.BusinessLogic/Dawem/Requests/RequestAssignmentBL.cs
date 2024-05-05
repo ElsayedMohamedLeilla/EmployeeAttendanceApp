@@ -192,9 +192,11 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.ModifyUserId = requestInfo.UserId;
 
 
+            getRequestAssignment.AssignmentTypeId = model.AssignmentTypeId;
             getRequestAssignment.ModifiedDate = DateTime.Now;
             getRequestAssignment.ModifyUserId = requestInfo.UserId;
             getRequestAssignment.DateTo = model.DateTo;
+            getRequestAssignment.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 

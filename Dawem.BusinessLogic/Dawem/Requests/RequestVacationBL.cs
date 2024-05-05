@@ -185,11 +185,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             return request.Id;
             #endregion
         }
-
-
-
-
-
         public async Task<bool> Update(UpdateRequestVacationDTO model)
         {
             #region Model Validation
@@ -249,17 +244,17 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestVacation.VacationTypeId = model.VacationTypeId;
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
             getRequestVacation.NumberOfDays = (int)(model.DateTo - model.DateFrom).TotalDays + 1;
-
+            getRequestVacation.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
-
-
 
             #region Update Attachements 
 
@@ -470,7 +465,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     NumberOfDays = requestVacation.NumberOfDays,
                     BalanceBeforeRequest = requestVacation.BalanceBeforeRequest,
                     BalanceAfterRequest = requestVacation.BalanceAfterRequest,
-                    StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+                    StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestVacation.Request.Notes,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestVacation;
@@ -494,7 +490,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     {
                         FileName = a.FileName,
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests)
-                    }).ToList()
+                    }).ToList(),
+                    Notes = requestVacation.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestVacation;

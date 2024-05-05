@@ -235,16 +235,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
-            getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestPermission.PermissionTypeId = model.PermissionTypeId;
             getRequestPermission.ModifiedDate = DateTime.Now;
             getRequestPermission.ModifyUserId = requestInfo.UserId;
             getRequestPermission.DateTo = model.DateTo;
+            getRequestPermission.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 

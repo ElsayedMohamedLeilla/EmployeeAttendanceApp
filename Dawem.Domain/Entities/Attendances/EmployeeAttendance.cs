@@ -22,7 +22,6 @@ namespace Dawem.Domain.Entities.Attendances
         public int ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }
-
         #endregion
         public int Code { get; set; }
         public DateTime LocalDate { get; set; }

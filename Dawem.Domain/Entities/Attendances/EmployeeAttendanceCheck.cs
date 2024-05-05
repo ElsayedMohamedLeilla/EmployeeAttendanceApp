@@ -13,17 +13,13 @@ namespace Dawem.Domain.Entities.Attendances
         public int EmployeeAttendanceId { get; set; }
         [ForeignKey(nameof(EmployeeAttendanceId))]
         public EmployeeAttendance EmployeeAttendance { get; set; }
-
         public int? SummonId { get; set; }
         [ForeignKey(nameof(SummonId))]
         public Summon Summon { get; set; }
-
         public int? ZoneId { get; set; }
         [ForeignKey(nameof(ZoneId))]
         public Zone Zone { get; set; }
-
         #endregion
-        public TimeSpan Time { get; set; }
         public DateTime FingerPrintDate { get; set; }
         public DateTime FingerPrintDateUTC { get; set; }
         public double Latitude { get; set; }

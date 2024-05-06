@@ -27,13 +27,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private readonly INotificationService notificationServiceByFireBaseAdmin;
 
         public SummonBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
            RequestInfo _requestHeaderContext,
-           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationService _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;

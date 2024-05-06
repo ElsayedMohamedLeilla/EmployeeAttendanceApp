@@ -72,7 +72,6 @@ namespace Dawem.RealTime.Helper
                 NotificationType.NewJustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.JustificationRequest, lang),
                 NotificationType.AcceptingJustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.YourJustificationRequestIsAccepted, lang),
                 NotificationType.RejectingJustificationRequest => TranslationHelper.GetTranslation(AmgadKeys.YourJustificationRequestIsRejected, lang),
-
                 NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
                 NotificationType.NewSummons => TranslationHelper.GetTranslation(AmgadKeys.NewSummons, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),

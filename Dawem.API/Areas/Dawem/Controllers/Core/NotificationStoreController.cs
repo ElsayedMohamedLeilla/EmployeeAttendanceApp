@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]   
-    public class NotificationController : DawemControllerBase
+    public class NotificationStoreController : DawemControllerBase
     {
         private readonly INotificationBL notificationStoreBL;
-        private readonly INotificationServiceByFireBaseAdmin notificationService;
-        public NotificationController(INotificationBL _NotificationStoreBL, INotificationServiceByFireBaseAdmin _notificationService)
+        private readonly INotificationService notificationService;
+        public NotificationStoreController(INotificationBL _NotificationStoreBL, INotificationService _notificationService)
         {
             notificationStoreBL = _NotificationStoreBL;
             notificationService = _notificationService;
@@ -109,7 +109,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             {
                 return BadRequest();
             }
-            var result = await notificationService.Send_Notification_Email(UserIds, notificationType, notificationStatus);
+            var result = await notificationService.SendNotificationsAndEmails(UserIds, notificationType, notificationStatus);
             return Ok(result);
         }
 

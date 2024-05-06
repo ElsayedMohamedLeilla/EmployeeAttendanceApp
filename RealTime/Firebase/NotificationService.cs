@@ -11,16 +11,17 @@ using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using FirebaseAdmin.Messaging;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
-public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBaseAdmin
+public class NotificationService : INotificationService
 {
     private readonly RequestInfo requestInfo;
     private readonly IUploadBLC uploadBLC;
     private readonly INotificationBL notificationStoreBL;
     private readonly IRepositoryManager repositoryManager;
     private readonly IMailBL mailBL;
-    public NotificationServiceByFireBaseAdmin(RequestInfo _requestInfo, IUploadBLC _uploadBLC,
+    public NotificationService(RequestInfo _requestInfo, IUploadBLC _uploadBLC,
         INotificationBL _notificationStoreBL, IRepositoryManager _repositoryManager,
         IMailBL _mailBL)
     {
@@ -30,14 +31,14 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
         repositoryManager = _repositoryManager;
         mailBL = _mailBL;
     }
-    public async Task<ResponseModel> Send_Notification_Email(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
+    public async Task<ResponseModel> SendNotificationsAndEmails(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
     {
         ResponseModel response = new();
-        string title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
-        string body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
-        Dictionary<string, string> Data = await GetNotificationData(notificationType);
-        string imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
-        List<TokensModel> userToken = GetUserTokens(UserIds);
+        var title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
+        var body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
+        var Data = await GetNotificationData(notificationType);
+        var imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
+        var userToken = GetUserTokens(UserIds);
         var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
 
         #region Send Notification
@@ -246,13 +247,12 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     }
     private async Task<Dictionary<string, string>> GetNotificationData(NotificationType notificationType)
     {
-        NotificationModelDTO nPM = new NotificationModelDTO()
+        NotificationModelDTO nPM = new()
         {
             NotificationType = notificationType,
             UnReadNotificationCount = await notificationStoreBL.GetUnreadNotificationCount(),
         };
         string jsonString = JsonSerializer.Serialize(nPM);
-
 
         Dictionary<string, string> myDict = new Dictionary<string, string>
         {
@@ -273,7 +273,7 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     }
     public async Task<bool> SendEmailByUserIds(List<int> userIds, NotificationType notificationType)
     {
-        List<string> emails = GetUserEmails(userIds);
+        var emails = await GetUsersEmails(userIds);
         bool result = false;
 
         var verifyEmail = new VerifyEmailModel
@@ -295,9 +295,13 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
         result = await mailBL.SendEmail(verifyEmail);
         return result;
     }
-    public List<string> GetUserEmails(List<int> userIds)
+    public async Task<List<string>> GetUsersEmails(List<int> userIds)
     {
-        List<string> userEmails = repositoryManager.UserRepository.Get(s => !s.IsDeleted & s.IsActive & userIds.Contains(s.Id)).Select(c => c.Email ?? AmgadKeys.NoEmail).ToList();
+        var userEmails = await repositoryManager.UserRepository.
+            Get(s => !s.IsDeleted & s.IsActive & userIds.Contains(s.Id) && !string.IsNullOrEmpty(s.Email)).
+            Select(c => c.Email).
+            ToListAsync();
+
         return userEmails;
     }
 

@@ -121,7 +121,7 @@ var firebaseApp = FirebaseApp.Create(new AppOptions
 {
     Credential = credential,
 });
-builder.Services.AddTransient<INotificationServiceByFireBaseAdmin, NotificationServiceByFireBaseAdmin>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 #endregion
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();

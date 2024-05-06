@@ -36,7 +36,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         private readonly INotificationBL notificationStoreBL;
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private readonly INotificationService notificationServiceByFireBaseAdmin;
         public RequestTaskBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
@@ -44,7 +44,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
            RequestInfo _requestHeaderContext,
            IRequestTaskBLValidation _requestTaskBLValidation,
            INotificationBL _notificationStoreBL,
-           INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           INotificationService _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -173,7 +173,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             if (userIds.Count > 0)
             {
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
+                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
             }
 
             #endregion
@@ -683,7 +683,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
             if (userIds.Count > 0)
             {
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
+                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
             }
             #endregion
             return true;

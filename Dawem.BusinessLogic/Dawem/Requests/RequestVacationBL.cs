@@ -156,7 +156,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 Priority = Priority.Medium
             };
 
-            await notificationHandleBL.HandleVacationNotification(handleNotificationModel);
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
             #endregion
 
@@ -563,7 +563,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 Priority = Priority.Medium
             };
 
-            await notificationHandleBL.HandleVacationNotification(handleNotificationModel);
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
             #endregion
 
@@ -609,7 +609,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 Priority = Priority.Medium
             };
 
-            await notificationHandleBL.HandleVacationNotification(handleNotificationModel);
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
             #endregion
 

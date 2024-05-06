@@ -3,16 +3,15 @@ using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
@@ -20,7 +19,6 @@ using Dawem.Models.Requests;
 using Dawem.Models.Requests.Tasks;
 using Dawem.Models.Response.Dawem.Requests;
 using Dawem.Models.Response.Dawem.Requests.Tasks;
-using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -35,16 +33,13 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationBL notificationStoreBL;
-        private readonly INotificationService notificationServiceByFireBaseAdmin;
+        private readonly INotificationHandleBL notificationHandleBL;
         public RequestTaskBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestTaskBLValidation _requestTaskBLValidation,
-           INotificationBL _notificationStoreBL,
-           INotificationService _notificationServiceByFireBaseAdmin)
+           IRequestTaskBLValidation _requestTaskBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -52,8 +47,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             requestTaskBLValidation = _requestTaskBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            notificationStoreBL = _notificationStoreBL;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            notificationHandleBL = _notificationHandleBL;
         }
         public async Task<int> Create(CreateRequestTaskModelDTO model)
         {
@@ -132,53 +126,28 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #endregion
 
-            #region Save Notification In DB
+            #region Handle Notifications
 
-            if (employeeId != 0)
+            var employeeIds = model.TaskEmployeeIds;
+            employeeIds.Add(employeeId ?? 0);
+
+            var userIds = await repositoryManager.UserRepository.
+                Get(user => !user.IsDeleted && user.IsActive & user.EmployeeId > 0 &&
+                employeeIds.Contains(user.EmployeeId.Value)).
+                Select(u => u.Id).ToListAsync();
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                model.TaskEmployeeIds.Add(employeeId ?? 0);
-            }
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.NewTaskRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = Priority.Medium
+            };
 
-            for (int i = 0; i < model.TaskEmployeeIds.Count; i++)
-            {
-                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-              .Get(e => e.CompanyId == requestInfo.CompanyId)
-              .Select(e => e.Code)
-              .DefaultIfEmpty()
-              .MaxAsync() + 1;
-
-                var notificationStore = new NotificationStore()
-                {
-                    Code = getNotificationNextCode,
-                    EmployeeId = model.TaskEmployeeIds[i],
-                    CompanyId = requestInfo.CompanyId,
-                    AddUserId = requestInfo.UserId,
-                    AddedDate = DateTime.UtcNow,
-                    Status = NotificationStatus.Info,
-                    NotificationType = NotificationType.NewTaskRequest,
-                    IsRead = false,
-                    IsActive = true,
-                    Priority = Priority.Medium,
-                };
-                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-                await unitOfWork.SaveAsync();
-            }
-            #endregion
-
-            #region Fire Notification & Email
-
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted &&
-            s.IsActive
-            & model.TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
-
-            if (userIds.Count > 0)
-            {
-                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
-            }
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
             #endregion
-
-
 
             #region Handle Response
 
@@ -653,39 +622,34 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             await unitOfWork.SaveAsync();
 
-            #region Save Notification In DB
-            List<int> TaskEmployeeIds = new List<int>(); // get this list
-            for (int i = 0; i < TaskEmployeeIds.Count; i++)
+            #region Handle Notifications
+
+            var taskEmployeeIds = await repositoryManager.RequestTaskEmployeeRepository.
+                Get(r => r.RequestTask.RequestId == requestId).
+                Select(r => r.EmployeeId).
+                ToListAsync();
+
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
+                 taskEmployeeIds.Contains(s.EmployeeId.Value)).
+                Select(u => u.Id).ToListAsync();
+
+            var employeeIds = taskEmployeeIds;
+            employeeIds.Add(request.EmployeeId);
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-              .Get(e => e.CompanyId == requestInfo.CompanyId)
-              .Select(e => e.Code)
-              .DefaultIfEmpty()
-              .MaxAsync() + 1;
-                var notificationStore = new NotificationStore()
-                {
-                    Code = getNotificationNextCode,
-                    EmployeeId = TaskEmployeeIds[i],
-                    CompanyId = requestInfo.CompanyId,
-                    AddUserId = requestInfo.UserId,
-                    AddedDate = DateTime.UtcNow,
-                    Status = NotificationStatus.Info,
-                    NotificationType = NotificationType.NewTaskRequest,
-                    IsRead = false,
-                    IsActive = true,
-                    Priority = Priority.Medium,
-                };
-                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-                await unitOfWork.SaveAsync();
-            }
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.AcceptingTaskRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = Priority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
             #endregion
-            #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
-            if (userIds.Count > 0)
-            {
-                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
-            }
-            #endregion
+
             return true;
         }
         public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
@@ -709,6 +673,35 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
+
+            #region Handle Notifications
+
+            var taskEmployeeIds = await repositoryManager.RequestTaskEmployeeRepository.
+                Get(r => r.RequestTask.RequestId == rejectModelDTO.Id).
+                Select(r => r.EmployeeId).
+                ToListAsync();
+
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
+                 taskEmployeeIds.Contains(s.EmployeeId.Value)).
+                Select(u => u.Id).ToListAsync();
+
+            var employeeIds = taskEmployeeIds;
+            employeeIds.Add(request.EmployeeId);
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.RejectingTaskRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = Priority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
+
             return true;
         }
         public async Task<GetTasksInformationsResponseDTO> GetTasksInformations()
@@ -732,4 +725,3 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
     }
 }
-

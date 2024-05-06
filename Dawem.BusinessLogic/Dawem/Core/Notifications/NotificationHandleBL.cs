@@ -26,7 +26,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             repositoryManager = _repositoryManager;
             notificationService = _notificationServiceByFireBaseAdmin;
         }
-        public async Task<bool> HandleVacationNotification(HandleNotificationModel model)
+        public async Task<bool> HandleNotifications(HandleNotificationModel model)
         {
             #region Handle Insert In Notification
 

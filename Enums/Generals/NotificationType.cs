@@ -7,7 +7,7 @@
         RejectingVacationRequest,
 
         NewTaskRequest,
-        AccecptingTaskRequest,
+        AcceptingTaskRequest,
         RejectingTaskRequest,
 
         NewJustificationRequest,
@@ -24,7 +24,7 @@
         AcceptingAssignmentRequest,
         RejectingAssignmentRequest,
 
-        NewSummons 
+        NewSummon 
 
 
     }

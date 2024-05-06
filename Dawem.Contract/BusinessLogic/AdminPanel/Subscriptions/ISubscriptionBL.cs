@@ -2,7 +2,6 @@
 using Dawem.Models.Dtos.Dawem.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Models.Response.AdminPanel.Subscriptions;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
 {

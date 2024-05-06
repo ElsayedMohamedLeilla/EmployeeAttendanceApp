@@ -2,10 +2,11 @@
 {
     public enum ExportFormat
     {
-        ViewOnly,
-        PDF,
+        Pdf,
         Excel,
-        Image
+        Image,
+        Xml,
+        ViewInWeb
     }
 
 }

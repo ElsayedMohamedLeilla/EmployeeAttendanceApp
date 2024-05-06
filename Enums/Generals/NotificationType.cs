@@ -20,6 +20,10 @@
         AcceptingPermissionRequest,
         RejectingPermissionRequest,
 
+        NewAssignmentRequest,
+        AcceptingAssignmentRequest,
+        RejectingAssignmentRequest,
+
         NewSummons 
 
 

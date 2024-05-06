@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Dawem.Subscriptions.Plans
+﻿namespace Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment
 {
     public class CreateSubscriptionPaymentModel
     {

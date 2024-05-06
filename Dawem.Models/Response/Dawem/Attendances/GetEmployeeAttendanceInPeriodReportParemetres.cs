@@ -11,5 +11,11 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? ZoneId { get; set; }
         public int? JobTitleID { get; set; }
         public ExportFormat ExportFormat { get; set; }
+        public string ZoneName { get; set; }
+        public string DepartmentName { get; set; }
+        public string JobTitleName { get; set; }
+
+
+
     }
 }

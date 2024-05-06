@@ -1,12 +1,12 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.AdminPanel.Controllers.SubscriptionPayments
+namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
     public class SubscriptionPaymentController : AdminPanelControllerBase

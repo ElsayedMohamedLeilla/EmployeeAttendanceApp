@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+﻿using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.Dawem.Subscriptions.Plans
+namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.SubscriptionPayments
 {
     public class UpdateSubscriptionPaymentModelValidator : AbstractValidator<UpdateSubscriptionPaymentModel>
     {

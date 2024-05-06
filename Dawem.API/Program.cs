@@ -46,6 +46,8 @@ Serilog.Core.Logger logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+Dawem.ReportsModule.Helper.DBConnectionHelper.AddFastReportDataConnections(builder.Services);
+
 
 builder.Services.AddCors(options =>
 {

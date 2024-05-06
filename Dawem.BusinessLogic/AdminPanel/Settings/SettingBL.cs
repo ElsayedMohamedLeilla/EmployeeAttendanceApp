@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessLogic.AdminPanel.Settings;
 using Dawem.Contract.BusinessLogicCore.Dawem;
-using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessValidation.AdminPanel.Settings;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -9,12 +9,12 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
-using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Settings;
+using Dawem.Models.Response.AdminPanel.Settings;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
+namespace Dawem.BusinessLogic.AdminPanel.Settings
 {
     public class SettingBL : ISettingBL
     {

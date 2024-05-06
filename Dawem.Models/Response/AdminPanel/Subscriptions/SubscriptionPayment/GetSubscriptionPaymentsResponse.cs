@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.Plans
+﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.SubscriptionPayment
 {
     public class GetSubscriptionPaymentsResponse
     {

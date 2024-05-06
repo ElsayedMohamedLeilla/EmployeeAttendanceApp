@@ -24,6 +24,7 @@ namespace Dawem.Domain.Entities.Core
         public Priority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
         public bool IsViewed { get; set; }
+
         public void MarkAsRead()
         {
             IsRead = true;

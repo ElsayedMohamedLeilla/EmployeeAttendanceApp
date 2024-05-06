@@ -239,7 +239,6 @@
         public const string YourJustificationRequestIsRejected = "YourJustificationRequestIsRejected";
         public const string AcceptingJustificationRequest = "AcceptingJustificationRequest";
         public const string RejectingJustificationRequest = "RejectingJustificationRequest";
-
         public const string SorryTheEmployeeEmailIsInValid = "Sorry!!TheEmployeeEmailIsInValid";
         public const string InvalidExportFormatSpecified = "InvalidExportFormatSpecified";
         public const string MissMatchValue = "MissMatchValue";
@@ -248,9 +247,16 @@
         public const string YourUserNameIs = "YourUserNameIs";
         public const string NewAccount = "NewAccount";
 
+        public const string AssignmentRequest = "AssignmentRequest";
+
         
+        public const string NewAssignmentRequest = "NewAssignmentRequest";
+        public const string YourAssignmentRequestIsAccepted = "YourAssignmentRequestIsAccepted";
+        public const string YourAssignmentRequestIsRejected = "YourAssignmentRequestIsRejected";
+        public const string AcceptingAssignmentRequest = "AcceptingAssignmentRequest";
+        public const string RejectingAssignmentRequest = "RejectingAssignmentRequest";
 
-
+        
 
 
 

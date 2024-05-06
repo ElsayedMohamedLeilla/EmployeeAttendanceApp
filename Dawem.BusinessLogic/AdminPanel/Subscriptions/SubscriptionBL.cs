@@ -16,7 +16,6 @@ using Dawem.Models.Dtos.Dawem.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.AdminPanel.Subscriptions;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

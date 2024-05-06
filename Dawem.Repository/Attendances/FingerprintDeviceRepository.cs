@@ -22,6 +22,7 @@ namespace Dawem.Repository.Attendances
             var inner = PredicateBuilder.New<FingerprintDevice>(true);
 
             predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
+            predicate = predicate.And(e => e.SerialNumber != "Hatch");
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

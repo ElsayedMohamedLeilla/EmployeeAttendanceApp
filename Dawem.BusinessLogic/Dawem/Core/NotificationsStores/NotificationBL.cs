@@ -2,6 +2,7 @@
 using Dawem.BusinessLogic.Dawem.RealTime.SignalR;
 using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -19,17 +20,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 {
-    public class NotificationStoreBL : INotificationStoreBL
+    public class NotificationBL : INotificationBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IMailBL mailBL;
+        private readonly IUploadBLC uploadBLC;
         private readonly IHubContext<SignalRHub, ISignalRHubClient> hubContext;
-        public NotificationStoreBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public NotificationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
-         IMapper _mapper,
+         IMapper _mapper, IUploadBLC _uploadBLC,
          RequestInfo _requestHeaderContext, IMailBL _mailBL,
          IHubContext<SignalRHub, ISignalRHubClient> _hubContext
          )
@@ -40,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             mapper = _mapper;
             mailBL = _mailBL;
             hubContext = _hubContext;
-
+            uploadBLC = _uploadBLC;
         }
         public async Task<GetNotificationStoreResponseDTO> Get(GetNotificationStoreCriteria criteria)
         {
@@ -64,22 +66,19 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #region Handle Response
 
-
-            var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
+            var NotificationStoreList = await queryPaged.Select(notification => new NotificationStoreForGridDTO
             {
-                Id = notificatioStore.Id,
-                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
-                IconUrl = notificatioStore.ImageUrl,
-                Priority = notificatioStore.Priority,
-                IsRead = notificatioStore.IsRead,
-                EmployeeId = notificatioStore.EmployeeId,
-                Date = notificatioStore.AddedDate,
-                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
-                Status = notificatioStore.Status
+                Id = notification.Id,
+                FullMessege = NotificationHelper.GetNotificationDescription(notification.NotificationType, requestInfo.Lang),
+                IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
+                Priority = notification.Priority,
+                IsRead = notification.IsRead,
+                EmployeeId = notification.EmployeeId,
+                Date = notification.AddedDate,
+                ShortMessege = NotificationHelper.GetNotificationType(notification.NotificationType, requestInfo.Lang),
+                Status = notification.Status
 
             }).ToListAsync();
-
-
 
             return new GetNotificationStoreResponseDTO
             {
@@ -88,7 +87,6 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             };
 
             #endregion
-
         }
         public async Task<bool> Delete(int NotificationStoreId)
         {
@@ -147,19 +145,18 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #endregion
 
-
-            var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
+            var NotificationStoreList = await queryPaged.Select(notification => new NotificationStoreForGridDTO
             {
-                Id = notificatioStore.Id,
-                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
-                IconUrl = notificatioStore.ImageUrl,
-                Priority = notificatioStore.Priority,
-                IsRead = notificatioStore.IsRead,
-                Date = notificatioStore.AddedDate,
-                NotificationType = notificatioStore.NotificationType,
-                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
-                Status = notificatioStore.Status,
-                EmployeeId = notificatioStore.EmployeeId
+                Id = notification.Id,
+                FullMessege = NotificationHelper.GetNotificationDescription(notification.NotificationType, requestInfo.Lang),
+                IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
+                Priority = notification.Priority,
+                IsRead = notification.IsRead,
+                Date = notification.AddedDate,
+                NotificationType = notification.NotificationType,
+                ShortMessege = NotificationHelper.GetNotificationType(notification.NotificationType, requestInfo.Lang),
+                Status = notification.Status,
+                EmployeeId = notification.EmployeeId
 
             }).ToListAsync();
 
@@ -202,17 +199,17 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             #endregion
 
 
-            var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
+            var NotificationStoreList = await queryPaged.Select(notification => new NotificationStoreForGridDTO
             {
-                Id = notificatioStore.Id,
-                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
-                IconUrl = notificatioStore.ImageUrl,
-                Priority = notificatioStore.Priority,
-                IsRead = notificatioStore.IsRead,
-                Date = notificatioStore.AddedDate,
-                EmployeeId = notificatioStore.EmployeeId,
-                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
-                Status = notificatioStore.Status
+                Id = notification.Id,
+                FullMessege = NotificationHelper.GetNotificationDescription(notification.NotificationType, requestInfo.Lang),
+                IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
+                Priority = notification.Priority,
+                IsRead = notification.IsRead,
+                Date = notification.AddedDate,
+                EmployeeId = notification.EmployeeId,
+                ShortMessege = NotificationHelper.GetNotificationType(notification.NotificationType, requestInfo.Lang),
+                Status = notification.Status
 
             }).ToListAsync();
 
@@ -225,7 +222,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<int> GetUnViewedNotificationCount()
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId ;
+            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId).FirstOrDefault().EmployeeId;
             var notification = await repositoryManager.NotificationStoreRepository.Get(n => !n.IsViewed && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
             return notification.Count;
         }
@@ -241,7 +238,6 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             return true;
 
         }
-
         public async Task<GetNotificationStoreResponseDTO> GetUnreadNotifications(GetNotificationStoreCriteria criteria)
         {
             var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId)
@@ -265,19 +261,18 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #endregion
 
-
-            var NotificationStoreList = await queryPaged.Select(notificatioStore => new NotificationStoreForGridDTO
+            var NotificationStoreList = await queryPaged.Select(notification => new NotificationStoreForGridDTO
             {
-                Id = notificatioStore.Id,
-                FullMessege = NotificationHelper.GetNotificationDescription(notificatioStore.NotificationType, requestInfo.Lang),
-                IconUrl = notificatioStore.ImageUrl,
-                Priority = notificatioStore.Priority,
-                IsRead = notificatioStore.IsRead,
-                Date = notificatioStore.AddedDate,
-                NotificationType = notificatioStore.NotificationType,
-                ShortMessege = NotificationHelper.GetNotificationType(notificatioStore.NotificationType, requestInfo.Lang),
-                Status = notificatioStore.Status,
-                EmployeeId = notificatioStore.EmployeeId
+                Id = notification.Id,
+                FullMessege = NotificationHelper.GetNotificationDescription(notification.NotificationType, requestInfo.Lang),
+                IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
+                Priority = notification.Priority,
+                IsRead = notification.IsRead,
+                Date = notification.AddedDate,
+                NotificationType = notification.NotificationType,
+                ShortMessege = NotificationHelper.GetNotificationType(notification.NotificationType, requestInfo.Lang),
+                Status = notification.Status,
+                EmployeeId = notification.EmployeeId
 
             }).ToListAsync();
 

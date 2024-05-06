@@ -35,7 +35,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationStoreBL notificationStoreBL;
+        private readonly INotificationBL notificationStoreBL;
         private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
         public RequestTaskBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
@@ -43,7 +43,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestTaskBLValidation _requestTaskBLValidation,
-           INotificationStoreBL _notificationStoreBL,
+           INotificationBL _notificationStoreBL,
            INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
@@ -55,7 +55,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             notificationStoreBL = _notificationStoreBL;
             notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
         }
-
         public async Task<int> Create(CreateRequestTaskModelDTO model)
         {
             #region Model Validation
@@ -147,6 +146,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
               .Select(e => e.Code)
               .DefaultIfEmpty()
               .MaxAsync() + 1;
+
                 var notificationStore = new NotificationStore()
                 {
                     Code = getNotificationNextCode,
@@ -156,7 +156,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     AddedDate = DateTime.UtcNow,
                     Status = NotificationStatus.Info,
                     NotificationType = NotificationType.NewTaskRequest,
-                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                     IsRead = false,
                     IsActive = true,
                     Priority = Priority.Medium,
@@ -165,12 +164,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 await unitOfWork.SaveAsync();
             }
             #endregion
+
             #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & model.TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
+
+            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted &&
+            s.IsActive
+            & model.TaskEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => u.Id).ToList();
+
             if (userIds.Count > 0)
             {
                 await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewTaskRequest, NotificationStatus.Info);
             }
+
             #endregion
 
 
@@ -238,16 +243,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
-            getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestTask.TaskTypeId = model.TaskTypeId;
             getRequestTask.ModifiedDate = DateTime.Now;
             getRequestTask.ModifyUserId = requestInfo.UserId;
             getRequestTask.DateTo = model.DateTo;
+            getRequestTask.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 
@@ -490,7 +497,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                                 Status = ds.Status,
                                 StatusName = ds.StatusName,
                                 Employees = ds.Employees,
-                                Notes = isScheduleVacationDay ? 
+                                Notes = isScheduleVacationDay ?
                                 TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                             }).ToList()
                         }
@@ -664,7 +671,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     AddedDate = DateTime.UtcNow,
                     Status = NotificationStatus.Info,
                     NotificationType = NotificationType.NewTaskRequest,
-                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                     IsRead = false,
                     IsActive = true,
                     Priority = Priority.Medium,

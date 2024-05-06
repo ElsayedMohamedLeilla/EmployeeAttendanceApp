@@ -37,7 +37,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IUploadBLC uploadBLC;
         private readonly IRequestBLValidation requestBLValidation;
         private readonly IHubContext<SignalRHub, ISignalRHubClient> hubContext;
-        private readonly INotificationStoreBL notificationStoreBL;
+        private readonly INotificationBL notificationStoreBL;
         private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
 
         public RequestVacationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
@@ -47,7 +47,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestVacationBLValidation _requestVacationBLValidation,
-           IHubContext<SignalRHub, ISignalRHubClient> _hubContext, INotificationStoreBL _notificationStoreBL,
+           IHubContext<SignalRHub, ISignalRHubClient> _hubContext, INotificationBL _notificationStoreBL,
            INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
@@ -148,11 +148,13 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             #endregion
 
             #region Save Notification In DB
+
             var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
+
             var notificationStore = new NotificationStore()
             {
                 Code = getNotificationNextCode,
@@ -162,34 +164,38 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.NewVacationRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
-
             };
+
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
+
             #endregion
 
             #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
+
+            List<int> userIds = repositoryManager.
+                UserRepository.Get(s => !s.IsDeleted && 
+                s.IsActive & s.EmployeeId == 
+                requestEmployee.DirectManagerId)
+                .Select(u => u.Id).ToList();
+
             if (userIds.Count > 0)
             {
                 await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
             }
+
             #endregion
 
             #region Handle Response
+
             await unitOfWork.CommitAsync();
             return request.Id;
+
             #endregion
         }
-
-
-
-
-
         public async Task<bool> Update(UpdateRequestVacationDTO model)
         {
             #region Model Validation
@@ -249,17 +255,17 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestVacation.VacationTypeId = model.VacationTypeId;
             getRequestVacation.ModifiedDate = DateTime.Now;
             getRequestVacation.ModifyUserId = requestInfo.UserId;
             getRequestVacation.DateTo = model.DateTo;
             getRequestVacation.NumberOfDays = (int)(model.DateTo - model.DateFrom).TotalDays + 1;
-
+            getRequestVacation.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
-
-
 
             #region Update Attachements 
 
@@ -470,7 +476,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     NumberOfDays = requestVacation.NumberOfDays,
                     BalanceBeforeRequest = requestVacation.BalanceBeforeRequest,
                     BalanceAfterRequest = requestVacation.BalanceAfterRequest,
-                    StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang)
+                    StatusName = TranslationHelper.GetTranslation(requestVacation.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestVacation.Request.Notes,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestVacation;
@@ -494,7 +501,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     {
                         FileName = a.FileName,
                         FilePath = uploadBLC.GetFilePath(a.FileName, LeillaKeys.VacationRequests)
-                    }).ToList()
+                    }).ToList(),
+                    Notes = requestVacation.Request.Notes
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestVacation;
@@ -581,7 +589,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.AcceptingVacationRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
@@ -641,7 +648,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.AcceptingVacationRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium

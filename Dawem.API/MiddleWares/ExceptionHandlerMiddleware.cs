@@ -36,7 +36,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 response.State = ResponseStatus.ValidationError;
                 response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
-                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
+                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo.Lang);
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
             catch (BusinessValidationExceptionGenaric<int> ex)
@@ -44,7 +44,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 responseGenaric.State = ResponseStatus.ValidationError;
                 responseGenaric.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
-                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
+                     TranslationHelper.GetTranslation(ex.MessageCode, requestInfo.Lang);
                 responseGenaric.Data = ex.Data;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, responseGenaric);
             }
@@ -53,7 +53,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 response.State = ResponseStatus.ActionNotAllowed;
                 response.Message = !string.IsNullOrEmpty(ex.Message) ? ex.Message :
-                                TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang);
+                                TranslationHelper.GetTranslation(ex.MessageCode, requestInfo.Lang);
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
             catch (UnAuthorizedException ex)
@@ -68,7 +68,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.Forbidden;
                 response.State = ResponseStatus.Forbidden;
                 response.Message = string.IsNullOrEmpty(ex.Message) ?
-                    TranslationHelper.GetTranslation(ex.MessageCode, requestInfo?.Lang) :
+                    TranslationHelper.GetTranslation(ex.MessageCode, requestInfo.Lang) :
                     ex.Message;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
@@ -90,20 +90,20 @@ namespace Dawem.API.MiddleWares
                     {
                         // Cannot insert duplicate key row in object ........
                         2601 => TranslationHelper.
-                        GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowedPleaseTryAgain, requestInfo?.Lang),
+                        GetTranslation(LeillaKeys.SorryDuplicationOfDataIsNotAllowedPleaseTryAgain, requestInfo.Lang),
 
                         // String or binary data would be truncated in table ........
                         2628 => TranslationHelper.
-                        GetTranslation(LeillaKeys.SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain, requestInfo?.Lang),
+                        GetTranslation(LeillaKeys.SorryTheSizeOfInsertedDataIsBigPleaseDecreaseTheDataSizeAndTryAgain, requestInfo.Lang),
 
                         _ => TranslationHelper.
-                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo?.Lang),
+                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo.Lang),
                     };
                 }
                 else
                 {
                     response.Message = TranslationHelper.
-                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo?.Lang);
+                        GetTranslation(LeillaKeys.SorryErrorHappenWhenProcessingInsertedData, requestInfo.Lang);
                 }
 
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
@@ -116,7 +116,7 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 response.State = ResponseStatus.Error;
                 response.Message = TranslationHelper.
-                        GetTranslation(LeillaKeys.SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt, requestInfo?.Lang);
+                        GetTranslation(LeillaKeys.SorryInternalErrorHappenedPleaseContactDawemSupportToSolveIt, requestInfo.Lang);
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
         }

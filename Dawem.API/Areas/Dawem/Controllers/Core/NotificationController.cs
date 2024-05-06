@@ -9,15 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
-
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
-    public class NotificationStoreController : DawemControllerBase
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]   
+    public class NotificationController : DawemControllerBase
     {
-        private readonly INotificationStoreBL notificationStoreBL;
+        private readonly INotificationBL notificationStoreBL;
         private readonly INotificationServiceByFireBaseAdmin notificationService;
-        public NotificationStoreController(INotificationStoreBL _NotificationStoreBL, INotificationServiceByFireBaseAdmin _notificationService)
+        public NotificationController(INotificationBL _NotificationStoreBL, INotificationServiceByFireBaseAdmin _notificationService)
         {
             notificationStoreBL = _NotificationStoreBL;
             notificationService = _notificationService;

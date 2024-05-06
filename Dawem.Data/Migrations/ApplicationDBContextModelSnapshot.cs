@@ -177,11 +177,14 @@ namespace Dawem.Data.Migrations
                     b.Property<DateTime>("FingerPrintDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("FingerPrintDateUTC")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("FingerPrintType")
                         .HasColumnType("int");
 
-                    b.Property<bool>("InsertedFromExcel")
-                        .HasColumnType("bit");
+                    b.Property<int>("FingerprintSource")
+                        .HasColumnType("int");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(50)
@@ -217,9 +220,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int?>("SummonId")
                         .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
 
                     b.Property<int?>("ZoneId")
                         .HasColumnType("int");
@@ -690,10 +690,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2054,10 +2050,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("PhoneLength")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimeZoneId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<decimal?>("TimeZoneToUTC")
                         .HasPrecision(30, 20)
                         .HasColumnType("decimal(30,20)");
@@ -2387,7 +2379,7 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateUTC")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletionDate")

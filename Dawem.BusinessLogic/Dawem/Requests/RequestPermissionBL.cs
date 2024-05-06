@@ -138,11 +138,13 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
 
             #region Save Notification In DB
+
             var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
+
             var notificationStore = new NotificationStore()
             {
                 Code = getNotificationNextCode,
@@ -152,11 +154,9 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.NewPermissionRequent,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
-
             };
             repositoryManager.NotificationStoreRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
@@ -235,16 +235,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
-            getRequest.Notes = model.Notes;
             getRequest.IsNecessary = model.IsNecessary;
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestPermission.PermissionTypeId = model.PermissionTypeId;
             getRequestPermission.ModifiedDate = DateTime.Now;
             getRequestPermission.ModifyUserId = requestInfo.UserId;
             getRequestPermission.DateTo = model.DateTo;
+            getRequestPermission.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 
@@ -535,7 +537,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.AcceptingPermissionRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium
@@ -591,7 +592,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Error,
                 NotificationType = NotificationType.RejectingPermissionRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium

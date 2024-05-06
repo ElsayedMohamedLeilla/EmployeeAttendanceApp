@@ -17,11 +17,11 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
 {
     private readonly RequestInfo requestInfo;
     private readonly IUploadBLC uploadBLC;
-    private readonly INotificationStoreBL notificationStoreBL;
+    private readonly INotificationBL notificationStoreBL;
     private readonly IRepositoryManager repositoryManager;
     private readonly IMailBL mailBL;
     public NotificationServiceByFireBaseAdmin(RequestInfo _requestInfo, IUploadBLC _uploadBLC,
-        INotificationStoreBL _notificationStoreBL, IRepositoryManager _repositoryManager,
+        INotificationBL _notificationStoreBL, IRepositoryManager _repositoryManager,
         IMailBL _mailBL)
     {
         requestInfo = _requestInfo;
@@ -33,53 +33,60 @@ public class NotificationServiceByFireBaseAdmin : INotificationServiceByFireBase
     public async Task<ResponseModel> Send_Notification_Email(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
     {
         ResponseModel response = new();
-        string Title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
-        string Body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
+        string title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
+        string body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
         Dictionary<string, string> Data = await GetNotificationData(notificationType);
-        string ImageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
-        List<TokensModel> UserToken = GetUserTokens(UserIds);
-        var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(UserToken);
+        string imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
+        List<TokensModel> userToken = GetUserTokens(UserIds);
+        var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
+
         #region Send Notification
+
         if (webTokens.Count > 0)
         {
-            NotificationModel webModel = new NotificationModel()
+            NotificationModel webModel = new()
             {
-                Body = Body,
-                Title = Title,
+                Body = body,
+                Title = title,
                 Data = Data,
-                ImageUrl = ImageUrl,
+                ImageUrl = imageUrl,
                 Tokens = webTokens
             };
             response = await Send_Web_Notification(webModel);
         }
+
         if (androidTokens.Count > 0)
         {
-            NotificationModel androiodModel = new NotificationModel()
+            NotificationModel androiodModel = new()
             {
-                Body = Body,
-                Title = Title,
+                Body = body,
+                Title = title,
                 Data = Data,
-                ImageUrl = ImageUrl,
+                ImageUrl = imageUrl,
                 Tokens = androidTokens
             };
             response = await Send_Android_Notification(androiodModel);
         }
         if (iosTokens.Count > 0)
         {
-            NotificationModel iosModel = new NotificationModel()
+            NotificationModel iosModel = new()
             {
-                Body = Body,
-                Title = Title,
+                Body = body,
+                Title = title,
                 Data = Data,
-                ImageUrl = ImageUrl,
+                ImageUrl = imageUrl,
                 Tokens = iosTokens
             };
             response = await Send_Ios_Notification(iosModel);
         }
         #endregion
+
         #region Send Email
+
         await SendEmailByUserIds(UserIds, notificationType);
+
         #endregion
+
         return response;
     }
     private static async Task<ResponseModel> Send_Web_Notification(NotificationModel notificationModel)

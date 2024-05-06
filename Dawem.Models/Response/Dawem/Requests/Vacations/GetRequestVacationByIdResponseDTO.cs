@@ -14,5 +14,6 @@ namespace Dawem.Models.Response.Dawem.Requests.Vacations
         public DateTime DateTo { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
+        public string Notes { get; set; }
     }
 }

@@ -73,11 +73,14 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
             #region Handle End Date
 
-            var getTimeZoneId = await repositoryManager.CompanyRepository.
-                Get(c => !c.IsDeleted && c.Id == requestInfo.CompanyId && c.Country.TimeZoneId != null).
-                Select(c => c.Country.TimeZoneId).
-                FirstOrDefaultAsync();
-            var utcDateTime = DateHelper.GetUTSDateTime(summon.LocalDateAndTime, getTimeZoneId);
+            var getTimeZoneToUTC = await repositoryManager.CompanyRepository
+                        .Get(c => !c.IsDeleted && c.Id == requestInfo.CompanyId)
+                        .Select(c => c.Country.TimeZoneToUTC)
+                        .FirstOrDefaultAsync();
+
+            var getTimeZoneToUTCDouble = (double)getTimeZoneToUTC;
+            var utcDateTime = summon.LocalDateAndTime.AddHours(-getTimeZoneToUTCDouble);
+
             summon.StartDateAndTimeUTC = utcDateTime;
 
             switch (model.TimeType)
@@ -650,7 +653,6 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                 var getMissingEmployeesList = await repositoryManager
                     .SummonLogRepository.Get(summonLog => !summonLog.IsDeleted && !summonLog.Summon.IsDeleted &&
-                    summonLog.Company.Country.TimeZoneId != null &&
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {

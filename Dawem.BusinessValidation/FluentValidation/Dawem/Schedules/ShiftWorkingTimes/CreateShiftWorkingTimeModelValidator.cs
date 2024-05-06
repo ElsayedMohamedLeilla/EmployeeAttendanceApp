@@ -18,11 +18,8 @@ namespace Dawem.Validation.FluentValidation.Dawem.Schedules.ShiftWorkingTimes
             RuleFor(model => model.CheckInTime)
                    .Custom((CheckInTime, context) =>
                    {
-                       // Convert TimeOnly to TimeSpan
-                       var timeSpan = TimeOnlyHelper.ToTimeSpan(CheckInTime);
-
                        // Check if the TimeSpan is valid (e.g., not negative, within a valid range)
-                       if (timeSpan < TimeSpan.Zero || timeSpan >= TimeSpan.FromDays(1))
+                       if (CheckInTime < TimeSpan.Zero || CheckInTime >= TimeSpan.FromDays(1))
                        {
                            context.AddFailure(AmgadKeys.SorryThisTimeFormatNotValid);
                        }
@@ -32,11 +29,8 @@ namespace Dawem.Validation.FluentValidation.Dawem.Schedules.ShiftWorkingTimes
             RuleFor(model => model.CheckOutTime)
            .Custom((CheckOutTime, context) =>
            {
-               // Convert TimeOnly to TimeSpan
-               var timeSpan = TimeOnlyHelper.ToTimeSpan(CheckOutTime);
-
                // Check if the TimeSpan is valid (e.g., not negative, within a valid range)
-               if (timeSpan < TimeSpan.Zero || timeSpan >= TimeSpan.FromDays(1))
+               if (CheckOutTime < TimeSpan.Zero || CheckOutTime >= TimeSpan.FromDays(1))
                {
                    context.AddFailure(AmgadKeys.SorryThisTimeFormatNotValid);
                }

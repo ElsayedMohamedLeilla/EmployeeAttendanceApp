@@ -7,13 +7,11 @@ using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Core.Zones;
-using Dawem.Models.Response.Dawem.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 {
-
     public class EmployeeAttendanceBLValidation : IEmployeeAttendanceBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
@@ -25,12 +23,22 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
         }
         public async Task<FingerPrintValidationResponseModel> FingerPrintValidation(FingerprintModel model)
         {
+            #region First Handle
+
             var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+                    throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
 
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetByIdAsync(getEmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
+            var getScheduleId = getEmployee.ScheduleId ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
+
+            var clientLocalDateTime = requestInfo.LocalDateTime;
+            var clientLocalDate = requestInfo.LocalDateTime.Date; 
+
+            #endregion
 
             #region Validate Latitude And Longitude 
 
@@ -114,38 +122,23 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #endregion
 
-            var getScheduleId = getEmployee.ScheduleId ??
-                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
+            #region Check If Fingerprint Cross Days ( 24 )
 
-            var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == getScheduleId && !schedule.IsDeleted)
-               .Select(schedule => new GetScheduleByIdResponseModel
-               {
-                   Id = schedule.Id,
-                   Code = schedule.Code,
-                   Name = schedule.Name,
-                   IsActive = schedule.IsActive,
-                   ScheduleDays = schedule.ScheduleDays.Select(weekShift => new ScheduleDayUpdateModel
-                   {
-                       Id = weekShift.Id,
-                       WeekDay = weekShift.WeekDay,
-                       ShiftId = weekShift.ShiftId
-                   }).ToList()
-               }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
+            var checkIfShift24HoursModel = new CheckIfShift24HoursModel
+            {
+                ScheduleId = getScheduleId,
+                ClientLocalDateTime = clientLocalDateTime,
+                EmployeeId = getEmployeeId
+            };
 
-            var clientLocalDateTime = requestInfo.LocalDateTime;
-            var clientLocalDate = requestInfo.LocalDateTime.Date;
+            var response = await CheckIfShiftIs24Hours(checkIfShift24HoursModel);
 
-            var shiftId = getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDateTime.DayOfWeek)
-                .ShiftId ?? throw new BusinessValidationException(LeillaKeys.SorryYouDoNotHaveScheduleToday);
+            clientLocalDateTime = response.ClientLocalDateTime;
+            clientLocalDate = response.ClientLocalDateTime.Date;
+            var getSchedule = response.Schedule;
+            var shiftInfo = response.ShiftInfo;
 
-            var shiftInfo = await repositoryManager.ShiftWorkingTimeRepository
-                .Get(s => s.Id == shiftId)
-                .Select(s => new
-                {
-                    s.CheckInTime,
-                    s.CheckOutTime,
-                    s.AllowedMinutes
-                }).FirstOrDefaultAsync();
+            #endregion
 
             #region Validate Checks
 
@@ -164,7 +157,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
                 else
                     fingerPrintType = FingerPrintType.CheckIn;
-
 
             }
             else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn) && fingerPrintTypes.Contains(FingerPrintType.CheckOut))
@@ -217,20 +209,19 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             #endregion
 
             #region Validate Fingerprint Device Code
-            if (model.FromExcel == false)
+
+            if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
+                !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode) &&
+                !model.FromExcel)
             {
-                if (!string.IsNullOrEmpty(getEmployee.FingerprintMobileCode) &&
-                    !string.IsNullOrWhiteSpace(getEmployee.FingerprintMobileCode))
+                if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
                 {
-                    if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                        string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
-                    {
-                        throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
-                    }
-                    else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
-                    {
-                        throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
-                    }
+                    throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
+                }
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }
             }
 
@@ -240,21 +231,34 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 EmployeeId = getEmployeeId,
                 ScheduleId = getScheduleId,
-                ShiftId = shiftId,
+                ShiftId = shiftInfo.ShiftId,
                 SummonId = summonId,
                 ZoneId = zoneId,
-                LocalDate = clientLocalDateTime,
-                ShiftCheckInTime = shiftInfo.CheckInTime,
-                ShiftCheckOutTime = shiftInfo.CheckOutTime,
-                AllowedMinutes = shiftInfo.AllowedMinutes,
+                LocalDateTime = clientLocalDateTime,
+                ShiftCheckInTime = shiftInfo.ShiftCheckInTime,
+                ShiftCheckOutTime = shiftInfo.ShiftCheckOutTime,
+                AllowedMinutes = shiftInfo.ShiftAllowedMinutes,
                 FingerPrintType = fingerPrintType
             };
         }
         public async Task<GetCurrentFingerPrintInfoResponseModel> GetCurrentFingerPrintInfoValidation()
         {
+            #region First Handle
 
-            var getEmployeeId = (requestInfo?.User?.EmployeeId) ??
-             throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+            var getEmployeeId = requestInfo.EmployeeId ??
+                 throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+
+            var getEmployee = await repositoryManager.EmployeeRepository
+                .GetByIdAsync(getEmployeeId) ??
+                throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
+            var getScheduleId = getEmployee.ScheduleId ??
+               throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
+
+            var clientLocalDateTime = requestInfo.LocalDateTime;
+            var clientLocalDate = requestInfo.LocalDateTime.Date; 
+
+            #endregion
 
             #region Get Availble Zones For Fingerprint
 
@@ -325,8 +329,25 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #endregion
 
-            var clientLocalDateTime = requestInfo.LocalDateTime;
-            var clientLocalDate = requestInfo.LocalDateTime.Date;
+            #region Check If Fingerprint Cross Days ( 24 )
+
+            var checkIfShift24HoursModel = new CheckIfShift24HoursModel
+            {
+                ScheduleId = getScheduleId,
+                ClientLocalDateTime = clientLocalDateTime,
+                EmployeeId = getEmployeeId
+            };
+
+            var response = await CheckIfShiftIs24Hours(checkIfShift24HoursModel);
+
+            clientLocalDateTime = response.ClientLocalDateTime;
+            clientLocalDate = response.ClientLocalDateTime.Date;
+            var getSchedule = response.Schedule;
+            var shiftInfo = response.ShiftInfo;
+
+            #endregion
+
+            #region Get Attendance
 
             var getAttendance = await repositoryManager.EmployeeAttendanceRepository
                 .Get(a => !a.IsDeleted && a.EmployeeId == getEmployeeId
@@ -335,12 +356,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 {
                     Id = a.Id,
                     Code = a.Code,
-                    CheckInTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
-                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).Time.ToString("HH:mm:ss") : null,
-                    CheckOutTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
-                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().Time.ToString("HH:mm:ss") : null,
+                    CheckInDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) != null ?
+                     a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : null,
+                    CheckOutDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
+
+            #endregion
 
             #region Check If Summon
 
@@ -362,22 +385,128 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 Id = getAttendance?.Id,
                 Code = getAttendance?.Code,
-                CheckInTime = getAttendance?.CheckInTime,
-                CheckOutTime = getAttendance?.CheckOutTime,
+                CheckInDateTime = getAttendance.CheckInDateTime,
+                CheckOutDateTime = getAttendance.CheckOutDateTime,
 
-                DefaultCheckType = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? FingerprintCheckType.CheckIn :
-                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? FingerprintCheckType.NotDefined :
-                getAttendance?.CheckInTime != null ? checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut :
+                DefaultCheckType = getAttendance?.CheckInDateTime == null &&
+                getAttendance?.CheckOutDateTime == null ? FingerprintCheckType.CheckIn :
+                getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? FingerprintCheckType.NotDefined :
+                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut :
                 FingerprintCheckType.NotDefined,
 
-                EmployeeStatus = getAttendance?.CheckInTime == null && getAttendance?.CheckOutTime == null ? EmployeeStatus.NotAttendYet :
-                getAttendance?.CheckInTime != null && getAttendance?.CheckOutTime != null ? EmployeeStatus.AttendThenLeaved :
-                getAttendance?.CheckInTime != null ? EmployeeStatus.AtWork :
+                EmployeeStatus = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? EmployeeStatus.NotAttendYet :
+                getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? EmployeeStatus.AttendThenLeaved :
+                getAttendance?.CheckInDateTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
 
                 LocalDate = clientLocalDateTime,
                 AvailableZones = availableZonesOutput
             };
+        }
+        private async Task<CheckIfShiftIs24HoursResponseModel> CheckIfShiftIs24Hours(CheckIfShift24HoursModel model)
+        {
+            #region Get Schedule
+
+            var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == model.ScheduleId &&
+                !schedule.IsDeleted)
+                   .Select(schedule => new GetScheduleModel
+                   {
+                       Id = schedule.Id,
+                       Code = schedule.Code,
+                       Name = schedule.Name,
+                       IsActive = schedule.IsActive,
+                       ScheduleDays = schedule.ScheduleDays.Select(weekShift => new GetScheduleDayModel
+                       {
+                           Id = weekShift.Id,
+                           WeekDay = weekShift.WeekDay,
+                           ShiftId = weekShift.ShiftId,
+                           ShiftInfo = weekShift.Shift != null ? new ShiftInfoModel
+                           {
+                               ShiftId = weekShift.Shift.Id,
+                               ShiftCheckInTime = weekShift.Shift.CheckInTime,
+                               ShiftCheckOutTime = weekShift.Shift.CheckOutTime,
+                               ShiftAllowedMinutes = weekShift.Shift.AllowedMinutes
+                           } : null
+                       }).ToList()
+                   }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryScheduleNotFound);
+
+            #endregion
+
+            var clientLocalDateTime = model.ClientLocalDateTime;
+            var clientLocalDate = model.ClientLocalDateTime.Date;
+
+            #region Check If Fingerprint Cross Days ( 24 )
+
+            ShiftInfoModel the24HoursShift = null;
+
+            var getLastFingerprint = await repositoryManager.
+                EmployeeAttendanceCheckRepository.
+                Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId).
+                OrderByDescending(a=>a.Id).
+                Select(check => new
+                {
+                    check.FingerPrintDate,
+                    check.FingerPrintType,
+                    check.EmployeeAttendance.LocalDate
+                }).FirstOrDefaultAsync();
+
+            var checkIfLastFingerPrintAllow24Hours =
+                getLastFingerprint != null &&
+                getLastFingerprint.FingerPrintType == FingerPrintType.CheckIn &&
+                (clientLocalDate - getLastFingerprint.LocalDate).Days == 1 &&
+                (clientLocalDate - getLastFingerprint.FingerPrintDate.Date).Days == 1;
+
+            if (checkIfLastFingerPrintAllow24Hours)
+            {
+                var lastClientLocalDateTime = requestInfo.LocalDateTime.AddDays(-1);
+                var lastClientLocalDate = requestInfo.LocalDateTime.Date.AddDays(-1);
+
+                var getLastShiftInfo = getSchedule.ScheduleDays.
+                    FirstOrDefault(d => (DayOfWeek)d.WeekDay == lastClientLocalDateTime.DayOfWeek).
+                    ShiftInfo;
+
+                if (getLastShiftInfo != null)
+                {
+                    #region Check If Shift Is 24 Hours Cross Days
+
+                    var shiftCheckInTime = getLastShiftInfo.ShiftCheckInTime;
+                    var shiftCheckOutTime = getLastShiftInfo.ShiftCheckOutTime;
+
+                    var shiftCheckInTimeType = shiftCheckInTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
+                    var shiftCheckOutTimeType = shiftCheckOutTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
+
+                    var is24HoursShift = ((shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
+                        (shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM && shiftCheckInTime > shiftCheckOutTime) ||
+                        (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM && shiftCheckInTime > shiftCheckOutTime))
+                        && clientLocalDateTime.TimeOfDay <= shiftCheckOutTime;
+
+                    if (is24HoursShift)
+                    {
+                        the24HoursShift = getLastShiftInfo;
+                        clientLocalDate = lastClientLocalDate;
+                        clientLocalDateTime  = lastClientLocalDateTime;
+                    }
+
+                    #endregion
+                }
+            }
+
+
+            var shiftInfo = the24HoursShift != null ? the24HoursShift :
+               (getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDateTime.DayOfWeek)
+               .ShiftInfo ?? throw new BusinessValidationException(LeillaKeys.SorryYouDoNotHaveScheduleToday));
+
+
+            #endregion
+
+            var respnse = new CheckIfShiftIs24HoursResponseModel()
+            {
+                ClientLocalDateTime = clientLocalDateTime,
+                ShiftInfo = shiftInfo,
+                Schedule = getSchedule
+            };
+
+            return respnse;
         }
         public async Task<bool> GetEmployeeAttendancesValidation(GetEmployeeAttendancesCriteria model)
         {
@@ -471,7 +600,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
         {
             return Math.PI * angle / 180.0;
         }
-
         public static int? IsWithinZone(double userLat, double userLon, List<AvailableZoneDTO> employeeZones)
         {
             for (int i = 0; i < employeeZones.Count; i++)

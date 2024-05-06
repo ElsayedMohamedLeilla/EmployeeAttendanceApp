@@ -20,7 +20,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
         {
             requestVacationBL = _requestVacationBL;
         }
-
         [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult> Create([FromForm] CreateRequestVacationWithImageDTO formData)
         {
@@ -34,7 +33,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
             var result = await requestVacationBL.Create(model);
             return Success(result, messageCode: AmgadKeys.DoneCreateVacationRequestSuccessfully);
         }
-
         [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> Update([FromForm] UpdateRequestVacationWithImageDTO formData)
         {

@@ -67,7 +67,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports
         eac.EmployeeAttendance != null &&
         eac.EmployeeAttendance.LocalDate >= model.DateFrom &&
         eac.EmployeeAttendance.LocalDate <= model.DateTo &&
-        eac.Time < eac.EmployeeAttendance.ShiftCheckOutTime
+        eac.FingerPrintDate.TimeOfDay < eac.EmployeeAttendance.ShiftCheckOutTime
     )
     .Count() + LeillaKeys.Space + LeillaKeys.Hour,
      LateArrivalsCount = employee.EmployeeAttendances
@@ -134,16 +134,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports
         }
         private static double CalculateWorkingHours(IEnumerable<EmployeeAttendanceCheck> checks)
         {
-            var orderedChecks = checks.OrderBy(e => e.Time).ToList();
+            var orderedChecks = checks.OrderBy(e => e.FingerPrintDate).ToList();
             if (orderedChecks.Count < 2)
             {
                 return 0;
             }
             // Assuming endTime is always greater than or equal to startTime
-            var startTime = orderedChecks.First().Time;
-            var endTime = orderedChecks.Last().Time;
+            var startDateTime = orderedChecks.First().FingerPrintDate;
+            var endDateTime = orderedChecks.Last().FingerPrintDate;
 
-            return (endTime - startTime).TotalMinutes;
+            return (endDateTime - startDateTime).TotalMinutes;
         }
         TimeOnly GetLateArrivalThreshold(TimeOnly shiftCheckInTime, DateTime fromDate)
         {
@@ -202,20 +202,20 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 ea.EmployeeAttendanceChecks != null && ea.LocalDate.Date >= criteria.DateFrom.Date
                 && ea.LocalDate.Date <= criteria.DateTo.Date &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn) &&
-                ea.EmployeeAttendanceChecks.FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).Time > ea.ShiftCheckInTime)
+                ea.EmployeeAttendanceChecks.FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate.TimeOfDay > ea.ShiftCheckInTime)
                 .Select(ea => EF.Functions.DateDiffMinute((DateTime)(object)ea.ShiftCheckInTime,
                 (DateTime)(object)ea.EmployeeAttendanceChecks
-                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).Time) / 60).ToList()) + LeillaKeys.Space + LeillaKeys.Hour,
+                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate.TimeOfDay) / 60).ToList()) + LeillaKeys.Space + LeillaKeys.Hour,
 
 
                 EarlyDeparturesCount = ReportsHelper.SumListOfNumber(employee.EmployeeAttendances.Where(ea => !ea.IsDeleted &&
                 ea.EmployeeAttendanceChecks != null && ea.LocalDate.Date >= criteria.DateFrom.Date
                 && ea.LocalDate.Date <= criteria.DateTo.Date &&
                 ea.EmployeeAttendanceChecks
-                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).Time < ea.ShiftCheckOutTime &&
+                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).FingerPrintDate.TimeOfDay < ea.ShiftCheckOutTime &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut))
                 .Select(ea => EF.Functions.DateDiffMinute((DateTime)(object)ea.EmployeeAttendanceChecks
-                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).Time,
+                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).FingerPrintDate.TimeOfDay,
                 (DateTime)(object)ea.ShiftCheckOutTime) / 60).ToList()) + LeillaKeys.Space + LeillaKeys.Hour,
 
 
@@ -225,9 +225,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn) &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut))
                 .Select(ea => EF.Functions.DateDiffMinute((DateTime)(object)ea.EmployeeAttendanceChecks
-                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).Time,
+                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate.TimeOfDay,
                 (DateTime)(object)ea.EmployeeAttendanceChecks
-                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).Time) / 60).ToList()) + LeillaKeys.Space + LeillaKeys.Hour,
+                .FirstOrDefault(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut).FingerPrintDate.TimeOfDay) / 60).ToList()) + LeillaKeys.Space + LeillaKeys.Hour,
 
 
                 AbsencesCount = ReportsHelper.GetShouldAttendCount(employee.Schedule.ScheduleDays
@@ -301,9 +301,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 ea.LocalDate.Date >= criteria.DateFrom.Date
                 && ea.LocalDate.Date <= criteria.DateTo.Date &&
                 ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
-                eac.FingerPrintType == FingerPrintType.CheckIn && eac.Time < ea.ShiftCheckOutTime) &&
+                eac.FingerPrintType == FingerPrintType.CheckIn && eac.FingerPrintDate.TimeOfDay < ea.ShiftCheckOutTime) &&
                  ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted &&
-                (eac.FingerPrintType == FingerPrintType.CheckOut && eac.Time > ea.ShiftCheckInTime)))
+                (eac.FingerPrintType == FingerPrintType.CheckOut && eac.FingerPrintDate.TimeOfDay > ea.ShiftCheckInTime)))
                 .Select(ea => new
                 {
                     ea.Id,
@@ -315,19 +315,8 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                     ea.TotalWorkingHours,
                     ea.TotalEarlyDeparturesHours,
                     ea.TotalLateArrivalsHours,
-                    ea.TotalOverTimeHours,
+                    ea.TotalOverTimeHours
 
-                    EmployeeAttendanceChecks = ea.EmployeeAttendanceChecks
-                    .Where(eac => !eac.IsDeleted && (eac.FingerPrintType == FingerPrintType.CheckIn &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(eac => eac.Time) || eac.FingerPrintType == FingerPrintType.CheckOut &&
-                    eac.Time == ea.EmployeeAttendanceChecks.Where(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(eac => eac.Time)))
-                    .Select(eac => new
-                    {
-                        eac.FingerPrintType,
-                        eac.Time
-                    }).ToList()
                 }).ToList(),
 
                 Schedule = employee.Schedule.ScheduleDays.Any(es => !es.IsDeleted && es.ShiftId > 0) ? new

@@ -22,12 +22,11 @@ namespace Dawem.Domain.Entities.Attendances
         public int ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }
-
         #endregion
         public int Code { get; set; }
         public DateTime LocalDate { get; set; }
-        public TimeOnly ShiftCheckInTime { get; set; }
-        public TimeOnly ShiftCheckOutTime { get; set; }
+        public TimeSpan ShiftCheckInTime { get; set; }
+        public TimeSpan ShiftCheckOutTime { get; set; }
         public decimal? TotalWorkingHours { get; set; }
         public decimal? TotalLateArrivalsHours { get; set; }
         public decimal? TotalEarlyDeparturesHours { get; set; }

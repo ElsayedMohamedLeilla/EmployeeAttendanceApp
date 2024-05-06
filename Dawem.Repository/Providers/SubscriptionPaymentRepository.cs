@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 

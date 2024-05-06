@@ -1,8 +1,8 @@
-﻿using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+﻿using Dawem.Models.Dtos.Dawem.Settings;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
+namespace Dawem.Validation.FluentValidation.AdminPanel.Settings
 {
     public class UpdateSettingModelValidator : AbstractValidator<UpdateSettingModel>
     {

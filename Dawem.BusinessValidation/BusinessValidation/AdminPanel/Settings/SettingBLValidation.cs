@@ -1,17 +1,17 @@
-﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+﻿using Dawem.Contract.BusinessValidation.AdminPanel.Settings;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Dawem;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+using Dawem.Models.Dtos.Dawem.Settings;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Validation.BusinessValidation.AdminPanel.Settings
 {
 
     public class SettingBLValidation : ISettingBLValidation

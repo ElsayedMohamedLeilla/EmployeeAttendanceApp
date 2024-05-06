@@ -9,9 +9,9 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
+using Dawem.Models.Response.AdminPanel.Subscriptions.SubscriptionPayment;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

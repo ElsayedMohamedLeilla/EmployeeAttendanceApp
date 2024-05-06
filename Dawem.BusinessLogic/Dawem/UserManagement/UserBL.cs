@@ -323,10 +323,12 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.AddUserId = requestInfo.UserId;
             user.UserName = foundEmployee.Email;
             user.Email = foundEmployee.Email;
+            user.PhoneNumber = foundEmployee.MobileNumber;
             user.ProfileImageName = foundEmployee.ProfileImageName;
             user.Code = foundEmployee.Code;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
+            user.IsActive = foundEmployee.IsActive;
             user.Type = AuthenticationType.DawemAdmin;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
@@ -507,6 +509,9 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             getUser.ModifiedDate = DateTime.Now;
             getUser.ModifyUserId = requestInfo.UserId;
             getUser.ProfileImageName = foundEmployee.ProfileImageName;
+            getUser.PhoneNumber = foundEmployee.MobileNumber;
+            getUser.IsActive = foundEmployee.IsActive;
+            
 
             var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
 
@@ -809,7 +814,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
                     MobileCountryFlagPath = uploadBLC.GetFilePath(user.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = user.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
                     ProfileImageName = user.ProfileImageName,
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.Responsibility.Name).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
@@ -832,7 +837,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryId = user.MobileCountryId ?? 0,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 

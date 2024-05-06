@@ -1,7 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 
 
 namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions

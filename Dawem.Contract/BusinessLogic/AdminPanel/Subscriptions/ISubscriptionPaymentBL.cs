@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
+using Dawem.Models.Response.AdminPanel.Subscriptions.SubscriptionPayment;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
 {

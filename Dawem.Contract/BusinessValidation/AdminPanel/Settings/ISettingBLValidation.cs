@@ -1,7 +1,7 @@
 ﻿using Dawem.Domain.Entities.Dawem;
-using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+using Dawem.Models.Dtos.Dawem.Settings;
 
-namespace Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Contract.BusinessValidation.AdminPanel.Settings
 {
     public interface ISettingBLValidation
     {

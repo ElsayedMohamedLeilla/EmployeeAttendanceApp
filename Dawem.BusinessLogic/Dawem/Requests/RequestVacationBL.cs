@@ -136,7 +136,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 .EmployeeRepository.Get(r => r.Id == employeeId && r.DirectManagerId > 0)
                 .Select(e => new
                 {
-                    e.Name,
                     DirectManagerId = e.DirectManagerId.Value
                 }).FirstOrDefaultAsync();
 

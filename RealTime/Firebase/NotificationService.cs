@@ -36,7 +36,7 @@ public class NotificationService : INotificationService
         ResponseModel response = new();
         var title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
         var body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
-        var Data = await GetNotificationData(notificationType);
+        var notificationData = await GetNotificationData(notificationType);
         var imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
         var userToken = GetUserTokens(UserIds);
         var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
@@ -49,7 +49,7 @@ public class NotificationService : INotificationService
             {
                 Body = body,
                 Title = title,
-                Data = Data,
+                Data = notificationData,
                 ImageUrl = imageUrl,
                 Tokens = webTokens
             };
@@ -62,7 +62,7 @@ public class NotificationService : INotificationService
             {
                 Body = body,
                 Title = title,
-                Data = Data,
+                Data = notificationData,
                 ImageUrl = imageUrl,
                 Tokens = androidTokens
             };
@@ -74,7 +74,7 @@ public class NotificationService : INotificationService
             {
                 Body = body,
                 Title = title,
-                Data = Data,
+                Data = notificationData,
                 ImageUrl = imageUrl,
                 Tokens = iosTokens
             };
@@ -247,18 +247,18 @@ public class NotificationService : INotificationService
     }
     private async Task<Dictionary<string, string>> GetNotificationData(NotificationType notificationType)
     {
-        NotificationModelDTO nPM = new()
+        NotificationDataModel model = new()
         {
             NotificationType = notificationType,
-            UnReadNotificationCount = await notificationBL.GetUnreadNotificationCount(),
+            UnReadNotificationCount = await notificationBL.GetUnreadNotificationCount()
         };
-        string jsonString = JsonSerializer.Serialize(nPM);
+        string jsonString = JsonSerializer.Serialize(model);
 
-        Dictionary<string, string> myDict = new Dictionary<string, string>
+        var dataDictionary = new Dictionary<string, string>
         {
             {"NotificationData", jsonString},
         };
-        return myDict;
+        return dataDictionary;
     }
     private List<TokensModel> GetUserTokens(List<int> userids)
     {

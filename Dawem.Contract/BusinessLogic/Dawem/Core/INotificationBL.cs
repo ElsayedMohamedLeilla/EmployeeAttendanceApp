@@ -4,7 +4,7 @@ using Dawem.Models.Response.Dawem.Core.NotificationsStores;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {
-    public interface INotificationStoreBL
+    public interface INotificationBL
     {
         Task<bool> MarkAsRead(int notificationStoreId);
         Task<bool> MarkAsViewed();

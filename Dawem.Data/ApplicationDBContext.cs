@@ -474,10 +474,6 @@ namespace Dawem.Data
                 .Property(e => e.FCMToken)
                 .HasMaxLength(250);
 
-            builder.Entity<NotificationStore>()
-                .Property(e => e.ImageUrl)
-                .HasMaxLength(100);
-
             builder.Entity<MyUser>()
                 .Property(e => e.PasswordHash)
                 .HasMaxLength(250);

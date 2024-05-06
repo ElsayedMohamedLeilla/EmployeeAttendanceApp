@@ -21,7 +21,6 @@ namespace Dawem.Domain.Entities.Core
         public int Code { get; set; }
         public bool IsRead { get; set; }
         public NotificationStatus Status { get; set; }
-        public string ImageUrl { get; set; }
         public Priority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
         public bool IsViewed { get; set; }

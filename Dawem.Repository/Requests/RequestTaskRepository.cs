@@ -36,7 +36,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestTask => !requestTask.Request.IsDeleted && !requestTask.IsDeleted);
+            predicate = predicate.And(requestTask => !requestTask.Request.IsDeleted);
             predicate = predicate.And(requestTask => requestTask.Request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)
@@ -97,7 +97,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestTask => !requestTask.Request.IsDeleted && !requestTask.IsDeleted);
+            predicate = predicate.And(requestTask => !requestTask.Request.IsDeleted);
             predicate = predicate.And(requestTask => requestTask.Request.CompanyId == requestInfo.CompanyId);
 
             predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId || 

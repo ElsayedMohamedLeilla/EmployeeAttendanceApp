@@ -34,7 +34,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestVacation => !requestVacation.Request.IsDeleted && !requestVacation.IsDeleted);
+            predicate = predicate.And(requestVacation => !requestVacation.Request.IsDeleted);
             predicate = predicate.And(requestVacation => requestVacation.Request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)
@@ -93,7 +93,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
-            predicate = predicate.And(requestVacation => !requestVacation.Request.IsDeleted && !requestVacation.IsDeleted);
+            predicate = predicate.And(requestVacation => !requestVacation.Request.IsDeleted);
 
             predicate = predicate.And(requestVacation => requestVacation.Request.CompanyId == requestInfo.CompanyId);
 

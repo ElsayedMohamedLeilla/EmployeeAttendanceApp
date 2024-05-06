@@ -375,7 +375,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestJustificationsList = await queryPaged.Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
+            var requestJustificationsList = await queryPaged.
+                Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
             {
                 Id = requestJustification.Request.Id,
                 Code = requestJustification.Request.Code,

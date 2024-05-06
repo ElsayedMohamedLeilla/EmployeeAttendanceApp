@@ -19,9 +19,18 @@ namespace Dawem.API.MiddleWares
         }
         public Task Invoke(HttpContext context, RequestInfo userContext, IUnitOfWork<ApplicationDBContext> unitOfWork) => InvokeAsync(context, userContext, unitOfWork);
         async Task InvokeAsync(HttpContext context, RequestInfo requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork)
-        {
+        {            
+            #region Check Dawem And AdminPanel Access
 
-            await _request.Invoke(context);
+            var isForbiddenUser = false;
+
+            if (!requestInfo.IsSignInRequest && ((requestInfo.IsAdminPanelRequest && !requestInfo.IsAdminPanelUser) ||
+                (!requestInfo.IsAdminPanelRequest && requestInfo.IsAdminPanelUser)))
+            {
+                isForbiddenUser = true;
+            }
+
+            #endregion
 
             if (context.Response.StatusCode == StatusCodes.Status401Unauthorized && !context.Response.HasStarted)
             {
@@ -35,7 +44,7 @@ namespace Dawem.API.MiddleWares
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
             }
-            else if (context.Response.StatusCode == StatusCodes.Status403Forbidden && !context.Response.HasStarted)
+            else if ((context.Response.StatusCode == StatusCodes.Status403Forbidden || isForbiddenUser )&& !context.Response.HasStarted)
             {
                 int statusCode = StatusCodes.Status403Forbidden;
                 var response = new ErrorResponse
@@ -46,6 +55,10 @@ namespace Dawem.API.MiddleWares
                 };
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
 
+            }
+            else
+            {
+                await _request.Invoke(context);
             }
         }
         

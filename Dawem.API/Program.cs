@@ -188,10 +188,14 @@ RequestLocalizationOptions requestLocalizationOptions = new()
     SupportedCultures = supportedCultures,
     SupportedUICultures = supportedCultures
 };
+
 app.UseMiddleware<UnauthorizedMessageHandlerMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseRequestLocalization(requestLocalizationOptions);
+
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseMiddleware<PermissionMiddleWare>();

@@ -1,6 +1,5 @@
 ﻿using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Response.Dawem.Core.NotificationsStores;
+using Dawem.Models.Response.Dawem.Core.Notifications;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {
@@ -8,13 +7,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Core
     {
         Task<bool> MarkAsRead(int notificationStoreId);
         Task<bool> MarkAsViewed();
-        Task<GetNotificationStoreResponseDTO> Get(GetNotificationStoreCriteria criteria);
-        Task<GetNotificationStoreResponseDTO> GetNotifications(GetNotificationStoreCriteria criteria);
-        Task<bool> Enable(int GroupId);
-        Task<bool> Disable(DisableModelDTO model);
-        Task<bool> Delete(int GroupId);
+        Task<GetNotificationsResponseDTO> Get(GetNotificationCriteria criteria);
         Task<int> GetUnreadNotificationCount();
-        Task<GetNotificationStoreResponseDTO> GetUnreadNotification(GetNotificationStoreCriteria criteria);
         Task<int> GetUnViewedNotificationCount();
 
 

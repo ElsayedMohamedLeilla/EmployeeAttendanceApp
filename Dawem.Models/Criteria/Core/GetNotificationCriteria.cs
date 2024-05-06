@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Criteria.Core
 {
-    public class GetNotificationStoreCriteria : BaseCriteria
+    public class GetNotificationCriteria : BaseCriteria
     {
         public bool? IsRead { get; set; }
         [JsonIgnore]

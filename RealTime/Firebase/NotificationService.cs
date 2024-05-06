@@ -18,7 +18,7 @@ public class NotificationService : INotificationService
 {
     private readonly RequestInfo requestInfo;
     private readonly IUploadBLC uploadBLC;
-    private readonly INotificationBL notificationStoreBL;
+    private readonly INotificationBL notificationBL;
     private readonly IRepositoryManager repositoryManager;
     private readonly IMailBL mailBL;
     public NotificationService(RequestInfo _requestInfo, IUploadBLC _uploadBLC,
@@ -27,7 +27,7 @@ public class NotificationService : INotificationService
     {
         requestInfo = _requestInfo;
         uploadBLC = _uploadBLC;
-        notificationStoreBL = _notificationStoreBL;
+        notificationBL = _notificationStoreBL;
         repositoryManager = _repositoryManager;
         mailBL = _mailBL;
     }
@@ -250,7 +250,7 @@ public class NotificationService : INotificationService
         NotificationModelDTO nPM = new()
         {
             NotificationType = notificationType,
-            UnReadNotificationCount = await notificationStoreBL.GetUnreadNotificationCount(),
+            UnReadNotificationCount = await notificationBL.GetUnreadNotificationCount(),
         };
         string jsonString = JsonSerializer.Serialize(nPM);
 

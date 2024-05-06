@@ -139,13 +139,13 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Save Notification In DB
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+            var getNotificationNextCode = await repositoryManager.NotificationRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
 
-            var notificationStore = new NotificationStore()
+            var notificationStore = new Notification()
             {
                 Code = getNotificationNextCode,
                 EmployeeId = requestEmployee.DirectManagerId ?? 0,
@@ -158,7 +158,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 IsActive = true,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            repositoryManager.NotificationRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #endregion
 
@@ -524,12 +524,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Save Notification In DB
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+            var getNotificationNextCode = await repositoryManager.NotificationRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
-            var notificationStore = new NotificationStore()
+            var notificationStore = new Notification()
             {
                 Code = getNotificationNextCode,
                 EmployeeId = request.EmployeeId,
@@ -542,7 +542,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 IsActive = true,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            repositoryManager.NotificationRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #endregion
 
@@ -579,12 +579,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             await unitOfWork.SaveAsync();
             #region Save Notification In DB
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+            var getNotificationNextCode = await repositoryManager.NotificationRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
-            var notificationStore = new NotificationStore()
+            var notificationStore = new Notification()
             {
                 Code = getNotificationNextCode,
                 EmployeeId = request.EmployeeId,
@@ -597,7 +597,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 IsActive = true,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            repositoryManager.NotificationRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #endregion
 

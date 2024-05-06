@@ -35,7 +35,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationBL notificationStoreBL;
 
         private readonly INotificationService notificationServiceByFireBaseAdmin;
 
@@ -45,7 +44,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestAssignmentBLValidation _requestAssignmentBLValidation,
-           INotificationBL _notificationStoreBL, INotificationService _notificationServiceByFireBaseAdmin)
+           INotificationService _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -53,7 +52,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             requestAssignmentBLValidation = _requestAssignmentBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            notificationStoreBL = _notificationStoreBL;
             notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
 
         }
@@ -143,12 +141,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             #endregion
 
             #region Save Notification In DB
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
+            var getNotificationNextCode = await repositoryManager.NotificationRepository
                .Get(e => e.CompanyId == requestInfo.CompanyId)
                .Select(e => e.Code)
                .DefaultIfEmpty()
                .MaxAsync() + 1;
-            var notificationStore = new NotificationStore()
+            var notificationStore = new Notification()
             {
                 Code = getNotificationNextCode,
                 EmployeeId = requestEmployee.DirectManagerId ?? 0,
@@ -163,7 +161,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 Priority = Priority.Medium
 
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+            repositoryManager.NotificationRepository.Insert(notificationStore);
             await unitOfWork.SaveAsync();
             #endregion
 

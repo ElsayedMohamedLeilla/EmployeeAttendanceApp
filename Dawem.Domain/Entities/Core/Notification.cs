@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(NotificationStore) + LeillaKeys.S)]
-    public class NotificationStore : BaseEntity
+    [Table(nameof(Notification) + LeillaKeys.S)]
+    public class Notification : BaseEntity
     {
         #region Forign Key
         public int CompanyId { get; set; }
@@ -23,7 +23,6 @@ namespace Dawem.Domain.Entities.Core
         public Priority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
         public bool IsViewed { get; set; }
-
         public void MarkAsRead()
         {
             IsRead = true;
@@ -34,9 +33,5 @@ namespace Dawem.Domain.Entities.Core
             IsViewed = true;
             ModifiedDate = DateTime.UtcNow;
         }
-
-
-
-
     }
 }

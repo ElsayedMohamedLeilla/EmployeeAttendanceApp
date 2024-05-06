@@ -32,13 +32,13 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             foreach (var employeeId in model.EmployeeIds)
             {
-                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository.
+                var getNotificationNextCode = await repositoryManager.NotificationRepository.
                     Get(e => e.CompanyId == requestInfo.CompanyId).
                     Select(e => e.Code).
                     DefaultIfEmpty().
                     MaxAsync() + 1;
 
-                var notificationStore = new NotificationStore()
+                var notificationStore = new Notification()
                 {
                     Code = getNotificationNextCode,
                     EmployeeId = employeeId,
@@ -50,7 +50,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                     Priority = model.Priority
                 };
 
-                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
+                repositoryManager.NotificationRepository.Insert(notificationStore);
             }
 
             await unitOfWork.SaveAsync();

@@ -7,19 +7,19 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Core.NotificationsStores
+namespace Dawem.Repository.Core.Notifications
 {
-    public class NotificationStoreRepository : GenericRepository<NotificationStore>, INotificationStoreRepository
+    public class NotificationRepository : GenericRepository<Notification>, INotificationRepository
     {
         private readonly RequestInfo _requestInfo;
-        public NotificationStoreRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
+        public NotificationRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
             _requestInfo = requestInfo;
         }
-        public IQueryable<NotificationStore> GetAsQueryable(GetNotificationStoreCriteria criteria)
+        public IQueryable<Notification> GetAsQueryable(GetNotificationCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<NotificationStore>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<NotificationStore>(true);
+            var predicate = PredicateBuilder.New<Notification>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<Notification>(true);
 
             predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 

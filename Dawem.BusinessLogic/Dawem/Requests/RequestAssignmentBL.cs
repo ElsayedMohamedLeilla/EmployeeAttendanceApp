@@ -35,9 +35,9 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationStoreBL notificationStoreBL;
+        private readonly INotificationBL notificationStoreBL;
 
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private readonly INotificationService notificationServiceByFireBaseAdmin;
 
         public RequestAssignmentBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
@@ -45,7 +45,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestAssignmentBLValidation _requestAssignmentBLValidation,
-           INotificationStoreBL _notificationStoreBL, INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           INotificationBL _notificationStoreBL, INotificationService _notificationServiceByFireBaseAdmin)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -171,7 +171,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
             if (userIds.Count > 0)
             {
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
+                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
             }
             #endregion
 

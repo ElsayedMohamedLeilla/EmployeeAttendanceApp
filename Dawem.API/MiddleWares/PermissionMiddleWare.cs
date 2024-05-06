@@ -22,7 +22,7 @@ namespace Dawem.API.MiddleWares
             _next = next;
         }
         public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown };
-        public List<string> ExcludedControllers = new() { LeillaKeys.NotificationController };
+        public List<string> ExcludedControllers = new() { LeillaKeys.NotificationStoreController };
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, IPermissionBL permissionBL, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {

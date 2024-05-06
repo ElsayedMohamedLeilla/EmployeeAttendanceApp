@@ -385,8 +385,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 Id = getAttendance?.Id,
                 Code = getAttendance?.Code,
-                CheckInDateTime = getAttendance.CheckInDateTime,
-                CheckOutDateTime = getAttendance.CheckOutDateTime,
+                CheckInDateTime = getAttendance?.CheckInDateTime,
+                CheckOutDateTime = getAttendance?.CheckOutDateTime,
 
                 DefaultCheckType = getAttendance?.CheckInDateTime == null &&
                 getAttendance?.CheckOutDateTime == null ? FingerprintCheckType.CheckIn :

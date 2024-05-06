@@ -476,6 +476,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     PermissionTypeId = requestPermission.PermissionTypeId,
                     DateFrom = requestPermission.Request.Date,
                     DateTo = requestPermission.DateTo,
+                    Status = requestPermission.Request.Status,
                     IsActive = requestPermission.Request.IsActive,
                     IsNecessary = requestPermission.Request.IsNecessary,
                     ForEmployee = requestPermission.Request.ForEmployee,

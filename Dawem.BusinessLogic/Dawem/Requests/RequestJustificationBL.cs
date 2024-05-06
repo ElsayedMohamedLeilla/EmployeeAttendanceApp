@@ -472,10 +472,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 {
                     Id = requestJustification.Request.Id,
                     Code = requestJustification.Request.Code,
+
                     EmployeeId = requestJustification.Request.EmployeeId,
                     JustificationTypeId = requestJustification.JustificationTypeId,
                     DateFrom = requestJustification.Request.Date,
                     DateTo = requestJustification.DateTo,
+                    Status = requestJustification.Request.Status,
                     IsActive = requestJustification.Request.IsActive,
                     IsNecessary = requestJustification.Request.IsNecessary,
                     ForEmployee = requestJustification.Request.ForEmployee,

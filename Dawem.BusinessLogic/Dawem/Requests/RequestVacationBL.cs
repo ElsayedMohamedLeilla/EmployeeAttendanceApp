@@ -464,6 +464,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     VacationTypeId = requestVacation.VacationTypeId,
                     DateFrom = requestVacation.Request.Date,
                     DateTo = requestVacation.DateTo,
+                    Status = requestVacation.Request.Status,
                     IsActive = requestVacation.Request.IsActive,
                     IsNecessary = requestVacation.Request.IsNecessary,
                     ForEmployee = requestVacation.Request.ForEmployee,

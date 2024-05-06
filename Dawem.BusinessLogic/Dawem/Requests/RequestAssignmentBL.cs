@@ -567,6 +567,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     AssignmentTypeId = requestAssignment.AssignmentTypeId,
                     DateFrom = requestAssignment.Request.Date,
                     DateTo = requestAssignment.DateTo,
+                    Status = requestAssignment.Request.Status,
                     IsActive = requestAssignment.Request.IsActive,
                     IsNecessary = requestAssignment.Request.IsNecessary,
                     ForEmployee = requestAssignment.Request.ForEmployee,

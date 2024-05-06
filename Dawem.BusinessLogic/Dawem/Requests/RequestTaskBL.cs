@@ -576,6 +576,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     TaskTypeId = requestTask.TaskTypeId,
                     DateFrom = requestTask.Request.Date,
                     DateTo = requestTask.DateTo,
+                    Status = requestTask.Request.Status,
                     IsActive = requestTask.Request.IsActive,
                     IsNecessary = requestTask.Request.IsNecessary,
                     ForEmployee = requestTask.Request.ForEmployee,

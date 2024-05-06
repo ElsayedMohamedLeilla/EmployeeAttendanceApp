@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class EmployeeRequestController : DawemControllerBase
     {

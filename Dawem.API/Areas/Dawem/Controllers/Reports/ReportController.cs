@@ -2,15 +2,11 @@
 using Dawem.Enums.Generals;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Reports
 {
-    [Route(LeillaKeys.DawemApiControllerAction),
-        ApiController,
-        Authorize, DawemAuthorize
-        ]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class ReportController : DawemControllerBase
     {
         private readonly IReportGeneratorBL _reportGeneratorBL;
@@ -19,7 +15,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             _reportGeneratorBL = reportGeneratorBL;
         }
         [HttpPost]
-        public IActionResult GetAttendanceForAllEmployeeReport([FromQuery]  GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetAttendanceForAllEmployeeReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
         {
             var response = _reportGeneratorBL.GenerateAttendanceForAllEmployeeReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -65,7 +61,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetEmployeeAttendanceByEmployeeReport([FromQuery]  GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetEmployeeAttendanceByEmployeeReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
         {
             var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusByEmployeeID(param);
             if (response != null && response.IsSuccessStatusCode)

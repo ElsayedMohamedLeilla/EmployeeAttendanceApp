@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Dashboard
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class DashboardController : DawemControllerBase
     {

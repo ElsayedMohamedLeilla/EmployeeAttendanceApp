@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class CompanyController : AdminPanelControllerBase
     {
         private readonly ICompanyBL companyBL;

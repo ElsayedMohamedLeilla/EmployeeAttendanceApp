@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Settings
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class SettingController : AdminPanelControllerBase
     {
         private readonly ISettingBL settingBL;

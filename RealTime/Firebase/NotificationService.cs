@@ -53,7 +53,7 @@ public class NotificationService : INotificationService
                 ImageUrl = imageUrl,
                 Tokens = webTokens
             };
-            response = await Send_Web_Notification(webModel);
+            response = await SendWebNotification(webModel);
         }
 
         if (androidTokens.Count > 0)
@@ -66,7 +66,7 @@ public class NotificationService : INotificationService
                 ImageUrl = imageUrl,
                 Tokens = androidTokens
             };
-            response = await Send_Android_Notification(androiodModel);
+            response = await SendAndroidNotification(androiodModel);
         }
         if (iosTokens.Count > 0)
         {
@@ -78,7 +78,7 @@ public class NotificationService : INotificationService
                 ImageUrl = imageUrl,
                 Tokens = iosTokens
             };
-            response = await Send_Ios_Notification(iosModel);
+            response = await SendIosNotification(iosModel);
         }
         #endregion
 
@@ -90,7 +90,7 @@ public class NotificationService : INotificationService
 
         return response;
     }
-    private static async Task<ResponseModel> Send_Web_Notification(NotificationModel notificationModel)
+    private static async Task<ResponseModel> SendWebNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try
@@ -131,7 +131,7 @@ public class NotificationService : INotificationService
 
         return response;
     }
-    private static async Task<ResponseModel> Send_Android_Notification(NotificationModel notificationModel)
+    private static async Task<ResponseModel> SendAndroidNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try
@@ -180,7 +180,7 @@ public class NotificationService : INotificationService
 
         return response;
     }
-    private async Task<ResponseModel> Send_Ios_Notification(NotificationModel notificationModel)
+    private async Task<ResponseModel> SendIosNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try

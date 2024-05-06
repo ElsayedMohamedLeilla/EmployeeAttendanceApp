@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Summons
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     
     
     public class SummonLogController : DawemControllerBase

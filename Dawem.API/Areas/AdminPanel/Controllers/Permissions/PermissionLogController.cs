@@ -2,12 +2,11 @@
 using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class PermissionLogController : AdminPanelControllerBase
     {
         private readonly IPermissionLogBL permissionLogBL;

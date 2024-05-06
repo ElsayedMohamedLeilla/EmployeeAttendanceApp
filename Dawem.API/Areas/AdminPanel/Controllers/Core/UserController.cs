@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class UserController : AdminPanelControllerBase
     {
         private readonly IUserBL userBL;

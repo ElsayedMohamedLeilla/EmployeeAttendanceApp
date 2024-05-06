@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class PermissionController : AdminPanelControllerBase
     {
         private readonly IPermissionBL permissionBL;

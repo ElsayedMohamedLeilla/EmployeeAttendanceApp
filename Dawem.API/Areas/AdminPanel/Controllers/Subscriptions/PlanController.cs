@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class PlanController : AdminPanelControllerBase
     {
         private readonly IPlanBL planBL;

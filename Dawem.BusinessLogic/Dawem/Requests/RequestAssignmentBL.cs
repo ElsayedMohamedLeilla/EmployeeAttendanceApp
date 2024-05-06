@@ -157,7 +157,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 AddedDate = DateTime.UtcNow,
                 Status = NotificationStatus.Info,
                 NotificationType = NotificationType.NewAssignmentRequest,
-                ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
+                //ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
                 IsRead = false,
                 IsActive = true,
                 Priority = Priority.Medium

@@ -41,6 +41,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
+            predicate = predicate.And(request => !request.IsDeleted);
             predicate = predicate.And(request => request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)

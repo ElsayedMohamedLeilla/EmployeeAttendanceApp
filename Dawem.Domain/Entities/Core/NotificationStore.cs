@@ -13,7 +13,6 @@ namespace Dawem.Domain.Entities.Core
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-
         public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }

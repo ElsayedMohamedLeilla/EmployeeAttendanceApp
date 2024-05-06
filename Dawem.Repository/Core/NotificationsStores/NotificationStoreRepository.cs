@@ -25,7 +25,6 @@ namespace Dawem.Repository.Core.NotificationsStores
 
             if (criteria.Id != null)
             {
-
                 predicate = predicate.And(e => e.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
@@ -44,16 +43,13 @@ namespace Dawem.Repository.Core.NotificationsStores
             {
                 predicate = predicate.And(ps => ps.Code == criteria.Code);
             }
-            if (criteria.EmployeeID != null)
+            if (criteria.EmployeeId > 0)
             {
-                if(criteria.IsRead != null && criteria.IsRead == false)
-                {
-                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID && e.IsRead == criteria.IsRead);
-                }
-                else
-                {
-                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID);
-                }
+                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId);
+            }
+            if (criteria.IsRead.HasValue)
+            {
+                predicate = predicate.And(e => e.IsRead == criteria.IsRead);
             }
 
             predicate = predicate.And(inner);

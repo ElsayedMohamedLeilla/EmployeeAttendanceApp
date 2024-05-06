@@ -19,43 +19,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             notificationStoreBL = _NotificationStoreBL;
             notificationService = _notificationService;
         }
-        [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetNotificationStoreCriteria criteria)
-        {
-            if (criteria == null)
-            {
-                return BadRequest();
-            }
-            var result = await notificationStoreBL.Get(criteria);
-            return Success(result.NotificationStores, result.TotalCount);
-        }
-        [HttpDelete]
-        public async Task<ActionResult> Delete(int NotificationStoreId)
-        {
-            if (NotificationStoreId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.Delete(NotificationStoreId));
-        }
-        [HttpPut]
-        public async Task<ActionResult> Enable(int NotificationStoreId)
-        {
-            if (NotificationStoreId < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.Enable(NotificationStoreId));
-        }
-        [HttpPut]
-        public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
-        {
-            if (model.Id < 1)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.Disable(model));
-        }
         [HttpPut]
         public async Task<ActionResult> MarkAsRead(int notificationStoreId)
         {
@@ -71,16 +34,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             return Success(await notificationStoreBL.MarkAsViewed());
         }
         [HttpGet]
-        public async Task<ActionResult> GetNotifications([FromQuery] GetNotificationStoreCriteria criteria)
-        {
-            if (criteria == null)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.GetNotifications(criteria));
-        }
-
-        [HttpGet]
         public async Task<ActionResult> GetUnreadNotificationCount()
         {
 
@@ -91,15 +44,11 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
         {
             return Success(await notificationStoreBL.GetUnViewedNotificationCount());
         }
-        [HttpGet]
-        public async Task<ActionResult> GetUnreadNotifications([FromQuery] GetNotificationStoreCriteria criteria)
-        {
-            if (criteria == null)
-            {
-                return BadRequest();
-            }
-            return Success(await notificationStoreBL.GetUnreadNotification(criteria));
-        }
+
+
+
+
+       
 
         [Route("CreateSendNotification")]
         [HttpPost]
@@ -112,7 +61,34 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             var result = await notificationService.SendNotificationsAndEmails(UserIds, notificationType, notificationStatus);
             return Ok(result);
         }
-
-
+        
+        [HttpGet]
+        public async Task<ActionResult> Get([FromQuery] GetNotificationStoreCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            return Success(await notificationStoreBL.GetNotifications(criteria));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetOld([FromQuery] GetNotificationStoreCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var result = await notificationStoreBL.Get(criteria);
+            return Success(result.NotificationStores, result.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetUnreadNotifications([FromQuery] GetNotificationStoreCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            return Success(await notificationStoreBL.GetUnreadNotification(criteria));
+        }
     }
 }

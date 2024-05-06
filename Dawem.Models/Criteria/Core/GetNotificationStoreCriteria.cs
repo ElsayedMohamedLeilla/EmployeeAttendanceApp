@@ -1,9 +1,11 @@
-﻿namespace Dawem.Models.Criteria.Core
+﻿using Newtonsoft.Json;
+
+namespace Dawem.Models.Criteria.Core
 {
     public class GetNotificationStoreCriteria : BaseCriteria
     {
-        public int? EmployeeID { get; set; }
         public bool? IsRead { get; set; }
-
+        [JsonIgnore]
+        public int EmployeeId { get; set; }
     }
 }

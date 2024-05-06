@@ -71,8 +71,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             }
             return Success(await planBL.GetById(planId));
         }
-        [HttpDelete]
-        
+        [HttpDelete] 
         public async Task<ActionResult> Delete(int planId)
         {
             if (planId < 1)

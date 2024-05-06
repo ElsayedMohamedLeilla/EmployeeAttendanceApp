@@ -124,9 +124,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<GetNotificationStoreResponseDTO> GetNotifications(GetNotificationStoreCriteria criteria)
         {
-            var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId)
-                .FirstOrDefault().EmployeeId;
-            criteria.EmployeeID = employeeId;
+            criteria.EmployeeId = requestInfo.EmployeeId ?? 0;
             var NotificationStoreRepository = repositoryManager.NotificationStoreRepository;
             var query = NotificationStoreRepository.GetAsQueryable(criteria);
 
@@ -177,7 +175,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         {
             var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId)
              .FirstOrDefault().EmployeeId;
-            criteria.EmployeeID = employeeId;
+            criteria.EmployeeId = employeeId;
             criteria.IsRead = false;
 
             var NotificationStoreRepository = repositoryManager.NotificationStoreRepository;
@@ -242,7 +240,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         {
             var employeeId = repositoryManager.UserRepository.Get(e => e.Id == requestInfo.UserId)
                 .FirstOrDefault().EmployeeId;
-            criteria.EmployeeID = employeeId;
+            criteria.EmployeeId = employeeId;
             var NotificationStoreRepository = repositoryManager.NotificationStoreRepository;
             var query = NotificationStoreRepository.GetAsQueryable(criteria);
 

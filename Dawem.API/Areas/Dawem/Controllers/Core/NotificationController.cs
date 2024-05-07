@@ -2,8 +2,8 @@
 using Dawem.Contract.RealTime.Firebase;
 using Dawem.Enums.Generals;
 using Dawem.Models.Criteria.Core;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Core
@@ -54,13 +54,13 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
         }
         [Route("CreateSendNotification")]
         [HttpPost]
-        public async Task<IActionResult> CreateSendNotification([FromQuery] List<int> UserIds, NotificationType notificationType, NotificationStatus notificationStatus)
+        public async Task<IActionResult> CreateSendNotification([FromQuery] SendNotificationsAndEmailsModel model)
         {
-            if (UserIds.Count == 0)
+            if (model == null)
             {
                 return BadRequest();
             }
-            var result = await notificationService.SendNotificationsAndEmails(UserIds, notificationType, notificationStatus);
+            var result = await notificationService.SendNotificationsAndEmails(model);
             return Ok(result);
         }
     }

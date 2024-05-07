@@ -262,7 +262,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
             var checkIfHasAttendances = await repositoryManager.RequestTaskEmployeeRepository
                 .Get(a => !a.RequestTask.Request.IsDeleted && a.EmployeeId == getEmployeeId
                 && (a.RequestTask.Request.Date.Month == model.Month
-                && a.RequestTask.Request.Date.Year == model.Year || a.RequestTask.DateTo.Month == model.Month
+                && a.RequestTask.Request.Date.Year == model.Year || 
+                a.RequestTask.DateTo.Month == model.Month
                 && a.RequestTask.DateTo.Year == model.Year))
                 .AnyAsync();
 

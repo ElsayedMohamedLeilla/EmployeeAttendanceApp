@@ -4,9 +4,10 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
-using Microsoft.EntityFrameworkCore;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 
 namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 {
@@ -30,17 +31,12 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         {
             #region Handle Insert In Notification
 
+            var notifications = new List<Notification>();
+
             foreach (var employeeId in model.EmployeeIds)
             {
-                var getNotificationNextCode = await repositoryManager.NotificationRepository.
-                    Get(e => e.CompanyId == requestInfo.CompanyId).
-                    Select(e => e.Code).
-                    DefaultIfEmpty().
-                    MaxAsync() + 1;
-
-                var notificationStore = new Notification()
+                notifications.Add(new Notification()
                 {
-                    Code = getNotificationNextCode,
                     EmployeeId = employeeId,
                     CompanyId = requestInfo.CompanyId,
                     AddUserId = requestInfo.UserId,
@@ -48,11 +44,10 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                     NotificationType = model.NotificationType,
                     IsActive = true,
                     Priority = model.Priority
-                };
-
-                repositoryManager.NotificationRepository.Insert(notificationStore);
+                });
             }
 
+            repositoryManager.NotificationRepository.BulkInsert(notifications);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -61,8 +56,14 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             if (model.UserIds != null && model.UserIds.Count > 0)
             {
-                await notificationService.SendNotificationsAndEmails(model.UserIds, model.NotificationType,
-                    model.NotificationStatus);
+                var sendNotificationsAndEmailsModel = new SendNotificationsAndEmailsModel
+                {
+                    UserIds = model.UserIds,
+                    NotificationType = model.NotificationType,
+                    NotificationStatus = model.NotificationStatus,
+                    NotificationDescription = model.NotificationDescription
+                };
+                await notificationService.SendNotificationsAndEmails(sendNotificationsAndEmailsModel);
             }
 
             #endregion

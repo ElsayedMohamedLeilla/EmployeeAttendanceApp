@@ -31,60 +31,57 @@ public class NotificationService : INotificationService
         repositoryManager = _repositoryManager;
         mailBL = _mailBL;
     }
-    public async Task<ResponseModel> SendNotificationsAndEmails(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
+    public async Task<ResponseModel> SendNotificationsAndEmails(SendNotificationsAndEmailsModel model)
     {
+        var notificationType = model.NotificationType;
+        var notificationStatus = model.NotificationStatus;
+        var userIds = model.UserIds;
+        var notificationDescription = model.NotificationDescription;
+
         ResponseModel response = new();
+
         var title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
-        var body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
+
+        var notificationBody = !string.IsNullOrEmpty(notificationDescription) &&
+            !string.IsNullOrWhiteSpace(notificationDescription) ? notificationDescription :
+            NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
+
         var notificationData = await GetNotificationData(notificationType);
-        var imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
-        var userToken = GetUserTokens(UserIds);
+        var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
+        var userToken = GetUserTokens(userIds);
         var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
 
         #region Send Notification
 
+        NotificationModel notificationModel = new()
+        {
+            Body = notificationBody,
+            Title = title,
+            Data = notificationData,
+            ImageUrl = imageUrl
+        };
+
         if (webTokens.Count > 0)
         {
-            NotificationModel webModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = notificationData,
-                ImageUrl = imageUrl,
-                Tokens = webTokens
-            };
-            response = await SendWebNotification(webModel);
+            notificationModel.Tokens = webTokens;
+            response = await SendWebNotification(notificationModel);
         }
-
         if (androidTokens.Count > 0)
         {
-            NotificationModel androiodModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = notificationData,
-                ImageUrl = imageUrl,
-                Tokens = androidTokens
-            };
-            response = await SendAndroidNotification(androiodModel);
+            notificationModel.Tokens = androidTokens;
+            response = await SendAndroidNotification(notificationModel);
         }
         if (iosTokens.Count > 0)
         {
-            NotificationModel iosModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = notificationData,
-                ImageUrl = imageUrl,
-                Tokens = iosTokens
-            };
-            response = await SendIosNotification(iosModel);
+            notificationModel.Tokens = iosTokens;
+            response = await SendIosNotification(notificationModel);
         }
+
         #endregion
 
         #region Send Email
 
-        await SendEmailByUserIds(UserIds, notificationType);
+        await SendEmailByUserIds(userIds, notificationType);
 
         #endregion
 

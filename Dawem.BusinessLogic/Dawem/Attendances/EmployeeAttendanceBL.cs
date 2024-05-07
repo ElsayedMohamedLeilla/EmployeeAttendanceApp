@@ -355,7 +355,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -364,7 +364,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -398,10 +398,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 TotalCount = await query.CountAsync()
             };
 
-        }
-        public static string TranslateAmAndPm(string AmOrPm, string lang)
-        {
-            return LeillaKeys.Space + TranslationHelper.GetTranslation(AmOrPm, lang);
         }
         public static string GetWayOfRecognition(RecognitionWay MinCheckinRecognitionWay, RecognitionWay MaxCheckOutRecognitionWay, string lang)
         {
@@ -474,7 +470,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -483,7 +479,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -522,7 +518,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
                     {
                         ZoneName = employeeAttendanceCheck.Zone.Name,
-                        Time = employeeAttendanceCheck.FingerPrintDate.ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(employeeAttendanceCheck.FingerPrintDate.ToString("tt"), requestInfo.Lang),
+                        Time = employeeAttendanceCheck.FingerPrintDate.ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(employeeAttendanceCheck.FingerPrintDate.ToString("tt"), requestInfo.Lang),
                         Type = employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :

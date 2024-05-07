@@ -39,10 +39,6 @@ namespace Dawem.Repository.Core.Notifications
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
-            if (criteria.Code != null)
-            {
-                predicate = predicate.And(ps => ps.Code == criteria.Code);
-            }
             if (criteria.EmployeeId > 0)
             {
                 predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId);

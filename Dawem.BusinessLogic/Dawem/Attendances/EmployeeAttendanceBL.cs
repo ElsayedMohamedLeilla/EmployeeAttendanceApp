@@ -958,12 +958,12 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 {
                     DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
                     IsVacation = day.IsVacation,
-                    TimeFrom = day?.StartTime != null ? new DateTime(day.StartTime.Value.Ticks).ToString("hh:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.StartTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
-                    TimeTo = day?.EndTime != null ? new DateTime(day.EndTime.Value.Ticks).ToString("hh:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.EndTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
-                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) : null,
-                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) + 
+                    TimeFrom = day?.StartDateTime != null ? new DateTime(day.StartDateTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.StartDateTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = day?.EndDateTime != null ? new DateTime(day.EndDateTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.EndDateTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
+                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) : null,
+                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) + 
                     LeillaKeys.Space + 
                     TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null
                 });
@@ -985,8 +985,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 {
                     WeekDay = s.WeekDay,
                     IsVacation = s.ShiftId == null,
-                    StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
-                    EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                    StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
+                    EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
                 }).ToListAsync();
 
             var getEmployeeSchedulePlans = await repositoryManager.EmployeeRepository.
@@ -1013,8 +1013,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         {
                             WeekDay = s.WeekDay,
                             IsVacation = s.ShiftId == null,
-                            StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
-                            EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                            StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
+                            EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
                         }).ToList()
                     }).ToList() : null
                 }).FirstOrDefaultAsync();
@@ -1045,6 +1045,27 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
 
             var day = days.FirstOrDefault(s => s.WeekDay == (WeekDay)model.Date.DayOfWeek);
+
+            if (day != null && day.StartDateTime != null && day.EndDateTime != null)
+            {
+                var startDateTime = day.StartDateTime.Value.TimeOfDay;
+                var endDateTime = day.EndDateTime.Value.TimeOfDay;
+
+                var shiftCheckInTimeType = startDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
+                var shiftCheckOutTimeType = endDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
+
+                var is24HoursShift = (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
+                    (((shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM) ||
+                    (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM)) && 
+                    startDateTime > endDateTime);
+
+                if (is24HoursShift)
+                {
+                    day.StartDateTime = new DateTime(day.StartDateTime.Value.TimeOfDay.Ticks);
+                    day.EndDateTime = new DateTime(day.EndDateTime.Value.TimeOfDay.Ticks).AddDays(1);
+                }      
+            }
+
             return day;
         }
 

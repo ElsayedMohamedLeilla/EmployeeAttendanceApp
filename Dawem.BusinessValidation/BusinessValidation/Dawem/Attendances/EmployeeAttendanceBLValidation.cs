@@ -476,8 +476,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     var shiftCheckOutTimeType = shiftCheckOutTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
 
                     var is24HoursShift = ((shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
-                        (shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM && shiftCheckInTime > shiftCheckOutTime) ||
-                        (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM && shiftCheckInTime > shiftCheckOutTime))
+                        (((shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM) || 
+                        (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM)) && 
+                        shiftCheckInTime > shiftCheckOutTime))
                         && clientLocalDateTime.TimeOfDay <= shiftCheckOutTime;
 
                     if (is24HoursShift)

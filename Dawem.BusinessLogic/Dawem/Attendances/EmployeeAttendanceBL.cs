@@ -19,6 +19,7 @@ using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Dawem.BusinessLogic.Dawem.Attendances
 {
@@ -957,10 +958,10 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 {
                     DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
                     IsVacation = day.IsVacation,
-                    TimeFrom = day?.StartTime != null ? day.StartTime.Value.ToString("HH:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
-                    TimeTo = day?.EndTime != null ? day.EndTime.Value.ToString("HH:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
+                    TimeFrom = day?.StartTime != null ? new DateTime(day.StartTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.StartTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = day?.EndTime != null ? new DateTime(day.EndTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.EndTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
                     WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) : null,
                     WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) + 
                     LeillaKeys.Space + 

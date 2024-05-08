@@ -8,6 +8,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
+using Dawem.RealTime.Helper;
 
 namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 {
@@ -29,6 +30,15 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<bool> HandleNotifications(HandleNotificationModel model)
         {
+            #region Handle short And Full Message
+
+            var shortMessage = NotificationHelper.GetNotificationType(model.NotificationType, requestInfo.Lang);
+            var fullMessage = !string.IsNullOrEmpty(model.NotificationDescription) &&
+                !string.IsNullOrWhiteSpace(model.NotificationDescription) ? model.NotificationDescription :
+                NotificationHelper.GetNotificationDescription(model.NotificationType, requestInfo.Lang);
+
+            #endregion
+
             #region Handle Insert In Notification
 
             var notifications = new List<Notification>();
@@ -37,6 +47,8 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             {
                 notifications.Add(new Notification()
                 {
+                    ShortMessege = shortMessage,
+                    FullMessage = fullMessage,
                     EmployeeId = employeeId,
                     CompanyId = requestInfo.CompanyId,
                     AddUserId = requestInfo.UserId,
@@ -58,6 +70,8 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             {
                 var sendNotificationsAndEmailsModel = new SendNotificationsAndEmailsModel
                 {
+                    ShortMessege = shortMessage,
+                    FullMessage = fullMessage,
                     UserIds = model.UserIds,
                     NotificationType = model.NotificationType,
                     NotificationStatus = model.NotificationStatus,

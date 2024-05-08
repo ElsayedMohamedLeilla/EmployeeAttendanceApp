@@ -51,16 +51,16 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #endregion
 
-            var NotificationStoreList = await queryPaged.Select(notification => new NotificationForGridDTO
+            var notificationsList = await queryPaged.Select(notification => new NotificationForGridDTO
             {
                 Id = notification.Id,
-                FullMessege = NotificationHelper.GetNotificationDescription(notification.NotificationType, requestInfo.Lang),
+                ShortMessege = notification.ShortMessege,
+                FullMessege = notification.FullMessage,
                 IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
                 Priority = notification.Priority,
                 IsRead = notification.IsRead,
                 Date = notification.AddedDate,
-                NotificationType = notification.NotificationType,
-                ShortMessege = NotificationHelper.GetNotificationType(notification.NotificationType, requestInfo.Lang),
+                NotificationType = notification.NotificationType,          
                 Status = notification.Status,
                 EmployeeId = notification.EmployeeId
 
@@ -68,7 +68,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             return new GetNotificationsResponseDTO()
             {
-                Notifications = NotificationStoreList.OrderBy(s => s.Date).ToList(),
+                Notifications = notificationsList,
                 TotalCount = await queryOrdered.CountAsync()
             };
 

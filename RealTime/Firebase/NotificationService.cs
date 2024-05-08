@@ -10,6 +10,7 @@ using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
+using DocumentFormat.OpenXml.Office2013.Excel;
 using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -36,15 +37,8 @@ public class NotificationService : INotificationService
         var notificationType = model.NotificationType;
         var notificationStatus = model.NotificationStatus;
         var userIds = model.UserIds;
-        var notificationDescription = model.NotificationDescription;
 
         ResponseModel response = new();
-
-        var title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
-
-        var notificationBody = !string.IsNullOrEmpty(notificationDescription) &&
-            !string.IsNullOrWhiteSpace(notificationDescription) ? notificationDescription :
-            NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
 
         var notificationData = await GetNotificationData(notificationType);
         var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
@@ -55,8 +49,8 @@ public class NotificationService : INotificationService
 
         NotificationModel notificationModel = new()
         {
-            Body = notificationBody,
-            Title = title,
+            Title = model.ShortMessege,
+            Body = model.FullMessage,
             Data = notificationData,
             ImageUrl = imageUrl
         };

@@ -17,6 +17,8 @@ namespace Dawem.Domain.Entities.Core
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }
         #endregion
+        public string ShortMessege { get; set; }
+        public string FullMessage { get; set; }
         public bool IsRead { get; set; }
         public NotificationStatus Status { get; set; }
         public Priority Priority { get; set; }

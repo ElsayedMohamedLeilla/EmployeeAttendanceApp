@@ -24,7 +24,7 @@ using Dawem.Repository.Core;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.Holidays;
 using Dawem.Repository.Core.JustificationsTypes;
-using Dawem.Repository.Core.NotificationsStores;
+using Dawem.Repository.Core.Notifications;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
@@ -112,7 +112,7 @@ namespace Dawem.Repository.Managers
         private IRequestAttachmentRepository requestAttachmentRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
         private IHolidayRepository holidayRepository;
-        private INotificationStoreRepository notificationStoreRepository;
+        private INotificationRepository notificationRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private ISummonRepository summonRepository;
         private ISummonLogSanctionRepository summonLogSanctionRepository;
@@ -286,8 +286,8 @@ namespace Dawem.Repository.Managers
         public IHolidayRepository HolidayRepository =>
           holidayRepository ??= new HolidayRepository(unitOfWork, generalSetting, requestInfo);
 
-        public INotificationStoreRepository NotificationStoreRepository =>
-            notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting, requestInfo);
+        public INotificationRepository NotificationRepository =>
+            notificationRepository ??= new NotificationRepository(unitOfWork, generalSetting, requestInfo);
 
         public ISummonRepository SummonRepository =>
             summonRepository ??= new SummonRepository(unitOfWork, generalSetting, requestInfo);

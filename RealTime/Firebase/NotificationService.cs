@@ -18,7 +18,7 @@ public class NotificationService : INotificationService
 {
     private readonly RequestInfo requestInfo;
     private readonly IUploadBLC uploadBLC;
-    private readonly INotificationBL notificationStoreBL;
+    private readonly INotificationBL notificationBL;
     private readonly IRepositoryManager repositoryManager;
     private readonly IMailBL mailBL;
     public NotificationService(RequestInfo _requestInfo, IUploadBLC _uploadBLC,
@@ -27,70 +27,67 @@ public class NotificationService : INotificationService
     {
         requestInfo = _requestInfo;
         uploadBLC = _uploadBLC;
-        notificationStoreBL = _notificationStoreBL;
+        notificationBL = _notificationStoreBL;
         repositoryManager = _repositoryManager;
         mailBL = _mailBL;
     }
-    public async Task<ResponseModel> SendNotificationsAndEmails(List<int> UserIds, NotificationType notificationType, NotificationStatus type)
+    public async Task<ResponseModel> SendNotificationsAndEmails(SendNotificationsAndEmailsModel model)
     {
+        var notificationType = model.NotificationType;
+        var notificationStatus = model.NotificationStatus;
+        var userIds = model.UserIds;
+        var notificationDescription = model.NotificationDescription;
+
         ResponseModel response = new();
+
         var title = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang);
-        var body = NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
-        var Data = await GetNotificationData(notificationType);
-        var imageUrl = NotificationHelper.GetNotificationImage(type, uploadBLC);
-        var userToken = GetUserTokens(UserIds);
+
+        var notificationBody = !string.IsNullOrEmpty(notificationDescription) &&
+            !string.IsNullOrWhiteSpace(notificationDescription) ? notificationDescription :
+            NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang);
+
+        var notificationData = await GetNotificationData(notificationType);
+        var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
+        var userToken = GetUserTokens(userIds);
         var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
 
         #region Send Notification
 
+        NotificationModel notificationModel = new()
+        {
+            Body = notificationBody,
+            Title = title,
+            Data = notificationData,
+            ImageUrl = imageUrl
+        };
+
         if (webTokens.Count > 0)
         {
-            NotificationModel webModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = Data,
-                ImageUrl = imageUrl,
-                Tokens = webTokens
-            };
-            response = await Send_Web_Notification(webModel);
+            notificationModel.Tokens = webTokens;
+            response = await SendWebNotification(notificationModel);
         }
-
         if (androidTokens.Count > 0)
         {
-            NotificationModel androiodModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = Data,
-                ImageUrl = imageUrl,
-                Tokens = androidTokens
-            };
-            response = await Send_Android_Notification(androiodModel);
+            notificationModel.Tokens = androidTokens;
+            response = await SendAndroidNotification(notificationModel);
         }
         if (iosTokens.Count > 0)
         {
-            NotificationModel iosModel = new()
-            {
-                Body = body,
-                Title = title,
-                Data = Data,
-                ImageUrl = imageUrl,
-                Tokens = iosTokens
-            };
-            response = await Send_Ios_Notification(iosModel);
+            notificationModel.Tokens = iosTokens;
+            response = await SendIosNotification(notificationModel);
         }
+
         #endregion
 
         #region Send Email
 
-        await SendEmailByUserIds(UserIds, notificationType);
+        await SendEmailByUserIds(userIds, notificationType);
 
         #endregion
 
         return response;
     }
-    private static async Task<ResponseModel> Send_Web_Notification(NotificationModel notificationModel)
+    private static async Task<ResponseModel> SendWebNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try
@@ -131,7 +128,7 @@ public class NotificationService : INotificationService
 
         return response;
     }
-    private static async Task<ResponseModel> Send_Android_Notification(NotificationModel notificationModel)
+    private static async Task<ResponseModel> SendAndroidNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try
@@ -180,7 +177,7 @@ public class NotificationService : INotificationService
 
         return response;
     }
-    private async Task<ResponseModel> Send_Ios_Notification(NotificationModel notificationModel)
+    private async Task<ResponseModel> SendIosNotification(NotificationModel notificationModel)
     {
         ResponseModel response = new ResponseModel();
         try
@@ -247,18 +244,18 @@ public class NotificationService : INotificationService
     }
     private async Task<Dictionary<string, string>> GetNotificationData(NotificationType notificationType)
     {
-        NotificationModelDTO nPM = new()
+        NotificationDataModel model = new()
         {
             NotificationType = notificationType,
-            UnReadNotificationCount = await notificationStoreBL.GetUnreadNotificationCount(),
+            UnReadNotificationCount = await notificationBL.GetUnreadNotificationCount()
         };
-        string jsonString = JsonSerializer.Serialize(nPM);
+        string jsonString = JsonSerializer.Serialize(model);
 
-        Dictionary<string, string> myDict = new Dictionary<string, string>
+        var dataDictionary = new Dictionary<string, string>
         {
             {"NotificationData", jsonString},
         };
-        return myDict;
+        return dataDictionary;
     }
     private List<TokensModel> GetUserTokens(List<int> userids)
     {

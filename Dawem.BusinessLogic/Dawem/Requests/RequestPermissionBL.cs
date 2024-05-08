@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Dawem.BusinessLogic.Dawem.Core.NotificationsStores;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
@@ -11,6 +13,7 @@ using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Requests;
@@ -33,7 +36,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRequestBLValidation requestBLValidation;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationService notificationServiceByFireBaseAdmin;
+        private readonly INotificationHandleBL notificationHandleBL;
 
         public RequestPermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
@@ -42,7 +45,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestPermissionBLValidation _requestPermissionBLValidation,
-           INotificationService _notificationServiceByFireBaseAdmin)
+           INotificationHandleBL _notificationHandleBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -51,7 +54,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             mapper = _mapper;
             requestBLValidation = _requestBLValidation;
             uploadBLC = _uploadBLC;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            notificationHandleBL = _notificationHandleBL;
         }
         public async Task<int> Create(CreateRequestPermissionModelDTO model)
         {
@@ -127,50 +130,37 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
-            var requestEmployee = await repositoryManager
-               .EmployeeRepository.Get(r => r.Id == employeeId)
-               .Select(e => new
-               {
-                   e.Name,
-                   e.DirectManagerId
-               }).FirstOrDefaultAsync();
+
             #endregion
 
+            #region Handle Notifications
 
-            #region Save Notification In DB
+            var requestEmployee = await repositoryManager
+                .EmployeeRepository.Get(r => r.Id == employeeId && r.DirectManagerId > 0)
+                .Select(e => new
+                {
+                    DirectManagerId = e.DirectManagerId.Value
+                }).FirstOrDefaultAsync();
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
-               .Select(e => e.Code)
-               .DefaultIfEmpty()
-               .MaxAsync() + 1;
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == requestEmployee.DirectManagerId).
+                Select(u => u.Id).ToListAsync();
 
-            var notificationStore = new NotificationStore()
+            var employeeIds = new List<int>() { requestEmployee.DirectManagerId };
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                Code = getNotificationNextCode,
-                EmployeeId = requestEmployee.DirectManagerId ?? 0,
-                CompanyId = requestInfo.CompanyId,
-                AddUserId = requestInfo.UserId,
-                AddedDate = DateTime.UtcNow,
-                Status = NotificationStatus.Info,
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewPermissionRequent,
-                IsRead = false,
-                IsActive = true,
+                NotificationStatus = NotificationStatus.Info,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-            await unitOfWork.SaveAsync();
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
             #endregion
-
-            #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
-            if (userIds.Count > 0)
-            {
-                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
-            }
-            #endregion
-
-
 
             #region Handle Response
 
@@ -522,36 +512,26 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             await unitOfWork.SaveAsync();
 
-            #region Save Notification In DB
+            #region Handle Notifications
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
-               .Select(e => e.Code)
-               .DefaultIfEmpty()
-               .MaxAsync() + 1;
-            var notificationStore = new NotificationStore()
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => u.Id).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                Code = getNotificationNextCode,
-                EmployeeId = request.EmployeeId,
-                CompanyId = requestInfo.CompanyId,
-                AddUserId = requestInfo.UserId,
-                AddedDate = DateTime.UtcNow,
-                Status = NotificationStatus.Info,
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
                 NotificationType = NotificationType.AcceptingPermissionRequest,
-                IsRead = false,
-                IsActive = true,
+                NotificationStatus = NotificationStatus.Info,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-            await unitOfWork.SaveAsync();
-            #endregion
 
-            #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == request.EmployeeId).Select(u => u.Id).ToList();
-            if (userIds.Count > 0)
-            {
-                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
-            }
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
             #endregion
 
             return true;
@@ -577,37 +557,29 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
-            #region Save Notification In DB
 
-            var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
-               .Select(e => e.Code)
-               .DefaultIfEmpty()
-               .MaxAsync() + 1;
-            var notificationStore = new NotificationStore()
+            #region Handle Notifications
+
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => u.Id).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                Code = getNotificationNextCode,
-                EmployeeId = request.EmployeeId,
-                CompanyId = requestInfo.CompanyId,
-                AddUserId = requestInfo.UserId,
-                AddedDate = DateTime.UtcNow,
-                Status = NotificationStatus.Error,
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
                 NotificationType = NotificationType.RejectingPermissionRequest,
-                IsRead = false,
-                IsActive = true,
+                NotificationStatus = NotificationStatus.Info,
                 Priority = Priority.Medium
             };
-            repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-            await unitOfWork.SaveAsync();
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
             #endregion
 
-            #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == request.EmployeeId).Select(u => u.Id).ToList();
-            if (userIds.Count > 0)
-            {
-                await notificationServiceByFireBaseAdmin.SendNotificationsAndEmails(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
-            }
-            #endregion
             return true;
         }
         public async Task<GetPermissionsInformationsResponseDTO> GetPermissionsInformations()

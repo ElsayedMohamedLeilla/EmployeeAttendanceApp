@@ -328,9 +328,9 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetNotificationStoreCriteriaValidator : AbstractValidator<GetNotificationStoreCriteria>
+    public class GetNotificationSCriteriaValidator : AbstractValidator<GetNotificationCriteria>
     {
-        public GetNotificationStoreCriteriaValidator()
+        public GetNotificationSCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

@@ -20,6 +20,7 @@
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
         public const string AdminPanel = "adminpanel";
+        public const string SignIn = "signin";
         public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
         public const string LogoImageName = "LogoImageName";
@@ -93,7 +94,7 @@
         public const string BL = "BL";
         public const string BLC = "BLC";
         public const string GetForDropDown = "GetForDropDown";
-        public const string NotificationStoreController = "NotificationStoreController";
+        public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
@@ -631,5 +632,12 @@
         public const string SorryDeleteSummonNotAllowedAfterSummonStarted = "Sorry!!DeleteSummonNotAllowedAfterSummonStarted!";
         public const string SorryEnableSummonNotAllowedAfterSummonStarted = "Sorry!!EnableSummonNotAllowedAfterSummonStarted!";
         public const string SorryDisableSummonNotAllowedAfterSummonStarted = "Sorry!!DisableSummonNotAllowedAfterSummonStarted!";
+
+
+        public const string YouHaveNewSummon = "YouHaveNewSummon";
+        public const string InDay = "InDay";
+        public const string TheTime = "TheTime";
+        public const string AvailableFor = "AvailableForPeriod";
+        
     }
 }

@@ -13,6 +13,6 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Plans
         public bool IsTrial { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }
-        public List<NameTranslationModel> NameTranslations { get; set; }
+        public List<NameTranslationGetInfoModel> NameTranslations { get; set; }
     }
 }

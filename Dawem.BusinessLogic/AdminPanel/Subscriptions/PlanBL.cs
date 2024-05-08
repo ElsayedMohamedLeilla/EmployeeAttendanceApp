@@ -253,10 +253,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     SubscriptionsCount = plan.Subscriptions.Count,
                     NameTranslations = plan.PlanNameTranslations.
                     Select(pt =>
-                    new NameTranslationModel
+                    new NameTranslationGetInfoModel
                     {
                         Name = pt.Name,
-                        LanguageId = pt.LanguageId
+                        LanguageName = pt.Language.NativeName
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPlanNotFound);
 
@@ -276,8 +276,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     IsActive = plan.IsActive,
                     Notes = plan.Notes,
                     NameTranslations = plan.PlanNameTranslations.
-                    Select(pt =>
-                    new NameTranslationModel
+                    Select(pt => new NameTranslationModel
                     {
                         Id = pt.Id,
                         Name = pt.Name,

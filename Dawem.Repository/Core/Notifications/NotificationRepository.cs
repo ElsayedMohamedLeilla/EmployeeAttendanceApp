@@ -7,25 +7,24 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
-namespace Dawem.Repository.Core.NotificationsStores
+namespace Dawem.Repository.Core.Notifications
 {
-    public class NotificationStoreRepository : GenericRepository<NotificationStore>, INotificationStoreRepository
+    public class NotificationRepository : GenericRepository<Notification>, INotificationRepository
     {
         private readonly RequestInfo _requestInfo;
-        public NotificationStoreRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
+        public NotificationRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
             _requestInfo = requestInfo;
         }
-        public IQueryable<NotificationStore> GetAsQueryable(GetNotificationStoreCriteria criteria)
+        public IQueryable<Notification> GetAsQueryable(GetNotificationCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<NotificationStore>(a => !a.IsDeleted);
-            var inner = PredicateBuilder.New<NotificationStore>(true);
+            var predicate = PredicateBuilder.New<Notification>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<Notification>(true);
 
             predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
             if (criteria.Id != null)
             {
-
                 predicate = predicate.And(e => e.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
@@ -40,20 +39,13 @@ namespace Dawem.Repository.Core.NotificationsStores
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
             }
-            if (criteria.Code != null)
+            if (criteria.EmployeeId > 0)
             {
-                predicate = predicate.And(ps => ps.Code == criteria.Code);
+                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId);
             }
-            if (criteria.EmployeeID != null)
+            if (criteria.IsRead.HasValue)
             {
-                if(criteria.IsRead != null && criteria.IsRead == false)
-                {
-                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID && e.IsRead == criteria.IsRead);
-                }
-                else
-                {
-                    predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeID);
-                }
+                predicate = predicate.And(e => e.IsRead == criteria.IsRead);
             }
 
             predicate = predicate.And(inner);

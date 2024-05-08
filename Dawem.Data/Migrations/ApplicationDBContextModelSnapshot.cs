@@ -656,7 +656,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("JustificationTypes", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.NotificationStore", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -732,7 +732,7 @@ namespace Dawem.Data.Migrations
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
-                    b.ToTable("NotificationStores", "Dawem");
+                    b.ToTable("Notifications", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.PermissionType", b =>
@@ -5684,7 +5684,7 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.NotificationStore", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
                         .WithMany()

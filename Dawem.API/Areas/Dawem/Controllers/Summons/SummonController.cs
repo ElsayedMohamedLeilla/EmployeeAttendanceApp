@@ -2,14 +2,11 @@
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Summons
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class SummonController : DawemControllerBase
     {
         private readonly ISummonBL summonBL;

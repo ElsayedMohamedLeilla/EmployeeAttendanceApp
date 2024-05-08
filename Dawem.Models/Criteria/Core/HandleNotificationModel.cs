@@ -14,5 +14,6 @@ namespace Dawem.Models.Criteria.Core
         public NotificationType NotificationType { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
         public Priority Priority { get; set; }
+        public string NotificationDescription { get; set; }
     }
 }

@@ -6,14 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Core
 {
-    [Table(nameof(NotificationStore) + LeillaKeys.S)]
-    public class NotificationStore : BaseEntity
+    [Table(nameof(Notification) + LeillaKeys.S)]
+    public class Notification : BaseEntity
     {
         #region Forign Key
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-
         public int EmployeeId { get; set; }
         [ForeignKey(nameof(EmployeeId))]
         public Employee Employee { get; set; }

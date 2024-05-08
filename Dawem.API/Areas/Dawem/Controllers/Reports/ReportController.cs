@@ -2,15 +2,11 @@
 using Dawem.Enums.Generals;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Reports
 {
-    [Route(LeillaKeys.DawemApiControllerAction),
-        ApiController,
-        Authorize, DawemAuthorize
-        ]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class ReportController : DawemControllerBase
     {
         private readonly IReportGeneratorBL _reportGeneratorBL;

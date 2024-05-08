@@ -1,4 +1,5 @@
 ﻿using Dawem.Enums.Generals;
+using Dawem.Translations;
 
 namespace Dawem.Helpers
 {
@@ -31,6 +32,10 @@ namespace Dawem.Helpers
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             var UTCDateTime = TimeZoneInfo.ConvertTimeToUtc(localDate, timeZoneInfo);
             return UTCDateTime;
+        }
+        public static string TranslateAmAndPm(string AmOrPm, string lang)
+        {
+            return LeillaKeys.Space + TranslationHelper.GetTranslation(AmOrPm, lang);
         }
     }
 }

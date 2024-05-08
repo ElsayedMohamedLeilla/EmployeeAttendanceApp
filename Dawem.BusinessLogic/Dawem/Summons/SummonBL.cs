@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Summons;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Summons;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -10,6 +10,7 @@ using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
@@ -27,13 +28,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationService notificationServiceByFireBaseAdmin;
+        private readonly INotificationHandleBL notificationHandleBL;
 
         public SummonBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
            RequestInfo _requestHeaderContext,
-           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationService _notificationServiceByFireBaseAdmin)
+           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -41,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             summonBLValidation = _summonBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            notificationHandleBL = _notificationHandleBL;
         }
 
         public async Task<int> Create(CreateSummonModel model)
@@ -133,93 +134,53 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             await unitOfWork.SaveAsync();
             #endregion
 
-            #region Notifiacations
-            /*
-            var notificationNextCode = await repositoryManager.NotificationStoreRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
-               .Select(e => e.Code)
-               .DefaultIfEmpty()
-               .MaxAsync();
+            #region Handle Notifications
 
-            #region For All Employee
+            var forAllEmployees = model.ForAllEmployees.HasValue && model.ForAllEmployees.Value;
 
-            List<NotificationRecieverDTO> notificationRecieverDTO = new();
-            if (model.ForAllEmployees.HasValue && model.ForAllEmployees.Value)
-            {
-                notificationRecieverDTO = repositoryManager.UserRepository
-                    .Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null)
-                    .Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id })
-                    .ToList();
-            }
-            else
-            {
-                if (model.Employees != null && model.Employees.Any())
-                {
-                    notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Employees.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
-                }
-                if (model.Groups != null && model.Groups.Any())
-                {
-                    List<int> groupEmployeeIds = repositoryManager.GroupEmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Groups.Contains(s.Id)).Select(g => g.EmployeeId).ToList();
-                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && groupEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
-                }
-                if (model.Departments != null && model.Departments.Any())
-                {
-                    List<int> departmentEmployeeIds = repositoryManager.EmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Departments.Contains(s.DepartmentId ?? 0)).Select(g => g.Id).ToList();
-                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Departments.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
-                }
-            }
+            var employeeIds = await repositoryManager.EmployeeRepository.
+                Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId &&
+                (forAllEmployees || (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                (model.Departments != null && e.DepartmentId > 00 && model.Departments.Contains(e.DepartmentId.Value)) ||
+                (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Departments.Contains(eg.GroupId))))).
+                Select(e => e.Id).
+                ToListAsync();
 
-            List<NotificationStore> notificationStores = new();
-            for (int i = 0; i < notificationRecieverDTO.Count; i++)
-            {
-                var notificationStore = new NotificationStore()
-                {
-                    Code = notificationNextCode++,
-                    EmployeeId = notificationRecieverDTO[i].EmployeeId,
-                    CompanyId = requestInfo.CompanyId,
-                    AddUserId = requestInfo.UserId,
-                    AddedDate = DateTime.UtcNow,
-                    Status = NotificationStatus.Info,
-                    NotificationType = NotificationType.NewSummons,
-                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Warning, uploadBLC),
-                    IsRead = false,
-                    IsActive = true,
-                    IsViewed = false,
-                    Priority = Priority.High
-                };
-                notificationStores.Add(notificationStore);
-                #region Fire Notification & Email
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(notificationRecieverDTO.Select(S => S.UserId).ToList(), NotificationType.NewSummons, NotificationStatus.Warning);
-                #endregion
-            }
-            repositoryManager.NotificationStoreRepository.BulkInsert(notificationStores);
-            await unitOfWork.SaveAsync();
+            var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
+                employeeIds.Contains(s.EmployeeId.Value)).
+                Select(u => u.Id).ToListAsync();
 
+            #region Handle Summon Description
 
+            var notificationDescription = 
+                TranslationHelper.GetTranslation(LeillaKeys.YouHaveNewSummon, requestInfo.Lang) +
+                LeillaKeys.Space +
+                TranslationHelper.GetTranslation(LeillaKeys.InDay, requestInfo.Lang) +
+                LeillaKeys.Space +
+                model.LocalDateAndTime.ToString("dd-MM-yyyy") +
+                LeillaKeys.Space +
+                TranslationHelper.GetTranslation(LeillaKeys.TheTime, requestInfo.Lang) +
+                LeillaKeys.Space +
+                model.LocalDateAndTime.ToString("hh:mm") + LeillaKeys.Space + 
+                DateHelper.TranslateAmAndPm(model.LocalDateAndTime.ToString("tt"), requestInfo.Lang) +
+                LeillaKeys.Space + LeillaKeys.AvailableFor + LeillaKeys.Space +
+                model.AllowedTime + TranslationHelper.GetTranslation(model.TimeType.ToString(), requestInfo.Lang);
 
             #endregion
 
-            #region Save Notification In DB
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                UserIds = userIds,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.NewSummon,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = Priority.Medium,
+                NotificationDescription = notificationDescription
+            };
 
-            //var notificationStore = new NotificationStore()
-            //{
-            //    Code = notificationNextCode,
-            //    EmployeeId = requestEmployee.DirectManagerId ?? 0,
-            //    CompanyId = requestInfo.CompanyId,
-            //    AddUserId = requestInfo.UserId,
-            //    AddedDate = DateTime.UtcNow,
-            //    Status = NotificationStatus.Info,
-            //    NotificationType = NotificationType.NewVacationRequest,
-            //    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
-            //    IsRead = false,
-            //    IsActive = true,
-            //    Priority = Priority.Medium
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
-            //};
-            //repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-            //await unitOfWork.SaveAsync();
-            #endregion
-            */
             #endregion
 
             #region Handle Response

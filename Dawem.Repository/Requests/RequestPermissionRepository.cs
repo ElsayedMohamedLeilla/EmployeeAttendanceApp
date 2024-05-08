@@ -33,6 +33,8 @@ namespace Dawem.Repository.Requests
                 }
             }
 
+            predicate = predicate.And(requestPermission => !requestPermission.Request.IsDeleted);
+
             predicate = predicate.And(requestPermission => requestPermission.Request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)

@@ -576,7 +576,7 @@ namespace Dawem.Data
         public DbSet<ZoneEmployee> ZoneEmployees { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
-        public DbSet<NotificationStore> NotificationStores { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<EmployeeOTP> EmployeeOTPs { get; set; }
 
 

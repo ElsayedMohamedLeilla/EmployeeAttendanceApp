@@ -29,7 +29,6 @@ namespace Dawem.Domain.Entities.Employees
         public int? DirectManagerId { get; set; }
         [ForeignKey(nameof(DirectManagerId))]
         public Employee DirectManager { get; set; }
-
         public int MobileCountryId { get; set; }
         [ForeignKey(nameof(MobileCountryId))]
         public Country MobileCountry { get; set; }

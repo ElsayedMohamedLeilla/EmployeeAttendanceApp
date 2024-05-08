@@ -84,7 +84,7 @@ namespace Dawem.Contract.Repository.Manager
         IRequestVacationRepository RequestVacationRepository { get; }
         IHolidayRepository HolidayRepository { get; }
         IVacationBalanceRepository VacationBalanceRepository { get; }
-        INotificationStoreRepository NotificationStoreRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         ISummonRepository SummonRepository { get; }
         ISummonLogSanctionRepository SummonLogSanctionRepository { get; }
         ISummonLogRepository SummonLogRepository { get; }

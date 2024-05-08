@@ -55,7 +55,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             {
                 return Redirect("https://www.google.com");
             }
-
             return Redirect("https://stage.dawem.app/#/login");
         }
         [HttpPost]

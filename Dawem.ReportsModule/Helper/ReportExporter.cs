@@ -49,30 +49,28 @@ namespace Dawem.ReportsModule.Helper
                 };
 
                 report.Dictionary.Connections.Add(connection);
-                report.Load(exporterModelDTO.Path);
+                report.Load(exporterModelDTO.FullPath);
                 #region Set Paremetes
 
                 #region General Parameters
-                if (exporterModelDTO.ReportType == ReportType.AttendanceForAllEmployeeReport
+                if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport
                     || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByDepartmentIDReport 
                     || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByEmployeeIDReport)
                 {
                     report.SetParameterValue("DateFrom", param.DateFrom != default ? param.DateFrom.Date.ToShortDateString() : null);
                     report.SetParameterValue("DateTo", param.DateTo != default ? param.DateTo.Date.ToShortDateString() : null);
-                    report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
-                    report.SetParameterValue("EmployeeID", param.EmployeeID);
-                    report.SetParameterValue("DepartmentId", param.DepartmentId);
-
+                    report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID );
+                    report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
+                    report.SetParameterValue("DepartmentId", param.DepartmentId ?? 0);
+                    report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
                 }
                 #endregion
 
-                if (exporterModelDTO.ReportType == ReportType.AttendanceForAllEmployeeReport)
+                if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport)
                 {
                     report.SetParameterValue("ZoneId", param.ZoneId);
                     report.SetParameterValue("ZoneName", param.ZoneName == null ? "كل المناطق" : param.ZoneName);
                     report.SetParameterValue("DepartmentName", param.DepartmentName == null ? "كل الاقسام" : param.DepartmentName);
-                    report.SetParameterValue("JobTitleID", param.JobTitleID);
-                    report.SetParameterValue("JobName", param.JobTitleName == null ? "كل الوظائف" : param.JobTitleName);
                 }
 
                 #endregion

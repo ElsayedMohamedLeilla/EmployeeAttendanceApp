@@ -2,6 +2,11 @@
 {
     public static class AmgadKeys
     {
+
+        public const string Pdf = ".pdf";
+        public const string frx = ".frx";
+        public const string Xlsx = ".xlsx";
+        public const string AttendanceReports = "AttendanceReports";
         public const string InfoImageName = "info.jpg";
         public const string WarningImageName = "warning.jpg";
         public const string ErrorImageName = "error.jpg";

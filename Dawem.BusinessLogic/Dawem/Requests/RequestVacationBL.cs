@@ -6,7 +6,6 @@ using Dawem.Contract.BusinessValidation.Dawem.Requests;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -56,7 +55,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         public async Task<int> Create(CreateRequestVacationDTO model)
         {
             #region Model Validation
-
             var validator = new CreateRequestVacationDTOValidator();
             var validatorResult = validator.Validate(model);
             if (!validatorResult.IsValid)
@@ -64,19 +62,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 var error = validatorResult.Errors.FirstOrDefault();
                 throw new BusinessValidationException(error.ErrorMessage);
             }
-
             #endregion
-
             #region Business Validation
-
             var employeeId = await requestVacationBLValidation.CreateValidation(model);
-
             #endregion
-
             unitOfWork.CreateTransaction();
-
             #region Upload Files
-
             List<string> fileNames = null;
 
             if (model.Attachments != null && model.Attachments.Count > 0)
@@ -161,10 +152,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             #endregion
 
             #region Handle Response
-
             await unitOfWork.CommitAsync();
             return request.Id;
-
             #endregion
         }
         public async Task<bool> Update(UpdateRequestVacationDTO model)

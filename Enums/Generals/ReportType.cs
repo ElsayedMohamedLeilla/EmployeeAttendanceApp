@@ -2,7 +2,7 @@
 {
     public enum ReportType
     {
-        AttendanceForAllEmployeeReport,
+        EmployeeDailyAttendanceGroupByDayReport,
         AttendaceLeaveSummaryReport,
         AttendaceLeaveStatusByDepartmentIDReport,
         AttendaceLeaveStatusByEmployeeIDReport 

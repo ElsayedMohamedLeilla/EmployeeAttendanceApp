@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
+﻿using Azure;
+using Dawem.Contract.BusinessLogic.Dawem.Reports;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
@@ -19,7 +20,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         private readonly IRepositoryManager repositoryManager;
 
 
-
         public ReportGeneratorBL(IRepositoryManager _repositoryManager, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, RequestInfo requestInfo)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -27,124 +27,59 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             _requestInfo = requestInfo;
             repositoryManager = _repositoryManager;
         }
-        public HttpResponseMessage GenerateAttendanceForAllEmployeeReport(GetEmployeeAttendanceInPeriodReportParameters param)
+
+        public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string reportPath = Path.Combine(webRootPath, "uploads", "Reports", "AttendanceReports", "AttendanceForAllEmployeeReport.frx");
-            HttpResponseMessage response = null;
             ExporterModelDTO exporterModelDTO = new()
             {
-                ConnectionString = connectionString,
-                Path = reportPath,
-                ReportName = param.ExportFormat == ExportFormat.Pdf ? "EmployeeAttendanceSummaryReport.pdf" :
-                             param.ExportFormat == ExportFormat.Excel ? "EmployeeAttendanceSummaryReport.xlsx" :
-                             "",
-                CompanyID = _requestInfo.CompanyId,
-                ReportType = ReportType.AttendanceForAllEmployeeReport
-
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.EmployeeDailyAttendanceGroupByDayReport,
             };
-            switch (param.ExportFormat)
-            {
-                case ExportFormat.Pdf:
-                    response = ReportExporter.ExportToPdf(exporterModelDTO, param);
-                    break;
-                case ExportFormat.Excel:
-                    // Call method to generate Excel report
-                    // response = ReportHelper.GenerateExcelWithConnectionString(reportPath, "CompaniesReport.xlsx", Global.ConnectionStringWork);
-                    break;
-                // Handle other export types as needed
-                default:
-                    // Handle unsupported export types
-                    break;
-            }
-            return response;
-
+            return GenerateReport(exporterModelDTO,param);
 
         }
         public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string reportPath = Path.Combine(webRootPath, "uploads", "Reports", "AttendanceReports", "AttendaceLeaveStatusByDepartmentIDReport.frx");
-            HttpResponseMessage response = null;
             ExporterModelDTO exporterModelDTO = new()
             {
-                ConnectionString = connectionString,
-                Path = reportPath,
-                ReportName = param.ExportFormat == ExportFormat.Pdf ? "AttendaceLeaveStatusByDepartmentIDReport.pdf" :
-                             param.ExportFormat == ExportFormat.Excel ? "AttendaceLeaveStatusByDepartmentIDReport.xlsx" :
-                             "",
-                CompanyID = _requestInfo.CompanyId,
-                ReportType = ReportType.AttendaceLeaveStatusByDepartmentIDReport
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.AttendaceLeaveStatusByDepartmentIDReport,
             };
-            switch (param.ExportFormat)
-
-            {
-                case ExportFormat.Pdf:
-                    response = ReportExporter.ExportToPdf(exporterModelDTO, param);
-                    break;
-                case ExportFormat.Excel:
-                    // Call method to generate Excel report
-                    // response = ReportHelper.GenerateExcelWithConnectionString(reportPath, "CompaniesReport.xlsx", Global.ConnectionStringWork);
-                    break;
-                // Handle other export types as needed
-                default:
-                    // Handle unsupported export types
-                    break;
-            }
-            return response;
+            return GenerateReport(exporterModelDTO, param);
         }
         public HttpResponseMessage GenerateAttendaceLeaveStatusByEmployeeID(GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string reportPath = Path.Combine(webRootPath, "uploads", "Reports", "AttendanceReports", "AttendaceLeaveStatusByEmployeeIDReport.frx");
-            HttpResponseMessage response = null;
             ExporterModelDTO exporterModelDTO = new()
             {
-                ConnectionString = connectionString,
-                Path = reportPath,
-                ReportName = param.ExportFormat == ExportFormat.Pdf ? "AttendaceLeaveStatusByEmployeeIDReport.pdf" :
-                             param.ExportFormat == ExportFormat.Excel ? "AttendaceLeaveStatusByEmployeeIDReport.xlsx" :
-                             "",
-                CompanyID = _requestInfo.CompanyId,
-                ReportType = ReportType.AttendaceLeaveStatusByEmployeeIDReport
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.AttendaceLeaveStatusByEmployeeIDReport,
             };
-            switch (param.ExportFormat)
-
-            {
-                case ExportFormat.Pdf:
-                    response = ReportExporter.ExportToPdf(exporterModelDTO, param);
-                    break;
-                case ExportFormat.Excel:
-                    // Call method to generate Excel report
-                    // response = ReportHelper.GenerateExcelWithConnectionString(reportPath, "CompaniesReport.xlsx", Global.ConnectionStringWork);
-                    break;
-                // Handle other export types as needed
-                default:
-                    // Handle unsupported export types
-                    break;
-            }
-            return response;
+            return GenerateReport(exporterModelDTO, param);
         }
-
         public HttpResponseMessage GenerateAttendaceLeaveSummary(GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string reportPath = Path.Combine(webRootPath, "uploads", "Reports", "AttendanceReports", "AttendaceLeaveSummaryReport.frx");
-            HttpResponseMessage response = null;
             ExporterModelDTO exporterModelDTO = new()
             {
-                ConnectionString = connectionString,
-                Path = reportPath,
-                ReportName = param.ExportFormat == ExportFormat.Pdf ? "AttendaceLeaveSummaryReport.pdf" :
-                             param.ExportFormat == ExportFormat.Excel ? "AttendaceLeaveSummaryReport.xlsx" :
-                             "",
-                CompanyID = _requestInfo.CompanyId,
-                ReportType = ReportType.AttendaceLeaveSummaryReport
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.AttendaceLeaveSummaryReport,
             };
+            return GenerateReport(exporterModelDTO, param);
+        }
+
+        public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
+                             param.ExportFormat == ExportFormat.Excel ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Xlsx :
+                             "";
+            exporterModelDTO.CompanyID = _requestInfo.CompanyId;
+            exporterModelDTO.CompanyName = repositoryManager.CompanyRepository.Get(c => c.Id == _requestInfo.CompanyId).Select(com => com.Name).FirstOrDefault();
+            exporterModelDTO.BasePath = "uploads\\Reports";
+            string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
+            exporterModelDTO.ConnectionString = connectionString;
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string reportPath = Path.Combine(webRootPath, exporterModelDTO.BasePath, exporterModelDTO.FolderName, exporterModelDTO.ReportType.ToString() + AmgadKeys.frx);
+            exporterModelDTO.FullPath = reportPath;
+            HttpResponseMessage response = null;
             switch (param.ExportFormat)
 
             {

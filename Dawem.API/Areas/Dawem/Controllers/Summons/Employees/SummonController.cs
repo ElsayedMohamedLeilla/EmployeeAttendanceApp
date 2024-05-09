@@ -27,5 +27,14 @@ namespace Dawem.API.Areas.Dawem.Controllers.Summons
 
             return Success(summonsResponse.Summons, summonsResponse.TotalCount);
         }
+        [HttpGet]
+        public async Task<ActionResult> GetInfo([FromQuery] int summonId)
+        {
+            if (summonId < 1)
+            {
+                return BadRequest();
+            }
+            return Success(await summonBL.EmployeeGetInfo(summonId));
+        }
     }
 }

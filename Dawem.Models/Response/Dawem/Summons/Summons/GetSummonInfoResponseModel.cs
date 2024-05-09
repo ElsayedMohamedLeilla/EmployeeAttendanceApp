@@ -13,7 +13,7 @@ namespace Dawem.Models.Response.Dawem.Summons.Summons
         public List<string> Employees { get; set; }
         public List<string> Groups { get; set; }
         public List<string> Departments { get; set; }
-        public List<string> Sanctions { get; set; }
+        public List<SummonSancationModel> Sanctions { get; set; }
         public SummonStatus SummonStatus { get; set; }
         public string SummonStatusName { get; set; }
         public int NumberOfTargetedEmployees { get; set; }

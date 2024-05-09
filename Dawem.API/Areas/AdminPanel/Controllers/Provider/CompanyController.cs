@@ -3,7 +3,6 @@ using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -106,7 +105,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(await companyBL.Disable(model));
         }
         [HttpDelete]
-        
+
         public async Task<ActionResult> Delete(int companyId)
         {
             if (companyId < 1)

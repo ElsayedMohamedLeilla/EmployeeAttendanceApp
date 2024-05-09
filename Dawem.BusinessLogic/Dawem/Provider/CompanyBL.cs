@@ -414,6 +414,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             var getCompany = await repositoryManager.CompanyRepository
                 .GetEntityByConditionWithTrackingAsync(company => !company.IsDeleted
             && company.Id == model.Id);
+            getCompany.Name = model.Name;
+            getCompany.NumberOfEmployees = model.NumberOfEmployees;
             getCompany.ModifiedDate = DateTime.Now;
             getCompany.ModifyUserId = requestInfo.UserId;
             getCompany.Email = model.Email;

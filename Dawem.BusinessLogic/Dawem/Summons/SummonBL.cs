@@ -529,18 +529,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 Id = s.Id,
                 Code = s.Code,
                 LocalDateAndTime = s.LocalDateAndTime,
+                SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing,
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
-                AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
-                EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
+               EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
                 TranslationHelper.GetTranslation(LeillaKeys.SummonDone,requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
             }).ToListAsync();
+
             return new EmployeeGetSummonsResponse
             {
                 Summons = summonsList,
                 TotalCount = await query.CountAsync()
             };
+
             #endregion
 
         }
@@ -567,7 +571,12 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Employees = s.SummonEmployees.Count > 0 ? s.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
                     Groups = s.SummonGroups.Count > 0 ? s.SummonGroups.Select(e => e.Group.Name).ToList() : null,
                     Departments = s.SummonDepartments.Count > 0 ? s.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
-                    Sanctions = s.SummonSanctions.Count > 0 ? s.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
+                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
+                    s.SummonSanctions.Select(e => new SummonSancationModel
+                    {
+                        Name = e.Sanction.Name,
+                        WarningMessage = e.Sanction.WarningMessage
+                    }).ToList() : null,
                     NumberOfTargetedEmployees = s.SummonLogs.Count,
                     SummonStatus = utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
@@ -576,6 +585,31 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                     IsActive = s.IsActive
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
+
+            return summon;
+        }
+        public async Task<EmployeeGetSummonInfoResponseModel> EmployeeGetInfo(int summonId)
+        {
+            var utcDate = DateTime.UtcNow;
+            var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
+                .Select(s => new EmployeeGetSummonInfoResponseModel
+                {
+                    Code = s.Code,
+                    LocalDateAndTime = s.LocalDateAndTime,
+                    AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ? 
+                    s.SummonSanctions.Select(e => new SummonSancationModel
+                    {
+                        Name = e.Sanction.Name,
+                        WarningMessage = e.Sanction.WarningMessage
+                    }).ToList() : null,
+                    SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                    SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;

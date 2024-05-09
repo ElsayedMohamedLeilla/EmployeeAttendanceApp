@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.Dawem.Core.NotificationsStores;
 using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -19,8 +16,7 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Permissions;
 using Dawem.Models.Response.Dawem.Requests;
-using Dawem.Models.Response.Dawem.Requests.Permissions; 
-using Dawem.RealTime.Helper;
+using Dawem.Models.Response.Dawem.Requests.Permissions;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Permissions;
 using Microsoft.EntityFrameworkCore;
@@ -124,7 +120,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestPermission.Code = getRequestPermissionNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestPermission.IsActive = true;
 

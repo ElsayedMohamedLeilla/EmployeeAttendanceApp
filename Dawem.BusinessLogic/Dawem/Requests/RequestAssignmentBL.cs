@@ -123,7 +123,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestAssignment.Code = getRequestAssignmentNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestAssignment.IsActive = true;
 

@@ -63,10 +63,13 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 throw new BusinessValidationException(error.ErrorMessage);
             }
             #endregion
+
             #region Business Validation
             var employeeId = await requestVacationBLValidation.CreateValidation(model);
             #endregion
+
             unitOfWork.CreateTransaction();
+
             #region Upload Files
             List<string> fileNames = null;
 
@@ -112,7 +115,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestVacation.Code = getRequestVacationNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestVacation.IsActive = true;
 

@@ -94,6 +94,8 @@
         public const string BL = "BL";
         public const string BLC = "BLC";
         public const string GetForDropDown = "GetForDropDown";
+        public const string GetAllScreens = "GetAllScreens";
+        public const string GetAllActions = "GetAllActions";
         public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";

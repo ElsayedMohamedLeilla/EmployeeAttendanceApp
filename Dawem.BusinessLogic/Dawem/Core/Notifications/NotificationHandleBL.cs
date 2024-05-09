@@ -33,13 +33,13 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         {
             #region Handle Short And Full Message
 
-            var getActiveLanguages = model.ActiveLanguages == null ?
+            var getActiveLanguages = model.ActiveLanguages.Any() ? model.ActiveLanguages :
                 await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
                 Select(l => new ActiveLanguageModel
                 {
                     Id = l.Id,
                     ISO2 = l.ISO2
-                }).ToListAsync() : model.ActiveLanguages;
+                }).ToListAsync();
 
             var notificationTranslations = new List<NotificationTranslationModel>();
 

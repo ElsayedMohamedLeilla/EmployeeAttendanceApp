@@ -8,6 +8,8 @@ namespace Dawem.Models.Criteria.Core
         {
             UserIds = new List<int>();
             EmployeeIds = new List<int>();
+            NotificationDescriptions = new List<NotificationDescriptionModel>();
+            ActiveLanguages = new List<ActiveLanguageModel>();
         }
         public int CompanyId { get; set; }
         public List<int> UserIds { get; set; }

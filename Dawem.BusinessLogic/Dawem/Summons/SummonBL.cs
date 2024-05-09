@@ -768,7 +768,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     getSummonLogs.ForEach(m =>
                     {
-                        m.DoneTakeActions = true;
+                        m.DoneTakeActions = false;
                     });
 
                     await unitOfWork.SaveAsync();

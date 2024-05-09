@@ -832,8 +832,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                     TranslationHelper.GetTranslation(LeillaKeys.TheTime, language.ISO2) +
                                     LeillaKeys.ColonsThenSpace +
                                     summonDate.ToString("hh:mm") + LeillaKeys.Space +
-                                    DateHelper.TranslateAmAndPm(summonDate.ToString("tt"), language.ISO2) +
-                                    LeillaKeys.DotThenSpace + TranslationHelper.GetTranslation(LeillaKeys.ClickForDetails, language.ISO2) 
+                                    DateHelper.TranslateAmAndPm(summonDate.ToString("tt"), language.ISO2)
                             });
                         }
 

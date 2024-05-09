@@ -1,7 +1,7 @@
 ﻿namespace Dawem.Translations
 {
     public static class LeillaKeys
-    {        
+    {
         public const string DawemConnectionString = "DawemConnectionString";
         public const string ConnectionStringNotFound = "Connection string 'DawemConnectionString' not found.";
         public const string AllowSpecificOrigins = "_allowSpecificOrigins";
@@ -96,6 +96,7 @@
         public const string GetForDropDown = "GetForDropDown";
         public const string GetAllScreens = "GetAllScreens";
         public const string GetAllActions = "GetAllActions";
+        public const string GetHeaderInformations = "GetHeaderInformations";
         public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
@@ -108,6 +109,7 @@
         public const string Comma = ",";
         public const string CommaThenSpace = ", ";
         public const string Dot = ".";
+        public const string DotThenSpace = ". ";
         public const string Slash = "/";
         public const string BackSlash = @"\";
         public const string UnderScore = "_";
@@ -635,10 +637,14 @@
         public const string SorryEnableSummonNotAllowedAfterSummonStarted = "Sorry!!EnableSummonNotAllowedAfterSummonStarted!";
         public const string SorryDisableSummonNotAllowedAfterSummonStarted = "Sorry!!DisableSummonNotAllowedAfterSummonStarted!";
         public const string YouHaveNewSummon = "YouHaveNewSummon";
+        public const string YouHaveMissedTheSummon = "YouHaveMissedTheSummon";
+        public const string YouHaveMissedTheSummonAssignedToYou = "YouHaveMissedTheSummonAssignedToYou";
         public const string InDate = "InDate";
         public const string TheTime = "TheTime";
         public const string AvailableFor = "AvailableForPeriod";
         public const string SummonDone = "SummonDone";
         public const string SummonMissed = "SummonMissed";
+        public const string ClickForDetails = "ClickForDetails";
+        
     }
 }

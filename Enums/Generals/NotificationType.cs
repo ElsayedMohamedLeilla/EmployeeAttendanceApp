@@ -18,6 +18,7 @@
         NewAssignmentRequest,
         AcceptingAssignmentRequest,
         RejectingAssignmentRequest,
-        NewSummon 
+        NewSummon,
+        SummonMissed
     }
 }

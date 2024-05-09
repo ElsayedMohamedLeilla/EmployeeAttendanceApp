@@ -6,7 +6,6 @@ using Dawem.Contract.BusinessValidation.Dawem.Summons;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -16,7 +15,6 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Summons.Summons;
-using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -535,8 +533,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
-               EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
-                TranslationHelper.GetTranslation(LeillaKeys.SummonDone,requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
+                EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
+                TranslationHelper.GetTranslation(LeillaKeys.SummonDone, requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
             }).ToListAsync();
 
             return new EmployeeGetSummonsResponse
@@ -598,7 +596,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Code = s.Code,
                     LocalDateAndTime = s.LocalDateAndTime,
                     AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
-                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ? 
+                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
                     s.SummonSanctions.Select(e => new SummonSancationModel
                     {
                         Name = e.Sanction.Name,
@@ -707,16 +705,24 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {
+                        summonLog.SummonId,
                         summonLog.Id,
                         SummonSanctions = summonLog.Summon.SummonSanctions
                             .Select(ss => new
                             {
                                 ss.Id,
                                 SanctionType = ss.Sanction.Type,
-                                SanctionName = ss.Sanction.Name,
-                                SanctionWarningMessage = ss.Sanction.WarningMessage
+                                //SanctionName = ss.Sanction.Name,
+                                //SanctionWarningMessage = ss.Sanction.WarningMessage
                             }),
-                        EmployeeId = summonLog.Id,
+
+                        summonLog.EmployeeId,
+
+                        UsersIds = summonLog.Summon.Company.Users.Where(u => !u.IsDeleted && u.IsActive & u.EmployeeId > 0 &
+                             u.EmployeeId.Value == summonLog.EmployeeId).Select(u => u.Id).ToList(),
+
+                        SummonDate = summonLog.Summon.LocalDateAndTime,
+
                         WillCanceledEmployeeAttendanceId = summonLog.Summon.SummonSanctions
                             .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && summonLog.Employee.EmployeeAttendances
                             .Any(ea => !ea.IsDeleted && ea.IsActive && ea.LocalDate.Date == summonLog.Summon.LocalDateAndTime.Date) ?
@@ -771,28 +777,6 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     foreach (var missingEmployee in getMissingEmployeesList)
                     {
-                        #region Send Notification To Employees Missing Summon
-
-                        var doneSendNotification = false;
-                        var getNotificationsSancations = missingEmployee.SummonSanctions.
-                            Where(s => s.SanctionType == SanctionType.Notification);
-
-                        if (getNotificationsSancations.Count() > 0)
-                        {
-                            var employeeId = missingEmployee.EmployeeId;
-
-                            foreach (var getNotificationsSancation in getNotificationsSancations)
-                            {
-                                var sanctionName = getNotificationsSancation.SanctionName;
-                                var sanctionWarningMessage = getNotificationsSancation.SanctionWarningMessage;
-
-                                // here
-                            }
-
-                        }
-
-                        #endregion
-
                         addedSummonLogSanctions.
                             AddRange(missingEmployee.SummonSanctions.
                             Select(ss => new SummonLogSanction()
@@ -800,14 +784,73 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                 SummonLogId = missingEmployee.Id,
                                 SummonSanctionId = ss.Id,
                                 Done = ss.SanctionType == SanctionType.CancelDayFingerprint ||
-                                (ss.SanctionType == SanctionType.Notification && doneSendNotification)
+                                (ss.SanctionType == SanctionType.Notification)
                             }).ToList());
                     }
 
                     repositoryManager.SummonLogSanctionRepository.BulkInsert(addedSummonLogSanctions);
                     await unitOfWork.SaveAsync();
 
-                    #endregion               
+                    #endregion
+
+                    #region Handle Notifications
+
+                    var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                            Select(l => new ActiveLanguageModel
+                            {
+                                Id = l.Id,
+                                ISO2 = l.ISO2
+                            }).ToListAsync();
+
+                    var missingEmployeesGroupedBySummon = getMissingEmployeesList.GroupBy(m => m.SummonId).ToList();
+
+                    foreach (var missingGroup in missingEmployeesGroupedBySummon)
+                    {
+                        var employeeIds = missingGroup.Select(m => m.EmployeeId).ToList();
+                        var userIds = missingGroup.SelectMany(m => m.UsersIds).ToList();
+                        var summonDate = missingGroup.First().SummonDate;
+
+                        #region Handle Summon Description
+                       
+                        var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                        foreach (var language in getActiveLanguages)
+                        {
+                            notificationDescriptions.Add(new NotificationDescriptionModel
+                            {
+                                LanguageIso2 = language.ISO2,
+                                Description = TranslationHelper.GetTranslation(LeillaKeys.YouHaveMissedTheSummonAssignedToYou, language.ISO2) +
+                                    LeillaKeys.Space +
+                                    TranslationHelper.GetTranslation(LeillaKeys.InDate, language.ISO2) +
+                                    LeillaKeys.ColonsThenSpace +
+                                    summonDate.ToString("dd-MM-yyyy") +
+                                    LeillaKeys.Space +
+                                    TranslationHelper.GetTranslation(LeillaKeys.TheTime, language.ISO2) +
+                                    LeillaKeys.ColonsThenSpace +
+                                    summonDate.ToString("hh:mm") + LeillaKeys.Space +
+                                    DateHelper.TranslateAmAndPm(summonDate.ToString("tt"), language.ISO2) +
+                                    LeillaKeys.DotThenSpace + TranslationHelper.GetTranslation(LeillaKeys.ClickForDetails, language.ISO2) 
+                            });
+                        }
+
+
+                        #endregion
+
+                        var handleNotificationModel = new HandleNotificationModel
+                        {
+                            UserIds = userIds,
+                            EmployeeIds = employeeIds,
+                            NotificationType = NotificationType.NewSummon,
+                            NotificationStatus = NotificationStatus.Info,
+                            Priority = NotificationPriority.Medium,
+                            NotificationDescriptions = notificationDescriptions,
+                            ActiveLanguages = getActiveLanguages
+                        };
+
+                        await notificationHandleBL.HandleNotifications(handleNotificationModel);
+                    }
+                   
+                    #endregion
                 }
             }
             catch (Exception ex)

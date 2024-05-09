@@ -31,6 +31,7 @@ namespace Dawem.RealTime.Helper
                 NotificationType.AcceptingAssignmentRequest => TranslationHelper.GetTranslation(AmgadKeys.AcceptingAssignmentRequest, lang),
                 NotificationType.RejectingAssignmentRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingAssignmentRequest, lang),
                 NotificationType.NewSummon => TranslationHelper.GetTranslation(AmgadKeys.NewSummon, lang),
+                NotificationType.SummonMissed => TranslationHelper.GetTranslation(LeillaKeys.YouHaveMissedTheSummon, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
 
             };

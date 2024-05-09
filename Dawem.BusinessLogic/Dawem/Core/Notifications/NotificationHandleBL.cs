@@ -9,7 +9,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 {

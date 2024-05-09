@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Dawem.BusinessLogic.Dawem.Core.NotificationsStores;
 using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
@@ -20,7 +17,6 @@ using Dawem.Models.Requests;
 using Dawem.Models.Requests.Justifications;
 using Dawem.Models.Response.Dawem.Requests;
 using Dawem.Models.Response.Dawem.Requests.Justifications;
-using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Justifications;
 using Microsoft.EntityFrameworkCore;
@@ -362,18 +358,18 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             var requestJustificationsList = await queryPaged.
                 Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
-            {
-                Id = requestJustification.Request.Id,
-                Code = requestJustification.Request.Code,
-                AddedDate = requestJustification.Request.AddedDate,
-                DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
+                {
+                    Id = requestJustification.Request.Id,
+                    Code = requestJustification.Request.Code,
+                    AddedDate = requestJustification.Request.AddedDate,
+                    DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
                 requestJustification.Request.Employee.DirectManager.Name : null,
-                JustificationTypeName = requestJustification.JustificatioType.Name,
-                DateFrom = requestJustification.Request.Date,
-                DateTo = requestJustification.DateTo,
-                Status = requestJustification.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
-            }).ToListAsync();
+                    JustificationTypeName = requestJustification.JustificatioType.Name,
+                    DateFrom = requestJustification.Request.Date,
+                    DateTo = requestJustification.DateTo,
+                    Status = requestJustification.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
+                }).ToListAsync();
 
             return new EmployeeGetRequestJustificationsResponseDTO
             {

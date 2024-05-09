@@ -8,9 +8,7 @@ using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]    
     public class RequestJustificationController : DawemControllerBase
     {
         private readonly IRequestJustificationBL requestJustificationBL;

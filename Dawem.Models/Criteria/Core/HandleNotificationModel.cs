@@ -9,6 +9,7 @@ namespace Dawem.Models.Criteria.Core
             UserIds = new List<int>();
             EmployeeIds = new List<int>();
         }
+        public int CompanyId { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> EmployeeIds { get; set; }
         public NotificationType NotificationType { get; set; }

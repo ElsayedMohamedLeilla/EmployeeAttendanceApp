@@ -705,6 +705,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {
+                        summonLog.CompanyId,
                         summonLog.SummonId,
                         summonLog.Id,
                         SummonSanctions = summonLog.Summon.SummonSanctions
@@ -768,7 +769,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     getSummonLogs.ForEach(m =>
                     {
-                        m.DoneTakeActions = false;
+                        m.DoneTakeActions = true;
                     });
 
                     await unitOfWork.SaveAsync();
@@ -809,9 +810,10 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         var employeeIds = missingGroup.Select(m => m.EmployeeId).ToList();
                         var userIds = missingGroup.SelectMany(m => m.UsersIds).ToList();
                         var summonDate = missingGroup.First().SummonDate;
+                        var companyId = missingGroup.First().CompanyId;
 
                         #region Handle Summon Description
-                       
+
                         var notificationDescriptions = new List<NotificationDescriptionModel>();
 
                         foreach (var language in getActiveLanguages)
@@ -838,6 +840,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                         var handleNotificationModel = new HandleNotificationModel
                         {
+                            CompanyId = companyId,
                             UserIds = userIds,
                             EmployeeIds = employeeIds,
                             NotificationType = NotificationType.NewSummon,

@@ -63,7 +63,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             {
                 NotificationType = model.NotificationType,
                 NotificationTypeName = model.NotificationType.ToString(),
-                CompanyId = requestInfo.CompanyId,
+                CompanyId = requestInfo.CompanyId == 0 ? model.CompanyId : requestInfo.CompanyId,
                 AddUserId = requestInfo.UserId,
                 Status = model.NotificationStatus,
                 IsActive = true,

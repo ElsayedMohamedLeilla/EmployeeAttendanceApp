@@ -74,7 +74,7 @@ public class NotificationService : INotificationService
 
         #region Send Email
 
-        await SendEmailByUserIds(userIds, notificationType);
+        await SendEmailByUserIds(model);
 
         #endregion
 
@@ -82,7 +82,7 @@ public class NotificationService : INotificationService
     }
     private static async Task<ResponseModel> SendWebNotification(NotificationModel notificationModel)
     {
-        ResponseModel response = new ResponseModel();
+        var response = new ResponseModel();
         try
         {
             // Create a message
@@ -261,14 +261,14 @@ public class NotificationService : INotificationService
 
         return userTokens;
     }
-    public async Task<bool> SendEmailByUserIds(List<int> userIds, NotificationType notificationType)
+    public async Task<bool> SendEmailByUserIds(SendNotificationsAndEmailsModel model)
     {
-        var emails = await GetUsersEmails(userIds);
+        var emails = await GetUsersEmails(model.UserIds);
         bool result = false;
 
         var verifyEmail = new VerifyEmailModel
         {
-            Subject = NotificationHelper.GetNotificationType(notificationType, requestInfo.Lang),
+            Subject = model.Title,
             Body = @"<meta charset='UTF-8'>
                                             <title>عزيزي الموظف</title>
                                             <style>
@@ -276,7 +276,7 @@ public class NotificationService : INotificationService
                                             </style>
                                             </head>
                                             <body>
-                                            <h1>" + NotificationHelper.GetNotificationDescription(notificationType, requestInfo.Lang) + @"</h1>
+                                            <h1>" + model.Body + @"</h1>
                                             </body>
                                             </html>",
             Emails = emails.Where(e => e != AmgadKeys.NoEmail).Distinct().ToList()

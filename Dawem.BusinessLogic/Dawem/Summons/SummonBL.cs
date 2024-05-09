@@ -796,6 +796,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     #region Handle Notifications
 
+                    requestInfo.Lang = LeillaKeys.Ar;
+
                     var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
                             Select(l => new ActiveLanguageModel
                             {
@@ -843,7 +845,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             CompanyId = companyId,
                             UserIds = userIds,
                             EmployeeIds = employeeIds,
-                            NotificationType = NotificationType.NewSummon,
+                            NotificationType = NotificationType.SummonMissed,
                             NotificationStatus = NotificationStatus.Info,
                             Priority = NotificationPriority.Medium,
                             NotificationDescriptions = notificationDescriptions,

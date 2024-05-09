@@ -100,7 +100,24 @@ namespace Dawem.Data
             builder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
             builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
-            builder.Entity<UserBranch>().HasOne(p => p.User).WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).
+            
+            
+                builder.Entity<NotificationTranslation>().
+                HasOne(p => p.Notification).
+                WithMany(b => b.NotificationTranslations).
+                HasForeignKey(p => p.NotificationId).
+                OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<NotificationEmployee>().
+                HasOne(p => p.Notification).
+                WithMany(b => b.NotificationEmployees).
+                HasForeignKey(p => p.NotificationId).
+                OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<UserBranch>().HasOne(p => p.User).
+                WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).
                 OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<UserResponsibility>().
@@ -428,6 +445,7 @@ namespace Dawem.Data
                      .Where(p => p.ClrType == typeof(string)
                      && p.Name != nameof(BaseEntity.Notes)
                      && p.Name != nameof(Employee.Address)
+                     && p.Name != nameof(NotificationTranslation.Body)
                      && !p.Name.Contains(LeillaKeys.Mobile)
                      && !p.Name.Contains(LeillaKeys.Phone));
 
@@ -444,6 +462,16 @@ namespace Dawem.Data
             foreach (var property in allStringPropertiesWithNotesAndAddress)
             {
                 property.SetMaxLength(200);
+            }
+
+            var allStringPropertiesWithFullMessage = allEntity
+                    .SelectMany(t => t.GetProperties())
+                    .Where(p => p.ClrType == typeof(string)
+                    && ( p.Name == nameof(NotificationTranslation.Body)));
+
+            foreach (var property in allStringPropertiesWithFullMessage)
+            {
+                property.SetMaxLength(500);
             }
 
             var allStringPropertiesWithFileOrImageName = allEntity

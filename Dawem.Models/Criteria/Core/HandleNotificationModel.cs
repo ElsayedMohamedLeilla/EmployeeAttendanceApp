@@ -13,7 +13,8 @@ namespace Dawem.Models.Criteria.Core
         public List<int> EmployeeIds { get; set; }
         public NotificationType NotificationType { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
-        public Priority Priority { get; set; }
-        public string NotificationDescription { get; set; }
+        public NotificationPriority Priority { get; set; }
+        public List<NotificationDescriptionModel> NotificationDescriptions { get; set; }
+        public List<ActiveLanguageModel> ActiveLanguages { get; set; }
     }
 }

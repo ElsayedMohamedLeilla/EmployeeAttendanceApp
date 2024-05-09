@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240508203647_FixFullMessageSize")]
+    partial class FixFullMessageSize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -685,6 +688,13 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FullMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -713,12 +723,12 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("NotificationType")
                         .HasColumnType("int");
 
-                    b.Property<string>("NotificationTypeName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortMessege")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -726,6 +736,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Notifications", "Dawem");
                 });
@@ -4059,134 +4071,6 @@ namespace Dawem.Data.Migrations
                     b.ToTable("ShiftWorkingTimes", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.ToTable("NotificationEmployees", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("Body")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("NotificationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("NotificationId");
-
-                    b.ToTable("NotificationTranslations", "Dawem");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Plan", b =>
                 {
                     b.Property<int>("Id")
@@ -5815,7 +5699,15 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Company");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.PermissionType", b =>
@@ -6553,44 +6445,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Core.Notification", "Notification")
-                        .WithMany("NotificationEmployees")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Notification");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationTranslation", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Core.Notification", "Notification")
-                        .WithMany("NotificationTranslations")
-                        .HasForeignKey("NotificationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Language");
-
-                    b.Navigation("Notification");
-                });
-
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanNameTranslation", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
@@ -6980,13 +6834,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanGroups");
 
                     b.Navigation("Zones");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
-                {
-                    b.Navigation("NotificationEmployees");
-
-                    b.Navigation("NotificationTranslations");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Responsibility", b =>

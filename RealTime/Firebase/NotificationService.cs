@@ -10,7 +10,6 @@ using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
-using DocumentFormat.OpenXml.Office2013.Excel;
 using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -49,8 +48,8 @@ public class NotificationService : INotificationService
 
         NotificationModel notificationModel = new()
         {
-            Title = model.ShortMessege,
-            Body = model.FullMessage,
+            Title = model.Title,
+            Body = model.Body,
             Data = notificationData,
             ImageUrl = imageUrl
         };

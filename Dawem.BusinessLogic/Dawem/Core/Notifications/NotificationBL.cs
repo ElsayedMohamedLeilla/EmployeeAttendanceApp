@@ -32,9 +32,8 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<GetNotificationsResponseDTO> Get(GetNotificationCriteria criteria)
         {
-            criteria.EmployeeId = requestInfo.EmployeeId ?? 0;
-            var NotificationStoreRepository = repositoryManager.NotificationRepository;
-            var query = NotificationStoreRepository.GetAsQueryable(criteria);
+            var notificationStoreRepository = repositoryManager.NotificationRepository;
+            var query = notificationStoreRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -43,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             #region sorting
 
-            var queryOrdered = NotificationStoreRepository.OrderBy(query, nameof(Notification.Id), LeillaKeys.Desc);
+            var queryOrdered = notificationStoreRepository.OrderBy(query, nameof(Notification.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -54,16 +53,16 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             var notificationsList = await queryPaged.Select(notification => new NotificationForGridDTO
             {
                 Id = notification.Id,
-                ShortMessege = notification.ShortMessege,
-                FullMessege = notification.FullMessage,
+                Title = notification.NotificationTranslations.
+                FirstOrDefault(t=>t.Language.ISO2 == requestInfo.Lang).Title,
+                Body = notification.NotificationTranslations.
+                FirstOrDefault(t => t.Language.ISO2 == requestInfo.Lang).Body,
                 IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
                 Priority = notification.Priority,
                 IsRead = notification.IsRead,
-                Date = notification.AddedDate,
-                NotificationType = notification.NotificationType,          
-                Status = notification.Status,
-                EmployeeId = notification.EmployeeId
-
+                Date = notification.AddedDate.AddHours((double?)notification.Company.Country.TimeZoneToUTC ?? 0),
+                NotificationType = notification.NotificationType,
+                Status = notification.Status
             }).ToListAsync();
 
             return new GetNotificationsResponseDTO()
@@ -79,7 +78,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             var notifications = await repositoryManager.
                 NotificationRepository.
-                GetWithTracking(n => !n.IsViewed && !n.IsDeleted && n.EmployeeId == employeeId).
+                GetWithTracking(n => !n.IsViewed && !n.IsDeleted && n.NotificationEmployees.Any( ne => ne.EmployeeId == employeeId)).
                 ToListAsync();
 
             for (int i = 0; i < notifications.Count; i++)
@@ -102,7 +101,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         public async Task<int> GetUnreadNotificationCount()
         {
             var employeeId = requestInfo.EmployeeId;
-            var notification = await repositoryManager.NotificationRepository.Get(n => !n.IsRead && !n.IsDeleted && n.EmployeeId == employeeId).ToListAsync();
+            var notification = await repositoryManager.NotificationRepository.Get(n => !n.IsRead && !n.IsDeleted && n.NotificationEmployees.Any(ne => ne.EmployeeId == employeeId)).ToListAsync();
             return notification.Count;
         }
         public async Task<int> GetUnViewedNotificationCount()
@@ -110,7 +109,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             var employeeId = requestInfo.EmployeeId;
             var notification = await repositoryManager.
                 NotificationRepository.
-                Get(n => !n.IsViewed && !n.IsDeleted && n.EmployeeId == employeeId).
+                Get(n => !n.IsViewed && !n.IsDeleted && n.NotificationEmployees.Any(ne => ne.EmployeeId == employeeId)).
                 ToListAsync();
 
             return notification.Count;

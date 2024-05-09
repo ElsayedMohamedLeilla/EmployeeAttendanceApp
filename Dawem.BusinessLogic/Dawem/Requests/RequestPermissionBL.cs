@@ -155,7 +155,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewPermissionRequent,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -527,7 +527,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.AcceptingPermissionRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -573,7 +573,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.RejectingPermissionRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);

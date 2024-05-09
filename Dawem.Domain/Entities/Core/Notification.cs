@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,16 +14,12 @@ namespace Dawem.Domain.Entities.Core
         public int CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public Company Company { get; set; }
-        public int EmployeeId { get; set; }
-        [ForeignKey(nameof(EmployeeId))]
-        public Employee Employee { get; set; }
         #endregion
-        public string ShortMessege { get; set; }
-        public string FullMessage { get; set; }
         public bool IsRead { get; set; }
         public NotificationStatus Status { get; set; }
-        public Priority Priority { get; set; }
+        public NotificationPriority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
+        public string NotificationTypeName { get; set; }
         public bool IsViewed { get; set; }
         public void MarkAsRead()
         {
@@ -34,5 +31,7 @@ namespace Dawem.Domain.Entities.Core
             IsViewed = true;
             ModifiedDate = DateTime.UtcNow;
         }
+        public virtual List<NotificationTranslation> NotificationTranslations { get; set; }
+        public virtual List<NotificationEmployee> NotificationEmployees { get; set; }
     }
 }

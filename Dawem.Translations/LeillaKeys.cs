@@ -632,12 +632,11 @@
         public const string SorryDeleteSummonNotAllowedAfterSummonStarted = "Sorry!!DeleteSummonNotAllowedAfterSummonStarted!";
         public const string SorryEnableSummonNotAllowedAfterSummonStarted = "Sorry!!EnableSummonNotAllowedAfterSummonStarted!";
         public const string SorryDisableSummonNotAllowedAfterSummonStarted = "Sorry!!DisableSummonNotAllowedAfterSummonStarted!";
-
-
         public const string YouHaveNewSummon = "YouHaveNewSummon";
-        public const string InDay = "InDay";
+        public const string InDate = "InDate";
         public const string TheTime = "TheTime";
         public const string AvailableFor = "AvailableForPeriod";
-        
+        public const string SummonDone = "SummonDone";
+        public const string SummonMissed = "SummonMissed";
     }
 }

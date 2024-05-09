@@ -11,6 +11,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Summons
         Task<GetSummonInfoResponseModel> GetInfo(int summonId);
         Task<GetSummonByIdResponseModel> GetById(int summonId);
         Task<GetSummonsResponse> Get(GetSummonsCriteria model);
+        Task<EmployeeGetSummonsResponse> EmployeeGet(GetSummonsCriteria model);
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Enable(int summonId);
         Task<bool> Delete(int summonId);

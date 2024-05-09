@@ -143,7 +143,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewVacationRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -549,7 +549,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.AcceptingVacationRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -595,7 +595,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.RejectingVacationRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);

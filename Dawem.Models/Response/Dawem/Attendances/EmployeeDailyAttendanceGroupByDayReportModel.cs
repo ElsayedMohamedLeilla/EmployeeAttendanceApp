@@ -1,6 +1,7 @@
-﻿namespace Dawem.Models.Response.Dawem.Attendances
+﻿
+namespace Dawem.Models.Response.Dawem.Attendances
 {
-    public class GetEmployeeAttendanceInPeriodReportModel
+    public class EmployeeDailyAttendanceGroupByDayReportModel
     {
         public string EmployeeName { get; set; }
         public string JobTitleName { get; set; }

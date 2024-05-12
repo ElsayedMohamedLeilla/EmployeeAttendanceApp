@@ -3,8 +3,13 @@
     public enum ReportType
     {
         EmployeeDailyAttendanceGroupByDayReport,
-        AttendaceLeaveSummaryReport,
         AttendaceLeaveStatusByDepartmentIDReport,
-        AttendaceLeaveStatusByEmployeeIDReport 
+        AttendaceLeaveStatusShortGroupByJobReport,
+        AttendanceDetailsByEmployeeIDReport,
+
+
+        AttendaceLeaveSummaryReport,
+       
+            
     }
 }

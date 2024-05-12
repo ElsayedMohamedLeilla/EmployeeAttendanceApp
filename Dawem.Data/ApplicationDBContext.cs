@@ -15,6 +15,7 @@ using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Models.DTOs.Dawem.Generic;
+using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -24,6 +25,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Data.Entity.Infrastructure;
 
 namespace Dawem.Data
 {
@@ -61,7 +63,10 @@ namespace Dawem.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasDefaultSchema("Dawem");
+
             base.OnModelCreating(builder);
+            builder.Entity<EmployeeDailyAttendanceGroupByDayReportModel>().HasNoKey();
+
             foreach (var relationship in builder.Model.GetEntityTypes()
                    .SelectMany(e => e.GetForeignKeys()))
             {
@@ -578,6 +583,7 @@ namespace Dawem.Data
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EmployeeOTP> EmployeeOTPs { get; set; }
+        public virtual DbSet<EmployeeDailyAttendanceGroupByDayReportModel> EmployeeDailyAttendanceGroupByDayReport { get; set; }
 
 
 

@@ -16,7 +16,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
         Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations();
         public Task<MemoryStream> ExportDraft();
         public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
-        public Task<List<GetEmployeeAttendanceInPeriodReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria);
+        public Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria);
 
 
 

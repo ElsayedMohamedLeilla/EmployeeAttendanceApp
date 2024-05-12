@@ -90,13 +90,13 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 }
                 else
                 {
-                    #region Set User
-                    var getNextCode = await repositoryManager.UserRepository
-                        .Get(e => (e.Type == AuthenticationType.DawemAdmin && e.CompanyId == getCompany.Id && !e.IsDeleted))
-                        .Select(e => e.Code)
-                        .DefaultIfEmpty()
-                        .MaxAsync() + 1;
-                    #endregion
+                    //#region Set User
+                    //var getNextCode = await repositoryManager.UserRepository
+                    //    .Get(e => (e.Type == AuthenticationType.DawemAdmin && e.CompanyId == getCompany.Id && !e.IsDeleted))
+                    //    .Select(e => e.Code)
+                    //    .DefaultIfEmpty()
+                    //    .MaxAsync() + 1;
+                    //#endregion
 
                     user.UserName = getEmployee.Email;
                     user.Email = getEmployee.Email;
@@ -105,7 +105,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     user.CompanyId = getCompany.Id;
                     user.MobileCountryId = getEmployee.MobileCountryId;
                     user.ProfileImageName = getEmployee.ProfileImageName;
-                    user.Code = getNextCode;
+                    user.Code = getEmployee.Code;
                     user.EmployeeId = getEmployee.Id;
                     user.VerificationCode = maxOTP.OTP.ToString();
                     user.IsActive = true;

@@ -888,7 +888,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             return result;
         }
 
-        public async Task<List<GetEmployeeAttendanceInPeriodReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
+        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
         {
 
             using (var context = new ApplicationDBContext())
@@ -903,7 +903,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             new SqlParameter("@JobTitleID", Critria.JobTitleID),
             new SqlParameter("@CompanyID", requestInfo.CompanyId)
         };
-                var result = context.Database.SqlQueryRaw<GetEmployeeAttendanceInPeriodReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
+                var result = context.Database.SqlQueryRaw<EmployeeDailyAttendanceGroupByDayReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
 
                 return result;
             }

@@ -1,6 +1,8 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
+using Dawem.Translations;
 using FastReport;
 using FastReport.Data;
 using FastReport.Export.Image;
@@ -50,27 +52,56 @@ namespace Dawem.ReportsModule.Helper
 
                 report.Dictionary.Connections.Add(connection);
                 report.Load(exporterModelDTO.FullPath);
-                #region Set Paremetes
+                //report.RegisterData(exporterModelDTO.DataSource, exporterModelDTO.ReportType.ToString());
+                //report.AutoFillDataSet = true;
+                //report.GetDataSource(exporterModelDTO.ReportType.ToString()).Enabled = true;
+                //#region Set Paremetes OLD
+                //#region General Parameters
+                //if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport
+                //    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByDepartmentIDReport 
+                //    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusShortGroupByJobReport
+                //    || exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
+                //{
+                //    report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
+                //    report.SetParameterValue("DateFrom", param.DateFrom);
+                //    report.SetParameterValue("DateTo", param.DateTo);
+                //    report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
+                //    report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
+                //    report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
+                //}
+                //if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport)
+                //{
+                //    report.SetParameterValue("ZoneName", param.ZoneName == null ? "كل المناطق" : param.ZoneName);
+                //    report.SetParameterValue("DepartmentName", param.DepartmentName == null ? "كل الاقسام" : param.DepartmentName);
+                //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+                //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+                //}
+                //if (exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusShortGroupByJobReport
+                //    || exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
+                //{
+                //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+                //}
+                //if (exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
+                //{
+                //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+                //}
+                //#endregion
+                //#endregion
 
-                #region General Parameters
-                if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport
-                    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByDepartmentIDReport 
-                    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByEmployeeIDReport)
-                {
-                    report.SetParameterValue("DateFrom", param.DateFrom != default ? param.DateFrom.Date.ToShortDateString() : null);
-                    report.SetParameterValue("DateTo", param.DateTo != default ? param.DateTo.Date.ToShortDateString() : null);
-                    report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID );
-                    report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
-                    report.SetParameterValue("DepartmentId", param.DepartmentId ?? 0);
-                    report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
-                }
-                #endregion
+                #region Set Parameters
 
-                if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport)
+                SetGeneralParameters(report, param, exporterModelDTO);
+                switch (exporterModelDTO.ReportType)
                 {
-                    report.SetParameterValue("ZoneId", param.ZoneId);
-                    report.SetParameterValue("ZoneName", param.ZoneName == null ? "كل المناطق" : param.ZoneName);
-                    report.SetParameterValue("DepartmentName", param.DepartmentName == null ? "كل الاقسام" : param.DepartmentName);
+                    case ReportType.EmployeeDailyAttendanceGroupByDayReport:
+                        SetEmployeeDailyAttendanceParameters(report, param);
+                        break;
+                    case ReportType.AttendaceLeaveStatusShortGroupByJobReport:
+                        SetLeaveStatusByJobParameters(report, param);
+                        break;
+                    case ReportType.AttendanceDetailsByEmployeeIDReport:
+                        SetAttendanceDetailsParameters(report, param);
+                        break;
                 }
 
                 #endregion
@@ -90,8 +121,7 @@ namespace Dawem.ReportsModule.Helper
                 }
                 else
                 {
-                    // Report preparation failed
-                    // Handle appropriately
+                    throw new BusinessValidationException(AmgadKeys.SorryErrorHappendDuringExtractingReport);
                 }
             }
             catch (Exception ex)
@@ -103,6 +133,35 @@ namespace Dawem.ReportsModule.Helper
             }
 
             return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+        }
+
+
+        private static void SetGeneralParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param, ExporterModelDTO exporterModelDTO)
+        {
+            report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
+            report.SetParameterValue("DateFrom", param.DateFrom);
+            report.SetParameterValue("DateTo", param.DateTo);
+            report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
+            report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
+            report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
+        }
+
+        private static void SetEmployeeDailyAttendanceParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
+            report.SetParameterValue("DepartmentName", param.DepartmentName ?? "كل الاقسام");
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+
+        private static void SetLeaveStatusByJobParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+
+        private static void SetAttendanceDetailsParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
         }
 
 

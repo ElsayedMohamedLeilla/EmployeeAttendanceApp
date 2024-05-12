@@ -37,64 +37,17 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             }
             return BadRequest();
         }
-
-        //[HttpPost]
-        //public IActionResult GetEmployeeAttendanceByDepartmentReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
-        //{
-        //    var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusByDepartmentID(param);
-        //    if (response != null && response.IsSuccessStatusCode)
-        //    {
-        //        var contentStream = response.Content.ReadAsStream();
-        //        switch (param.ExportFormat)
-        //        {
-        //            case ExportFormat.Pdf:
-        //                return File(contentStream, "application/pdf", "EmployeeAttendanceByDepartmentReport.pdf");
-        //            case ExportFormat.Excel:
-        //                // Return Excel file
-        //                // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
-        //                break;
-        //            // Handle other export types as needed
-        //            default:
-        //                // Handle unsupported export types
-        //                break;
-        //        }
-        //    }
-        //    return NotFound();
-        //}
-        //[HttpPost]
-        //public IActionResult GetEmployeeAttendanceByEmployeeReport([FromQuery]  GetEmployeeAttendanceInPeriodReportParameters param)
-        //{
-        //    var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusByEmployeeID(param);
-        //    if (response != null && response.IsSuccessStatusCode)
-        //    {
-        //        var contentStream = response.Content.ReadAsStream();
-        //        switch (param.ExportFormat)
-        //        {
-        //            case ExportFormat.Pdf:
-        //                return File(contentStream, "application/pdf", "EmployeeAttendanceByEmployee.pdf");
-        //            case ExportFormat.Excel:
-        //                // Return Excel file
-        //                // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
-        //                break;
-        //            // Handle other export types as needed
-        //            default:
-        //                // Handle unsupported export types
-        //                break;
-        //        }
-        //    }
-        //    return NotFound();
-        //}
         [HttpPost]
-        public IActionResult GetAttendaceLeaveSummaryReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetEmployeeAttendanceByDepartmentReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            var response = _reportGeneratorBL.GenerateAttendaceLeaveSummary(param);
+            var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusByDepartmentID(param);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var contentStream = response.Content.ReadAsStream();
                 switch (param.ExportFormat)
                 {
                     case ExportFormat.Pdf:
-                        return File(contentStream, "application/pdf", "AttendaceLeaveSummaryReport.pdf");
+                        return File(contentStream, "application/pdf", "EmployeeAttendanceByDepartmentReport.pdf");
                     case ExportFormat.Excel:
                         // Return Excel file
                         // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
@@ -107,6 +60,79 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             }
             return NotFound();
         }
+        [HttpPost]
+        public IActionResult GetAttendaceLeaveStatusShortGroupByJobReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusShortGroupByJobReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "AttendaceLeaveStatusShortGroupByJobReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult GetAttendanceDetailsByEmployeeIDReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            var response = _reportGeneratorBL.GenerateAttendanceDetailsByEmployeeIDReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "AttendanceDetailsByEmployeeIDReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+
+
+
+        //[HttpPost]
+        //public IActionResult GetAttendaceLeaveSummaryReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        //{
+        //    var response = _reportGeneratorBL.GenerateAttendaceLeaveSummary(param);
+        //    if (response != null && response.IsSuccessStatusCode)
+        //    {
+        //        var contentStream = response.Content.ReadAsStream();
+        //        switch (param.ExportFormat)
+        //        {
+        //            case ExportFormat.Pdf:
+        //                return File(contentStream, "application/pdf", "AttendaceLeaveSummaryReport.pdf");
+        //            case ExportFormat.Excel:
+        //                // Return Excel file
+        //                // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+        //                break;
+        //            // Handle other export types as needed
+        //            default:
+        //                // Handle unsupported export types
+        //                break;
+        //        }
+        //    }
+        //    return NotFound();
+        //}
 
 
 

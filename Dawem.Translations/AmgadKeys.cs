@@ -254,8 +254,9 @@
         public const string AcceptingAssignmentRequest = "AcceptingAssignmentRequest";
         public const string RejectingAssignmentRequest = "RejectingAssignmentRequest";
 
+        public const string SorryErrorHappendDuringExtractingReport = "Sorry!!ErrorHappendDuringExtractingReport!";
 
-
+        
 
 
 

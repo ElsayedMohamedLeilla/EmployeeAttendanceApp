@@ -1,6 +1,6 @@
-﻿using Azure;
-using Dawem.Contract.BusinessLogic.Dawem.Reports;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Data;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
@@ -8,8 +8,9 @@ using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.ReportsModule.Helper;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
 namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 {
     public class ReportGeneratorBL : IReportGeneratorBL
@@ -18,26 +19,44 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         private readonly IConfiguration _configuration;
         private readonly RequestInfo _requestInfo;
         private readonly IRepositoryManager repositoryManager;
+        //private readonly ApplicationDBContext context;
 
 
-        public ReportGeneratorBL(IRepositoryManager _repositoryManager, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, RequestInfo requestInfo)
+        public ReportGeneratorBL(ApplicationDBContext _context, IRepositoryManager _repositoryManager, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, RequestInfo requestInfo)
         {
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
             _requestInfo = requestInfo;
             repositoryManager = _repositoryManager;
+            //_context = context;
+
         }
 
         public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(GetEmployeeAttendanceInPeriodReportParameters param)
         {
+            //object[] parameters =
+            //{
+            //     new SqlParameter("@EmployeeID", param.EmployeeID ?? 0),
+            //     new SqlParameter("@DateFrom", param.DateFrom),
+            //     new SqlParameter("@DateTo", param.DateTo),
+            //     new SqlParameter("@DepartmentID", param.DepartmentId ?? 0),
+            //     new SqlParameter("@ZoneID", param.ZoneId ?? 0),
+            //     new SqlParameter("@JobTitleID", param.JobTitleID ?? 0),
+            //     new SqlParameter("@CompanyID", _requestInfo.CompanyId),
+
+            // };
+            //var dataSource = GetDataSource(parameters, ReportType.EmployeeDailyAttendanceGroupByDayReport);
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.EmployeeDailyAttendanceGroupByDayReport,
+                //DataSource = dataSource
             };
-            return GenerateReport(exporterModelDTO,param);
+
+            return GenerateReport(exporterModelDTO, param);
 
         }
+
         public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(GetEmployeeAttendanceInPeriodReportParameters param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -47,25 +66,26 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveStatusByEmployeeID(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(GetEmployeeAttendanceInPeriodReportParameters param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
-                ReportType = ReportType.AttendaceLeaveStatusByEmployeeIDReport,
+                ReportType = ReportType.AttendaceLeaveStatusShortGroupByJobReport,
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveSummary(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(GetEmployeeAttendanceInPeriodReportParameters param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
-                ReportType = ReportType.AttendaceLeaveSummaryReport,
+                ReportType = ReportType.AttendanceDetailsByEmployeeIDReport,
             };
             return GenerateReport(exporterModelDTO, param);
         }
-
+        
+        
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -81,7 +101,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             exporterModelDTO.FullPath = reportPath;
             HttpResponseMessage response = null;
             switch (param.ExportFormat)
-
             {
                 case ExportFormat.Pdf:
                     response = ReportExporter.ExportToPdf(exporterModelDTO, param);
@@ -96,6 +115,30 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
                     break;
             }
             return response;
+        }
+        public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType)
+        {
+            IEnumerable<dynamic> result = null;
+            using (ApplicationDBContext context = new ApplicationDBContext())
+            {
+                if (reportType == ReportType.EmployeeDailyAttendanceGroupByDayReport)
+                {
+                    string SqlQuery = @"
+                                       EXEC [dbo].EmployeeDailyAttendanceGroupByDayReport 
+                                       @EmployeeID = @EmployeeID,
+                                       @DateFrom = @DateFrom,
+                                       @DateTo = @DateTo,
+                                       @DepartmentID = @DepartmentID,
+                                       @ZoneID = @ZoneID,
+                                       @JobTitleID = @JobTitleID,
+                                       @CompanyID = @CompanyID"; context.Database.SetCommandTimeout(3600);
+                    result = context.EmployeeDailyAttendanceGroupByDayReport.FromSqlRaw(SqlQuery, parameters).ToList();
+                }
+            }
+
+
+
+            return result;
         }
     }
 }

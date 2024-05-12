@@ -13,5 +13,6 @@ namespace Dawem.Models.Dtos.Dawem.Reports.ExporterModel
         public string BasePath { get; set; }
         public string FolderName { get; set; }  
         public ReportType ReportType { get; set; }
+       public IEnumerable<dynamic> DataSource { get; set; }
     }
 }

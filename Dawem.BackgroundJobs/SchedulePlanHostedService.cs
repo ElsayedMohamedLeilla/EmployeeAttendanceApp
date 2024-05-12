@@ -26,7 +26,7 @@ namespace Dawem.BackgroundJobs
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             do
-            {
+            {        
                 if (DateTime.UtcNow > _nextRun)
                 {
                     await Process();

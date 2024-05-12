@@ -1,5 +1,4 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Summons;
-using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Summons
         {
             summonBL = _summonBL;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] GetSummonsCriteria criteria)
         {

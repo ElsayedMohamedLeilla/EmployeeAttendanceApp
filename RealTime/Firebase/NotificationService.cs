@@ -74,7 +74,13 @@ public class NotificationService : INotificationService
 
         #region Send Email
 
-        await SendEmailByUserIds(model);
+        try
+        {
+            await SendEmailByUserIds(model);
+        }
+        catch (Exception ec)
+        {
+        }
 
         #endregion
 

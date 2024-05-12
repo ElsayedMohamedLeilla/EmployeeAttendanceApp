@@ -316,9 +316,9 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
         {
             try
             {
-                var utcDate = DateTime.UtcNow.Date;
+                var utcDate = DateTime.UtcNow;
                 var getNextSchedulePlans = await repositoryManager.SchedulePlanRepository.Get(p => !p.IsDeleted && p.IsActive &&
-                p.DateFrom.Date == utcDate)
+                p.DateFrom.Date == utcDate.AddHours((double?)p.Company.Country.TimeZoneToUTC ?? 0).Date)
                     .Select(p => new GetSchedulePlanLogModel
                     {
                         CompanyId = p.CompanyId,
@@ -342,14 +342,14 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
 
 
                                 var employeeId = nextSchedulePlan.EmployeeId ?? 0;
-                                var getEmployee = await repositoryManager.EmployeeRepository.
-                                    Get(e => !e.IsDeleted && e.Id == employeeId &&
+                                var getEmployees = await repositoryManager.EmployeeRepository.
+                                    GetWithTracking(e => !e.IsDeleted && e.Id == employeeId &&
                                     e.ScheduleId != nextSchedulePlan.NewScheduleId).
                                     ToListAsync();
 
-                                if (getEmployee != null)
+                                if (getEmployees != null && getEmployees.Count > 0)
                                 {
-                                    await HandleSchedulePlanLogEmployee(getEmployee, nextSchedulePlan, startDate);
+                                    await HandleSchedulePlanLogEmployee(getEmployees, nextSchedulePlan, startDate);
                                 }
 
                                 break;
@@ -357,7 +357,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
 
                                 var groupId = nextSchedulePlan.GroupId ?? 0;
                                 var getEmployeesByGroup = await repositoryManager.EmployeeRepository
-                                    .Get(e => !e.IsDeleted && e.EmployeeGroups != null &&
+                                    .GetWithTracking(e => !e.IsDeleted && e.EmployeeGroups != null &&
                                     e.EmployeeGroups.Any(g => g.GroupId == nextSchedulePlan.GroupId) &&
                                     e.ScheduleId != nextSchedulePlan.NewScheduleId).
                                     ToListAsync();
@@ -372,7 +372,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
 
                                 var departmentId = nextSchedulePlan.DepartmentId ?? 0;
                                 var getEmployeesByDepartment = await repositoryManager.EmployeeRepository
-                                    .Get(e => !e.IsDeleted && e.DepartmentId == departmentId &&
+                                    .GetWithTracking(e => !e.IsDeleted && e.DepartmentId == departmentId &&
                                     e.ScheduleId != nextSchedulePlan.NewScheduleId).
                                     ToListAsync();
 
@@ -415,8 +415,11 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
                 });
                 employee.ScheduleId = model.NewScheduleId;
             }
+            await unitOfWork.SaveAsync();
 
             #region Handle Notifications
+
+            requestInfo.Lang = LeillaKeys.Ar;
 
             var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
                    Select(l => new ActiveLanguageModel
@@ -486,6 +489,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
             schedulePlanLog.FinishDate = DateTime.UtcNow;
             repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanLog);
             await unitOfWork.SaveAsync();
+
         }
         public async Task<GetSchedulePlansInformationsResponseDTO> GetSchedulePlansInformations()
         {

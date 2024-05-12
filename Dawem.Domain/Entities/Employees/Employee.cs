@@ -4,6 +4,7 @@ using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -52,6 +53,7 @@ namespace Dawem.Domain.Entities.Employees
         public List<EmployeeAttendance> EmployeeAttendances { get; set; }
         public List<Request> EmployeeRequests { get; set; }
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
+        public List<MyUser> Users { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
         public bool InsertedFromExcel { get; set; } = false;
     }

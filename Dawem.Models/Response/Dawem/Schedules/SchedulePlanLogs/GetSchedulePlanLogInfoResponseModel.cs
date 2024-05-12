@@ -4,7 +4,6 @@ namespace Dawem.Models.Response.Dawem.Schedules.SchedulePlanLogs
 {
     public class GetSchedulePlanLogInfoResponseModel
     {
-        public int Code { get; set; }
         public string ScheduleName { get; set; }
         public string EmployeeName { get; set; }
         public string GroupName { get; set; }

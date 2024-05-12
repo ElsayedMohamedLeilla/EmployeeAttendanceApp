@@ -6,7 +6,8 @@ namespace Dawem.Models.Response.Dawem.Schedules.SchedulePlanLogs
     {
         public int CompanyId { get; set; }
         public int SchedulePlanId { get; set; }
-        public int ScheduleId { get; set; }
+        public int NewScheduleId { get; set; }
+        public string ScheduleName { get; set; }
         public int? EmployeeId { get; set; }
         public int? GroupId { get; set; }
         public int? DepartmentId { get; set; }

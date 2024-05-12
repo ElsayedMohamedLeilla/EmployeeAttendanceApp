@@ -1,7 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 

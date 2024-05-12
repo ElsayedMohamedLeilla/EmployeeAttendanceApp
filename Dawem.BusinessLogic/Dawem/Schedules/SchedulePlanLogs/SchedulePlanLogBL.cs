@@ -37,7 +37,6 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlanLogs
                 !schedulePlanLog.IsDeleted)
                 .Select(schedulePlanLog => new GetSchedulePlanLogInfoResponseModel
                 {
-                    Code = schedulePlanLog.Code,
                     SchedulePlanType = schedulePlanLog.SchedulePlan.SchedulePlanType,
                     SchedulePlanTypeName = TranslationHelper.GetTranslation(schedulePlanLog.SchedulePlan.SchedulePlanType.ToString(), requestInfo.Lang),
                     ScheduleName = schedulePlanLog.SchedulePlan.Schedule.Name,
@@ -48,10 +47,10 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlanLogs
                     ScheduleDateFrom = schedulePlanLog.SchedulePlan.DateFrom,
                     Notes = schedulePlanLog.Notes,
                     EmployeesNumberAppliedOn = schedulePlanLog.SchedulePlanLogEmployees.Count,
-                    EmployeesAppliedOn = schedulePlanLog.SchedulePlanLogEmployees
-                    .OrderByDescending(e => e.Id)
-                    .Take(5)
-                    .Select(e => new GetSchedulePlanLogEmployeeInfoModel
+                    EmployeesAppliedOn = schedulePlanLog.SchedulePlanLogEmployees.
+                    OrderByDescending(e => e.Id).
+                    Take(5).
+                    Select(e => new GetSchedulePlanLogEmployeeInfoModel
                     {
                         EmployeeName = e.Employee.Name,
                         OldScheduleName = e.OldSchedule.Name,

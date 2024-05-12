@@ -965,7 +965,10 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) : null,
                     WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) + 
                     LeillaKeys.Space + 
-                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
+                    AllowedMinutes = !day.IsVacation && day.AllowedMinutes > 0 ? day.AllowedMinutes.Value +
+                    LeillaKeys.Space + 
+                    TranslationHelper.GetTranslation(LeillaKeys.Minute, requestInfo.Lang) : null,
                 });
             }
 
@@ -987,6 +990,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     IsVacation = s.ShiftId == null,
                     StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
                     EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
+                    AllowedMinutes = s.ShiftId > 0 ? s.Shift.AllowedMinutes : null
                 }).ToListAsync();
 
             var getEmployeeSchedulePlans = await repositoryManager.EmployeeRepository.
@@ -1015,6 +1019,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             IsVacation = s.ShiftId == null,
                             StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
                             EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
+                            AllowedMinutes = s.ShiftId > 0 ? s.Shift.AllowedMinutes : null
                         }).ToList()
                     }).ToList() : null
                 }).FirstOrDefaultAsync();

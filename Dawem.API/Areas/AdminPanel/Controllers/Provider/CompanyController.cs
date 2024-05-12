@@ -1,6 +1,8 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,12 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
     public class CompanyController : AdminPanelControllerBase
     {
         private readonly ICompanyBL companyBL;
+        private readonly IAuthenticationBL authenticationBL;
 
-        public CompanyController(ICompanyBL _companyBL)
+        public CompanyController(ICompanyBL _companyBL, IAuthenticationBL _authenticationBL)
         {
             companyBL = _companyBL;
+            authenticationBL = _authenticationBL;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -32,7 +36,11 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             var result = await companyBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateCompanySuccessfully);
         }
-
+        [HttpPost]
+        public async Task<ActionResult> CompanySignUp(SignUpModel model)
+        {
+            return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+        }
         [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> Update([FromForm] UpdateCompanyWithFilesModel formData)
         {

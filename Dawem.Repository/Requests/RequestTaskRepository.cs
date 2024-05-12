@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Dawem.Contract.Repository.Requests;
+﻿using Dawem.Contract.Repository.Requests;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
@@ -26,9 +25,9 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
                 inner = inner.Or(x => x.TaskType != null && x.TaskType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.TaskEmployees != null && x.TaskEmployees.Any(te => te.Employee.Name.ToLower().Trim().Contains(criteria.FreeText)));
+                inner = inner.Or(x => x.TaskEmployees != null && x.TaskEmployees.Any(te => te.Employee.Name.ToLower().Trim().Contains(criteria.FreeText)));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
@@ -87,9 +86,9 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
                 inner = inner.Or(x => x.TaskType != null && x.TaskType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.TaskEmployees != null && x.TaskEmployees.Any(te => te.Employee.Name.ToLower().Trim().Contains(criteria.FreeText)));
+                inner = inner.Or(x => x.TaskEmployees != null && x.TaskEmployees.Any(te => te.Employee.Name.ToLower().Trim().Contains(criteria.FreeText)));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
@@ -100,9 +99,9 @@ namespace Dawem.Repository.Requests
             predicate = predicate.And(requestTask => !requestTask.Request.IsDeleted);
             predicate = predicate.And(requestTask => requestTask.Request.CompanyId == requestInfo.CompanyId);
 
-            predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId || 
+            predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == requestInfo.EmployeeId ||
             (requestTask.TaskEmployees != null && requestTask.TaskEmployees.Any(te => te.EmployeeId == requestInfo.EmployeeId)));
-           
+
             if (criteria.Id != null)
             {
                 predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);

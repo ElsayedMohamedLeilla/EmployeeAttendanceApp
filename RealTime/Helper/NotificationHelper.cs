@@ -31,6 +31,7 @@ namespace Dawem.RealTime.Helper
                 NotificationType.AcceptingAssignmentRequest => TranslationHelper.GetTranslation(AmgadKeys.AcceptingAssignmentRequest, lang),
                 NotificationType.RejectingAssignmentRequest => TranslationHelper.GetTranslation(AmgadKeys.RejectingAssignmentRequest, lang),
                 NotificationType.NewSummon => TranslationHelper.GetTranslation(AmgadKeys.NewSummon, lang),
+                NotificationType.SummonMissed => TranslationHelper.GetTranslation(LeillaKeys.YouHaveMissedTheSummon, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
 
             };
@@ -49,13 +50,13 @@ namespace Dawem.RealTime.Helper
                     return uploadBLC.GetFilePath(AmgadKeys.DefaultImageName, AmgadKeys.NotificationIcons);
             }
         }
-        private static string GetNotificationPriority(Priority priority, string lang)
+        private static string GetNotificationPriority(NotificationPriority priority, string lang)
         {
             return priority switch
             {
-                Priority.High => TranslationHelper.GetTranslation(AmgadKeys.High, lang),
-                Priority.Medium => TranslationHelper.GetTranslation(AmgadKeys.Medium, lang),
-                Priority.Low => TranslationHelper.GetTranslation(AmgadKeys.Low, lang),
+                NotificationPriority.High => TranslationHelper.GetTranslation(AmgadKeys.High, lang),
+                NotificationPriority.Medium => TranslationHelper.GetTranslation(AmgadKeys.Medium, lang),
+                NotificationPriority.Low => TranslationHelper.GetTranslation(AmgadKeys.Low, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }

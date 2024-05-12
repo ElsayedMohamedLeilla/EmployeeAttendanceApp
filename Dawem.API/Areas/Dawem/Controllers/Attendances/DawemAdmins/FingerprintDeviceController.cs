@@ -5,11 +5,11 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Attendances
+namespace Dawem.API.Areas.Dawem.Controllers.Attendances.DawemAdmins
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+
+
     public class FingerprintDeviceController : DawemControllerBase
     {
         private readonly IFingerprintDeviceBL fingerprintDeviceBL;

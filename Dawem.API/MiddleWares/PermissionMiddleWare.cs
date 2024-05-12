@@ -21,7 +21,7 @@ namespace Dawem.API.MiddleWares
         {
             _next = next;
         }
-        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown };
+        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown, LeillaKeys.GetAllScreens, LeillaKeys.GetAllActions, LeillaKeys.GetHeaderInformations };
         public List<string> ExcludedControllers = new() { LeillaKeys.NotificationController };
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, IPermissionBL permissionBL, IUnitOfWork<ApplicationDBContext> unitOfWork)

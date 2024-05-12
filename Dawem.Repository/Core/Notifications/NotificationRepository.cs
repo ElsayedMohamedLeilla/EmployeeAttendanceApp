@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -22,6 +23,7 @@ namespace Dawem.Repository.Core.Notifications
             var inner = PredicateBuilder.New<Notification>(true);
 
             predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
+            predicate = predicate.And(n => n.NotificationEmployees.Any(ne => ne.EmployeeId == _requestInfo.EmployeeId));
 
             if (criteria.Id != null)
             {
@@ -38,10 +40,6 @@ namespace Dawem.Repository.Core.Notifications
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
                 predicate = predicate.And(e => criteria.Ids.Contains(e.Id));
-            }
-            if (criteria.EmployeeId > 0)
-            {
-                predicate = predicate.And(e => e.EmployeeId == criteria.EmployeeId);
             }
             if (criteria.IsRead.HasValue)
             {

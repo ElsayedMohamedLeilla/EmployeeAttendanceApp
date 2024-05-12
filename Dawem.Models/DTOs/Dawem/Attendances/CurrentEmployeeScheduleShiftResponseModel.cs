@@ -6,7 +6,7 @@ namespace Dawem.Models.Dtos.Dawem.Attendances
     {
         public WeekDay WeekDay { get; set; }
         public bool IsVacation { get; set; }
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
+        public DateTime? StartDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
     }
 }

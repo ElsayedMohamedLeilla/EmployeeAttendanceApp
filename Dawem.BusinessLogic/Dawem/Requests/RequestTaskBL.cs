@@ -117,7 +117,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestTask.Code = getRequestTaskNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestTask.IsActive = true;
 
@@ -142,7 +142,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewTaskRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -369,19 +369,26 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             var employeeTasks = await repositoryManager.RequestTaskRepository
                 .Get(a => !a.Request.IsDeleted && (a.Request.EmployeeId == getEmployeeId ||
                 a.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId))
-                && (a.Request.Date.Month == criteria.Month
-                && a.Request.Date.Year == criteria.Year || a.Request.RequestTask.DateTo.Month == criteria.Month
-                && a.Request.RequestTask.DateTo.Year == criteria.Year))
+                && ((a.Request.Date.Month == criteria.Month
+                && a.Request.Date.Year == criteria.Year) || (a.Request.RequestTask.DateTo.Month == criteria.Month
+                && a.Request.RequestTask.DateTo.Year == criteria.Year)))
                 .Select(requestTask => new
                 {
                     requestTask.Request.Id,
                     requestTask.Request.Code,
                     requestTask.Request.Date,
                     requestTask.DateTo,
+                    Employee = new RequestTaskEmployeeModel
+                    {
+                        IsTaskManager = true,
+                        EmployeeNumber = requestTask.Request.Employee.EmployeeNumber,
+                        Name = requestTask.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestTask.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    },
                     requestTask.Request.Status,
                     StatusName = TranslationHelper.GetTranslation(requestTask.Request.Status.ToString(), requestInfo.Lang),
                     TaskTypeName = requestTask.TaskType.Name,
-                    Employees = requestTask.TaskEmployees.Select(e => new RequestEmployeeModel()
+                    Employees = requestTask.TaskEmployees.Select(e => new RequestTaskEmployeeModel()
                     {
                         EmployeeNumber = e.Employee.EmployeeNumber,
                         Name = e.Employee.Name,
@@ -449,6 +456,11 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
                 if (!isScheduleVacationDay || dayTasks.Count > 0)
                 {
+                    dayTasks.ForEach(e =>
+                    {
+                        e.Employees.Insert(0, e.Employee);
+                    });
+
                     var employeeGetRequestTasksResponseModel = new EmployeeGetRequestTasksResponseModel
                     {
                         DayTasks = new GetTaskDayModel
@@ -644,7 +656,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.AcceptingTaskRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);
@@ -696,7 +708,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.RejectingTaskRequest,
                 NotificationStatus = NotificationStatus.Info,
-                Priority = Priority.Medium
+                Priority = NotificationPriority.Medium
             };
 
             await notificationHandleBL.HandleNotifications(handleNotificationModel);

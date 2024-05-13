@@ -6,7 +6,7 @@ using NCrontab;
 namespace Dawem.BackgroundJobs
 {
     // test CrontabSchedule in => https://crontab.cronhub.io/
-    public class SchedulePlanBackgroundJobHostedService : BackgroundService
+    public class SchedulePlanHostedService : BackgroundService
     {
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
@@ -16,7 +16,7 @@ namespace Dawem.BackgroundJobs
 
         //private string Schedule => "*/10 * * * * *"; // Runs every 10 
 
-        public SchedulePlanBackgroundJobHostedService(IServiceScopeFactory _serviceScopeFactory)
+        public SchedulePlanHostedService(IServiceScopeFactory _serviceScopeFactory)
         {
             _schedule = CrontabSchedule.Parse(Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
             _nextRun = _schedule.GetNextOccurrence(DateTime.UtcNow);
@@ -26,7 +26,7 @@ namespace Dawem.BackgroundJobs
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             do
-            {
+            {        
                 if (DateTime.UtcNow > _nextRun)
                 {
                     await Process();
@@ -43,7 +43,7 @@ namespace Dawem.BackgroundJobs
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 var schedulePlanBL = scope.ServiceProvider.GetRequiredService<ISchedulePlanBL>();
-                await schedulePlanBL.HandleSchedulePlanBackgroundJob();
+                await schedulePlanBL.HandleSchedulePlans();
 
             }
         }

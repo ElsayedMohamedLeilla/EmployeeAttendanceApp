@@ -138,20 +138,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
             var forAllEmployees = model.ForAllEmployees.HasValue && model.ForAllEmployees.Value;
 
-            var employeeIds = await repositoryManager.EmployeeRepository.
-                Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId &&
-                (forAllEmployees || (model.Employees != null && model.Employees.Contains(e.Id)) ||
-                (model.Departments != null && e.DepartmentId > 00 && model.Departments.Contains(e.DepartmentId.Value)) ||
-                (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Departments.Contains(eg.GroupId))))).
-                Select(e => e.Id).
-                ToListAsync();
+            var employees = await repositoryManager.EmployeeRepository.
+                    Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId &&
+                    (forAllEmployees || (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                    (model.Departments != null && e.DepartmentId > 00 && model.Departments.Contains(e.DepartmentId.Value)) ||
+                    (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Departments.Contains(eg.GroupId))))).
+                    Select(e => new
+                    {
+                        e.Id,
+                        Users = e.Users != null ? e.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null
+                    }).ToListAsync();
 
-            var userIds = await repositoryManager.UserRepository.
-                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
-                employeeIds.Contains(s.EmployeeId.Value)).
-                Select(u => u.Id).ToListAsync();
+            var employeeIds = employees.Select(e => e.Id).ToList();
 
-            #region Handle Summon Description
+            var userIds = employees.Where(e => e.Users != null).SelectMany(e => e.Users).Distinct().ToList();
+
+            #region Handle Notification Description
 
             var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
                 Select(l => new ActiveLanguageModel
@@ -510,6 +512,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             var summonRepository = repositoryManager.SummonRepository;
             var query = summonRepository.EmployeeGetAsQueryable(criteria);
             var utcDate = DateTime.UtcNow;
+            var employeeId = requestInfo.EmployeeId;
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
@@ -527,11 +530,14 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 Id = s.Id,
                 Code = s.Code,
                 LocalDateAndTime = s.LocalDateAndTime,
-                SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                SummonStatus = utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
-                SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
-                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
                 TranslationHelper.GetTranslation(LeillaKeys.SummonDone, requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
@@ -590,6 +596,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         public async Task<EmployeeGetSummonInfoResponseModel> EmployeeGetInfo(int summonId)
         {
             var utcDate = DateTime.UtcNow;
+            var employeeId = requestInfo.EmployeeId;
+
             var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
                 .Select(s => new EmployeeGetSummonInfoResponseModel
                 {
@@ -602,11 +610,14 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         Name = e.Sanction.Name,
                         WarningMessage = e.Sanction.WarningMessage
                     }).ToList() : null,
-                    SummonStatus = utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus = utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
-                    SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
-                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang)
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
@@ -853,7 +864,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                         await notificationHandleBL.HandleNotifications(handleNotificationModel);
                     }
-                   
+
                     #endregion
                 }
             }

@@ -645,6 +645,17 @@
         public const string SummonDone = "SummonDone";
         public const string SummonMissed = "SummonMissed";
         public const string ClickForDetails = "ClickForDetails";
+        public const string YourScheduleHaveBeenChangedToNewSchedule = "YourScheduleHaveBeenChangedToNewSchedule";
+        public const string OldSchedule = "OldSchedule";
+        public const string NewSchedule = "NewSchedule";
+        public const string NotExist = "NotExist";
+        public const string ScheduleName = "ScheduleName";
+        public const string UpdatedScheduleDaysCount = "UpdatedScheduleDaysCount";
+        public const string ThereIsNewUpdateInWorkingHoursInOneShiftOfYourScheduleShifts = "ThereIsNewUpdateInWorkingHoursInOneShiftOfYourScheduleShifts";
+        public const string ShiftName = "ShiftName";
+        public const string CheckInTime = "CheckInTime";
+        public const string CheckOutTime = "CheckOutTime";
+        public const string AllowedMinutes = "AllowedMinutes";
         
     }
 }

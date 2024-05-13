@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Employees;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessLogicCore.Dawem;
@@ -12,6 +13,7 @@ using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
@@ -37,9 +39,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
         private readonly IMailBL mailBL;
+        private readonly INotificationHandleBL notificationHandleBL;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IEmployeeBLValidation _employeeBLValidation, IMailBL _mailBL)
@@ -50,6 +53,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            notificationHandleBL = _notificationHandleBL;
             mailBL = _mailBL;
         }
         public async Task<int> Create(CreateEmployeeModel model)
@@ -203,6 +207,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
+
+            var oldScheduleId = getEmployee.ScheduleId;
+            var newScheduleId = model.ScheduleId;
+
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;
@@ -261,6 +269,75 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #endregion
 
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Notifications
+
+            if (oldScheduleId != newScheduleId)
+            {
+                var employeeIds = new List<int> { getEmployee.Id };
+
+                var scheduleNames = await repositoryManager.ScheduleRepository.
+                    Get(s => !s.IsDeleted && (s.Id == oldScheduleId || s.Id == newScheduleId)).
+                    Select(s =>
+                    new
+                    {
+                        s.Id,
+                        s.Name
+                    }).ToListAsync();
+
+                var oldScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == oldScheduleId)?.Name;
+                var newScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == newScheduleId)?.Name;
+
+                var userIds = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
+                employeeIds.Contains(s.EmployeeId.Value)).
+                Select(u => u.Id).ToListAsync();
+
+                #region Handle Notification Description
+
+                var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                       Select(l => new ActiveLanguageModel
+                       {
+                           Id = l.Id,
+                           ISO2 = l.ISO2
+                       }).ToListAsync();
+
+                foreach (var language in getActiveLanguages)
+                {
+                    notificationDescriptions.Add(new NotificationDescriptionModel
+                    {
+                        LanguageIso2 = language.ISO2,
+                        Description = TranslationHelper.GetTranslation(LeillaKeys.YourScheduleHaveBeenChangedToNewSchedule, language.ISO2) +
+                            LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.OldSchedule, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace +
+                            (oldScheduleName ?? TranslationHelper.GetTranslation(LeillaKeys.NotExist, language.ISO2)) +
+                            LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.NewSchedule, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace +
+                            (newScheduleName ?? TranslationHelper.GetTranslation(LeillaKeys.NotExist, language.ISO2))
+                    });
+                }
+
+                #endregion
+
+                var handleNotificationModel = new HandleNotificationModel
+                {
+                    UserIds = userIds,
+                    EmployeeIds = employeeIds,
+                    NotificationType = NotificationType.NewChangeInSchedule,
+                    NotificationStatus = NotificationStatus.Info,
+                    Priority = NotificationPriority.Medium,
+                    NotificationDescriptions = notificationDescriptions,
+                    ActiveLanguages = getActiveLanguages
+                };
+
+                await notificationHandleBL.HandleNotifications(handleNotificationModel);
+            }
 
             #endregion
 

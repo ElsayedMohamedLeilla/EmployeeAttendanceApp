@@ -1,7 +1,9 @@
 ﻿using Dawem.Contract.Repository.Summons;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Summons;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -20,6 +22,7 @@ namespace Dawem.Repository.Summons
         {
             var predicate = PredicateBuilder.New<Summon>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Summon>(true);
+            var utcDate = DateTime.UtcNow;
 
             predicate = predicate.And(e => e.CompanyId == _requestInfo.CompanyId);
 
@@ -48,6 +51,27 @@ namespace Dawem.Repository.Summons
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
+            if (criteria.Date != null)
+            {
+                predicate = predicate.And(e => e.LocalDateAndTime.Date == criteria.Date.Value.Date);
+            }
+            if (criteria.Status != null)
+            {
+                switch (criteria.Status.Value)
+                {
+                    case SummonStatus.NotStarted:
+                        predicate = predicate.And(e => e.StartDateAndTimeUTC < utcDate);
+                        break;
+                    case SummonStatus.OnGoing:
+                        predicate = predicate.And(e => utcDate >= e.StartDateAndTimeUTC && utcDate <= e.EndDateAndTimeUTC);
+                        break;
+                    case SummonStatus.Finished:
+                        predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);
@@ -59,9 +83,11 @@ namespace Dawem.Repository.Summons
             var predicate = PredicateBuilder.New<Summon>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Summon>(true);
             var innerFilterEmployee = PredicateBuilder.New<Summon>(true);
+            var utcDate = DateTime.UtcNow;
+            var employeeId = _requestInfo.EmployeeId;
 
             predicate = predicate.And(s => s.CompanyId == _requestInfo.CompanyId);
-  
+
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
@@ -86,6 +112,31 @@ namespace Dawem.Repository.Summons
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (criteria.Date != null)
+            {
+                predicate = predicate.And(e => e.LocalDateAndTime.Date == criteria.Date.Value.Date);
+            }
+            if (criteria.Status != null)
+            {
+                switch (criteria.Status.Value)
+                {
+                    case SummonStatus.NotStarted:
+                        predicate = predicate.And(e => e.StartDateAndTimeUTC < utcDate);
+                        break;
+                    case SummonStatus.OnGoing:
+                        predicate = predicate.And(e => utcDate >= e.StartDateAndTimeUTC && utcDate <= e.EndDateAndTimeUTC);
+                        break;
+                    case SummonStatus.Finished:
+                        predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC);
+                        break;
+                    case SummonStatus.FinishedAndMissed:
+                        predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC && !e.EmployeeAttendanceChecks.
+                        Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             innerFilterEmployee = innerFilterEmployee.And(s => s.ForAllEmployees.HasValue && s.ForAllEmployees.Value);

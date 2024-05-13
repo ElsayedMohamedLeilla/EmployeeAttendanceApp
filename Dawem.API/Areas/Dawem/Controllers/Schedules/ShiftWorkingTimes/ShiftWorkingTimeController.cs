@@ -2,15 +2,14 @@
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules.ShiftWorkingTimes
 {
 
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+
+
     public class ShiftWorkingTimeController : DawemControllerBase
     {
         private readonly IShiftWorkingTimeBL shiftWorkingTimeBL;

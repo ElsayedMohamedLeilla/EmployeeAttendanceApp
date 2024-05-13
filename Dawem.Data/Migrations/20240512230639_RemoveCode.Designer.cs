@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240512230639_RemoveCode")]
+    partial class RemoveCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -6529,9 +6532,9 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Schedules.SchedulePlan", "SchedulePlan")
-                        .WithMany("SchedulePlanLogs")
+                        .WithMany()
                         .HasForeignKey("SchedulePlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Company");
@@ -7128,8 +7131,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanEmployee");
 
                     b.Navigation("SchedulePlanGroup");
-
-                    b.Navigation("SchedulePlanLogs");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanLog", b =>

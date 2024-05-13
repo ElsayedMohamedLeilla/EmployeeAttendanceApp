@@ -45,6 +45,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances.Employees
             }
             var response = await employeeAttendanceBL.GetEmployeeAttendances(model);
             return Success(response);
-        }       
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentEmployeeSchedules([FromQuery] GetCurrentEmployeeSchedulesModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            var response = await employeeAttendanceBL.GetCurrentEmployeeSchedules(model);
+            return Success(response, response.Schedules.Count);
+        }
     }
 }

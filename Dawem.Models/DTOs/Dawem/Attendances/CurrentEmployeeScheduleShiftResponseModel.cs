@@ -8,5 +8,6 @@ namespace Dawem.Models.Dtos.Dawem.Attendances
         public bool IsVacation { get; set; }
         public DateTime? StartDateTime { get; set; }
         public DateTime? EndDateTime { get; set; }
+        public int? AllowedMinutes { get; set; }
     }
 }

@@ -8,7 +8,6 @@ using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.ReportsModule.Helper;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
@@ -84,15 +83,36 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        
-        
+
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.LateEarlyArrivalGroupByDepartmentReport,
+            };
+            param.EmployeeID = 0;
+            return GenerateReport(exporterModelDTO, param);
+        }
+
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
                              param.ExportFormat == ExportFormat.Excel ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Xlsx :
                              "";
             exporterModelDTO.CompanyID = _requestInfo.CompanyId;
-            exporterModelDTO.CompanyName = repositoryManager.CompanyRepository.Get(c => c.Id == _requestInfo.CompanyId).Select(com => com.Name).FirstOrDefault();
+            var ComObj = repositoryManager.CompanyRepository.Get(c => c.Id == _requestInfo.CompanyId).Select(com =>
+            new
+            {
+                com.Name,
+                com.Email,
+                com.Country.NameAr
+            }).FirstOrDefault();
+            exporterModelDTO.CompanyName = ComObj.Name;
+            exporterModelDTO.CompanyEmail = ComObj.Email ?? "No Email";
+            exporterModelDTO.CountryName = ComObj.NameAr;
+
+
             exporterModelDTO.BasePath = "uploads\\Reports";
             string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
             exporterModelDTO.ConnectionString = connectionString;
@@ -140,5 +160,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 
             return result;
         }
+        
     }
 }

@@ -255,8 +255,15 @@
         public const string RejectingAssignmentRequest = "RejectingAssignmentRequest";
 
         public const string SorryErrorHappendDuringExtractingReport = "Sorry!!ErrorHappendDuringExtractingReport!";
+        public const string RegistrationInformation = "RegistrationInformation";
+        public const string PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation = "PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation";
+        public const string CompanyVerificationCode = "CompanyVerificationCode";
+        public const string EmploymentNumber = "EmploymentNumber";
 
         
+
+
+
 
 
 

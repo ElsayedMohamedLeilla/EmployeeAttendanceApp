@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
 using Dawem.Contract.BusinessLogic.Dawem.Employees;
+using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Employees;
 using Dawem.Contract.Repository.Manager;
@@ -14,6 +15,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
+using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Employees.Employees;
@@ -21,6 +23,8 @@ using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
+
+
 
 namespace Dawem.BusinessLogic.Dawem.Employees
 {
@@ -32,12 +36,13 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly IMailBL mailBL;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IEmployeeBLValidation _employeeBLValidation)
+           IEmployeeBLValidation _employeeBLValidation, IMailBL _mailBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -45,6 +50,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            mailBL = _mailBL;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
@@ -89,6 +95,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Insert Employee
 
+
             #region Set Employee code
 
             var getNextCode = await repositoryManager.EmployeeRepository
@@ -107,6 +114,41 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employee.Code = getNextCode;
             repositoryManager.EmployeeRepository.Insert(employee);
             await unitOfWork.SaveAsync();
+
+            #region Send Email RegistrationInfo
+            if (employee.IsActive)
+            {
+                #region get CompanyVerficationCode
+                var CompanyVerificationCode = repositoryManager.CompanyRepository.Get(c=> c.Id == requestInfo.CompanyId).Select(ss=> ss.IdentityCode).FirstOrDefault();
+                #endregion
+                var verifyEmail = new VerifyEmailModel
+                {
+                    Email = employee.Email,
+                    Subject = TranslationHelper.GetTranslation(AmgadKeys.RegistrationInformation, requestInfo?.Lang),
+                    Body = $@"
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>{TranslationHelper.GetTranslation(AmgadKeys.RegistrationInformation, requestInfo?.Lang)} </title>
+                            </head>
+                            <body>
+                                <p>
+                                    {TranslationHelper.GetTranslation(AmgadKeys.PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation, requestInfo?.Lang)}
+                                </p>
+                                <p>
+                                    <strong>  {TranslationHelper.GetTranslation(AmgadKeys.CompanyVerificationCode, requestInfo?.Lang) + " : " + LeillaKeys.Space + CompanyVerificationCode} </strong> 
+                                </p>
+                                <p>
+                                    <strong>  {TranslationHelper.GetTranslation(AmgadKeys.EmploymentNumber, requestInfo?.Lang) + " : " + LeillaKeys.Space + employee.EmployeeNumber} </strong> 
+                                </p>
+                            </body>
+                            </html>
+                    "
+                };
+
+                await mailBL.SendEmail(verifyEmail);
+            }
+            #endregion
 
             #endregion
 
@@ -870,7 +912,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         {
             List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
             u.IsActive & u.CompanyId == requestInfo.CompanyId
-            && (u.EmployeeId > 0 &&  u.EmployeeId == null)
+            && (u.EmployeeId > 0 && u.EmployeeId == null)
             ).Select(e => e.EmployeeId.Value).ToListAsync();
 
             var employeeList = await repositoryManager.EmployeeRepository.Get(e =>

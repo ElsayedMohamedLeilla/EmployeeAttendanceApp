@@ -52,42 +52,6 @@ namespace Dawem.ReportsModule.Helper
 
                 report.Dictionary.Connections.Add(connection);
                 report.Load(exporterModelDTO.FullPath);
-                //report.RegisterData(exporterModelDTO.DataSource, exporterModelDTO.ReportType.ToString());
-                //report.AutoFillDataSet = true;
-                //report.GetDataSource(exporterModelDTO.ReportType.ToString()).Enabled = true;
-                //#region Set Paremetes OLD
-                //#region General Parameters
-                //if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport
-                //    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusByDepartmentIDReport 
-                //    || exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusShortGroupByJobReport
-                //    || exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
-                //{
-                //    report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
-                //    report.SetParameterValue("DateFrom", param.DateFrom);
-                //    report.SetParameterValue("DateTo", param.DateTo);
-                //    report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
-                //    report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
-                //    report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
-                //}
-                //if (exporterModelDTO.ReportType == ReportType.EmployeeDailyAttendanceGroupByDayReport)
-                //{
-                //    report.SetParameterValue("ZoneName", param.ZoneName == null ? "كل المناطق" : param.ZoneName);
-                //    report.SetParameterValue("DepartmentName", param.DepartmentName == null ? "كل الاقسام" : param.DepartmentName);
-                //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
-                //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-                //}
-                //if (exporterModelDTO.ReportType == ReportType.AttendaceLeaveStatusShortGroupByJobReport
-                //    || exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
-                //{
-                //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-                //}
-                //if (exporterModelDTO.ReportType == ReportType.AttendanceDetailsByEmployeeIDReport)
-                //{
-                //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
-                //}
-                //#endregion
-                //#endregion
-
                 #region Set Parameters
 
                 SetGeneralParameters(report, param, exporterModelDTO);
@@ -102,6 +66,10 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.AttendanceDetailsByEmployeeIDReport:
                         SetAttendanceDetailsParameters(report, param);
                         break;
+                    case ReportType.LateEarlyArrivalGroupByDepartmentReport:
+                        SetEarlyArrivalGroupByDepartmentParameters(report, param);
+                        break;
+
                 }
 
                 #endregion
@@ -138,12 +106,18 @@ namespace Dawem.ReportsModule.Helper
 
         private static void SetGeneralParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param, ExporterModelDTO exporterModelDTO)
         {
-            report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
             report.SetParameterValue("DateFrom", param.DateFrom);
             report.SetParameterValue("DateTo", param.DateTo);
+            report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
             report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
             report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
             report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
+            report.SetParameterValue("DateFromString", param.DateFrom.ToShortDateString());
+            report.SetParameterValue("DateToString", param.DateTo.ToShortDateString());
+            report.SetParameterValue("CompanyEmail", exporterModelDTO.CompanyEmail);
+            report.SetParameterValue("CountryName", exporterModelDTO.CountryName);
+
+
         }
 
         private static void SetEmployeeDailyAttendanceParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
@@ -162,6 +136,12 @@ namespace Dawem.ReportsModule.Helper
         private static void SetAttendanceDetailsParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        }
+
+        private static void SetEarlyArrivalGroupByDepartmentParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
 
 

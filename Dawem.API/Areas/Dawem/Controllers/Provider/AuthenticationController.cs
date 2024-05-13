@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Provider
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]    
     [AllowAnonymous]
     public class AuthenticationController : DawemControllerBase
     {

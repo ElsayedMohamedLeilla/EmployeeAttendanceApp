@@ -37,7 +37,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(result, messageCode: LeillaKeys.DoneCreateCompanySuccessfully);
         }
         [HttpPost]
-        public async Task<ActionResult> CompanySignUp(SignUpModel model)
+        public async Task<ActionResult> CreateSignUp(SignUpModel model)
         {
             return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }

@@ -318,6 +318,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
             {
                 var utcDate = DateTime.UtcNow;
                 var getNextSchedulePlans = await repositoryManager.SchedulePlanRepository.Get(p => !p.IsDeleted && p.IsActive &&
+                !p.SchedulePlanLogs.Any() &&
                 p.DateFrom.Date == utcDate.AddHours((double?)p.Company.Country.TimeZoneToUTC ?? 0).Date)
                     .Select(p => new GetSchedulePlanLogModel
                     {
@@ -488,6 +489,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
 
             schedulePlanLog.FinishDate = DateTime.UtcNow;
             repositoryManager.SchedulePlanLogRepository.Insert(schedulePlanLog);
+
             await unitOfWork.SaveAsync();
 
         }

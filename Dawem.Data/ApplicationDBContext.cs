@@ -262,6 +262,12 @@ namespace Dawem.Data
                .WithOne(b => b.SchedulePlanEmployee)
                .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<SchedulePlanLog>()
+               .HasOne(p => p.SchedulePlan)
+               .WithMany(b => b.SchedulePlanLogs)
+               .HasForeignKey(p => p.SchedulePlanId)
+               .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<SchedulePlanGroup>()
                .HasOne(p => p.SchedulePlan)
                .WithOne(b => b.SchedulePlanGroup)

@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.Repository.Employees;
+using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
@@ -9,6 +10,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic;
+using DocumentFormat.OpenXml.InkML;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +19,12 @@ namespace Dawem.Repository.Employees
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
         private readonly RequestInfo requestInfo;
-        public EmployeeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
+        private readonly IUserRepository userRepository;
+
+        public EmployeeRepository(IUserRepository _userRepository, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
+            userRepository =_userRepository ;
         }
         public IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria)
         {
@@ -125,6 +130,14 @@ namespace Dawem.Repository.Employees
                         break;
                     default:
                         break;
+                }
+            }
+            if (criteria.IsFreeEmployee)
+            {
+                criteria.FreeEmployeeIds = userRepository.GetEmployeeIdsNotConnectedToUser();
+                if (criteria.FreeEmployeeIds != null && criteria.FreeEmployeeIds.Count() > 0)
+                {
+                    predicate = predicate.And(e => criteria.FreeEmployeeIds.Contains(e.Id));
                 }
             }
 

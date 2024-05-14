@@ -493,7 +493,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 LocalDateAndTime = s.LocalDateAndTime,
                 ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                 NumberOfTargetedEmployees = s.SummonLogs.Count,
-                SummonStatus = GetSummonStatus(s.StartDateAndTimeUTC, s.EndDateAndTimeUTC),
+                SummonStatus = GetSummonStatus(s.StartDateAndTimeUTC, s.EndDateAndTimeUTC, utcDate),
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
@@ -552,10 +552,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             #endregion
 
         }
-        private static SummonStatus GetSummonStatus(DateTime startDateAndTimeUTC, DateTime endDateAndTimeUTC)
+        private static SummonStatus GetSummonStatus(DateTime startDateAndTimeUTC, DateTime endDateAndTimeUTC, DateTime utcDate)
         {
-            var utcDate = DateTime.UtcNow;
-
             return utcDate > endDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < startDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing;

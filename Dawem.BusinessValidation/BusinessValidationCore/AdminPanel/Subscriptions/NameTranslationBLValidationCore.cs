@@ -40,7 +40,7 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
             foreach (var nameTranslation in NameTranslations)
             {
                 var checkNameDuplicate = await repositoryManager.PlanNameTranslationRepository.
-                    Get(pt => nameTranslation.Name == pt.Name &&
+                    Get(pt => pt.Id != nameTranslation.Id && nameTranslation.Name == pt.Name &&
                     nameTranslation.LanguageId == pt.LanguageId).
                     Select(l => new
                     {

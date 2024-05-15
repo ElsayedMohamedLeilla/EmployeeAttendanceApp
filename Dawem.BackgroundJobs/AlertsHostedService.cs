@@ -12,7 +12,7 @@ namespace Dawem.BackgroundJobs
         private DateTime _nextRun;
         private IServiceScopeFactory serviceScopeFactory;
 
-        private string Schedule => "* */1 * * * *"; // Fire every 1 minute
+        private string Schedule => "0 */2 * * * *"; // Fire every 1 minute
 
         public AlertsHostedService(IServiceScopeFactory _serviceScopeFactory)
         {
@@ -24,6 +24,7 @@ namespace Dawem.BackgroundJobs
         {
             do
             {
+                
                 if (DateTime.UtcNow > _nextRun)
                 {
                     await Process();
@@ -38,8 +39,9 @@ namespace Dawem.BackgroundJobs
             Console.WriteLine("Handle Alerts" + DateTime.UtcNow.ToString("F"));
             using (var scope = serviceScopeFactory.CreateScope())
             {
-                var summonBL = scope.ServiceProvider.GetRequiredService<ISummonBL>();
-                await summonBL.HandleSummonLog();
+                var alertBL = scope.ServiceProvider.GetRequiredService<IAlertBL>();
+                
+                await alertBL.HandleSystemAlerts();
             }
         }
     }

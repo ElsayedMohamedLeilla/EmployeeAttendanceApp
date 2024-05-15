@@ -52,6 +52,7 @@ namespace Dawem.ReportsModule.Helper
 
                 report.Dictionary.Connections.Add(connection);
                 report.Load(exporterModelDTO.FullPath);
+
                 #region Set Parameters
 
                 SetGeneralParameters(report, param, exporterModelDTO);

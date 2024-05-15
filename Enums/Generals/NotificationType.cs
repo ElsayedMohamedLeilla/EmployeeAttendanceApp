@@ -20,6 +20,8 @@
         RejectingAssignmentRequest,
         NewSummon,
         SummonMissed,
-        NewChangeInSchedule
+        NewChangeInSchedule,
+        DoNotForgetSummon,
+        DoNotForgetSignIn
     }
 }

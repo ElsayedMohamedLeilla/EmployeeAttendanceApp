@@ -12,7 +12,7 @@ namespace Dawem.BackgroundJobs
         private DateTime _nextRun;
         private IServiceScopeFactory serviceScopeFactory;
 
-        private string Schedule => "1 * * * * *"; // Fire every one hour
+        private string Schedule => "0 0 */1 * * *"; // Fire every one hour
 
         public SubscriptionHostedService(IServiceScopeFactory _serviceScopeFactory)
         {

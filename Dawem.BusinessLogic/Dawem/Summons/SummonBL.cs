@@ -819,7 +819,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     foreach (var missingGroup in missingEmployeesGroupedBySummon)
                     {
                         var employeeIds = missingGroup.Select(m => m.EmployeeId).ToList();
-                        var userIds = missingGroup.SelectMany(m => m.UsersIds).ToList();
+                        var userIds = missingGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
                         var summonDate = missingGroup.First().SummonDate;
                         var companyId = missingGroup.First().CompanyId;
 

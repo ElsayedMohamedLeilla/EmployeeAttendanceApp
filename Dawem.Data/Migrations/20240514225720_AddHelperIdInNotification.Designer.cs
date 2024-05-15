@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240514225720_AddHelperIdInNotification")]
+    partial class AddHelperIdInNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,13 +129,7 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("LocalDate");
-
                     b.HasIndex("ScheduleId");
-
-                    b.HasIndex("ShiftCheckInTime");
-
-                    b.HasIndex("ShiftCheckOutTime");
 
                     b.HasIndex("ShiftId");
 
@@ -233,12 +230,6 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeAttendanceId");
-
-                    b.HasIndex("FingerPrintDate");
-
-                    b.HasIndex("FingerPrintDateUTC");
-
-                    b.HasIndex("FingerPrintType");
 
                     b.HasIndex("SummonId");
 
@@ -697,10 +688,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("HelperDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("HelperNumber")
+                    b.Property<int?>("HelperId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -744,12 +732,6 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("HelperDate");
-
-                    b.HasIndex("HelperNumber");
-
-                    b.HasIndex("NotificationType");
 
                     b.ToTable("Notifications", "Dawem");
                 });
@@ -2074,8 +2056,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("decimal(30,20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TimeZoneToUTC");
 
                     b.ToTable("Countries", "Dawem");
                 });
@@ -4071,10 +4051,6 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CheckInTime");
-
-                    b.HasIndex("CheckOutTime");
-
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -4723,10 +4699,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EndDateAndTimeUTC");
-
-                    b.HasIndex("StartDateAndTimeUTC");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -5875,7 +5847,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("Notifications")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -7118,8 +7090,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("FingerprintDevices");
-
-                    b.Navigation("Notifications");
 
                     b.Navigation("SchedulePlans");
 

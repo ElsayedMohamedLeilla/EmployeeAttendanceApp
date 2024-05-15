@@ -21,6 +21,7 @@
         NewSummon,
         SummonMissed,
         NewChangeInSchedule,
-        DoNotForgetSummon
+        DoNotForgetSummon,
+        DoNotForgetSignIn
     }
 }

@@ -20,7 +20,8 @@ namespace Dawem.Domain.Entities.Core
         public NotificationType NotificationType { get; set; }
         public string NotificationTypeName { get; set; }
         public bool IsViewed { get; set; }
-        public int? HelperId { get; set; }
+        public int? HelperNumber { get; set; }
+        public DateTime? HelperDate { get; set; }
         public void MarkAsRead()
         {
             IsRead = true;

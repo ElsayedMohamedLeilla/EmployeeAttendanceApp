@@ -383,11 +383,33 @@ namespace Dawem.Data
             builder.Entity<Notification>().
                 HasIndex(p => p.NotificationType);
             builder.Entity<Notification>().
-                HasIndex(p => p.HelperId);
+                HasIndex(p => p.HelperNumber);
+            builder.Entity<Notification>().
+                HasIndex(p => p.HelperDate);
+
             builder.Entity<Summon>().
                 HasIndex(p => p.StartDateAndTimeUTC);
             builder.Entity<Summon>().
                 HasIndex(p => p.EndDateAndTimeUTC);
+
+            builder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.CheckInTime);
+            builder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.CheckOutTime);
+
+            builder.Entity<EmployeeAttendance>().
+                HasIndex(p => p.LocalDate);
+            builder.Entity<EmployeeAttendance>().
+                HasIndex(p => p.ShiftCheckInTime);
+            builder.Entity<EmployeeAttendance>().
+                HasIndex(p => p.ShiftCheckOutTime);
+
+            builder.Entity<EmployeeAttendanceCheck>().
+                HasIndex(p => p.FingerPrintDate);
+            builder.Entity<EmployeeAttendanceCheck>().
+                HasIndex(p => p.FingerPrintDateUTC);
+            builder.Entity<EmployeeAttendanceCheck>().
+                HasIndex(p => p.FingerPrintType);
 
             #endregion
 

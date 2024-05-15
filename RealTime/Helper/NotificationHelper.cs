@@ -34,6 +34,7 @@ namespace Dawem.RealTime.Helper
                 NotificationType.SummonMissed => TranslationHelper.GetTranslation(LeillaKeys.YouHaveMissedTheSummon, lang),
                 NotificationType.NewChangeInSchedule => TranslationHelper.GetTranslation(LeillaKeys.NewChangeInYourSchedule, lang),
                 NotificationType.DoNotForgetSummon => TranslationHelper.GetTranslation(LeillaKeys.DoNotForgetYourSummonFingerprint, lang),
+                NotificationType.DoNotForgetSignIn => TranslationHelper.GetTranslation(LeillaKeys.DoNotForgetSignIn, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
 
             };

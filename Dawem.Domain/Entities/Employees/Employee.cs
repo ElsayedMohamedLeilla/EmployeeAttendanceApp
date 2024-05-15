@@ -4,6 +4,8 @@ using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Domain.Entities.Subscriptions;
+using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
@@ -44,6 +46,7 @@ namespace Dawem.Domain.Entities.Employees
         public string ProfileImageName { get; set; }
         public string FingerprintMobileCode { get; set; }
         public bool AllowChangeFingerprintMobileCode { get; set; }
+        public bool InsertedFromExcel { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }    
@@ -55,6 +58,7 @@ namespace Dawem.Domain.Entities.Employees
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
         public List<MyUser> Users { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
-        public bool InsertedFromExcel { get; set; } = false;
+        public List<SummonLog> SummonLogs { get; set; }
+        public virtual List<NotificationEmployee> NotificationEmployees { get; set; }
     }
 }

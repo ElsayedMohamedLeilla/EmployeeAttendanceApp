@@ -68,6 +68,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                 Status = model.NotificationStatus,
                 IsActive = true,
                 Priority = model.Priority,
+                HelperId = model.HelperId,
                 NotificationTranslations = notificationTranslations.
                     Select(nt => new NotificationTranslation
                     {

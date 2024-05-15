@@ -32,6 +32,7 @@ namespace Dawem.Domain.Entities.Providers
         public List<FingerprintDevice> FingerprintDevices { get; set; }
         public List<Zone> Zones { get; set; }
         public List<MyUser> Users { get; set; }
+        public List<Notification> Notifications { get; set; }
         #endregion
         public string IdentityCode { get; set; }
         public int Code { get; set; }

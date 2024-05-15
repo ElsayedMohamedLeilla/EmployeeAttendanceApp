@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240514225720_AddHelperIdInNotification")]
+    partial class AddHelperIdInNotification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -729,10 +732,6 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("HelperId");
-
-                    b.HasIndex("NotificationType");
 
                     b.ToTable("Notifications", "Dawem");
                 });
@@ -4701,10 +4700,6 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EndDateAndTimeUTC");
-
-                    b.HasIndex("StartDateAndTimeUTC");
-
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -5852,7 +5847,7 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany("Notifications")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -7095,8 +7090,6 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("FingerprintDevices");
-
-                    b.Navigation("Notifications");
 
                     b.Navigation("SchedulePlans");
 

@@ -17,6 +17,7 @@ namespace Dawem.Models.Criteria.Core
         public NotificationType NotificationType { get; set; }
         public NotificationStatus NotificationStatus { get; set; }
         public NotificationPriority Priority { get; set; }
+        public int? HelperId { get; set; }
         public List<NotificationDescriptionModel> NotificationDescriptions { get; set; }
         public List<ActiveLanguageModel> ActiveLanguages { get; set; }
     }

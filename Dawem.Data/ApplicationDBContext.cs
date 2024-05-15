@@ -378,9 +378,18 @@ namespace Dawem.Data
       .HasForeignKey(p => p.CompanyId)
       .OnDelete(DeleteBehavior.Restrict);
 
+            #region Handle Indexes
 
+            builder.Entity<Notification>().
+                HasIndex(p => p.NotificationType);
+            builder.Entity<Notification>().
+                HasIndex(p => p.HelperId);
+            builder.Entity<Summon>().
+                HasIndex(p => p.StartDateAndTimeUTC);
+            builder.Entity<Summon>().
+                HasIndex(p => p.EndDateAndTimeUTC);
 
-
+            #endregion
 
             builder.Entity<Department>()
            .HasMany(d => d.Employees)

@@ -656,6 +656,9 @@
         public const string CheckInTime = "CheckInTime";
         public const string CheckOutTime = "CheckOutTime";
         public const string AllowedMinutes = "AllowedMinutes";
-        
+        public const string NewChangeInYourSchedule = "NewChangeInYourSchedule";
+        public const string DoNotForgetYourSummonFingerprint = "DoNotForgetYourSummonFingerprint";
+        public const string DoNotForgetToFingerprintForTheSummonAssignedForYou = "DoNotForgetToFingerprintForTheSummonAssignedForYou";
+        public const string SummonDate = "SummonDate";
     }
 }

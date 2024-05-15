@@ -95,6 +95,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return GenerateReport(exporterModelDTO, param);
         }
 
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.LateEarlyArrivalGroupByEmployeeReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -160,6 +170,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 
             return result;
         }
-        
+
+       
     }
 }

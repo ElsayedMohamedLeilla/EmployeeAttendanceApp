@@ -46,6 +46,8 @@ namespace Dawem.Repository.Managers
     public class RepositoryManager : IRepositoryManager
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
+        private readonly ApplicationDBContext context;
+
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
@@ -187,7 +189,7 @@ namespace Dawem.Repository.Managers
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
-        employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting, requestInfo);
+        employeeRepository ??= new EmployeeRepository(userRepository,unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting, requestInfo);
         public IAssignmentTypeRepository AssignmentTypeRepository =>

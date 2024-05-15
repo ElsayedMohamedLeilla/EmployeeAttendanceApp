@@ -9,15 +9,19 @@ using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using LinqKit;
+using System.Linq;
 
 namespace Dawem.Repository.UserManagement
 {
     public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
         private readonly RequestInfo requestInfo;
+        private ApplicationDBContext Context { get; set; }
+
         public UserRepository(RequestInfo _requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
+            Context = unitOfWork.Context;
         }
 
         public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
@@ -105,6 +109,13 @@ namespace Dawem.Repository.UserManagement
             var Query = Get(predicate);
             return Query;
 
+        }
+        public List<int?> GetEmployeeIdsNotConnectedToUser()
+        {
+            var employeeIdsWithUsers = Context.MyUser.Select(u => u.EmployeeId).ToList();
+            var allEmployeeIds = Context.Employees.Select(e => e.Id).ToList();
+            var result = allEmployeeIds.Where(id => !employeeIdsWithUsers.Contains(id)).Select(id => (int?)id).ToList();
+            return (List<int?>)result;
         }
     }
 

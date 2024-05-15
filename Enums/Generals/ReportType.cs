@@ -6,8 +6,8 @@
         AttendaceLeaveStatusByDepartmentIDReport,
         AttendaceLeaveStatusShortGroupByJobReport,
         AttendanceDetailsByEmployeeIDReport,
-        LateEarlyArrivalGroupByDepartmentReport
-       
-            
+        LateEarlyArrivalGroupByDepartmentReport,
+        LateEarlyArrivalGroupByEmployeeReport
+
     }
 }

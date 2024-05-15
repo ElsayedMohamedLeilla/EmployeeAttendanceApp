@@ -987,37 +987,38 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetEmployeesForDropDownResponse> GetForDropDownEmployeeNotHaveUser(GetEmployeesCriteria criteria)
         {
-            List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
-            u.IsActive & u.CompanyId == requestInfo.CompanyId
-            && (u.EmployeeId > 0 && u.EmployeeId == null)
-            ).Select(e => e.EmployeeId.Value).ToListAsync();
-
-            var employeeList = await repositoryManager.EmployeeRepository.Get(e =>
-                !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo => eo.Id)
-                .ToListAsync();
-
+            criteria.IsFreeEmployee = true;
+            criteria.IsActive = true;
+            var employeeRepository = repositoryManager.EmployeeRepository;
+            var query = employeeRepository.GetAsQueryable(criteria);
 
             #region paging
 
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
 
-            var queryPaged = criteria.GetPagingEnabled() ? employeeList.Skip(skip).Take(take) : employeeList;
+            #region sorting
+
+            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
             #region Handle Response
 
-            var employeesList = queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
+            var employeesList = await queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
-            }).ToList();
+            }).ToListAsync();
 
             return new GetEmployeesForDropDownResponse
             {
                 Employees = employeesList,
-                TotalCount = employeeList.Count()
+                TotalCount = await query.CountAsync()
             };
 
             #endregion

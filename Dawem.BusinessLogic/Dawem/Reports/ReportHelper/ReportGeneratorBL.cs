@@ -104,7 +104,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-
+        public HttpResponseMessage GenerateEmployeeVacanciesInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.EmployeeVacanciesInPeriodReport,
+            };
+            param.EmployeeID = 0;
+            return GenerateReport(exporterModelDTO, param);
+        }
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -162,7 +171,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
                                        @ZoneID = @ZoneID,
                                        @JobTitleID = @JobTitleID,
                                        @CompanyID = @CompanyID"; context.Database.SetCommandTimeout(3600);
-                    result = context.EmployeeDailyAttendanceGroupByDayReport.FromSqlRaw(SqlQuery, parameters).ToList();
+                   // result = context.EmployeeDailyAttendanceGroupByDayReport.FromSqlRaw(SqlQuery, parameters).ToList();
                 }
             }
 

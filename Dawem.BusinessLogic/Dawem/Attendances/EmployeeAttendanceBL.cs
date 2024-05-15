@@ -785,7 +785,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                          row.Cell(6).GetString() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
                                          row.Cell(6).GetString() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
                                          RecognitionWay.NotSet,
-                        Type = row.Cell(9).GetString() == "CheckIn" ? FingerPrintType.CheckIn :
+                        Type = row.Cell(5).GetString() == "CheckIn" ? FingerPrintType.CheckIn :
                                          row.Cell(5).GetString() == "CheckOut" ? FingerPrintType.CheckOut :
                                          row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
                                          row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :

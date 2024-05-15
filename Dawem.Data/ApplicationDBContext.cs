@@ -65,7 +65,7 @@ namespace Dawem.Data
             builder.HasDefaultSchema("Dawem");
 
             base.OnModelCreating(builder);
-            builder.Entity<EmployeeDailyAttendanceGroupByDayReportModel>().HasNoKey();
+            
 
             foreach (var relationship in builder.Model.GetEntityTypes()
                    .SelectMany(e => e.GetForeignKeys()))
@@ -617,7 +617,6 @@ namespace Dawem.Data
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EmployeeOTP> EmployeeOTPs { get; set; }
-        public virtual DbSet<EmployeeDailyAttendanceGroupByDayReportModel> EmployeeDailyAttendanceGroupByDayReport { get; set; }
 
 
 

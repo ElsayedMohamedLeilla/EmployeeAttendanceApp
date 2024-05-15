@@ -143,6 +143,14 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
+        private static void SetEmployeeVacanciesInPeriodParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("WithPermision", param.WithPermision == null ?  false : true);
+            report.SetParameterValue("BothWithandWithoutPermision", param.BothWithandWithoutPermision == null ? false : true);
+        }
+
 
 
     }

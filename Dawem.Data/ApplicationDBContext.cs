@@ -380,6 +380,9 @@ namespace Dawem.Data
 
             #region Handle Indexes
 
+            builder.Entity<Country>().
+                HasIndex(p => p.TimeZoneToUTC);
+
             builder.Entity<Notification>().
                 HasIndex(p => p.NotificationType);
             builder.Entity<Notification>().

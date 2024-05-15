@@ -53,7 +53,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                 var getDoNotForgetSummonEmployeesList = await repositoryManager
                            .EmployeeRepository.Get(employee => !employee.IsDeleted &&
-                           employee.Users.Any() &&
+                           employee.Users.Any(u => !u.IsDeleted) &&
                            employee.SummonLogs.Any(sl => !sl.IsDeleted && !sl.DoneSummon &&
                            EF.Functions.DateDiffMinute(sl.Summon.StartDateAndTimeUTC, utcDateTime) >= 1 &&
                            utcDateTime < sl.Summon.EndDateAndTimeUTC &&
@@ -157,12 +157,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                 var getDoNotForgetSignInEmployeesList = await repositoryManager
                            .EmployeeRepository.Get(employee => !employee.IsDeleted &&
-                            employee.Users.Any() && employee.ScheduleId != null &&
+                            employee.Users.Any(u=> !u.IsDeleted) && employee.ScheduleId != null &&
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ea.LocalDate.Date == utcDate &&
                             ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckIn)) &&
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
-                            sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek && utcTime < sd.Shift.CheckInTime &&
-                            EF.Functions.DateDiffMinute((DateTime)(object)utcTime, (DateTime)(object)sd.Shift.CheckInTime) <= 15) &&
+                            sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek && 
+                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckInTime &&
+                            EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0), (DateTime)(object)sd.Shift.CheckInTime) <= 15) &&
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.DoNotForgetSignIn &&

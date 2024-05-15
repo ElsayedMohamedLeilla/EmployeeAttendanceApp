@@ -660,7 +660,6 @@
         public const string DoNotForgetYourSummonFingerprint = "DoNotForgetYourSummonFingerprint";
         public const string DoNotForgetToFingerprintForTheSummonAssignedForYou = "DoNotForgetToFingerprintForTheSummonAssignedForYou";
         public const string SummonDate = "SummonDate";
-
         public const string DoNotForgetSignIn = "DoNotForgetSignIn";
         public const string DoNotForgetToFingerprintForYourSignIn = "DoNotForgetToFingerprintForYourSignIn";
 

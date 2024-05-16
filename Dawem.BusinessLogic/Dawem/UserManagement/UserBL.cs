@@ -62,7 +62,11 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             unitOfWork.CreateTransaction();
 
             #region get Company
-            var getCompany = repositoryManager.CompanyRepository.Get(e => !e.IsDeleted && e.IsActive && e.IdentityCode == model.CompanyVerficationCode).FirstOrDefault();
+
+            var getCompany = repositoryManager.CompanyRepository.
+                Get(e => !e.IsDeleted && e.IsActive && e.IdentityCode == model.CompanyVerficationCode).
+                FirstOrDefault();
+
             #endregion
 
             #region get Employee

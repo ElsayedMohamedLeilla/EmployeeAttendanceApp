@@ -518,7 +518,7 @@
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
-        public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
+        public const string SorryYouMustEnterDeviceNotificationsToken = "Sorry!!YouMustEnterDeviceNotificationsToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonLogNotFound = "Sorry!!SummonLogNotFound!";
@@ -662,6 +662,12 @@
         public const string SummonDate = "SummonDate";
         public const string DoNotForgetSignIn = "DoNotForgetSignIn";
         public const string DoNotForgetToFingerprintForYourSignIn = "DoNotForgetToFingerprintForYourSignIn";
+
+        public const string ForgetSignIn = "ForgetSignIn";
+        public const string DoNotForgetSignOut = "DoNotForgetSignOut";
+        public const string ForgetSignOut = "ForgetSignOut";
+        public const string YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible";
+        
 
     }
 }

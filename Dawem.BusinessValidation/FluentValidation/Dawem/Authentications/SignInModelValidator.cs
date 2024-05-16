@@ -21,9 +21,9 @@ namespace Dawem.Validation.FluentValidation.Dawem.Authentications
                 .IsInEnum().
                 WithMessage(LeillaKeys.SorryYouMustEnterApplicationType);
 
-            /*RuleFor(signInModel => signInModel.DeviceToken)
-                .Must(d=> !string.IsNullOrEmpty(d) && !string.IsNullOrWhiteSpace(d)).
-                WithMessage(LeillaKeys.SorryYouMustEnterDeviceToken);*/
+            RuleFor(signInModel => signInModel.FCMToken)
+                .Must(d=> !string.IsNullOrEmpty(d) && !string.IsNullOrWhiteSpace(d) && d.Length > 100).
+                WithMessage(LeillaKeys.SorryYouMustEnterDeviceNotificationsToken);
         }
     }
 }

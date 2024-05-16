@@ -22,6 +22,9 @@
         SummonMissed,
         NewChangeInSchedule,
         DoNotForgetSummon,
-        DoNotForgetSignIn
+        DoNotForgetSignIn,
+        ForgetSignIn,
+        DoNotForgetSignOut,
+        ForgetSignOut
     }
 }

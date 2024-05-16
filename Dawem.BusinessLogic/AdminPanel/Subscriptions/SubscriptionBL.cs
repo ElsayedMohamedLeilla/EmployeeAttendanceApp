@@ -134,7 +134,6 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var subscriptionRepository = repositoryManager.SubscriptionRepository;
             var query = subscriptionRepository.GetAsQueryable(criteria);
-            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
@@ -153,10 +152,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Code = subscription.Code,
                 PlanName = subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 CompanyName = subscription.Company.Name,
-                EndDate = subscription.EndDate,
-                Status = subscription.Status,
-                IsActive = subscription.IsActive,
-                StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang)
+                StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang),
+                IsWaitingForApproval = subscription.IsWaitingForApproval,
             }).ToListAsync();
 
             return new GetSubscriptionsResponse
@@ -206,7 +203,6 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetSubscriptionInfoResponseModel> GetInfo(int subscriptionId)
         {
-            var isArabic = requestInfo.Lang == LeillaKeys.Ar;
             var subscription = await repositoryManager.SubscriptionRepository.Get(e => e.Id == subscriptionId && !e.IsDeleted)
                 .Select(subscription => new GetSubscriptionInfoResponseModel
                 {

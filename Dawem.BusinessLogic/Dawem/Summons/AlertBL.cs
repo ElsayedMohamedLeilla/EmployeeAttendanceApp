@@ -329,7 +329,6 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             await notificationHandleBL.HandleNotifications(handleNotificationModel);
                         }
-
                     }
 
                     #endregion

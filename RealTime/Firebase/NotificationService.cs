@@ -39,7 +39,7 @@ public class NotificationService : INotificationService
 
         ResponseModel response = new();
 
-        var notificationData = await GetNotificationData(notificationType);
+        var notificationData = GetNotificationData(notificationType);
         var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
         var userToken = GetUserTokens(userIds);
         var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
@@ -241,12 +241,11 @@ public class NotificationService : INotificationService
             .Select(t => t.Token)
             .ToList());
     }
-    private async Task<Dictionary<string, string>> GetNotificationData(NotificationType notificationType)
+    private Dictionary<string, string> GetNotificationData(NotificationType notificationType)
     {
         NotificationDataModel model = new()
         {
-            NotificationType = notificationType,
-            UnReadNotificationCount = await notificationBL.GetUnreadNotificationCount()
+            NotificationType = notificationType
         };
         string jsonString = JsonSerializer.Serialize(model);
 

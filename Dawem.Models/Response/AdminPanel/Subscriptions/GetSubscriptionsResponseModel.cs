@@ -1,6 +1,4 @@
-﻿using Dawem.Enums.Generals;
-
-namespace Dawem.Models.Response.AdminPanel.Subscriptions
+﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions
 {
     public class GetSubscriptionsResponseModel
     {
@@ -10,5 +8,6 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions
         public string CompanyName { get; set; }
         public string StatusName { get; set; }
         public bool IsWaitingForApproval { get; set; }
+        public bool IsActive { get; set; }
     }
 }

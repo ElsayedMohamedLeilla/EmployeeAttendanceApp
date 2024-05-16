@@ -17,6 +17,7 @@ using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.AdminPanel.Subscriptions;
 using Dawem.Translations;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
@@ -154,6 +155,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 CompanyName = subscription.Company.Name,
                 StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang),
                 IsWaitingForApproval = subscription.IsWaitingForApproval,
+                IsActive = subscription.IsActive
             }).ToListAsync();
 
             return new GetSubscriptionsResponse

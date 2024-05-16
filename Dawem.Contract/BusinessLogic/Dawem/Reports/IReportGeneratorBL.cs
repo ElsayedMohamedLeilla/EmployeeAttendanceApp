@@ -14,6 +14,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
         HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(GetEmployeeAttendanceInPeriodReportParameters param);
         HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(GetEmployeeAttendanceInPeriodReportParameters param);
         HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(GetEmployeeAttendanceInPeriodReportParameters param);
+        HttpResponseMessage GenerateEmployeeVacanciesInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param);
         HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param);
         public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType);
         

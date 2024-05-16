@@ -129,7 +129,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             }
             return NotFound();
         }
-
         [HttpPost]
         public IActionResult GetLateEarlyArrivalGroupByEmployeeReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
         {

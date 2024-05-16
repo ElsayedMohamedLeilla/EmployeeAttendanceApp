@@ -14,6 +14,11 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public string ZoneName { get; set; }
         public string DepartmentName { get; set; }
         public string JobTitleName { get; set; }
+        public bool? WithPermision { get; set; }
+        public bool? BothWithandWithoutPermision { get; set; }
+
+
+
 
 
 

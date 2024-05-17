@@ -451,7 +451,8 @@ namespace Dawem.Data
 
             #region Handle Is Two Days Shift
 
-            var employeeAttendances = context.EmployeeAttendances.ToList();
+
+            /*var employeeAttendances = context.EmployeeAttendances.ToList();
        
             if (employeeAttendances != null && employeeAttendances.Count > 0)
             {
@@ -461,7 +462,31 @@ namespace Dawem.Data
                         IsTwoDaysShift(employeeAttendance.ShiftCheckInTime, employeeAttendance.ShiftCheckOutTime);
                 }
                 context.SaveChanges();
-            }
+            }*/
+
+            #endregion
+
+
+            #region Handle Is Two Days Shift
+
+            /*var employeeAttendances = context.EmployeeAttendances.ToList();
+            var employeeAttendanceChecks = context.EmployeeAttendanceChecks.ToList();
+
+            if (employeeAttendances != null && employeeAttendances.Count > 0)
+            {
+                foreach (var employeeAttendance in employeeAttendances)
+                {
+                    var getChecks = employeeAttendanceChecks.Where(c => c.EmployeeAttendanceId == employeeAttendance.Id).ToList();
+
+                    employeeAttendance.FingerPrintStatus = getChecks.
+                        Any(c=> !c.IsDeleted && c.FingerPrintType==FingerPrintType.CheckIn) && getChecks.
+                        Any(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) ? 
+                        AttendanceFingerPrintStatus.CheckInAndCheckOut : getChecks.
+                        Any(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) ? 
+                        AttendanceFingerPrintStatus.CheckIn : AttendanceFingerPrintStatus.NotSet;
+                }
+                context.SaveChanges();
+            }*/
 
             #endregion
 

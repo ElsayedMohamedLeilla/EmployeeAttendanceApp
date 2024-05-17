@@ -1,6 +1,7 @@
 ﻿using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,6 +33,7 @@ namespace Dawem.Domain.Entities.Attendances
         public decimal? TotalLateArrivalsHours { get; set; }
         public decimal? TotalEarlyDeparturesHours { get; set; }
         public decimal? TotalOverTimeHours { get; set; }
+        public AttendanceFingerPrintStatus FingerPrintStatus { get; set; }
         public int AllowedMinutes { get; set; }
         public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
         public bool InsertedFromExcel { get; set; }

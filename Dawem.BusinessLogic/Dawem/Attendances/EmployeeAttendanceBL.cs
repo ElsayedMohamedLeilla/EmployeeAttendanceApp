@@ -51,19 +51,18 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Hanlde FingerPrint
 
-            var getAttandanceId = await repositoryManager
+            var getEmployeeAttendance = await repositoryManager
                 .EmployeeAttendanceRepository
-                .Get(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
+                .GetWithTracking(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
                 && e.LocalDate.Date == validationResult.LocalDateTime.Date)
-                .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
             //checkout or summon
-            if (getAttandanceId > 0)
-            {
+            if (getEmployeeAttendance != null)
+            {                
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
-                    EmployeeAttendanceId = getAttandanceId,
+                    EmployeeAttendanceId = getEmployeeAttendance.Id,
                     SummonId = validationResult.SummonId,
                     ZoneId = validationResult.ZoneId,
                     FingerPrintType = validationResult.FingerPrintType,
@@ -77,6 +76,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     RecognitionWay.FingerPrint : model.RecognitionWay,
                     FingerprintSource = FingerprintSource.MobileDevice
                 });
+
+                getEmployeeAttendance.FingerPrintStatus = AttendanceFingerPrintStatus.CheckInAndCheckOut;
+                await unitOfWork.SaveAsync();
 
                 #region Summon Log
 
@@ -125,7 +127,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     LocalDate = validationResult.LocalDateTime,
                     EmployeeId = validationResult.EmployeeId,
                     IsActive = true,
-                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
+                    FingerPrintStatus = AttendanceFingerPrintStatus.CheckIn,
+                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new() {
                         FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
                         ZoneId = validationResult.ZoneId,

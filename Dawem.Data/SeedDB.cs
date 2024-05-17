@@ -448,6 +448,23 @@ namespace Dawem.Data
 
             #endregion
 
+
+            #region Handle Is Two Days Shift
+
+            var employeeAttendances = context.EmployeeAttendances.ToList();
+       
+            if (employeeAttendances != null && employeeAttendances.Count > 0)
+            {
+                foreach (var employeeAttendance in employeeAttendances)
+                {
+                    employeeAttendance.IsTwoDaysShift = TimeHelper.
+                        IsTwoDaysShift(employeeAttendance.ShiftCheckInTime, employeeAttendance.ShiftCheckOutTime);
+                }
+                context.SaveChanges();
+            }
+
+            #endregion
+
         }
     }
 }

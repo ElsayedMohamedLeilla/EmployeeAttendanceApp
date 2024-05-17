@@ -118,6 +118,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ShiftId = validationResult.ShiftId,
                     ShiftCheckInTime = validationResult.ShiftCheckInTime,
                     ShiftCheckOutTime = validationResult.ShiftCheckOutTime,
+                    IsTwoDaysShift = validationResult.IsTwoDaysShift,
                     AllowedMinutes = validationResult.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,

@@ -344,15 +344,15 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var getDoNotForgetSignOutEmployeesList = await repositoryManager
                            .EmployeeRepository.Get(employee => !employee.IsDeleted &&
                             employee.Users.Any(u => !u.IsDeleted) && employee.ScheduleId != null &&
-                            employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
 
-                            !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ((sd.Shift.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate) &&
+                            !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ((/*sd.Shift.IsTwoDaysShift &&*/ false && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate) &&
                             ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)) &&
 
+                            employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek) &&
-
                             ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckOutTime &&
                             EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0), (DateTime)(object)sd.Shift.CheckOutTime) <= 15) &&
+                           
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.DoNotForgetSignOut &&
@@ -364,14 +364,10 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                EmployeeId = employee.Id,
                                UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
                                ShiftCheckOutTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
-
-                               !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ((sd.Shift.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate) &&
-                                ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)) &&
-
                                ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
                            }).ToListAsync();
 
-                if (false && getDoNotForgetSignOutEmployeesList != null && getDoNotForgetSignOutEmployeesList.Count > 0)
+                if (getDoNotForgetSignOutEmployeesList != null && getDoNotForgetSignOutEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -420,6 +416,102 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                 UserIds = userIds,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.DoNotForgetSignOut,
+                                NotificationStatus = NotificationStatus.Info,
+                                Priority = NotificationPriority.Medium,
+                                NotificationDescriptions = notificationDescriptions,
+                                ActiveLanguages = getActiveLanguages,
+                                HelperNumber = (int)utcDateTime.DayOfWeek,
+                                HelperDate = utcDateTime
+                            };
+
+                            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+                        }
+
+                    }
+
+                    #endregion
+                }
+
+                #endregion
+
+                #region Handle Forget To Sign-Out
+
+                var getForgetSignOutEmployeesList = await repositoryManager
+                           .EmployeeRepository.Get(employee => !employee.IsDeleted &&
+                            employee.Users.Any(u => !u.IsDeleted) && employee.ScheduleId != null &&
+
+                            !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ((/*sd.Shift.IsTwoDaysShift &&*/false && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate) &&
+                            ea.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.FingerPrintType == FingerPrintType.CheckOut)) &&
+
+                            employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
+
+                            ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek) &&
+
+                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckOutTime &&
+                            EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckOutTime, ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0)) <= 15) &&
+                            !employee.Company.Notifications.Any(en => !en.IsDeleted &&
+                                en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
+                                en.NotificationType == NotificationType.ForgetSignOut &&
+                                en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
+                                en.HelperDate.Value.Date == utcDate)).
+                           Select(employee => new
+                           {
+                               employee.CompanyId,
+                               EmployeeId = employee.Id,
+                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               ShiftCheckOutTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
+                               ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
+                           }).ToListAsync();
+
+                if (getForgetSignOutEmployeesList != null && getForgetSignOutEmployeesList.Count > 0)
+                {
+                    #region Handle Notifications
+
+                    requestInfo.Lang = LeillaKeys.Ar;
+
+                    var forgetSignOutEmployeesGroupedBycompany = getForgetSignOutEmployeesList.
+                        GroupBy(m => m.CompanyId).
+                        ToList();
+
+                    foreach (var forgetSignOutEmployeesCompanyGroup in forgetSignOutEmployeesGroupedBycompany)
+                    {
+                        var companyId = forgetSignOutEmployeesCompanyGroup.First().CompanyId;
+
+                        var forgetSignOutEmployeesGroupedByShiftCheckOutTime = forgetSignOutEmployeesCompanyGroup.
+                                GroupBy(m => m.ShiftCheckOutTime).
+                                ToList();
+                        foreach (var forgetSignOutEmployeesGroup in forgetSignOutEmployeesGroupedByShiftCheckOutTime)
+                        {
+                            var employeeIds = forgetSignOutEmployeesGroup.Select(m => m.EmployeeId).ToList();
+                            var userIds = forgetSignOutEmployeesGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var shiftCheckOutTime = new DateTime(forgetSignOutEmployeesGroup.First().ShiftCheckOutTime.Ticks);
+
+                            #region Handle Summon Description
+
+                            var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                            foreach (var language in getActiveLanguages)
+                            {
+                                notificationDescriptions.Add(new NotificationDescriptionModel
+                                {
+                                    LanguageIso2 = language.ISO2,
+                                    Description = TranslationHelper.GetTranslation(LeillaKeys.YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible, language.ISO2) +
+                                        LeillaKeys.Space +
+                                        TranslationHelper.GetTranslation(LeillaKeys.CheckOutTime, language.ISO2) +
+                                        LeillaKeys.ColonsThenSpace +
+                                        shiftCheckOutTime.ToString("hh:mm") + LeillaKeys.Space +
+                                        DateHelper.TranslateAmAndPm(shiftCheckOutTime.ToString("tt"), language.ISO2)
+                                });
+                            }
+
+                            #endregion
+
+                            var handleNotificationModel = new HandleNotificationModel
+                            {
+                                CompanyId = companyId,
+                                UserIds = userIds,
+                                EmployeeIds = employeeIds,
+                                NotificationType = NotificationType.ForgetSignOut,
                                 NotificationStatus = NotificationStatus.Info,
                                 Priority = NotificationPriority.Medium,
                                 NotificationDescriptions = notificationDescriptions,

@@ -14,6 +14,7 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
+using Dawem.Enums.Generals;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
@@ -399,6 +400,11 @@ namespace Dawem.Data
                 HasIndex(p => p.CheckInTime);
             builder.Entity<ShiftWorkingTime>().
                 HasIndex(p => p.CheckOutTime);
+            builder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.AllowedMinutes);
+            builder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.IsTwoDaysShift);
+            
 
             builder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.LocalDate);
@@ -413,6 +419,10 @@ namespace Dawem.Data
                 HasIndex(p => p.FingerPrintDateUTC);
             builder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintType);
+
+            builder.Entity<ScheduleDay>().
+                HasIndex(p => p.WeekDay);
+            
 
             #endregion
 

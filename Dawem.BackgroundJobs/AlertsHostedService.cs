@@ -25,6 +25,8 @@ namespace Dawem.BackgroundJobs
             do
             {
                 
+                
+                
                 if (DateTime.UtcNow > _nextRun)
                 {
                     await Process();

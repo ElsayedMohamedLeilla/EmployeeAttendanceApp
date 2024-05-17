@@ -27,6 +27,7 @@ namespace Dawem.Domain.Entities.Attendances
         public DateTime LocalDate { get; set; }
         public TimeSpan ShiftCheckInTime { get; set; }
         public TimeSpan ShiftCheckOutTime { get; set; }
+        public bool IsTwoDaysShift { get; set; }
         public decimal? TotalWorkingHours { get; set; }
         public decimal? TotalLateArrivalsHours { get; set; }
         public decimal? TotalEarlyDeparturesHours { get; set; }

@@ -238,6 +238,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 LocalDateTime = clientLocalDateTime,
                 ShiftCheckInTime = shiftInfo.ShiftCheckInTime,
                 ShiftCheckOutTime = shiftInfo.ShiftCheckOutTime,
+                IsTwoDaysShift = shiftInfo.IsTwoDaysShift,
                 AllowedMinutes = shiftInfo.ShiftAllowedMinutes,
                 FingerPrintType = fingerPrintType
             };
@@ -426,6 +427,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                                ShiftId = weekShift.Shift.Id,
                                ShiftCheckInTime = weekShift.Shift.CheckInTime,
                                ShiftCheckOutTime = weekShift.Shift.CheckOutTime,
+                               IsTwoDaysShift = weekShift.Shift.IsTwoDaysShift,
                                ShiftAllowedMinutes = weekShift.Shift.AllowedMinutes
                            } : null
                        }).ToList()

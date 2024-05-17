@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 
 namespace Dawem.Models.Response.Dawem.Attendances
 {
-    public class CheckIfShiftIs24HoursResponseModel
+    public class CheckIfShiftIsTwoDaysShiftResponseModel
     {
         public DateTime ClientLocalDateTime { get; set; }
         public ShiftInfoModel ShiftInfo { get; set; }

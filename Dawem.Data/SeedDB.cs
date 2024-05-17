@@ -3,6 +3,7 @@ using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
+using Dawem.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -393,7 +394,6 @@ namespace Dawem.Data
 
             #endregion
 
-
             #region Handle time zones
 
             /* var fullPath3 = "C:\\Users\\Leilla\\Downloads\\\\Documents\\time-zone-country-code.json";
@@ -429,6 +429,22 @@ namespace Dawem.Data
 
              }
             */
+
+            #endregion
+
+            #region Handle Is Two Days Shift
+
+            /*var shiftWorkingTimes = context.ShiftWorkingTimes.ToList();
+       
+            if (shiftWorkingTimes != null && shiftWorkingTimes.Count > 0)
+            {
+                foreach (var shiftWorkingTime in shiftWorkingTimes)
+                {
+                    shiftWorkingTime.IsTwoDaysShift = TimeHelper.
+                        IsTwoDaysShift(shiftWorkingTime.CheckInTime, shiftWorkingTime.CheckOutTime);
+                }
+                context.SaveChanges();
+            }*/
 
             #endregion
 

@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Dtos.Dawem.Attendances
 {
-    public class CheckIfShift24HoursModel
+    public class CheckIfShiftIsTwoDaysShiftModel
     {
         public DateTime ClientLocalDateTime { get; set; }
         public int EmployeeId { get; set; }

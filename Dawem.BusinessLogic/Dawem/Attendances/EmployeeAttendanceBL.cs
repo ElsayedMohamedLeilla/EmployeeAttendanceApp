@@ -1056,15 +1056,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 var startDateTime = day.StartDateTime.Value.TimeOfDay;
                 var endDateTime = day.EndDateTime.Value.TimeOfDay;
 
-                var shiftCheckInTimeType = startDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-                var shiftCheckOutTimeType = endDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-
-                var is24HoursShift = (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
-                    (((shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM) ||
-                    (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM)) && 
-                    startDateTime > endDateTime);
-
-                if (is24HoursShift)
+                var isTwoDaysShift = TimeHelper.IsTwoDaysShift(startDateTime, endDateTime);
+                
+                if (isTwoDaysShift)
                 {
                     day.StartDateTime = new DateTime(day.StartDateTime.Value.TimeOfDay.Ticks);
                     day.EndDateTime = new DateTime(day.EndDateTime.Value.TimeOfDay.Ticks).AddDays(1);

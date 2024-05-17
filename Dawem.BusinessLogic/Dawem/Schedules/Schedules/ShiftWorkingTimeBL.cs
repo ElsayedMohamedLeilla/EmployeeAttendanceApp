@@ -74,18 +74,19 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
                 .MaxAsync() + 1;
             #endregion
 
-            var ShiftWorkingTime = mapper.Map<ShiftWorkingTime>(model);
-            ShiftWorkingTime.CompanyId = requestInfo.CompanyId;
-            ShiftWorkingTime.AddUserId = requestInfo.UserId;
-            ShiftWorkingTime.Code = getNextCode;
-            repositoryManager.ShiftWorkingTimeRepository.Insert(ShiftWorkingTime);
+            var shiftWorkingTime = mapper.Map<ShiftWorkingTime>(model);
+            shiftWorkingTime.CompanyId = requestInfo.CompanyId;
+            shiftWorkingTime.AddUserId = requestInfo.UserId;
+            shiftWorkingTime.Code = getNextCode;
+            shiftWorkingTime.IsTwoDaysShift = TimeHelper.IsTwoDaysShift(shiftWorkingTime.CheckInTime, shiftWorkingTime.CheckOutTime);
+            repositoryManager.ShiftWorkingTimeRepository.Insert(shiftWorkingTime);
             await unitOfWork.SaveAsync();
 
             #endregion
 
             #region Handle Response
             await unitOfWork.CommitAsync();
-            return ShiftWorkingTime.Id;
+            return shiftWorkingTime.Id;
             #endregion
 
         }
@@ -135,6 +136,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
             getShiftWorkingTime.IsActive = model.IsActive;
             getShiftWorkingTime.ModifiedDate = DateTime.UtcNow;
             getShiftWorkingTime.ModifyUserId = requestInfo.UserId;
+            getShiftWorkingTime.IsTwoDaysShift = TimeHelper.IsTwoDaysShift(model.CheckInTime, model.CheckOutTime);
             await unitOfWork.SaveAsync();
 
             #endregion

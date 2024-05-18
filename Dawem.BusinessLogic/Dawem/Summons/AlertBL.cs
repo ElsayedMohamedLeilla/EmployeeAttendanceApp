@@ -214,7 +214,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
 
-                if (getDoNotForgetSignInEmployeesList != null && getDoNotForgetSignInEmployeesList.Count > 0)
+                if (false && getDoNotForgetSignInEmployeesList != null && getDoNotForgetSignInEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -325,7 +325,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
 
-                if (getForgetSignInEmployeesList != null && getForgetSignInEmployeesList.Count > 0)
+                if (false && getForgetSignInEmployeesList != null && getForgetSignInEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -399,6 +399,10 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted &&
                             ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckInAndCheckOut &&
+                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate)) &&
+
+                            employee.EmployeeAttendances.Any(ea => !ea.IsDeleted &&
+                            ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckIn &&
                             ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate)) &&
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
@@ -510,9 +514,12 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted &&
                             ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckInAndCheckOut &&
+                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate)) &&
 
-                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate))
-                            &&
+                            employee.EmployeeAttendances.Any(ea => !ea.IsDeleted &&
+                            ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckIn &&
+                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate)) &&
+
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
 
                             ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek) &&

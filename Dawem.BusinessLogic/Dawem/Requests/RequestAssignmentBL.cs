@@ -593,14 +593,14 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            /*if (request.Status == RequestStatus.Accepted)
+            if (request.Status == RequestStatus.Accepted)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyAccepted);
             }
             else if (request.Status == RequestStatus.Rejected)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyRejected);
-            }*/
+            }
 
             request.Status = RequestStatus.Accepted;
             request.DecisionUserId = requestInfo.UserId;

@@ -97,6 +97,7 @@
         public const string GetAllScreens = "GetAllScreens";
         public const string GetAllActions = "GetAllActions";
         public const string GetHeaderInformations = "GetHeaderInformations";
+        public const string SignOut = "SignOut";
         public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";

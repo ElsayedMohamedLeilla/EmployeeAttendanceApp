@@ -10,6 +10,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Dawem.BusinessLogic.Dawem.Summons
 {
@@ -41,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var utcDate = DateTime.UtcNow.Date;
                 var utcDateMinusOne = utcDateTimeMinusOne.Date;
                 var utcTime = DateTime.UtcNow.TimeOfDay;
-                var utcDayOfWeek = DateTime.UtcNow.DayOfWeek;
+                var utcDayOfWeek = (int)DateTime.UtcNow.DayOfWeek;
                 var utcDayOfWeekMinusOne = utcDateTimeMinusOne.DayOfWeek;
 
                 var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
@@ -185,12 +186,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckInTime &&
+                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckInTime &&         
                             EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0), (DateTime)(object)sd.Shift.CheckInTime) <= 15) &&
+
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.DoNotForgetSignIn &&
-                                en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
+                                en.HelperNumber == utcDayOfWeek && en.HelperDate != null &&
                                 en.HelperDate.Value.Date == utcDate)).
                            Select(employee => new
                            {
@@ -216,7 +218,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
 
-                if ( getDoNotForgetSignInEmployeesList != null && getDoNotForgetSignInEmployeesList.Count > 0)
+                if (getDoNotForgetSignInEmployeesList != null && getDoNotForgetSignInEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -295,13 +297,12 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckInTime &&
-                            EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckInTime, ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0)) > 1) &&
+                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckInTime) &&
 
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.ForgetSignIn &&
-                                en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
+                                en.HelperNumber == utcDayOfWeek && en.HelperDate != null &&
                                 en.HelperDate.Value.Date == utcDate)).
                            Select(employee => new
                            {
@@ -314,7 +315,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                    Id = u.Id,
                                    Email = u.Email,
                                    UserTokens = u.NotificationUsers.
-                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.Any(f => !f.IsDeleted)).
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
                                     SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
                                     Select(f => new NotificationUserTokenModel
                                     {
@@ -326,7 +328,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
 
-                if ( getForgetSignInEmployeesList != null && getForgetSignInEmployeesList.Count > 0)
+                if (getForgetSignInEmployeesList != null && getForgetSignInEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -414,7 +416,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationType == NotificationType.DoNotForgetSignOut &&
                                 en.HelperDate.Value.Date == utcDate &&
-                                en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
+                                en.HelperNumber == utcDayOfWeek && en.HelperDate != null &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id))).
                            Select(employee => new
                            {
@@ -440,7 +442,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
                            }).ToListAsync();
 
-                if ( getDoNotForgetSignOutEmployeesList != null && getDoNotForgetSignOutEmployeesList.Count > 0)
+                if (getDoNotForgetSignOutEmployeesList != null && getDoNotForgetSignOutEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 
@@ -531,7 +533,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                              !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationType == NotificationType.ForgetSignOut &&
                                 en.HelperDate.Value.Date == utcDate &&
-                                en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
+                                en.HelperNumber == utcDayOfWeek && en.HelperDate != null &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id))).
                            Select(employee => new
                            {
@@ -557,7 +559,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
                            }).ToListAsync();
 
-                if ( getForgetSignOutEmployeesList != null && getForgetSignOutEmployeesList.Count > 0)
+                if (getForgetSignOutEmployeesList != null && getForgetSignOutEmployeesList.Count > 0)
                 {
                     #region Handle Notifications
 

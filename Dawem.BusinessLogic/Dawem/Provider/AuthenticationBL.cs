@@ -398,6 +398,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     {
                         var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
+                            CompanyId = user.CompanyId ?? 0,
                             NotificationUserId = getNotificationUser.Id,
                             FCMToken = model.FCMToken,
                             DeviceType = model.ApplicationType,
@@ -542,7 +543,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.UserId, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.CompanyId , criteria.CompanyId.ToString()),
-                new Claim(LeillaKeys.ApplicationType , criteria.ApplicationType.ToString())
+                new Claim(LeillaKeys.ApplicationType , ((int)criteria.ApplicationType).ToString())
             });
             if (criteria.RememberMe)
             {

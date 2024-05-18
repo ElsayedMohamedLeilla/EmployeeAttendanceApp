@@ -98,13 +98,12 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             model.NotificationDescriptions.FirstOrDefault(d => d.LanguageIso2 == requestInfo.Lang).Description :
             NotificationHelper.GetNotificationDescription(model.NotificationType, requestInfo.Lang);
 
-            if (model.UserIds != null && model.UserIds.Count > 0)
+            if (model.NotificationUsers != null && model.NotificationUsers.Count > 0)
             {
                 var sendNotificationsAndEmailsModel = new SendNotificationsAndEmailsModel
                 {
                     Title = shortMessage,
                     Body = fullMessage,
-                    //UserIds = model.UserIds,
                     NotificationUsers = model.NotificationUsers,
                     NotificationType = model.NotificationType,
                     NotificationStatus = model.NotificationStatus

@@ -149,7 +149,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     UserTokens = u.NotificationUsers.
                     Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
                     Any(f => !f.IsDeleted)).
-                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => f.IsDeleted).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
                     Select(f => new NotificationUserTokenModel
                     {
                         ApplicationType = f.DeviceType,
@@ -593,14 +593,14 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 .GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == requestId) ??
                throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
-            if (request.Status == RequestStatus.Accepted)
+            /*if (request.Status == RequestStatus.Accepted)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyAccepted);
             }
             else if (request.Status == RequestStatus.Rejected)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryRequestAlreadyRejected);
-            }
+            }*/
 
             request.Status = RequestStatus.Accepted;
             request.DecisionUserId = requestInfo.UserId;
@@ -619,7 +619,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     Email = u.Email,
                     UserTokens = u.NotificationUsers.Any() ? u.NotificationUsers.
                     Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.Any(f => !f.IsDeleted)).
-                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => f.IsDeleted).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
                     Select(f => new NotificationUserTokenModel
                     {
                         ApplicationType = f.DeviceType,
@@ -677,7 +677,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     Email = u.Email,
                     UserTokens = u.NotificationUsers.Any() ? u.NotificationUsers.
                     Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.Any(f => !f.IsDeleted)).
-                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => f.IsDeleted).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
                     Select(f => new NotificationUserTokenModel
                     {
                         ApplicationType = f.DeviceType,

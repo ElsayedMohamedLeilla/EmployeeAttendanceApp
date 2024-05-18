@@ -20,6 +20,7 @@ using Dawem.Models.Dtos.Dawem.Excel.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
@@ -290,10 +291,23 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 var oldScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == oldScheduleId)?.Name;
                 var newScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == newScheduleId)?.Name;
 
-                var userIds = await repositoryManager.UserRepository.
+                var notificationUsers = await repositoryManager.UserRepository.
                 Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
                 employeeIds.Contains(s.EmployeeId.Value)).
-                Select(u => u.Id).ToListAsync();
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
 
                 #region Handle Notification Description
 
@@ -327,7 +341,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
                 var handleNotificationModel = new HandleNotificationModel
                 {
-                    UserIds = userIds,
+                    NotificationUsers = notificationUsers,
                     EmployeeIds = employeeIds,
                     NotificationType = NotificationType.NewChangeInSchedule,
                     NotificationStatus = NotificationStatus.Info,

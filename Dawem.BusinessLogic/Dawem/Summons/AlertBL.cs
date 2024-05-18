@@ -7,6 +7,7 @@ using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,7 +69,21 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                            {
                                employee.CompanyId,
                                EmployeeId = employee.Id,
-                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               NotificationUsers = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).
+                               Select(u => new NotificationUserModel
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserTokens = u.NotificationUsers.
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
+                                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                    Select(f => new NotificationUserTokenModel
+                                    {
+                                        ApplicationType = f.DeviceType,
+                                        Token = f.FCMToken
+                                    })).ToList()
+                               }).ToList() : null,
                                SummonDate = employee.SummonLogs.FirstOrDefault(sl => !sl.IsDeleted && !sl.DoneSummon &&
                                 EF.Functions.DateDiffMinute(sl.Summon.StartDateAndTimeUTC, utcDateTime) >= 1 &&
                                  utcDateTime < sl.Summon.EndDateAndTimeUTC &&
@@ -104,7 +119,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         foreach (var doNotForgetSummonGroup in doNotForgetSummonEmployeesGroupedBySummon)
                         {
                             var employeeIds = doNotForgetSummonGroup.Select(m => m.EmployeeId).ToList();
-                            var userIds = doNotForgetSummonGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var notificationUsers = doNotForgetSummonGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                             var summonDate = doNotForgetSummonGroup.First().SummonDate;
                             var summonId = doNotForgetSummonGroup.First().SummonId;
 
@@ -137,7 +152,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             var handleNotificationModel = new HandleNotificationModel
                             {
                                 CompanyId = companyId,
-                                UserIds = userIds,
+                                NotificationUsers = notificationUsers,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.DoNotForgetSummon,
                                 NotificationStatus = NotificationStatus.Info,
@@ -165,7 +180,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ea.LocalDate.Date == utcDate &&
                             (ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckIn ||
                             ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckInAndCheckOut)) &&
-                            
+
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
                             ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckInTime &&
@@ -179,7 +194,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                            {
                                employee.CompanyId,
                                EmployeeId = employee.Id,
-                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               NotificationUsers = employee.Users != null ? employee.Users.
+                               Where(u => !u.IsDeleted).
+                               Select(u => new NotificationUserModel
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserTokens = u.NotificationUsers.
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
+                                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                    Select(f => new NotificationUserTokenModel
+                                    {
+                                        ApplicationType = f.DeviceType,
+                                        Token = f.FCMToken
+                                    })).ToList()
+                               }).ToList() : null,
                                ShiftCheckInTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
@@ -204,7 +234,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         foreach (var doNotForgetSignInEmployeesGroup in doNotForgetSignInEmployeesGroupedByShiftCheckInTime)
                         {
                             var employeeIds = doNotForgetSignInEmployeesGroup.Select(m => m.EmployeeId).ToList();
-                            var userIds = doNotForgetSignInEmployeesGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var notificationUsers = doNotForgetSignInEmployeesGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                             var shiftCheckInTime = new DateTime(doNotForgetSignInEmployeesGroup.First().ShiftCheckInTime.Ticks);
 
                             #region Handle Summon Description
@@ -230,7 +260,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             var handleNotificationModel = new HandleNotificationModel
                             {
                                 CompanyId = companyId,
-                                UserIds = userIds,
+                                NotificationUsers = notificationUsers,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.DoNotForgetSignIn,
                                 NotificationStatus = NotificationStatus.Info,
@@ -256,16 +286,16 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 var getForgetSignInEmployeesList = await repositoryManager
                            .EmployeeRepository.Get(employee => !employee.IsDeleted &&
                             employee.Users.Any(u => !u.IsDeleted) && employee.ScheduleId != null &&
-                            
+
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted && ea.LocalDate.Date == utcDate &&
                             (ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckIn ||
                             ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckInAndCheckOut)) &&
-                            
+
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
                             ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckInTime &&
                             EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckInTime, ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0)) > 1) &&
-                            
+
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.ForgetSignIn &&
@@ -275,7 +305,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                            {
                                employee.CompanyId,
                                EmployeeId = employee.Id,
-                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               NotificationUsers = employee.Users != null ? employee.Users.
+                               Where(u => !u.IsDeleted).
+                               Select(u => new NotificationUserModel
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserTokens = u.NotificationUsers.
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
+                                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                    Select(f => new NotificationUserTokenModel
+                                    {
+                                        ApplicationType = f.DeviceType,
+                                        Token = f.FCMToken
+                                    })).ToList()
+                               }).ToList() : null,
                                ShiftCheckInTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
                                     sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek).Shift.CheckInTime
                            }).ToListAsync();
@@ -300,7 +345,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         foreach (var forgetSignInEmployeesGroup in forgetSignInEmployeesGroupedByShiftCheckInTime)
                         {
                             var employeeIds = forgetSignInEmployeesGroup.Select(m => m.EmployeeId).ToList();
-                            var userIds = forgetSignInEmployeesGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var notificationUsers = forgetSignInEmployeesGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                             var shiftCheckInTime = new DateTime(forgetSignInEmployeesGroup.First().ShiftCheckInTime.Ticks);
 
                             #region Handle Summon Description
@@ -326,7 +371,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             var handleNotificationModel = new HandleNotificationModel
                             {
                                 CompanyId = companyId,
-                                UserIds = userIds,
+                                NotificationUsers = notificationUsers,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.ForgetSignIn,
                                 NotificationStatus = NotificationStatus.Info,
@@ -365,12 +410,27 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                 en.NotificationType == NotificationType.DoNotForgetSignOut &&
                                 en.HelperDate.Value.Date == utcDate &&
                                 en.HelperNumber == (int)utcDayOfWeek && en.HelperDate != null &&
-                                en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) )).
+                                en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id))).
                            Select(employee => new
                            {
                                employee.CompanyId,
                                EmployeeId = employee.Id,
-                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               NotificationUsers = employee.Users != null ? employee.Users.
+                               Where(u => !u.IsDeleted).
+                               Select(u => new NotificationUserModel
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserTokens = u.NotificationUsers.
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
+                                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                    Select(f => new NotificationUserTokenModel
+                                    {
+                                        ApplicationType = f.DeviceType,
+                                        Token = f.FCMToken
+                                    })).ToList()
+                               }).ToList() : null,
                                ShiftCheckOutTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
                                ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
                            }).ToListAsync();
@@ -395,7 +455,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         foreach (var doNotForgetSignOutEmployeesGroup in doNotForgetSignOutEmployeesGroupedByShiftCheckOutTime)
                         {
                             var employeeIds = doNotForgetSignOutEmployeesGroup.Select(m => m.EmployeeId).ToList();
-                            var userIds = doNotForgetSignOutEmployeesGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var notificationUsers = doNotForgetSignOutEmployeesGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                             var shiftCheckOutTime = new DateTime(doNotForgetSignOutEmployeesGroup.First().ShiftCheckOutTime.Ticks);
 
                             #region Handle Summon Description
@@ -421,7 +481,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             var handleNotificationModel = new HandleNotificationModel
                             {
                                 CompanyId = companyId,
-                                UserIds = userIds,
+                                NotificationUsers = notificationUsers,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.DoNotForgetSignOut,
                                 NotificationStatus = NotificationStatus.Info,
@@ -451,7 +511,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             !employee.EmployeeAttendances.Any(ea => !ea.IsDeleted &&
                             ea.FingerPrintStatus == AttendanceFingerPrintStatus.CheckInAndCheckOut &&
 
-                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate)) 
+                            ((ea.IsTwoDaysShift && ea.LocalDate.Date == utcDateMinusOne) || ea.LocalDate.Date == utcDate))
                             &&
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
 
@@ -469,7 +529,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                            {
                                employee.CompanyId,
                                EmployeeId = employee.Id,
-                               UsersIds = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null,
+                               NotificationUsers = employee.Users != null ? employee.Users.Where(u => !u.IsDeleted).
+                               Select(u => new NotificationUserModel
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserTokens = u.NotificationUsers.
+                                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                    Any(f => !f.IsDeleted)).
+                                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                    Select(f => new NotificationUserTokenModel
+                                    {
+                                        ApplicationType = f.DeviceType,
+                                        Token = f.FCMToken
+                                    })).ToList()
+                               }).
+                               ToList() : null,
                                ShiftCheckOutTime = employee.Schedule.ScheduleDays.FirstOrDefault(sd => !sd.IsDeleted && sd.ShiftId != null &&
                                ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek)).Shift.CheckOutTime
                            }).ToListAsync();
@@ -494,7 +569,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         foreach (var forgetSignOutEmployeesGroup in forgetSignOutEmployeesGroupedByShiftCheckOutTime)
                         {
                             var employeeIds = forgetSignOutEmployeesGroup.Select(m => m.EmployeeId).ToList();
-                            var userIds = forgetSignOutEmployeesGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                            var notificationUsers = forgetSignOutEmployeesGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                             var shiftCheckOutTime = new DateTime(forgetSignOutEmployeesGroup.First().ShiftCheckOutTime.Ticks);
 
                             #region Handle Summon Description
@@ -520,7 +595,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             var handleNotificationModel = new HandleNotificationModel
                             {
                                 CompanyId = companyId,
-                                UserIds = userIds,
+                                NotificationUsers = notificationUsers,
                                 EmployeeIds = employeeIds,
                                 NotificationType = NotificationType.ForgetSignOut,
                                 NotificationStatus = NotificationStatus.Info,

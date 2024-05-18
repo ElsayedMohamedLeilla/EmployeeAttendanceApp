@@ -2,6 +2,7 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Helpers;
+using Dawem.Models.Context;
 using Dawem.Models.Criteria.Providers;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Providers.Companies;
@@ -13,14 +14,18 @@ namespace Dawem.BusinessLogic.Dawem.Provider
     public class CompanyBranchBL : ICompanyBranchBL
     {
         private readonly IRepositoryManager repositoryManager;
-        public CompanyBranchBL(IRepositoryManager _repositoryManager)
+        private readonly RequestInfo requestInfo;
+        public CompanyBranchBL(IRepositoryManager _repositoryManager, 
+            RequestInfo _requestInfo)
         {
             repositoryManager = _repositoryManager;
+            requestInfo = _requestInfo;
         }
         public async Task<GetCompanyBranchByIdResponseModel> GetById(int branchId)
         {
             var branch = await repositoryManager.CompanyBranchRepository.
-                Get(branch => branch.Id == branchId && !branch.IsDeleted)
+                Get(branch => branch.Id == branchId && 
+                branch.CompanyId == requestInfo.CompanyId)
                 .Select(company => new GetCompanyBranchByIdResponseModel
                 {
                     Id = company.Id,

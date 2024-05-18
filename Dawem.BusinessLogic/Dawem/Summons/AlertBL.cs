@@ -265,6 +265,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
                             ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckInTime &&
                             EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckInTime, ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0)) > 1) &&
+                            
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
                                 en.NotificationType == NotificationType.ForgetSignIn &&

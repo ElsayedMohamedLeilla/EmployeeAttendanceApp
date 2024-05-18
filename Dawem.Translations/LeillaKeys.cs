@@ -102,6 +102,7 @@
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
+        public const string IsDeleted = "IX_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string BLValidationCore = "BLValidationCore";

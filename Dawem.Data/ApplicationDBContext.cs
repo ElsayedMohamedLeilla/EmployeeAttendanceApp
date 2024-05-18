@@ -412,7 +412,10 @@ namespace Dawem.Data
                 HasIndex(p => p.ShiftCheckInTime);
             builder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.ShiftCheckOutTime);
+            builder.Entity<EmployeeAttendance>().
+                HasIndex(p => p.FingerPrintStatus);
 
+           
             builder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintDate);
             builder.Entity<EmployeeAttendanceCheck>().
@@ -430,7 +433,23 @@ namespace Dawem.Data
            .HasMany(d => d.Employees)
            .WithOne(e => e.Department)
            .HasForeignKey(e => e.DepartmentId);
-     
+
+            #region Add Index To All CompanyId And Name In All Tables
+
+            var allIsDeletedEntities = builder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.IsDeleted)));
+
+            foreach (var entityType in allIsDeletedEntities)
+            {
+                var isDeleted = entityType?.GetProperty(nameof(Employee.IsDeleted));
+                if (entityType != null && isDeleted != null)
+                {
+                    entityType.AddIndex(isDeleted, LeillaKeys.IsDeleted)
+                    .IsUnique = false;
+                }
+            }
+
+            #endregion
 
             #region Add Index To All CompanyId And Name In All Tables
 

@@ -59,18 +59,20 @@ namespace Dawem.ReportsModule.Helper
                 switch (exporterModelDTO.ReportType)
                 {
                     case ReportType.EmployeeDailyAttendanceGroupByDayReport:
-                        SetEmployeeDailyAttendanceParameters(report, param);
+                        SetEmployeeDailyAttendanceGroupByDayReportParameters(report, param);
                         break;
                     case ReportType.AttendaceLeaveStatusShortGroupByJobReport:
-                        SetLeaveStatusByJobParameters(report, param);
+                        SetAttendaceLeaveStatusShortGroupByJobReportParameters(report, param);
                         break;
                     case ReportType.AttendanceDetailsByEmployeeIDReport:
-                        SetAttendanceDetailsParameters(report, param);
+                        SetAttendanceDetailsByEmployeeIDReportParameters(report, param);
                         break;
                     case ReportType.LateEarlyArrivalGroupByDepartmentReport:
-                        SetEarlyArrivalGroupByDepartmentParameters(report, param);
+                        SetLateEarlyArrivalGroupByDepartmentReportParameters(report, param);
                         break;
-
+                    case ReportType.AttendaceLeaveStatusByDepartmentIDReport:
+                        SetAttendaceLeaveStatusByDepartmentIDReportParameters(report, param);
+                        break;
                 }
 
                 #endregion
@@ -121,7 +123,7 @@ namespace Dawem.ReportsModule.Helper
 
         }
 
-        private static void SetEmployeeDailyAttendanceParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
             report.SetParameterValue("DepartmentName", param.DepartmentName ?? "كل الاقسام");
@@ -129,17 +131,21 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
 
-        private static void SetLeaveStatusByJobParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetAttendaceLeaveStatusShortGroupByJobReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        {
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+        private static void SetAttendaceLeaveStatusByDepartmentIDReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
 
-        private static void SetAttendanceDetailsParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetAttendanceDetailsByEmployeeIDReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
         }
 
-        private static void SetEarlyArrivalGroupByDepartmentParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetLateEarlyArrivalGroupByDepartmentReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
@@ -148,7 +154,7 @@ namespace Dawem.ReportsModule.Helper
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("WithPermision", param.WithPermision == null ?  false : true);
+            report.SetParameterValue("WithPermision", param.WithPermision == null ? false : true);
             report.SetParameterValue("BothWithandWithoutPermision", param.BothWithandWithoutPermision == null ? false : true);
         }
 

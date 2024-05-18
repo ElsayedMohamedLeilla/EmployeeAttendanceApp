@@ -476,14 +476,19 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         }
         public async Task<bool> SignOut()
         {
-            var getNotificationUserDeviceToken = await repositoryManager.NotificationUserFCMTokenRepository.
-                GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && !f.NotificationUser.IsDeleted &&
+            var getNotificationUserDeviceTokens = await repositoryManager.NotificationUserFCMTokenRepository.
+                GetWithTracking(f => !f.IsDeleted && !f.NotificationUser.IsDeleted &&
                 f.NotificationUser.CompanyId == requestInfo.CompanyId && f.NotificationUser.UserId == requestInfo.UserId &&
-                f.DeviceType == requestInfo.ApplicationType);
+                f.DeviceType == requestInfo.ApplicationType).
+                ToListAsync();
 
-            if (getNotificationUserDeviceToken != null)
+            if (getNotificationUserDeviceTokens != null && getNotificationUserDeviceTokens.Count > 0)
             {
-                getNotificationUserDeviceToken.Delete();
+                foreach (var getNotificationUserDeviceToken in getNotificationUserDeviceTokens)
+                {
+                    getNotificationUserDeviceToken.Delete();
+                }
+
                 await unitOfWork.SaveAsync();
             }
 

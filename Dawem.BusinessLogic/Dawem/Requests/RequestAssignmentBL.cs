@@ -8,7 +8,6 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;

@@ -42,11 +42,11 @@ namespace Dawem.Repository.UserManagement
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
+                userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().StartsWith(criteria.FreeText));
             }
             if (criteria.Code != null)
             {
@@ -55,7 +55,7 @@ namespace Dawem.Repository.UserManagement
 
             if (!string.IsNullOrWhiteSpace(criteria.UserName))
             {
-                userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().Contains(criteria.UserName.ToLower().Trim()));
+                userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().StartsWith(criteria.UserName.ToLower().Trim()));
             }
 
             if (criteria.IsActive != null)
@@ -87,9 +87,9 @@ namespace Dawem.Repository.UserManagement
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.Email != null && x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.And(x => x.Email != null && x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

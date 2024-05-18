@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Criteria.Core;
 using Dawem.Models.Criteria.Lookups;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Dashboard;
 using Dawem.Models.Dtos.Dawem.Employees.AssignmentTypes;
@@ -11,6 +12,7 @@ using Dawem.Models.Dtos.Dawem.Employees.TaskTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
@@ -342,6 +344,18 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-   
-
+    public class GetCompaniesCriteriaValidator : AbstractValidator<GetCompaniesCriteria>
+    {
+        public GetCompaniesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetCompanyBranchesCriteriaValidator : AbstractValidator<GetCompanyBranchesCriteria>
+    {
+        public GetCompanyBranchesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

@@ -3,6 +3,7 @@ using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
+using Dawem.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -393,7 +394,6 @@ namespace Dawem.Data
 
             #endregion
 
-
             #region Handle time zones
 
             /* var fullPath3 = "C:\\Users\\Leilla\\Downloads\\\\Documents\\time-zone-country-code.json";
@@ -429,6 +429,64 @@ namespace Dawem.Data
 
              }
             */
+
+            #endregion
+
+            #region Handle Is Two Days Shift
+
+            /*var shiftWorkingTimes = context.ShiftWorkingTimes.ToList();
+       
+            if (shiftWorkingTimes != null && shiftWorkingTimes.Count > 0)
+            {
+                foreach (var shiftWorkingTime in shiftWorkingTimes)
+                {
+                    shiftWorkingTime.IsTwoDaysShift = TimeHelper.
+                        IsTwoDaysShift(shiftWorkingTime.CheckInTime, shiftWorkingTime.CheckOutTime);
+                }
+                context.SaveChanges();
+            }*/
+
+            #endregion
+
+
+            #region Handle Is Two Days Shift
+
+
+            /*var employeeAttendances = context.EmployeeAttendances.ToList();
+       
+            if (employeeAttendances != null && employeeAttendances.Count > 0)
+            {
+                foreach (var employeeAttendance in employeeAttendances)
+                {
+                    employeeAttendance.IsTwoDaysShift = TimeHelper.
+                        IsTwoDaysShift(employeeAttendance.ShiftCheckInTime, employeeAttendance.ShiftCheckOutTime);
+                }
+                context.SaveChanges();
+            }*/
+
+            #endregion
+
+
+            #region Handle Is Two Days Shift
+
+            /*var employeeAttendances = context.EmployeeAttendances.ToList();
+            var employeeAttendanceChecks = context.EmployeeAttendanceChecks.ToList();
+
+            if (employeeAttendances != null && employeeAttendances.Count > 0)
+            {
+                foreach (var employeeAttendance in employeeAttendances)
+                {
+                    var getChecks = employeeAttendanceChecks.Where(c => c.EmployeeAttendanceId == employeeAttendance.Id).ToList();
+
+                    employeeAttendance.FingerPrintStatus = getChecks.
+                        Any(c=> !c.IsDeleted && c.FingerPrintType==FingerPrintType.CheckIn) && getChecks.
+                        Any(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) ? 
+                        AttendanceFingerPrintStatus.CheckInAndCheckOut : getChecks.
+                        Any(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn) ? 
+                        AttendanceFingerPrintStatus.CheckIn : AttendanceFingerPrintStatus.NotSet;
+                }
+                context.SaveChanges();
+            }*/
 
             #endregion
 

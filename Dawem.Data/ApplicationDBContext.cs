@@ -14,18 +14,22 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
+using Dawem.Enums.Generals;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Data.Entity.Infrastructure;
+using System.Linq.Expressions;
 
 namespace Dawem.Data
 {
@@ -60,23 +64,23 @@ namespace Dawem.Data
 
         public GeneralSetting GeneralSetting { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            builder.HasDefaultSchema("Dawem");
+            modelBuilder.HasDefaultSchema("Dawem");
 
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
             
 
-            foreach (var relationship in builder.Model.GetEntityTypes()
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes()
                    .SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
-            foreach (var entityType in builder.Model.GetEntityTypes())
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (entityType.ClrType.GetProperty(nameof(IBaseEntity.AddedDate)) != null)
                 {
-                    var entityTypeBuilder = builder.Entity(entityType.ClrType);
+                    var entityTypeBuilder = modelBuilder.Entity(entityType.ClrType);
                     entityTypeBuilder
                         .Property(nameof(IBaseEntity.AddedDate))
                         .HasDefaultValueSql(LeillaKeys.GetDateSQL);
@@ -85,7 +89,7 @@ namespace Dawem.Data
 
             #region Handle All decimal Precisions
 
-            var allDecimalProperties = builder.Model.GetEntityTypes()
+            var allDecimalProperties = modelBuilder.Model.GetEntityTypes()
                      .SelectMany(t => t.GetProperties())
                      .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
 
@@ -97,243 +101,243 @@ namespace Dawem.Data
 
             #endregion
 
-            builder.Entity<Translation>().HasIndex(x => new { x.KeyWord, x.Lang }).IsUnique();
-            builder.Entity<MyUser>(entity => { entity.ToTable(name: nameof(MyUser) + LeillaKeys.S).HasKey(x => x.Id); });
-            builder.Entity<UserRole>(entity => { entity.ToTable(name: nameof(UserRole) + LeillaKeys.S); });
-            builder.Entity<UserClaim>(entity => { entity.ToTable(nameof(UserClaim) + LeillaKeys.S); });
-            builder.Entity<UserLogIn>(entity => { entity.ToTable(nameof(UserLogIn) + LeillaKeys.S); });
-            builder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
-            builder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
-            builder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
+            modelBuilder.Entity<Translation>().HasIndex(x => new { x.KeyWord, x.Lang }).IsUnique();
+            modelBuilder.Entity<MyUser>(entity => { entity.ToTable(name: nameof(MyUser) + LeillaKeys.S).HasKey(x => x.Id); });
+            modelBuilder.Entity<UserRole>(entity => { entity.ToTable(name: nameof(UserRole) + LeillaKeys.S); });
+            modelBuilder.Entity<UserClaim>(entity => { entity.ToTable(nameof(UserClaim) + LeillaKeys.S); });
+            modelBuilder.Entity<UserLogIn>(entity => { entity.ToTable(nameof(UserLogIn) + LeillaKeys.S); });
+            modelBuilder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
+            modelBuilder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
+            modelBuilder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
             
             
-                builder.Entity<NotificationTranslation>().
+                modelBuilder.Entity<NotificationTranslation>().
                 HasOne(p => p.Notification).
                 WithMany(b => b.NotificationTranslations).
                 HasForeignKey(p => p.NotificationId).
                 OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<NotificationEmployee>().
+            modelBuilder.Entity<NotificationEmployee>().
                 HasOne(p => p.Notification).
                 WithMany(b => b.NotificationEmployees).
                 HasForeignKey(p => p.NotificationId).
                 OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<UserBranch>().HasOne(p => p.User).
+            modelBuilder.Entity<UserBranch>().HasOne(p => p.User).
                 WithMany(b => b.UserBranches).HasForeignKey(p => p.UserId).
                 OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<UserResponsibility>().
+            modelBuilder.Entity<UserResponsibility>().
                 HasOne(p => p.User).
                 WithMany(b => b.UserResponsibilities).
                 HasForeignKey(p => p.UserId).
                 OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<PlanNameTranslation>().
+            modelBuilder.Entity<PlanNameTranslation>().
                 HasOne(p => p.Plan).
                 WithMany(b => b.PlanNameTranslations).
                 HasForeignKey(p => p.PlanId).
                 OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<CompanyBranch>()
+            modelBuilder.Entity<CompanyBranch>()
              .HasOne(p => p.Company)
              .WithMany(b => b.CompanyBranches)
              .HasForeignKey(p => p.CompanyId)
              .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<CompanyIndustry>()
+            modelBuilder.Entity<CompanyIndustry>()
          .HasOne(p => p.Company)
          .WithMany(b => b.CompanyIndustries)
          .HasForeignKey(p => p.CompanyId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonLog>()
+            modelBuilder.Entity<SummonLog>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonLogs)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonLogSanction>()
+            modelBuilder.Entity<SummonLogSanction>()
          .HasOne(p => p.SummonLog)
          .WithMany(b => b.SummonLogSanctions)
          .HasForeignKey(p => p.SummonLogId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<PermissionScreen>()
+            modelBuilder.Entity<PermissionScreen>()
          .HasOne(p => p.Permission)
          .WithMany(b => b.PermissionScreens)
          .HasForeignKey(p => p.PermissionId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<PermissionScreenAction>()
+            modelBuilder.Entity<PermissionScreenAction>()
         .HasOne(p => p.PermissionScreen)
         .WithMany(b => b.PermissionScreenActions)
         .HasForeignKey(p => p.PermissionScreenId)
         .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestAttachment>()
+            modelBuilder.Entity<RequestAttachment>()
          .HasOne(p => p.Request)
          .WithMany(b => b.RequestAttachments)
          .HasForeignKey(p => p.RequestId)
          .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestAssignment>()
+            modelBuilder.Entity<RequestAssignment>()
          .HasOne(p => p.Request)
          .WithOne(b => b.RequestAssignment)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<RequestTask>()
+            modelBuilder.Entity<RequestTask>()
          .HasOne(p => p.Request)
          .WithOne(b => b.RequestTask)
          .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestTaskEmployee>()
+            modelBuilder.Entity<RequestTaskEmployee>()
         .HasOne(p => p.RequestTask)
         .WithMany(b => b.TaskEmployees)
         .HasForeignKey(p => p.RequestTaskId)
         .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestJustification>()
+            modelBuilder.Entity<RequestJustification>()
          .HasOne(p => p.Request)
          .WithOne(b => b.RequestJustification)
          .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestPermission>()
+            modelBuilder.Entity<RequestPermission>()
          .HasOne(p => p.Request)
          .WithOne(b => b.RequestPermission)
          .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<RequestVacation>()
+            modelBuilder.Entity<RequestVacation>()
          .HasOne(p => p.Request)
          .WithOne(b => b.RequestVacation)
          .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<Company>()
+            modelBuilder.Entity<Company>()
                 .HasIndex(u => u.IdentityCode)
                 .IsUnique();
 
-            builder.Entity<Translation>()
+            modelBuilder.Entity<Translation>()
                 .Property(p => p.IsActive)
                 .HasDefaultValue(true);
 
-            builder.Entity<Translation>()
+            modelBuilder.Entity<Translation>()
                 .Property(p => p.IsDeleted)
                 .HasDefaultValue(false);
 
-            builder.Entity<Translation>()
+            modelBuilder.Entity<Translation>()
                .Property(p => p.IsActive)
                .HasDefaultValue(true);
 
 
-            builder.Entity<UserRole>().HasOne(p => p.Role)
+            modelBuilder.Entity<UserRole>().HasOne(p => p.Role)
                    .WithMany(r => r.UserRoles)
                    .HasForeignKey(p => p.RoleId)
                    .IsRequired();
 
-            builder.Entity<UserRole>().HasOne(p => p.User)
+            modelBuilder.Entity<UserRole>().HasOne(p => p.User)
                    .WithMany(r => r.UserRoles)
                    .HasForeignKey(p => p.UserId)
             .IsRequired();
 
 
-            builder.Entity<EmployeeAttendanceCheck>()
+            modelBuilder.Entity<EmployeeAttendanceCheck>()
            .HasOne(p => p.EmployeeAttendance)
            .WithMany(b => b.EmployeeAttendanceChecks)
            .HasForeignKey(p => p.EmployeeAttendanceId)
            .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ScheduleDay>()
+            modelBuilder.Entity<ScheduleDay>()
                 .HasOne(p => p.Schedule)
                 .WithMany(b => b.ScheduleDays)
                 .HasForeignKey(p => p.ScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanEmployee>()
+            modelBuilder.Entity<SchedulePlanEmployee>()
                .HasOne(p => p.SchedulePlan)
                .WithOne(b => b.SchedulePlanEmployee)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanLog>()
+            modelBuilder.Entity<SchedulePlanLog>()
                .HasOne(p => p.SchedulePlan)
                .WithMany(b => b.SchedulePlanLogs)
                .HasForeignKey(p => p.SchedulePlanId)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanGroup>()
+            modelBuilder.Entity<SchedulePlanGroup>()
                .HasOne(p => p.SchedulePlan)
                .WithOne(b => b.SchedulePlanGroup)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanDepartment>()
+            modelBuilder.Entity<SchedulePlanDepartment>()
                .HasOne(p => p.SchedulePlan)
                .WithOne(b => b.SchedulePlanDepartment)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SchedulePlanLogEmployee>()
+            modelBuilder.Entity<SchedulePlanLogEmployee>()
                .HasOne(p => p.SchedulePlanLog)
                .WithMany(b => b.SchedulePlanLogEmployees)
                .HasForeignKey(p => p.SchedulePlanLogId)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<GroupEmployee>()
+            modelBuilder.Entity<GroupEmployee>()
                .HasOne(p => p.Group)
                .WithMany(b => b.GroupEmployees)
                .HasForeignKey(p => p.GroupId)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ZoneDepartment>()
+            modelBuilder.Entity<ZoneDepartment>()
               .HasOne(p => p.Department)
               .WithMany(b => b.Zones)
               .HasForeignKey(p => p.DepartmentId)
               .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<DepartmentManagerDelegator>()
+            modelBuilder.Entity<DepartmentManagerDelegator>()
            .HasOne(p => p.Department)
            .WithMany(b => b.ManagerDelegators)
            .HasForeignKey(p => p.DepartmentId)
            .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<SummonNotifyWay>()
+            modelBuilder.Entity<SummonNotifyWay>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonNotifyWays)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonEmployee>()
+            modelBuilder.Entity<SummonEmployee>()
           .HasOne(p => p.Summon)
           .WithMany(b => b.SummonEmployees)
           .HasForeignKey(p => p.SummonId)
           .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonGroup>()
+            modelBuilder.Entity<SummonGroup>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonGroups)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonDepartment>()
+            modelBuilder.Entity<SummonDepartment>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonDepartments)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonSanction>()
+            modelBuilder.Entity<SummonSanction>()
          .HasOne(p => p.Summon)
          .WithMany(b => b.SummonSanctions)
          .HasForeignKey(p => p.SummonId)
          .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SummonSanction>()
+            modelBuilder.Entity<SummonSanction>()
          .HasOne(p => p.Sanction)
          .WithMany(b => b.SummonSanctions)
          .HasForeignKey(p => p.SanctionId)
@@ -341,38 +345,38 @@ namespace Dawem.Data
 
 
 
-            builder.Entity<NotificationUserFCMToken>()
+            modelBuilder.Entity<NotificationUserFCMToken>()
       .HasOne(p => p.NotificationUser)
       .WithMany(b => b.NotificationUserFCMTokens)
       .HasForeignKey(p => p.NotificationUserId)
       .OnDelete(DeleteBehavior.Cascade);
 
 
-            builder.Entity<SummonDepartment>()
+            modelBuilder.Entity<SummonDepartment>()
         .HasOne(p => p.Company)
         .WithMany()
         .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SummonEmployee>()
+            modelBuilder.Entity<SummonEmployee>()
         .HasOne(p => p.Company)
         .WithMany()
         .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SummonGroup>()
+            modelBuilder.Entity<SummonGroup>()
         .HasOne(p => p.Company)
         .WithMany()
         .HasForeignKey(p => p.CompanyId)
         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SummonSanction>()
+            modelBuilder.Entity<SummonSanction>()
        .HasOne(p => p.Company)
        .WithMany()
        .HasForeignKey(p => p.CompanyId)
        .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SummonNotifyWay>()
+            modelBuilder.Entity<SummonNotifyWay>()
       .HasOne(p => p.Company)
       .WithMany()
       .HasForeignKey(p => p.CompanyId)
@@ -380,51 +384,79 @@ namespace Dawem.Data
 
             #region Handle Indexes
 
-            builder.Entity<Country>().
+            modelBuilder.Entity<Country>().
                 HasIndex(p => p.TimeZoneToUTC);
 
-            builder.Entity<Notification>().
+            modelBuilder.Entity<Notification>().
                 HasIndex(p => p.NotificationType);
-            builder.Entity<Notification>().
+            modelBuilder.Entity<Notification>().
                 HasIndex(p => p.HelperNumber);
-            builder.Entity<Notification>().
+            modelBuilder.Entity<Notification>().
                 HasIndex(p => p.HelperDate);
 
-            builder.Entity<Summon>().
+            modelBuilder.Entity<Summon>().
                 HasIndex(p => p.StartDateAndTimeUTC);
-            builder.Entity<Summon>().
+            modelBuilder.Entity<Summon>().
                 HasIndex(p => p.EndDateAndTimeUTC);
 
-            builder.Entity<ShiftWorkingTime>().
+            modelBuilder.Entity<ShiftWorkingTime>().
                 HasIndex(p => p.CheckInTime);
-            builder.Entity<ShiftWorkingTime>().
+            modelBuilder.Entity<ShiftWorkingTime>().
                 HasIndex(p => p.CheckOutTime);
+            modelBuilder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.AllowedMinutes);
+            modelBuilder.Entity<ShiftWorkingTime>().
+                HasIndex(p => p.IsTwoDaysShift);
+            
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.LocalDate);
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.ShiftCheckInTime);
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.ShiftCheckOutTime);
+            modelBuilder.Entity<EmployeeAttendance>().
+                HasIndex(p => p.FingerPrintStatus);
 
-            builder.Entity<EmployeeAttendanceCheck>().
+           
+            modelBuilder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintDate);
-            builder.Entity<EmployeeAttendanceCheck>().
+            modelBuilder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintDateUTC);
-            builder.Entity<EmployeeAttendanceCheck>().
+            modelBuilder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintType);
+
+            modelBuilder.Entity<ScheduleDay>().
+                HasIndex(p => p.WeekDay);
+            
 
             #endregion
 
-            builder.Entity<Department>()
+            modelBuilder.Entity<Department>()
            .HasMany(d => d.Employees)
            .WithOne(e => e.Department)
            .HasForeignKey(e => e.DepartmentId);
-     
 
             #region Add Index To All CompanyId And Name In All Tables
 
-            var allNameEntities = builder.Model.GetEntityTypes()
+            var allIsDeletedEntities = modelBuilder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.IsDeleted)));
+
+            foreach (var entityType in allIsDeletedEntities)
+            {
+                var isDeleted = entityType?.GetProperty(nameof(Employee.IsDeleted));
+                if (entityType != null && isDeleted != null)
+                {
+                    entityType.AddIndex(isDeleted, LeillaKeys.IsDeleted)
+                    .IsUnique = false;
+                }
+            }
+
+            #endregion
+
+            #region Add Index To All CompanyId And Name In All Tables
+
+            var allNameEntities = modelBuilder.Model.GetEntityTypes()
                      .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(Employee.Name)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
@@ -446,7 +478,7 @@ namespace Dawem.Data
 
             #region Add Index To All CompanyId Code All Tables
 
-            var allCodeEntities = builder.Model.GetEntityTypes()
+            var allCodeEntities = modelBuilder.Model.GetEntityTypes()
                      .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.CompanyId)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(Employee.Code)) &&
                      entity.GetProperties().Any(p => p.Name == nameof(BaseEntity.IsDeleted)));
@@ -468,7 +500,7 @@ namespace Dawem.Data
 
             #region Handle All String Max Length
 
-            var allEntity = builder.Model.GetEntityTypes()
+            var allEntity = modelBuilder.Model.GetEntityTypes()
                 .Where(e => e.ClrType != typeof(UserToken) &&
                 e.ClrType != typeof(UserLogIn) &&
                 e.ClrType != typeof(UserLoginInfo));
@@ -531,27 +563,27 @@ namespace Dawem.Data
                 property.SetMaxLength(250);
             }
 
-            builder.Entity<Employee>()
+            modelBuilder.Entity<Employee>()
                 .Property(e => e.FingerprintMobileCode)
                 .HasMaxLength(100);
 
-            builder.Entity<Translation>()
+            modelBuilder.Entity<Translation>()
                 .Property(e => e.KeyWord)
                 .HasMaxLength(250);
 
-            builder.Entity<Translation>()
+            modelBuilder.Entity<Translation>()
                 .Property(e => e.TransWords)
                 .HasMaxLength(250);
 
-            builder.Entity<NotificationUserFCMToken>()
+            modelBuilder.Entity<NotificationUserFCMToken>()
                 .Property(e => e.FCMToken)
                 .HasMaxLength(250);
 
-            builder.Entity<MyUser>()
+            modelBuilder.Entity<MyUser>()
                 .Property(e => e.PasswordHash)
                 .HasMaxLength(250);
 
-            builder.Entity<MyUser>()
+            modelBuilder.Entity<MyUser>()
                 .Property(e => e.SecurityStamp)
                 .HasMaxLength(250);
 
@@ -559,36 +591,56 @@ namespace Dawem.Data
 
             #region Computed Columns
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 Property(e => e.TotalWorkingHours).
                 HasComputedColumnSql("dbo.TotalWorkingHours(Id)");
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 Property(e => e.TotalLateArrivalsHours).
                 HasComputedColumnSql("dbo.TotalLateArrivalsHours(Id)");
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 Property(e => e.TotalEarlyDeparturesHours).
                 HasComputedColumnSql("dbo.TotalEarlyDeparturesHours(Id)");
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 Property(e => e.TotalOverTimeHours).
                 HasComputedColumnSql("dbo.TotalOverTimeHours(Id)");
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalWorkingHours(Id)"));
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalLateArrivalsHours(Id)"));
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalEarlyDeparturesHours(Id)"));
 
-            builder.Entity<EmployeeAttendance>().
+            modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalOverTimeHours(Id)"));
 
             #endregion
 
+            #region Handle Query Filters
+
+            // define your filter expression tree
+            Expression<Func<BaseEntity, bool>> filterExpr = bm => !bm.IsDeleted;
+            foreach (var mutableEntityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // check if current entity type is child of BaseModel
+                if (mutableEntityType.ClrType.IsAssignableTo(typeof(BaseEntity)))
+                {
+                    // modify expression to handle correct child type
+                    var parameter = Expression.Parameter(mutableEntityType.ClrType);
+                    var body = ReplacingExpressionVisitor.Replace(filterExpr.Parameters.First(), parameter, filterExpr.Body);
+                    var lambdaExpression = Expression.Lambda(body, parameter);
+
+                    // set filter
+                    mutableEntityType.SetQueryFilter(lambdaExpression);
+                }
+            }
+
+            #endregion
         }
 
         public DbSet<Language> Languages { get; set; }

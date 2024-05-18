@@ -153,7 +153,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports
             {
                 lateArrivalThreshold = lateArrivalThreshold.AddDays(1);
             }
-            return TimeOnlyHelper.ToTimeOnly(lateArrivalThreshold.TimeOfDay);
+            return TimeHelper.ToTimeOnly(lateArrivalThreshold.TimeOfDay);
         }
         #endregion
 

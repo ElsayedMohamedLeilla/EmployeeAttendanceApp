@@ -51,19 +51,18 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Hanlde FingerPrint
 
-            var getAttandanceId = await repositoryManager
+            var getEmployeeAttendance = await repositoryManager
                 .EmployeeAttendanceRepository
-                .Get(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
+                .GetWithTracking(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
                 && e.LocalDate.Date == validationResult.LocalDateTime.Date)
-                .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
             //checkout or summon
-            if (getAttandanceId > 0)
-            {
+            if (getEmployeeAttendance != null)
+            {                
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
-                    EmployeeAttendanceId = getAttandanceId,
+                    EmployeeAttendanceId = getEmployeeAttendance.Id,
                     SummonId = validationResult.SummonId,
                     ZoneId = validationResult.ZoneId,
                     FingerPrintType = validationResult.FingerPrintType,
@@ -77,6 +76,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     RecognitionWay.FingerPrint : model.RecognitionWay,
                     FingerprintSource = FingerprintSource.MobileDevice
                 });
+
+                getEmployeeAttendance.FingerPrintStatus = AttendanceFingerPrintStatus.CheckInAndCheckOut;
+                await unitOfWork.SaveAsync();
 
                 #region Summon Log
 
@@ -118,13 +120,15 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ShiftId = validationResult.ShiftId,
                     ShiftCheckInTime = validationResult.ShiftCheckInTime,
                     ShiftCheckOutTime = validationResult.ShiftCheckOutTime,
+                    IsTwoDaysShift = validationResult.IsTwoDaysShift,
                     AllowedMinutes = validationResult.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,
                     LocalDate = validationResult.LocalDateTime,
                     EmployeeId = validationResult.EmployeeId,
                     IsActive = true,
-                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
+                    FingerPrintStatus = AttendanceFingerPrintStatus.CheckIn,
+                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new() {
                         FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
                         ZoneId = validationResult.ZoneId,
@@ -1056,15 +1060,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 var startDateTime = day.StartDateTime.Value.TimeOfDay;
                 var endDateTime = day.EndDateTime.Value.TimeOfDay;
 
-                var shiftCheckInTimeType = startDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-                var shiftCheckOutTimeType = endDateTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-
-                var is24HoursShift = (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
-                    (((shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM) ||
-                    (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM)) && 
-                    startDateTime > endDateTime);
-
-                if (is24HoursShift)
+                var isTwoDaysShift = TimeHelper.IsTwoDaysShift(startDateTime, endDateTime);
+                
+                if (isTwoDaysShift)
                 {
                     day.StartDateTime = new DateTime(day.StartDateTime.Value.TimeOfDay.Ticks);
                     day.EndDateTime = new DateTime(day.EndDateTime.Value.TimeOfDay.Ticks).AddDays(1);

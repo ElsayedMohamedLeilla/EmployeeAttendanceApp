@@ -43,10 +43,11 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         private readonly IAccountBLValidation accountBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
+        private readonly RequestInfo requestInfo;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
-            IOptions<Jwt> _appSettings,
+            IOptions<Jwt> _appSettings, RequestInfo _requestInfo,
             IPermissionBL _permissionBL,
            RequestInfo _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
@@ -56,6 +57,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
+            requestInfo = _requestInfo;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
             permissionBL = _permissionBL;
@@ -396,6 +398,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     {
                         var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
+                            CompanyId = user.CompanyId ?? 0,
                             NotificationUserId = getNotificationUser.Id,
                             FCMToken = model.FCMToken,
                             DeviceType = model.ApplicationType,
@@ -472,6 +475,26 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             return tokenData;
         }
+        public async Task<bool> SignOut()
+        {
+            var getNotificationUserDeviceTokens = await repositoryManager.NotificationUserFCMTokenRepository.
+                GetWithTracking(f => !f.IsDeleted && !f.NotificationUser.IsDeleted &&
+                f.NotificationUser.CompanyId == requestInfo.CompanyId && f.NotificationUser.UserId == requestInfo.UserId &&
+                f.DeviceType == requestInfo.ApplicationType).
+                ToListAsync();
+
+            if (getNotificationUserDeviceTokens != null && getNotificationUserDeviceTokens.Count > 0)
+            {
+                foreach (var getNotificationUserDeviceToken in getNotificationUserDeviceTokens)
+                {
+                    getNotificationUserDeviceToken.Delete();
+                }
+
+                await unitOfWork.SaveAsync();
+            }
+
+            return true;
+        }
         public async Task<TokenDto> AdminPanelSignIn(AdminPanelSignInModel model)
         {
             #region Business Validation
@@ -520,7 +543,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.UserId, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.CompanyId , criteria.CompanyId.ToString()),
-                new Claim(LeillaKeys.ApplicationType , criteria.ApplicationType.ToString())
+                new Claim(LeillaKeys.ApplicationType , ((int)criteria.ApplicationType).ToString())
             });
             if (criteria.RememberMe)
             {

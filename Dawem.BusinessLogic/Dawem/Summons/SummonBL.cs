@@ -14,6 +14,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -146,12 +147,29 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Select(e => new
                     {
                         e.Id,
-                        Users = e.Users != null ? e.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null
+                        NotificationUsers = e.Users != null ? e.Users.Where(u => !u.IsDeleted).
+                        Select(u => new NotificationUserModel
+                        {
+                            Id = u.Id,
+                            Email = u.Email,
+                            UserTokens = u.NotificationUsers.
+                            Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                            Any(f => !f.IsDeleted)).
+                            SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                            Select(f => new NotificationUserTokenModel
+                            {
+                                ApplicationType = f.DeviceType,
+                                Token = f.FCMToken
+                            })).ToList()
+                        }).ToList() : null
                     }).ToListAsync();
 
             var employeeIds = employees.Select(e => e.Id).ToList();
 
-            var userIds = employees.Where(e => e.Users != null).SelectMany(e => e.Users).Distinct().ToList();
+            var notificationUsers = employees.Where(e => e.NotificationUsers != null).
+                SelectMany(e => e.NotificationUsers).
+                Distinct().
+                ToList();
 
             #region Handle Notification Description
 
@@ -189,7 +207,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
             var handleNotificationModel = new HandleNotificationModel
             {
-                UserIds = userIds,
+                NotificationUsers = notificationUsers,
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewSummon,
                 NotificationStatus = NotificationStatus.Info,
@@ -728,8 +746,22 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                         summonLog.EmployeeId,
 
-                        UsersIds = summonLog.Summon.Company.Users.Where(u => !u.IsDeleted && u.IsActive & u.EmployeeId > 0 &
-                             u.EmployeeId.Value == summonLog.EmployeeId).Select(u => u.Id).ToList(),
+                        NotificationUsers = summonLog.Summon.Company.Users.Where(u => !u.IsDeleted && u.IsActive & u.EmployeeId > 0 &
+                             u.EmployeeId.Value == summonLog.EmployeeId).
+                             Select(u => new NotificationUserModel
+                             {
+                                 Id = u.Id,
+                                 Email = u.Email,
+                                 UserTokens = u.NotificationUsers.
+                                Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                Any(f => !f.IsDeleted)).
+                                SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                Select(f => new NotificationUserTokenModel
+                                {
+                                    ApplicationType = f.DeviceType,
+                                    Token = f.FCMToken
+                                })).ToList()
+                             }).ToList(),
 
                         SummonDate = summonLog.Summon.LocalDateAndTime,
 
@@ -819,7 +851,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     foreach (var missingGroup in missingEmployeesGroupedBySummon)
                     {
                         var employeeIds = missingGroup.Select(m => m.EmployeeId).ToList();
-                        var userIds = missingGroup.SelectMany(m => m.UsersIds).Distinct().ToList();
+                        var notificationUsers = missingGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
                         var summonDate = missingGroup.First().SummonDate;
                         var companyId = missingGroup.First().CompanyId;
 
@@ -851,7 +883,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         var handleNotificationModel = new HandleNotificationModel
                         {
                             CompanyId = companyId,
-                            UserIds = userIds,
+                            NotificationUsers = notificationUsers,
                             EmployeeIds = employeeIds,
                             NotificationType = NotificationType.SummonMissed,
                             NotificationStatus = NotificationStatus.Info,

@@ -37,12 +37,12 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
@@ -157,14 +157,14 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {

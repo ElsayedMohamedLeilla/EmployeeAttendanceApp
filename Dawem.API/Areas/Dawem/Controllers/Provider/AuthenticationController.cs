@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Provider
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]    
-    [AllowAnonymous]
     public class AuthenticationController : DawemControllerBase
     {
         private readonly IAuthenticationBL authenticationBL;
@@ -21,6 +20,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             mailBL = _mailBL;
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> VerifyCompanyCode([FromQuery] string identityCode)
         {
             if (identityCode is null)
@@ -30,22 +30,30 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             return Success(await authenticationBL.VerifyCompanyCode(identityCode), messageCode: LeillaKeys.DoneVerifyCompanyCodeSuccessfully);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
             return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
         }
-
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> SignIn(SignInModel signInModel)
         {
             return Success(await authenticationBL.SignIn(signInModel), messageCode: LeillaKeys.DoneSignYouInSuccessfully);
         }
         [HttpPost]
+        public new async Task<ActionResult> SignOut()
+        {
+            return Success(await authenticationBL.SignOut(), messageCode: LeillaKeys.DoneSignYouOutSuccessfully);
+        }
+        [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> SendVerificationCode(VerifyEmailModel model)
         {
             return Success(await mailBL.SendEmail(model));
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> VerifyEmail(string emailtoken, string email)
         {
             var response = await authenticationBL.VerifyEmail(emailtoken, email);
@@ -57,6 +65,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             return Redirect("https://stage.dawem.app/#/login");
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> RequestResetPassword(RequestResetPasswordModel forgetPasswordBindingModel)
         {
             if (forgetPasswordBindingModel == null)
@@ -68,6 +77,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
             return Success(forgetPasswordResponse, messageCode: LeillaKeys.DoneSendResetPasswordLinkToYourRegisteredEmailSuccessfully);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             var response = await authenticationBL.ResetPassword(model);

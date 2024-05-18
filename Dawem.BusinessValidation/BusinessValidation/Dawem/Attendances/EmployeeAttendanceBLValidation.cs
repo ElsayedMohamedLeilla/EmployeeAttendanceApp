@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.Dawem.Attendances;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
@@ -124,14 +125,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Check If Fingerprint Cross Days ( 24 )
 
-            var checkIfShift24HoursModel = new CheckIfShift24HoursModel
+            var checkIfShift24HoursModel = new CheckIfShiftIsTwoDaysShiftModel
             {
                 ScheduleId = getScheduleId,
                 ClientLocalDateTime = clientLocalDateTime,
                 EmployeeId = getEmployeeId
             };
 
-            var response = await CheckIfShiftIs24Hours(checkIfShift24HoursModel);
+            var response = await CheckIfShiftIsTwoDaysShift(checkIfShift24HoursModel);
 
             clientLocalDateTime = response.ClientLocalDateTime;
             clientLocalDate = response.ClientLocalDateTime.Date;
@@ -237,6 +238,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 LocalDateTime = clientLocalDateTime,
                 ShiftCheckInTime = shiftInfo.ShiftCheckInTime,
                 ShiftCheckOutTime = shiftInfo.ShiftCheckOutTime,
+                IsTwoDaysShift = shiftInfo.IsTwoDaysShift,
                 AllowedMinutes = shiftInfo.ShiftAllowedMinutes,
                 FingerPrintType = fingerPrintType
             };
@@ -331,14 +333,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Check If Fingerprint Cross Days ( 24 )
 
-            var checkIfShift24HoursModel = new CheckIfShift24HoursModel
+            var checkIfShift24HoursModel = new CheckIfShiftIsTwoDaysShiftModel
             {
                 ScheduleId = getScheduleId,
                 ClientLocalDateTime = clientLocalDateTime,
                 EmployeeId = getEmployeeId
             };
 
-            var response = await CheckIfShiftIs24Hours(checkIfShift24HoursModel);
+            var response = await CheckIfShiftIsTwoDaysShift(checkIfShift24HoursModel);
 
             clientLocalDateTime = response.ClientLocalDateTime;
             clientLocalDate = response.ClientLocalDateTime.Date;
@@ -403,7 +405,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 AvailableZones = availableZonesOutput
             };
         }
-        private async Task<CheckIfShiftIs24HoursResponseModel> CheckIfShiftIs24Hours(CheckIfShift24HoursModel model)
+        private async Task<CheckIfShiftIsTwoDaysShiftResponseModel> CheckIfShiftIsTwoDaysShift(CheckIfShiftIsTwoDaysShiftModel model)
         {
             #region Get Schedule
 
@@ -425,6 +427,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                                ShiftId = weekShift.Shift.Id,
                                ShiftCheckInTime = weekShift.Shift.CheckInTime,
                                ShiftCheckOutTime = weekShift.Shift.CheckOutTime,
+                               IsTwoDaysShift = weekShift.Shift.IsTwoDaysShift,
                                ShiftAllowedMinutes = weekShift.Shift.AllowedMinutes
                            } : null
                        }).ToList()
@@ -435,9 +438,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var clientLocalDateTime = model.ClientLocalDateTime;
             var clientLocalDate = model.ClientLocalDateTime.Date;
 
-            #region Check If Fingerprint Cross Days ( 24 )
+            #region Check If Fingerprint Cross Days ( Two Days Shift )
 
-            ShiftInfoModel the24HoursShift = null;
+            ShiftInfoModel theTwoDaysShift = null;
 
             var getLastFingerprint = await repositoryManager.
                 EmployeeAttendanceCheckRepository.
@@ -450,13 +453,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     check.EmployeeAttendance.LocalDate
                 }).FirstOrDefaultAsync();
 
-            var checkIfLastFingerPrintAllow24Hours =
+            var checkIfLastFingerPrintAllowTwoDaysShift =
                 getLastFingerprint != null &&
                 getLastFingerprint.FingerPrintType == FingerPrintType.CheckIn &&
                 (clientLocalDate - getLastFingerprint.LocalDate).Days == 1 &&
                 (clientLocalDate - getLastFingerprint.FingerPrintDate.Date).Days == 1;
 
-            if (checkIfLastFingerPrintAllow24Hours)
+            if (checkIfLastFingerPrintAllowTwoDaysShift)
             {
                 var lastClientLocalDateTime = requestInfo.LocalDateTime.AddDays(-1);
                 var lastClientLocalDate = requestInfo.LocalDateTime.Date.AddDays(-1);
@@ -467,23 +470,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
                 if (getLastShiftInfo != null)
                 {
-                    #region Check If Shift Is 24 Hours Cross Days
+                    #region Check If Shift Is Two Days Shift
 
-                    var shiftCheckInTime = getLastShiftInfo.ShiftCheckInTime;
-                    var shiftCheckOutTime = getLastShiftInfo.ShiftCheckOutTime;
+                    var isTwoDaysShift = 
+                        TimeHelper.IsTwoDaysShift(getLastShiftInfo.ShiftCheckInTime, getLastShiftInfo.ShiftCheckOutTime);
 
-                    var shiftCheckInTimeType = shiftCheckInTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-                    var shiftCheckOutTimeType = shiftCheckOutTime.Hours >= 12 ? AmPm.PM : AmPm.AM;
-
-                    var is24HoursShift = ((shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.AM) ||
-                        (((shiftCheckInTimeType == AmPm.AM && shiftCheckOutTimeType == AmPm.AM) || 
-                        (shiftCheckInTimeType == AmPm.PM && shiftCheckOutTimeType == AmPm.PM)) && 
-                        shiftCheckInTime > shiftCheckOutTime))
-                        && clientLocalDateTime.TimeOfDay <= shiftCheckOutTime;
-
-                    if (is24HoursShift)
+                    if (isTwoDaysShift && clientLocalDateTime.TimeOfDay <= getLastShiftInfo.ShiftCheckOutTime)
                     {
-                        the24HoursShift = getLastShiftInfo;
+                        theTwoDaysShift = getLastShiftInfo;
                         clientLocalDate = lastClientLocalDate;
                         clientLocalDateTime  = lastClientLocalDateTime;
                     }
@@ -492,15 +486,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 }
             }
 
-
-            var shiftInfo = the24HoursShift != null ? the24HoursShift :
+            var shiftInfo = theTwoDaysShift != null ? theTwoDaysShift :
                (getSchedule.ScheduleDays.FirstOrDefault(d => (DayOfWeek)d.WeekDay == clientLocalDateTime.DayOfWeek)
                .ShiftInfo ?? throw new BusinessValidationException(LeillaKeys.SorryYouDoNotHaveScheduleToday));
 
 
             #endregion
 
-            var respnse = new CheckIfShiftIs24HoursResponseModel()
+            var respnse = new CheckIfShiftIsTwoDaysShiftResponseModel()
             {
                 ClientLocalDateTime = clientLocalDateTime,
                 ShiftInfo = shiftInfo,

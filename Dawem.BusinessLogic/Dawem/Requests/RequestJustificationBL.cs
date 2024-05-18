@@ -13,6 +13,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Justifications;
 using Dawem.Models.Response.Dawem.Requests;
@@ -139,16 +140,29 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     DirectManagerId = e.DirectManagerId.Value
                 }).FirstOrDefaultAsync();
 
-            var userIds = await repositoryManager.UserRepository.
+            var notificationUsers = await repositoryManager.UserRepository.
                 Get(s => !s.IsDeleted && s.IsActive &
                 s.EmployeeId == requestEmployee.DirectManagerId).
-                Select(u => u.Id).ToListAsync();
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
 
             var employeeIds = new List<int>() { requestEmployee.DirectManagerId };
 
             var handleNotificationModel = new HandleNotificationModel
             {
-                UserIds = userIds,
+                NotificationUsers = notificationUsers,
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.NewVacationRequest,
                 NotificationStatus = NotificationStatus.Info,
@@ -507,16 +521,29 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Notifications
 
-            var userIds = await repositoryManager.UserRepository.
+            var notificationUsers = await repositoryManager.UserRepository.
                 Get(s => !s.IsDeleted && s.IsActive &
                 s.EmployeeId == request.EmployeeId).
-                Select(u => u.Id).ToListAsync();
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
 
             var employeeIds = new List<int>() { request.EmployeeId };
 
             var handleNotificationModel = new HandleNotificationModel
             {
-                UserIds = userIds,
+                NotificationUsers = notificationUsers,
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.AcceptingJustificationRequest,
                 NotificationStatus = NotificationStatus.Info,
@@ -553,16 +580,29 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Notifications
 
-            var userIds = await repositoryManager.UserRepository.
+            var notificationUsers = await repositoryManager.UserRepository.
                 Get(s => !s.IsDeleted && s.IsActive &
                 s.EmployeeId == request.EmployeeId).
-                Select(u => u.Id).ToListAsync();
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
 
             var employeeIds = new List<int>() { request.EmployeeId };
 
             var handleNotificationModel = new HandleNotificationModel
             {
-                UserIds = userIds,
+                NotificationUsers = notificationUsers,
                 EmployeeIds = employeeIds,
                 NotificationType = NotificationType.RejectingJustificationRequest,
                 NotificationStatus = NotificationStatus.Info,

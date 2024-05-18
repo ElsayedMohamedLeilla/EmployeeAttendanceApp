@@ -97,10 +97,12 @@
         public const string GetAllScreens = "GetAllScreens";
         public const string GetAllActions = "GetAllActions";
         public const string GetHeaderInformations = "GetHeaderInformations";
+        public const string SignOut = "SignOut";
         public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
+        public const string IsDeleted = "IX_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string BLValidationCore = "BLValidationCore";
@@ -181,6 +183,7 @@
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn = "DoneSignUpSuccessfully.CheckYourEmailToVerifyItAndLogIn";
         public const string DoneSignYouInSuccessfully = "DoneSignYouInSuccessfully";
+        public const string DoneSignYouOutSuccessfully = "DoneSignYouOutSuccessfully";
         public const string SorryYouMustEnterOldPassword = "Sorry!!YouMustEnterOldPassword!";
         public const string SorryYouMustEnterNewPassword = "Sorry!!YouMustEnterNewPassword!";
         public const string SorryYouMustEnterConfirmNewPassword = "Sorry!!YouMustEnterConfirmNewPassword!";
@@ -518,7 +521,7 @@
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
-        public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
+        public const string SorryYouMustEnterDeviceNotificationsToken = "Sorry!!YouMustEnterDeviceNotificationsToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonLogNotFound = "Sorry!!SummonLogNotFound!";
@@ -662,6 +665,13 @@
         public const string SummonDate = "SummonDate";
         public const string DoNotForgetSignIn = "DoNotForgetSignIn";
         public const string DoNotForgetToFingerprintForYourSignIn = "DoNotForgetToFingerprintForYourSignIn";
+        public const string ForgetSignIn = "ForgetSignIn";
+        public const string DoNotForgetSignOut = "DoNotForgetSignOut";
+        public const string ForgetSignOut = "ForgetSignOut";
+        public const string YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible";
+        public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
+        public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
 
+        
     }
 }

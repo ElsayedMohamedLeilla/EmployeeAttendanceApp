@@ -43,7 +43,7 @@ namespace Dawem.Repository.Others
                         ScreenName = TranslationHelper.GetTranslation(applicationScreenCode.ToString() + screenNameSuffix, requestInfo.Lang)
                     })
                     .ToList()
-                    .Where(s=> s.ScreenName.ToLower().Trim().Contains(criteria.FreeText))
+                    .Where(s=> s.ScreenName.ToLower().Trim().StartsWith(criteria.FreeText))
                     .Select(s=>s.ScreenCode)
                     .ToList();
 

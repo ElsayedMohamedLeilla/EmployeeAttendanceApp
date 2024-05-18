@@ -3,7 +3,6 @@ using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
@@ -98,7 +97,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(await subscriptionBL.Disable(model));
         }
         [HttpPut]
-        public async Task<ActionResult> Approve(ApproveSubscriptionModel model)
+        public async Task<ActionResult> Approve([FromQuery] ApproveSubscriptionModel model)
         {
             if (model is null)
             {

@@ -13,6 +13,7 @@ using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Schedules.ShiftWorkingTimes;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation;
@@ -74,18 +75,19 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
                 .MaxAsync() + 1;
             #endregion
 
-            var ShiftWorkingTime = mapper.Map<ShiftWorkingTime>(model);
-            ShiftWorkingTime.CompanyId = requestInfo.CompanyId;
-            ShiftWorkingTime.AddUserId = requestInfo.UserId;
-            ShiftWorkingTime.Code = getNextCode;
-            repositoryManager.ShiftWorkingTimeRepository.Insert(ShiftWorkingTime);
+            var shiftWorkingTime = mapper.Map<ShiftWorkingTime>(model);
+            shiftWorkingTime.CompanyId = requestInfo.CompanyId;
+            shiftWorkingTime.AddUserId = requestInfo.UserId;
+            shiftWorkingTime.Code = getNextCode;
+            shiftWorkingTime.IsTwoDaysShift = TimeHelper.IsTwoDaysShift(shiftWorkingTime.CheckInTime, shiftWorkingTime.CheckOutTime);
+            repositoryManager.ShiftWorkingTimeRepository.Insert(shiftWorkingTime);
             await unitOfWork.SaveAsync();
 
             #endregion
 
             #region Handle Response
             await unitOfWork.CommitAsync();
-            return ShiftWorkingTime.Id;
+            return shiftWorkingTime.Id;
             #endregion
 
         }
@@ -135,6 +137,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
             getShiftWorkingTime.IsActive = model.IsActive;
             getShiftWorkingTime.ModifiedDate = DateTime.UtcNow;
             getShiftWorkingTime.ModifyUserId = requestInfo.UserId;
+            getShiftWorkingTime.IsTwoDaysShift = TimeHelper.IsTwoDaysShift(model.CheckInTime, model.CheckOutTime);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -149,13 +152,30 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
                     Select(e => new
                     {
                         e.Id,
-                        Users = e.Users != null ? e.Users.Where(u => !u.IsDeleted).Select(u => u.Id).ToList() : null
+                        NotificationUsers = e.Users != null ? e.Users.Where(u => !u.IsDeleted).
+                        Select(u => new NotificationUserModel
+                        {
+                            Id = u.Id,
+                            Email = u.Email,
+                            UserTokens = u.NotificationUsers.
+                            Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                            Any(f => !f.IsDeleted)).
+                            SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                            Select(f => new NotificationUserTokenModel
+                            {
+                                ApplicationType = f.DeviceType,
+                                Token = f.FCMToken
+                            })).ToList()
+                        }).ToList() : null
                     }).ToListAsync();
 
                 var employeeIds = employees.Select(e => e.Id).ToList();
                 var shiftName = model.Name;
 
-                var userIds = employees.Where(e => e.Users != null).SelectMany(e => e.Users).Distinct().ToList();
+                var notificationUsers = employees.Where(e => e.NotificationUsers != null).
+                    SelectMany(e => e.NotificationUsers).
+                    Distinct().
+                    ToList();
 
                 #region Handle Notification Description
 
@@ -197,7 +217,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
 
                 var handleNotificationModel = new HandleNotificationModel
                 {
-                    UserIds = userIds,
+                    NotificationUsers = notificationUsers,
                     EmployeeIds = employeeIds,
                     NotificationType = NotificationType.NewChangeInSchedule,
                     NotificationStatus = NotificationStatus.Info,

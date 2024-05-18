@@ -28,8 +28,8 @@ namespace Dawem.Repository.Lookups
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                currencyPredicate = currencyPredicate.Start(x => x.NameAr.ToLower().Trim().Contains(criteria.FreeText));
-                currencyPredicate = currencyPredicate.Or(x => x.NameEn.ToLower().Trim().Contains(criteria.FreeText));
+                currencyPredicate = currencyPredicate.Start(x => x.NameAr.ToLower().Trim().StartsWith(criteria.FreeText));
+                currencyPredicate = currencyPredicate.Or(x => x.NameEn.ToLower().Trim().StartsWith(criteria.FreeText));
             }
 
             var query = Get(currencyPredicate, includeProperties: includeProperties);

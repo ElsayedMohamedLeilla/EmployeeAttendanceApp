@@ -2,6 +2,7 @@
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Providers;
+using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,7 @@ namespace Dawem.Domain.Entities.UserManagement
         public List<UserRole> UserRoles { get; set; }
         public List<UserResponsibility> UserResponsibilities { get; set; }
         public List<UserBranch> UserBranches { get; set; }
+        public List<NotificationUser> NotificationUsers { get; set; }
         public bool Status { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletionDate { get; set; }

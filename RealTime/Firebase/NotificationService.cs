@@ -5,6 +5,7 @@ using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.NotificationsStores;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
@@ -35,14 +36,17 @@ public class NotificationService : INotificationService
     {
         var notificationType = model.NotificationType;
         var notificationStatus = model.NotificationStatus;
-        var userIds = model.UserIds;
+        //var userIds = model.UserIds;
 
         ResponseModel response = new();
 
         var notificationData = GetNotificationData(notificationType);
         var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
-        var userToken = GetUserTokens(userIds);
-        var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(userToken);
+        var usersTokens = model.NotificationUsers?.
+            Where(n=>n.UserTokens != null)?.
+            SelectMany(u => u.UserTokens)?.
+            ToList() ?? new List<NotificationUserTokenModel>(); //GetUserTokens(userIds);
+        var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(usersTokens);
 
         #region Send Notification
 
@@ -228,7 +232,7 @@ public class NotificationService : INotificationService
         }
         return response;
     }
-    private static (List<string>, List<string>, List<string>) GetTokenClassificationByDeviceType(List<TokensModel> tokens)
+    private static (List<string>, List<string>, List<string>) GetTokenClassificationByDeviceType(List<NotificationUserTokenModel> tokens)
     {
         return (tokens
             .Where(t => t.ApplicationType == ApplicationType.Web)
@@ -255,10 +259,11 @@ public class NotificationService : INotificationService
         };
         return dataDictionary;
     }
-    private List<TokensModel> GetUserTokens(List<int> userids)
+    private List<NotificationUserTokenModel> GetUserTokens(List<int> userids)
     {
-        List<TokensModel> userTokens = repositoryManager.NotificationUserFCMTokenRepository
-            .Get(s => !s.IsDeleted && userids.Contains(s.NotificationUser.UserId)).Select(c => new TokensModel()
+        List<NotificationUserTokenModel> userTokens = repositoryManager.NotificationUserFCMTokenRepository.
+            Get(s => !s.IsDeleted && userids.Contains(s.NotificationUser.UserId)).
+            Select(c => new NotificationUserTokenModel()
             {
                 ApplicationType = c.DeviceType,
                 Token = c.FCMToken
@@ -268,7 +273,11 @@ public class NotificationService : INotificationService
     }
     public async Task<bool> SendEmailByUserIds(SendNotificationsAndEmailsModel model)
     {
-        var emails = await GetUsersEmails(model.UserIds);
+        var emails = model.NotificationUsers.
+            Where(u => !string.IsNullOrEmpty(u.Email)).
+            Select(u => u.Email).
+            ToList();//await GetUsersEmails(model.UserIds);
+
         bool result = false;
 
         var verifyEmail = new VerifyEmailModel

@@ -31,6 +31,9 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
         }
         public async Task<bool> HandleNotifications(HandleNotificationModel model)
         {
+            if (model.NotificationUsers == null || model.NotificationUsers.Count == 0)
+                return true;
+
             #region Handle Short And Full Message
 
             var getActiveLanguages = model.ActiveLanguages.Any() ? model.ActiveLanguages :
@@ -101,7 +104,8 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
                 {
                     Title = shortMessage,
                     Body = fullMessage,
-                    UserIds = model.UserIds,
+                    //UserIds = model.UserIds,
+                    NotificationUsers = model.NotificationUsers,
                     NotificationType = model.NotificationType,
                     NotificationStatus = model.NotificationStatus
                 };

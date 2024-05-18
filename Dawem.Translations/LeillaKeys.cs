@@ -181,6 +181,7 @@
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn = "DoneSignUpSuccessfully.CheckYourEmailToVerifyItAndLogIn";
         public const string DoneSignYouInSuccessfully = "DoneSignYouInSuccessfully";
+        public const string DoneSignYouOutSuccessfully = "DoneSignYouOutSuccessfully";
         public const string SorryYouMustEnterOldPassword = "Sorry!!YouMustEnterOldPassword!";
         public const string SorryYouMustEnterNewPassword = "Sorry!!YouMustEnterNewPassword!";
         public const string SorryYouMustEnterConfirmNewPassword = "Sorry!!YouMustEnterConfirmNewPassword!";

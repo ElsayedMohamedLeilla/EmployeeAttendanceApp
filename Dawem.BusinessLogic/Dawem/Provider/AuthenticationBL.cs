@@ -43,10 +43,11 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         private readonly IAccountBLValidation accountBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
+        private readonly RequestInfo requestInfo;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             UserManagerRepository _userManagerRepository,
-            IOptions<Jwt> _appSettings,
+            IOptions<Jwt> _appSettings, RequestInfo _requestInfo,
             IPermissionBL _permissionBL,
            RequestInfo _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
@@ -56,6 +57,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
+            requestInfo = _requestInfo;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
             permissionBL = _permissionBL;
@@ -471,6 +473,21 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             return tokenData;
+        }
+        public async Task<bool> SignOut()
+        {
+            var getNotificationUserDeviceToken = await repositoryManager.NotificationUserFCMTokenRepository.
+                GetEntityByConditionWithTrackingAsync(f => !f.IsDeleted && !f.NotificationUser.IsDeleted &&
+                f.NotificationUser.CompanyId == requestInfo.CompanyId && f.NotificationUser.UserId == requestInfo.UserId &&
+                f.DeviceType == requestInfo.ApplicationType);
+
+            if (getNotificationUserDeviceToken != null)
+            {
+                getNotificationUserDeviceToken.Delete();
+                await unitOfWork.SaveAsync();
+            }
+
+            return true;
         }
         public async Task<TokenDto> AdminPanelSignIn(AdminPanelSignInModel model)
         {

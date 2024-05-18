@@ -21,7 +21,7 @@ namespace Dawem.Repository.Providers
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.Or(x => x.Subscription.Company.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Subscription.Company.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;

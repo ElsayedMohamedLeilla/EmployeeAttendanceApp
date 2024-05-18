@@ -28,7 +28,7 @@ namespace Dawem.Repository.Attendances
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int employeeNumber))
                 {
                     criteria.EmployeeNumber = employeeNumber;

@@ -26,7 +26,7 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Start(x => x.User != null && x.User.Name.ToLower().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.User != null && x.User.Name.ToLower().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     inner = inner.Or(x => x.Id == id);

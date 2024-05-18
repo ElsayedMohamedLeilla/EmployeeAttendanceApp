@@ -131,11 +131,11 @@ namespace Dawem.Repository.Managers
 
 
 
-        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
+        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
             unitOfWork = _unitOfWork;
             generalSetting = _generalSetting;
-            requestInfo = _requestHeaderContext;
+            requestInfo = _requestInfo;
         }
         public ICountryRepository CountryRepository =>
             countryRepository ??= new CountryRepository(unitOfWork, generalSetting);

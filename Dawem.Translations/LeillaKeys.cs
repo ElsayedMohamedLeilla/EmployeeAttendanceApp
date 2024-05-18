@@ -665,7 +665,6 @@
         public const string SummonDate = "SummonDate";
         public const string DoNotForgetSignIn = "DoNotForgetSignIn";
         public const string DoNotForgetToFingerprintForYourSignIn = "DoNotForgetToFingerprintForYourSignIn";
-
         public const string ForgetSignIn = "ForgetSignIn";
         public const string DoNotForgetSignOut = "DoNotForgetSignOut";
         public const string ForgetSignOut = "ForgetSignOut";
@@ -673,5 +672,6 @@
         public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
         public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
 
+        
     }
 }

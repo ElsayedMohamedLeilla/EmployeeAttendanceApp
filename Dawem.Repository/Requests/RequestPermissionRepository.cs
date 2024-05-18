@@ -25,8 +25,8 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;
@@ -84,8 +84,8 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;

@@ -21,7 +21,7 @@ namespace Dawem.Repository.Core.Roles
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;

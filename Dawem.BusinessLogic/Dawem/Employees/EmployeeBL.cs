@@ -124,7 +124,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             if (employee.IsActive)
             {
                 #region get CompanyVerficationCode
-                var CompanyVerificationCode = repositoryManager.CompanyRepository.Get(c=> c.Id == requestInfo.CompanyId).Select(ss=> ss.IdentityCode).FirstOrDefault();
+                var CompanyVerificationCode = repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(ss => ss.IdentityCode).FirstOrDefault();
                 #endregion
                 var verifyEmail = new VerifyEmailModel
                 {
@@ -269,6 +269,20 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #endregion
 
+            //await unitOfWork.SaveAsync();
+
+            #region Enable Related user
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
+          
+            #endregion
+            if (model.IsActive == true)
+            {
+                user.IsActive = true;
+            }
+            else
+            {
+                user.IsActive = true;
+            }
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -547,12 +561,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employee.Enable();
 
             #region Enable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
-            foreach (var user in users)
-            {
-                user.IsActive = true;
-                await unitOfWork.SaveAsync();
-            }
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == employeeId);
+            user.IsActive = true;
             #endregion
             await unitOfWork.SaveAsync();
             return true;
@@ -564,15 +574,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             employee.Disable(model.DisableReason);
             #region Disable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.IsActive && d.EmployeeId == model.Id).ToListAsync();
-            foreach (var user in users)
-            {
-                user.DisableReason = "Employee Disabled";
-                user.IsActive = false;
-                await unitOfWork.SaveAsync();
-            }
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
+            user.DisableReason = "Employee Disabled";
+            user.IsActive = false;
             #endregion
-
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -581,15 +586,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
             employee.Delete();
-            #region Enable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
-            foreach (var user in users)
-            {
-                user.IsDeleted = true;
-                await unitOfWork.SaveAsync();
-            }
+            #region Delete Related user
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == employeeId);
+            user.IsDeleted = true;
             #endregion
-
             await unitOfWork.SaveAsync();
             return true;
         }

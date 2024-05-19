@@ -105,8 +105,6 @@ namespace Dawem.ReportsModule.Helper
 
             return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
-
-
         private static void SetGeneralParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param, ExporterModelDTO exporterModelDTO)
         {
             report.SetParameterValue("DateFrom", param.DateFrom);
@@ -122,7 +120,6 @@ namespace Dawem.ReportsModule.Helper
 
 
         }
-
         private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
@@ -130,7 +127,6 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
-
         private static void SetAttendaceLeaveStatusShortGroupByJobReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
@@ -139,12 +135,10 @@ namespace Dawem.ReportsModule.Helper
         {
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
-
         private static void SetAttendanceDetailsByEmployeeIDReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
         }
-
         private static void SetLateEarlyArrivalGroupByDepartmentReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);

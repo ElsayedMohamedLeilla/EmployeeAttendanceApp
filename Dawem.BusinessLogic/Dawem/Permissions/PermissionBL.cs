@@ -527,8 +527,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 {
                     var getUserPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                     && ps.Permission.CompanyId == currentCompanyId
-                    && ps.Permission.Type == authenticationType &&
-                    EnumHelper.CheckScreenForMenu(ps.ScreenCode, authenticationType) &&
+                    && ps.Permission.Type == authenticationType &&                
                     ps.Permission.UserId == currentUserId)
                         .GroupBy(ps => ps.ScreenCode)
                         .Select(g => new PermissionScreenResponseWithNamesModel
@@ -542,6 +541,10 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                                 ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
                             }).OrderBy(a => a.ActionCode).ToList()
                         }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+
+                    getUserPermissions = getUserPermissions.
+                        Where(sp => EnumHelper.CheckScreenForMenu(sp.ScreenCode, authenticationType)).
+                        ToList();
 
                     resonse.UserPermissions.AddRange(getUserPermissions);
                 }
@@ -565,6 +568,10 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                             ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
                         }).OrderBy(a => a.ActionCode).ToList()
                         }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+
+                    getResponsibilitiesPermissions = getResponsibilitiesPermissions.
+                        Where(sp => EnumHelper.CheckScreenForMenu(sp.ScreenCode, authenticationType)).
+                        ToList();
 
                     resonse.UserPermissions.AddRange(getResponsibilitiesPermissions);
                 }

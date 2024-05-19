@@ -104,14 +104,14 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateEmployeeVacanciesInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
-                ReportType = ReportType.EmployeeVacanciesInPeriodReport,
+                ReportType = ReportType.EmployeeAbsenseInPeriodReport,
             };
-            param.EmployeeID = 0;
+            //param.EmployeeID = 0;
             return GenerateReport(exporterModelDTO, param);
         }
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)

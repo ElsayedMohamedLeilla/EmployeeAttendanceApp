@@ -8,7 +8,7 @@
         AttendanceDetailsByEmployeeIDReport,
         LateEarlyArrivalGroupByDepartmentReport,
         LateEarlyArrivalGroupByEmployeeReport,
-        EmployeeVacanciesInPeriodReport
+        EmployeeAbsenseInPeriodReport
 
     }
 }

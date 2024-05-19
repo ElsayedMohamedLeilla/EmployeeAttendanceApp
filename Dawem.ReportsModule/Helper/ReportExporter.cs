@@ -73,6 +73,9 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.AttendaceLeaveStatusByDepartmentIDReport:
                         SetAttendaceLeaveStatusByDepartmentIDReportParameters(report, param);
                         break;
+                    case ReportType.EmployeeAbsenseInPeriodReport:
+                        SetEmployeeAbsenseInPeriodReportParameters(report, param);
+                        break;
                 }
 
                 #endregion
@@ -97,6 +100,8 @@ namespace Dawem.ReportsModule.Helper
             }
             catch (Exception ex)
             {
+                throw new BusinessValidationException(AmgadKeys.SorryErrorHappendDuringExtractingReport);
+
             }
             finally
             {
@@ -122,8 +127,8 @@ namespace Dawem.ReportsModule.Helper
         }
         private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
-            report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
-            report.SetParameterValue("DepartmentName", param.DepartmentName ?? "كل الاقسام");
+            //report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
+            //report.SetParameterValue("DepartmentName", param.DepartmentName ?? "كل الاقسام");
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
@@ -144,12 +149,11 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
-        private static void SetEmployeeVacanciesInPeriodParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetEmployeeAbsenseInPeriodReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("WithPermision", param.WithPermision == null ? false : true);
-            report.SetParameterValue("BothWithandWithoutPermision", param.BothWithandWithoutPermision == null ? false : true);
+            report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
         }
 
 

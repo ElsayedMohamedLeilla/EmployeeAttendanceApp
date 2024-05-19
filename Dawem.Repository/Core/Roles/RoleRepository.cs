@@ -21,7 +21,7 @@ namespace Dawem.Repository.Core.Roles
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;
@@ -30,11 +30,11 @@ namespace Dawem.Repository.Core.Roles
             if (criteria.Id != null)
             {
 
-                inner = inner.And(e => e.Id == criteria.Id);
+                inner = inner.Or(e => e.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                inner = inner.And(e => criteria.Ids.Contains(e.Id));
+                inner = inner.Or(e => criteria.Ids.Contains(e.Id));
             }
             
             var Query = Get(inner);

@@ -69,7 +69,7 @@ namespace Dawem.API.Helpers
             response.Method = method;
             return response;
         }
-        public static GetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo)
+        public static GetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo, bool? IsForMenu = false)
         {
             var response = new GetAllScreensWithAvailableActionsResponse();
 
@@ -80,8 +80,15 @@ namespace Dawem.API.Helpers
             foreach (var tempScreenCode in allScreenCodes)
             {
                 dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)tempScreenCode:
+                    (AdminPanelApplicationScreenCode)tempScreenCode :
                     (DawemAdminApplicationScreenCode)tempScreenCode;
+
+                if (IsForMenu.HasValue && IsForMenu.Value && requestInfo.Type == AuthenticationType.DawemAdmin)
+                {
+                    var screenName = screenCode.ToString();
+                    if (screenName.StartsWith(LeillaKeys.Employee) && screenName.Length > LeillaKeys.Employee.Length)
+                        continue;
+                }
 
                 var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
@@ -102,7 +109,7 @@ namespace Dawem.API.Helpers
             var actions = new List<DawemAdminApplicationAction>();
 
             var assembly = Assembly.GetExecutingAssembly();
-            var controllerType = type == AuthenticationType.AdminPanel ?  
+            var controllerType = type == AuthenticationType.AdminPanel ?
                 assembly.GetTypes()
                 .Where(type => typeof(AdminPanelControllerBase).IsAssignableFrom(type))
                 .FirstOrDefault(c => c.Name == screenName + LeillaKeys.Controller) :

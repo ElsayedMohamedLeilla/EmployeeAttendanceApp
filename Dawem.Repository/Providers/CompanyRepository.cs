@@ -25,7 +25,7 @@ namespace Dawem.Repository.Providers
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.HeadquarterAddress.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.HeadquarterPostalCode.ToLower().Trim().StartsWith(criteria.FreeText));

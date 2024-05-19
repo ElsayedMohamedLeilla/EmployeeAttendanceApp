@@ -279,6 +279,7 @@
         public const string DoneUpdateHolidayTypeSuccessfully = "DoneUpdateHolidayTypeSuccessfully";
         public const string MainDepartment = "MainDepartment";
         public const string AdminEmployee = "AdminEmployee";
+        public const string Employee = "Employee";
         public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";

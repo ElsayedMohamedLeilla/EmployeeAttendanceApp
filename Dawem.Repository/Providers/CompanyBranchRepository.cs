@@ -28,7 +28,7 @@ namespace Dawem.Repository.Providers
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Address.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 int id;

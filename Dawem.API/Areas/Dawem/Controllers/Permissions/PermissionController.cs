@@ -5,14 +5,11 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
     public class PermissionController : DawemControllerBase
     {
         private readonly IPermissionBL permissionBL;
@@ -109,9 +106,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
             return Success(await permissionBL.GetPermissionsInformations());
         }
         [HttpGet]
-        public ActionResult GetAllScreensWithAvailableActions()
+        public ActionResult GetAllScreensWithAvailableActions([FromQuery] bool IsForMenu)
         {
-            var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
+            var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo, IsForMenu);
             return Success(response, response.Screens.Count);
         }
         [HttpGet]

@@ -3,14 +3,11 @@ using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
-using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic;
-using DocumentFormat.OpenXml.InkML;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +21,7 @@ namespace Dawem.Repository.Employees
         public EmployeeRepository(IUserRepository _userRepository, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
-            userRepository =_userRepository ;
+            userRepository = _userRepository;
         }
         public IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria)
         {
@@ -37,7 +34,7 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
@@ -157,7 +154,7 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().StartsWith(criteria.FreeText));

@@ -554,7 +554,6 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                         Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted &&
                         ps.Permission.CompanyId == currentCompanyId &&
                         ps.Permission.Type == authenticationType &&
-                        EnumHelper.CheckScreenForMenu(ps.ScreenCode, authenticationType) &&
                         ps.Permission.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(ps.Permission.ResponsibilityId.Value)).
                         GroupBy(ps => ps.ScreenCode).
                         Select(g => new PermissionScreenResponseWithNamesModel

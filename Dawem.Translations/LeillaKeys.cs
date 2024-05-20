@@ -604,6 +604,7 @@
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
         public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
         public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
+        public const string SorryThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed = "Sorry!!ThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed!";
         public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
         public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
@@ -673,6 +674,6 @@
         public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
         public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
 
-        
+
     }
 }

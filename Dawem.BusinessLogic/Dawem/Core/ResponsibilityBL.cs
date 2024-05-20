@@ -98,6 +98,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
             {
                 getResponsibility.Name = model.Name;
                 getResponsibility.IsActive = model.IsActive;
+                getResponsibility.ForEmployeesApplication = model.ForEmployeesApplication;
                 getResponsibility.ModifiedDate = DateTime.Now;
                 getResponsibility.ModifyUserId = requestInfo.UserId;
                 await unitOfWork.SaveAsync();
@@ -191,6 +192,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                 {
                     Code = e.Code,
                     Name = e.Name,
+                    ForEmployeesApplication = e.ForEmployeesApplication,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
 
@@ -207,6 +209,7 @@ namespace Dawem.BusinessLogic.Dawem.Core
                     Id = e.Id,
                     Code = e.Code,
                     Name = e.Name,
+                    ForEmployeesApplication = e.ForEmployeesApplication,
                     IsActive = e.IsActive,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNotFound);
 

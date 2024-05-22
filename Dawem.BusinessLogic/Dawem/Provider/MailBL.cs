@@ -40,7 +40,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     }
                 });
             }
-            return true;
+
             // Create a new mail message
             MailMessage message = new()
             {

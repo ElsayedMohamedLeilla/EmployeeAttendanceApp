@@ -6,6 +6,8 @@
         EditAction,
         DeletionAction,
         ViewingAction,
+        AcceptAction,
+        RejectAction,
         EnableAction,
         DisableAction
     }

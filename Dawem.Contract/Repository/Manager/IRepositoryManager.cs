@@ -97,6 +97,8 @@ namespace Dawem.Contract.Repository.Manager
         INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository { get; }
         IEmployeeOTPRepository EmployeeOTPRepository { get; }
         IScreenRepository ScreenRepository { get; }
+        IScreenGroupRepository ScreenGroupRepository { get; }
+        IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository { get; }
         IOldScreenRepository OldScreenRepository { get; }
         IScreenActionRepository ScreenActionRepository { get; }
         IScreenNameTranslationRepository ScreenNameTranslationRepository { get; }

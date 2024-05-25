@@ -5,7 +5,8 @@ using Dawem.Domain.Entities.Others;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
-using Dawem.Models.DTOs.Dawem.Screens;
+using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using LinqKit;
 
 namespace Dawem.Repository.Providers

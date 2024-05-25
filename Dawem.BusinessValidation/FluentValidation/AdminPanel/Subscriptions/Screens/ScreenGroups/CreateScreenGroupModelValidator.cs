@@ -1,17 +1,17 @@
-﻿using Dawem.Models.DTOs.Dawem.Screens;
+﻿using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
 {
-    public class CreateScreenModelValidator : AbstractValidator<CreateScreenModel>
+    public class CreateScreenGroupModelValidator : AbstractValidator<CreateScreenGroupModel>
     {
-        public CreateScreenModelValidator()
+        public CreateScreenGroupModelValidator()
         {
 
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt != null && nt.Count > 0).
-                WithMessage(LeillaKeys.SorryYouMustEnterScreenName);
+                WithMessage(LeillaKeys.SorryYouMustEnterScreenGroupName);
 
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt.All(n => n.LanguageId > 0)).

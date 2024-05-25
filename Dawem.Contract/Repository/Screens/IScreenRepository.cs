@@ -1,6 +1,6 @@
 ﻿using Dawem.Data;
 using Dawem.Domain.Entities.Others;
-using Dawem.Models.DTOs.Dawem.Screens;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 
 namespace Dawem.Contract.Repository.Settings
 {

@@ -3,18 +3,17 @@ using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
-using Dawem.Models.DTOs.Dawem.Screens.Screens;
 
 
 namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 {
 
-    public class ScreenBLValidation : IScreenBLValidation
+    public class ScreenGroupBLValidation : IScreenGroupBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly RequestInfo requestInfo;
         private readonly INameTranslationBLValidationCore nameTranslationBLValidationCore;
-        public ScreenBLValidation(IRepositoryManager _repositoryManager,
+        public ScreenGroupBLValidation(IRepositoryManager _repositoryManager,
             RequestInfo _requestInfo,
             INameTranslationBLValidationCore _nameTranslationBLValidationCore)
         {
@@ -22,7 +21,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
             requestInfo = _requestInfo;
             nameTranslationBLValidationCore = _nameTranslationBLValidationCore;
         }
-        public async Task<bool> CreateValidation(CreateScreenModel model)
+        public async Task<bool> CreateValidation(CreateScreenGroupModel model)
         {
             #region Validate Arabic And English Languages
 
@@ -32,7 +31,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             return true;
         }
-        public async Task<bool> UpdateValidation(UpdateScreenModel model)
+        public async Task<bool> UpdateValidation(UpdateScreenGroupModel model)
         {
             #region Validate Arabic And English Languages
 

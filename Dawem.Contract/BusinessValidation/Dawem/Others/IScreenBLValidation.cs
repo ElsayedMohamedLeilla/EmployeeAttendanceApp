@@ -1,4 +1,4 @@
-﻿using Dawem.Models.DTOs.Dawem.Screens;
+﻿using Dawem.Models.DTOs.Dawem.Screens.Screens;
 
 namespace Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions
 {

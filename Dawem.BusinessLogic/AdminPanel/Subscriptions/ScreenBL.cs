@@ -12,7 +12,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
-using Dawem.Models.DTOs.Dawem.Screens;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -85,8 +85,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             getScreen.ModifiedDate = DateTime.Now;
             getScreen.ModifyUserId = requestInfo.UserId;
             getScreen.Notes = model.Notes;
-            getScreen.ScreenIcon = model.ScreenIcon;
-            getScreen.ScreenURL = model.ScreenURL;
+            getScreen.Icon = model.Icon;
+            getScreen.URL = model.URL;
 
             await unitOfWork.SaveAsync();
 
@@ -227,8 +227,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
-                    ScreenIcon = screen.ScreenIcon,
-                    ScreenURL = screen.ScreenURL,
+                    Icon = screen.Icon,
+                    URL = screen.URL,
                     Actions = screen.ScreenActions != null ?
                     screen.ScreenActions.Select(a => TranslationHelper.
                     GetTranslation(a.ActionCode.ToString(), requestInfo.Lang)).
@@ -254,8 +254,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
-                    ScreenIcon = screen.ScreenIcon,
-                    ScreenURL = screen.ScreenURL,
+                    Icon = screen.Icon,
+                    URL = screen.URL,
                     NameTranslations = screen.ScreenNameTranslations.
                     Select(pt => new NameTranslationModel
                     {

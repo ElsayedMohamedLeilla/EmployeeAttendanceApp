@@ -10,7 +10,7 @@ namespace Dawem.Domain.Entities.Others
     {
         public ScreenGroupType GroupType { get; set; }
         public string GroupTypeName { get; set; }
-        public string GroupIcon { get; set; }
+        public string Icon { get; set; }
         public int Order { get; set; }
         public List<ScreenGroupNameTranslation> ScreenGroupNameTranslations { get; set; }
     }

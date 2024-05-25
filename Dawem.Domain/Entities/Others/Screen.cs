@@ -16,8 +16,8 @@ namespace Dawem.Domain.Entities.Others
         public string ScreenCodeName { get; set; }
         public AuthenticationType Type { get; set; }
         public string TypeName { get; set; }
-        public string ScreenIcon { get; set; }
-        public string ScreenURL { get; set; }
+        public string Icon { get; set; }
+        public string URL { get; set; }
         public List<ScreenNameTranslation> ScreenNameTranslations { get; set; }
         public List<ScreenAction> ScreenActions { get; set; }
     }

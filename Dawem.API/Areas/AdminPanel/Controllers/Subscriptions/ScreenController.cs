@@ -2,7 +2,8 @@
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.DTOs.Dawem.Screens;
+using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 

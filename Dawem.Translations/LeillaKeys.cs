@@ -680,5 +680,13 @@
         public const string SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt = "Sorry!!YouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt!";
         public const string SorryYouMustChooseScreensWithPlan = "Sorry!!YouMustChooseScreensWithPlan!";
         public const string SorryYouMustEnterScreenName = "Sorry!!YouMustEnterScreenName!";
+        public const string SorryYouMustEnterScreenGroupName = "Sorry!!YouMustEnterScreenGroupName!";
+        public const string SorryYouMustEnterScreenId = "Sorry!!YouMustEnterScreenId!";
+        public const string SorryYouMustEnterScreenGroupId = "Sorry!!YouMustEnterScreenGroupId!";
+        public const string SorryScreenGroupNotFound = "Sorry!!ScreenGroupNotFound!";
+        public const string DoneCreateScreenGroupSuccessfully = "DoneCreateScreenGroupSuccessfully";
+        public const string DoneUpdateScreenGroupSuccessfully = "DoneUpdateScreenGroupSuccessfully";
+
+
     }
 }

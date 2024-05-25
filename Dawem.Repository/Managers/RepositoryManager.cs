@@ -128,11 +128,13 @@ namespace Dawem.Repository.Managers
         private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
         private IEmployeeOTPRepository employeeOTPRepository;
         private IScreenRepository screenRepository;
+        private IScreenGroupRepository screenGroupRepository;
+        private IScreenGroupNameTranslationRepository screenGroupNameTranslationRepository;
         private IScreenActionRepository screenActionRepository;
         private IScreenNameTranslationRepository screenNameTranslationRepository;
         private IPlanScreenRepository planScreenRepository;
         private IOldScreenRepository oldScreenRepository;
-        
+
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
             unitOfWork = _unitOfWork;
@@ -166,7 +168,7 @@ namespace Dawem.Repository.Managers
         public IPlanNameTranslationRepository PlanNameTranslationRepository =>
         planNameTranslationRepository ??= new PlanNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
 
-        
+
 
         public ISettingRepository SettingRepository =>
          dawemSettingRepository ??= new SettingRepository(unitOfWork, generalSetting);
@@ -186,6 +188,10 @@ namespace Dawem.Repository.Managers
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
         public IScreenRepository ScreenRepository =>
         screenRepository ??= new ScreenRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenGroupRepository ScreenGroupRepository =>
+        screenGroupRepository ??= new ScreenGroupRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository =>
+        screenGroupNameTranslationRepository ??= new ScreenGroupNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
         public IScreenActionRepository ScreenActionRepository =>
         screenActionRepository ??= new ScreenActionRepository(unitOfWork, generalSetting, requestInfo);
         public IScreenNameTranslationRepository ScreenNameTranslationRepository =>
@@ -197,7 +203,7 @@ namespace Dawem.Repository.Managers
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
-        employeeRepository ??= new EmployeeRepository(userRepository,unitOfWork, generalSetting, requestInfo);
+        employeeRepository ??= new EmployeeRepository(userRepository, unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting, requestInfo);
         public IAssignmentTypeRepository AssignmentTypeRepository =>

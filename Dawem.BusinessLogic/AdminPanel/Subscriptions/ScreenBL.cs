@@ -256,6 +256,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     Notes = screen.Notes,
                     Icon = screen.Icon,
                     URL = screen.URL,
+                    Actions = screen.ScreenActions != null ?
+                    screen.ScreenActions.Select(a => a.ActionCode).
+                    ToList() : null,
                     NameTranslations = screen.ScreenNameTranslations.
                     Select(pt => new NameTranslationModel
                     {

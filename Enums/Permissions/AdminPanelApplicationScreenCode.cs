@@ -11,6 +11,7 @@
         User,
         SubscriptionPayment,
         Setting,
-        Screen
+        Screen,
+        ScreenGroup
     }
 }

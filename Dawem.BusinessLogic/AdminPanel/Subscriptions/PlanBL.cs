@@ -104,6 +104,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             getPlan.MaxNumberOfEmployees = model.MaxNumberOfEmployees;
             getPlan.EmployeeCost = model.EmployeeCost;
             getPlan.Notes = model.Notes;
+            getPlan.AllScreensAvailable = model.AllScreensAvailable;
 
             await unitOfWork.SaveAsync();
 
@@ -154,6 +155,42 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 });
                 repositoryManager.PlanNameTranslationRepository.BulkUpdate(updatedPlanNameTranslations);
             }
+
+            #endregion
+
+            #region Update Plan Screens 
+
+            var existDbList = await repositoryManager.PlanScreenRepository
+                    .Get(e => e.PlanId == getPlan.Id)
+                    .ToListAsync();
+
+            var existingScreenIds = existDbList.Select(e => e.ScreenId).ToList();
+
+            var addedScreens = model.ScreenIds
+                .Where(screenId => !existingScreenIds.Contains(screenId))
+                .Select(screenId => new PlanScreen
+                {
+                    PlanId = getPlan.Id,
+                    ScreenId = screenId,
+                    ModifyUserId = requestInfo.UserId,
+                    ModifiedDate = DateTime.UtcNow
+                }).ToList();
+
+            var removedScreenIds = existDbList
+                .Where(ge => !model.ScreenIds.Contains(ge.ScreenId))
+                .Select(ge => ge.ScreenId)
+                .ToList();
+
+            var removedScreens = await repositoryManager.PlanScreenRepository
+                .Get(e => e.PlanId == model.Id && removedScreenIds.Contains(e.ScreenId))
+                .ToListAsync();
+
+            if (removedScreens.Count > 0)
+                repositoryManager.PlanScreenRepository.BulkDeleteIfExist(removedScreens);
+            if (addedScreens.Count > 0)
+                repositoryManager.PlanScreenRepository.BulkInsert(addedScreens);
+
+            await unitOfWork.SaveAsync();
 
             #endregion
 
@@ -251,6 +288,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     IsActive = plan.IsActive,
                     Notes = plan.Notes,
                     SubscriptionsCount = plan.Subscriptions.Count,
+                    AllScreensAvailable = plan.AllScreensAvailable,
+                    Screens = plan.PlanScreens != null ? plan.PlanScreens.Select(s => s.Screen.
+                    ScreenNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name).
+                    ToList() : null,
                     NameTranslations = plan.PlanNameTranslations.
                     Select(pt =>
                     new NameTranslationGetInfoModel
@@ -274,6 +316,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
                     EmployeeCost = plan.EmployeeCost,
                     IsActive = plan.IsActive,
+                    AllScreensAvailable = plan.AllScreensAvailable,
+                    ScreenIds = plan.PlanScreens != null ? plan.PlanScreens.Select(s => s.ScreenId).ToList() : null,
                     Notes = plan.Notes,
                     NameTranslations = plan.PlanNameTranslations.
                     Select(pt => new NameTranslationModel

@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Provider;
+﻿using Dawem.Contract.BusinessLogic.Dawem.Screens;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Models.Dtos.Dawem.Lookups;
 using Dawem.Translations;

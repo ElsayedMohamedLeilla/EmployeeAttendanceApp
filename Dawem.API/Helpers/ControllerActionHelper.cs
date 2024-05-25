@@ -7,7 +7,6 @@ using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Response;
 using Dawem.Models.Response.Dawem.Attendances.FingerprintDevices;
 using Dawem.Models.Response.Dawem.Others;
-using Dawem.Models.Response.Dawem.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;

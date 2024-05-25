@@ -673,11 +673,12 @@
         public const string YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible";
         public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
         public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
+        public const string DoneCreateScreenSuccessfully = "DoneCreateScreenSuccessfully";
+        public const string DoneUpdateScreenSuccessfully = "DoneUpdateScreenSuccessfully";
 
 
-        public const string DoneCreateScreenSuccessfully = "DoneCreateScreenSuccessfully!";
-        public const string DoneUpdateScreenSuccessfully = "DoneUpdateScreenSuccessfully!";
-
-
+        public const string SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt = "Sorry!!YouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt!";
+        public const string SorryYouMustChooseScreensWithPlan = "Sorry!!YouMustChooseScreensWithPlan!";
+        public const string SorryYouMustEnterScreenName = "Sorry!!YouMustEnterScreenName!";
     }
 }

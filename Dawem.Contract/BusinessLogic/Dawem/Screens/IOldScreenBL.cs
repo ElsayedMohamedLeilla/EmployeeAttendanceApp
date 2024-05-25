@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Lookups;
 
-namespace Dawem.Contract.BusinessLogic.Dawem.Provider
+namespace Dawem.Contract.BusinessLogic.Dawem.Screens
 {
     public interface IOldScreenBL
     {

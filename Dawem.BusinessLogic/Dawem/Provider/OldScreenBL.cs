@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessLogic.Dawem.Screens;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;

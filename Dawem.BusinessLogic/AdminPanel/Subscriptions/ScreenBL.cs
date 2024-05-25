@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Dawem.Screens;
+using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -7,20 +7,17 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
-using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Screens;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
-using Dawem.Models.Response.Dawem.Screens;
+using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Dawem.Screens
+namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 {
     public class ScreenBL : IScreenBL
     {
@@ -43,69 +40,30 @@ namespace Dawem.BusinessLogic.Dawem.Screens
         }
         public async Task<int> Create(CreateScreenModel model)
         {
-            var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
-                  Select(l => new ActiveLanguageModel
-                  {
-                      Id = l.Id,
-                      ISO2 = l.ISO2
-                  }).ToListAsync();
+            #region Business Validation
 
-            var allScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions.Screens;
+            await screenBLValidation.CreateValidation(model);
 
-            foreach (var screen in allScreensWithAvailableActions)
-            {
-                var dbScreen = new Screen
-                {
-                    ScreenCode = screen.ScreenCode,
-                    ScreenCodeName = ((AdminPanelApplicationScreenCode)screen.ScreenCode).ToString(),
-                    Type = AuthenticationType.AdminPanel,
-                    TypeName = AuthenticationType.AdminPanel.ToString(),
-                    ScreenActions = screen.AvailableActions.Select(a=> new ScreenAction
-                    {
-                        ActionCode = a,
-                        ActionCodeName = a.ToString(),
-                        IsActive = true
-                    }).ToList(),
-                    ScreenNameTranslations = getActiveLanguages.
-                    Select(t=> new ScreenNameTranslation
-                    {
-                        LanguageId = t.Id,
-                        Name = TranslationHelper.GetTranslation(((AdminPanelApplicationScreenCode)screen.ScreenCode).ToString() + LeillaKeys.AdminPanelScreen, t.ISO2)
-                    }).
-                    ToList(),
-                    IsActive = true,
-                };
-                repositoryManager.ScreenRepository.Insert(dbScreen);
-            }
+            #endregion
 
+            unitOfWork.CreateTransaction();
+
+            #region Insert Screen
+
+            var screen = mapper.Map<Screen>(model);
+            screen.AddUserId = requestInfo.UserId;
+            screen.Type = requestInfo.Type;
+            repositoryManager.ScreenRepository.Insert(screen);
             await unitOfWork.SaveAsync();
 
-            //#region Business Validation
+            #endregion
 
-            //await screenBLValidation.CreateValidation(model);
+            #region Handle Response
 
-            //#endregion
+            await unitOfWork.CommitAsync();
+            return screen.Id;
 
-            //unitOfWork.CreateTransaction();
-
-            //#region Insert Screen
-
-            //var screen = mapper.Map<Screen>(model);
-            //screen.AddUserId = requestInfo.UserId;
-            //screen.Type = requestInfo.Type;
-            //repositoryManager.ScreenRepository.Insert(screen);
-            //await unitOfWork.SaveAsync();
-
-            //#endregion
-
-            //#region Handle Response
-
-            //await unitOfWork.CommitAsync();
-            //return screen.Id;
-
-            //#endregion
-
-            return 0;
+            #endregion
 
         }
         public async Task<bool> Update(UpdateScreenModel model)
@@ -127,6 +85,8 @@ namespace Dawem.BusinessLogic.Dawem.Screens
             getScreen.ModifiedDate = DateTime.Now;
             getScreen.ModifyUserId = requestInfo.UserId;
             getScreen.Notes = model.Notes;
+            getScreen.ScreenIcon = model.ScreenIcon;
+            getScreen.ScreenURL = model.ScreenURL;
 
             await unitOfWork.SaveAsync();
 
@@ -222,6 +182,42 @@ namespace Dawem.BusinessLogic.Dawem.Screens
             #endregion
 
         }
+        public async Task<GetScreensForDropDownResponse> GetForDropDown(GetScreensCriteria criteria)
+        {
+            criteria.IsActive = true;
+            var screenRepository = repositoryManager.ScreenRepository;
+            var query = screenRepository.GetAsQueryable(criteria);
+
+            #region paging
+
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+
+            #region sorting
+            var queryOrdered = screenRepository.OrderBy(query, nameof(Screen.Id), LeillaKeys.Desc);
+            #endregion
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            #endregion
+
+            #region Handle Response
+
+            var screensList = await queryPaged.Select(screen => new GetScreensForDropDownResponseModel
+            {
+                Id = screen.Id,
+                Name = screen.ScreenNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+            }).ToListAsync();
+
+            return new GetScreensForDropDownResponse
+            {
+                Screens = screensList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
         public async Task<GetScreenInfoResponseModel> GetInfo(int screenId)
         {
             var screen = await repositoryManager.ScreenRepository.Get(e => e.Id == screenId && !e.IsDeleted)
@@ -231,6 +227,8 @@ namespace Dawem.BusinessLogic.Dawem.Screens
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
+                    ScreenIcon = screen.ScreenIcon,
+                    ScreenURL = screen.ScreenURL,
                     Actions = screen.ScreenActions != null ?
                     screen.ScreenActions.Select(a => TranslationHelper.
                     GetTranslation(a.ActionCode.ToString(), requestInfo.Lang)).
@@ -256,6 +254,8 @@ namespace Dawem.BusinessLogic.Dawem.Screens
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
+                    ScreenIcon = screen.ScreenIcon,
+                    ScreenURL = screen.ScreenURL,
                     NameTranslations = screen.ScreenNameTranslations.
                     Select(pt => new NameTranslationModel
                     {
@@ -301,9 +301,9 @@ namespace Dawem.BusinessLogic.Dawem.Screens
         public async Task<GetScreensInformationsResponseDTO> GetScreensInformations()
         {
             var screenRepository = repositoryManager.ScreenRepository;
-            var query = screenRepository.Get(screen => (requestInfo.Type == AuthenticationType.DawemAdmin &&
-            screen.Type != AuthenticationType.AdminPanel) || (requestInfo.Type == AuthenticationType.AdminPanel &&
-            screen.Type == AuthenticationType.AdminPanel));
+            var query = screenRepository.Get(screen => requestInfo.Type == AuthenticationType.DawemAdmin &&
+            screen.Type != AuthenticationType.AdminPanel || requestInfo.Type == AuthenticationType.AdminPanel &&
+            screen.Type == AuthenticationType.AdminPanel);
 
             #region Handle Response
 

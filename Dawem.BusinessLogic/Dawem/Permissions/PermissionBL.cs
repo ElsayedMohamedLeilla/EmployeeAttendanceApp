@@ -13,7 +13,6 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
-using Dawem.Models.Response.Dawem.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -418,7 +417,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        } 
+        }
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
             var permissionRepository = repositoryManager.PermissionRepository;
@@ -528,7 +527,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 {
                     var getUserPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                     && ps.Permission.CompanyId == currentCompanyId
-                    && ps.Permission.Type == authenticationType &&                
+                    && ps.Permission.Type == authenticationType &&
                     ps.Permission.UserId == currentUserId)
                         .GroupBy(ps => ps.ScreenCode)
                         .Select(g => new PermissionScreenResponseWithNamesModel

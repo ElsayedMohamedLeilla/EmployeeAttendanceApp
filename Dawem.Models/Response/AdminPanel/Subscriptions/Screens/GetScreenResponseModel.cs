@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Dawem.Screens
+namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
 {
     public class GetScreenResponseModel
     {

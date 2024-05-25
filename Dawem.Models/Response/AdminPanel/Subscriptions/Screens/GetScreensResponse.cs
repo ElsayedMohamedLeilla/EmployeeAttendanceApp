@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Dawem.Screens
+﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
 {
     public class GetScreensResponse
     {

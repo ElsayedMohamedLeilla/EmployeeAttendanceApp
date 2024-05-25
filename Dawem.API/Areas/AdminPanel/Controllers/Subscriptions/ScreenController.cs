@@ -1,8 +1,5 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.API.Helpers;
-using Dawem.Contract.BusinessLogic.Dawem.Screens;
-using Dawem.Enums.Generals;
-using Dawem.Helpers;
+using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens;
@@ -11,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    public class ScreenController : DawemControllerBase
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
+    public class ScreenController : AdminPanelControllerBase
     {
         private readonly IScreenBL screenBL;
         private readonly RequestInfo requestInfo;
@@ -26,15 +23,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         [HttpPost]
         public async Task<ActionResult> Create(CreateScreenModel model)
         {
-            #region Set All Screens Available Actions
-
-            requestInfo.Type = AuthenticationType.AdminPanel;
-            requestInfo.CompanyId = 0;
-
-            APIHelper.AllScreensWithAvailableActions ??= ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
-
-            #endregion
-
             var result = await screenBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateScreenSuccessfully);
         }
@@ -53,6 +41,17 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
                 return BadRequest();
             }
             var screensResponse = await screenBL.Get(criteria);
+
+            return Success(screensResponse.Screens, screensResponse.TotalCount);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetScreensCriteria criteria)
+        {
+            if (criteria == null)
+            {
+                return BadRequest();
+            }
+            var screensResponse = await screenBL.GetForDropDown(criteria);
 
             return Success(screensResponse.Screens, screensResponse.TotalCount);
         }

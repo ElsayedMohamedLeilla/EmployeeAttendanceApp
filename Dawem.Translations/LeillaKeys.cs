@@ -675,5 +675,9 @@
         public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
 
 
+        public const string DoneCreateScreenSuccessfully = "DoneCreateScreenSuccessfully!";
+        public const string DoneUpdateScreenSuccessfully = "DoneUpdateScreenSuccessfully!";
+
+
     }
 }

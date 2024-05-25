@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
+using Dawem.Models.Response.Dawem.Screens;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Permissions
 {

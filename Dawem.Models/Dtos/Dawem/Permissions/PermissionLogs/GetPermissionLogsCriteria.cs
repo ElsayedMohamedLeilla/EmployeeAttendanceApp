@@ -7,6 +7,6 @@ namespace Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs
     {
         public int? UserId { get; set; }
         public int? ScreenCode { get; set; }
-        public DawemAdminApplicationAction? ActionCode { get; set; }
+        public ApplicationActionCode? ActionCode { get; set; }
     }
 }

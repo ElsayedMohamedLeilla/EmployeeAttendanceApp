@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Response.Dawem.Permissions.Permissions;
+using Dawem.Models.Response.Dawem.Screens;
 
 namespace Dawem.Models.Dtos.Dawem.Identities
 {

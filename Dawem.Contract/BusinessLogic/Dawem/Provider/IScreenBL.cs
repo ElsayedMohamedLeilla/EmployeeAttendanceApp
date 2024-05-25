@@ -2,7 +2,7 @@
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Provider
 {
-    public interface IScreenBL
+    public interface IOldScreenBL
     {
         Task<int> Create(CreatedScreen screen);
         Task<List<ScreenDto>> GetAllDescendantScreens(int id);

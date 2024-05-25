@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Enums.Permissions
 {
-    public enum DawemAdminApplicationAction
+    public enum ApplicationActionCode
     {
         AdditionAction,
         EditAction,

@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    public class ScreenController : DawemControllerBase
-    {
-        private readonly IScreenBL screenBL;
 
-        public ScreenController(IScreenBL _screenBL)
+    public class OldScreenController : DawemControllerBase
+    {
+        private readonly IOldScreenBL screenBL;
+
+        public OldScreenController(IOldScreenBL _screenBL)
         {
             screenBL = _screenBL;
         }
@@ -34,7 +34,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult<IEnumerable<Screen>> GetAllDescendantScreens([FromBody] int Id)
+        public ActionResult<IEnumerable<OldNotUsedScreen>> GetAllDescendantScreens([FromBody] int Id)
         {
 
             if (Id == default)

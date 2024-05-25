@@ -18,6 +18,7 @@ using Dawem.Enums.Generals;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -343,13 +344,29 @@ namespace Dawem.Data
          .HasForeignKey(p => p.SanctionId)
          .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<NotificationUserFCMToken>().
+                HasOne(p => p.NotificationUser).
+                WithMany(b => b.NotificationUserFCMTokens).
+                HasForeignKey(p => p.NotificationUserId).
+                OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ScreenNameTranslation>().
+                HasOne(p => p.Screen).
+                WithMany(b => b.ScreenNameTranslations).
+                HasForeignKey(p => p.ScreenId).
+                OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<NotificationUserFCMToken>()
-      .HasOne(p => p.NotificationUser)
-      .WithMany(b => b.NotificationUserFCMTokens)
-      .HasForeignKey(p => p.NotificationUserId)
-      .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ScreenAction>().
+                HasOne(p => p.Screen).
+                WithMany(b => b.ScreenActions).
+                HasForeignKey(p => p.ScreenId).
+                OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PlanScreen>().
+                HasOne(p => p.Plan).
+                WithMany(b => b.PlanScreens).
+                HasForeignKey(p => p.PlanId).
+                OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<SummonDepartment>()
@@ -642,7 +659,7 @@ namespace Dawem.Data
 
             #endregion
         }
-
+        public DbSet<Screen> Screens { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Setting> DawemSettings { get; set; }
         public DbSet<Plan> Plans { get; set; }

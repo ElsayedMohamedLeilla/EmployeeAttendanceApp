@@ -13,6 +13,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
+using Dawem.Models.Response.Dawem.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

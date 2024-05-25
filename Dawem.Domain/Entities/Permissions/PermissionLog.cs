@@ -18,7 +18,7 @@ namespace Dawem.Domain.Entities.Permissions
         [ForeignKey(nameof(UserId))]
         public virtual MyUser User { get; set; }
         public int ScreenCode { get; set; }
-        public DawemAdminApplicationAction ActionCode { get; set; }
+        public ApplicationActionCode ActionCode { get; set; }
         public AuthenticationType Type { get; set; }
     }
 }

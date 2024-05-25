@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Lookups;
 
 namespace Dawem.Contract.Repository.Lookups
 {
-    public interface IScreenRepository : IGenericRepository<Screen>
+    public interface IOldScreenRepository : IGenericRepository<OldNotUsedScreen>
     {
 
     }

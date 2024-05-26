@@ -40,7 +40,7 @@ namespace Dawem.ReportsModule.Helper
             return stream.ToArray();
         }
 
-        public static HttpResponseMessage ExportToPdf(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
+        public static HttpResponseMessage ExportToPdf(ExporterModelDTO exporterModelDTO, ReportCritria param)
         {
             Report report = new();
             try
@@ -73,9 +73,20 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.AttendaceLeaveStatusByDepartmentIDReport:
                         SetAttendaceLeaveStatusByDepartmentIDReportParameters(report, param);
                         break;
-                    case ReportType.EmployeeAbsenseInPeriodReport:
-                        SetEmployeeAbsenseInPeriodReportParameters(report, param);
+                    case ReportType.EmployeeAbsenseInPeriodGroupByEmployeeReport:
+                        SetEmployeeAbsenseInPeriodGroupByEmployeeReportParameters(report, param);
                         break;
+                    case ReportType.EmployeeAbsenseInPeriodGroupByDepartmentReport:
+                        SetEmployeeAbsenseInPeriodGroupByDepartmentReportParameters(report, param);
+                        break;
+                    case ReportType.OverTimeInSelectedPeriodReport:
+                        SetOverTimeInSelectedPeriodReportParameters(report, param);
+                        break;
+                    case ReportType.AttendaceLeaveSummaryReport:
+                        SetAttendaceLeaveSummaryReportParameters(report, param);
+                        break;
+
+                        
                 }
 
                 #endregion
@@ -101,7 +112,6 @@ namespace Dawem.ReportsModule.Helper
             catch (Exception ex)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryErrorHappendDuringExtractingReport);
-
             }
             finally
             {
@@ -110,7 +120,7 @@ namespace Dawem.ReportsModule.Helper
 
             return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
-        private static void SetGeneralParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param, ExporterModelDTO exporterModelDTO)
+        private static void SetGeneralParameters(Report report, ReportCritria param, ExporterModelDTO exporterModelDTO)
         {
             report.SetParameterValue("DateFrom", param.DateFrom);
             report.SetParameterValue("DateTo", param.DateTo);
@@ -125,35 +135,54 @@ namespace Dawem.ReportsModule.Helper
 
 
         }
-        private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
-        {
-            //report.SetParameterValue("ZoneName", param.ZoneName ?? "كل المناطق");
-            //report.SetParameterValue("DepartmentName", param.DepartmentName ?? "كل الاقسام");
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-        }
-        private static void SetAttendaceLeaveStatusShortGroupByJobReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
-        {
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-        }
-        private static void SetAttendaceLeaveStatusByDepartmentIDReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
-        {
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-        }
-        private static void SetAttendanceDetailsByEmployeeIDReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
-        {
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
-        }
-        private static void SetLateEarlyArrivalGroupByDepartmentReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, ReportCritria param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
         }
-        private static void SetEmployeeAbsenseInPeriodReportParameters(Report report, GetEmployeeAttendanceInPeriodReportParameters param)
+        private static void SetAttendaceLeaveStatusShortGroupByJobReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+        private static void SetAttendaceLeaveStatusByDepartmentIDReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+        private static void SetAttendanceDetailsByEmployeeIDReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        }
+        private static void SetLateEarlyArrivalGroupByDepartmentReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        }
+        private static void SetEmployeeAbsenseInPeriodGroupByEmployeeReportParameters(Report report, ReportCritria param)
         {
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
             report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+        }
+        private static void SetEmployeeAbsenseInPeriodGroupByDepartmentReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+        }
+
+        private static void SetOverTimeInSelectedPeriodReportParameters(Report report, ReportCritria param)
+        {
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OverTimeFrom", param.OverTimeFrom ?? 0);
+            report.SetParameterValue("OverTimeTo", param.OverTimeTo ?? 0);
+
+        }
+        private static void SetAttendaceLeaveSummaryReportParameters(Report report, ReportCritria param)
+        {
+
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
         }
 
 

@@ -15,7 +15,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             _reportGeneratorBL = reportGeneratorBL;
         }
         [HttpPost]
-        public IActionResult GetEmployeeDailyAttendanceGroupByDay([FromQuery]  GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetEmployeeDailyAttendanceGroupByDay([FromQuery]  ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateEmployeeDailyAttendanceGroupByDay(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -38,7 +38,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return BadRequest();
         }
         [HttpPost]
-        public IActionResult GetEmployeeAttendanceByDepartmentReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetEmployeeAttendanceByDepartmentReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusByDepartmentID(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -61,7 +61,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetAttendaceLeaveStatusShortGroupByJobReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetAttendaceLeaveStatusShortGroupByJobReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateAttendaceLeaveStatusShortGroupByJobReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -84,7 +84,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetAttendanceDetailsByEmployeeIDReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetAttendanceDetailsByEmployeeIDReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateAttendanceDetailsByEmployeeIDReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -107,7 +107,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetLateEarlyArrivalGroupByDepartmentReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetLateEarlyArrivalGroupByDepartmentReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateLateEarlyArrivalGroupByDepartmentReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -130,7 +130,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetLateEarlyArrivalGroupByEmployeeReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetLateEarlyArrivalGroupByEmployeeReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateLateEarlyArrivalGroupByEmployeeReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -153,16 +153,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             return NotFound();
         }
         [HttpPost]
-        public IActionResult GetEmployeeAbsenseInPeriodReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
+        public IActionResult GetEmployeeAbsenseInPeriodGroupByEmployeeReport([FromQuery] ReportCritria param)
         {
-            var response = _reportGeneratorBL.GenerateEmployeeAbsenseInPeriodReport(param);
+            var response = _reportGeneratorBL.GenerateEmployeeAbsenseInPeriodGroupByEmployeeReport(param);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var contentStream = response.Content.ReadAsStream();
                 switch (param.ExportFormat)
                 {
                     case ExportFormat.Pdf:
-                        return File(contentStream, "application/pdf", "EmployeeAbsenseInPeriodReport.pdf");
+                        return File(contentStream, "application/pdf", "EmployeeAbsenseInPeriodGroupByEmployeeReport.pdf");
                     case ExportFormat.Excel:
                         // Return Excel file
                         // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
@@ -175,33 +175,75 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             }
             return NotFound();
         }
-
-
-        //[HttpPost]
-        //public IActionResult GetAttendaceLeaveSummaryReport([FromQuery] GetEmployeeAttendanceInPeriodReportParameters param)
-        //{
-        //    var response = _reportGeneratorBL.GenerateAttendaceLeaveSummary(param);
-        //    if (response != null && response.IsSuccessStatusCode)
-        //    {
-        //        var contentStream = response.Content.ReadAsStream();
-        //        switch (param.ExportFormat)
-        //        {
-        //            case ExportFormat.Pdf:
-        //                return File(contentStream, "application/pdf", "AttendaceLeaveSummaryReport.pdf");
-        //            case ExportFormat.Excel:
-        //                // Return Excel file
-        //                // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
-        //                break;
-        //            // Handle other export types as needed
-        //            default:
-        //                // Handle unsupported export types
-        //                break;
-        //        }
-        //    }
-        //    return NotFound();
-        //}
-
-
+        [HttpPost]
+        public IActionResult GetEmployeeAbsenseInPeriodGroupByDepartmentReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateEmployeeAbsenseInPeriodGroupByDepartmentReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "EmployeeAbsenseInPeriodGroupByDepartmentReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public IActionResult GetOverTimeInSelectedPeriodReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateOverTimeInSelectedPeriodReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "OverTimeInSelectedPeriodReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public IActionResult GetAttendaceLeaveSummaryReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateAttendaceLeaveSummaryReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "AttendaceLeaveSummaryReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
 
     }
 }

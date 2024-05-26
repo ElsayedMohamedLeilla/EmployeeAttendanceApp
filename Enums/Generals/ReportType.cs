@@ -8,7 +8,10 @@
         AttendanceDetailsByEmployeeIDReport,
         LateEarlyArrivalGroupByDepartmentReport,
         LateEarlyArrivalGroupByEmployeeReport,
-        EmployeeAbsenseInPeriodReport
+        EmployeeAbsenseInPeriodGroupByEmployeeReport,
+        EmployeeAbsenseInPeriodGroupByDepartmentReport,
+        OverTimeInSelectedPeriodReport,
+        AttendaceLeaveSummaryReport
 
     }
 }

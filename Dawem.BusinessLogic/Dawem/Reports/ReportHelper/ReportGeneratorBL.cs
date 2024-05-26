@@ -30,8 +30,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             //_context = context;
 
         }
-
-        public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(ReportCritria param)
         {
             //object[] parameters =
             //{
@@ -55,8 +54,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return GenerateReport(exporterModelDTO, param);
 
         }
-
-        public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -65,7 +63,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -74,7 +72,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -83,8 +81,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-
-        public HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -94,8 +91,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             param.EmployeeID = 0;
             return GenerateReport(exporterModelDTO, param);
         }
-
-        public HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -104,17 +100,45 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByEmployeeReport(ReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
-                ReportType = ReportType.EmployeeAbsenseInPeriodReport,
+                ReportType = ReportType.EmployeeAbsenseInPeriodGroupByEmployeeReport,
             };
             //param.EmployeeID = 0;
             return GenerateReport(exporterModelDTO, param);
         }
-        public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param)
+        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByDepartmentReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.EmployeeAbsenseInPeriodGroupByDepartmentReport,
+            };
+            param.EmployeeID = 0; // no filter by employee report by department
+            return GenerateReport(exporterModelDTO, param);
+        }
+        public HttpResponseMessage GenerateOverTimeInSelectedPeriodReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.OverTimeInSelectedPeriodReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        public HttpResponseMessage GenerateAttendaceLeaveSummaryReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.AttendanceReports,
+                ReportType = ReportType.AttendaceLeaveSummaryReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
                              param.ExportFormat == ExportFormat.Excel ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Xlsx :

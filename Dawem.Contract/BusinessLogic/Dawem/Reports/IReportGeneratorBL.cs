@@ -8,14 +8,19 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
     public interface IReportGeneratorBL
     {
         //1
-        HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateEmployeeAbsenseInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters param);
-        HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, GetEmployeeAttendanceInPeriodReportParameters param);
+        HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(ReportCritria param);
+        HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(ReportCritria param);
+        HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(ReportCritria param);
+        HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(ReportCritria param);
+        HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(ReportCritria param);
+        HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(ReportCritria param);
+        HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByEmployeeReport(ReportCritria param);
+        HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByDepartmentReport(ReportCritria param);
+        HttpResponseMessage GenerateOverTimeInSelectedPeriodReport(ReportCritria param);
+
+        HttpResponseMessage GenerateAttendaceLeaveSummaryReport(ReportCritria param);
+
+        HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param);
         public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType);
         
            

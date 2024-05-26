@@ -70,7 +70,6 @@ namespace Dawem.Repository.Managers
         private ISettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
         private ICurrencyRepository currencyRepository;
-        private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
@@ -128,8 +127,13 @@ namespace Dawem.Repository.Managers
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
         private IEmployeeOTPRepository employeeOTPRepository;
-
-
+        private IScreenRepository screenRepository;
+        private IScreenGroupRepository screenGroupRepository;
+        private IScreenGroupNameTranslationRepository screenGroupNameTranslationRepository;
+        private IScreenActionRepository screenActionRepository;
+        private IScreenNameTranslationRepository screenNameTranslationRepository;
+        private IPlanScreenRepository planScreenRepository;
+        private IOldScreenRepository oldScreenRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
@@ -164,7 +168,7 @@ namespace Dawem.Repository.Managers
         public IPlanNameTranslationRepository PlanNameTranslationRepository =>
         planNameTranslationRepository ??= new PlanNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
 
-        
+
 
         public ISettingRepository SettingRepository =>
          dawemSettingRepository ??= new SettingRepository(unitOfWork, generalSetting);
@@ -183,13 +187,23 @@ namespace Dawem.Repository.Managers
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
         public IScreenRepository ScreenRepository =>
-        screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
+        screenRepository ??= new ScreenRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenGroupRepository ScreenGroupRepository =>
+        screenGroupRepository ??= new ScreenGroupRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository =>
+        screenGroupNameTranslationRepository ??= new ScreenGroupNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenActionRepository ScreenActionRepository =>
+        screenActionRepository ??= new ScreenActionRepository(unitOfWork, generalSetting, requestInfo);
+        public IScreenNameTranslationRepository ScreenNameTranslationRepository =>
+        screenNameTranslationRepository ??= new ScreenNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+        public IPlanScreenRepository PlanScreenRepository =>
+        planScreenRepository ??= new PlanScreenRepository(unitOfWork, generalSetting, requestInfo);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
-        employeeRepository ??= new EmployeeRepository(userRepository,unitOfWork, generalSetting, requestInfo);
+        employeeRepository ??= new EmployeeRepository(userRepository, unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting, requestInfo);
         public IAssignmentTypeRepository AssignmentTypeRepository =>
@@ -318,7 +332,7 @@ namespace Dawem.Repository.Managers
             notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
         public IEmployeeOTPRepository EmployeeOTPRepository =>
            employeeOTPRepository ??= new EmployeeOTPRepository(unitOfWork, generalSetting);
-
-
+        public IOldScreenRepository OldScreenRepository =>
+           oldScreenRepository ??= new OldScreenRepository(unitOfWork, generalSetting);
     }
 }

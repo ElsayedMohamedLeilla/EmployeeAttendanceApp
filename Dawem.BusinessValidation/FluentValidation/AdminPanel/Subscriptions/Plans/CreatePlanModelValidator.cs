@@ -41,6 +41,16 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
                 Must(nt => nt.GroupBy(nt => nt.LanguageId).ToList().All(g => g.Count() == 1)).
                 WithMessage(LeillaKeys.SorryYouMustNotRepeatLanguagesWithNames);
 
+            RuleFor(model => model.ScreenIds).
+               Must(x => x == null || x.Count <= 0).
+               When(x=>x.AllScreensAvailable).
+               WithMessage(LeillaKeys.SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt);
+
+            RuleFor(model => model.ScreenIds).
+               Must(x => x != null && x.Count > 0).
+               When(x => !x.AllScreensAvailable).
+               WithMessage(LeillaKeys.SorryYouMustChooseScreensWithPlan);
+
         }
     }
 }

@@ -417,7 +417,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        } 
+        }
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
             var permissionRepository = repositoryManager.PermissionRepository;
@@ -527,7 +527,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 {
                     var getUserPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                     && ps.Permission.CompanyId == currentCompanyId
-                    && ps.Permission.Type == authenticationType &&                
+                    && ps.Permission.Type == authenticationType &&
                     ps.Permission.UserId == currentUserId)
                         .GroupBy(ps => ps.ScreenCode)
                         .Select(g => new PermissionScreenResponseWithNamesModel
@@ -554,7 +554,6 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                         Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted &&
                         ps.Permission.CompanyId == currentCompanyId &&
                         ps.Permission.Type == authenticationType &&
-                        EnumHelper.CheckScreenForMenu(ps.ScreenCode, authenticationType) &&
                         ps.Permission.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(ps.Permission.ResponsibilityId.Value)).
                         GroupBy(ps => ps.ScreenCode).
                         Select(g => new PermissionScreenResponseWithNamesModel

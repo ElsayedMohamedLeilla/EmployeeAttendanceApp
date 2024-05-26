@@ -97,13 +97,13 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(await subscriptionBL.Disable(model));
         }
         [HttpPut]
-        public async Task<ActionResult> Approve([FromQuery] ApproveSubscriptionModel model)
+        public async Task<ActionResult> Accept([FromQuery] AcceptSubscriptionModel model)
         {
             if (model is null)
             {
                 return BadRequest();
             }
-            return Success(await subscriptionBL.Approve(model));
+            return Success(await subscriptionBL.Accept(model));
         }
         [HttpGet]
         public async Task<ActionResult> GetSubscriptionsInformations()

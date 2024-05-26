@@ -15,7 +15,7 @@ namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
         Task<GetSubscriptionsForDropDownResponse> GetForDropDown(GetSubscriptionsCriteria model);
         Task<bool> Disable(DisableModelDTO model);
         Task<bool> Enable(int subscriptionId);
-        Task<bool> Approve(ApproveSubscriptionModel model);
+        Task<bool> Accept(AcceptSubscriptionModel model);
         Task<bool> Delete(int subscriptionId);
         Task<GetSubscriptionsInformationsResponseDTO> GetSubscriptionsInformations();
         Task HandleSubscriptions();

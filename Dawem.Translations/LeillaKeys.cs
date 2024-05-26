@@ -604,6 +604,7 @@
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
         public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
         public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
+        public const string SorryThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed = "Sorry!!ThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed!";
         public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
         public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
@@ -672,7 +673,18 @@
         public const string YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible";
         public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
         public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
+        public const string DoneCreateScreenSuccessfully = "DoneCreateScreenSuccessfully";
+        public const string DoneUpdateScreenSuccessfully = "DoneUpdateScreenSuccessfully";
+        public const string SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt = "Sorry!!YouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt!";
+        public const string SorryYouMustChooseScreensWithPlan = "Sorry!!YouMustChooseScreensWithPlan!";
+        public const string SorryYouMustEnterScreenName = "Sorry!!YouMustEnterScreenName!";
+        public const string SorryYouMustEnterScreenGroupName = "Sorry!!YouMustEnterScreenGroupName!";
+        public const string SorryYouMustEnterScreenId = "Sorry!!YouMustEnterScreenId!";
+        public const string SorryYouMustEnterScreenGroupId = "Sorry!!YouMustEnterScreenGroupId!";
+        public const string SorryScreenGroupNotFound = "Sorry!!ScreenGroupNotFound!";
+        public const string DoneCreateScreenGroupSuccessfully = "DoneCreateScreenGroupSuccessfully";
+        public const string DoneUpdateScreenGroupSuccessfully = "DoneUpdateScreenGroupSuccessfully";
 
-        
+
     }
 }

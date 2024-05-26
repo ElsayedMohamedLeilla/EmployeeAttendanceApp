@@ -18,8 +18,13 @@ using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Dawem.Subscriptions;
+using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.Dtos.Dawem.Summons.Sanctions;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
+using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Assignments;
 using Dawem.Models.Requests.Justifications;
@@ -354,6 +359,34 @@ namespace Dawem.Validation.FluentValidation
     public class GetCompanyBranchesCriteriaValidator : AbstractValidator<GetCompanyBranchesCriteria>
     {
         public GetCompanyBranchesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSubscriptionsCriteriaValidator : AbstractValidator<GetSubscriptionsCriteria>
+    {
+        public GetSubscriptionsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSubscriptionPaymentsCriteriaValidator : AbstractValidator<GetSubscriptionPaymentsCriteria>
+    {
+        public GetSubscriptionPaymentsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetScreensCriteriaValidator : AbstractValidator<GetScreensCriteria>
+    {
+        public GetScreensCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetPlansCriteriaValidator : AbstractValidator<GetPlansCriteria>
+    {
+        public GetPlansCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

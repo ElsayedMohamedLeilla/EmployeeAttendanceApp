@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             await unitOfWork.SaveAsync();
             return true;
         }
-        public async Task<bool> Approve(ApproveSubscriptionModel model)
+        public async Task<bool> Accept(AcceptSubscriptionModel model)
         {
             var subscription = await repositoryManager.SubscriptionRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsWaitingForApproval &&

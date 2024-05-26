@@ -552,11 +552,15 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
                     SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing,
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
                 Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
                     SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
                 TranslationHelper.GetTranslation(LeillaKeys.SummonDone, requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
             }).ToListAsync();
@@ -630,11 +634,15 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
                     SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing,
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing,
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
                     Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
                     SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
-                    SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang)
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;

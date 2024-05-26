@@ -10,6 +10,8 @@
         Subscription,
         User,
         SubscriptionPayment,
-        Setting
+        Setting,
+        Screen,
+        ScreenGroup
     }
 }

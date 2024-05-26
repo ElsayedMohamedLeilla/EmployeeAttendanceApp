@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions
 {
-    public class ApproveSubscriptionModelValidator : AbstractValidator<ApproveSubscriptionModel>
+    public class ApproveSubscriptionModelValidator : AbstractValidator<AcceptSubscriptionModel>
     {
         public ApproveSubscriptionModelValidator()
         {

@@ -4,6 +4,7 @@
     {
         public int Code { get; set; }
         public string Name { get; set; }
+        public bool ForEmployeesApplication { get; set; }
         public bool IsActive { get; set; }
     }
 }

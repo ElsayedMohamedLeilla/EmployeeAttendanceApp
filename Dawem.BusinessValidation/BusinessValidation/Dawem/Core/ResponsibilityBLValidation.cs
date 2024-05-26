@@ -32,6 +32,19 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNameIsDuplicated);
             }
 
+            var checkForemployeesDuplicate = await repositoryManager.
+                ResponsibilityRepository.
+                Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
+                responsibility.ForEmployeesApplication &&  model.ForEmployeesApplication &&
+                responsibility.Type == requestInfo.Type).
+                AnyAsync();
+
+            if (checkResponsibilityDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed);
+            }
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateResponsibilityModel model)
@@ -45,6 +58,19 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
             if (checkResponsibilityDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNameIsDuplicated);
+            }
+
+            var checkForemployeesDuplicate = await repositoryManager.
+                ResponsibilityRepository.
+                Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
+                (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
+                responsibility.ForEmployeesApplication && model.ForEmployeesApplication &&
+                responsibility.Type == requestInfo.Type && responsibility.Id != model.Id).
+                AnyAsync();
+
+            if (checkResponsibilityDuplicate)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed);
             }
 
             return true;

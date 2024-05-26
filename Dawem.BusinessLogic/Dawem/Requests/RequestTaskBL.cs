@@ -265,7 +265,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 .ToList();
 
             var removedTaskEmployees = await repositoryManager.RequestTaskEmployeeRepository
-                .Get(e => e.EmployeeId == model.Id && removedTaskEmployeeIds.Contains(e.EmployeeId))
+                .Get(e => e.RequestTask.RequestId == model.Id && removedTaskEmployeeIds.Contains(e.EmployeeId))
                 .ToListAsync();
 
             if (removedTaskEmployees.Count > 0)

@@ -39,7 +39,6 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
-        IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }
         ITranslationRepository TranslationRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
@@ -97,6 +96,12 @@ namespace Dawem.Contract.Repository.Manager
         INotificationUserRepository NotificationUserRepository { get; }
         INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository { get; }
         IEmployeeOTPRepository EmployeeOTPRepository { get; }
-
+        IScreenRepository ScreenRepository { get; }
+        IScreenGroupRepository ScreenGroupRepository { get; }
+        IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository { get; }
+        IOldScreenRepository OldScreenRepository { get; }
+        IScreenActionRepository ScreenActionRepository { get; }
+        IScreenNameTranslationRepository ScreenNameTranslationRepository { get; }
+        IPlanScreenRepository PlanScreenRepository { get; }
     }
 }

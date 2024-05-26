@@ -718,7 +718,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             else
             {
-                requestInfo.CompanyId = 17;
+                //requestInfo.CompanyId = 17;
                 List<EmployeeAttendance> ImportedList = new();
                 List<EmployeeAttendanceCheck> CImportedList = new();
                 EmployeeAttendance Temp = new();

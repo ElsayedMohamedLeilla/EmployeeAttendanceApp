@@ -28,13 +28,13 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             return Success(await notificationBL.Get(criteria));
         }
         [HttpPut]
-        public async Task<ActionResult> MarkAsRead(int notificationStoreId)
+        public async Task<ActionResult> MarkAsRead(int notificationId)
         {
-            if (notificationStoreId < 1)
+            if (notificationId < 1)
             {
                 return BadRequest();
             }
-            return Success(await notificationBL.MarkAsRead(notificationStoreId));
+            return Success(await notificationBL.MarkAsRead(notificationId));
         }
         [HttpPut]
         public async Task<ActionResult> MarkAsViewed()

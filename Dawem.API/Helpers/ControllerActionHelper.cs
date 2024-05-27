@@ -65,13 +65,13 @@ namespace Dawem.API.Helpers
                 }
             }
 
-            response.Screen = screen;
-            response.Method = method;
+            response.ScreenCode = screen;
+            response.ActionCode = method;
             return response;
         }
-        public static GetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo, bool? IsForMenu = false)
+        public static OldGetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo, bool? IsForMenu = false)
         {
-            var response = new GetAllScreensWithAvailableActionsResponse();
+            var response = new OldGetAllScreensWithAvailableActionsResponse();
 
             var allScreenCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
@@ -93,7 +93,7 @@ namespace Dawem.API.Helpers
                 var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
-                var screensWithAvailableActionsDTO = new ScreenWithAvailableActionsDTO
+                var screensWithAvailableActionsDTO = new OldScreenWithAvailableActionsDTO
                 {
                     ScreenCode = (int)screenCode,
                     ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang),
@@ -163,60 +163,6 @@ namespace Dawem.API.Helpers
             }
 
             return actions.Distinct().Order().ToList();
-        }
-        public static GetScreensForDropDownResponse GetAllScreens(RequestInfo requestInfo)
-        {
-            var response = new GetScreensForDropDownResponse();
-
-            var allScreenCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
-                Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
-                Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
-
-            foreach (var tempScreenCode in allScreenCodes)
-            {
-                dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)tempScreenCode :
-                    (DawemAdminApplicationScreenCode)tempScreenCode;
-
-                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
-                    LeillaKeys.DawemScreen;
-
-                var screensWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
-                {
-                    Id = (int)screenCode,
-                    Name = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
-                };
-
-                response.Screens.Add(screensWithAvailableActionsDTO);
-            }
-            return response;
-        }
-        public static GetActionsForDropDownResponse GetAllActions(RequestInfo requestInfo)
-        {
-            var response = new GetActionsForDropDownResponse();
-
-            var allActionCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
-                Enum.GetValues(typeof(ApplicationActionCode)).Cast<int>().ToList() :
-                Enum.GetValues(typeof(ApplicationActionCode)).Cast<int>().ToList();
-
-            foreach (var tempActionCode in allActionCodes)
-            {
-                dynamic actionCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (ApplicationActionCode)tempActionCode :
-                    (ApplicationActionCode)tempActionCode;
-
-                var actionNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelAction :
-                    LeillaKeys.DawemAction;
-
-                var actionsWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
-                {
-                    Id = (int)actionCode,
-                    Name = TranslationHelper.GetTranslation(actionCode.ToString() + actionNameSuffix, requestInfo.Lang)
-                };
-
-                response.Actions.Add(actionsWithAvailableActionsDTO);
-            }
-            return response;
         }
     }
 }

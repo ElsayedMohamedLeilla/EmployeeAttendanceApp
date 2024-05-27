@@ -5,7 +5,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Core
 {
     public interface INotificationBL
     {
-        Task<bool> MarkAsRead(int notificationStoreId);
+        Task<bool> MarkAsRead(int notificationId);
         Task<bool> MarkAsViewed();
         Task<GetNotificationsResponseDTO> Get(GetNotificationCriteria criteria);
         Task<int> GetUnreadNotificationCount();

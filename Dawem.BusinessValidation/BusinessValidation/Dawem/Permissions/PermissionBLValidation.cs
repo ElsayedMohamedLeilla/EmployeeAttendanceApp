@@ -25,7 +25,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         {
             #region Vaildate Permission Screens
 
-            ValidatePermissionScreens(model.PermissionScreens);
+            ValidatePermissionScreens(model.Screens);
 
             #endregion
 
@@ -76,7 +76,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             #region Validate Available Actions
 
-            ValidatePermissionScreenAvailableActions(model.PermissionScreens);
+            ValidatePermissionScreenAvailableActions(model.Screens);
 
             #endregion
 
@@ -86,7 +86,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         {
             #region Vaildate Permission Screens
 
-            ValidatePermissionScreens(model.PermissionScreens);
+            ValidatePermissionScreens(model.Screens);
 
             #endregion
 
@@ -120,7 +120,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             #region Validate Available Actions
 
-            ValidatePermissionScreenAvailableActions(model.PermissionScreens);
+            ValidatePermissionScreenAvailableActions(model.Screens);
 
             #endregion
 
@@ -156,9 +156,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
 
                 var screenWithNotAvailableAction = permissionScreens
-                    .FirstOrDefault(permissionScreen => permissionScreen.PermissionScreenActions
-                        .Any(a => !allScreensWithAvailableActions.Screens
-                        .FirstOrDefault(s => s.ScreenCode == permissionScreen.ScreenCode).AvailableActions.Contains(a.ActionCode)));
+                    .FirstOrDefault(permissionScreen => permissionScreen.Actions
+                        .Any(actionCode => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s => s.ScreenCode == permissionScreen.ScreenCode).AvailableActions.Contains(actionCode)));
 
                 if (screenWithNotAvailableAction != null)
                 {
@@ -166,9 +166,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                     (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenCode :
                     (DawemAdminApplicationScreenCode)screenWithNotAvailableAction.ScreenCode;
 
-                    var actionNotAvailable = screenWithNotAvailableAction.PermissionScreenActions
-                        .FirstOrDefault(a => !allScreensWithAvailableActions.Screens
-                        .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(a.ActionCode));
+                    var actionNotAvailable = screenWithNotAvailableAction.Actions
+                        .FirstOrDefault(actionCode => !allScreensWithAvailableActions.Screens
+                        .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(actionCode));
 
                     var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
@@ -179,7 +179,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                         + TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
-                        + TranslationHelper.GetTranslation(actionNotAvailable.ActionCode.ToString(), requestInfo.Lang)
+                        + TranslationHelper.GetTranslation(actionNotAvailable.ToString(), requestInfo.Lang)
                         + LeillaKeys.Dot;
 
                     throw new BusinessValidationException(messageCode: null, message: message);

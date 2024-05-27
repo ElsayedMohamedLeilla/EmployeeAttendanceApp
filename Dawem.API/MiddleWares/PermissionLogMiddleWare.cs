@@ -42,7 +42,7 @@ namespace Dawem.API.MiddleWares
                 var mapResult = ControllerActionHelper.
                     MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
 
-                if (mapResult.Screen != null && mapResult.Method != null)
+                if (mapResult.ScreenCode != null && mapResult.ActionCode != null)
                 {
                     var permissionLogRepository = repositoryManager.PermissionLogRepository;
 
@@ -50,8 +50,8 @@ namespace Dawem.API.MiddleWares
                     {
                         CompanyId = companyId,
                         UserId = userId,
-                        ActionCode = mapResult.Method.Value,
-                        ScreenCode = mapResult.Screen.Value,
+                        ActionCode = mapResult.ActionCode.Value,
+                        ScreenCode = mapResult.ScreenCode.Value,
                         Type = type
                     };
 

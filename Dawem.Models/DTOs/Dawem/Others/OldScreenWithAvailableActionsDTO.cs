@@ -2,13 +2,13 @@
 
 namespace Dawem.Models.Dtos.Dawem.Others
 {
-    public class ScreenWithAvailableActionsDTO
+    public class OldScreenWithAvailableActionsDTO
     {
-        public ScreenWithAvailableActionsDTO()
+        public OldScreenWithAvailableActionsDTO()
         {
             AvailableActions = new List<ApplicationActionCode>();
         }
-        public int ScreenId { get; set; }
+        public int ScreenCode { get; set; }
         public string ScreenName { get; set; }
         public List<ApplicationActionCode> AvailableActions { get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace Dawem.Models.Response.Dawem.Attendances
 {
-    public class GetEmployeeAttendanceInPeriodReportParameters
+    public class ReportCritria
     {
         public int? EmployeeID { get; set; }
         public DateTime DateFrom { get; set; }
@@ -11,9 +11,8 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? ZoneId { get; set; }
         public int? JobTitleID { get; set; }
         public ExportFormat ExportFormat { get; set; }
-        //public string ZoneName { get; set; }
-        //public string DepartmentName { get; set; }
-        //public string JobTitleName { get; set; }
+        public int? OverTimeFrom { get; set; }
+        public int? OverTimeTo { get; set; }
         public bool? WithoutPermision { get; set; }
 
 

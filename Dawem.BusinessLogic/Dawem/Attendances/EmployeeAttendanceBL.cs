@@ -718,6 +718,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             else
             {
+                //requestInfo.CompanyId = 17;
                 List<EmployeeAttendance> ImportedList = new();
                 List<EmployeeAttendanceCheck> CImportedList = new();
                 EmployeeAttendance Temp = new();
@@ -872,7 +873,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             FingerPrintType = validationResult.FingerPrintType,
                             IsActive = true,
                             ZoneId = validationResult.ZoneId,
-                            FingerPrintDate = requestInfo.LocalDateTime,
+                            FingerPrintDate = localDate,
                             FingerPrintDateUTC = DateTime.UtcNow,
                             Latitude = model.Latitude,
                             Longitude = model.Longitude,
@@ -893,7 +894,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             return result;
         }
 
-        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
+        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(ReportCritria Critria)
         {
 
             using (var context = new ApplicationDBContext())

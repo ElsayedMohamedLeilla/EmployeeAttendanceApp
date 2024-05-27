@@ -110,9 +110,11 @@ namespace Dawem.Data
             modelBuilder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
             modelBuilder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             modelBuilder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
-            
-            
-                modelBuilder.Entity<NotificationTranslation>().
+
+            modelBuilder.Entity<Company>().Property(c => c.IdentityCode)
+              .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.Entity<NotificationTranslation>().
                 HasOne(p => p.Notification).
                 WithMany(b => b.NotificationTranslations).
                 HasForeignKey(p => p.NotificationId).

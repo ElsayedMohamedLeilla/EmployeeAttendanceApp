@@ -313,7 +313,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ResponsibilityId = p.ResponsibilityId,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenId = ps.ScreenId,
+                        ScreenId = ps.ScreenId ?? 0,
                         ScreenCode = ps.ScreenCode,
                         ScreenActions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),
@@ -347,7 +347,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ResponsibilityId = p.ResponsibilityId,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenId = ps.ScreenId,
+                        ScreenId = ps.ScreenId ?? 0,
                         ScreenCode = ps.ScreenCode,
                         ScreenActions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),

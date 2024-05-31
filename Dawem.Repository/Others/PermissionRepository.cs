@@ -60,9 +60,9 @@ namespace Dawem.Repository.Others
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            if (criteria.ScreenCode != null)
+            if (criteria.ScreenId != null)
             {
-                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.ScreenCode == criteria.ScreenCode));
+                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.ScreenId == criteria.ScreenId));
             }
             if (criteria.ActionCode != null)
             {

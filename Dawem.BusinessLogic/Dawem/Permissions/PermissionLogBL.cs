@@ -47,7 +47,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             {
                 Id = pl.Id,
                 UserName = pl.User.Name,
-                ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
+                ScreenName = pl.Screen.ScreenNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang)
             }).ToListAsync();
 
@@ -71,7 +72,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,
-                    ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
+                    ScreenName = pl.Screen.ScreenNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
                     DateAndTime = pl.Company.Country.TimeZoneToUTC != null ?
                     pl.DateUTC.AddHours((double)pl.Company.Country.TimeZoneToUTC.Value) :

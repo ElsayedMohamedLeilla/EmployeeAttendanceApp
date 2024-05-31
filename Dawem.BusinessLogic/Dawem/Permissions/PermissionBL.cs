@@ -115,11 +115,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var modelPermissionScreens = model.Screens;
 
                 var getAddedPermissionScreens = modelPermissionScreens
-                    .Where(m => !dbPermissionScreens.Any(d => d.ScreenCode == m.ScreenCode))
+                    .Where(m => !dbPermissionScreens.Any(d => d.ScreenId == m.ScreenId))
                     .Select(m => new PermissionScreen
                     {
                         PermissionId = model.Id,
-                        ScreenCode = m.ScreenCode,
+                        ScreenId = m.ScreenId,
                         PermissionScreenActions = m.Actions.Select(actionCode => new PermissionScreenAction
                         {
                             ActionCode = actionCode
@@ -127,7 +127,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     }).ToList();
 
                 var getDeletedPermissionScreens = dbPermissionScreens
-                    .Where(d => !modelPermissionScreens.Any(m => m.ScreenCode == d.ScreenCode))
+                    .Where(d => !modelPermissionScreens.Any(m => m.ScreenId == d.ScreenId))
                     .ToList();
 
                 repositoryManager.PermissionScreenRepository.BulkInsert(getAddedPermissionScreens);
@@ -146,7 +146,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     foreach (var permissionScreen in getUpdatedPermissionScreens)
                     {
                         var dbPermissionScreen = dbPermissionScreens
-                            .FirstOrDefault(ps => ps.ScreenCode == permissionScreen.ScreenCode);
+                            .FirstOrDefault(ps => ps.ScreenId == permissionScreen.ScreenId);
                         var dbPermissionScreenActions = dbPermissionScreen.PermissionScreenActions;
                         var modelPermissionScreenActions = permissionScreen.Actions;
 
@@ -313,7 +313,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ResponsibilityId = p.ResponsibilityId,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenId = ps.ScreenId ?? 0,
+                        ScreenId = ps.ScreenId,
                         ScreenCode = ps.ScreenCode,
                         ScreenActions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),
@@ -347,7 +347,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ResponsibilityId = p.ResponsibilityId,
                     PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenId = ps.ScreenId ?? 0,
+                        ScreenId = ps.ScreenId,
                         ScreenCode = ps.ScreenCode,
                         ScreenActions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),

@@ -2,7 +2,7 @@
 {
     public class PermissionScreenModel : BasePermissionScreenModel
     {
-        public int ScreenCode { get; set; }
+        //public int ScreenCode { get; set; }
         public int ScreenId { get; set; }
     }
 }

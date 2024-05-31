@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.BusinessValidation.Dawem.Permissions;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
@@ -16,10 +17,12 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly RequestInfo requestInfo;
-        public PermissionBLValidation(IRepositoryManager _repositoryManager, RequestInfo _requestInfo)
+        private readonly IScreenBLC screenBLC;
+        public PermissionBLValidation(IRepositoryManager _repositoryManager, RequestInfo _requestInfo, IScreenBLC _screenBLC)
         {
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;
+            screenBLC = _screenBLC;
         }
         public async Task<bool> CreateValidation(CreatePermissionModel model)
         {
@@ -120,7 +123,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             #region Validate Available Actions
 
-            ValidatePermissionScreenAvailableActions(model.Screens);
+            await ValidatePermissionScreenAvailableActions(model.Screens);
 
             #endregion
 
@@ -128,7 +131,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         private void ValidatePermissionScreens(List<PermissionScreenModel> PermissionScreens)
         {
-            bool check = false;
+            /*bool check = false;
 
             if (requestInfo.Type == AuthenticationType.AdminPanel)
             {
@@ -142,41 +145,50 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             if (check)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
-            }
+            }*/
         }
-        private void ValidatePermissionScreenAvailableActions(List<PermissionScreenModel> permissionScreens)
+        private async Task ValidatePermissionScreenAvailableActions(List<PermissionScreenModel> permissionScreens)
         {
             #region Validate Available Actions
 
-            var allScreensWithAvailableActions = requestInfo.Type == AuthenticationType.AdminPanel ?
-                APIHelper.AdminPanelAllScreensWithAvailableActions :
-                APIHelper.AllScreensWithAvailableActions;
+
+            var allScreensWithAvailableActionsGrouped = await screenBLC.
+                GetAllScreensWithAvailableActions();
+
+            var allScreensWithAvailableActions = allScreensWithAvailableActionsGrouped.
+                ScreensTypes.SelectMany(s => s.Screens).ToList();
+
+                    /*requestInfo.Type == AuthenticationType.AdminPanel ?
+                        APIHelper.AdminPanelAllScreensWithAvailableActions :
+                        APIHelper.AllScreensWithAvailableActions*/;
 
             if (allScreensWithAvailableActions != null)
             {
 
                 var screenWithNotAvailableAction = permissionScreens
                     .FirstOrDefault(permissionScreen => permissionScreen.Actions
-                        .Any(actionCode => !allScreensWithAvailableActions.Screens
-                        .FirstOrDefault(s => s.ScreenCode == permissionScreen.ScreenCode).AvailableActions.Contains(actionCode)));
+                        .Any(actionCode => !allScreensWithAvailableActions
+                        .FirstOrDefault(s => s.ScreenId == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
+
+                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.ScreenId ==  screenWithNotAvailableAction.ScreenId);
 
                 if (screenWithNotAvailableAction != null)
                 {
-                    dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenCode :
-                    (DawemAdminApplicationScreenCode)screenWithNotAvailableAction.ScreenCode;
+                    /*dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
+                    (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenId :
+                    (DawemAdminApplicationScreenCode)screenWithNotAvailableAction.ScreenId;*/
 
                     var actionNotAvailable = screenWithNotAvailableAction.Actions
-                        .FirstOrDefault(actionCode => !allScreensWithAvailableActions.Screens
-                        .FirstOrDefault(s => s.ScreenCode == screenWithNotAvailableAction.ScreenCode).AvailableActions.Contains(actionCode));
+                        .FirstOrDefault(actionCode => !allScreensWithAvailableActions
+                        .FirstOrDefault(s => s.ScreenId == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
 
-                    var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
-                    LeillaKeys.DawemScreen;
+                    /*var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;*/
 
                     var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
                         + LeillaKeys.Space +
                         TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
-                        + TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
+                        + screenInfo.ScreenName
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
                         + TranslationHelper.GetTranslation(actionNotAvailable.ToString(), requestInfo.Lang)

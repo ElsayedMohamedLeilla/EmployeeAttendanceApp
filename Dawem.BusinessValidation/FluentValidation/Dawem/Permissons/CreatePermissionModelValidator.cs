@@ -36,9 +36,9 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
                 .Must(model => model.All(s => s.ScreenId > 0))
                 .WithMessage(LeillaKeys.SorryYouMustEnterScreenId);
 
-            RuleFor(model => model.Screens)
+            /*RuleFor(model => model.Screens)
                 .Must(model => model.GroupBy(s => s.ScreenCode).ToList().All(g => g.Count() == 1))
-                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreens);
+                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreens);*/
 
             RuleFor(model => model.Screens)
                 .Must(model => model.GroupBy(s => s.ScreenId).ToList().All(g => g.Count() == 1))
@@ -52,9 +52,13 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
     {
         public CreatePermissionScreenModelValidator()
         {
-            RuleFor(model => model.ScreenCode).
+            /*RuleFor(model => model.ScreenCode).
                 Must(screenCode => screenCode >= 0).
-                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);*/
+
+            RuleFor(model => model.ScreenId).
+                Must(screenId => screenId >= 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenId);
 
             RuleFor(model => model.Actions)
                 .Must(model => model != null && model.Count > 0)

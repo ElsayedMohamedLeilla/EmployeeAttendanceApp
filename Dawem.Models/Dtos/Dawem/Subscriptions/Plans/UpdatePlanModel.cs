@@ -11,7 +11,7 @@ namespace Dawem.Models.Dtos.Dawem.Subscriptions.Plans
         public bool IsTrial { get; set; }
         public bool IsActive { get; set; }
         public bool AllScreensAvailable { get; set; }
-        public List<int> ScreenIds { get; set; }
+        public List<int> ScreensIds { get; set; }
         public string Notes { get; set; }
     }
 }

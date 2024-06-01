@@ -702,7 +702,7 @@
         public const string SorryGroupParentCannotBeOneOfItsChildren = "Sorry!!GroupParentCannotBeOneOfItsChildren!";
         public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
 
+        public const string SorryPlanScreensMustChoosenFromWebOrMobileApp = "Sorry!!PlanScreensMustChoosenFromWebOrMobileApp!";
         
-
     }
 }

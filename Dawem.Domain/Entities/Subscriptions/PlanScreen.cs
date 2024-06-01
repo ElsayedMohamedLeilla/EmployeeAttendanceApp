@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Dawem.Domain.Entities.Subscriptions
 {
     [Table(nameof(PlanScreen) + LeillaKeys.S)]
-    public class PlanScreen : NameTranslation
+    public class PlanScreen : BaseEntity
     {
         public int PlanId { get; set; }
         [ForeignKey(nameof(PlanId))]

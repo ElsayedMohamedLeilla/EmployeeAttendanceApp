@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -61,6 +62,7 @@ namespace Dawem.Repository.Providers
             {
                 predicate = predicate.And(e => e.AuthenticationType == criteria.LocalAuthenticationType);
             }
+
             else if (!criteria.ForGridView)
             {
                 predicate = predicate.And(e => e.AuthenticationType == criteria.AuthenticationType);
@@ -79,7 +81,7 @@ namespace Dawem.Repository.Providers
             {
                 predicate = predicate.And(e => e.GroupOrScreenType == criteria.GroupOrScreenType);
             }
-
+            
             predicate = predicate.And(inner);
             var Query = Get(predicate);
             return Query;

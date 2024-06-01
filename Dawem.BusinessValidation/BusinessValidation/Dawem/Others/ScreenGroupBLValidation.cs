@@ -42,7 +42,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
-            await ValidateOrderDuplication(model.Order, 0);
+            await ValidateOrderDuplication(model.Order, 0, model.AuthenticationType);
 
             await ValidateParent(0, model.ParentId);
 
@@ -64,7 +64,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
-            await ValidateOrderDuplication(model.Order, model.Id);
+            await ValidateOrderDuplication(model.Order, model.Id , model.AuthenticationType);
 
             await ValidateParent(model.Id, model.ParentId);
 
@@ -99,10 +99,12 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             return true;
         }
-        private async Task<bool> ValidateOrderDuplication(int order, int id)
+        private async Task<bool> ValidateOrderDuplication(int order, int id, AuthenticationType authenticationType)
         {
             var checkOrderDuplicate = await repositoryManager.MenuItemRepository.
-                Get(m => !m.IsDeleted && m.GroupOrScreenType == GroupOrScreenType.Group && m.Id != id && m.Order == order).
+                Get(m => !m.IsDeleted && m.GroupOrScreenType == GroupOrScreenType.Group &&
+                 m.AuthenticationType == authenticationType &&
+                m.Id != id && m.Order == order).
                 Select(screenGroup => new
                 {
                     screenGroup.MenuItemNameTranslations.

@@ -166,7 +166,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             var existingScreenIds = existDbList.Select(e => e.ScreenId).ToList();
 
-            var addedScreens = model.ScreenIds
+            var addedScreens = model.ScreensIds
                 .Where(screenId => !existingScreenIds.Contains(screenId))
                 .Select(screenId => new PlanScreen
                 {
@@ -177,7 +177,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 }).ToList();
 
             var removedScreenIds = existDbList
-                .Where(ge => !model.ScreenIds.Contains(ge.ScreenId))
+                .Where(ge => !model.ScreensIds.Contains(ge.ScreenId))
                 .Select(ge => ge.ScreenId)
                 .ToList();
 

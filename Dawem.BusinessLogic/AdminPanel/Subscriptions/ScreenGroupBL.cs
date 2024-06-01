@@ -53,9 +53,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             #region Insert ScreenGroup
 
             var screenGroup = mapper.Map<MenuItem>(model);
+
             screenGroup.AddUserId = requestInfo.UserId;
             screenGroup.GroupOrScreenType = GroupOrScreenType.Group;
             screenGroup.AuthenticationTypeName = model.AuthenticationType.ToString();
+
             repositoryManager.MenuItemRepository.Insert(screenGroup);
             await unitOfWork.SaveAsync();
 
@@ -86,12 +88,13 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             && screenGroup.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryScreenGroupNotFound);
 
             getScreenGroup.IsActive = model.IsActive;
-            getScreenGroup.ModifiedDate = DateTime.Now;
+            getScreenGroup.ModifiedDate = DateTime.UtcNow;
             getScreenGroup.ModifyUserId = requestInfo.UserId;
             getScreenGroup.Notes = model.Notes;
             getScreenGroup.Icon = model.Icon;
             getScreenGroup.Order = model.Order;
             getScreenGroup.ParentId = model.ParentId;
+            getScreenGroup.AuthenticationType = model.AuthenticationType;
             getScreenGroup.AuthenticationTypeName = model.AuthenticationType.ToString();
 
             await unitOfWork.SaveAsync();
@@ -130,11 +133,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Any(mi => mi.Id == nt.Id && (mi.Name != nt.Name || mi.LanguageId != nt.LanguageId))).
                 ToList();
 
-            if (removedMenuItemNameTranslations.Count() > 0)
+            if (removedMenuItemNameTranslations.Count > 0)
                 repositoryManager.MenuItemNameTranslationRepository.BulkDeleteIfExist(removedMenuItemNameTranslations);
-            if (addedMenuItemNameTranslations.Count() > 0)
+            if (addedMenuItemNameTranslations.Count > 0)
                 repositoryManager.MenuItemNameTranslationRepository.BulkInsert(addedMenuItemNameTranslations);
-            if (updatedMenuItemNameTranslations.Count() > 0)
+            if (updatedMenuItemNameTranslations.Count > 0)
             {
                 updatedMenuItemNameTranslations.ForEach(i =>
                 {
@@ -145,6 +148,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             }
 
             #endregion
+
+            await unitOfWork.SaveAsync();
 
             #endregion
 

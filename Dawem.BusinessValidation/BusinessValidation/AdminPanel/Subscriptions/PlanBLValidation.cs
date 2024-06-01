@@ -2,6 +2,7 @@
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Shared;
@@ -9,6 +10,7 @@ using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 
 namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
@@ -66,6 +68,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
+            await ValidatePlanScreens(model.ScreensIds);
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdatePlanModel model)
@@ -107,6 +111,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
+            await ValidatePlanScreens(model.ScreensIds);
+
             return true;
         }
         private async Task<bool> ValidatePlanNameDuplication(List<NameTranslationModel> nameTranslations)
@@ -129,6 +135,22 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
                         LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanName, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
                         checkNameDuplicate.Name + LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanLanguage, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
                         checkNameDuplicate.LanguageName);
+                }
+            }
+
+            return true;
+        }
+        private async Task<bool> ValidatePlanScreens(List<int> screensIds)
+        {
+            if (screensIds != null && screensIds.Count > 0)
+            {
+                var checkScreenApp = await repositoryManager.MenuItemRepository.
+                    Get(mi => screensIds.Contains(mi.Id) && mi.AuthenticationType != AuthenticationType.DawemAdmin
+                    && mi.AuthenticationType != AuthenticationType.DawemEmployee).AnyAsync();
+
+                if (checkScreenApp)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryPlanScreensMustChoosenFromWebOrMobileApp);
                 }
             }
 

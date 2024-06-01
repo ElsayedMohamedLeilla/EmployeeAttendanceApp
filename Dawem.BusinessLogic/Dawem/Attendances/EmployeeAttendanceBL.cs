@@ -685,7 +685,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             #endregion
 
         }
-
         public async Task<MemoryStream> ExportDraft()
         {
             EmptyExcelDraftModelDTO employeeAttendanceHeaderDraftDTO = new();
@@ -694,7 +693,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             employeeAttendanceHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.EmployeeAttendance;
             return ExcelManager.ExportEmptyDraft(employeeAttendanceHeaderDraftDTO);
         }
-
         public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
         {
             #region Fill IniValidationModelDTO
@@ -893,7 +891,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             return result;
         }
-
         public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(ReportCritria Critria)
         {
 

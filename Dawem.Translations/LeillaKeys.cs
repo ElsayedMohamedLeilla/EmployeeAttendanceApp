@@ -701,7 +701,6 @@
         public const string SorryParentGroupMustNotBeTheGroup = "Sorry!!ParentGroupMustNotBeTheGroup!";
         public const string SorryGroupParentCannotBeOneOfItsChildren = "Sorry!!GroupParentCannotBeOneOfItsChildren!";
         public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
-
         public const string SorryPlanScreensMustChoosenFromWebOrMobileApp = "Sorry!!PlanScreensMustChoosenFromWebOrMobileApp!";
         
     }

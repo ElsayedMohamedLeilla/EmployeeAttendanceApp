@@ -13,6 +13,7 @@ using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Policy;
 
 namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 {
@@ -156,7 +157,19 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 {
                     Type = screenGroup.Key,
                     TypeName = TranslationHelper.GetTranslation(screenGroup.Key.ToString() + nameof(AuthenticationType), requestInfo.Lang),
-                    Screens = screenGroup.OrderBy(s => s.Order).ToList()
+                    Screens = screenGroup.OrderBy(s => s.Order).Select(screen => new ScreenDTO
+                    {
+                        Id = screen.Id,
+                        Order = screen.Order,
+                        GroupOrScreenType = screen.GroupOrScreenType,
+                        ParentId = screen.ParentId,
+                        Name = screen.MenuItemNameTranslations.
+                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                        Icon = screen.Icon,
+                        URL = screen.URL,
+                        AvailableActions = screen.MenuItemActions != null ?
+                        screen.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+                    }).ToList()
                 }).ToListAsync();
 
             var response = new GetAllScreensWithAvailableActionsResponse();
@@ -176,12 +189,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     {
                         Id = screen.Id,
                         Type = screen.GroupOrScreenType,
-                        Name = screen.MenuItemNameTranslations.
-                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                        Name = screen.Name,
                         Icon = screen.Icon,
                         URL = screen.URL,
-                        AvailableActions = screen.MenuItemActions != null ?
-                        screen.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+                        AvailableActions = screen.AvailableActions,
                         Children = HasChildren(screen.Id, screenType.Screens) ?
                         GetChildren(screen.Id, screenType.Screens) : null,
                     });
@@ -196,11 +207,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             #endregion
 
         }
-        private bool HasChildren(int screenId, List<MenuItem> screens)
+        private bool HasChildren(int screenId, List<ScreenDTO> screens)
         {
             return screens.Any(s => s.ParentId == screenId);
         }
-        private List<ScreenWithAvailableActionsDTO> GetChildren(int screenId, List<MenuItem> screens)
+        private List<ScreenWithAvailableActionsDTO> GetChildren(int screenId, List<ScreenDTO> screens)
         {
             var children = screens.Where(s => s.ParentId == screenId).ToList();
 
@@ -208,12 +219,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             {
                 Id = screen.Id,
                 Type = screen.GroupOrScreenType,
-                Name = screen.MenuItemNameTranslations.
-                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Name = screen.Name,
                 Icon = screen.Icon,
                 URL = screen.URL,
-                AvailableActions = screen.MenuItemActions != null ?
-                        screen.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+                AvailableActions = screen.AvailableActions,
                 Children = HasChildren(screen.Id, screens) ?
                         GetChildren(screen.Id, screens) : null,
             }).ToList();

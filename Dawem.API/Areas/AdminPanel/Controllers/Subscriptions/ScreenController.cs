@@ -1,5 +1,7 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.API.Helpers;
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
@@ -25,6 +27,15 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         [HttpPost]
         public async Task<ActionResult> Create(CreateScreenModel model)
         {
+            #region Set All Screens Available Actions
+
+            requestInfo.Type = Enums.Generals.AuthenticationType.DawemAdmin;
+            requestInfo.CompanyId = 0;
+
+            APIHelper.AllScreensWithAvailableActions ??= ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
+
+            #endregion
+
             var result = await screenBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateScreenSuccessfully);
         }

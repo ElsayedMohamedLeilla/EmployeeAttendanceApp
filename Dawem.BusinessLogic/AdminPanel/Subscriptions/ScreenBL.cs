@@ -10,6 +10,7 @@ using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
@@ -41,30 +42,69 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<int> Create(CreateScreenModel model)
         {
-            #region Business Validation
+            var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                  Select(l => new ActiveLanguageModel
+                  {
+                      Id = l.Id,
+                      ISO2 = l.ISO2
+                  }).ToListAsync();
 
-            await screenBLValidation.CreateValidation(model);
+            var allScreensWithAvailableActions = APIHelper.AllScreensWithAvailableActions.Screens;
 
-            #endregion
+            foreach (var screen in allScreensWithAvailableActions)
+            {
+                var dbScreen = new MenuItem
+                {
+                    MenuItemCode = screen.ScreenCode,
+                    MenuItemCodeName = ((DawemAdminApplicationScreenCode)screen.ScreenCode).ToString(),
+                    AuthenticationType = AuthenticationType.DawemAdmin,
+                    AuthenticationTypeName = AuthenticationType.DawemAdmin.ToString(),
+                    MenuItemActions = screen.AvailableActions.Select(a => new MenuItemAction
+                    {
+                        ActionCode = a,
+                        ActionCodeName = a.ToString(),
+                        IsActive = true
+                    }).ToList(),
+                    MenuItemNameTranslations = getActiveLanguages.
+                    Select(t => new MenuItemNameTranslation
+                    {
+                        LanguageId = t.Id,
+                        Name = TranslationHelper.GetTranslation(((DawemAdminApplicationScreenCode)screen.ScreenCode).ToString() + LeillaKeys.DawemScreen, t.ISO2)
+                    }).
+                    ToList(),
+                    IsActive = true,
+                };
+                repositoryManager.MenuItemRepository.Insert(dbScreen);
+            }
 
-            unitOfWork.CreateTransaction();
-
-            #region Insert Screen
-
-            var screen = mapper.Map<MenuItem>(model);
-            screen.AddUserId = requestInfo.UserId;
-            screen.AuthenticationType = requestInfo.Type;
-            repositoryManager.MenuItemRepository.Insert(screen);
             await unitOfWork.SaveAsync();
 
-            #endregion
+            //#region Business Validation
 
-            #region Handle Response
+            //await screenBLValidation.CreateValidation(model);
 
-            await unitOfWork.CommitAsync();
-            return screen.Id;
+            //#endregion
 
-            #endregion
+            //unitOfWork.CreateTransaction();
+
+            //#region Insert Screen
+
+            //var screen = mapper.Map<Screen>(model);
+            //screen.AddUserId = requestInfo.UserId;
+            //screen.Type = requestInfo.Type;
+            //repositoryManager.ScreenRepository.Insert(screen);
+            //await unitOfWork.SaveAsync();
+
+            //#endregion
+
+            //#region Handle Response
+
+            //await unitOfWork.CommitAsync();
+            //return screen.Id;
+
+            //#endregion
+
+            return 0;
 
         }
         public async Task<bool> Update(UpdateScreenModel model)

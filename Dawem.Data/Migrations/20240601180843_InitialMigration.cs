@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,9 +8,10 @@ namespace Dawem.Data.Migrations
     /// <inheritdoc />
     public partial class InitialMigration : Migration
     {
+        /// <inheritdoc />
+        /// 
         protected override void Up(MigrationBuilder migrationBuilder)
         { }
-        /// <inheritdoc />
         //protected override void Up(MigrationBuilder migrationBuilder)
         //{
         //    migrationBuilder.EnsureSchema(
@@ -29,11 +31,11 @@ namespace Dawem.Data.Migrations
         //            Dial = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            Currency = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            CurrencyName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            TimeZoneId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            Order = table.Column<int>(type: "int", nullable: false),
         //            NationalityNameEn = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            NationalityNameAr = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            PhoneLength = table.Column<int>(type: "int", nullable: false),
+        //            TimeZoneToUTC = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -49,39 +51,6 @@ namespace Dawem.Data.Migrations
         //        constraints: table =>
         //        {
         //            table.PrimaryKey("PK_Countries", x => x.Id);
-        //        });
-
-        //    migrationBuilder.CreateTable(
-        //        name: "DawemSettings",
-        //        schema: "Dawem",
-        //        columns: table => new
-        //        {
-        //            Id = table.Column<int>(type: "int", nullable: false)
-        //                .Annotation("SqlServer:Identity", "1, 1"),
-        //            Type = table.Column<int>(type: "int", nullable: false),
-        //            TypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            GroupType = table.Column<int>(type: "int", nullable: false),
-        //            GroupTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            ValueType = table.Column<int>(type: "int", nullable: false),
-        //            ValueTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            String = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            Integer = table.Column<int>(type: "int", nullable: true),
-        //            Decimal = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true),
-        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
-        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
-        //            AddUserId = table.Column<int>(type: "int", nullable: true),
-        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
-        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
-        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
-        //        },
-        //        constraints: table =>
-        //        {
-        //            table.PrimaryKey("PK_DawemSettings", x => x.Id);
         //        });
 
         //    migrationBuilder.CreateTable(
@@ -114,6 +83,46 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "MenuItems",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            ParentId = table.Column<int>(type: "int", nullable: true),
+        //            MenuItemCode = table.Column<int>(type: "int", nullable: true),
+        //            MenuItemCodeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            GroupOrScreenType = table.Column<int>(type: "int", nullable: false),
+        //            Order = table.Column<int>(type: "int", nullable: false),
+        //            AuthenticationType = table.Column<int>(type: "int", nullable: false),
+        //            AuthenticationTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Icon = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            URL = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_MenuItems", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_MenuItems_MenuItems_ParentId",
+        //                column: x => x.ParentId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "Plans",
         //        schema: "Dawem",
         //        columns: table => new
@@ -125,6 +134,7 @@ namespace Dawem.Data.Migrations
         //            MaxNumberOfEmployees = table.Column<int>(type: "int", nullable: false),
         //            EmployeeCost = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: false),
         //            IsTrial = table.Column<bool>(type: "bit", nullable: false),
+        //            AllScreensAvailable = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -230,17 +240,18 @@ namespace Dawem.Data.Migrations
         //                .Annotation("SqlServer:Identity", "1, 1"),
         //            CountryId = table.Column<int>(type: "int", nullable: false),
         //            PreferredLanguageId = table.Column<int>(type: "int", nullable: true),
-        //            IdentityCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            IdentityCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, collation: "SQL_Latin1_General_CP1_CS_AS"),
         //            Code = table.Column<int>(type: "int", nullable: false),
         //            Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            LogoImageName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
         //            WebSite = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            HeadquarterAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-        //            HeadquarterLocation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            HeadquarterLocationLatitude = table.Column<double>(type: "float", nullable: true),
+        //            HeadquarterLocationLongtude = table.Column<double>(type: "float", nullable: true),
         //            HeadquarterPostalCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            NumberOfEmployees = table.Column<int>(type: "int", nullable: false),
-        //            TotalNumberOfEmployees = table.Column<int>(type: "int", nullable: false),
+        //            TotalNumberOfEmployees = table.Column<int>(type: "int", nullable: true),
         //            ImportDefaultData = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -271,6 +282,81 @@ namespace Dawem.Data.Migrations
         //                principalTable: "Languages",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
+        //        name: "MenuItemActions",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            MenuItemId = table.Column<int>(type: "int", nullable: false),
+        //            ActionCode = table.Column<int>(type: "int", nullable: false),
+        //            ActionCodeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_MenuItemActions", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_MenuItemActions_MenuItems_MenuItemId",
+        //                column: x => x.MenuItemId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
+        //        });
+
+        //    migrationBuilder.CreateTable(
+        //        name: "MenuItemNameTranslations",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            MenuItemId = table.Column<int>(type: "int", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+        //            LanguageId = table.Column<int>(type: "int", nullable: false),
+        //            Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_MenuItemNameTranslations", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_MenuItemNameTranslations_Languages_LanguageId",
+        //                column: x => x.LanguageId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Languages",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
+        //                name: "FK_MenuItemNameTranslations_MenuItems_MenuItemId",
+        //                column: x => x.MenuItemId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
         //        });
 
         //    migrationBuilder.CreateTable(
@@ -307,6 +393,55 @@ namespace Dawem.Data.Migrations
         //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
         //                name: "FK_PlanNameTranslations_Plans_PlanId",
+        //                column: x => x.PlanId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Plans",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
+        //        });
+
+        //    migrationBuilder.CreateTable(
+        //        name: "PlanScreens",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            PlanId = table.Column<int>(type: "int", nullable: false),
+        //            ScreenId = table.Column<int>(type: "int", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+        //            LanguageId = table.Column<int>(type: "int", nullable: false),
+        //            Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_PlanScreens", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_PlanScreens_Languages_LanguageId",
+        //                column: x => x.LanguageId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Languages",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
+        //                name: "FK_PlanScreens_MenuItems_ScreenId",
+        //                column: x => x.ScreenId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
+        //                name: "FK_PlanScreens_Plans_PlanId",
         //                column: x => x.PlanId,
         //                principalSchema: "Dawem",
         //                principalTable: "Plans",
@@ -414,7 +549,8 @@ namespace Dawem.Data.Migrations
         //            CompanyId = table.Column<int>(type: "int", nullable: false),
         //            Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-        //            Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Latitude = table.Column<double>(type: "float", nullable: true),
+        //            Longitude = table.Column<double>(type: "float", nullable: true),
         //            PostalCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -471,6 +607,43 @@ namespace Dawem.Data.Migrations
         //                principalTable: "Companies",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Cascade);
+        //        });
+
+        //    migrationBuilder.CreateTable(
+        //        name: "EmployeeOTPs",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            OTPCount = table.Column<int>(type: "int", nullable: false),
+        //            EmployeeId = table.Column<int>(type: "int", nullable: false),
+        //            OTP = table.Column<int>(type: "int", nullable: false),
+        //            ExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            IsVerified = table.Column<bool>(type: "bit", nullable: false),
+        //            CompanyId = table.Column<int>(type: "int", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_EmployeeOTPs", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_EmployeeOTPs_Companies_CompanyId",
+        //                column: x => x.CompanyId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Companies",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
         //        });
 
         //    migrationBuilder.CreateTable(
@@ -652,6 +825,46 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "Notifications",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            CompanyId = table.Column<int>(type: "int", nullable: false),
+        //            IsRead = table.Column<bool>(type: "bit", nullable: false),
+        //            Status = table.Column<int>(type: "int", nullable: false),
+        //            Priority = table.Column<int>(type: "int", nullable: false),
+        //            NotificationType = table.Column<int>(type: "int", nullable: false),
+        //            NotificationTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            IsViewed = table.Column<bool>(type: "bit", nullable: false),
+        //            HelperNumber = table.Column<int>(type: "int", nullable: true),
+        //            HelperDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_Notifications", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_Notifications_Companies_CompanyId",
+        //                column: x => x.CompanyId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Companies",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "PermissionTypes",
         //        schema: "Dawem",
         //        columns: table => new
@@ -678,6 +891,42 @@ namespace Dawem.Data.Migrations
         //            table.PrimaryKey("PK_PermissionTypes", x => x.Id);
         //            table.ForeignKey(
         //                name: "FK_PermissionTypes_Companies_CompanyId",
+        //                column: x => x.CompanyId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Companies",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
+        //        name: "Responsibilities",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            CompanyId = table.Column<int>(type: "int", nullable: true),
+        //            Code = table.Column<int>(type: "int", nullable: false),
+        //            Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            ForEmployeesApplication = table.Column<bool>(type: "bit", nullable: false),
+        //            Type = table.Column<int>(type: "int", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_Responsibilities", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_Responsibilities_Companies_CompanyId",
         //                column: x => x.CompanyId,
         //                principalSchema: "Dawem",
         //                principalTable: "Companies",
@@ -756,6 +1005,49 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "Settings",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            Type = table.Column<int>(type: "int", nullable: false),
+        //            CompanyId = table.Column<int>(type: "int", nullable: true),
+        //            SettingType = table.Column<int>(type: "int", nullable: false),
+        //            TypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            GroupType = table.Column<int>(type: "int", nullable: false),
+        //            GroupTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            ValueType = table.Column<int>(type: "int", nullable: false),
+        //            ValueTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            String = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Integer = table.Column<int>(type: "int", nullable: true),
+        //            Decimal = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true),
+        //            Bool = table.Column<bool>(type: "bit", nullable: true),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_Settings", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_Settings_Companies_CompanyId",
+        //                column: x => x.CompanyId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Companies",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "ShiftWorkingTimes",
         //        schema: "Dawem",
         //        columns: table => new
@@ -769,6 +1061,7 @@ namespace Dawem.Data.Migrations
         //            CheckInTime = table.Column<TimeSpan>(type: "time", nullable: false),
         //            CheckOutTime = table.Column<TimeSpan>(type: "time", nullable: false),
         //            AllowedMinutes = table.Column<int>(type: "int", nullable: false),
+        //            IsTwoDaysShift = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -812,6 +1105,7 @@ namespace Dawem.Data.Migrations
         //            NumberOfEmployees = table.Column<int>(type: "int", nullable: false),
         //            EmployeeCost = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: false),
         //            TotalAmount = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: false),
+        //            IsWaitingForApproval = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -854,7 +1148,9 @@ namespace Dawem.Data.Migrations
         //            Code = table.Column<int>(type: "int", nullable: false),
         //            ForType = table.Column<int>(type: "int", nullable: false),
         //            ForAllEmployees = table.Column<bool>(type: "bit", nullable: true),
-        //            DateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            LocalDateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            StartDateAndTimeUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            EndDateAndTimeUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
         //            AllowedTime = table.Column<int>(type: "int", nullable: false),
         //            TimeType = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
@@ -989,6 +1285,48 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "NotificationTranslations",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            NotificationId = table.Column<int>(type: "int", nullable: false),
+        //            LanguageId = table.Column<int>(type: "int", nullable: false),
+        //            Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Body = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_NotificationTranslations", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_NotificationTranslations_Languages_LanguageId",
+        //                column: x => x.LanguageId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Languages",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
+        //                name: "FK_NotificationTranslations_Notifications_NotificationId",
+        //                column: x => x.NotificationId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Notifications",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "SchedulePlans",
         //        schema: "Dawem",
         //        columns: table => new
@@ -1109,6 +1447,41 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "SubscriptionPayments",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            Code = table.Column<int>(type: "int", nullable: false),
+        //            SubscriptionId = table.Column<int>(type: "int", nullable: false),
+        //            Amount = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: false),
+        //            Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_SubscriptionPayments", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_SubscriptionPayments_Subscriptions_SubscriptionId",
+        //                column: x => x.SubscriptionId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Subscriptions",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "SummonNotifyWays",
         //        schema: "Dawem",
         //        columns: table => new
@@ -1206,7 +1579,6 @@ namespace Dawem.Data.Migrations
         //                .Annotation("SqlServer:Identity", "1, 1"),
         //            CompanyId = table.Column<int>(type: "int", nullable: false),
         //            SchedulePlanId = table.Column<int>(type: "int", nullable: false),
-        //            Code = table.Column<int>(type: "int", nullable: false),
         //            SchedulePlanType = table.Column<int>(type: "int", nullable: false),
         //            StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
         //            FinishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1238,7 +1610,7 @@ namespace Dawem.Data.Migrations
         //                principalSchema: "Dawem",
         //                principalTable: "SchedulePlans",
         //                principalColumn: "Id",
-        //                onDelete: ReferentialAction.Restrict);
+        //                onDelete: ReferentialAction.Cascade);
         //        });
 
         //    migrationBuilder.CreateTable(
@@ -1333,10 +1705,10 @@ namespace Dawem.Data.Migrations
         //            ProfileImageName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
         //            FingerprintMobileCode = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
         //            AllowChangeFingerprintMobileCode = table.Column<bool>(type: "bit", nullable: false),
+        //            InsertedFromExcel = table.Column<bool>(type: "bit", nullable: false),
         //            JoiningDate = table.Column<DateTime>(type: "datetime2", nullable: false),
         //            AttendanceType = table.Column<int>(type: "int", nullable: false),
         //            EmployeeType = table.Column<int>(type: "int", nullable: false),
-        //            InsertedFromExcel = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -1538,7 +1910,14 @@ namespace Dawem.Data.Migrations
         //            LocalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
         //            ShiftCheckInTime = table.Column<TimeSpan>(type: "time", nullable: false),
         //            ShiftCheckOutTime = table.Column<TimeSpan>(type: "time", nullable: false),
+        //            IsTwoDaysShift = table.Column<bool>(type: "bit", nullable: false),
+        //            TotalWorkingHours = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true, computedColumnSql: "dbo.TotalWorkingHours(Id)"),
+        //            TotalLateArrivalsHours = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true, computedColumnSql: "dbo.TotalLateArrivalsHours(Id)"),
+        //            TotalEarlyDeparturesHours = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true, computedColumnSql: "dbo.TotalEarlyDeparturesHours(Id)"),
+        //            TotalOverTimeHours = table.Column<decimal>(type: "decimal(30,20)", precision: 30, scale: 20, nullable: true, computedColumnSql: "dbo.TotalOverTimeHours(Id)"),
+        //            FingerPrintStatus = table.Column<int>(type: "int", nullable: false),
         //            AllowedMinutes = table.Column<int>(type: "int", nullable: false),
+        //            InsertedFromExcel = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -1635,7 +2014,7 @@ namespace Dawem.Data.Migrations
         //                .Annotation("SqlServer:Identity", "1, 1"),
         //            CompanyId = table.Column<int>(type: "int", nullable: true),
         //            EmployeeId = table.Column<int>(type: "int", nullable: true),
-        //            MobileCountryId = table.Column<int>(type: "int", nullable: false),
+        //            MobileCountryId = table.Column<int>(type: "int", nullable: true),
         //            Code = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1656,6 +2035,7 @@ namespace Dawem.Data.Migrations
         //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
         //            VerificationCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            VerificationCodeSendDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            Type = table.Column<int>(type: "int", nullable: false),
         //            UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            NormalizedUserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -1698,21 +2078,14 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
-        //        name: "NotificationStores",
+        //        name: "NotificationEmployees",
         //        schema: "Dawem",
         //        columns: table => new
         //        {
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
-        //            CompanyId = table.Column<int>(type: "int", nullable: false),
+        //            NotificationId = table.Column<int>(type: "int", nullable: false),
         //            EmployeeId = table.Column<int>(type: "int", nullable: false),
-        //            Code = table.Column<int>(type: "int", nullable: false),
-        //            IsRead = table.Column<bool>(type: "bit", nullable: false),
-        //            Status = table.Column<int>(type: "int", nullable: false),
-        //            ImageUrl = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-        //            Priority = table.Column<int>(type: "int", nullable: false),
-        //            NotificationType = table.Column<int>(type: "int", nullable: false),
-        //            IsViewed = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -1727,21 +2100,21 @@ namespace Dawem.Data.Migrations
         //        },
         //        constraints: table =>
         //        {
-        //            table.PrimaryKey("PK_NotificationStores", x => x.Id);
+        //            table.PrimaryKey("PK_NotificationEmployees", x => x.Id);
         //            table.ForeignKey(
-        //                name: "FK_NotificationStores_Companies_CompanyId",
-        //                column: x => x.CompanyId,
-        //                principalSchema: "Dawem",
-        //                principalTable: "Companies",
-        //                principalColumn: "Id",
-        //                onDelete: ReferentialAction.Restrict);
-        //            table.ForeignKey(
-        //                name: "FK_NotificationStores_Employees_EmployeeId",
+        //                name: "FK_NotificationEmployees_Employees_EmployeeId",
         //                column: x => x.EmployeeId,
         //                principalSchema: "Dawem",
         //                principalTable: "Employees",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
+        //                name: "FK_NotificationEmployees_Notifications_NotificationId",
+        //                column: x => x.NotificationId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Notifications",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
         //        });
 
         //    migrationBuilder.CreateTable(
@@ -1889,7 +2262,7 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
-        //        name: "SummonMissingLogs",
+        //        name: "SummonLogs",
         //        schema: "Dawem",
         //        columns: table => new
         //        {
@@ -1898,7 +2271,9 @@ namespace Dawem.Data.Migrations
         //            CompanyId = table.Column<int>(type: "int", nullable: false),
         //            EmployeeId = table.Column<int>(type: "int", nullable: false),
         //            SummonId = table.Column<int>(type: "int", nullable: false),
-        //            Code = table.Column<int>(type: "int", nullable: false),
+        //            DoneSummon = table.Column<bool>(type: "bit", nullable: false),
+        //            DoneTakeActions = table.Column<bool>(type: "bit", nullable: false),
+        //            DoneDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -1913,23 +2288,23 @@ namespace Dawem.Data.Migrations
         //        },
         //        constraints: table =>
         //        {
-        //            table.PrimaryKey("PK_SummonMissingLogs", x => x.Id);
+        //            table.PrimaryKey("PK_SummonLogs", x => x.Id);
         //            table.ForeignKey(
-        //                name: "FK_SummonMissingLogs_Companies_CompanyId",
+        //                name: "FK_SummonLogs_Companies_CompanyId",
         //                column: x => x.CompanyId,
         //                principalSchema: "Dawem",
         //                principalTable: "Companies",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
-        //                name: "FK_SummonMissingLogs_Employees_EmployeeId",
+        //                name: "FK_SummonLogs_Employees_EmployeeId",
         //                column: x => x.EmployeeId,
         //                principalSchema: "Dawem",
         //                principalTable: "Employees",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
-        //                name: "FK_SummonMissingLogs_Summons_SummonId",
+        //                name: "FK_SummonLogs_Summons_SummonId",
         //                column: x => x.SummonId,
         //                principalSchema: "Dawem",
         //                principalTable: "Summons",
@@ -2033,12 +2408,14 @@ namespace Dawem.Data.Migrations
         //            EmployeeAttendanceId = table.Column<int>(type: "int", nullable: false),
         //            SummonId = table.Column<int>(type: "int", nullable: true),
         //            ZoneId = table.Column<int>(type: "int", nullable: true),
-        //            Time = table.Column<TimeSpan>(type: "time", nullable: false),
+        //            FingerPrintDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            FingerPrintDateUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
         //            Latitude = table.Column<double>(type: "float", nullable: false),
         //            Longitude = table.Column<double>(type: "float", nullable: false),
         //            IpAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
         //            FingerPrintType = table.Column<int>(type: "int", nullable: false),
         //            RecognitionWay = table.Column<int>(type: "int", nullable: false),
+        //            FingerprintSource = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -2332,11 +2709,12 @@ namespace Dawem.Data.Migrations
         //        {
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
-        //            Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-        //            CompanyId = table.Column<int>(type: "int", nullable: false),
+        //            DateUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
+        //            CompanyId = table.Column<int>(type: "int", nullable: true),
         //            UserId = table.Column<int>(type: "int", nullable: false),
-        //            ScreenCode = table.Column<int>(type: "int", nullable: false),
+        //            ScreenId = table.Column<int>(type: "int", nullable: false),
         //            ActionCode = table.Column<int>(type: "int", nullable: false),
+        //            Type = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -2360,6 +2738,13 @@ namespace Dawem.Data.Migrations
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
+        //                name: "FK_PermissionLogs_MenuItems_ScreenId",
+        //                column: x => x.ScreenId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
         //                name: "FK_PermissionLogs_MyUsers_UserId",
         //                column: x => x.UserId,
         //                principalSchema: "Dawem",
@@ -2375,11 +2760,12 @@ namespace Dawem.Data.Migrations
         //        {
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
-        //            CompanyId = table.Column<int>(type: "int", nullable: false),
+        //            CompanyId = table.Column<int>(type: "int", nullable: true),
         //            ForType = table.Column<int>(type: "int", nullable: false),
-        //            RoleId = table.Column<int>(type: "int", nullable: true),
+        //            ResponsibilityId = table.Column<int>(type: "int", nullable: true),
         //            UserId = table.Column<int>(type: "int", nullable: true),
         //            Code = table.Column<int>(type: "int", nullable: false),
+        //            Type = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -2410,10 +2796,10 @@ namespace Dawem.Data.Migrations
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
-        //                name: "FK_Permissions_Roles_RoleId",
-        //                column: x => x.RoleId,
+        //                name: "FK_Permissions_Responsibilities_ResponsibilityId",
+        //                column: x => x.ResponsibilityId,
         //                principalSchema: "Dawem",
-        //                principalTable: "Roles",
+        //                principalTable: "Responsibilities",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Restrict);
         //        });
@@ -2553,6 +2939,46 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
+        //        name: "UserResponsibilities",
+        //        schema: "Dawem",
+        //        columns: table => new
+        //        {
+        //            Id = table.Column<int>(type: "int", nullable: false)
+        //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            UserId = table.Column<int>(type: "int", nullable: false),
+        //            ResponsibilityId = table.Column<int>(type: "int", nullable: false),
+        //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+        //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
+        //            ModifiedApplicationType = table.Column<int>(type: "int", nullable: true),
+        //            AddUserId = table.Column<int>(type: "int", nullable: true),
+        //            ModifyUserId = table.Column<int>(type: "int", nullable: true),
+        //            IsActive = table.Column<bool>(type: "bit", nullable: false),
+        //            IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+        //            DeletionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+        //            DisableReason = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+        //            Notes = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+        //        },
+        //        constraints: table =>
+        //        {
+        //            table.PrimaryKey("PK_UserResponsibilities", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_UserResponsibilities_MyUsers_UserId",
+        //                column: x => x.UserId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MyUsers",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Cascade);
+        //            table.ForeignKey(
+        //                name: "FK_UserResponsibilities_Responsibilities_ResponsibilityId",
+        //                column: x => x.ResponsibilityId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Responsibilities",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //        });
+
+        //    migrationBuilder.CreateTable(
         //        name: "UserRoles",
         //        schema: "Dawem",
         //        columns: table => new
@@ -2602,15 +3028,14 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateTable(
-        //        name: "SummonMissingLogSanctions",
+        //        name: "SummonLogSanctions",
         //        schema: "Dawem",
         //        columns: table => new
         //        {
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
-        //            SummonMissingLogId = table.Column<int>(type: "int", nullable: false),
+        //            SummonLogId = table.Column<int>(type: "int", nullable: false),
         //            SummonSanctionId = table.Column<int>(type: "int", nullable: false),
-        //            Code = table.Column<int>(type: "int", nullable: false),
         //            Done = table.Column<bool>(type: "bit", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -2626,16 +3051,16 @@ namespace Dawem.Data.Migrations
         //        },
         //        constraints: table =>
         //        {
-        //            table.PrimaryKey("PK_SummonMissingLogSanctions", x => x.Id);
+        //            table.PrimaryKey("PK_SummonLogSanctions", x => x.Id);
         //            table.ForeignKey(
-        //                name: "FK_SummonMissingLogSanctions_SummonMissingLogs_SummonMissingLogId",
-        //                column: x => x.SummonMissingLogId,
+        //                name: "FK_SummonLogSanctions_SummonLogs_SummonLogId",
+        //                column: x => x.SummonLogId,
         //                principalSchema: "Dawem",
-        //                principalTable: "SummonMissingLogs",
+        //                principalTable: "SummonLogs",
         //                principalColumn: "Id",
         //                onDelete: ReferentialAction.Cascade);
         //            table.ForeignKey(
-        //                name: "FK_SummonMissingLogSanctions_SummonSanctions_SummonSanctionId",
+        //                name: "FK_SummonLogSanctions_SummonSanctions_SummonSanctionId",
         //                column: x => x.SummonSanctionId,
         //                principalSchema: "Dawem",
         //                principalTable: "SummonSanctions",
@@ -2650,6 +3075,7 @@ namespace Dawem.Data.Migrations
         //        {
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
+        //            CompanyId = table.Column<int>(type: "int", nullable: false),
         //            NotificationUserId = table.Column<int>(type: "int", nullable: false),
         //            FCMToken = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
         //            DeviceType = table.Column<int>(type: "int", nullable: false),
@@ -2670,6 +3096,13 @@ namespace Dawem.Data.Migrations
         //        {
         //            table.PrimaryKey("PK_NotificationUserFCMTokens", x => x.Id);
         //            table.ForeignKey(
+        //                name: "FK_NotificationUserFCMTokens_Companies_CompanyId",
+        //                column: x => x.CompanyId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "Companies",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
+        //            table.ForeignKey(
         //                name: "FK_NotificationUserFCMTokens_NotificationUsers_NotificationUserId",
         //                column: x => x.NotificationUserId,
         //                principalSchema: "Dawem",
@@ -2686,7 +3119,7 @@ namespace Dawem.Data.Migrations
         //            Id = table.Column<int>(type: "int", nullable: false)
         //                .Annotation("SqlServer:Identity", "1, 1"),
         //            PermissionId = table.Column<int>(type: "int", nullable: false),
-        //            ScreenCode = table.Column<int>(type: "int", nullable: false),
+        //            ScreenId = table.Column<int>(type: "int", nullable: false),
         //            AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
         //            ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
         //            AddedApplicationType = table.Column<int>(type: "int", nullable: false),
@@ -2702,6 +3135,13 @@ namespace Dawem.Data.Migrations
         //        constraints: table =>
         //        {
         //            table.PrimaryKey("PK_PermissionScreens", x => x.Id);
+        //            table.ForeignKey(
+        //                name: "FK_PermissionScreens_MenuItems_ScreenId",
+        //                column: x => x.ScreenId,
+        //                principalSchema: "Dawem",
+        //                principalTable: "MenuItems",
+        //                principalColumn: "Id",
+        //                onDelete: ReferentialAction.Restrict);
         //            table.ForeignKey(
         //                name: "FK_PermissionScreens_Permissions_PermissionId",
         //                column: x => x.PermissionId,
@@ -3031,6 +3471,12 @@ namespace Dawem.Data.Migrations
         //        });
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "AssignmentTypes",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "AssignmentTypes",
@@ -3066,10 +3512,28 @@ namespace Dawem.Data.Migrations
         //        column: "PreferredLanguageId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Companies",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_CompanyAttachments_CompanyId",
         //        schema: "Dawem",
         //        table: "CompanyAttachments",
         //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "CompanyAttachments",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "CompanyBranches",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Name_IsDeleted",
@@ -3080,6 +3544,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "CompanyIndustries",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Name_IsDeleted",
         //        schema: "Dawem",
         //        table: "CompanyIndustries",
@@ -3088,10 +3558,28 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_Countries_TimeZoneToUTC",
+        //        schema: "Dawem",
+        //        table: "Countries",
+        //        column: "TimeZoneToUTC");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Countries",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Currencies_CountryId",
         //        schema: "Dawem",
         //        table: "Currencies",
         //        column: "CountryId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Currencies",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_DepartmentManagerDelegators_DepartmentId",
@@ -3106,6 +3594,12 @@ namespace Dawem.Data.Migrations
         //        column: "EmployeeId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "DepartmentManagerDelegators",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Departments_ManagerId",
         //        schema: "Dawem",
         //        table: "Departments",
@@ -3116,6 +3610,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "Departments",
         //        column: "ParentId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Departments",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3139,6 +3639,24 @@ namespace Dawem.Data.Migrations
         //        column: "EmployeeAttendanceId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendanceChecks_FingerPrintDate",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendanceChecks",
+        //        column: "FingerPrintDate");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendanceChecks_FingerPrintDateUTC",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendanceChecks",
+        //        column: "FingerPrintDateUTC");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendanceChecks_FingerPrintType",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendanceChecks",
+        //        column: "FingerPrintType");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_EmployeeAttendanceChecks_SummonId",
         //        schema: "Dawem",
         //        table: "EmployeeAttendanceChecks",
@@ -3151,10 +3669,28 @@ namespace Dawem.Data.Migrations
         //        column: "ZoneId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendanceChecks",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_EmployeeAttendances_EmployeeId",
         //        schema: "Dawem",
         //        table: "EmployeeAttendances",
         //        column: "EmployeeId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendances_FingerPrintStatus",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendances",
+        //        column: "FingerPrintStatus");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendances_LocalDate",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendances",
+        //        column: "LocalDate");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_EmployeeAttendances_ScheduleId",
@@ -3163,10 +3699,28 @@ namespace Dawem.Data.Migrations
         //        column: "ScheduleId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendances_ShiftCheckInTime",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendances",
+        //        column: "ShiftCheckInTime");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeAttendances_ShiftCheckOutTime",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendances",
+        //        column: "ShiftCheckOutTime");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_EmployeeAttendances_ShiftId",
         //        schema: "Dawem",
         //        table: "EmployeeAttendances",
         //        column: "ShiftId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "EmployeeAttendances",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3174,6 +3728,18 @@ namespace Dawem.Data.Migrations
         //        table: "EmployeeAttendances",
         //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
         //        unique: true);
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_EmployeeOTPs_CompanyId",
+        //        schema: "Dawem",
+        //        table: "EmployeeOTPs",
+        //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "EmployeeOTPs",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Employees_DepartmentId",
@@ -3206,6 +3772,12 @@ namespace Dawem.Data.Migrations
         //        column: "ScheduleId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Employees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "Employees",
@@ -3219,6 +3791,12 @@ namespace Dawem.Data.Migrations
         //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
         //        unique: true,
         //        filter: "[Name] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "FingerprintDevices",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3248,6 +3826,12 @@ namespace Dawem.Data.Migrations
         //        column: "GroupId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "GroupEmployees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_GroupManagerDelegators_EmployeeId",
         //        schema: "Dawem",
         //        table: "GroupManagerDelegators",
@@ -3260,12 +3844,24 @@ namespace Dawem.Data.Migrations
         //        column: "GroupId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "GroupManagerDelegators",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Groups_ManagerId",
         //        schema: "Dawem",
         //        table: "Groups",
         //        column: "ManagerId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Groups",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "Groups",
@@ -3279,6 +3875,12 @@ namespace Dawem.Data.Migrations
         //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
         //        unique: true,
         //        filter: "[Name] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Holidays",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3296,6 +3898,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "HolidayTypes",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "HolidayTypes",
@@ -3309,6 +3917,12 @@ namespace Dawem.Data.Migrations
         //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
         //        unique: true,
         //        filter: "[Name] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "JobTitles",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3326,6 +3940,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "JustificationTypes",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "JustificationTypes",
@@ -3339,12 +3959,66 @@ namespace Dawem.Data.Migrations
         //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
         //        unique: true,
         //        filter: "[Name] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Languages",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "MenuItemActions",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_MenuItemActions_MenuItemId",
+        //        schema: "Dawem",
+        //        table: "MenuItemActions",
+        //        column: "MenuItemId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "MenuItemNameTranslations",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_MenuItemNameTranslations_LanguageId",
+        //        schema: "Dawem",
+        //        table: "MenuItemNameTranslations",
+        //        column: "LanguageId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_MenuItemNameTranslations_MenuItemId",
+        //        schema: "Dawem",
+        //        table: "MenuItemNameTranslations",
+        //        column: "MenuItemId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "MenuItems",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_MenuItems_ParentId",
+        //        schema: "Dawem",
+        //        table: "MenuItems",
+        //        column: "ParentId");
 
         //    migrationBuilder.CreateIndex(
         //        name: "EmailIndex",
         //        schema: "Dawem",
         //        table: "MyUsers",
         //        column: "NormalizedEmail");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "MyUsers",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_MyUsers_EmployeeId",
@@ -3383,23 +4057,94 @@ namespace Dawem.Data.Migrations
         //        filter: "[NormalizedUserName] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_NotificationStores_EmployeeId",
+        //        name: "IX_IsDeleted",
         //        schema: "Dawem",
-        //        table: "NotificationStores",
+        //        table: "NotificationEmployees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_NotificationEmployees_EmployeeId",
+        //        schema: "Dawem",
+        //        table: "NotificationEmployees",
         //        column: "EmployeeId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_Unique_CompanyId_Code_IsDeleted",
+        //        name: "IX_NotificationEmployees_NotificationId",
         //        schema: "Dawem",
-        //        table: "NotificationStores",
-        //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
-        //        unique: true);
+        //        table: "NotificationEmployees",
+        //        column: "NotificationId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Notifications",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Notifications_CompanyId",
+        //        schema: "Dawem",
+        //        table: "Notifications",
+        //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Notifications_HelperDate",
+        //        schema: "Dawem",
+        //        table: "Notifications",
+        //        column: "HelperDate");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Notifications_HelperNumber",
+        //        schema: "Dawem",
+        //        table: "Notifications",
+        //        column: "HelperNumber");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Notifications_NotificationType",
+        //        schema: "Dawem",
+        //        table: "Notifications",
+        //        column: "NotificationType");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "NotificationTranslations",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_NotificationTranslations_LanguageId",
+        //        schema: "Dawem",
+        //        table: "NotificationTranslations",
+        //        column: "LanguageId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_NotificationTranslations_NotificationId",
+        //        schema: "Dawem",
+        //        table: "NotificationTranslations",
+        //        column: "NotificationId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "NotificationUserFCMTokens",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_NotificationUserFCMTokens_CompanyId",
+        //        schema: "Dawem",
+        //        table: "NotificationUserFCMTokens",
+        //        column: "CompanyId");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_NotificationUserFCMTokens_NotificationUserId",
         //        schema: "Dawem",
         //        table: "NotificationUserFCMTokens",
         //        column: "NotificationUserId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "NotificationUsers",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_NotificationUsers_CompanyId",
@@ -3414,10 +4159,22 @@ namespace Dawem.Data.Migrations
         //        column: "UserId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PermissionLogs",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_PermissionLogs_CompanyId",
         //        schema: "Dawem",
         //        table: "PermissionLogs",
         //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_PermissionLogs_ScreenId",
+        //        schema: "Dawem",
+        //        table: "PermissionLogs",
+        //        column: "ScreenId");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_PermissionLogs_UserId",
@@ -3426,10 +4183,16 @@ namespace Dawem.Data.Migrations
         //        column: "UserId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_Permissions_RoleId",
+        //        name: "IX_IsDeleted",
         //        schema: "Dawem",
         //        table: "Permissions",
-        //        column: "RoleId");
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Permissions_ResponsibilityId",
+        //        schema: "Dawem",
+        //        table: "Permissions",
+        //        column: "ResponsibilityId");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Permissions_UserId",
@@ -3442,7 +4205,14 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "Permissions",
         //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
-        //        unique: true);
+        //        unique: true,
+        //        filter: "[CompanyId] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PermissionScreenActions",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_PermissionScreenActions_PermissionScreenId",
@@ -3451,10 +4221,28 @@ namespace Dawem.Data.Migrations
         //        column: "PermissionScreenId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PermissionScreens",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_PermissionScreens_PermissionId",
         //        schema: "Dawem",
         //        table: "PermissionScreens",
         //        column: "PermissionId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_PermissionScreens_ScreenId",
+        //        schema: "Dawem",
+        //        table: "PermissionScreens",
+        //        column: "ScreenId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PermissionTypes",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3472,6 +4260,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PlanNameTranslations",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_PlanNameTranslations_LanguageId",
         //        schema: "Dawem",
         //        table: "PlanNameTranslations",
@@ -3482,6 +4276,42 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "PlanNameTranslations",
         //        column: "PlanId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Plans",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "PlanScreens",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_PlanScreens_LanguageId",
+        //        schema: "Dawem",
+        //        table: "PlanScreens",
+        //        column: "LanguageId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_PlanScreens_PlanId",
+        //        schema: "Dawem",
+        //        table: "PlanScreens",
+        //        column: "PlanId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_PlanScreens_ScreenId",
+        //        schema: "Dawem",
+        //        table: "PlanScreens",
+        //        column: "ScreenId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestAssignments",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestAssignments_AssignmentTypeId",
@@ -3497,10 +4327,22 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestAttachments",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestAttachments_RequestId",
         //        schema: "Dawem",
         //        table: "RequestAttachments",
         //        column: "RequestId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestJustifications",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestJustifications_JustificationTypeId",
@@ -3516,6 +4358,12 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestPermissions",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestPermissions_PermissionTypeId",
         //        schema: "Dawem",
         //        table: "RequestPermissions",
@@ -3527,6 +4375,12 @@ namespace Dawem.Data.Migrations
         //        table: "RequestPermissions",
         //        column: "RequestId",
         //        unique: true);
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Requests",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Requests_DecisionUserId",
@@ -3548,6 +4402,12 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestTaskEmployees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestTaskEmployees_EmployeeId",
         //        schema: "Dawem",
         //        table: "RequestTaskEmployees",
@@ -3558,6 +4418,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "RequestTaskEmployees",
         //        column: "RequestTaskId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestTasks",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestTasks_RequestId",
@@ -3573,6 +4439,12 @@ namespace Dawem.Data.Migrations
         //        column: "TaskTypeId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "RequestVacations",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_RequestVacations_RequestId",
         //        schema: "Dawem",
         //        table: "RequestVacations",
@@ -3584,6 +4456,28 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "RequestVacations",
         //        column: "VacationTypeId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Responsibilities",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Unique_CompanyId_Code_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Responsibilities",
+        //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
+        //        unique: true,
+        //        filter: "[CompanyId] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Unique_CompanyId_Name_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Responsibilities",
+        //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
+        //        unique: true,
+        //        filter: "[CompanyId] IS NOT NULL AND [Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_RoleClaims_RoleId",
@@ -3598,6 +4492,12 @@ namespace Dawem.Data.Migrations
         //        column: "NormalizedName",
         //        unique: true,
         //        filter: "[NormalizedName] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Sanctions",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3615,6 +4515,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "ScheduleDays",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_ScheduleDays_ScheduleId",
         //        schema: "Dawem",
         //        table: "ScheduleDays",
@@ -3625,6 +4531,18 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "ScheduleDays",
         //        column: "ShiftId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_ScheduleDays_WeekDay",
+        //        schema: "Dawem",
+        //        table: "ScheduleDays",
+        //        column: "WeekDay");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanDepartments",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlanDepartments_DepartmentId",
@@ -3640,6 +4558,12 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanEmployees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlanEmployees_EmployeeId",
         //        schema: "Dawem",
         //        table: "SchedulePlanEmployees",
@@ -3653,6 +4577,12 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanGroups",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlanGroups_GroupId",
         //        schema: "Dawem",
         //        table: "SchedulePlanGroups",
@@ -3664,6 +4594,12 @@ namespace Dawem.Data.Migrations
         //        table: "SchedulePlanGroups",
         //        column: "SchedulePlanId",
         //        unique: true);
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanLogEmployees",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlanLogEmployees_EmployeeId",
@@ -3690,17 +4626,28 @@ namespace Dawem.Data.Migrations
         //        column: "SchedulePlanLogId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanLogs",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_SchedulePlanLogs_CompanyId",
+        //        schema: "Dawem",
+        //        table: "SchedulePlanLogs",
+        //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlanLogs_SchedulePlanId",
         //        schema: "Dawem",
         //        table: "SchedulePlanLogs",
         //        column: "SchedulePlanId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_Unique_CompanyId_Code_IsDeleted",
+        //        name: "IX_IsDeleted",
         //        schema: "Dawem",
-        //        table: "SchedulePlanLogs",
-        //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
-        //        unique: true);
+        //        table: "SchedulePlans",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SchedulePlans_ScheduleId",
@@ -3716,6 +4663,12 @@ namespace Dawem.Data.Migrations
         //        unique: true);
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Schedules",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "Schedules",
@@ -3731,6 +4684,48 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Settings",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Settings_CompanyId",
+        //        schema: "Dawem",
+        //        table: "Settings",
+        //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "ShiftWorkingTimes",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_ShiftWorkingTimes_AllowedMinutes",
+        //        schema: "Dawem",
+        //        table: "ShiftWorkingTimes",
+        //        column: "AllowedMinutes");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_ShiftWorkingTimes_CheckInTime",
+        //        schema: "Dawem",
+        //        table: "ShiftWorkingTimes",
+        //        column: "CheckInTime");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_ShiftWorkingTimes_CheckOutTime",
+        //        schema: "Dawem",
+        //        table: "ShiftWorkingTimes",
+        //        column: "CheckOutTime");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_ShiftWorkingTimes_IsTwoDaysShift",
+        //        schema: "Dawem",
+        //        table: "ShiftWorkingTimes",
+        //        column: "IsTwoDaysShift");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "ShiftWorkingTimes",
@@ -3744,12 +4739,43 @@ namespace Dawem.Data.Migrations
         //        columns: new[] { "CompanyId", "Name", "IsDeleted" },
         //        unique: true,
         //        filter: "[Name] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SubscriptionLogs",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SubscriptionLogs_SubscriptionId",
         //        schema: "Dawem",
         //        table: "SubscriptionLogs",
         //        column: "SubscriptionId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SubscriptionPayments",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_SubscriptionPayments_SubscriptionId",
+        //        schema: "Dawem",
+        //        table: "SubscriptionPayments",
+        //        column: "SubscriptionId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Subscriptions",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Subscriptions_CompanyId",
+        //        schema: "Dawem",
+        //        table: "Subscriptions",
+        //        column: "CompanyId",
+        //        unique: true);
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Subscriptions_PlanId",
@@ -3763,6 +4789,12 @@ namespace Dawem.Data.Migrations
         //        table: "Subscriptions",
         //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
         //        unique: true);
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SummonDepartments",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SummonDepartments_CompanyId",
@@ -3783,6 +4815,12 @@ namespace Dawem.Data.Migrations
         //        column: "SummonId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SummonEmployees",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_SummonEmployees_CompanyId",
         //        schema: "Dawem",
         //        table: "SummonEmployees",
@@ -3799,6 +4837,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "SummonEmployees",
         //        column: "SummonId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SummonGroups",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SummonGroups_CompanyId",
@@ -3819,35 +4863,52 @@ namespace Dawem.Data.Migrations
         //        column: "SummonId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_SummonMissingLogs_EmployeeId",
+        //        name: "IX_IsDeleted",
         //        schema: "Dawem",
-        //        table: "SummonMissingLogs",
+        //        table: "SummonLogs",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_SummonLogs_CompanyId",
+        //        schema: "Dawem",
+        //        table: "SummonLogs",
+        //        column: "CompanyId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_SummonLogs_EmployeeId",
+        //        schema: "Dawem",
+        //        table: "SummonLogs",
         //        column: "EmployeeId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_SummonMissingLogs_SummonId",
+        //        name: "IX_SummonLogs_SummonId",
         //        schema: "Dawem",
-        //        table: "SummonMissingLogs",
+        //        table: "SummonLogs",
         //        column: "SummonId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_Unique_CompanyId_Code_IsDeleted",
+        //        name: "IX_IsDeleted",
         //        schema: "Dawem",
-        //        table: "SummonMissingLogs",
-        //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
-        //        unique: true);
+        //        table: "SummonLogSanctions",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_SummonMissingLogSanctions_SummonMissingLogId",
+        //        name: "IX_SummonLogSanctions_SummonLogId",
         //        schema: "Dawem",
-        //        table: "SummonMissingLogSanctions",
-        //        column: "SummonMissingLogId");
+        //        table: "SummonLogSanctions",
+        //        column: "SummonLogId");
 
         //    migrationBuilder.CreateIndex(
-        //        name: "IX_SummonMissingLogSanctions_SummonSanctionId",
+        //        name: "IX_SummonLogSanctions_SummonSanctionId",
         //        schema: "Dawem",
-        //        table: "SummonMissingLogSanctions",
+        //        table: "SummonLogSanctions",
         //        column: "SummonSanctionId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SummonNotifyWays",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SummonNotifyWays_CompanyId",
@@ -3862,11 +4923,35 @@ namespace Dawem.Data.Migrations
         //        column: "SummonId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Summons",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Summons_EndDateAndTimeUTC",
+        //        schema: "Dawem",
+        //        table: "Summons",
+        //        column: "EndDateAndTimeUTC");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_Summons_StartDateAndTimeUTC",
+        //        schema: "Dawem",
+        //        table: "Summons",
+        //        column: "StartDateAndTimeUTC");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "Summons",
         //        columns: new[] { "CompanyId", "Code", "IsDeleted" },
         //        unique: true);
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "SummonSanctions",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_SummonSanctions_CompanyId",
@@ -3887,6 +4972,12 @@ namespace Dawem.Data.Migrations
         //        column: "SummonId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "TaskTypes",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
         //        schema: "Dawem",
         //        table: "TaskTypes",
@@ -3902,12 +4993,24 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Translations",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_Translations_KeyWord_Lang",
         //        schema: "Dawem",
         //        table: "Translations",
         //        columns: new[] { "KeyWord", "Lang" },
         //        unique: true,
         //        filter: "[KeyWord] IS NOT NULL AND [Lang] IS NOT NULL");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "UserBranches",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_UserBranches_UserId",
@@ -3928,10 +5031,34 @@ namespace Dawem.Data.Migrations
         //        column: "UserId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "UserResponsibilities",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_UserResponsibilities_ResponsibilityId",
+        //        schema: "Dawem",
+        //        table: "UserResponsibilities",
+        //        column: "ResponsibilityId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_UserResponsibilities_UserId",
+        //        schema: "Dawem",
+        //        table: "UserResponsibilities",
+        //        column: "UserId");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_UserRoles_RoleId",
         //        schema: "Dawem",
         //        table: "UserRoles",
         //        column: "RoleId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "VacationBalances",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3945,6 +5072,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "VacationBalances",
         //        column: "EmployeeId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "VacationTypes",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -3962,6 +5095,12 @@ namespace Dawem.Data.Migrations
         //        filter: "[Name] IS NOT NULL");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "ZoneDepartments",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_ZoneDepartments_DepartmentId",
         //        schema: "Dawem",
         //        table: "ZoneDepartments",
@@ -3972,6 +5111,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "ZoneDepartments",
         //        column: "ZoneId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "ZoneEmployees",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_ZoneEmployees_EmployeeId",
@@ -3986,6 +5131,12 @@ namespace Dawem.Data.Migrations
         //        column: "ZoneId");
 
         //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "ZoneGroups",
+        //        column: "IsDeleted");
+
+        //    migrationBuilder.CreateIndex(
         //        name: "IX_ZoneGroups_GroupId",
         //        schema: "Dawem",
         //        table: "ZoneGroups",
@@ -3996,6 +5147,12 @@ namespace Dawem.Data.Migrations
         //        schema: "Dawem",
         //        table: "ZoneGroups",
         //        column: "ZoneId");
+
+        //    migrationBuilder.CreateIndex(
+        //        name: "IX_IsDeleted",
+        //        schema: "Dawem",
+        //        table: "Zones",
+        //        column: "IsDeleted");
 
         //    migrationBuilder.CreateIndex(
         //        name: "IX_Unique_CompanyId_Code_IsDeleted",
@@ -4092,15 +5249,15 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
-                name: "DawemSettings",
-                schema: "Dawem");
-
-            migrationBuilder.DropTable(
                 name: "DepartmentManagerDelegators",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
                 name: "EmployeeAttendanceChecks",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeOTPs",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4124,7 +5281,19 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
-                name: "NotificationStores",
+                name: "MenuItemActions",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "MenuItemNameTranslations",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "NotificationEmployees",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "NotificationTranslations",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4141,6 +5310,10 @@ namespace Dawem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "PlanNameTranslations",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "PlanScreens",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4192,7 +5365,15 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
+                name: "Settings",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
                 name: "SubscriptionLogs",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "SubscriptionPayments",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4208,7 +5389,7 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
-                name: "SummonMissingLogSanctions",
+                name: "SummonLogSanctions",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4229,6 +5410,10 @@ namespace Dawem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserLogIns",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "UserResponsibilities",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4257,6 +5442,10 @@ namespace Dawem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "EmployeeAttendances",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "Notifications",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4296,11 +5485,15 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
-                name: "SummonMissingLogs",
+                name: "SummonLogs",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
                 name: "SummonSanctions",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "Roles",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4313,6 +5506,10 @@ namespace Dawem.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ShiftWorkingTimes",
+                schema: "Dawem");
+
+            migrationBuilder.DropTable(
+                name: "MenuItems",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
@@ -4344,7 +5541,7 @@ namespace Dawem.Data.Migrations
                 schema: "Dawem");
 
             migrationBuilder.DropTable(
-                name: "Roles",
+                name: "Responsibilities",
                 schema: "Dawem");
 
             migrationBuilder.DropTable(

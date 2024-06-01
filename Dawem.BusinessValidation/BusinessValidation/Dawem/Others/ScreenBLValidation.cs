@@ -1,15 +1,15 @@
 ﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Dtos.Dawem.Shared;
-using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using Dawem.Enums.Permissions;
 
 
 namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
@@ -46,6 +46,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             await ValidateParent(model.ParentId);
 
+            await CheckParentAuthenticationType(model.ParentId, model.AuthenticationType);
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateScreenModel model)
@@ -65,6 +67,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
             await ValidateOrderDuplication(model.Order, model.Id);
 
             await ValidateParent(model.ParentId);
+
+            await CheckParentAuthenticationType(model.ParentId, model.AuthenticationType);
 
             return true;
         }
@@ -125,6 +129,22 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
                 if (checkParent)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryScreenParentMustBeScreenGroup);
+                }
+            }
+
+            return true;
+        }
+        private async Task<bool> CheckParentAuthenticationType(int? parentId, AuthenticationType authenticationType)
+        {
+            if (parentId > 0)
+            {
+                var checkParent = await repositoryManager.MenuItemRepository.
+                    Get(m => !m.IsDeleted && m.Id == parentId && m.AuthenticationType != authenticationType).
+                    AnyAsync();
+
+                if (checkParent)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryParentMustBeFromTheSameAuthenticationType);
                 }
             }
 

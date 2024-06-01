@@ -159,6 +159,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var screenGroupRepository = repositoryManager.MenuItemRepository;
             criteria.GroupOrScreenType = GroupOrScreenType.Group;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -193,7 +194,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             criteria.IsActive = true;
             var screenGroupRepository = repositoryManager.MenuItemRepository;
-            criteria.GroupOrScreenType = GroupOrScreenType.Screen;
+            criteria.GroupOrScreenType = GroupOrScreenType.Group;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging

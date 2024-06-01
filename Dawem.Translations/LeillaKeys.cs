@@ -685,9 +685,6 @@
         public const string DoneCreateScreenGroupSuccessfully = "DoneCreateScreenGroupSuccessfully";
         public const string DoneUpdateScreenGroupSuccessfully = "DoneUpdateScreenGroupSuccessfully";
         public const string SorryYourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen = "Sorry!!YourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen!";
-
-
-
         public const string SorryYouMustEnterCorrectScreenId = "Sorry!!YouMustEnterCorrectScreenId!";
         public const string SorryScreenNameIsDuplicated = "Sorry!!ScreenNameIsDuplicated!";
         public const string DuplicatedScreenName = "DuplicatedScreenName";
@@ -695,7 +692,7 @@
         public const string SorryScreenGroupNameIsDuplicated = "Sorry!!ScreenGroupNameIsDuplicated!";
         public const string DuplicatedScreenGroupName = "DuplicatedScreenGroupName";
         public const string DuplicatedScreenGroupLanguage = "DuplicatedScreenGroupLanguage";
-        public const string SorryScreenGroupOrderIsDuplicated = "SorryScreenGroupOrderIsDuplicated";
+        public const string SorryScreenGroupOrderIsDuplicated = "Sorry!!ScreenGroupOrderIsDuplicated!";
         public const string DuplicatedWithScreenGroupName = "DuplicatedWithScreenGroupName";
         public const string SorryScreenParentMustBeScreenGroup = "Sorry!!ScreenParentMustBeScreenGroup!";
         public const string SorryGroupParentMustBeScreenGroup = "Sorry!!GroupParentMustBeScreenGroup!";
@@ -703,6 +700,9 @@
         public const string SorryYouMustEnterCorrectAuthenticationType = "Sorry!!YouMustEnterCorrectAuthenticationType!";
         public const string SorryParentGroupMustNotBeTheGroup = "Sorry!!ParentGroupMustNotBeTheGroup!";
         public const string SorryGroupParentCannotBeOneOfItsChildren = "Sorry!!GroupParentCannotBeOneOfItsChildren!";
+        public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
+
         
+
     }
 }

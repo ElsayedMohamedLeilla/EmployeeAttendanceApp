@@ -369,16 +369,15 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
-            var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel
+            var getCurrentUserMenuItemsResponse = await permissionBL
+                .GetCurrentUserMenuItems(new GetCurrentUserMenuItemsModel
                 {
                     CompanyId = user.CompanyId,
                     UserId = user.Id,
                     AuthenticationType = AuthenticationType.DawemAdmin
                 });
 
-            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
-            tokenData.IsAdmin = permissionsResponse.IsAdmin;
+            tokenData.MenuItems = getCurrentUserMenuItemsResponse.MenuItems ?? null;
 
             #region Handle Device Token
 
@@ -524,11 +523,14 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
-            var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { AuthenticationType = AuthenticationType.AdminPanel, UserId = user.Id });
+            var getCurrentUserMenuItemsResponse = await permissionBL
+                .GetCurrentUserMenuItems(new GetCurrentUserMenuItemsModel
+                {
+                    AuthenticationType = AuthenticationType.AdminPanel,
+                    UserId = user.Id
+                });
 
-            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
-            tokenData.IsAdmin = permissionsResponse.IsAdmin;
+            tokenData.MenuItems = getCurrentUserMenuItemsResponse.MenuItems ?? null;
 
             return tokenData;
         }

@@ -1,4 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Others
         [HttpGet]
         public async Task<ActionResult> GetAllScreensWithAvailableActions()
         {
-            return Success(await screenBLC.GetAllScreensWithAvailableActions());
+            return Success(await screenBLC.GetAllScreensWithAvailableActions(new GetScreensCriteria { IsActive = true}));
         }
     }
 }

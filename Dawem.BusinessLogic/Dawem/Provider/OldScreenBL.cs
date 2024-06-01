@@ -75,8 +75,6 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 DeleteDescendantScreens(childScreen);
             }
         }
-
-
         private IEnumerable<OldNotUsedScreen> GetChildScreens(OldNotUsedScreen parentScreen)
         {
             var childScreens = parentScreen.Children;

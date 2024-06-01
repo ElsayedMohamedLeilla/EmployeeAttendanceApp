@@ -24,7 +24,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.Name == model.Name &&
-                responsibility.Type == requestInfo.Type).
+                responsibility.Type == requestInfo.AuthenticationType).
                 AnyAsync();
 
             if (checkResponsibilityDuplicate)
@@ -37,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.ForEmployeesApplication &&  model.ForEmployeesApplication &&
-                responsibility.Type == requestInfo.Type).
+                responsibility.Type == requestInfo.AuthenticationType).
                 AnyAsync();
 
             if (checkResponsibilityDuplicate)
@@ -54,7 +54,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.Name == model.Name &&
-                responsibility.Type == requestInfo.Type && responsibility.Id != model.Id).AnyAsync();
+                responsibility.Type == requestInfo.AuthenticationType && responsibility.Id != model.Id).AnyAsync();
             if (checkResponsibilityDuplicate)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryResponsibilityNameIsDuplicated);
@@ -65,7 +65,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Core
                 Get(responsibility => ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null)) &&
                 responsibility.ForEmployeesApplication && model.ForEmployeesApplication &&
-                responsibility.Type == requestInfo.Type && responsibility.Id != model.Id).
+                responsibility.Type == requestInfo.AuthenticationType && responsibility.Id != model.Id).
                 AnyAsync();
 
             if (checkResponsibilityDuplicate)

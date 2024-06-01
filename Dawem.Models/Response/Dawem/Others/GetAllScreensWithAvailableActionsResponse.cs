@@ -4,8 +4,8 @@
     {
         public GetAllScreensWithAvailableActionsResponse()
         {
-            ScreensTypes = new List<GetAllScreensWithAvailableActionsResponseModel>();
+            MenuItemsTypes = new List<GetAllMenuItemsWithAvailableActionsResponseModel>();
         }
-        public List<GetAllScreensWithAvailableActionsResponseModel> ScreensTypes { get; set; }
+        public List<GetAllMenuItemsWithAvailableActionsResponseModel> MenuItemsTypes { get; set; }
     }
 }

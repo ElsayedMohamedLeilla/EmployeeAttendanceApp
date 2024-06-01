@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Criteria.Others
 {
-    public class GetCurrentUserPermissionsModel : BaseCriteria
+    public class GetCurrentUserMenuItemsModel : BaseCriteria
     {
         public int UserId { get; set; }
     }

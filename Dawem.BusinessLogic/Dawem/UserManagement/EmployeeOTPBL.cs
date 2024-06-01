@@ -159,7 +159,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             MyUser user = await repositoryManager.UserRepository.
                 GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted && user.Id == userId &&
-                user.Type == requestInfo.Type &&
+                user.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);

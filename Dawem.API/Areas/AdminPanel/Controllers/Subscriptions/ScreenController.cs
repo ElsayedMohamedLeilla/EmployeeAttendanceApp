@@ -29,7 +29,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         {
             #region Set All Screens Available Actions
 
-            requestInfo.Type = Enums.Generals.AuthenticationType.DawemAdmin;
+            requestInfo.AuthenticationType = Enums.Generals.AuthenticationType.DawemAdmin;
             requestInfo.CompanyId = 0;
 
             APIHelper.AllScreensWithAvailableActions ??= ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
@@ -122,7 +122,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         [HttpGet]
         public async Task<ActionResult> GetAllScreensWithAvailableActions()
         {
-            return Success(await screenBLC.GetAllScreensWithAvailableActions());
+            return Success(await screenBLC.GetAllScreensWithAvailableActions(new GetScreensCriteria { IsActive = true }));
         }
     }
 }

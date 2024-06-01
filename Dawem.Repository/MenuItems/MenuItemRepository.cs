@@ -23,8 +23,8 @@ namespace Dawem.Repository.Providers
             var predicate = PredicateBuilder.New<MenuItem>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MenuItem>(true);
 
-            predicate = predicate.And(e => (requestInfo.Type == AuthenticationType.AdminPanel && e.AuthenticationType == AuthenticationType.AdminPanel) || 
-            (requestInfo.Type == AuthenticationType.DawemAdmin && e.AuthenticationType != AuthenticationType.AdminPanel));
+            //predicate = predicate.And(e => (requestInfo.AuthenticationType == AuthenticationType.AdminPanel && e.AuthenticationType == AuthenticationType.AdminPanel) || 
+            //(requestInfo.AuthenticationType == AuthenticationType.DawemAdmin && e.AuthenticationType != AuthenticationType.AdminPanel));
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
@@ -57,19 +57,12 @@ namespace Dawem.Repository.Providers
             {
                 predicate = predicate.And(e => e.MenuItemActions != null && e.MenuItemActions.Any(a => (int)a.ActionCode == criteria.ActionCode));
             }
-            if (criteria.ApplicationType != null)
+
+            predicate = predicate.And(e => e.AuthenticationType == criteria.AuthenticationType);
+
+            if (criteria.ScreensIds != null && criteria.ScreensIds.Count > 0)
             {
-                switch (criteria.ApplicationType.Value)
-                {
-                    case ApplicationType.Web:
-                        break;
-                    case ApplicationType.Android:
-                    case ApplicationType.Ios:
-                        predicate = predicate.And(e => e.AuthenticationType == AuthenticationType.DawemEmployee);
-                        break;
-                    default:
-                        break;
-                }
+                predicate = predicate.And(e => criteria.ScreensIds.Contains(e.Id));
             }
             if (!criteria.IsAllScreensAvailableInPlan && criteria.PlanId > 0)
             {

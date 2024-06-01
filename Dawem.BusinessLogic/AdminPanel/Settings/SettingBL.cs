@@ -93,30 +93,30 @@ namespace Dawem.BusinessLogic.AdminPanel.Settings
         {
             var settingRepository = repositoryManager.SettingRepository;
 
-            int? companyId = requestInfo.Type == AuthenticationType.DawemAdmin ?
+            int? companyId = requestInfo.AuthenticationType == AuthenticationType.DawemAdmin ?
                 requestInfo.CompanyId : null;
 
-            var settingGroupTypeName = requestInfo.Type == AuthenticationType.AdminPanel ?
+            var settingGroupTypeName = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                 nameof(AdminPanelSettingGroupType) : nameof(DawemSettingGroupType);
 
-            var settingTypeName = requestInfo.Type == AuthenticationType.AdminPanel ?
+            var settingTypeName = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                 nameof(AdminPanelSettingType) : nameof(DawemSettingType);
 
             #region Handle Response
 
             var settingsList = await repositoryManager
                 .SettingRepository.
-                Get(c => !c.IsDeleted && c.Type == requestInfo.Type && c.CompanyId == companyId).
+                Get(c => !c.IsDeleted && c.Type == requestInfo.AuthenticationType && c.CompanyId == companyId).
                 GroupBy(c => c.GroupType).
                 Select(settingGroup => new GetSettingGroupModel
                 {
                     GroupType = settingGroup.Key,
-                    GroupTypeName = TranslationHelper.GetTranslation(settingGroupTypeName + LeillaKeys.Dash + EnumHelper.GetSettingGroupName(settingGroup.Key, requestInfo.Type), requestInfo.Lang),
+                    GroupTypeName = TranslationHelper.GetTranslation(settingGroupTypeName + LeillaKeys.Dash + EnumHelper.GetSettingGroupName(settingGroup.Key, requestInfo.AuthenticationType), requestInfo.Lang),
                     Settings = settingGroup.Select(setting => new GetSettingModel
                     {
                         Id = setting.Id,
                         SettingType = setting.SettingType,
-                        SettingTypeName = TranslationHelper.GetTranslation(settingTypeName + LeillaKeys.Dash + EnumHelper.GetSettingName(setting.SettingType, requestInfo.Type), requestInfo.Lang),
+                        SettingTypeName = TranslationHelper.GetTranslation(settingTypeName + LeillaKeys.Dash + EnumHelper.GetSettingName(setting.SettingType, requestInfo.AuthenticationType), requestInfo.Lang),
                         ValueType = setting.ValueType,
                         ValueTypeName = TranslationHelper.GetTranslation(setting.ValueTypeName, requestInfo.Lang),
                         Value = setting.ValueType == SettingValueType.Integer ? setting.Integer :

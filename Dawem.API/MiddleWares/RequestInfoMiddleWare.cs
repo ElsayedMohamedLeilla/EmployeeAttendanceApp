@@ -89,16 +89,16 @@ namespace Dawem.API.MiddleWares
                 if ((requestInfo?.User != null & requestInfo?.User?.Type == AuthenticationType.AdminPanel) ||
                     requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel))
                 {
-                    requestInfo.Type = AuthenticationType.AdminPanel;
+                    requestInfo.AuthenticationType = AuthenticationType.AdminPanel;
                 }
                 else
                 {
-                    requestInfo.Type = AuthenticationType.DawemAdmin;
+                    requestInfo.AuthenticationType = AuthenticationType.DawemAdmin;
                 }
 
 
                 requestInfo.EmployeeId = requestInfo?.User?.EmployeeId;
-                requestInfo.CompanyId = requestInfo.Type == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
+                requestInfo.CompanyId = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 
             requestInfo.IsSignInRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.SignIn);

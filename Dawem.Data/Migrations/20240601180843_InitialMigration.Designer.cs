@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240420204129_AddOTPTable")]
-    partial class AddOTPTable
+    [Migration("20240601180843_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("FingerPrintStatus")
+                        .HasColumnType("int");
+
                     b.Property<bool>("InsertedFromExcel")
                         .HasColumnType("bit");
 
@@ -71,6 +74,9 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTwoDaysShift")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LocalDate")
@@ -129,9 +135,19 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("FingerPrintStatus");
+
+                    b.HasIndex("LocalDate");
+
                     b.HasIndex("ScheduleId");
 
+                    b.HasIndex("ShiftCheckInTime");
+
+                    b.HasIndex("ShiftCheckOutTime");
+
                     b.HasIndex("ShiftId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -177,11 +193,17 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("EmployeeAttendanceId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("FingerPrintDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FingerPrintDateUTC")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("FingerPrintType")
                         .HasColumnType("int");
 
-                    b.Property<bool>("InsertedFromExcel")
-                        .HasColumnType("bit");
+                    b.Property<int>("FingerprintSource")
+                        .HasColumnType("int");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(50)
@@ -218,9 +240,6 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("SummonId")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
-
                     b.Property<int?>("ZoneId")
                         .HasColumnType("int");
 
@@ -228,9 +247,17 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("EmployeeAttendanceId");
 
+                    b.HasIndex("FingerPrintDate");
+
+                    b.HasIndex("FingerPrintDateUTC");
+
+                    b.HasIndex("FingerPrintType");
+
                     b.HasIndex("SummonId");
 
                     b.HasIndex("ZoneId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("EmployeeAttendanceChecks", "Dawem");
                 });
@@ -291,6 +318,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("DepartmentManagerDelegators", "Dawem");
                 });
@@ -368,6 +397,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -440,6 +471,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ManagerId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -506,6 +539,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("GroupManagerDelegators", "Dawem");
                 });
@@ -579,6 +614,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -646,6 +683,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -656,7 +695,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("JustificationTypes", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.NotificationStore", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -675,9 +714,6 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
-
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -688,12 +724,11 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("HelperDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int?>("HelperNumber")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -723,6 +758,10 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("NotificationType")
                         .HasColumnType("int");
 
+                    b.Property<string>("NotificationTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
@@ -731,12 +770,17 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("CompanyId");
 
-                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
-                        .IsUnique();
+                    b.HasIndex("HelperDate");
 
-                    b.ToTable("NotificationStores", "Dawem");
+                    b.HasIndex("HelperNumber");
+
+                    b.HasIndex("NotificationType");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("Notifications", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.PermissionType", b =>
@@ -796,6 +840,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -838,6 +884,9 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("ForEmployeesApplication")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -865,6 +914,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique()
@@ -934,6 +985,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("UserResponsibilities", "Dawem");
                 });
 
@@ -996,6 +1049,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -1076,6 +1131,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -1086,7 +1143,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("Zones", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.DawemSetting", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.Setting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1107,6 +1164,9 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool?>("Bool")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Decimal")
                         .HasPrecision(30, 20)
@@ -1171,7 +1231,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DawemSettings", "Dawem");
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("Settings", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Employees.AssignmentType", b =>
@@ -1230,6 +1294,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -1310,6 +1376,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("ParentId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -1441,6 +1509,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -1508,6 +1578,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("GroupEmployees", "Dawem");
                 });
 
@@ -1567,6 +1639,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -1635,6 +1709,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -1701,6 +1777,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -1769,6 +1847,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ZoneId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("ZoneDepartments", "Dawem");
                 });
 
@@ -1829,6 +1909,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ZoneId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("ZoneEmployees", "Dawem");
                 });
 
@@ -1888,6 +1970,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("ZoneId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("ZoneGroups", "Dawem");
                 });
@@ -1958,6 +2042,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("KeyWord", "Lang")
                         .IsUnique()
                         .HasFilter("[KeyWord] IS NOT NULL AND [Lang] IS NOT NULL");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("Translations", "Dawem");
                 });
@@ -2049,11 +2135,15 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("PhoneLength")
                         .HasColumnType("int");
 
-                    b.Property<string>("TimeZoneId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<decimal?>("TimeZoneToUTC")
+                        .HasPrecision(30, 20)
+                        .HasColumnType("decimal(30,20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TimeZoneToUTC");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("Countries", "Dawem");
                 });
@@ -2126,6 +2216,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("CountryId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("Currencies", "Dawem");
                 });
 
@@ -2195,7 +2287,94 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("Languages", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("AuthenticationType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AuthenticationTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("GroupOrScreenType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MenuItemCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MenuItemCodeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("URL")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("MenuItems", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Others.VacationBalance", b =>
@@ -2270,6 +2449,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -2346,6 +2527,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique()
                         .HasFilter("[CompanyId] IS NOT NULL");
@@ -2378,7 +2561,7 @@ namespace Dawem.Data.Migrations
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateUTC")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletionDate")
@@ -2407,7 +2590,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ScreenCode")
+                    b.Property<int>("ScreenId")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -2420,7 +2603,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
+                    b.HasIndex("ScreenId");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("PermissionLogs", "Dawem");
                 });
@@ -2473,12 +2660,16 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScreenCode")
+                    b.Property<int>("ScreenId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PermissionId");
+
+                    b.HasIndex("ScreenId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("PermissionScreens", "Dawem");
                 });
@@ -2538,6 +2729,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("PermissionScreenId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("PermissionScreenActions", "Dawem");
                 });
 
@@ -2593,7 +2786,8 @@ namespace Dawem.Data.Migrations
 
                     b.Property<string>("IdentityCode")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .UseCollation("SQL_Latin1_General_CP1_CS_AS");
 
                     b.Property<bool>("ImportDefaultData")
                         .HasColumnType("bit");
@@ -2647,6 +2841,8 @@ namespace Dawem.Data.Migrations
                         .HasFilter("[IdentityCode] IS NOT NULL");
 
                     b.HasIndex("PreferredLanguageId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("Companies", "Dawem");
                 });
@@ -2706,6 +2902,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("CompanyAttachments", "Dawem");
                 });
@@ -2778,6 +2976,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
@@ -2838,6 +3038,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Name", "IsDeleted" }, "IX_Unique_CompanyId_Name_IsDeleted")
                         .IsUnique()
@@ -2900,6 +3102,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("UserBranches", "Dawem");
                 });
@@ -2989,6 +3193,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -3059,6 +3265,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("RequestId")
                         .IsUnique();
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("RequestAssignments", "Dawem");
                 });
 
@@ -3117,6 +3325,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RequestId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("RequestAttachments", "Dawem");
                 });
@@ -3185,6 +3395,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("RequestId")
                         .IsUnique();
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("RequestJustifications", "Dawem");
                 });
 
@@ -3251,6 +3463,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("RequestId")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("RequestPermissions", "Dawem");
                 });
@@ -3319,6 +3533,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("TaskTypeId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("RequestTasks", "Dawem");
                 });
 
@@ -3378,6 +3594,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("RequestTaskId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("RequestTaskEmployees", "Dawem");
                 });
@@ -3455,6 +3673,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("VacationTypeId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("RequestVacations", "Dawem");
                 });
 
@@ -3514,6 +3734,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -3585,6 +3807,10 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ShiftId");
 
+                    b.HasIndex("WeekDay");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("ScheduleDays", "Dawem");
                 });
 
@@ -3652,6 +3878,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -3716,6 +3944,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("SchedulePlanId")
                         .IsUnique();
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SchedulePlanDepartments", "Dawem");
                 });
 
@@ -3776,6 +4006,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SchedulePlanId")
                         .IsUnique();
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("SchedulePlanEmployees", "Dawem");
                 });
@@ -3838,6 +4070,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("SchedulePlanId")
                         .IsUnique();
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SchedulePlanGroups", "Dawem");
                 });
 
@@ -3859,9 +4093,6 @@ namespace Dawem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
@@ -3906,10 +4137,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("SchedulePlanId");
 
-                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
-                        .IsUnique();
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("SchedulePlanLogs", "Dawem");
                 });
@@ -3981,6 +4213,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SchedulePlanLogId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SchedulePlanLogEmployees", "Dawem");
                 });
 
@@ -4031,6 +4265,9 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsTwoDaysShift")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
 
@@ -4053,6 +4290,16 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AllowedMinutes");
+
+                    b.HasIndex("CheckInTime");
+
+                    b.HasIndex("CheckOutTime");
+
+                    b.HasIndex("IsTwoDaysShift");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -4061,6 +4308,268 @@ namespace Dawem.Data.Migrations
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("ShiftWorkingTimes", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActionCodeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("MenuItemActions", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemNameTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("MenuItemNameTranslations", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("NotificationEmployees", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Body")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("NotificationTranslations", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Plan", b =>
@@ -4081,6 +4590,9 @@ namespace Dawem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<bool>("AllScreensAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Code")
                         .HasColumnType("int");
@@ -4125,6 +4637,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("Plans", "Dawem");
                 });
@@ -4190,7 +4704,80 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("PlanId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("PlanNameTranslations", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanScreen", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScreenId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("ScreenId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("PlanScreens", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
@@ -4287,6 +4874,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("PlanId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -4358,6 +4947,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SubscriptionId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SubscriptionLogs", "Dawem");
                 });
 
@@ -4422,6 +5013,8 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SubscriptionId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("SubscriptionPayments", "Dawem");
                 });
@@ -4489,6 +5082,8 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
@@ -4574,6 +5169,12 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EndDateAndTimeUTC");
+
+                    b.HasIndex("StartDateAndTimeUTC");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique();
 
@@ -4642,6 +5243,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SummonId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SummonDepartments", "Dawem");
                 });
 
@@ -4707,6 +5310,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SummonId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SummonEmployees", "Dawem");
                 });
 
@@ -4771,6 +5376,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("GroupId");
 
                     b.HasIndex("SummonId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("SummonGroups", "Dawem");
                 });
@@ -4846,6 +5453,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SummonId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SummonLogs", "Dawem");
                 });
 
@@ -4909,6 +5518,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SummonSanctionId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SummonLogSanctions", "Dawem");
                 });
 
@@ -4971,6 +5582,8 @@ namespace Dawem.Data.Migrations
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("SummonId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("SummonNotifyWays", "Dawem");
                 });
@@ -5037,6 +5650,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("SummonId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("SummonSanctions", "Dawem");
                 });
 
@@ -5058,9 +5673,6 @@ namespace Dawem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int");
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
@@ -5103,10 +5715,14 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("OTP")
                         .HasColumnType("int");
 
+                    b.Property<int>("OTPCount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
-                        .IsUnique();
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("EmployeeOTPs", "Dawem");
                 });
@@ -5161,7 +5777,7 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Gender")
@@ -5262,6 +5878,8 @@ namespace Dawem.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.HasIndex(new[] { "CompanyId", "Code", "IsDeleted" }, "IX_Unique_CompanyId_Code_IsDeleted")
                         .IsUnique()
@@ -5469,6 +6087,8 @@ namespace Dawem.Data.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
                     b.ToTable("NotificationUsers", "Dawem");
                 });
 
@@ -5490,6 +6110,9 @@ namespace Dawem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
@@ -5532,7 +6155,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("NotificationUserId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("NotificationUserFCMTokens", "Dawem");
                 });
@@ -5684,23 +6311,15 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Core.NotificationStore", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Company");
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.PermissionType", b =>
@@ -5761,6 +6380,16 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Dawem.Setting", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Company");
                 });
@@ -5963,6 +6592,16 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Others.VacationBalance", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
@@ -6013,6 +6652,12 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
+                        .WithMany()
+                        .HasForeignKey("ScreenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -6020,6 +6665,8 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
+
+                    b.Navigation("Screen");
 
                     b.Navigation("User");
                 });
@@ -6032,7 +6679,15 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
+                        .WithMany()
+                        .HasForeignKey("ScreenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Permission");
+
+                    b.Navigation("Screen");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Permissions.PermissionScreenAction", b =>
@@ -6373,9 +7028,9 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Schedules.SchedulePlan", "SchedulePlan")
-                        .WithMany()
+                        .WithMany("SchedulePlanLogs")
                         .HasForeignKey("SchedulePlanId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");
@@ -6428,6 +7083,74 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemAction", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "MenuItem")
+                        .WithMany("MenuItemActions")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemNameTranslation", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "MenuItem")
+                        .WithMany("MenuItemNameTranslations")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("MenuItem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
+                        .WithMany("NotificationEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Core.Notification", "Notification")
+                        .WithMany("NotificationEmployees")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Notification");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationTranslation", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Core.Notification", "Notification")
+                        .WithMany("NotificationTranslations")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Notification");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanNameTranslation", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
@@ -6445,6 +7168,33 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Language");
 
                     b.Navigation("Plan");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanScreen", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Subscriptions.Plan", "Plan")
+                        .WithMany("PlanScreens")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
+                        .WithMany("PlanScreens")
+                        .HasForeignKey("ScreenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("Screen");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
@@ -6600,7 +7350,7 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("SummonLogs")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -6702,10 +7452,9 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Dawem.Domain.Entities.Lookups.Country", "MobileCountry")
                         .WithMany()
@@ -6783,7 +7532,7 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
-                        .WithMany()
+                        .WithMany("NotificationUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -6795,11 +7544,19 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.RealTime.Firebase.NotificationUserFCMToken", b =>
                 {
+                    b.HasOne("Dawem.Domain.Entities.Providers.Company", "Company")
+                        .WithMany("NotificationUserFCMTokens")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Dawem.Domain.RealTime.Firebase.NotificationUser", "NotificationUser")
                         .WithMany("NotificationUserFCMTokens")
                         .HasForeignKey("NotificationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("NotificationUser");
                 });
@@ -6818,6 +7575,13 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanGroups");
 
                     b.Navigation("Zones");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Core.Notification", b =>
+                {
+                    b.Navigation("NotificationEmployees");
+
+                    b.Navigation("NotificationTranslations");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Core.Responsibility", b =>
@@ -6848,11 +7612,26 @@ namespace Dawem.Data.Migrations
 
                     b.Navigation("EmployeeTasks");
 
+                    b.Navigation("NotificationEmployees");
+
                     b.Navigation("SchedulePlanEmployees");
+
+                    b.Navigation("SummonLogs");
+
+                    b.Navigation("Users");
 
                     b.Navigation("VacationBalances");
 
                     b.Navigation("Zones");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
+                {
+                    b.Navigation("MenuItemActions");
+
+                    b.Navigation("MenuItemNameTranslations");
+
+                    b.Navigation("PlanScreens");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Permissions.Permission", b =>
@@ -6878,6 +7657,10 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("FingerprintDevices");
+
+                    b.Navigation("NotificationUserFCMTokens");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("SchedulePlans");
 
@@ -6926,6 +7709,8 @@ namespace Dawem.Data.Migrations
                     b.Navigation("SchedulePlanEmployee");
 
                     b.Navigation("SchedulePlanGroup");
+
+                    b.Navigation("SchedulePlanLogs");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Schedules.SchedulePlanLog", b =>
@@ -6941,6 +7726,8 @@ namespace Dawem.Data.Migrations
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Plan", b =>
                 {
                     b.Navigation("PlanNameTranslations");
+
+                    b.Navigation("PlanScreens");
 
                     b.Navigation("Subscriptions");
                 });
@@ -6981,6 +7768,8 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.UserManagement.MyUser", b =>
                 {
+                    b.Navigation("NotificationUsers");
+
                     b.Navigation("UserBranches");
 
                     b.Navigation("UserResponsibilities");

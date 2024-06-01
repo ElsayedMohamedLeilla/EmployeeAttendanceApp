@@ -1,17 +1,15 @@
 ﻿using Dawem.Enums.Permissions;
-using Newtonsoft.Json;
 
 namespace Dawem.Models.Dtos.Dawem.Others
 {
-    public class ScreenWithAvailableActionsDTO
-    {  
+    public class UserPermissionsMenuItemWithAvailableActionsDTO
+    {
         public int Id { get; set; }
-        public GroupOrScreenType Type { get; set; }
+        public GroupOrScreenType GroupOrScreenType { get; set; }
         public string Name { get; set; }
         public string Icon { get; set; }
-        [JsonIgnore]
         public string URL { get; set; }
         public List<ApplicationActionCode> AvailableActions { get; set; }
-        public List<ScreenWithAvailableActionsDTO> Children { get; set; }
+        public List<UserPermissionsMenuItemWithAvailableActionsDTO> Children { get; set; }
     }
 }

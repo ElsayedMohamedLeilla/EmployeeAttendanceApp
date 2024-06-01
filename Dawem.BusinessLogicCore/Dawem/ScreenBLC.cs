@@ -13,7 +13,6 @@ using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Policy;
 
 namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 {
@@ -36,86 +35,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             screenBLValidation = _screenBLValidation;
             mapper = _mapper;
         }
-        public async Task<GetAllScreensWithAvailableActionsResponse> OldGetAllScreensWithAvailableActions()
-        {
-            return new GetAllScreensWithAvailableActionsResponse
-            {
-                ScreensTypes = null
-            };
-
-            //var screenRepository = repositoryManager.MenuItemRepository;
-
-            //var criteria = new GetScreensCriteria
-            //{
-            //    IsActive = true,
-            //};
-            //var query = screenRepository.GetAsQueryable(criteria);
-
-            //#region paging
-
-            //int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-            //int take = PagingHelper.Take(criteria.PageSize);
-
-            //#region sorting
-            //var queryOrdered = screenRepository.OrderBy(query, nameof(MenuItem.AuthenticationType), LeillaKeys.Asc);
-            //#endregion
-
-            //var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
-
-            //#endregion
-
-            //#region Handle Response
-
-            //var screensTypes = await queryPaged.GroupBy(s => s.AuthenticationType).Select(screenGroup => new GetAllScreensWithAvailableActionsResponseModel
-            //{
-            //    Type = screenGroup.Key,
-            //    TypeName = TranslationHelper.GetTranslation(screenGroup.Key.ToString() + nameof(AuthenticationType), requestInfo.Lang),
-
-            //    ScreensGroups = screenGroup.Where(sg => sg.ParentId > 0).OrderBy(s => s.Order).
-            //    GroupBy(s => s.ParentId).Select(screenGroupGroup => new GetAllScreensWithAvailableActionsModel
-            //    {
-            //        ScreenGroupId = screenGroupGroup.Key,
-            //        Order = screenGroupGroup.First().Order,
-            //        Name = screenGroupGroup.First().Screen.ScreenGroupNameTranslations.
-            //        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
-            //        Screens = screenGroupGroup.OrderBy(s => s.Order).Select(s => new ScreenWithAvailableActionsDTO
-            //        {
-            //            Id = s.Id,
-            //            Order = s.Order,
-            //            Name = s.MenuItemNameTranslations.Any(p => p.Language.ISO2 == requestInfo.Lang) ?
-            //            s.MenuItemNameTranslations.First(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
-            //            AvailableActions = s.MenuItemActions.Any() ? s.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
-            //        }).ToList()
-
-            //    }).ToList(),
-
-            //    Screens = screenGroup.Where(sg => sg.ParentId == null).
-            //    OrderBy(s => s.Order).Select(s => new ScreenWithAvailableActionsDTO
-            //    {
-            //        Id = s.Id,
-            //        Order = s.Order,
-            //        Name = s.MenuItemNameTranslations.Any(p => p.Language.ISO2 == requestInfo.Lang) ?
-            //        s.MenuItemNameTranslations.First(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
-            //        AvailableActions = s.MenuItemActions.Any() ? s.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
-            //    }).ToList()
-            //}).ToListAsync();
-
-            //return new GetAllScreensWithAvailableActionsResponse
-            //{
-            //    ScreensTypes = screensTypes
-            //};
-
-            //#endregion
-
-        }
-        public async Task<GetAllScreensWithAvailableActionsResponse> GetAllScreensWithAvailableActions()
+        public async Task<GetAllScreensWithAvailableActionsResponse> GetAllScreensWithAvailableActions(GetScreensCriteria criteria)
         {
             var screenRepository = repositoryManager.MenuItemRepository;
 
-            var criteria = new GetScreensCriteria
-            {
-                IsActive = true,
-            };
+            criteria.IsActive = true;
 
             var companyId = requestInfo.CompanyId;
 
@@ -176,19 +100,19 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             foreach (var screenType in screensTypes)
             {
-                var screenTypeModel = new GetAllScreensWithAvailableActionsResponseModel
+                var screenTypeModel = new GetAllMenuItemsWithAvailableActionsResponseModel
                 {
-                    Type = screenType.Type,
-                    TypeName = screenType.TypeName
+                    AuthenticationType = screenType.Type,
+                    AuthenticationTypeName = screenType.TypeName
                 };
                 var masterScreens = screenType.Screens.Where(s => s.ParentId == null).OrderBy(s => s.Order);
 
                 foreach (var screen in masterScreens)
                 {
-                    screenTypeModel.Screens.Add(new ScreenWithAvailableActionsDTO
+                    screenTypeModel.MenuItems.Add(new MenuItemWithAvailableActionsDTO
                     {
                         Id = screen.Id,
-                        Type = screen.GroupOrScreenType,
+                        GroupOrScreenType = screen.GroupOrScreenType,
                         Name = screen.Name,
                         Icon = screen.Icon,
                         URL = screen.URL,
@@ -198,7 +122,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     });
                 }
 
-                response.ScreensTypes.Add(screenTypeModel);
+                response.MenuItemsTypes.Add(screenTypeModel);
 
             }
 
@@ -211,14 +135,14 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             return screens.Any(s => s.ParentId == screenId);
         }
-        private List<ScreenWithAvailableActionsDTO> GetChildren(int screenId, List<ScreenDTO> screens)
+        private List<MenuItemWithAvailableActionsDTO> GetChildren(int screenId, List<ScreenDTO> screens)
         {
             var children = screens.Where(s => s.ParentId == screenId).ToList();
 
-            var respnse = children.Select(screen => new ScreenWithAvailableActionsDTO
+            var respnse = children.Select(screen => new MenuItemWithAvailableActionsDTO
             {
                 Id = screen.Id,
-                Type = screen.GroupOrScreenType,
+                GroupOrScreenType = screen.GroupOrScreenType,
                 Name = screen.Name,
                 Icon = screen.Icon,
                 URL = screen.URL,

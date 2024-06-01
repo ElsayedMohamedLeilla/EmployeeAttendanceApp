@@ -1,6 +1,7 @@
 ﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -45,6 +46,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             await ValidateParent(0, model.ParentId);
 
+            await CheckParentAuthenticationType(model.ParentId, model.AuthenticationType);
+
             return true;
         }
         public async Task<bool> UpdateValidation(UpdateScreenGroupModel model)
@@ -64,6 +67,8 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
             await ValidateOrderDuplication(model.Order, model.Id);
 
             await ValidateParent(model.Id, model.ParentId);
+
+            await CheckParentAuthenticationType(model.ParentId, model.AuthenticationType);
 
             return true;
         }
@@ -136,6 +141,22 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
             }
 
 
+
+            return true;
+        }
+        private async Task<bool> CheckParentAuthenticationType(int? parentId, AuthenticationType authenticationType)
+        {
+            if (parentId > 0)
+            {
+                var checkParent = await repositoryManager.MenuItemRepository.
+                    Get(m => !m.IsDeleted && m.Id == parentId && m.AuthenticationType != authenticationType).
+                    AnyAsync();
+
+                if (checkParent)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryParentMustBeFromTheSameAuthenticationType);
+                }
+            }
 
             return true;
         }

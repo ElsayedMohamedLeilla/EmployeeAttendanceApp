@@ -195,6 +195,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var screenRepository = repositoryManager.MenuItemRepository;
             criteria.GroupOrScreenType = GroupOrScreenType.Screen;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
             var query = screenRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -232,6 +233,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             criteria.IsActive = true;
             var screenRepository = repositoryManager.MenuItemRepository;
             criteria.GroupOrScreenType = GroupOrScreenType.Screen;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
             var query = screenRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -326,7 +328,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var responsibility = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
-                && d.AuthenticationType == requestInfo.Type && d.Id == screenId &&
+                && d.AuthenticationType == requestInfo.AuthenticationType && d.Id == screenId &&
                 d.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             responsibility.Enable();
@@ -337,7 +339,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var responsibility = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted
-                && d.AuthenticationType == requestInfo.Type && d.IsActive && d.Id == model.Id &&
+                && d.AuthenticationType == requestInfo.AuthenticationType && d.IsActive && d.Id == model.Id &&
                 d.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             responsibility.Disable(model.DisableReason);
@@ -348,7 +350,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         {
             var screen = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(screen => !screen.IsDeleted && screen.Id == screend &&
-                screen.AuthenticationType == requestInfo.Type &&
+                screen.AuthenticationType == requestInfo.AuthenticationType &&
                 screen.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             screen.Delete();

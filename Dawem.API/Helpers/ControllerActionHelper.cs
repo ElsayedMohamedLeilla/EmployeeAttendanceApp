@@ -73,31 +73,31 @@ namespace Dawem.API.Helpers
         {
             var response = new OldGetAllScreensWithAvailableActionsResponse();
 
-            var allScreenCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
+            var allScreenCodes = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
                 Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
 
             foreach (var tempScreenCode in allScreenCodes)
             {
-                dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
+                dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)tempScreenCode :
                     (DawemAdminApplicationScreenCode)tempScreenCode;
 
-                if (IsForMenu.HasValue && IsForMenu.Value && requestInfo.Type == AuthenticationType.DawemAdmin)
+                if (IsForMenu.HasValue && IsForMenu.Value && requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
                 {
                     var screenName = screenCode.ToString();
                     if (screenName.StartsWith(LeillaKeys.Employee) && screenName.Length > LeillaKeys.Employee.Length)
                         continue;
                 }
 
-                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
                 var screensWithAvailableActionsDTO = new OldScreenWithAvailableActionsDTO
                 {
                     ScreenCode = (int)screenCode,
                     ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang),
-                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.Type)
+                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.AuthenticationType)
                 };
 
                 response.Screens.Add(screensWithAvailableActionsDTO);

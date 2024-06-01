@@ -2,7 +2,6 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
-using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -58,7 +57,14 @@ namespace Dawem.Repository.Providers
                 predicate = predicate.And(e => e.MenuItemActions != null && e.MenuItemActions.Any(a => (int)a.ActionCode == criteria.ActionCode));
             }
 
-            predicate = predicate.And(e => e.AuthenticationType == criteria.AuthenticationType);
+            if (criteria.LocalAuthenticationType != null)
+            {
+                predicate = predicate.And(e => e.AuthenticationType == criteria.LocalAuthenticationType);
+            }
+            else if (!criteria.ForGridView)
+            {
+                predicate = predicate.And(e => e.AuthenticationType == criteria.AuthenticationType);
+            }
 
             if (criteria.ScreensIds != null && criteria.ScreensIds.Count > 0)
             {
@@ -66,8 +72,8 @@ namespace Dawem.Repository.Providers
             }
             if (!criteria.IsAllScreensAvailableInPlan && criteria.PlanId > 0)
             {
-                predicate = predicate.And(e => e.GroupOrScreenType == GroupOrScreenType.Group || 
-                e.PlanScreens.Any(p=>p.PlanId == criteria.PlanId));
+                predicate = predicate.And(e => e.GroupOrScreenType == GroupOrScreenType.Group ||
+                e.PlanScreens.Any(p => p.PlanId == criteria.PlanId));
             }
             if (criteria.GroupOrScreenType != null)
             {

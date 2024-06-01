@@ -7,7 +7,7 @@ using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
+namespace Dawem.API.Areas.AdminPanel.Controllers.Screens
 {
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class ScreenGroupController : AdminPanelControllerBase

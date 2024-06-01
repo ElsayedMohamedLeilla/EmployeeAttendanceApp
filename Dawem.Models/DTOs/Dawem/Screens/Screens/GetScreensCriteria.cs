@@ -1,4 +1,5 @@
-﻿using Dawem.Enums.Permissions;
+﻿using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Models.Criteria;
 
 namespace Dawem.Models.DTOs.Dawem.Screens.Screens
@@ -11,5 +12,6 @@ namespace Dawem.Models.DTOs.Dawem.Screens.Screens
         public bool IsAllScreensAvailableInPlan { get; set; }
         public GroupOrScreenType? GroupOrScreenType { get; set; }
         public List<int> ScreensIds { get; set; }
+        public AuthenticationType? LocalAuthenticationType { get; set; }
     }
 }

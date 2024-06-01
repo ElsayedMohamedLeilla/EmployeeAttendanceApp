@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Dawem.Shared;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Dtos.Dawem.Shared;
 
 namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
 {
@@ -8,6 +9,7 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public int? ParentId { get; set; }
+        public AuthenticationType AuthenticationType { get; set; }
         public int Order { get; set; }
         public string Notes { get; set; }
         public string Icon { get; set; }

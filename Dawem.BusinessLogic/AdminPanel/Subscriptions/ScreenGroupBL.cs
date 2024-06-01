@@ -55,7 +55,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroup = mapper.Map<MenuItem>(model);
             screenGroup.AddUserId = requestInfo.UserId;
             screenGroup.GroupOrScreenType = GroupOrScreenType.Group;
-            screenGroup.AuthenticationTypeName = TranslationHelper.GetTranslation(model.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang);
+            screenGroup.AuthenticationTypeName = model.AuthenticationType.ToString();
             repositoryManager.MenuItemRepository.Insert(screenGroup);
             await unitOfWork.SaveAsync();
 
@@ -92,7 +92,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             getScreenGroup.Icon = model.Icon;
             getScreenGroup.Order = model.Order;
             getScreenGroup.ParentId = model.ParentId;
-            getScreenGroup.AuthenticationTypeName = TranslationHelper.GetTranslation(model.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang);
+            getScreenGroup.AuthenticationTypeName = model.AuthenticationType.ToString();
 
             await unitOfWork.SaveAsync();
 
@@ -160,6 +160,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroupRepository = repositoryManager.MenuItemRepository;
             criteria.GroupOrScreenType = GroupOrScreenType.Group;
             criteria.AuthenticationType = requestInfo.AuthenticationType;
+            criteria.ForGridView = true;
+
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -176,6 +178,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroupsList = await queryPaged.Select(screenGroup => new GetScreenGroupResponseModel
             {
                 Id = screenGroup.Id,
+                AuthenticationTypeName = TranslationHelper.GetTranslation(screenGroup.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
                 Name = screenGroup.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 ParentName = screenGroup.ParentId > 0 ? screenGroup.Parent.MenuItemNameTranslations.
@@ -196,6 +199,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroupRepository = repositoryManager.MenuItemRepository;
             criteria.GroupOrScreenType = GroupOrScreenType.Group;
             criteria.AuthenticationType = requestInfo.AuthenticationType;
+            criteria.ForGridView = true;
+
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -234,6 +239,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             e.GroupOrScreenType == GroupOrScreenType.Group)
                 .Select(screenGroup => new GetScreenGroupInfoResponseModel
                 {
+                    AuthenticationTypeName = TranslationHelper.GetTranslation(screenGroup.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
                     Name = screenGroup.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screenGroup.IsActive,
@@ -267,6 +273,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     Notes = screenGroup.Notes,
                     Order = screenGroup.Order,
                     Icon = screenGroup.Icon,
+                    AuthenticationType = screenGroup.AuthenticationType,
                     NameTranslations = screenGroup.MenuItemNameTranslations.
                     Select(pt => new NameTranslationModel
                     {

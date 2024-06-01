@@ -7,10 +7,10 @@ using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.Providers
 {
-    public class ScreenNameTranslationRepository : GenericRepository<ScreenNameTranslation>, IScreenNameTranslationRepository
+    public class MenuItemNameTranslationRepository : GenericRepository<MenuItemNameTranslation>, IMenuItemNameTranslationRepository
     {
         private readonly RequestInfo _requestInfo;
-        public ScreenNameTranslationRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
+        public MenuItemNameTranslationRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
             _requestInfo = requestInfo;
         }

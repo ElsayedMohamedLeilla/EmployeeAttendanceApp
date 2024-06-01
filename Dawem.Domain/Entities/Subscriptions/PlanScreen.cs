@@ -12,7 +12,7 @@ namespace Dawem.Domain.Entities.Subscriptions
         public Plan Plan { get; set; }
         public int ScreenId { get; set; }
         [ForeignKey(nameof(ScreenId))]
-        public Screen Screen { get; set; }
+        public MenuItem Screen { get; set; }
     }
 
 }

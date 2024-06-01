@@ -127,11 +127,9 @@ namespace Dawem.Repository.Managers
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
         private IEmployeeOTPRepository employeeOTPRepository;
-        private IScreenRepository screenRepository;
-        private IScreenGroupRepository screenGroupRepository;
-        private IScreenGroupNameTranslationRepository screenGroupNameTranslationRepository;
-        private IScreenActionRepository screenActionRepository;
-        private IScreenNameTranslationRepository screenNameTranslationRepository;
+        private IMenuItemRepository menuItemRepository;
+        private IMenuItemActionRepository menuItemActionRepository;
+        private IMenuItemNameTranslationRepository menuItemNameTranslationRepository;
         private IPlanScreenRepository planScreenRepository;
         private IOldScreenRepository oldScreenRepository;
 
@@ -186,16 +184,12 @@ namespace Dawem.Repository.Managers
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
-        public IScreenRepository ScreenRepository =>
-        screenRepository ??= new ScreenRepository(unitOfWork, generalSetting, requestInfo);
-        public IScreenGroupRepository ScreenGroupRepository =>
-        screenGroupRepository ??= new ScreenGroupRepository(unitOfWork, generalSetting, requestInfo);
-        public IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository =>
-        screenGroupNameTranslationRepository ??= new ScreenGroupNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
-        public IScreenActionRepository ScreenActionRepository =>
-        screenActionRepository ??= new ScreenActionRepository(unitOfWork, generalSetting, requestInfo);
-        public IScreenNameTranslationRepository ScreenNameTranslationRepository =>
-        screenNameTranslationRepository ??= new ScreenNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+        public IMenuItemRepository MenuItemRepository =>
+        menuItemRepository ??= new MenuItemRepository(unitOfWork, generalSetting, requestInfo);
+        public IMenuItemActionRepository MenuItemActionRepository =>
+        menuItemActionRepository ??= new MenuItemActionRepository(unitOfWork, generalSetting, requestInfo);
+        public IMenuItemNameTranslationRepository MenuItemNameTranslationRepository =>
+        menuItemNameTranslationRepository ??= new MenuItemNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
         public IPlanScreenRepository PlanScreenRepository =>
         planScreenRepository ??= new PlanScreenRepository(unitOfWork, generalSetting, requestInfo);
         public IUserRoleRepository UserRoleRepository =>

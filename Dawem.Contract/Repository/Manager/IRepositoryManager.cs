@@ -96,12 +96,10 @@ namespace Dawem.Contract.Repository.Manager
         INotificationUserRepository NotificationUserRepository { get; }
         INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository { get; }
         IEmployeeOTPRepository EmployeeOTPRepository { get; }
-        IScreenRepository ScreenRepository { get; }
-        IScreenGroupRepository ScreenGroupRepository { get; }
-        IScreenGroupNameTranslationRepository ScreenGroupNameTranslationRepository { get; }
+        IMenuItemRepository MenuItemRepository { get; }
         IOldScreenRepository OldScreenRepository { get; }
-        IScreenActionRepository ScreenActionRepository { get; }
-        IScreenNameTranslationRepository ScreenNameTranslationRepository { get; }
+        IMenuItemActionRepository MenuItemActionRepository { get; }
+        IMenuItemNameTranslationRepository MenuItemNameTranslationRepository { get; }
         IPlanScreenRepository PlanScreenRepository { get; }
     }
 }

@@ -168,9 +168,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 var screenWithNotAvailableAction = permissionScreens
                     .FirstOrDefault(permissionScreen => permissionScreen.Actions
                         .Any(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.ScreenId == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
+                        .FirstOrDefault(s => s.Id == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
 
-                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.ScreenId ==  screenWithNotAvailableAction.ScreenId);
+                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.Id ==  screenWithNotAvailableAction.ScreenId);
 
                 if (screenWithNotAvailableAction != null)
                 {
@@ -180,7 +180,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
                     var actionNotAvailable = screenWithNotAvailableAction.Actions
                         .FirstOrDefault(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.ScreenId == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
+                        .FirstOrDefault(s => s.Id == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
 
                     /*var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;*/
@@ -188,7 +188,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                     var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
                         + LeillaKeys.Space +
                         TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
-                        + screenInfo.ScreenName
+                        + screenInfo.Name
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
                         + TranslationHelper.GetTranslation(actionNotAvailable.ToString(), requestInfo.Lang)

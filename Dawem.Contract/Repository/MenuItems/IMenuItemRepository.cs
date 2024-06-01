@@ -4,8 +4,8 @@ using Dawem.Models.DTOs.Dawem.Screens.Screens;
 
 namespace Dawem.Contract.Repository.Settings
 {
-    public interface IScreenRepository : IGenericRepository<Screen>
+    public interface IMenuItemRepository : IGenericRepository<MenuItem>
     {
-        IQueryable<Screen> GetAsQueryable(GetScreensCriteria criteria);
+        IQueryable<MenuItem> GetAsQueryable(GetScreensCriteria criteria);
     }
 }

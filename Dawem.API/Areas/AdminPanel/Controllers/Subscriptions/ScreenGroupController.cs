@@ -3,6 +3,7 @@ using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +35,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(result, messageCode: LeillaKeys.DoneUpdateScreenGroupSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetScreenGroupsCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetScreensCriteria criteria)
         {
             if (criteria == null)
             {
@@ -45,7 +46,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(screenGroupsResponse.ScreenGroups, screenGroupsResponse.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetScreenGroupsCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetScreensCriteria criteria)
         {
             if (criteria == null)
             {

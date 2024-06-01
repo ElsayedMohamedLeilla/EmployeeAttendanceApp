@@ -50,9 +50,9 @@ namespace Dawem.API.MiddleWares
                         requestInfo.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
                         AuthenticationType.DawemEmployee;
 
-                    var getScreenId = await repositoryManager.ScreenRepository.
-                        Get(s => !s.IsDeleted && s.IsActive && s.ScreenCode == mapResult.ScreenCode &&
-                        s.Type == currentType).
+                    var getScreenId = await repositoryManager.MenuItemRepository.
+                        Get(s => !s.IsDeleted && s.IsActive && s.MenuItemCode == mapResult.ScreenCode &&
+                        s.AuthenticationType == currentType).
                         Select(s => s.Id).
                         FirstOrDefaultAsync();
 

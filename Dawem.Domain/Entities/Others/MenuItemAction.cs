@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Subscriptions
 {
-    [Table(nameof(ScreenAction) + LeillaKeys.S)]
-    public class ScreenAction : BaseEntity
+    [Table(nameof(MenuItemAction) + LeillaKeys.S)]
+    public class MenuItemAction : BaseEntity
     {
-        public int ScreenId { get; set; }
-        [ForeignKey(nameof(ScreenId))]
-        public Screen Screen { get; set; }
+        public int MenuItemId { get; set; }
+        [ForeignKey(nameof(MenuItemId))]
+        public MenuItem MenuItem { get; set; }
         public ApplicationActionCode ActionCode { get; set; }
         public string ActionCodeName { get; set; }
     }

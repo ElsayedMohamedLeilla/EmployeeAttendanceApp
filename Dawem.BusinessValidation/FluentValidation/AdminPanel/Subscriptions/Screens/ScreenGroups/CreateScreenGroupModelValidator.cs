@@ -8,6 +8,12 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
     {
         public CreateScreenGroupModelValidator()
         {
+            RuleFor(model => model.Order).
+                Must(o => o > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectOrder);
+
+            RuleFor(model => model.AuthenticationType).IsInEnum().
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectAuthenticationType);
 
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt != null && nt.Count > 0).

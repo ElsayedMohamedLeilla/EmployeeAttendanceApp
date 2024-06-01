@@ -7,10 +7,10 @@ using Dawem.Models.DTOs.Dawem.Generic;
 
 namespace Dawem.Repository.Providers
 {
-    public class ScreenActionRepository : GenericRepository<ScreenAction>, IScreenActionRepository
+    public class MenuItemActionRepository : GenericRepository<MenuItemAction>, IMenuItemActionRepository
     {
         private readonly RequestInfo _requestInfo;
-        public ScreenActionRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
+        public MenuItemActionRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo requestInfo) : base(unitOfWork, _generalSetting)
         {
             _requestInfo = requestInfo;
         }

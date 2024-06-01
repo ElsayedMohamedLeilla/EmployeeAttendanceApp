@@ -10,7 +10,6 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -36,14 +35,104 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             screenBLValidation = _screenBLValidation;
             mapper = _mapper;
         }
+        public async Task<GetAllScreensWithAvailableActionsResponse> OldGetAllScreensWithAvailableActions()
+        {
+            return new GetAllScreensWithAvailableActionsResponse
+            {
+                ScreensTypes = null
+            };
+
+            //var screenRepository = repositoryManager.MenuItemRepository;
+
+            //var criteria = new GetScreensCriteria
+            //{
+            //    IsActive = true,
+            //};
+            //var query = screenRepository.GetAsQueryable(criteria);
+
+            //#region paging
+
+            //int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            //int take = PagingHelper.Take(criteria.PageSize);
+
+            //#region sorting
+            //var queryOrdered = screenRepository.OrderBy(query, nameof(MenuItem.AuthenticationType), LeillaKeys.Asc);
+            //#endregion
+
+            //var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            //#endregion
+
+            //#region Handle Response
+
+            //var screensTypes = await queryPaged.GroupBy(s => s.AuthenticationType).Select(screenGroup => new GetAllScreensWithAvailableActionsResponseModel
+            //{
+            //    Type = screenGroup.Key,
+            //    TypeName = TranslationHelper.GetTranslation(screenGroup.Key.ToString() + nameof(AuthenticationType), requestInfo.Lang),
+
+            //    ScreensGroups = screenGroup.Where(sg => sg.ParentId > 0).OrderBy(s => s.Order).
+            //    GroupBy(s => s.ParentId).Select(screenGroupGroup => new GetAllScreensWithAvailableActionsModel
+            //    {
+            //        ScreenGroupId = screenGroupGroup.Key,
+            //        Order = screenGroupGroup.First().Order,
+            //        Name = screenGroupGroup.First().Screen.ScreenGroupNameTranslations.
+            //        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+            //        Screens = screenGroupGroup.OrderBy(s => s.Order).Select(s => new ScreenWithAvailableActionsDTO
+            //        {
+            //            Id = s.Id,
+            //            Order = s.Order,
+            //            Name = s.MenuItemNameTranslations.Any(p => p.Language.ISO2 == requestInfo.Lang) ?
+            //            s.MenuItemNameTranslations.First(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
+            //            AvailableActions = s.MenuItemActions.Any() ? s.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+            //        }).ToList()
+
+            //    }).ToList(),
+
+            //    Screens = screenGroup.Where(sg => sg.ParentId == null).
+            //    OrderBy(s => s.Order).Select(s => new ScreenWithAvailableActionsDTO
+            //    {
+            //        Id = s.Id,
+            //        Order = s.Order,
+            //        Name = s.MenuItemNameTranslations.Any(p => p.Language.ISO2 == requestInfo.Lang) ?
+            //        s.MenuItemNameTranslations.First(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
+            //        AvailableActions = s.MenuItemActions.Any() ? s.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+            //    }).ToList()
+            //}).ToListAsync();
+
+            //return new GetAllScreensWithAvailableActionsResponse
+            //{
+            //    ScreensTypes = screensTypes
+            //};
+
+            //#endregion
+
+        }
         public async Task<GetAllScreensWithAvailableActionsResponse> GetAllScreensWithAvailableActions()
         {
-            var screenRepository = repositoryManager.ScreenRepository;
+            var screenRepository = repositoryManager.MenuItemRepository;
 
             var criteria = new GetScreensCriteria
             {
                 IsActive = true,
             };
+
+            var companyId = requestInfo.CompanyId;
+
+            var getCompanyPlan = await repositoryManager.SubscriptionRepository.
+                Get(s => s.CompanyId == companyId).
+                Select(s => new
+                {
+                    s.PlanId,
+                    s.Plan.AllScreensAvailable,
+                }).FirstOrDefaultAsync();
+
+            if (getCompanyPlan != null)
+            {
+                criteria.PlanId = getCompanyPlan.PlanId;
+                criteria.IsAllScreensAvailableInPlan = getCompanyPlan.AllScreensAvailable;
+            }
+
+
             var query = screenRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -52,7 +141,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = screenRepository.OrderBy(query, nameof(Screen.Type), LeillaKeys.Asc);
+            var queryOrdered = screenRepository.OrderBy(query, nameof(MenuItem.AuthenticationType), LeillaKeys.Asc);
             #endregion
 
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -61,26 +150,75 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Handle Response
 
-            var screensTypes = await queryPaged.GroupBy(s => s.Type).Select(screenGroup => new GetAllScreensWithAvailableActionsResponseModel
-            {
-                Type = screenGroup.Key,
-                TypeName = TranslationHelper.GetTranslation(screenGroup.Key.ToString() + nameof(AuthenticationType), requestInfo.Lang),
-                Screens = screenGroup.OrderBy(s=>s.Order).Select(s => new ScreenWithAvailableActionsDTO
+            var screensTypes = await queryPaged.
+                GroupBy(s => s.AuthenticationType).
+                Select(screenGroup => new
                 {
-                    ScreenId = s.Id,
-                    ScreenName = s.ScreenNameTranslations.Any(p => p.Language.ISO2 == requestInfo.Lang) ?
-                    s.ScreenNameTranslations.First(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
-                    AvailableActions = s.ScreenActions.Any() ? s.ScreenActions.Select(a => a.ActionCode).ToList() : null,
-                }).ToList()
-            }).ToListAsync();
+                    Type = screenGroup.Key,
+                    TypeName = TranslationHelper.GetTranslation(screenGroup.Key.ToString() + nameof(AuthenticationType), requestInfo.Lang),
+                    Screens = screenGroup.OrderBy(s => s.Order).ToList()
+                }).ToListAsync();
 
-            return new GetAllScreensWithAvailableActionsResponse
+            var response = new GetAllScreensWithAvailableActionsResponse();
+
+            foreach (var screenType in screensTypes)
             {
-                ScreensTypes = screensTypes
-            };
+                var screenTypeModel = new GetAllScreensWithAvailableActionsResponseModel
+                {
+                    Type = screenType.Type,
+                    TypeName = screenType.TypeName
+                };
+                var masterScreens = screenType.Screens.Where(s => s.ParentId == null).OrderBy(s => s.Order);
+
+                foreach (var screen in masterScreens)
+                {
+                    screenTypeModel.Screens.Add(new ScreenWithAvailableActionsDTO
+                    {
+                        Id = screen.Id,
+                        Type = screen.GroupOrScreenType,
+                        Name = screen.MenuItemNameTranslations.
+                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                        Icon = screen.Icon,
+                        URL = screen.URL,
+                        AvailableActions = screen.MenuItemActions != null ?
+                        screen.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+                        Children = HasChildren(screen.Id, screenType.Screens) ?
+                        GetChildren(screen.Id, screenType.Screens) : null,
+                    });
+                }
+
+                response.ScreensTypes.Add(screenTypeModel);
+
+            }
+
+            return response;
 
             #endregion
 
+        }
+        private bool HasChildren(int screenId, List<MenuItem> screens)
+        {
+            return screens.Any(s => s.ParentId == screenId);
+        }
+        private List<ScreenWithAvailableActionsDTO> GetChildren(int screenId, List<MenuItem> screens)
+        {
+            var children = screens.Where(s => s.ParentId == screenId).ToList();
+
+            var respnse = children.Select(screen => new ScreenWithAvailableActionsDTO
+            {
+                Id = screen.Id,
+                Type = screen.GroupOrScreenType,
+                Name = screen.MenuItemNameTranslations.
+                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Icon = screen.Icon,
+                URL = screen.URL,
+                AvailableActions = screen.MenuItemActions != null ?
+                        screen.MenuItemActions.Select(a => a.ActionCode).ToList() : null,
+                Children = HasChildren(screen.Id, screens) ?
+                        GetChildren(screen.Id, screens) : null,
+            }).ToList();
+
+            return respnse;
         }
     }
 }

@@ -7,12 +7,14 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -50,9 +52,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Insert ScreenGroup
 
-            var screenGroup = mapper.Map<ScreenGroup>(model);
+            var screenGroup = mapper.Map<MenuItem>(model);
             screenGroup.AddUserId = requestInfo.UserId;
-            repositoryManager.ScreenGroupRepository.Insert(screenGroup);
+            screenGroup.GroupOrScreenType = GroupOrScreenType.Group;
+            screenGroup.AuthenticationTypeName = TranslationHelper.GetTranslation(model.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang);
+            repositoryManager.MenuItemRepository.Insert(screenGroup);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -77,7 +81,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Update ScreenGroup
 
-            var getScreenGroup = await repositoryManager.ScreenGroupRepository.GetEntityByConditionWithTrackingAsync(screenGroup => !screenGroup.IsDeleted
+            var getScreenGroup = await repositoryManager.MenuItemRepository.
+                GetEntityByConditionWithTrackingAsync(screenGroup => !screenGroup.IsDeleted
             && screenGroup.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryScreenGroupNotFound);
 
             getScreenGroup.IsActive = model.IsActive;
@@ -85,55 +90,58 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             getScreenGroup.ModifyUserId = requestInfo.UserId;
             getScreenGroup.Notes = model.Notes;
             getScreenGroup.Icon = model.Icon;
+            getScreenGroup.Order = model.Order;
+            getScreenGroup.ParentId = model.ParentId;
+            getScreenGroup.AuthenticationTypeName = TranslationHelper.GetTranslation(model.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang);
 
             await unitOfWork.SaveAsync();
 
             #region Handle Update Name Translations
 
-            var exisNameTranslationsDbList = await repositoryManager.ScreenGroupNameTranslationRepository
-                    .Get(e => e.ScreenGroupId == getScreenGroup.Id)
+            var exisNameTranslationsDbList = await repositoryManager.MenuItemNameTranslationRepository
+                    .Get(e => e.MenuItemId == getScreenGroup.Id)
                     .ToListAsync();
 
             var existingNameTranslationsIds = exisNameTranslationsDbList.Select(e => e.Id)
                 .ToList();
 
-            var addedScreenGroupNameTranslations = model.NameTranslations != null ? model.NameTranslations
+            var addedMenuItemNameTranslations = model.NameTranslations != null ? model.NameTranslations
                 .Where(ge => !existingNameTranslationsIds.Contains(ge.Id))
-                .Select(ge => new ScreenGroupNameTranslation
+                .Select(ge => new MenuItemNameTranslation
                 {
-                    ScreenGroupId = model.Id,
+                    MenuItemId = model.Id,
                     LanguageId = ge.LanguageId,
                     Name = ge.Name,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
-                }).ToList() : new List<ScreenGroupNameTranslation>();
+                }).ToList() : new List<MenuItemNameTranslation>();
 
-            var removedScreenGroupNameTranslationsIds = exisNameTranslationsDbList
+            var removedMenuItemNameTranslationsIds = exisNameTranslationsDbList
                 .Where(ge => model.NameTranslations == null || !model.NameTranslations.Select(i => i.Id).Contains(ge.Id))
                 .Select(ge => ge.Id)
                 .ToList();
 
-            var removedScreenGroupNameTranslations = exisNameTranslationsDbList
-                .Where(e => removedScreenGroupNameTranslationsIds.Contains(e.Id))
+            var removedMenuItemNameTranslations = exisNameTranslationsDbList
+                .Where(e => removedMenuItemNameTranslationsIds.Contains(e.Id))
                 .ToList();
 
-            var updatedScreenGroupNameTranslations = exisNameTranslationsDbList.
+            var updatedMenuItemNameTranslations = exisNameTranslationsDbList.
                 Where(nt => model.NameTranslations != null && model.NameTranslations.
                 Any(mi => mi.Id == nt.Id && (mi.Name != nt.Name || mi.LanguageId != nt.LanguageId))).
                 ToList();
 
-            if (removedScreenGroupNameTranslations.Count() > 0)
-                repositoryManager.ScreenGroupNameTranslationRepository.BulkDeleteIfExist(removedScreenGroupNameTranslations);
-            if (addedScreenGroupNameTranslations.Count() > 0)
-                repositoryManager.ScreenGroupNameTranslationRepository.BulkInsert(addedScreenGroupNameTranslations);
-            if (updatedScreenGroupNameTranslations.Count() > 0)
+            if (removedMenuItemNameTranslations.Count() > 0)
+                repositoryManager.MenuItemNameTranslationRepository.BulkDeleteIfExist(removedMenuItemNameTranslations);
+            if (addedMenuItemNameTranslations.Count() > 0)
+                repositoryManager.MenuItemNameTranslationRepository.BulkInsert(addedMenuItemNameTranslations);
+            if (updatedMenuItemNameTranslations.Count() > 0)
             {
-                updatedScreenGroupNameTranslations.ForEach(i =>
+                updatedMenuItemNameTranslations.ForEach(i =>
                 {
                     i.Name = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
                     i.LanguageId = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.LanguageId ?? 0;
                 });
-                repositoryManager.ScreenGroupNameTranslationRepository.BulkUpdate(updatedScreenGroupNameTranslations);
+                repositoryManager.MenuItemNameTranslationRepository.BulkUpdate(updatedMenuItemNameTranslations);
             }
 
             #endregion
@@ -147,16 +155,17 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #endregion
         }
-        public async Task<GetScreenGroupsResponse> Get(GetScreenGroupsCriteria criteria)
+        public async Task<GetScreenGroupsResponse> Get(GetScreensCriteria criteria)
         {
-            var screenGroupRepository = repositoryManager.ScreenGroupRepository;
+            var screenGroupRepository = repositoryManager.MenuItemRepository;
+            criteria.GroupOrScreenType = GroupOrScreenType.Group;
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = screenGroupRepository.OrderBy(query, nameof(ScreenGroup.Id), LeillaKeys.Desc);
+            var queryOrdered = screenGroupRepository.OrderBy(query, nameof(MenuItem.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
@@ -166,10 +175,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroupsList = await queryPaged.Select(screenGroup => new GetScreenGroupResponseModel
             {
                 Id = screenGroup.Id,
-                Name = screenGroup.ScreenGroupNameTranslations.
+                Name = screenGroup.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
-                GroupType = screenGroup.GroupType,
-                GroupTypeName = TranslationHelper.GetTranslation(screenGroup.GroupTypeName.ToString() + nameof(ScreenGroupType), requestInfo.Lang),
+                ParentName = screenGroup.ParentId > 0 ? screenGroup.Parent.MenuItemNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
                 IsActive = screenGroup.IsActive,
             }).ToListAsync();
             return new GetScreenGroupsResponse
@@ -180,10 +189,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             #endregion
 
         }
-        public async Task<GetScreenGroupsForDropDownResponse> GetForDropDown(GetScreenGroupsCriteria criteria)
+        public async Task<GetScreenGroupsForDropDownResponse> GetForDropDown(GetScreensCriteria criteria)
         {
             criteria.IsActive = true;
-            var screenGroupRepository = repositoryManager.ScreenGroupRepository;
+            var screenGroupRepository = repositoryManager.MenuItemRepository;
+            criteria.GroupOrScreenType = GroupOrScreenType.Screen;
             var query = screenGroupRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -192,7 +202,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = screenGroupRepository.OrderBy(query, nameof(ScreenGroup.Id), LeillaKeys.Desc);
+            var queryOrdered = screenGroupRepository.OrderBy(query, nameof(MenuItem.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -204,7 +214,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screenGroupsList = await queryPaged.Select(screenGroup => new GetScreenGroupsForDropDownResponseModel
             {
                 Id = screenGroup.Id,
-                Name = screenGroup.ScreenGroupNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Name = screenGroup.MenuItemNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
             }).ToListAsync();
 
             return new GetScreenGroupsForDropDownResponse
@@ -218,15 +228,19 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenGroupInfoResponseModel> GetInfo(int screenGroupId)
         {
-            var screenGroup = await repositoryManager.ScreenGroupRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted)
+            var screenGroup = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted && 
+            e.GroupOrScreenType == GroupOrScreenType.Group)
                 .Select(screenGroup => new GetScreenGroupInfoResponseModel
                 {
-                    Name = screenGroup.ScreenGroupNameTranslations.
+                    Name = screenGroup.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screenGroup.IsActive,
+                    Order = screenGroup.Order,
+                    ParentName = screenGroup.ParentId > 0 ? screenGroup.Parent.MenuItemNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
                     Notes = screenGroup.Notes,
                     Icon = screenGroup.Icon,
-                    NameTranslations = screenGroup.ScreenGroupNameTranslations.
+                    NameTranslations = screenGroup.MenuItemNameTranslations.
                     Select(pt =>
                     new NameTranslationGetInfoModel
                     {
@@ -239,16 +253,19 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenGroupByIdResponseModel> GetById(int screenGroupId)
         {
-            var screenGroup = await repositoryManager.ScreenGroupRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted)
+            var screenGroup = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted &&
+            e.GroupOrScreenType == GroupOrScreenType.Group)
                 .Select(screenGroup => new GetScreenGroupByIdResponseModel
                 {
                     Id = screenGroup.Id,
-                    Name = screenGroup.ScreenGroupNameTranslations.
+                    Name = screenGroup.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screenGroup.IsActive,
+                    ParentId = screenGroup.ParentId,
                     Notes = screenGroup.Notes,
+                    Order = screenGroup.Order,
                     Icon = screenGroup.Icon,
-                    NameTranslations = screenGroup.ScreenGroupNameTranslations.
+                    NameTranslations = screenGroup.MenuItemNameTranslations.
                     Select(pt => new NameTranslationModel
                     {
                         Id = pt.Id,
@@ -262,9 +279,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Enable(int screenGroupId)
         {
-            var responsibility = await repositoryManager.ScreenGroupRepository.
+            var responsibility = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
-                && d.Id == screenGroupId) ??
+                && d.Id == screenGroupId && d.GroupOrScreenType == GroupOrScreenType.Group) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenGroupNotFound);
             responsibility.Enable();
             await unitOfWork.SaveAsync();
@@ -272,9 +289,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var responsibility = await repositoryManager.ScreenGroupRepository.
+            var responsibility = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted
-                && d.IsActive && d.Id == model.Id) ??
+                && d.IsActive && d.Id == model.Id &&
+                  d.GroupOrScreenType == GroupOrScreenType.Group) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenGroupNotFound);
             responsibility.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
@@ -282,8 +300,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Delete(int screenGroupd)
         {
-            var screenGroup = await repositoryManager.ScreenGroupRepository.
-                GetEntityByConditionWithTrackingAsync(screenGroup => !screenGroup.IsDeleted && screenGroup.Id == screenGroupd ) ??
+            var screenGroup = await repositoryManager.MenuItemRepository.
+                GetEntityByConditionWithTrackingAsync(screenGroup => !screenGroup.IsDeleted && screenGroup.Id == screenGroupd &&
+                  screenGroup.GroupOrScreenType == GroupOrScreenType.Group) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenGroupNotFound);
             screenGroup.Delete();
             await unitOfWork.SaveAsync();
@@ -291,8 +310,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenGroupsInformationsResponseDTO> GetScreenGroupsInformations()
         {
-            var screenGroupRepository = repositoryManager.ScreenGroupRepository;
-            var query = screenGroupRepository.Get();
+            var screenGroupRepository = repositoryManager.MenuItemRepository;
+            var query = screenGroupRepository.
+                Get(screenGroup => screenGroup.GroupOrScreenType == GroupOrScreenType.Group).
+                IgnoreQueryFilters();
 
             #region Handle Response
 

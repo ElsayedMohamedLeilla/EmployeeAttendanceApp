@@ -290,7 +290,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     SubscriptionsCount = plan.Subscriptions.Count,
                     AllScreensAvailable = plan.AllScreensAvailable,
                     Screens = plan.PlanScreens != null ? plan.PlanScreens.Select(s => s.Screen.
-                    ScreenNameTranslations.
+                    MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name).
                     ToList() : null,
                     NameTranslations = plan.PlanNameTranslations.

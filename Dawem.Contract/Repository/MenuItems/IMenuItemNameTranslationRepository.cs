@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Subscriptions;
 
 namespace Dawem.Contract.Repository.Settings
 {
-    public interface IScreenActionRepository : IGenericRepository<ScreenAction>
+    public interface IMenuItemNameTranslationRepository : IGenericRepository<MenuItemNameTranslation>
     {
     }
 }

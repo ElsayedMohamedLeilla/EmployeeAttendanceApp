@@ -7,6 +7,8 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
+        public int? ParentId { get; set; }
+        public int Order { get; set; }
         public string Notes { get; set; }
         public string Icon { get; set; }
         public List<NameTranslationModel> NameTranslations { get; set; }

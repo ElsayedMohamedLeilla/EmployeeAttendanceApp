@@ -14,6 +14,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
+
+        #region Attendance Report
+
         [HttpPost]
         public IActionResult GetEmployeeDailyAttendanceGroupByDay([FromQuery]  ReportCritria param)
         {
@@ -244,6 +247,58 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
             }
             return NotFound();
         }
+        #endregion
+
+
+        #region Summons Report
+        [HttpPost]
+        public IActionResult GetBriefingSummonsInPeriodReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateBriefingSummonsInPeriodReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "BriefingSummonsInPeriodReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult GetGetSummonsDetailsInPeriodReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateSummonsDetailsInPeriodReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "SummonsDetailsInPeriodReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+        #endregion
 
     }
 }

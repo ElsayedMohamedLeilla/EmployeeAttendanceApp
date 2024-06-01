@@ -11,7 +11,10 @@
         EmployeeAbsenseInPeriodGroupByEmployeeReport,
         EmployeeAbsenseInPeriodGroupByDepartmentReport,
         OverTimeInSelectedPeriodReport,
-        AttendaceLeaveSummaryReport
+        AttendaceLeaveSummaryReport,
+        BriefingSummonsInPeriodReport,
+        GetSummonsDetailsInPeriodReport
+
 
     }
 }

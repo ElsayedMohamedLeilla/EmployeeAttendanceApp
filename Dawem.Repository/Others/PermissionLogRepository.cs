@@ -58,9 +58,9 @@ namespace Dawem.Repository.Others
                 outerpredicate = outerpredicate.And(x => x.ActionCode == criteria.ActionCode);
             }
 
-            if (criteria.ScreenCode != null)
+            if (criteria.ScreenId != null)
             {
-                outerpredicate = outerpredicate.And(x => x.ScreenCode == criteria.ScreenCode);
+                outerpredicate = outerpredicate.And(x => x.ScreenId == criteria.ScreenId);
             }
 
             outerpredicate = outerpredicate.And(inner);

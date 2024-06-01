@@ -112,18 +112,6 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
             return Success(response, response.Screens.Count);
         }
         [HttpGet]
-        public ActionResult GetAllScreens()
-        {
-            var response = ControllerActionHelper.GetAllScreens(requestInfo);
-            return Success(response, response.Screens.Count);
-        }
-        [HttpGet]
-        public ActionResult GetAllActions()
-        {
-            var response = ControllerActionHelper.GetAllActions(requestInfo);
-            return Success(response, response.Actions.Count);
-        }
-        [HttpGet]
         public async Task<ActionResult> GetCurrentUserPermissions()
         {
             var response = await permissionBL.GetCurrentUserPermissions();

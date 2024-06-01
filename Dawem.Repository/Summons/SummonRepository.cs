@@ -1,7 +1,6 @@
 ﻿using Dawem.Contract.Repository.Summons;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
@@ -122,7 +121,7 @@ namespace Dawem.Repository.Summons
                 switch (criteria.Status.Value)
                 {
                     case SummonStatus.NotStarted:
-                        predicate = predicate.And(e => e.StartDateAndTimeUTC < utcDate);
+                        predicate = predicate.And(e => utcDate < e.StartDateAndTimeUTC);
                         break;
                     case SummonStatus.OnGoing:
                         predicate = predicate.And(e => utcDate >= e.StartDateAndTimeUTC && utcDate <= e.EndDateAndTimeUTC);
@@ -132,7 +131,8 @@ namespace Dawem.Repository.Summons
                         break;
                     case SummonStatus.FinishedAndMissed:
                         predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC && !e.EmployeeAttendanceChecks.
-                        Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon));
+                        Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && 
+                        c.FingerPrintType == FingerPrintType.Summon));
                         break;
                     default:
                         break;

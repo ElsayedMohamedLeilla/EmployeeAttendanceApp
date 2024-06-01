@@ -41,6 +41,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         public async Task<string> PreSignUp(PreSignUpDTO model)
         {
             #region Model Validation
+
             var PreSignUpModel = new PreSignUpModelValidator();
             var createUserModelResult = PreSignUpModel.Validate(model);
             if (!createUserModelResult.IsValid)

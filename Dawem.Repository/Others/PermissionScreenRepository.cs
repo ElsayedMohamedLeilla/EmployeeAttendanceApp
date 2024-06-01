@@ -32,7 +32,7 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                /*var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
                 var screenCodes = Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>()
@@ -47,7 +47,9 @@ namespace Dawem.Repository.Others
                     .Select(s=>s.ScreenCode)
                     .ToList();
 
-                inner = inner.Or(ps => screenCodes != null && screenCodes.Contains(ps.ScreenCode));
+                inner = inner.Or(ps => screenCodes != null && screenCodes.Contains(ps.ScreenCode));*/
+
+                inner = inner.Or(ps => ps.Screen.ScreenNameTranslations.Any(sn =>sn.Name.StartsWith(criteria.FreeText)));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
@@ -66,9 +68,9 @@ namespace Dawem.Repository.Others
             {
                 predicate = predicate.And(ps => ps.IsActive == criteria.IsActive);
             }
-            if (criteria.ScreenCode != null)
+            if (criteria.ScreenId != null)
             {
-                predicate = predicate.And(ps => ps.ScreenCode == criteria.ScreenCode);
+                predicate = predicate.And(ps => ps.ScreenId == criteria.ScreenId);
             }
             if (criteria.ActionCode != null)
             {

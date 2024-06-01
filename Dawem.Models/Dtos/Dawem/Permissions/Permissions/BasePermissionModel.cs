@@ -7,7 +7,7 @@ namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
         public ForResponsibilityOrUser ForType { get; set; }
         public int? ResponsibilityId { get; set; }
         public int? UserId { get; set; }
-        public List<PermissionScreenModel> PermissionScreens { get; set; }
+        public List<PermissionScreenModel> Screens { get; set; }
         public bool IsActive { get; set; }
     }
 }

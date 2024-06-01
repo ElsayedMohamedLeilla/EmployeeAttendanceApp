@@ -4,6 +4,7 @@ using Dawem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dawem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240527232120_UseCollation")]
+    partial class UseCollation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2650,7 +2653,7 @@ namespace Dawem.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ScreenId")
+                    b.Property<int>("ScreenCode")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -2662,8 +2665,6 @@ namespace Dawem.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("ScreenId");
 
                     b.HasIndex("UserId");
 
@@ -2720,7 +2721,10 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScreenId")
+                    b.Property<int>("ScreenCode")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ScreenId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -6778,12 +6782,6 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
-                        .WithMany()
-                        .HasForeignKey("ScreenId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.UserManagement.MyUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -6791,8 +6789,6 @@ namespace Dawem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
-
-                    b.Navigation("Screen");
 
                     b.Navigation("User");
                 });
@@ -6808,8 +6804,7 @@ namespace Dawem.Data.Migrations
                     b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
                         .WithMany()
                         .HasForeignKey("ScreenId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Permission");
 

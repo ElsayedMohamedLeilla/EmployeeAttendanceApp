@@ -9,7 +9,7 @@ namespace Dawem.Models.AutoMapper.Dawem.Permissions
         public PermissionMapProfile()
         {
             CreateMap<PermissionScreenModel, PermissionScreen>();
-            CreateMap<PermissionScreenActionModel, PermissionScreenAction>();
+            //CreateMap<PermissionScreenActionModel, PermissionScreenAction>();
 
             CreateMap<CreatePermissionModel, Permission>();
             CreateMap<UpdatePermissionModel, Permission>();

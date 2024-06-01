@@ -684,7 +684,11 @@
         public const string SorryScreenGroupNotFound = "Sorry!!ScreenGroupNotFound!";
         public const string DoneCreateScreenGroupSuccessfully = "DoneCreateScreenGroupSuccessfully";
         public const string DoneUpdateScreenGroupSuccessfully = "DoneUpdateScreenGroupSuccessfully";
+        public const string SorryYourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen = "Sorry!!YourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen!";
 
+
+
+        public const string SorryYouMustEnterCorrectScreenId = "Sorry!!YouMustEnterCorrectScreenId!";
 
     }
 }

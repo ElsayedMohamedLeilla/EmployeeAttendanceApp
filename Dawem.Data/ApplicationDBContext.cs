@@ -14,14 +14,10 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
-using Dawem.Enums.Generals;
 using Dawem.Models.DTOs.Dawem.Generic;
-using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -29,7 +25,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Data.Entity.Infrastructure;
 using System.Linq.Expressions;
 
 namespace Dawem.Data
@@ -70,7 +65,7 @@ namespace Dawem.Data
             modelBuilder.HasDefaultSchema("Dawem");
 
             base.OnModelCreating(modelBuilder);
-            
+
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes()
                    .SelectMany(e => e.GetForeignKeys()))
@@ -110,9 +105,11 @@ namespace Dawem.Data
             modelBuilder.Entity<UserToken>(entity => { entity.ToTable(nameof(UserToken) + LeillaKeys.S); });
             modelBuilder.Entity<RoleClaim>(entity => { entity.ToTable(nameof(RoleClaim) + LeillaKeys.S); });
             modelBuilder.Entity<Role>(entity => { entity.ToTable(nameof(Role) + LeillaKeys.S); });
-            
-            
-                modelBuilder.Entity<NotificationTranslation>().
+
+            modelBuilder.Entity<Company>().Property(c => c.IdentityCode)
+              .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.Entity<NotificationTranslation>().
                 HasOne(p => p.Notification).
                 WithMany(b => b.NotificationTranslations).
                 HasForeignKey(p => p.NotificationId).
@@ -424,7 +421,7 @@ namespace Dawem.Data
                 HasIndex(p => p.AllowedMinutes);
             modelBuilder.Entity<ShiftWorkingTime>().
                 HasIndex(p => p.IsTwoDaysShift);
-            
+
 
             modelBuilder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.LocalDate);
@@ -435,7 +432,7 @@ namespace Dawem.Data
             modelBuilder.Entity<EmployeeAttendance>().
                 HasIndex(p => p.FingerPrintStatus);
 
-           
+
             modelBuilder.Entity<EmployeeAttendanceCheck>().
                 HasIndex(p => p.FingerPrintDate);
             modelBuilder.Entity<EmployeeAttendanceCheck>().
@@ -445,7 +442,7 @@ namespace Dawem.Data
 
             modelBuilder.Entity<ScheduleDay>().
                 HasIndex(p => p.WeekDay);
-            
+
 
             #endregion
 
@@ -506,7 +503,7 @@ namespace Dawem.Data
                 var code = entityType?.GetProperty(nameof(Employee.Code));
                 var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
 
-                if (  entityType != null && compoanyId != null && code != null && isDeleted != null)
+                if (entityType != null && compoanyId != null && code != null && isDeleted != null)
                 {
                     entityType.AddIndex(new List<IMutableProperty> { compoanyId, code, isDeleted }, LeillaKeys.UniqueIndexCompanyIdCodeIsDeleted)
                     .IsUnique = true;
@@ -561,7 +558,7 @@ namespace Dawem.Data
             var allStringPropertiesWithFullMessage = allEntity
                     .SelectMany(t => t.GetProperties())
                     .Where(p => p.ClrType == typeof(string)
-                    && ( p.Name == nameof(NotificationTranslation.Body)));
+                    && (p.Name == nameof(NotificationTranslation.Body)));
 
             foreach (var property in allStringPropertiesWithFullMessage)
             {

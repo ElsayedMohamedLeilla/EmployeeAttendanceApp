@@ -6,6 +6,7 @@ using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.API.MiddleWares
 {
@@ -24,8 +25,8 @@ namespace Dawem.API.MiddleWares
             await _next.Invoke(context: httpContext);
 
             var userId = requestInfo.UserId;
-            var type = requestInfo.Type;
-            int? companyId = type == AuthenticationType.AdminPanel ? null : requestInfo.CompanyId;
+            var authenticationType = requestInfo.Type;
+            int? companyId = authenticationType == AuthenticationType.AdminPanel ? null : requestInfo.CompanyId;
             
 
             var controllerActionDescriptor = httpContext
@@ -37,22 +38,33 @@ namespace Dawem.API.MiddleWares
             var actionName = controllerActionDescriptor?.ActionName;
 
 
-            if (userId > 0 && (companyId > 0 || type == AuthenticationType.AdminPanel) && controllerName != null && actionName != null)
+            if (userId > 0 && (companyId > 0 || authenticationType == AuthenticationType.AdminPanel) && controllerName != null && actionName != null)
             {
                 var mapResult = ControllerActionHelper.
                     MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
 
-                if (mapResult.Screen != null && mapResult.Method != null)
+                if (mapResult.ScreenCode != null && mapResult.ActionCode != null)
                 {
+                    var currentType = authenticationType == AuthenticationType.AdminPanel ?
+                        AuthenticationType.AdminPanel : authenticationType == AuthenticationType.DawemAdmin &&
+                        requestInfo.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+                        AuthenticationType.DawemEmployee;
+
+                    var getScreenId = await repositoryManager.ScreenRepository.
+                        Get(s => !s.IsDeleted && s.IsActive && s.ScreenCode == mapResult.ScreenCode &&
+                        s.Type == currentType).
+                        Select(s => s.Id).
+                        FirstOrDefaultAsync();
+
                     var permissionLogRepository = repositoryManager.PermissionLogRepository;
 
                     var permissionLog = new PermissionLog
                     {
                         CompanyId = companyId,
                         UserId = userId,
-                        ActionCode = mapResult.Method.Value,
-                        ScreenCode = mapResult.Screen.Value,
-                        Type = type
+                        ScreenId = getScreenId,
+                        ActionCode = mapResult.ActionCode.Value,
+                        Type = authenticationType
                     };
 
                     permissionLogRepository.Insert(permissionLog);

@@ -5,6 +5,7 @@ namespace Dawem.Models.Dtos.Dawem.Permissions.Permissions
 {
     public class GetPermissionsCriteria : BaseCriteria
     {
+        public int? ScreenId { get; set; }
         public int? ScreenCode { get; set; }
         public ApplicationActionCode? ActionCode { get; set; }
     }

@@ -1,13 +1,11 @@
-﻿using Dawem.Models.Dtos.Dawem.Others;
-
-namespace Dawem.Models.Response.Dawem.Others
+﻿namespace Dawem.Models.Response.Dawem.Others
 {
     public class GetAllScreensWithAvailableActionsResponse
     {
         public GetAllScreensWithAvailableActionsResponse()
         {
-            Screens = new List<ScreenWithAvailableActionsDTO>();
+            ScreensTypes = new List<GetAllScreensWithAvailableActionsResponseModel>();
         }
-        public List<ScreenWithAvailableActionsDTO> Screens { get; set; }
+        public List<GetAllScreensWithAvailableActionsResponseModel> ScreensTypes { get; set; }
     }
 }

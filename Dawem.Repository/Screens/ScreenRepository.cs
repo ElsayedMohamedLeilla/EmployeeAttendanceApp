@@ -5,7 +5,6 @@ using Dawem.Domain.Entities.Others;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
-using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using LinqKit;
 
@@ -23,16 +22,8 @@ namespace Dawem.Repository.Providers
             var predicate = PredicateBuilder.New<Screen>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Screen>(true);
 
-            if (_requestInfo.Type == AuthenticationType.AdminPanel)
-            {
-                predicate = predicate.And(e => e.Type == _requestInfo.Type);
-            }
-            else if (_requestInfo.Type == AuthenticationType.DawemAdmin)
-            {
-                predicate = predicate.And(e => e.Type == _requestInfo.Type);
-            }
-
-            predicate = predicate.And(e => e.Type == _requestInfo.Type);
+            predicate = predicate.And(e => (_requestInfo.Type == AuthenticationType.AdminPanel && e.Type == AuthenticationType.AdminPanel) || 
+            (_requestInfo.Type == AuthenticationType.DawemAdmin && e.Type != AuthenticationType.AdminPanel));
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

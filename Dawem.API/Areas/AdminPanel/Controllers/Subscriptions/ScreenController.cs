@@ -2,7 +2,6 @@
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +12,13 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
     public class ScreenController : AdminPanelControllerBase
     {
         private readonly IScreenBL screenBL;
+        private readonly IScreenBLC screenBLC;
         private readonly RequestInfo requestInfo;
 
-        public ScreenController(IScreenBL _screenBL, RequestInfo requestInfo)
+        public ScreenController(IScreenBL _screenBL, IScreenBLC _screenBLC, RequestInfo requestInfo)
         {
             screenBL = _screenBL;
+            screenBLC = _screenBLC;
             this.requestInfo = requestInfo;
         }
 
@@ -106,6 +107,11 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
         public async Task<ActionResult> GetScreensInformations()
         {
             return Success(await screenBL.GetScreensInformations());
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetAllScreensWithAvailableActions()
+        {
+            return Success(await screenBLC.GetAllScreensWithAvailableActions());
         }
     }
 }

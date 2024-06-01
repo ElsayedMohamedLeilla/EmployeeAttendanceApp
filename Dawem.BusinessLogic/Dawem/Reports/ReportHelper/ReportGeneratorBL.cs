@@ -3,6 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.ReportsModule.Helper;
@@ -30,6 +31,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             //_context = context;
 
         }
+        #region Attendance Report
         public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(ReportCritria param)
         {
             //object[] parameters =
@@ -138,6 +140,30 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             return GenerateReport(exporterModelDTO, param);
         }
+
+        #endregion
+
+        #region Summon Reports
+        public HttpResponseMessage GenerateBriefingSummonsInPeriodReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.SummonReports,
+                ReportType = ReportType.BriefingSummonsInPeriodReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+
+        public HttpResponseMessage GenerateSummonsDetailsInPeriodReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.SummonReports,
+                ReportType = ReportType.GetSummonsDetailsInPeriodReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        #endregion
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -204,6 +230,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return result;
         }
 
-       
+        
     }
 }

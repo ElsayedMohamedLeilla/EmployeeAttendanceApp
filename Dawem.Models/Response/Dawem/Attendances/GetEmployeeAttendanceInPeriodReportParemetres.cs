@@ -14,6 +14,17 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? OverTimeFrom { get; set; }
         public int? OverTimeTo { get; set; }
         public bool? WithoutPermision { get; set; }
+        public ReportNotifyWay? NotifiyWay { get; set; }
+        public int? AllowedTimeWithMinutesFrom { get; set; }
+        public int? AllowedTimeWithMinutesTo { get; set; }
+        public int? NoOfRequiredEmployeeFrom { get; set; }
+        public int? NoOfRequiredEmployeeTo { get; set; }
+        public int? PercentageOfDoneFrom { get; set; }
+        public int? PercentageOfDoneTo { get; set; }
+        public DoneStatus? DoneStatus { get; set; }
+
+
+        
 
 
 

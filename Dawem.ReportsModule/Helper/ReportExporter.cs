@@ -85,8 +85,14 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.AttendaceLeaveSummaryReport:
                         SetAttendaceLeaveSummaryReportParameters(report, param);
                         break;
+                    case ReportType.BriefingSummonsInPeriodReport:
+                        SetBriefingSummonsInPeriodReportParameters(report, param);
+                        break;
+                    case ReportType.GetSummonsDetailsInPeriodReport:
+                        SetSummonsDetailsInPeriodReportParameters(report, param);
+                        break;
 
-                        
+
                 }
 
                 #endregion
@@ -183,6 +189,36 @@ namespace Dawem.ReportsModule.Helper
 
             report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
             report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        }
+
+        private static void SetBriefingSummonsInPeriodReportParameters(Report report, ReportCritria param)
+        {
+
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+            report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+            report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+            report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+            report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+        }
+
+        private static void SetSummonsDetailsInPeriodReportParameters(Report report, ReportCritria param)
+        {
+
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+            report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+            report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+            report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+            report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+            report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+
         }
 
 

@@ -528,7 +528,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
-                        AmgadKeys.Unknown,
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.Summon ? TranslationHelper.GetTranslation(AmgadKeys.Summon, requestInfo.Lang) :
+                        TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
                         RecognitionWay = employeeAttendanceCheck.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
@@ -536,7 +537,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
-                        AmgadKeys.Unknown,
+                         TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
                     }).ToList()
 
 

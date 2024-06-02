@@ -276,7 +276,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
         }
 
         [HttpPost]
-        public IActionResult GetGetSummonsDetailsInPeriodReport([FromQuery] ReportCritria param)
+        public IActionResult GetSummonsDetailsInPeriodReport([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateSummonsDetailsInPeriodReport(param);
             if (response != null && response.IsSuccessStatusCode)
@@ -286,6 +286,30 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
                 {
                     case ExportFormat.Pdf:
                         return File(contentStream, "application/pdf", "SummonsDetailsInPeriodReport.pdf");
+                    case ExportFormat.Excel:
+                        // Return Excel file
+                        // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");
+                        break;
+                    // Handle other export types as needed
+                    default:
+                        // Handle unsupported export types
+                        break;
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult GetSummonsDetailsGroupByEmployeeReport([FromQuery] ReportCritria param)
+        {
+            var response = _reportGeneratorBL.GenerateSummonsDetailsGroupByEmployeeReport(param);
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                var contentStream = response.Content.ReadAsStream();
+                switch (param.ExportFormat)
+                {
+                    case ExportFormat.Pdf:
+                        return File(contentStream, "application/pdf", "SummonsDetailsGroupByEmployeeReport.pdf");
                     case ExportFormat.Excel:
                         // Return Excel file
                         // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");

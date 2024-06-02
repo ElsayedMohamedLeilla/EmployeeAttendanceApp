@@ -33,16 +33,16 @@ namespace Dawem.Repository.Others
                 }
             }
 
-            if (requestInfo.Type == AuthenticationType.AdminPanel)
+            if (requestInfo.AuthenticationType == AuthenticationType.AdminPanel)
             {
                 outerpredicate = outerpredicate.And(e => e.CompanyId == null);
             }
-            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
+            else if (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
             {
                 outerpredicate = outerpredicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            outerpredicate = outerpredicate.And(e => e.Type == requestInfo.Type);
+            outerpredicate = outerpredicate.And(e => e.Type == requestInfo.AuthenticationType);
 
             if (criteria.Id != null)
             {

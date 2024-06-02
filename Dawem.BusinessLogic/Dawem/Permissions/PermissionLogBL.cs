@@ -26,7 +26,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var permissionLogRepository = repositoryManager.PermissionLogRepository;
             var query = permissionLogRepository.GetAsQueryable(model);
 
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             #region paging
@@ -47,7 +47,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             {
                 Id = pl.Id,
                 UserName = pl.User.Name,
-                ScreenName = pl.Screen.ScreenNameTranslations.
+                ScreenName = pl.Screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang)
             }).ToListAsync();
@@ -61,18 +61,18 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         public async Task<GetPermissionLogInfoResponseModel> GetInfo(int permissionLogId)
         {
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             var permissionLog = await repositoryManager.PermissionLogRepository.
                 Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && permissionLog.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permissionLog.CompanyId == null)) &&
-                permissionLog.Type == requestInfo.Type)
+                permissionLog.Type == requestInfo.AuthenticationType)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,
-                    ScreenName = pl.Screen.ScreenNameTranslations.
+                    ScreenName = pl.Screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
                     DateAndTime = pl.Company.Country.TimeZoneToUTC != null ?

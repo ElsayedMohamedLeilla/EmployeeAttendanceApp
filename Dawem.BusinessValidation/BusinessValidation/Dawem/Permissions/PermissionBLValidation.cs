@@ -7,6 +7,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkResponsibility = await repositoryManager.ResponsibilityRepository.Get(responsibility =>
                 responsibility.Id == model.ResponsibilityId && !responsibility.IsDeleted &&
-                responsibility.Type == requestInfo.Type &&
+                responsibility.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && responsibility.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && responsibility.CompanyId == null))).AnyAsync();
                 if (!checkResponsibility)
@@ -45,7 +46,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.Type &&
+                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -58,7 +59,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkUser = await repositoryManager.UserRepository.Get(user =>
                 user.Id == model.UserId && !user.IsDeleted &&
-                user.Type == requestInfo.Type &&
+                user.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))).AnyAsync();
                 if (!checkUser)
@@ -67,7 +68,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.Type &&
+                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -97,7 +98,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id &&
-                permission.Type == requestInfo.Type &&
+                permission.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -110,7 +111,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id && !permission.IsDeleted &&
-                permission.Type == requestInfo.Type &&
+                permission.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -153,10 +154,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
 
             var allScreensWithAvailableActionsGrouped = await screenBLC.
-                GetAllScreensWithAvailableActions();
+                GetAllScreensWithAvailableActions(new GetScreensCriteria { IsActive = true});
 
             var allScreensWithAvailableActions = allScreensWithAvailableActionsGrouped.
-                ScreensTypes.SelectMany(s => s.Screens).ToList();
+                MenuItemsTypes.SelectMany(s => s.MenuItems).ToList();
 
                     /*requestInfo.Type == AuthenticationType.AdminPanel ?
                         APIHelper.AdminPanelAllScreensWithAvailableActions :
@@ -168,9 +169,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 var screenWithNotAvailableAction = permissionScreens
                     .FirstOrDefault(permissionScreen => permissionScreen.Actions
                         .Any(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.ScreenId == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
+                        .FirstOrDefault(s => s.Id == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
 
-                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.ScreenId ==  screenWithNotAvailableAction.ScreenId);
+                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.Id ==  screenWithNotAvailableAction.ScreenId);
 
                 if (screenWithNotAvailableAction != null)
                 {
@@ -180,7 +181,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
                     var actionNotAvailable = screenWithNotAvailableAction.Actions
                         .FirstOrDefault(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.ScreenId == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
+                        .FirstOrDefault(s => s.Id == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
 
                     /*var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;*/
@@ -188,7 +189,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                     var message = TranslationHelper.GetTranslation(LeillaKeys.SorryChosenActionNotAvailableForChosenScreen, requestInfo.Lang)
                         + LeillaKeys.Space +
                         TranslationHelper.GetTranslation(LeillaKeys.ScreenName, requestInfo.Lang)
-                        + screenInfo.ScreenName
+                        + screenInfo.Name
                         + LeillaKeys.SpaceThenDashThenSpace +
                         TranslationHelper.GetTranslation(LeillaKeys.ActionName, requestInfo.Lang)
                         + TranslationHelper.GetTranslation(actionNotAvailable.ToString(), requestInfo.Lang)

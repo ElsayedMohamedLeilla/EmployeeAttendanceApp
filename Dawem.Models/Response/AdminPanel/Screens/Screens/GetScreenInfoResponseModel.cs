@@ -4,8 +4,9 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
 {
     public class GetScreenInfoResponseModel
     {
-        public int Id { get; set; }
+        public string AuthenticationTypeName { get; set; }
         public string Name { get; set; }
+        public string ParentName { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }
         public string Icon { get; set; }

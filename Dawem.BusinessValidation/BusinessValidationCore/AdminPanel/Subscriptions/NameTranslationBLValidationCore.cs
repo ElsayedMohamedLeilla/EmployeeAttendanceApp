@@ -35,31 +35,6 @@ namespace Dawem.Validation.BusinessValidationCore.AdminPanel.Subscriptions
 
             }
 
-            #region Validate Duplication
-
-            foreach (var nameTranslation in NameTranslations)
-            {
-                var checkNameDuplicate = await repositoryManager.PlanNameTranslationRepository.
-                    Get(pt => pt.Id != nameTranslation.Id && nameTranslation.Name == pt.Name &&
-                    nameTranslation.LanguageId == pt.LanguageId).
-                    Select(l => new
-                    {
-                        l.Name,
-                        LanguageName = l.Language.NativeName
-                    }).FirstOrDefaultAsync();
-
-                if (checkNameDuplicate != null)
-                {
-                    throw new BusinessValidationException(messageCode: null,
-                        message: TranslationHelper.GetTranslation(LeillaKeys.SorryPlanNameIsDuplicated, requestInfo.Lang) +
-                        LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanName, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
-                        checkNameDuplicate.Name + LeillaKeys.SpaceThenDashThenSpace + TranslationHelper.GetTranslation(LeillaKeys.DuplicatedPlanLanguage, requestInfo.Lang) + LeillaKeys.ColonsThenSpace +
-                        checkNameDuplicate.LanguageName);
-                }
-            }
-
-            #endregion
-
             return true;
         }
 

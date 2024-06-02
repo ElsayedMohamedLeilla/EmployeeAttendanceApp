@@ -131,10 +131,10 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             return Success(response, response.Screens.Count);
         }
         [HttpGet]
-        public async Task<ActionResult> GetCurrentUserPermissions()
+        public async Task<ActionResult> GetCurrentUserMenuItems()
         {
-            var response = await permissionBL.GetCurrentUserPermissions();
-            var count = response?.UserPermissions?.Count ?? 0;
+            var response = await permissionBL.GetCurrentUserMenuItems();
+            var count = response?.MenuItems?.Count ?? 0;
             return Success(response, count);
         }
     }

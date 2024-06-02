@@ -8,6 +8,13 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Screens.Scr
     {
         public UpdateScreenModelValidator()
         {
+            RuleFor(model => model.Order).
+                Must(o => o > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectOrder);
+
+            RuleFor(model => model.AuthenticationType).IsInEnum().
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectAuthenticationType);
+
             RuleFor(model => model.Id).GreaterThan(0).
                     WithMessage(LeillaKeys.SorryYouMustEnterScreenId);
 

@@ -21,13 +21,13 @@ namespace Dawem.Models.AutoMapper.Dawem.Subscriptions
         }
         private void MapPlanScreens(CreatePlanModel source, Plan destination, ResolutionContext context)
         {
-            destination.PlanScreens = source.ScreenIds
+            destination.PlanScreens = source.ScreensIds
                 .Select(screenId => new PlanScreen { ScreenId = screenId })
                 .ToList();
         }
         private void MapPlanScreens(UpdatePlanModel source, Plan destination, ResolutionContext context)
         {
-            destination.PlanScreens = source.ScreenIds
+            destination.PlanScreens = source.ScreensIds
                 .Select(screenId => new PlanScreen { ScreenId = screenId })
                 .ToList();
         }

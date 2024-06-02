@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
@@ -10,8 +11,8 @@ namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
         Task<bool> Update(UpdateScreenGroupModel model);
         Task<GetScreenGroupInfoResponseModel> GetInfo(int screenGroupId);
         Task<GetScreenGroupByIdResponseModel> GetById(int screenGroupId);
-        Task<GetScreenGroupsResponse> Get(GetScreenGroupsCriteria model);
-        Task<GetScreenGroupsForDropDownResponse> GetForDropDown(GetScreenGroupsCriteria model);
+        Task<GetScreenGroupsResponse> Get(GetScreensCriteria model);
+        Task<GetScreenGroupsForDropDownResponse> GetForDropDown(GetScreensCriteria model);
         Task<bool> Delete(int screenGroupId);
         Task<bool> Enable(int screenGroupId);
         Task<bool> Disable(DisableModelDTO model);

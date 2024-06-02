@@ -8,6 +8,17 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
     {
         public UpdateScreenGroupModelValidator()
         {
+            RuleFor(model => model.Order).
+                Must(o => o > 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectOrder);
+
+            RuleFor(model => model).
+                Must(model => model.Id != model.ParentId).
+                WithMessage(LeillaKeys.SorryParentGroupMustNotBeTheGroup);
+
+            RuleFor(model => model.AuthenticationType).IsInEnum().
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectAuthenticationType);
+
             RuleFor(model => model.Id).GreaterThan(0).
                     WithMessage(LeillaKeys.SorryYouMustEnterScreenGroupId);
 

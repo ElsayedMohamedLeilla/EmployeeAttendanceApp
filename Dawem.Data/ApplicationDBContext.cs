@@ -347,16 +347,16 @@ namespace Dawem.Data
                 HasForeignKey(p => p.NotificationUserId).
                 OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ScreenNameTranslation>().
-                HasOne(p => p.Screen).
-                WithMany(b => b.ScreenNameTranslations).
-                HasForeignKey(p => p.ScreenId).
+            modelBuilder.Entity<MenuItemNameTranslation>().
+                HasOne(p => p.MenuItem).
+                WithMany(b => b.MenuItemNameTranslations).
+                HasForeignKey(p => p.MenuItemId).
                 OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ScreenAction>().
-                HasOne(p => p.Screen).
-                WithMany(b => b.ScreenActions).
-                HasForeignKey(p => p.ScreenId).
+            modelBuilder.Entity<MenuItemAction>().
+                HasOne(p => p.MenuItem).
+                WithMany(b => b.MenuItemActions).
+                HasForeignKey(p => p.MenuItemId).
                 OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PlanScreen>().
@@ -656,7 +656,7 @@ namespace Dawem.Data
 
             #endregion
         }
-        public DbSet<Screen> Screens { get; set; }
+        public DbSet<MenuItem> Screens { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Setting> DawemSettings { get; set; }
         public DbSet<Plan> Plans { get; set; }

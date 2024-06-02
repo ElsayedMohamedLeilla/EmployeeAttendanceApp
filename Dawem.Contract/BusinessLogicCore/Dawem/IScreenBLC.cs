@@ -5,6 +5,6 @@ namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
 {
     public interface IScreenBLC
     {
-        Task<GetAllScreensWithAvailableActionsResponse> GetAllScreensWithAvailableActions();
+        Task<GetAllScreensWithAvailableActionsResponse> GetAllScreensWithAvailableActions(GetScreensCriteria criteria);
     }
 }

@@ -6,6 +6,7 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string ParentName { get; set; }
         public AuthenticationType Type { get; set; }
         public string TypeName { get; set; }
         public bool IsActive { get; set; }

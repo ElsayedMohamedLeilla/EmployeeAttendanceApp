@@ -7,6 +7,7 @@ using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
@@ -50,10 +51,13 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Insert Screen
 
-            var screen = mapper.Map<Screen>(model);
+            var screen = mapper.Map<MenuItem>(model);
+
             screen.AddUserId = requestInfo.UserId;
-            screen.Type = requestInfo.Type;
-            repositoryManager.ScreenRepository.Insert(screen);
+            screen.GroupOrScreenType = GroupOrScreenType.Screen;
+            screen.AuthenticationTypeName = model.AuthenticationType.ToString();
+
+            repositoryManager.MenuItemRepository.Insert(screen);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -64,7 +68,6 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             return screen.Id;
 
             #endregion
-
         }
         public async Task<bool> Update(UpdateScreenModel model)
         {
@@ -78,22 +81,27 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Update Screen
 
-            var getScreen = await repositoryManager.ScreenRepository.GetEntityByConditionWithTrackingAsync(screen => !screen.IsDeleted
-            && screen.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
+            var getScreen = await repositoryManager.MenuItemRepository.
+                GetEntityByConditionWithTrackingAsync(screen => !screen.IsDeleted &&
+                screen.Id == model.Id) ?? throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
 
+            getScreen.ParentId = model.ParentId;
             getScreen.IsActive = model.IsActive;
-            getScreen.ModifiedDate = DateTime.Now;
+            getScreen.ModifiedDate = DateTime.UtcNow;
             getScreen.ModifyUserId = requestInfo.UserId;
-            getScreen.Notes = model.Notes;
             getScreen.Icon = model.Icon;
             getScreen.URL = model.URL;
+            getScreen.Order = model.Order;
+            getScreen.AuthenticationType = model.AuthenticationType;
+            getScreen.AuthenticationTypeName = model.AuthenticationType.ToString();
+            getScreen.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 
             #region Handle Update Name Translations
 
-            var exisNameTranslationsDbList = await repositoryManager.ScreenNameTranslationRepository
-                    .Get(e => e.ScreenId == getScreen.Id)
+            var exisNameTranslationsDbList = await repositoryManager.MenuItemNameTranslationRepository
+                    .Get(e => e.MenuItemId == getScreen.Id)
                     .ToListAsync();
 
             var existingNameTranslationsIds = exisNameTranslationsDbList.Select(e => e.Id)
@@ -101,14 +109,14 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             var addedScreenNameTranslations = model.NameTranslations != null ? model.NameTranslations
                 .Where(ge => !existingNameTranslationsIds.Contains(ge.Id))
-                .Select(ge => new ScreenNameTranslation
+                .Select(ge => new MenuItemNameTranslation
                 {
-                    ScreenId = model.Id,
+                    MenuItemId = model.Id,
                     LanguageId = ge.LanguageId,
                     Name = ge.Name,
                     ModifyUserId = requestInfo.UserId,
                     ModifiedDate = DateTime.UtcNow
-                }).ToList() : new List<ScreenNameTranslation>();
+                }).ToList() : new List<MenuItemNameTranslation>();
 
             var removedScreenNameTranslationsIds = exisNameTranslationsDbList
                 .Where(ge => model.NameTranslations == null || !model.NameTranslations.Select(i => i.Id).Contains(ge.Id))
@@ -124,21 +132,23 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Any(mi => mi.Id == nt.Id && (mi.Name != nt.Name || mi.LanguageId != nt.LanguageId))).
                 ToList();
 
-            if (removedScreenNameTranslations.Count() > 0)
-                repositoryManager.ScreenNameTranslationRepository.BulkDeleteIfExist(removedScreenNameTranslations);
-            if (addedScreenNameTranslations.Count() > 0)
-                repositoryManager.ScreenNameTranslationRepository.BulkInsert(addedScreenNameTranslations);
-            if (updatedScreenNameTranslations.Count() > 0)
+            if (removedScreenNameTranslations.Count > 0)
+                repositoryManager.MenuItemNameTranslationRepository.BulkDeleteIfExist(removedScreenNameTranslations);
+            if (addedScreenNameTranslations.Count > 0)
+                repositoryManager.MenuItemNameTranslationRepository.BulkInsert(addedScreenNameTranslations);
+            if (updatedScreenNameTranslations.Count > 0)
             {
                 updatedScreenNameTranslations.ForEach(i =>
                 {
                     i.Name = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.Name;
                     i.LanguageId = model.NameTranslations.FirstOrDefault(mi => mi.Id == i.Id)?.LanguageId ?? 0;
                 });
-                repositoryManager.ScreenNameTranslationRepository.BulkUpdate(updatedScreenNameTranslations);
+                repositoryManager.MenuItemNameTranslationRepository.BulkUpdate(updatedScreenNameTranslations);
             }
 
             #endregion
+
+            await unitOfWork.SaveAsync();
 
             #endregion
 
@@ -151,14 +161,18 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreensResponse> Get(GetScreensCriteria criteria)
         {
-            var screenRepository = repositoryManager.ScreenRepository;
+            var screenRepository = repositoryManager.MenuItemRepository;
+            criteria.GroupOrScreenType = GroupOrScreenType.Screen;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
+            criteria.ForGridView = true;
+
             var query = screenRepository.GetAsQueryable(criteria);
 
             #region paging
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
             #region sorting
-            var queryOrdered = screenRepository.OrderBy(query, nameof(Screen.Id), LeillaKeys.Desc);
+            var queryOrdered = screenRepository.OrderBy(query, nameof(MenuItem.Id), LeillaKeys.Desc);
             #endregion
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
@@ -168,10 +182,12 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screensList = await queryPaged.Select(screen => new GetScreenResponseModel
             {
                 Id = screen.Id,
-                Name = screen.ScreenNameTranslations.
+                Name = screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
-                Type = screen.Type,
-                TypeName = TranslationHelper.GetTranslation(screen.Type.ToString() + nameof(AuthenticationType), requestInfo.Lang),
+                ParentName = screen.ParentId > 0 ? screen.Parent.MenuItemNameTranslations.
+                   FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
+                Type = screen.AuthenticationType,
+                TypeName = TranslationHelper.GetTranslation(screen.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
                 IsActive = screen.IsActive,
             }).ToListAsync();
             return new GetScreensResponse
@@ -185,7 +201,11 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         public async Task<GetScreensForDropDownResponse> GetForDropDown(GetScreensCriteria criteria)
         {
             criteria.IsActive = true;
-            var screenRepository = repositoryManager.ScreenRepository;
+            var screenRepository = repositoryManager.MenuItemRepository;
+            criteria.GroupOrScreenType = GroupOrScreenType.Screen;
+            criteria.AuthenticationType = requestInfo.AuthenticationType;
+            criteria.ForGridView = true;
+
             var query = screenRepository.GetAsQueryable(criteria);
 
             #region paging
@@ -194,7 +214,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             int take = PagingHelper.Take(criteria.PageSize);
 
             #region sorting
-            var queryOrdered = screenRepository.OrderBy(query, nameof(Screen.Id), LeillaKeys.Desc);
+            var queryOrdered = screenRepository.OrderBy(query, nameof(MenuItem.Id), LeillaKeys.Desc);
             #endregion
 
             var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
@@ -206,7 +226,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var screensList = await queryPaged.Select(screen => new GetScreensForDropDownResponseModel
             {
                 Id = screen.Id,
-                Name = screen.ScreenNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Name = screen.MenuItemNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
             }).ToListAsync();
 
             return new GetScreensForDropDownResponse
@@ -220,20 +240,24 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenInfoResponseModel> GetInfo(int screenId)
         {
-            var screen = await repositoryManager.ScreenRepository.Get(e => e.Id == screenId && !e.IsDeleted)
+            var screen = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenId && !e.IsDeleted &&
+            e.GroupOrScreenType == GroupOrScreenType.Screen)
                 .Select(screen => new GetScreenInfoResponseModel
                 {
-                    Name = screen.ScreenNameTranslations.
+                    AuthenticationTypeName = TranslationHelper.GetTranslation(screen.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
+                    Name = screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsActive = screen.IsActive,
+                    ParentName = screen.ParentId > 0 ? screen.Parent.MenuItemNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
                     Notes = screen.Notes,
                     Icon = screen.Icon,
                     URL = screen.URL,
-                    Actions = screen.ScreenActions != null ?
-                    screen.ScreenActions.Select(a => TranslationHelper.
+                    Actions = screen.MenuItemActions != null ?
+                    screen.MenuItemActions.Select(a => TranslationHelper.
                     GetTranslation(a.ActionCode.ToString(), requestInfo.Lang)).
                     ToList() : null,
-                    NameTranslations = screen.ScreenNameTranslations.
+                    NameTranslations = screen.MenuItemNameTranslations.
                     Select(pt =>
                     new NameTranslationGetInfoModel
                     {
@@ -246,20 +270,20 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenByIdResponseModel> GetById(int screenId)
         {
-            var screen = await repositoryManager.ScreenRepository.Get(e => e.Id == screenId && !e.IsDeleted)
+            var screen = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenId && !e.IsDeleted &&
+            e.GroupOrScreenType == GroupOrScreenType.Screen)
                 .Select(screen => new GetScreenByIdResponseModel
                 {
                     Id = screen.Id,
-                    Name = screen.ScreenNameTranslations.
+                    AuthenticationType = screen.AuthenticationType,
+                    Name = screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    ParentId = screen.ParentId,
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
                     Icon = screen.Icon,
                     URL = screen.URL,
-                    Actions = screen.ScreenActions != null ?
-                    screen.ScreenActions.Select(a => a.ActionCode).
-                    ToList() : null,
-                    NameTranslations = screen.ScreenNameTranslations.
+                    NameTranslations = screen.MenuItemNameTranslations.
                     Select(pt => new NameTranslationModel
                     {
                         Id = pt.Id,
@@ -273,9 +297,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Enable(int screenId)
         {
-            var responsibility = await repositoryManager.ScreenRepository.
-                GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
-                && d.Type == requestInfo.Type && d.Id == screenId) ??
+            var responsibility = await repositoryManager.MenuItemRepository.
+                GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == screenId &&
+                d.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             responsibility.Enable();
             await unitOfWork.SaveAsync();
@@ -283,9 +307,10 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var responsibility = await repositoryManager.ScreenRepository.
+            var responsibility = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted
-                && d.Type == requestInfo.Type && d.IsActive && d.Id == model.Id) ??
+                && d.IsActive && d.Id == model.Id &&
+                d.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             responsibility.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
@@ -293,9 +318,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<bool> Delete(int screend)
         {
-            var screen = await repositoryManager.ScreenRepository.
+            var screen = await repositoryManager.MenuItemRepository.
                 GetEntityByConditionWithTrackingAsync(screen => !screen.IsDeleted && screen.Id == screend &&
-                screen.Type == requestInfo.Type) ??
+                screen.GroupOrScreenType == GroupOrScreenType.Screen) ??
                 throw new BusinessValidationException(LeillaKeys.SorryScreenNotFound);
             screen.Delete();
             await unitOfWork.SaveAsync();
@@ -303,10 +328,9 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreensInformationsResponseDTO> GetScreensInformations()
         {
-            var screenRepository = repositoryManager.ScreenRepository;
-            var query = screenRepository.Get(screen => requestInfo.Type == AuthenticationType.DawemAdmin &&
-            screen.Type != AuthenticationType.AdminPanel || requestInfo.Type == AuthenticationType.AdminPanel &&
-            screen.Type == AuthenticationType.AdminPanel);
+            var screenRepository = repositoryManager.MenuItemRepository;
+            var query = screenRepository.Get(screen => screen.GroupOrScreenType == GroupOrScreenType.Screen).
+                IgnoreQueryFilters();
 
             #region Handle Response
 

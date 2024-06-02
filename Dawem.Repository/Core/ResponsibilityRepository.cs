@@ -23,16 +23,16 @@ namespace Dawem.Repository.Core
             var predicate = PredicateBuilder.New<Responsibility>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Responsibility>(true);
 
-            if (requestInfo.Type == AuthenticationType.AdminPanel)
+            if (requestInfo.AuthenticationType == AuthenticationType.AdminPanel)
             {
                 predicate = predicate.And(e => e.CompanyId == null);
             }
-            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
+            else if (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            predicate = predicate.And(e => e.Type == requestInfo.Type);
+            predicate = predicate.And(e => e.Type == requestInfo.AuthenticationType);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

@@ -42,20 +42,20 @@ namespace Dawem.API.MiddleWares
                 !ExcludedControllers.Contains(controllerName) && 
                 !ExcludedApis.Contains(actionName))
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
+                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.AuthenticationType);
                 if (mapResult.ScreenCode != null && mapResult.ActionCode != null)
                 {
-                    dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
+                    dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)mapResult.ScreenCode.Value :
                     (DawemAdminApplicationScreenCode)mapResult.ScreenCode.Value;
 
-                    var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
                     var checkScreenInPlanModel = new CheckScreenInPlanModel{
                         CompanyId = requestInfo.CompanyId,
                         ScreenCode = mapResult.ScreenCode.Value,
-                        AuthenticationType = requestInfo.Type,
+                        AuthenticationType = requestInfo.AuthenticationType,
                         ApplicationType = requestInfo.ApplicationType
                     };
 
@@ -70,7 +70,7 @@ namespace Dawem.API.MiddleWares
                             ScreenCode = mapResult.ScreenCode.Value,
                             ActionCode = mapResult.ActionCode.Value,
                             ActionName = actionName,
-                            AuthenticationType = requestInfo.Type,
+                            AuthenticationType = requestInfo.AuthenticationType,
                             ApplicationType = requestInfo.ApplicationType
                         };
 

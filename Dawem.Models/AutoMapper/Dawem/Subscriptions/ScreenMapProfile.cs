@@ -11,13 +11,13 @@ namespace Dawem.Models.AutoMapper.Dawem.Subscriptions
     {
         public ScreenMapProfile()
         {
-            CreateMap<CreateScreenModel, Screen>().
-                ForMember(dest => dest.ScreenNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
-            CreateMap<UpdateScreenModel, Screen>().
-                ForMember(dest => dest.ScreenNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
+            CreateMap<CreateScreenModel, MenuItem>().
+                ForMember(dest => dest.MenuItemNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
+            CreateMap<UpdateScreenModel, MenuItem>().
+                ForMember(dest => dest.MenuItemNameTranslations, opt => opt.MapFrom(src => src.NameTranslations));
 
 
-            CreateMap<NameTranslationModel, ScreenNameTranslation>();
+            CreateMap<NameTranslationModel, MenuItemNameTranslation>();
         }
     }
 }

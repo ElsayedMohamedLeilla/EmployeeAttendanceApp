@@ -49,7 +49,7 @@ namespace Dawem.Repository.Others
 
                 inner = inner.Or(ps => screenCodes != null && screenCodes.Contains(ps.ScreenCode));*/
 
-                inner = inner.Or(ps => ps.Screen.ScreenNameTranslations.Any(sn =>sn.Name.StartsWith(criteria.FreeText)));
+                inner = inner.Or(ps => ps.Screen.MenuItemNameTranslations.Any(sn =>sn.Name.StartsWith(criteria.FreeText)));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

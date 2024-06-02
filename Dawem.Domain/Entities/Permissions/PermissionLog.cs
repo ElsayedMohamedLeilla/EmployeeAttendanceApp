@@ -20,7 +20,7 @@ namespace Dawem.Domain.Entities.Permissions
         public virtual MyUser User { get; set; }
         public int ScreenId { get; set; }
         [ForeignKey(nameof(ScreenId))]
-        public virtual Screen Screen { get; set; }
+        public virtual MenuItem Screen { get; set; }
         //public int ScreenCode { get; set; }
         public ApplicationActionCode ActionCode { get; set; }
         public AuthenticationType Type { get; set; }

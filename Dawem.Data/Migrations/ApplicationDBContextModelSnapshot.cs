@@ -2289,7 +2289,7 @@ namespace Dawem.Data.Migrations
                     b.ToTable("Languages", "Dawem");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Others.Screen", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2308,12 +2308,22 @@ namespace Dawem.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("AuthenticationType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AuthenticationTypeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisableReason")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("GroupOrScreenType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
@@ -2324,6 +2334,13 @@ namespace Dawem.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("MenuItemCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MenuItemCodeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
@@ -2341,22 +2358,8 @@ namespace Dawem.Data.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScreenCode")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ScreenCodeName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("ScreenGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TypeName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("URL")
                         .HasMaxLength(50)
@@ -2364,77 +2367,11 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ScreenGroupId");
+                    b.HasIndex("ParentId");
 
                     b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
-                    b.ToTable("Screens", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Others.ScreenGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("GroupType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GroupTypeName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Icon")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
-
-                    b.ToTable("ScreenGroups", "Dawem");
+                    b.ToTable("MenuItems", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Others.VacationBalance", b =>
@@ -4370,6 +4307,136 @@ namespace Dawem.Data.Migrations
                     b.ToTable("ShiftWorkingTimes", "Dawem");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActionCodeName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("MenuItemActions", "Dawem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemNameTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AddedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisableReason")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifyUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
+
+                    b.ToTable("MenuItemNameTranslations", "Dawem");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
                 {
                     b.Property<int>("Id")
@@ -4671,9 +4738,6 @@ namespace Dawem.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ModifiedApplicationType")
                         .HasColumnType("int");
 
@@ -4682,10 +4746,6 @@ namespace Dawem.Data.Migrations
 
                     b.Property<int?>("ModifyUserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(200)
@@ -4699,8 +4759,6 @@ namespace Dawem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LanguageId");
-
                     b.HasIndex("PlanId");
 
                     b.HasIndex("ScreenId");
@@ -4708,202 +4766,6 @@ namespace Dawem.Data.Migrations
                     b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
 
                     b.ToTable("PlanScreens", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActionCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ActionCodeName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("ScreenId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScreenId");
-
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
-
-                    b.ToTable("ScreenActions", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenGroupNameTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("ScreenGroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("ScreenGroupId");
-
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
-
-                    b.ToTable("ScreenGroupNameTranslations", "Dawem");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenNameTranslation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AddUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AddedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AddedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime?>("DeletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisableReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ModifiedApplicationType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifyUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("ScreenId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LanguageId");
-
-                    b.HasIndex("ScreenId");
-
-                    b.HasIndex(new[] { "IsDeleted" }, "IX_IsDeleted");
-
-                    b.ToTable("ScreenNameTranslations", "Dawem");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.Subscription", b =>
@@ -6718,14 +6580,14 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Others.Screen", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Others.ScreenGroup", "ScreenGroup")
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Parent")
                         .WithMany()
-                        .HasForeignKey("ScreenGroupId")
+                        .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("ScreenGroup");
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Others.VacationBalance", b =>
@@ -6778,7 +6640,7 @@ namespace Dawem.Data.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
                         .WithMany()
                         .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -6805,7 +6667,7 @@ namespace Dawem.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
                         .WithMany()
                         .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -7209,6 +7071,36 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemAction", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "MenuItem")
+                        .WithMany("MenuItemActions")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+                });
+
+            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.MenuItemNameTranslation", b =>
+                {
+                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "MenuItem")
+                        .WithMany("MenuItemNameTranslations")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("MenuItem");
+                });
+
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.NotificationEmployee", b =>
                 {
                     b.HasOne("Dawem.Domain.Entities.Employees.Employee", "Employee")
@@ -7268,76 +7160,19 @@ namespace Dawem.Data.Migrations
 
             modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.PlanScreen", b =>
                 {
-                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Dawem.Domain.Entities.Subscriptions.Plan", "Plan")
                         .WithMany("PlanScreens")
                         .HasForeignKey("PlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
-                        .WithMany()
+                    b.HasOne("Dawem.Domain.Entities.Others.MenuItem", "Screen")
+                        .WithMany("PlanScreens")
                         .HasForeignKey("ScreenId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Language");
 
                     b.Navigation("Plan");
-
-                    b.Navigation("Screen");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenAction", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
-                        .WithMany("ScreenActions")
-                        .HasForeignKey("ScreenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Screen");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenGroupNameTranslation", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Others.ScreenGroup", "ScreenGroup")
-                        .WithMany("ScreenGroupNameTranslations")
-                        .HasForeignKey("ScreenGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Language");
-
-                    b.Navigation("ScreenGroup");
-                });
-
-            modelBuilder.Entity("Dawem.Domain.Entities.Subscriptions.ScreenNameTranslation", b =>
-                {
-                    b.HasOne("Dawem.Domain.Entities.Lookups.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Dawem.Domain.Entities.Others.Screen", "Screen")
-                        .WithMany("ScreenNameTranslations")
-                        .HasForeignKey("ScreenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Language");
 
                     b.Navigation("Screen");
                 });
@@ -7770,16 +7605,13 @@ namespace Dawem.Data.Migrations
                     b.Navigation("Zones");
                 });
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Others.Screen", b =>
+            modelBuilder.Entity("Dawem.Domain.Entities.Others.MenuItem", b =>
                 {
-                    b.Navigation("ScreenActions");
+                    b.Navigation("MenuItemActions");
 
-                    b.Navigation("ScreenNameTranslations");
-                });
+                    b.Navigation("MenuItemNameTranslations");
 
-            modelBuilder.Entity("Dawem.Domain.Entities.Others.ScreenGroup", b =>
-                {
-                    b.Navigation("ScreenGroupNameTranslations");
+                    b.Navigation("PlanScreens");
                 });
 
             modelBuilder.Entity("Dawem.Domain.Entities.Permissions.Permission", b =>

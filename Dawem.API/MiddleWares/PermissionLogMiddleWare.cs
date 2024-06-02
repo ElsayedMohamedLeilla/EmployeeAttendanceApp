@@ -25,7 +25,7 @@ namespace Dawem.API.MiddleWares
             await _next.Invoke(context: httpContext);
 
             var userId = requestInfo.UserId;
-            var authenticationType = requestInfo.Type;
+            var authenticationType = requestInfo.AuthenticationType;
             int? companyId = authenticationType == AuthenticationType.AdminPanel ? null : requestInfo.CompanyId;
             
 
@@ -41,7 +41,7 @@ namespace Dawem.API.MiddleWares
             if (userId > 0 && (companyId > 0 || authenticationType == AuthenticationType.AdminPanel) && controllerName != null && actionName != null)
             {
                 var mapResult = ControllerActionHelper.
-                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
+                    MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.AuthenticationType);
 
                 if (mapResult.ScreenCode != null && mapResult.ActionCode != null)
                 {
@@ -50,9 +50,9 @@ namespace Dawem.API.MiddleWares
                         requestInfo.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
                         AuthenticationType.DawemEmployee;
 
-                    var getScreenId = await repositoryManager.ScreenRepository.
-                        Get(s => !s.IsDeleted && s.IsActive && s.ScreenCode == mapResult.ScreenCode &&
-                        s.Type == currentType).
+                    var getScreenId = await repositoryManager.MenuItemRepository.
+                        Get(s => !s.IsDeleted && s.IsActive && s.MenuItemCode == mapResult.ScreenCode &&
+                        s.AuthenticationType == currentType).
                         Select(s => s.Id).
                         FirstOrDefaultAsync();
 

@@ -159,7 +159,17 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.SummonReports,
-                ReportType = ReportType.GetSummonsDetailsInPeriodReport,
+                ReportType = ReportType.SummonsDetailsInPeriodReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+
+        public HttpResponseMessage GenerateSummonsDetailsGroupByEmployeeReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.SummonReports,
+                ReportType = ReportType.SummonsDetailsGroupByEmployeeReport,
             };
             return GenerateReport(exporterModelDTO, param);
         }

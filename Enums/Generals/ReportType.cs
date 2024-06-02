@@ -13,7 +13,8 @@
         OverTimeInSelectedPeriodReport,
         AttendaceLeaveSummaryReport,
         BriefingSummonsInPeriodReport,
-        GetSummonsDetailsInPeriodReport
+        SummonsDetailsInPeriodReport,
+        SummonsDetailsGroupByEmployeeReport
 
 
     }

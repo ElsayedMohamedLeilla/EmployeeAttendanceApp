@@ -346,6 +346,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             clientLocalDate = response.ClientLocalDateTime.Date;
             var getSchedule = response.Schedule;
             var shiftInfo = response.ShiftInfo;
+            var utcDateTime = DateTime.UtcNow;
 
             #endregion
 
@@ -370,16 +371,24 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             #region Check If Summon
 
             var checkIfHasSummon = await repositoryManager.SummonRepository
-                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.LocalDateAndTime &&
-                   (s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime ||
-                   s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime ||
-                   s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) &&
+                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && utcDateTime >= s.StartDateAndTimeUTC &&
+                   utcDateTime <= s.EndDateAndTimeUTC &&
                    !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
                    ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
                    (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
                    (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
                    (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
                    .AnyAsync();
+
+            var get = await repositoryManager.SummonRepository
+                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && utcDateTime >= s.StartDateAndTimeUTC &&
+                   utcDateTime <= s.EndDateAndTimeUTC &&
+                   !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
+                   ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
+                   (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
+                   (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
+                   (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
+                   .FirstOrDefaultAsync();
 
             #endregion
 

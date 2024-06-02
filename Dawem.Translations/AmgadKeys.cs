@@ -74,6 +74,7 @@
         public const string StartABreak = "StartABreak";
         public const string FinishABreak = "FinishABreak";
         public const string NotSet = "NotSet";
+        public const string Summon = "Summon";
         public const string SorryYouMustEnterHolidayName = "Sorry!!YouMustEnterHolidayName!";
         public const string SorryDateTypeMustBe0ForGregorianDateOr1HijriDate = "Sorry!!DateTypeMustBe0ForGregorianDateOr1HijriDate!";
         public const string SorryYouMustEnterStartDateForHoliday = "Sorry!!YouMustEnterStartDateForHoliday!";

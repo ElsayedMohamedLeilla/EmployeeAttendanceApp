@@ -88,8 +88,11 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.BriefingSummonsInPeriodReport:
                         SetBriefingSummonsInPeriodReportParameters(report, param);
                         break;
-                    case ReportType.GetSummonsDetailsInPeriodReport:
+                    case ReportType.SummonsDetailsInPeriodReport:
                         SetSummonsDetailsInPeriodReportParameters(report, param);
+                        break;
+                    case ReportType.SummonsDetailsGroupByEmployeeReport:
+                        SetSummonsDetailsGroupByEmployeeReportParameters(report, param);
                         break;
 
 
@@ -217,6 +220,18 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
             report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
             report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+            report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+
+        }
+
+        private static void SetSummonsDetailsGroupByEmployeeReportParameters(Report report, ReportCritria param)
+        {
+
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
             report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
 
         }

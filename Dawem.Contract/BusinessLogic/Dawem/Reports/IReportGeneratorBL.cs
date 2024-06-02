@@ -26,6 +26,8 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
         #region Summon Reports
         HttpResponseMessage GenerateBriefingSummonsInPeriodReport(ReportCritria param);
         HttpResponseMessage GenerateSummonsDetailsInPeriodReport(ReportCritria param);
+        HttpResponseMessage GenerateSummonsDetailsGroupByEmployeeReport(ReportCritria param);
+
         #endregion
 
 

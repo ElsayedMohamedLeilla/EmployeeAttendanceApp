@@ -782,17 +782,18 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     {
                         Latitude = tempLatitude,
                         Longitude = tempLongtude,
-                        RecognitionWay = row.Cell(6).GetString() == "FingerPrint" ? RecognitionWay.FingerPrint :
-                                         row.Cell(6).GetString() == "FaceRecognition" ? RecognitionWay.FaceRecognition :
-                                         row.Cell(6).GetString() == "PinRecognition" ? RecognitionWay.PinRecognition :
-                                         row.Cell(6).GetString() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
-                                         row.Cell(6).GetString() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
+                        RecognitionWay = row.Cell(6).GetString().Trim() == "FingerPrint" ? RecognitionWay.FingerPrint :
+                                         row.Cell(6).GetString().Trim() == "FaceRecognition" ? RecognitionWay.FaceRecognition :
+                                         row.Cell(6).GetString().Trim() == "PinRecognition" ? RecognitionWay.PinRecognition :
+                                         row.Cell(6).GetString().Trim() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
+                                         row.Cell(6).GetString().Trim() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
                                          RecognitionWay.NotSet,
-                        Type = row.Cell(5).GetString() == "CheckIn" ? FingerPrintType.CheckIn :
-                                         row.Cell(5).GetString() == "CheckOut" ? FingerPrintType.CheckOut :
-                                         row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
-                                         row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
-                                         row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
+
+                        Type =           row.Cell(5).GetString().Trim() == "CheckIn" ? FingerPrintType.CheckIn :
+                                         row.Cell(5).GetString().Trim() == "CheckOut" ? FingerPrintType.CheckOut :
+                                         row.Cell(5).GetString().Trim() == "Summon" ? FingerPrintType.Summon :
+                                         row.Cell(5).GetString().Trim() == "BreakIn" ? FingerPrintType.BreakIn :
+                                         row.Cell(5).GetString().Trim() == "BreakOut" ? FingerPrintType.BreakOut :
                                          FingerPrintType.NotSet,
                         FromExcel = true
 

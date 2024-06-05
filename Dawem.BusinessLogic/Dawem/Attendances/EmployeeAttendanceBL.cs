@@ -19,7 +19,6 @@ using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Dawem.BusinessLogic.Dawem.Attendances
 {
@@ -59,7 +58,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             //checkout or summon
             if (getEmployeeAttendance != null)
-            {                
+            {
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
                     EmployeeAttendanceId = getEmployeeAttendance.Id,
@@ -191,6 +190,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ShiftCheckInTime = a.ShiftCheckInTime,
                     ShiftCheckOutTime = a.ShiftCheckOutTime,
                     AllowedMinutes = a.AllowedMinutes,
+                    TotalWorkingHours = a.TotalWorkingHours,
                     EmployeeAttendanceChecks = a.EmployeeAttendanceChecks != null ?
                     a.EmployeeAttendanceChecks.Select(c => new EmployeeAttendanceCheck
                     {
@@ -236,6 +236,13 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 var checkOutDateTime = employeeAttendance?.EmployeeAttendanceChecks?
                     .Where(c => c.FingerPrintType == FingerPrintType.CheckOut)?
                     .OrderByDescending(c => c.Id)?.FirstOrDefault()?.FingerPrintDate;
+
+                if (checkInDateTime != null || checkOutDateTime != null)
+                {
+                    var schedu656leId = employeePlans.Where(s => s.DateFrom.Date <= date.Date)
+                    .OrderByDescending(c => c.DateFrom.Date)?.FirstOrDefault()?.ScheduleId;
+                }
+
 
                 #region Check For Vacation
 
@@ -283,8 +290,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             CheckOutStatus = checkOutDateTime == null ? EmployeeAttendanceStatus.Error :
                             checkOutDateTime.Value.TimeOfDay < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,
-                            TotalTime = checkOutDateTime != null ?
-                            TimeOnly.FromTimeSpan(checkOutDateTime.Value - checkInDateTime.Value).ToString("HH:mm:ss") : null,
+                            TotalTime = checkOutDateTime != null && checkOutDateTime != null ?
+                            new DateTime((checkOutDateTime.Value - checkInDateTime.Value).Ticks).ToString("hh:mm") + 
+                            LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
                             Notes = isScheduleVacationDay ?
                             TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                         }
@@ -790,7 +798,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                                          row.Cell(6).GetString().Trim() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
                                          RecognitionWay.NotSet,
 
-                        Type =           row.Cell(5).GetString().Trim() == "CheckIn" ? FingerPrintType.CheckIn :
+                        Type = row.Cell(5).GetString().Trim() == "CheckIn" ? FingerPrintType.CheckIn :
                                          row.Cell(5).GetString().Trim() == "CheckOut" ? FingerPrintType.CheckOut :
                                          row.Cell(5).GetString().Trim() == "Summon" ? FingerPrintType.Summon :
                                          row.Cell(5).GetString().Trim() == "BreakIn" ? FingerPrintType.BreakIn :
@@ -957,7 +965,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Date = date
                 };
                 var day = GetCurrentEmployeeScheduleDays(currentEmployeeScheduleDaysAndPlansResponseModel);
-               
+
                 schedules.Add(new GetEmployeeScheduleResponseModel
                 {
                     DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
@@ -967,11 +975,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     TimeTo = day?.EndDateTime != null ? new DateTime(day.EndDateTime.Value.Ticks).ToString("hh:mm") +
                     LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.EndDateTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
                     WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) : null,
-                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) + 
-                    LeillaKeys.Space + 
+                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) +
+                    LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
                     AllowedMinutes = !day.IsVacation && day.AllowedMinutes > 0 ? day.AllowedMinutes.Value +
-                    LeillaKeys.Space + 
+                    LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.Minute, requestInfo.Lang) : null,
                 });
             }
@@ -1061,12 +1069,12 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 var endDateTime = day.EndDateTime.Value.TimeOfDay;
 
                 var isTwoDaysShift = TimeHelper.IsTwoDaysShift(startDateTime, endDateTime);
-                
+
                 if (isTwoDaysShift)
                 {
                     day.StartDateTime = new DateTime(day.StartDateTime.Value.TimeOfDay.Ticks);
                     day.EndDateTime = new DateTime(day.EndDateTime.Value.TimeOfDay.Ticks).AddDays(1);
-                }      
+                }
             }
 
             return day;

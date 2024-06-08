@@ -1,18 +1,22 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
+﻿using Dawem.BusinessLogic.Dawem.Permissions;
+using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Identities;
+using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -44,8 +48,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
         private readonly RequestInfo requestInfo;
+        private readonly IPermissionBLC permissionBLC;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IRepositoryManager _repositoryManager,
+            IRepositoryManager _repositoryManager, IPermissionBLC _permissionBLC,
             UserManagerRepository _userManagerRepository,
             IOptions<Jwt> _appSettings, RequestInfo _requestInfo,
             IPermissionBL _permissionBL,
@@ -60,6 +65,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             requestInfo = _requestInfo;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
+            permissionBLC = _permissionBLC;
             permissionBL = _permissionBL;
             accessor = _accessor;
             generator = _generator;
@@ -213,6 +219,13 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
+            #region Handle Set Request Info
+
+            requestInfo.AuthenticationType = AuthenticationType.DawemAdmin;
+            requestInfo.CompanyId = companyId;
+
+            #endregion
+
             #region Insert Department And Employee
 
             var employee = repositoryManager.EmployeeRepository.Insert(new Employee
@@ -233,6 +246,49 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 Name = TranslationHelper.GetTranslation(LeillaKeys.AdminEmployee, LeillaKeys.Ar)
             });
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Insert Employees Responsibility
+
+            var employeesResponsibility = repositoryManager.ResponsibilityRepository.Insert(new Responsibility
+            {
+                CompanyId = companyId,
+                ForEmployeesApplication = true,
+                Type = AuthenticationType.DawemAdmin,
+                Code = 1,
+                IsActive = true,
+                Name = TranslationHelper.GetTranslation(LeillaKeys.Employees, requestInfo?.Lang)
+            });
+
+            await unitOfWork.SaveAsync();
+
+            #region Insert Employees Responsibility Permissions
+
+            var getEmployeesScreens = await repositoryManager.MenuItemRepository.
+                Get(m => m.IsActive && m.AuthenticationType == AuthenticationType.DawemEmployee &&
+                m.GroupOrScreenType == GroupOrScreenType.Screen).
+                Select(m => new
+                {
+                    m.Id,
+                    Actions = m.MenuItemActions.Select(a => a.ActionCode).ToList()
+                }).ToListAsync();
+
+            var createPermissionModel = new CreatePermissionModel
+            {
+                ForType = ForResponsibilityOrUser.Responsibility,
+                ResponsibilityId = employeesResponsibility.Id,
+                IsActive = true,
+                Screens = getEmployeesScreens.Select(s=> new PermissionScreenModel
+                {
+                    ScreenId = s.Id,
+                    Actions = s.Actions
+                }).ToList()
+            };
+
+            await permissionBLC.Create(createPermissionModel);
+
+            #endregion
 
             #endregion
 

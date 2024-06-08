@@ -30,9 +30,10 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IScreenBLC screenBLC;
+        private readonly IPermissionBLC permissionBLC;
         public PermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager, IScreenBLC _screenBLC,
-            IMapper _mapper,
+            IMapper _mapper, IPermissionBLC _permissionBLC,
            RequestInfo _requestHeaderContext,
            IPermissionBLValidation _permissionBLValidation)
         {
@@ -41,47 +42,18 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             repositoryManager = _repositoryManager;
             permissionBLValidation = _permissionBLValidation;
             mapper = _mapper;
+            permissionBLC = _permissionBLC;
             screenBLC = _screenBLC;
         }
         public async Task<int> Create(CreatePermissionModel model)
         {
-            #region Business Validation
+            await unitOfWork.CreateTransactionAsync();
 
-            await permissionBLValidation.CreateValidation(model);
-
-            #endregion
-
-            unitOfWork.CreateTransaction();
-
-            #region Insert Permission
-
-            #region Set Permission Code
-            var getNextCode = await repositoryManager.PermissionRepository
-                .Get(permission => permission.Type == requestInfo.AuthenticationType &&
-                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)))
-                .Select(e => e.Code)
-                .DefaultIfEmpty()
-                .MaxAsync() + 1;
-            #endregion
-
-            var permission = mapper.Map<Permission>(model);
-            permission.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
-            permission.AddUserId = requestInfo.UserId;
-            permission.Type = requestInfo.AuthenticationType;
-            permission.Code = getNextCode;
-            repositoryManager.PermissionRepository.Insert(permission);
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
-            #region Handle Response
+            var permissionId = await permissionBLC.Create(model);
 
             await unitOfWork.CommitAsync();
-            return permission.Id;
 
-            #endregion
-
+            return permissionId;
         }
         public async Task<bool> Update(UpdatePermissionModel model)
         {

@@ -42,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
 
             #region Set Permission Code
             var getNextCode = await repositoryManager.PermissionRepository
-                .Get(permission => permission.Type == requestInfo.AuthenticationType &&
+                .Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)))
                 .Select(e => e.Code)
@@ -53,7 +53,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var permission = mapper.Map<Permission>(model);
             permission.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
             permission.AddUserId = requestInfo.UserId;
-            permission.Type = requestInfo.AuthenticationType;
+            permission.AuthenticationType = requestInfo.AuthenticationType;
             permission.Code = getNextCode;
             repositoryManager.PermissionRepository.Insert(permission);
             await unitOfWork.SaveAsync();

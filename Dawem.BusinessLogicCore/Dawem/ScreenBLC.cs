@@ -58,7 +58,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             }
 
 
-            var query = screenRepository.GetAsQueryable(criteria);
+            var query = screenRepository.GetAsQueryableForGetAllScreens(criteria);
 
             #region paging
 

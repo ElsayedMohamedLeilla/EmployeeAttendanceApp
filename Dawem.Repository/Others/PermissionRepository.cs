@@ -30,7 +30,7 @@ namespace Dawem.Repository.Others
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            predicate = predicate.And(e => e.Type == requestInfo.AuthenticationType);
+            predicate = predicate.And(e => e.AuthenticationType == requestInfo.AuthenticationType);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {

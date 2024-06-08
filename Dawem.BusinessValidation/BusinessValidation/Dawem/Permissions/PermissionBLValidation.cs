@@ -45,7 +45,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
+                .PermissionRepository.Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -67,7 +67,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
+                .PermissionRepository.Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -97,7 +97,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id &&
-                permission.Type == requestInfo.AuthenticationType &&
+                permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -110,7 +110,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id && !permission.IsDeleted &&
-                permission.Type == requestInfo.AuthenticationType &&
+                permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();

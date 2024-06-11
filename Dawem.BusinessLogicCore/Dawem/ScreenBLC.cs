@@ -114,8 +114,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                         Id = screen.Id,
                         GroupOrScreenType = screen.GroupOrScreenType,
                         Name = screen.Name,
-                        Icon = /*screen.Icon*/null,
-                        URL = /*screen.URL*/null,
+                        Icon = screen.Icon,
+                        URL = screen.URL,
                         AvailableActions = screen.AvailableActions,
                         Children = HasChildren(screen.Id, screenType.Screens) ?
                         GetChildren(screen.Id, screenType.Screens) : null,
@@ -144,8 +144,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Id = screen.Id,
                 GroupOrScreenType = screen.GroupOrScreenType,
                 Name = screen.Name,
-                Icon = /*screen.Icon*/null,
-                URL = /*screen.URL*/null,
+                Icon = screen.Icon,
+                URL = screen.URL,
                 AvailableActions = screen.AvailableActions,
                 Children = HasChildren(screen.Id, screens) ?
                         GetChildren(screen.Id, screens) : null,

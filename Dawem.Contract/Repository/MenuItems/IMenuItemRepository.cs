@@ -8,5 +8,6 @@ namespace Dawem.Contract.Repository.Settings
     {
         IQueryable<MenuItem> GetAsQueryable(GetScreensCriteria criteria);
         IQueryable<MenuItem> GetAsQueryableForGetAllScreens(GetScreensCriteria criteria);
+        IQueryable<MenuItem> GetAsQueryableForMenu(GetScreensCriteria criteria);
     }
 }

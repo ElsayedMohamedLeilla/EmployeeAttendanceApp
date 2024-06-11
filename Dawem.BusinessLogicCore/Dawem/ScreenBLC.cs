@@ -6,6 +6,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
@@ -57,8 +58,13 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 criteria.IsAllScreensAvailableInPlan = getCompanyPlan.AllScreensAvailable;
             }
 
+            IQueryable<MenuItem>? query = null;
 
-            var query = screenRepository.GetAsQueryableForGetAllScreens(criteria);
+            if (criteria.ScreensForType == ScreensForType.AllScreens)
+                query = screenRepository.GetAsQueryableForGetAllScreens(criteria);
+
+            else if (criteria.ScreensForType == ScreensForType.Menu)
+                query = screenRepository.GetAsQueryableForMenu(criteria);
 
             #region paging
 

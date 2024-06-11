@@ -7,6 +7,7 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
@@ -705,6 +706,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         private async Task<List<MenuItemWithAvailableActionsDTO>> GetMenuItems(GetScreensCriteria criteria)
         {
+            criteria.ScreensForType = ScreensForType.Menu;
+
             var allScreensResponse = await screenBLC.GetAllScreensWithAvailableActions(criteria);
             var allScreens = allScreensResponse.MenuItemsTypes.SelectMany(m => m.MenuItems).ToList();
 

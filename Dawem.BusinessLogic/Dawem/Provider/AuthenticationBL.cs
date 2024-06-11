@@ -425,12 +425,20 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
+            var authenticationType = user.Type == AuthenticationType.AdminPanel ?
+               AuthenticationType.AdminPanel : user.Type == AuthenticationType.DawemAdmin &&
+               model.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+               AuthenticationType.DawemEmployee;
+
+            requestInfo.AuthenticationType = authenticationType;
+            requestInfo.CompanyId = user.CompanyId ?? 0;
+
             var getCurrentUserMenuItemsResponse = await permissionBL
                 .GetCurrentUserMenuItems(new GetCurrentUserMenuItemsModel
                 {
                     CompanyId = user.CompanyId,
                     UserId = user.Id,
-                    AuthenticationType = AuthenticationType.DawemAdmin
+                    AuthenticationType = authenticationType
                 });
 
             tokenData.MenuItems = getCurrentUserMenuItemsResponse.MenuItems ?? null;

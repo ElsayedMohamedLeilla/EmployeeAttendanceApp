@@ -87,5 +87,50 @@ namespace Dawem.Repository.Providers
             return Query;
 
         }
+        public IQueryable<MenuItem> GetAsQueryableForGetAllScreens(GetScreensCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<MenuItem>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<MenuItem>(true);
+
+            predicate = predicate.And(e => (requestInfo.AuthenticationType == AuthenticationType.AdminPanel && e.AuthenticationType == AuthenticationType.AdminPanel) || 
+            (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin && e.AuthenticationType != AuthenticationType.AdminPanel));
+
+            if (criteria.IsActive != null)
+            {
+                predicate = predicate.And(e => e.IsActive == criteria.IsActive);
+            }
+            if (!criteria.IsAllScreensAvailableInPlan && criteria.PlanId > 0)
+            {
+                predicate = predicate.And(e => e.GroupOrScreenType == GroupOrScreenType.Group ||
+                e.PlanScreens.Any(p => p.PlanId == criteria.PlanId));
+            }
+
+            predicate = predicate.And(inner);
+            var Query = Get(predicate);
+            return Query;
+
+        }
+        public IQueryable<MenuItem> GetAsQueryableForMenu(GetScreensCriteria criteria)
+        {
+            var predicate = PredicateBuilder.New<MenuItem>(a => !a.IsDeleted);
+            var inner = PredicateBuilder.New<MenuItem>(true);
+
+            predicate = predicate.And(e => e.AuthenticationType == criteria.AuthenticationType);
+
+            if (criteria.ScreensIds != null && criteria.ScreensIds.Count > 0)
+            {
+                predicate = predicate.And(e => criteria.ScreensIds.Contains(e.Id));
+            }
+            if (!criteria.IsAllScreensAvailableInPlan && criteria.PlanId > 0)
+            {
+                predicate = predicate.And(e => e.GroupOrScreenType == GroupOrScreenType.Group ||
+                e.PlanScreens.Any(p => p.PlanId == criteria.PlanId));
+            }
+
+            predicate = predicate.And(inner);
+            var Query = Get(predicate);
+            return Query;
+
+        }
     }
 }

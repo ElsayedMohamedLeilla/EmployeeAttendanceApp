@@ -7,5 +7,7 @@ namespace Dawem.Contract.Repository.Settings
     public interface IMenuItemRepository : IGenericRepository<MenuItem>
     {
         IQueryable<MenuItem> GetAsQueryable(GetScreensCriteria criteria);
+        IQueryable<MenuItem> GetAsQueryableForGetAllScreens(GetScreensCriteria criteria);
+        IQueryable<MenuItem> GetAsQueryableForMenu(GetScreensCriteria criteria);
     }
 }

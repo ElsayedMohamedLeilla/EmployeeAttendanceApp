@@ -186,8 +186,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 ParentName = screen.ParentId > 0 ? screen.Parent.MenuItemNameTranslations.
                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name : null,
-                Type = screen.AuthenticationType,
-                TypeName = TranslationHelper.GetTranslation(screen.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
+                AuthenticationType = screen.AuthenticationType,
+                AuthenticationTypeName = TranslationHelper.GetTranslation(screen.AuthenticationType.ToString() + nameof(AuthenticationType), requestInfo.Lang),
                 IsActive = screen.IsActive,
             }).ToListAsync();
             return new GetScreensResponse

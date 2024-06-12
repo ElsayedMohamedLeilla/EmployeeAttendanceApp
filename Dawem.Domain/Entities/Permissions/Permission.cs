@@ -23,6 +23,6 @@ namespace Dawem.Domain.Entities.Permissions
         public virtual MyUser User { get; set; }
         public int Code { get; set; }
         public List<PermissionScreen> PermissionScreens { get; set; }
-        public AuthenticationType Type { get; set; }
+        public AuthenticationType AuthenticationType { get; set; }
     }
 }

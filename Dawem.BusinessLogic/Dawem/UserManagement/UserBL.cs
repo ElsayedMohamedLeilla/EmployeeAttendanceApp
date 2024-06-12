@@ -51,8 +51,6 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             uploadBLC = _uploadBLC;
             userManagerRepository = _userManagerRepository;
         }
-
-
         public async Task<int> SignUp(UserSignUpModel model)
         {
             //#region business validation
@@ -74,6 +72,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region GetMax OTP
+
             var employeeOTPs = await repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id).ToListAsync();
             if (employeeOTPs.Any())
             {
@@ -84,7 +83,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     throw new BusinessValidationException(AmgadKeys.SorryWrongOTPPleaseUseLastRecieviedOne);
                 }
                 // Check if the retrieved OTP has expired
-                bool isExpired = maxOTP.ExpirationTime.AddHours(2) < DateTime.Now;
+                bool isExpired = DateTime.UtcNow > maxOTP.ExpirationTime;
                 if (isExpired)
                 {
                     if (maxOTP.OTPCount < 5)
@@ -155,9 +154,34 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             {
                 throw new BusinessValidationException(AmgadKeys.SorryNoOTPWasFoundForThisUser);
             }
+
             #endregion
-            #region Handle Response
+
+            #region Handle User Permissions
+
+            var companyId = getCompany.Id;
+
+            var getEmployeesResponsibility = await repositoryManager.
+                ResponsibilityRepository.
+                Get(r => r.CompanyId == companyId && r.ForEmployeesApplication).
+                FirstOrDefaultAsync();
+
+            if (getEmployeesResponsibility != null)
+            {
+                repositoryManager.UserResponsibilityRepository.
+                    Insert(new UserResponsibility
+                    {
+                        UserId = user.Id,
+                        ResponsibilityId = getEmployeesResponsibility.Id
+                    });
+            }
+
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
             await unitOfWork.CommitAsync();
             return user.Id;
 
@@ -515,7 +539,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             getUser.ProfileImageName = foundEmployee.ProfileImageName;
             getUser.PhoneNumber = foundEmployee.MobileNumber;
             getUser.IsActive = foundEmployee.IsActive;
-            
+
 
             var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
 

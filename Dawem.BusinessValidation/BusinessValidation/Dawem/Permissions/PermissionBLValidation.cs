@@ -1,7 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
-using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
@@ -46,7 +45,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
+                .PermissionRepository.Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -68,7 +67,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
                 }
 
                 var checkPermissionDuplicate = await repositoryManager
-                .PermissionRepository.Get(permission => permission.Type == requestInfo.AuthenticationType &&
+                .PermissionRepository.Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -80,7 +79,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
 
             #region Validate Available Actions
 
-            ValidatePermissionScreenAvailableActions(model.Screens);
+            await ValidatePermissionScreenAvailableActions(model.Screens);
 
             #endregion
 
@@ -98,7 +97,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id &&
-                permission.Type == requestInfo.AuthenticationType &&
+                permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.ResponsibilityId == model.ResponsibilityId).AnyAsync();
@@ -111,7 +110,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
             {
                 var checkPermissionDuplicate = await repositoryManager
                 .PermissionRepository.Get(permission => permission.Id != model.Id && !permission.IsDeleted &&
-                permission.Type == requestInfo.AuthenticationType &&
+                permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
                 permission.UserId == model.UserId).AnyAsync();
@@ -150,38 +149,72 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Permissions
         }
         private async Task ValidatePermissionScreenAvailableActions(List<PermissionScreenModel> permissionScreens)
         {
+            var screensIds = permissionScreens.Select(s => s.ScreenId).ToList();
+
+            var getScreens = await repositoryManager.MenuItemRepository.
+                Get(m => m.IsActive && screensIds.Contains(m.Id) &&
+                m.GroupOrScreenType == GroupOrScreenType.Screen).
+                Select(m => new
+                {
+                    m.Id,
+                    m.MenuItemNameTranslations.
+                        First(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    Actions = m.MenuItemActions.Select(a => a.ActionCode).ToList()
+                }).ToListAsync();
+
+            #region Validate Plan Screens
+
+            var getPlan = await repositoryManager.SubscriptionRepository.
+                    Get(s => s.CompanyId == requestInfo.CompanyId).
+                    Select(c => new
+                    {
+                        c.Plan.AllScreensAvailable,
+                        PlanScreens = c.Plan.PlanScreens != null ? c.Plan.PlanScreens.Select(ps => ps.ScreenId).ToList() : new List<int>()
+                    }).FirstOrDefaultAsync();
+
+            if (getPlan != null && !getPlan.AllScreensAvailable && getPlan.PlanScreens != null)
+            {
+                var allPlanScreens = getPlan.PlanScreens;
+                var getScreenId = screensIds?.FirstOrDefault(sId => !allPlanScreens.Contains(sId));
+
+                if (getScreenId != null)
+                {
+                    var getScreen = getScreens.FirstOrDefault(s => s.Id == getScreenId);
+
+                    if (getScreen != null)
+                    {
+                        var planMessage = TranslationHelper.GetTranslation(LeillaKeys.SorryYourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen,
+                                           requestInfo.Lang) + LeillaKeys.Space +
+                                           TranslationHelper.GetTranslation(LeillaKeys.ScreenName,
+                                           requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
+                                           getScreen.Name + LeillaKeys.RightBracket;
+                        throw new BusinessValidationException(messageCode: null, message: planMessage);
+                    }
+                }
+            } 
+
+            #endregion
+
             #region Validate Available Actions
 
-
-            var allScreensWithAvailableActionsGrouped = await screenBLC.
-                GetAllScreensWithAvailableActions(new GetScreensCriteria { IsActive = true});
-
-            var allScreensWithAvailableActions = allScreensWithAvailableActionsGrouped.
-                MenuItemsTypes.SelectMany(s => s.MenuItems).ToList();
-
-                    /*requestInfo.Type == AuthenticationType.AdminPanel ?
-                        APIHelper.AdminPanelAllScreensWithAvailableActions :
-                        APIHelper.AllScreensWithAvailableActions*/;
-
-            if (allScreensWithAvailableActions != null)
+            if (getScreens != null)
             {
-
                 var screenWithNotAvailableAction = permissionScreens
                     .FirstOrDefault(permissionScreen => permissionScreen.Actions
-                        .Any(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.Id == permissionScreen.ScreenId).AvailableActions.Contains(actionCode)));
-
-                var screenInfo = allScreensWithAvailableActions.FirstOrDefault(s=>s.Id ==  screenWithNotAvailableAction.ScreenId);
+                        .Any(actionCode => !getScreens
+                        .FirstOrDefault(s => s.Id == permissionScreen.ScreenId).Actions.Contains(actionCode)));
 
                 if (screenWithNotAvailableAction != null)
                 {
+                    var screenInfo = getScreens.FirstOrDefault(s => s.Id == screenWithNotAvailableAction.ScreenId);
+
                     /*dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
                     (AdminPanelApplicationScreenCode)screenWithNotAvailableAction.ScreenId :
                     (DawemAdminApplicationScreenCode)screenWithNotAvailableAction.ScreenId;*/
 
                     var actionNotAvailable = screenWithNotAvailableAction.Actions
-                        .FirstOrDefault(actionCode => !allScreensWithAvailableActions
-                        .FirstOrDefault(s => s.Id == screenWithNotAvailableAction.ScreenId).AvailableActions.Contains(actionCode));
+                        .FirstOrDefault(actionCode => !getScreens
+                        .FirstOrDefault(s => s.Id == screenWithNotAvailableAction.ScreenId).Actions.Contains(actionCode));
 
                     /*var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;*/

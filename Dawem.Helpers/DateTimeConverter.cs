@@ -6,11 +6,11 @@ namespace Dawem.Helpers
     public class MultiFormatDateConverter : JsonConverter
     {
         public string[] DateTimeFormats =
-            new string [] { "yyyyMMddTHHmmssZ",
-                "yyyy-MM-ddTHH:mm", "dd-MM-yyyy",
-                "MM-dd-yyyy", "dd/MM/yyyy",
+            new string [] { "dd-MM-yyyy","yyyy-MM-dd",
+                "MM-dd-yyyy", "dd/MM/yyyy","yyyy/MM/dd",
                 "MM/dd/yyyy" , "yyyy-dd-MM",
-                "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss","yyyyMMddTHHmmssZ",
+                "yyyy-MM-ddTHH:mm",
                 "dd-MM-yyyy HH:mm:ss", "MM-dd-yyyy HH:mm:ss",
                 "yyyy/MM/dd HH:mm:ss" , "dd/MM/yyyy HH:mm:ss",
                 "MM/dd/yyyy HH:mm:ss", "yyyy-MM-dd HH:mm",
@@ -25,7 +25,7 @@ namespace Dawem.Helpers
             return objectType == typeof(DateTime) || objectType == typeof(DateTime?);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             string dateString = reader.Value.ToString();
             if (dateString == null)
@@ -46,7 +46,7 @@ namespace Dawem.Helpers
             get { return false; }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

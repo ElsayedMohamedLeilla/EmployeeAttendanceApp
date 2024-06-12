@@ -13,5 +13,6 @@ namespace Dawem.Models.DTOs.Dawem.Screens.Screens
         public GroupOrScreenType? GroupOrScreenType { get; set; }
         public List<int> ScreensIds { get; set; }
         public AuthenticationType? LocalAuthenticationType { get; set; }
+        public ScreensForType ScreensForType { get; set; }
     }
 }

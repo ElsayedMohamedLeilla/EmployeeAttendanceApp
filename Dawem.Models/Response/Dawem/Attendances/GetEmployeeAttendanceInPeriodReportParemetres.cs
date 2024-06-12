@@ -22,9 +22,9 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? PercentageOfDoneFrom { get; set; }
         public int? PercentageOfDoneTo { get; set; }
         public DoneStatus? DoneStatus { get; set; }
+        public StatisticsReportOrderBy? statisticsReportOrderBy { get; set; }
 
 
-        
 
 
 

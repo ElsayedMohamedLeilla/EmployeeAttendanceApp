@@ -8,6 +8,7 @@
         public const string Xlsx = ".xlsx";
         public const string AttendanceReports = "AttendanceReports";
         public const string SummonReports = "SummonReports";
+        public const string StatisticsReports = "StatisticsReports";
         public const string InfoImageName = "info.jpg";
         public const string WarningImageName = "warning.jpg";
         public const string ErrorImageName = "error.jpg";

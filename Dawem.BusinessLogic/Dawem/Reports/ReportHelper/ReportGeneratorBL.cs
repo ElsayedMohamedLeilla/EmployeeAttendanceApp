@@ -174,6 +174,36 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return GenerateReport(exporterModelDTO, param);
         }
         #endregion
+
+        #region  Statistics
+        public HttpResponseMessage GenerateStatisticsOverAperiodReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.StatisticsReports,
+                ReportType = ReportType.StatisticsOverAperiodReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        public HttpResponseMessage GenerateStatisticsReportOverAperiodByDepartmentReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.StatisticsReports,
+                ReportType = ReportType.StatisticsReportOverAperiodByDepartmentReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        public HttpResponseMessage GenerateStatisticsReportOverAperiodGroupByMonthReport(ReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.StatisticsReports,
+                ReportType = ReportType.StatisticsReportOverAperiodGroupByMonthReport,
+            };
+            return GenerateReport(exporterModelDTO, param);
+        }
+        #endregion
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -240,6 +270,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return result;
         }
 
-        
+       
     }
 }

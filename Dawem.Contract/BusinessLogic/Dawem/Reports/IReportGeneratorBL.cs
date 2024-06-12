@@ -30,6 +30,13 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
 
         #endregion
 
+        #region Statistics
+        HttpResponseMessage GenerateStatisticsOverAperiodReport(ReportCritria param);
+        HttpResponseMessage GenerateStatisticsReportOverAperiodByDepartmentReport(ReportCritria param);
+        HttpResponseMessage GenerateStatisticsReportOverAperiodGroupByMonthReport(ReportCritria param);
+
+        #endregion
+
 
         HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param);
         public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType);

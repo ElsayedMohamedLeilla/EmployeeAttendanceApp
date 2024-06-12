@@ -94,8 +94,15 @@ namespace Dawem.ReportsModule.Helper
                     case ReportType.SummonsDetailsGroupByEmployeeReport:
                         SetSummonsDetailsGroupByEmployeeReportParameters(report, param);
                         break;
-
-
+                    case ReportType.StatisticsOverAperiodReport:
+                        SetStatisticsOverAperiodReportParameters(report, param);
+                        break;
+                    case ReportType.StatisticsReportOverAperiodByDepartmentReport:
+                        SetStatisticsOverAperiodReportParameters(report, param);
+                        break;
+                    case ReportType.StatisticsReportOverAperiodGroupByMonthReport:
+                        SetStatisticsOverAperiodReportParameters(report, param);
+                        break;
                 }
 
                 #endregion
@@ -233,6 +240,14 @@ namespace Dawem.ReportsModule.Helper
             report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
             report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
             report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+
+        }
+        private static void SetStatisticsOverAperiodReportParameters(Report report, ReportCritria param)
+        {
+
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
 
         }
 

@@ -14,7 +14,10 @@
         AttendaceLeaveSummaryReport,
         BriefingSummonsInPeriodReport,
         SummonsDetailsInPeriodReport,
-        SummonsDetailsGroupByEmployeeReport
+        SummonsDetailsGroupByEmployeeReport,
+        StatisticsOverAperiodReport,
+        StatisticsReportOverAperiodByDepartmentReport,
+        StatisticsReportOverAperiodGroupByMonthReport
 
 
     }

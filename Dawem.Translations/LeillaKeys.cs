@@ -524,6 +524,7 @@
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
         public const string SorryYouMustEnterDeviceNotificationsToken = "Sorry!!YouMustEnterDeviceNotificationsToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
+        public const string SorryCannotDoBreakFingerprintOutsideWorkingHours = "Sorry!!CannotDoBreakFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonLogNotFound = "Sorry!!SummonLogNotFound!";
         public const string TimeType = "TimeType";

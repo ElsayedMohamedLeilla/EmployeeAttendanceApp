@@ -37,7 +37,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
             var clientLocalDateTime = requestInfo.LocalDateTime;
-            var clientLocalDate = requestInfo.LocalDateTime.Date; 
+            var clientLocalDate = requestInfo.LocalDateTime.Date;
 
             #endregion
 
@@ -156,6 +156,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 if (model.Type == FingerPrintType.Summon)
                     throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
+                else if (model.Type == FingerPrintType.BreakIn || model.Type == FingerPrintType.BreakOut)
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotDoBreakFingerprintOutsideWorkingHours);
                 else
                     fingerPrintType = FingerPrintType.CheckIn;
 
@@ -164,6 +166,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 if (model.Type == FingerPrintType.Summon)
                     throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
+                else if (model.Type == FingerPrintType.BreakIn || model.Type == FingerPrintType.BreakOut)
+                    throw new BusinessValidationException(LeillaKeys.SorryCannotDoBreakFingerprintOutsideWorkingHours);
                 else
                     throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay);
 
@@ -172,6 +176,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             {
                 if (model.Type == FingerPrintType.Summon)
                     fingerPrintType = FingerPrintType.Summon;
+                else if (model.Type == FingerPrintType.BreakIn)
+                    fingerPrintType = FingerPrintType.BreakIn;
+                else if (model.Type == FingerPrintType.BreakOut)
+                    fingerPrintType = FingerPrintType.BreakOut;
                 else
                     fingerPrintType = FingerPrintType.CheckOut;
             }
@@ -208,6 +216,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             }
 
             #endregion
+
+            
 
             #region Validate Fingerprint Device Code
 
@@ -258,7 +268,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
             var clientLocalDateTime = requestInfo.LocalDateTime;
-            var clientLocalDate = requestInfo.LocalDateTime.Date; 
+            var clientLocalDate = requestInfo.LocalDateTime.Date;
 
             #endregion
 
@@ -454,7 +464,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var getLastFingerprint = await repositoryManager.
                 EmployeeAttendanceCheckRepository.
                 Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId).
-                OrderByDescending(a=>a.Id).
+                OrderByDescending(a => a.Id).
                 Select(check => new
                 {
                     check.FingerPrintDate,
@@ -481,14 +491,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 {
                     #region Check If Shift Is Two Days Shift
 
-                    var isTwoDaysShift = 
+                    var isTwoDaysShift =
                         TimeHelper.IsTwoDaysShift(getLastShiftInfo.ShiftCheckInTime, getLastShiftInfo.ShiftCheckOutTime);
 
                     if (isTwoDaysShift && clientLocalDateTime.TimeOfDay <= getLastShiftInfo.ShiftCheckOutTime)
                     {
                         theTwoDaysShift = getLastShiftInfo;
                         clientLocalDate = lastClientLocalDate;
-                        clientLocalDateTime  = lastClientLocalDateTime;
+                        clientLocalDateTime = lastClientLocalDateTime;
                     }
 
                     #endregion

@@ -1,4 +1,5 @@
-﻿using Dawem.Enums.Generals;
+﻿using Dawem.Contract.BusinessLogicCore.Dawem;
+using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
@@ -16,6 +17,10 @@ namespace Dawem.ReportsModule.Helper
 {
     public class ReportExporter
     {
+
+       
+
+
         //private byte[] ExportToPdf(Report report)
         //{
         //    using MemoryStream stream = new();
@@ -53,6 +58,17 @@ namespace Dawem.ReportsModule.Helper
                 report.Dictionary.Connections.Add(connection);
                 report.Load(exporterModelDTO.FullPath);
 
+                #region Get Company Logo Path
+                var picture = report.FindObject(AmgadKeys.ReportCompanyLogo) as PictureObject;
+                if (picture != null)
+                {
+                    string CompanyLogoPath = exporterModelDTO.CompanyLogoPath;
+                    if (!string.IsNullOrEmpty(CompanyLogoPath))
+                    {
+                        picture.ImageLocation = CompanyLogoPath;
+                    }
+                }
+                #endregion
                 #region Set Parameters
 
                 SetGeneralParameters(report, param, exporterModelDTO);
@@ -125,7 +141,7 @@ namespace Dawem.ReportsModule.Helper
                     throw new BusinessValidationException(AmgadKeys.SorryErrorHappendDuringExtractingReport);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new BusinessValidationException(AmgadKeys.SorryErrorHappendDuringExtractingReport);
             }
@@ -134,7 +150,7 @@ namespace Dawem.ReportsModule.Helper
                 report.Dispose();
             }
 
-            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            //return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
         private static void SetGeneralParameters(Report report, ReportCritria param, ExporterModelDTO exporterModelDTO)
         {

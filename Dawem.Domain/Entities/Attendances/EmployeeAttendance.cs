@@ -33,6 +33,7 @@ namespace Dawem.Domain.Entities.Attendances
         public decimal? TotalLateArrivalsHours { get; set; }
         public decimal? TotalEarlyDeparturesHours { get; set; }
         public decimal? TotalOverTimeHours { get; set; }
+        public decimal? TotalBreakHours { get; set; }
         public AttendanceFingerPrintStatus FingerPrintStatus { get; set; }
         public int AllowedMinutes { get; set; }
         public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }

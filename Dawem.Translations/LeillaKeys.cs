@@ -350,6 +350,8 @@
         public const string EndOfWeekVacations = "EndOfWeekVacations:";
         public const string DoneCheckInSuccessfully = "DoneCheckInSuccessfully";
         public const string DoneCheckOutSuccessfully = "DoneCheckOutSuccessfully";
+        public const string DoneBreakInSuccessfully = "DoneBreakInSuccessfully";
+        public const string DoneBreakOutSuccessfully = "DoneBreakOutSuccessfully";
         public const string DoneMakeSummonSuccessfully = "DoneMakeSummonSuccessfully";
         public const string SorryYouMustEnterTheLatitude = "Sorry!!YouMustEnterTheLatitude!";
         public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
@@ -431,6 +433,8 @@
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
         public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";
+        public const string SorryYouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn = "Sorry!!YouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn!";
+
         public const string SorryCannotFindChecksForEnteredId = "Sorry!!CannotFindChecksForEnteredId!";
         public const string SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord = "Sorry!!CannotDeleteCheckIfBecauseThereIsCheckOutRecord!";
         public const string SorryCannotFindCheckInRecord = "Sorry!!CannotFindCheckInRecord!";
@@ -703,6 +707,8 @@
         public const string SorryGroupParentCannotBeOneOfItsChildren = "Sorry!!GroupParentCannotBeOneOfItsChildren!";
         public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
         public const string SorryPlanScreensMustChoosenFromWebOrMobileApp = "Sorry!!PlanScreensMustChoosenFromWebOrMobileApp!";
-        
+        public const string SorryYouCannotDoBreakOutYouMustHaveBreakInFirst = "Sorry!!YouCannotDoBreakOut.YouMustHaveBreakInFirst!";
+
+
     }
 }

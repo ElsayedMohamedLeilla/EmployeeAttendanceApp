@@ -526,6 +526,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     OverTime = (empAttendance.TotalOverTimeHours ?? 0) + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
+                    BreakHours = (empAttendance.TotalBreakHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
 
                     Fingerprints = empAttendance.EmployeeAttendanceChecks
                     .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
@@ -534,8 +537,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         Time = employeeAttendanceCheck.FingerPrintDate.ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(employeeAttendanceCheck.FingerPrintDate.ToString("tt"), requestInfo.Lang),
                         Type = employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
-                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
-                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.Summon ? TranslationHelper.GetTranslation(AmgadKeys.Summon, requestInfo.Lang) :
                         TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
                         RecognitionWay = employeeAttendanceCheck.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :

@@ -26,8 +26,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Attendances.Employees
             var fingerPrintType = await employeeAttendanceBL.CreateFingerPrint(model);
             var messageCode = fingerPrintType == FingerPrintType.CheckIn ?
                  LeillaKeys.DoneCheckInSuccessfully : fingerPrintType == FingerPrintType.Summon ?
-                 LeillaKeys.DoneMakeSummonSuccessfully :
-                 LeillaKeys.DoneCheckOutSuccessfully;
+                 LeillaKeys.DoneMakeSummonSuccessfully : fingerPrintType == FingerPrintType.BreakIn ?
+                 LeillaKeys.DoneBreakInSuccessfully : fingerPrintType == FingerPrintType.BreakOut ?
+                 LeillaKeys.DoneBreakOutSuccessfully : LeillaKeys.DoneCheckOutSuccessfully;
             return Success(fingerPrintType, messageCode: messageCode);
         }
         [HttpGet]

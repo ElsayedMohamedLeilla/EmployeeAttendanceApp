@@ -143,16 +143,19 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Validate Checks
 
-            var fingerPrintTypes = await repositoryManager
+            var todayFingerPrintTypes = await repositoryManager
                 .EmployeeAttendanceCheckRepository
                 .Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == getEmployeeId
                 && e.EmployeeAttendance.LocalDate.Date == clientLocalDate)
+                .OrderByDescending(e => e.Id)
                 .Select(a => a.FingerPrintType)
                 .ToListAsync();
 
+            var lastFingetprint = todayFingerPrintTypes.FirstOrDefault();
+
             var fingerPrintType = FingerPrintType.CheckIn;
 
-            if (fingerPrintTypes == null || fingerPrintTypes.Count <= 0)
+            if (todayFingerPrintTypes == null || todayFingerPrintTypes.Count <= 0)
             {
                 if (model.Type == FingerPrintType.Summon)
                     throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
@@ -162,7 +165,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     fingerPrintType = FingerPrintType.CheckIn;
 
             }
-            else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn) && fingerPrintTypes.Contains(FingerPrintType.CheckOut))
+            else if (todayFingerPrintTypes.Contains(FingerPrintType.CheckIn) && todayFingerPrintTypes.Contains(FingerPrintType.CheckOut))
             {
                 if (model.Type == FingerPrintType.Summon)
                     throw new BusinessValidationException(LeillaKeys.SorryCannotDoSummonFingerprintOutsideWorkingHours);
@@ -172,7 +175,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     throw new BusinessValidationException(LeillaKeys.SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay);
 
             }
-            else if (fingerPrintTypes.Contains(FingerPrintType.CheckIn))
+            else if (todayFingerPrintTypes.Contains(FingerPrintType.CheckIn))
             {
                 if (model.Type == FingerPrintType.Summon)
                     fingerPrintType = FingerPrintType.Summon;
@@ -183,6 +186,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 else
                     fingerPrintType = FingerPrintType.CheckOut;
             }
+
+            #region Validate Break In And Break Out
+
+            if (lastFingetprint == FingerPrintType.BreakIn &&
+                            fingerPrintType != FingerPrintType.BreakOut)
+                throw new BusinessValidationException(LeillaKeys.SorryYouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn);
+
+            if (fingerPrintType == FingerPrintType.BreakOut && lastFingetprint != FingerPrintType.BreakIn)
+                throw new BusinessValidationException(LeillaKeys.SorryYouCannotDoBreakOutYouMustHaveBreakInFirst);
+
+            #endregion
 
             #endregion
 
@@ -216,8 +230,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             }
 
             #endregion
-
-            
 
             #region Validate Fingerprint Device Code
 
@@ -373,6 +385,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                      a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : null,
                     CheckOutDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
+                    LastFingetPrintType = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted) ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted).OrderByDescending(c=>c.Id).First().FingerPrintType : null,
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
 
@@ -408,15 +422,20 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 Code = getAttendance?.Code,
                 CheckInDateTime = getAttendance?.CheckInDateTime,
                 CheckOutDateTime = getAttendance?.CheckOutDateTime,
+                LastFingetPrintType = getAttendance?.LastFingetPrintType,
 
                 DefaultCheckType = getAttendance?.CheckInDateTime == null &&
-                getAttendance?.CheckOutDateTime == null ? FingerprintCheckType.CheckIn :
-                getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? FingerprintCheckType.NotDefined :
-                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerprintCheckType.Summon : FingerprintCheckType.CheckOut :
-                FingerprintCheckType.NotDefined,
+                getAttendance?.CheckOutDateTime == null ? FingerPrintType.CheckIn :
+                (getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null) ? FingerPrintType.NotSet :
+                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerPrintType.Summon :
+                getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn ?
+                FingerPrintType.BreakOut : FingerPrintType.CheckOut :
+                FingerPrintType.NotSet,
 
                 EmployeeStatus = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? EmployeeStatus.NotAttendYet :
                 getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? EmployeeStatus.AttendThenLeaved :
+                getAttendance?.CheckInDateTime != null && getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn
+                ? EmployeeStatus.AtBreak :
                 getAttendance?.CheckInDateTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
 

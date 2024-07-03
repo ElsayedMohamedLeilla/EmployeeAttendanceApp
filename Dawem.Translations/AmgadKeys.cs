@@ -3,6 +3,8 @@
     public static class AmgadKeys
     {
 
+        public const string ReportBasePath = "uploads\\Reports";
+        public const string ReportCompanyLogo = "CompanyLogo";
         public const string Pdf = ".pdf";
         public const string frx = ".frx";
         public const string Xlsx = ".xlsx";

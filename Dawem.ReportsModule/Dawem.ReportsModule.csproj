@@ -17,10 +17,12 @@
     <PackageReference Include="FastReport.OpenSource" Version="2024.2.1" />
     <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2024.2.1" />
     <PackageReference Include="FastReport.OpenSource.Web" Version="2024.2.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dawem.Contract\Dawem.Contract.csproj" />
     <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
   </ItemGroup>
 

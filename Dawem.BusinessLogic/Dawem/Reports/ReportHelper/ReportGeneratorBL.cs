@@ -1,9 +1,9 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.ReportsModule.Helper;
@@ -19,18 +19,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         private readonly IConfiguration _configuration;
         private readonly RequestInfo _requestInfo;
         private readonly IRepositoryManager repositoryManager;
-        //private readonly ApplicationDBContext context;
-
-
-        public ReportGeneratorBL(ApplicationDBContext _context, IRepositoryManager _repositoryManager, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, RequestInfo requestInfo)
+        private readonly IUploadBLC uploadBLC;
+        public ReportGeneratorBL(IUploadBLC _uploadBLC, ApplicationDBContext _context, IRepositoryManager _repositoryManager, IWebHostEnvironment hostingEnvironment, IConfiguration configuration, RequestInfo requestInfo)
         {
             _hostingEnvironment = hostingEnvironment;
             _configuration = configuration;
             _requestInfo = requestInfo;
             repositoryManager = _repositoryManager;
-            //_context = context;
-
+            uploadBLC = _uploadBLC;
         }
+       
         #region Attendance Report
         public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(ReportCritria param)
         {
@@ -204,6 +202,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return GenerateReport(exporterModelDTO, param);
         }
         #endregion
+
         public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param)
         {
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
@@ -215,12 +214,13 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             {
                 com.Name,
                 com.Email,
-                com.Country.NameAr
+                com.Country.NameAr,
+                com.LogoImageName
             }).FirstOrDefault();
             exporterModelDTO.CompanyName = ComObj.Name;
             exporterModelDTO.CompanyEmail = ComObj.Email ?? "No Email";
             exporterModelDTO.CountryName = ComObj.NameAr;
-
+            exporterModelDTO.CompanyLogoPath = uploadBLC.GetFilePath(ComObj.LogoImageName, LeillaKeys.Companies); ;
 
             exporterModelDTO.BasePath = "uploads\\Reports";
             string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
@@ -261,7 +261,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
                                        @ZoneID = @ZoneID,
                                        @JobTitleID = @JobTitleID,
                                        @CompanyID = @CompanyID"; context.Database.SetCommandTimeout(3600);
-                   // result = context.EmployeeDailyAttendanceGroupByDayReport.FromSqlRaw(SqlQuery, parameters).ToList();
+                    // result = context.EmployeeDailyAttendanceGroupByDayReport.FromSqlRaw(SqlQuery, parameters).ToList();
                 }
             }
 
@@ -270,6 +270,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             return result;
         }
 
-       
+
     }
 }

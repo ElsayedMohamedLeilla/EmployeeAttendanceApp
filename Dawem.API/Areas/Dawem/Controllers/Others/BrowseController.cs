@@ -34,13 +34,14 @@ namespace Dawem.API.Areas.Dawem.Controllers.Others
                 var sheetContentType = "application/vnd.ms-excel";
                 var wordContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
                 var txtContentType = "text/plain";
+                var frxContentType = "";
 
                 var contentType = fileName.Contains(".svg") ? svgContentType :
                     fileName.Contains(".pdf") ? pdfContentType :
                     fileName.Contains(".docx") ? wordContentType :
                     fileName.Contains(".txt") ? txtContentType :
                     fileName.Contains(".xlsx") || fileName.Contains(".xls") || fileName.Contains(".csv") ? sheetContentType :
-                    imageContentType;
+                    fileName.Contains(".frx") ? frxContentType : imageContentType;
 
                 var imageFile = System.IO.File.OpenRead(imgPath);
                 return File(imageFile, contentType, fileName);

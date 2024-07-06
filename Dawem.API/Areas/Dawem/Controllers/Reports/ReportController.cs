@@ -1,6 +1,5 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
 using Dawem.Enums.Generals;
-using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
@@ -22,23 +21,23 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports
         #region Attendance Report
 
         #region Test
-        [HttpGet]
-        public IActionResult GetEmployeeDailyAttendanceGroupByDayPath([FromQuery] ReportCritria param)
-        {
-            var response = _reportGeneratorBL.GenerateEmployeeDailyAttendanceGroupByDay(param);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                string webRootPath = _hostingEnvironment.WebRootPath;
-                string reportPath = Path.Combine(webRootPath, AmgadKeys.ReportBasePath, AmgadKeys.AttendanceReports, ReportType.EmployeeDailyAttendanceGroupByDayReport.ToString() + AmgadKeys.frx);
-                return Success(reportPath);
-            }
-            return BadRequest();
-        }
+        //[HttpGet]
+        //public IActionResult GetEmployeeDailyAttendanceGroupByDayPath([FromQuery] ReportCritria param)
+        //{
+        //    var response = _reportGeneratorBL.GenerateEmployeeDailyAttendanceGroupByDay(param);
+        //    if (response != null && response.IsSuccessStatusCode)
+        //    {
+        //        string webRootPath = _hostingEnvironment.WebRootPath;
+        //        string reportPath = Path.Combine(webRootPath, AmgadKeys.ReportBasePath, AmgadKeys.AttendanceReports, ReportType.EmployeeDailyAttendanceGroupByDayReport.ToString() + AmgadKeys.frx);
+        //        return Success(reportPath);
+        //    }
+        //    return BadRequest();
+        //}
         #endregion
 
 
         [HttpPost]
-        public IActionResult GetEmployeeDailyAttendanceGroupByDay([FromQuery]  ReportCritria param)
+        public IActionResult GetEmployeeDailyAttendanceGroupByDay([FromQuery] ReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateEmployeeDailyAttendanceGroupByDay(param);
             if (response != null && response.IsSuccessStatusCode)

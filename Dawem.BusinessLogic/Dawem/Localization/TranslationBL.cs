@@ -31,13 +31,13 @@ namespace Dawem.BusinessLogic.Dawem.Localization
                 var translations = query.ToList();
                 if (translations != null)
                 {
-                    var ar = translations.FindAll(c => c.Lang == LeillaKeys.Ar1);
+                    var ar = translations.FindAll(c => c.Lang == LeillaKeys.Ar);
                     if (ar.Count > 0)
                     {
                         TranslationHelper.SetArTrans(ar.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));
                     }
 
-                    var en = translations.FindAll(c => c.Lang == LeillaKeys.En2);
+                    var en = translations.FindAll(c => c.Lang == LeillaKeys.En);
                     if (en.Count > 0)
                     {
                         TranslationHelper.SetEnTrans(en.Select(x => new TransModel { KeyWord = x.KeyWord, TransWords = x.TransWords }));

@@ -586,7 +586,7 @@ namespace Dawem.Data
                 .HasMaxLength(250);
 
             modelBuilder.Entity<Translation>()
-                .Property(e => e.TransWords)
+                .Property(e => e.TranslationText)
                 .HasMaxLength(250);
 
             modelBuilder.Entity<NotificationUserFCMToken>()

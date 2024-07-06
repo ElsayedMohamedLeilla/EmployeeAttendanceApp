@@ -9,7 +9,7 @@ namespace Dawem.Domain.Entities.Localization
     {
         [StringLength(500)]
         public string KeyWord { get; set; }
-        public string TransWords { get; set; }
+        public string TranslationText { get; set; }
         public string Lang { get; set; } // lang iso2 code
     }
 }

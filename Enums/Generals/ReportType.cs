@@ -17,8 +17,8 @@
         SummonsDetailsGroupByEmployeeReport,
         StatisticsOverAperiodReport,
         StatisticsReportOverAperiodByDepartmentReport,
-        StatisticsReportOverAperiodGroupByMonthReport
-
+        StatisticsReportOverAperiodGroupByMonthReport,
+        EmployeesReport
 
     }
 }

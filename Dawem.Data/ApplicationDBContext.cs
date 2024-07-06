@@ -586,7 +586,7 @@ namespace Dawem.Data
                 .HasMaxLength(250);
 
             modelBuilder.Entity<Translation>()
-                .Property(e => e.TransWords)
+                .Property(e => e.TranslationText)
                 .HasMaxLength(250);
 
             modelBuilder.Entity<NotificationUserFCMToken>()
@@ -625,7 +625,15 @@ namespace Dawem.Data
                 Property(e => e.TotalBreakHours).
                 HasComputedColumnSql("dbo.TotalBreakHours(Id)");
 
-            
+            modelBuilder.Entity<EmployeeAttendance>().
+                Property(e => e.CheckInDateTime).
+                HasComputedColumnSql("dbo.CheckInDateTime(Id)");
+
+            modelBuilder.Entity<EmployeeAttendance>().
+                Property(e => e.CheckOutDateTime).
+                HasComputedColumnSql("dbo.CheckOutDateTime(Id)");
+
+
             modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalWorkingHours(Id)"));
 
@@ -640,7 +648,13 @@ namespace Dawem.Data
 
             modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalBreakHours(Id)"));
-    
+
+            modelBuilder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.CheckInDateTime(Id)"));
+
+            modelBuilder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.CheckOutDateTime(Id)"));
+
             #endregion
 
             #region Handle Query Filters

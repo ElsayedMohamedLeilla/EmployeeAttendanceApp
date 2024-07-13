@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/07/2024 05:28:56" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/07/2024 09:35:17" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table2" Alias="AttendanceAndDepartureTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetAttendanceAndDepartureList]&#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@Ids ,&#13;&#10;@EmployeesIds,&#13;&#10;@Lang&#13;&#10;&#13;&#10;">
-        <Column Name="EmployeeName" DataType="System.String"/>
+      <TableDataSource Name="Table2" Alias="ShiftsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetShiftsList] &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@Ids,&#13;&#10;@Lang &#13;&#10;&#13;&#10;">
         <Column Name="RowIndex" DataType="System.Int64"/>
-        <Column Name="Date" DataType="System.String"/>
-        <Column Name="CheckInDateTime" DataType="System.String"/>
-        <Column Name="CheckOutDateTime" DataType="System.String"/>
-        <Column Name="TotalWorkingHours" DataType="System.String"/>
-        <Column Name="TotalLateArrivalsHours" DataType="System.String"/>
-        <Column Name="TotalBreakHours" DataType="System.String"/>
+        <Column Name="ShiftName" DataType="System.String"/>
+        <Column Name="CheckInTime" DataType="System.String"/>
+        <Column Name="CheckOutTime" DataType="System.String"/>
+        <Column Name="AllowedMinutes" DataType="System.String"/>
+        <Column Name="EmployeesCount" DataType="System.Int32"/>
         <CommandParameter Name="CompanyId" DataType="8" Expression="[CompanyID]"/>
         <CommandParameter Name="Code" DataType="8" Expression="[Code]"/>
         <CommandParameter Name="Id" DataType="8" Expression="[Id]"/>
@@ -18,7 +16,6 @@
         <CommandParameter Name="IsActive" DataType="2" Expression="[IsActive]"/>
         <CommandParameter Name="Ids" DataType="12" Expression="[Ids]"/>
         <CommandParameter Name="Lang" DataType="12" Expression="[Lang]"/>
-        <CommandParameter Name="EmployeesIds" DataType="22" Expression="[EmployeesIds]"/>
       </TableDataSource>
     </MsSqlDataConnection>
     <Parameter Name="CompanyID" DataType="System.Int32" AsString=""/>
@@ -32,13 +29,12 @@
     <Parameter Name="FreeText" DataType="System.String" AsString=""/>
     <Parameter Name="IsActive" DataType="System.Boolean" AsString=""/>
     <Parameter Name="Lang" DataType="System.String" AsString=""/>
-    <Parameter Name="EmployeesIds" DataType="System.String" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Border.Lines="All" Border.Style="Double" Watermark.Enabled="true" Watermark.Text="DAWEM" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="132.75" Guides="28.35,47.25">
       <TextObject Name="Text48" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeeID" Font="Arial, 10pt"/>
       <TextObject Name="Text49" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="JobTitleID" Font="Arial, 10pt"/>
-      <TextObject Name="Text51" Left="189" Top="94.5" Width="341.4" Height="28.8" Border.Shadow="true" Border.ShadowColor="Gray" Border.Lines="All" Border.Width="2" Fill.Color="LightGray" Text="تقرير الحضور و الإنصراف للموظفين" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold"/>
+      <TextObject Name="Text51" Left="226.8" Top="94.5" Width="265.8" Height="28.8" Border.Shadow="true" Border.ShadowColor="Gray" Border.Lines="All" Border.Width="2" Fill.Color="LightGray" Text="تقرير الورديات" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold"/>
       <TextObject Name="Text54" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeeDailyAttendanceGroupByDayReport" Font="Arial, 10pt"/>
       <ContainerObject Name="Container1" Left="9.45" Top="9.45" Width="689.85" Height="75.6" Border.Lines="All" Border.Color="DimGray" Border.Style="Double">
         <TextObject Name="Text56" Left="85.05" Top="47.25" Width="199.65" Height="19.35" Border.Color="DimGray" Border.Style="Dash" Border.Width="2" Text="[CompanyEmail]" Font="Arial, 8pt, style=Bold"/>
@@ -50,34 +46,28 @@
     </ReportTitleBand>
     <PageHeaderBand Name="PageHeader1" Top="136.75" Width="718.2" Height="0.45"/>
     <DataBand Name="Data1" Top="141.2" Width="718.2" Height="76.05" Border.Lines="All" Guides="160.65,160.65,160.65" DataSource="Table2">
-      <TextObject Name="Text72" Left="425.25" Top="18.9" Width="114.6" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="التاريخ" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text74" Left="538.65" Top="18.9" Width="124.05" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="إسم الموظف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text72" Left="349.65" Top="18.9" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="وقت الدخول" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text74" Left="481.95" Top="18.9" Width="180.75" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="إسم الوردية" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
       <TextObject Name="Text75" Left="661.5" Top="18.9" Width="39" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text80" Left="245.7" Top="18.9" Width="95.7" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="وقت الإنصراف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text81" Left="160.65" Top="18.9" Width="86.25" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="ساعات العمل" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text83" Left="85.05" Top="18.9" Width="76.8" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="التأخير" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TableObject Name="Table3" Left="85.05" Top="47.25" Width="614.25" Height="28.35" Border.Lines="All" Border.Width="1.5">
-        <TableColumn Name="Column1" Width="72.9"/>
-        <TableColumn Name="Column2" Width="91.8"/>
-        <TableColumn Name="Column3" Width="91.8"/>
-        <TableColumn Name="Column4" Width="82.35"/>
-        <TableColumn Name="Column6" Width="110.7"/>
-        <TableColumn Name="Column8" Width="129.6"/>
-        <TableColumn Name="Column7" Width="35.1"/>
+      <TextObject Name="Text80" Left="113.4" Top="18.9" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الدقائق المسموحة" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      <TextObject Name="Text81" Left="9.45" Top="18.9" Width="105.15" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="عدد الموظفين" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+      <TableObject Name="Table3" Left="9.45" Top="47.25" Width="690.05" Height="28.35" Border.Lines="All" Border.Width="1.5">
+        <TableColumn Name="Column1" Width="100.85"/>
+        <TableColumn Name="Column2" Width="138.65"/>
+        <TableColumn Name="Column3" Width="100.85"/>
+        <TableColumn Name="Column4" Width="129.2"/>
+        <TableColumn Name="Column6" Width="185.84"/>
+        <TableColumn Name="Column7" Width="34.66"/>
         <TableRow Name="Row1" Height="28.35">
-          <TableCell Name="Cell1" Border.Lines="All" Border.Width="2" Text="[AttendanceAndDepartureTable.TotalLateArrivalsHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell2" Border.Lines="All" Text="[AttendanceAndDepartureTable.TotalWorkingHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell3" Border.Lines="All" Text="[AttendanceAndDepartureTable.CheckOutDateTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell4" Border.Lines="All" Text="[AttendanceAndDepartureTable.CheckInDateTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell6" Border.Lines="All" Text="[AttendanceAndDepartureTable.Date]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell8" Border.Lines="All" Text="[AttendanceAndDepartureTable.EmployeeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell7" Border.Lines="All" Text="[AttendanceAndDepartureTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell1" Border.Lines="All" Border.Width="2" Text="[ShiftsTable.EmployeesCount]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="All" Text="[ShiftsTable.AllowedMinutes]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell3" Border.Lines="All" Text="[ShiftsTable.CheckOutTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell4" Border.Lines="All" Text="[ShiftsTable.CheckInTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell6" Border.Lines="All" Text="[ShiftsTable.ShiftName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell7" Border.Lines="All" Text="[ShiftsTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
         </TableRow>
       </TableObject>
-      <TextObject Name="Text84" Left="340.2" Top="18.9" Width="86.25" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="وقت الحضور" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text85" Left="18.9" Top="9.45" Width="9.45" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="التأخير" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text86" Left="9.45" Top="18.9" Width="76.8" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الإستراحة" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text87" Left="9.45" Top="47.25" Width="75.6" Height="28.35" Border.Lines="All" Text="[AttendanceAndDepartureTable.TotalBreakHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text84" Left="245.7" Top="18.9" Width="105.15" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="وقت الخروج" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
     </DataBand>
     <PageFooterBand Name="PageFooter1" Top="221.25" Width="718.2" Height="28.35" Border.Lines="Top" Border.Style="Double" Border.Width="1.5" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>

@@ -5,16 +5,16 @@ using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions
 {
-    public class ApproveSubscriptionModelValidator : AbstractValidator<AcceptSubscriptionModel>
+    public class AcceptSubscriptionModelValidator : AbstractValidator<AcceptSubscriptionModel>
     {
-        public ApproveSubscriptionModelValidator()
+        public AcceptSubscriptionModelValidator()
         {
             RuleFor(model => model.SubscriptionId).
                 Must(n => n > 0).
                 WithMessage(LeillaKeys.SorryYouMustEnterSubscriptionId);
 
             RuleFor(model => model.ActivationStartDate).
-                Must(n => default).
+                Must(n => n != default).
                 WithMessage(LeillaKeys.SorryYouMustEnterSubscriptionActivationStartDate);
 
         }

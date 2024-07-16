@@ -283,7 +283,8 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
                 TimePeriod = shift.TimePeriod,
                 IsActive = shift.IsActive,
                 EmployeesCount = shift.Company.Schedules
-                .Where(s => !s.IsDeleted && s.Employees != null && s.ScheduleDays != null && s.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId == shift.Id))
+                .Where(s => !s.IsDeleted && s.Employees != null && s.ScheduleDays != null && 
+                s.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId == shift.Id))
                 .SelectMany(s => s.Employees)
                 .Count()
             }).ToListAsync();

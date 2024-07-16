@@ -602,9 +602,11 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                         WarningMessage = e.Sanction.WarningMessage
                     }).ToList() : null,
                     NumberOfTargetedEmployees = s.SummonLogs.Count,
+                    
                     SummonStatus = utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
+
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),

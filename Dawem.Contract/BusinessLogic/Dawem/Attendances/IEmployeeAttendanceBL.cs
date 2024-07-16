@@ -2,6 +2,7 @@
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
+using Dawem.Models.Response.Dawem.ReportCritrias;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
 {
@@ -16,7 +17,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
         Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations();
         public Task<MemoryStream> ExportDraft();
         public Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile);
-        public Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(ReportCritria Critria);
+        public Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(BaseReportCritria Critria);
         Task<GetCurrentEmployeeSchedulesResponse> GetCurrentEmployeeSchedules(GetCurrentEmployeeSchedulesModel model);
     }
 }

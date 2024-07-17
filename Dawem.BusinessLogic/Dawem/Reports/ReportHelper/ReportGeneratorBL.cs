@@ -44,8 +44,10 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("EmployeeIDs", param.EmployeeIDs.Count() == 0 || param.EmployeeIDs == null ? null : string.Join(',', param.EmployeeIDs));
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs.Count() == 0 || param.DepartmentIDs == null ? null : string.Join(',', param.DepartmentIDs));
+            report.SetParameterValue("ZoneIDs", param.ZoneIDs.Count() == 0 || param.ZoneIDs == null ? null : string.Join(',', param.ZoneIDs));
+            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs.Count() == 0 || param.JobTitleIDs == null ? null : string.Join(',', param.JobTitleIDs));
             return ExportReport(report, param.ExportFormat);
         }
         public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(EmployeeAttendanceByDepartmentReportCritria param)
@@ -373,8 +375,8 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         {
             report.SetParameterValue("DateFrom", param.DateFrom);
             report.SetParameterValue("DateTo", param.DateTo);
-            report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
-            report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
+            //report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
+            //report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
             report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
             report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
             report.SetParameterValue("DateFromString", param.DateFrom.ToShortDateString());

@@ -44,10 +44,10 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("EmployeeIDs", param.EmployeeIDs.Count() == 0 || param.EmployeeIDs == null ? null : string.Join(',', param.EmployeeIDs));
-            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs.Count() == 0 || param.DepartmentIDs == null ? null : string.Join(',', param.DepartmentIDs));
-            report.SetParameterValue("ZoneIDs", param.ZoneIDs.Count() == 0 || param.ZoneIDs == null ? null : string.Join(',', param.ZoneIDs));
-            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs.Count() == 0 || param.JobTitleIDs == null ? null : string.Join(',', param.JobTitleIDs));
+            report.SetParameterValue("EmployeeIDs", param.EmployeeIDs == null || !param.EmployeeIDs.Any() ? null : string.Join(',', param.EmployeeIDs));
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
+            report.SetParameterValue("ZoneIDs", param.ZoneIDs == null || !param.ZoneIDs.Any() ? null : string.Join(',', param.ZoneIDs));
+            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
             return ExportReport(report, param.ExportFormat);
         }
         public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(EmployeeAttendanceByDepartmentReportCritria param)

@@ -5,9 +5,12 @@ using Dawem.Data;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
-using Dawem.Models.Response.Dawem.Attendances;
+using Dawem.Models.Response.Dawem.ReportCritrias;
+using Dawem.Models.Response.Dawem.ReportCritrias.AttendanceReports;
 using Dawem.ReportsModule.Helper;
 using Dawem.Translations;
+using FastReport;
+using FastReport.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,87 +33,99 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         }
        
         #region Attendance Report
-        public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(ReportCritria param)
+        public HttpResponseMessage GenerateEmployeeDailyAttendanceGroupByDay(EmployeeDailyAttendanceGroupByDayReportCritria param)
         {
-            //object[] parameters =
-            //{
-            //     new SqlParameter("@EmployeeID", param.EmployeeID ?? 0),
-            //     new SqlParameter("@DateFrom", param.DateFrom),
-            //     new SqlParameter("@DateTo", param.DateTo),
-            //     new SqlParameter("@DepartmentID", param.DepartmentId ?? 0),
-            //     new SqlParameter("@ZoneID", param.ZoneId ?? 0),
-            //     new SqlParameter("@JobTitleID", param.JobTitleID ?? 0),
-            //     new SqlParameter("@CompanyID", _requestInfo.CompanyId),
-
-            // };
-            //var dataSource = GetDataSource(parameters, ReportType.EmployeeDailyAttendanceGroupByDayReport);
+           
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.EmployeeDailyAttendanceGroupByDayReport,
-                //DataSource = dataSource
             };
-
-            return GenerateReport(exporterModelDTO, param);
-
+            
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(ReportCritria param)
+        public HttpResponseMessage GenerateAttendaceLeaveStatusByDepartmentID(EmployeeAttendanceByDepartmentReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.AttendaceLeaveStatusByDepartmentIDReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(ReportCritria param)
+        public HttpResponseMessage GenerateAttendaceLeaveStatusShortGroupByJobReport(AttendaceLeaveStatusShortGroupByJobReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.AttendaceLeaveStatusShortGroupByJobReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(ReportCritria param)
+        public HttpResponseMessage GenerateAttendanceDetailsByEmployeeIDReport(AttendanceDetailsByEmployeeIDReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.AttendanceDetailsByEmployeeIDReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(ReportCritria param)
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByDepartmentReport(LateEarlyArrivalGroupByDepartmentReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.LateEarlyArrivalGroupByDepartmentReport,
             };
-            param.EmployeeID = 0;
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(ReportCritria param)
+       
+        public HttpResponseMessage GenerateLateEarlyArrivalGroupByEmployeeReport(LateEarlyArrivalGroupByEmployeeReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.LateEarlyArrivalGroupByEmployeeReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO); 
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByEmployeeReport(ReportCritria param)
+        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByEmployeeReport(EmployeeAbsenseInPeriodGroupByEmployeeReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.EmployeeAbsenseInPeriodGroupByEmployeeReport,
             };
-            //param.EmployeeID = 0;
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByDepartmentReport(ReportCritria param)
+        
+        public HttpResponseMessage GenerateEmployeeAbsenseInPeriodGroupByDepartmentReport(EmployeeAbsenseInPeriodGroupByDepartmentReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
@@ -118,93 +133,156 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
                 ReportType = ReportType.EmployeeAbsenseInPeriodGroupByDepartmentReport,
             };
             param.EmployeeID = 0; // no filter by employee report by department
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateOverTimeInSelectedPeriodReport(ReportCritria param)
+        
+        public HttpResponseMessage GenerateOverTimeInSelectedPeriodReport(OverTimeInSelectedPeriodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.OverTimeInSelectedPeriodReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OverTimeFrom", param.OverTimeFrom ?? 0);
+            report.SetParameterValue("OverTimeTo", param.OverTimeTo ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateAttendaceLeaveSummaryReport(ReportCritria param)
+        public HttpResponseMessage GenerateAttendaceLeaveSummaryReport(AttendaceLeaveSummaryReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.AttendanceReports,
                 ReportType = ReportType.AttendaceLeaveSummaryReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            return ExportReport(report, param.ExportFormat);
         }
 
         #endregion
 
         #region Summon Reports
-        public HttpResponseMessage GenerateBriefingSummonsInPeriodReport(ReportCritria param)
+        public HttpResponseMessage GenerateBriefingSummonsInPeriodReport(BriefingSummonsInPeriodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.SummonReports,
                 ReportType = ReportType.BriefingSummonsInPeriodReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+            report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+            report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+            report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+            report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+            return ExportReport(report, param.ExportFormat);
         }
 
-        public HttpResponseMessage GenerateSummonsDetailsInPeriodReport(ReportCritria param)
+        public HttpResponseMessage GenerateSummonsDetailsInPeriodReport(SummonsDetailsInPeriodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.SummonReports,
                 ReportType = ReportType.SummonsDetailsInPeriodReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+            report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+            report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+            report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+            report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+            report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+            return ExportReport(report, param.ExportFormat);
         }
 
-        public HttpResponseMessage GenerateSummonsDetailsGroupByEmployeeReport(ReportCritria param)
+        public HttpResponseMessage GenerateSummonsDetailsGroupByEmployeeReport(SummonsDetailsGroupByEmployeeReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.SummonReports,
                 ReportType = ReportType.SummonsDetailsGroupByEmployeeReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+            report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+            report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+            report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+            return ExportReport(report, param.ExportFormat);
         }
         #endregion
 
         #region  Statistics
-        public HttpResponseMessage GenerateStatisticsOverAperiodReport(ReportCritria param)
+        public HttpResponseMessage GenerateStatisticsOverAperiodReport(StatisticsOverAperiodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.StatisticsReports,
                 ReportType = ReportType.StatisticsOverAperiodReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateStatisticsReportOverAperiodByDepartmentReport(ReportCritria param)
+        public HttpResponseMessage GenerateStatisticsReportOverAperiodByDepartmentReport(StatisticsReportOverAperiodByDepartmentReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.StatisticsReports,
                 ReportType = ReportType.StatisticsReportOverAperiodByDepartmentReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
+            return ExportReport(report, param.ExportFormat);
         }
-        public HttpResponseMessage GenerateStatisticsReportOverAperiodGroupByMonthReport(ReportCritria param)
+        public HttpResponseMessage GenerateStatisticsReportOverAperiodGroupByMonthReport(StatisticsReportOverAperiodGroupByMonthReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
             {
                 FolderName = AmgadKeys.StatisticsReports,
                 ReportType = ReportType.StatisticsReportOverAperiodGroupByMonthReport,
             };
-            return GenerateReport(exporterModelDTO, param);
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
+            return ExportReport(report, param.ExportFormat);
         }
         #endregion
 
-        public HttpResponseMessage GenerateReport(ExporterModelDTO exporterModelDTO, ReportCritria param)
+        public Report GenerateReport(ExporterModelDTO exporterModelDTO, BaseReportCritria param)
         {
+            #region Fill Main Date
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
                              param.ExportFormat == ExportFormat.Excel ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Xlsx :
                              "";
@@ -228,22 +306,41 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             string webRootPath = _hostingEnvironment.WebRootPath;
             string reportPath = Path.Combine(webRootPath, exporterModelDTO.BasePath, exporterModelDTO.FolderName, exporterModelDTO.ReportType.ToString() + AmgadKeys.frx);
             exporterModelDTO.FullPath = reportPath;
-            HttpResponseMessage response = null;
-            switch (param.ExportFormat)
+           
+            #endregion
+
+            #region PrepareReport
+            Report report = new();
+            try
             {
-                case ExportFormat.Pdf:
-                    response = ReportExporter.ExportToPdf(exporterModelDTO, param);
-                    break;
-                case ExportFormat.Excel:
-                    // Call method to generate Excel report
-                    // response = ReportHelper.GenerateExcelWithConnectionString(reportPath, "CompaniesReport.xlsx", Global.ConnectionStringWork);
-                    break;
-                // Handle other export types as needed
-                default:
-                    // Handle unsupported export types
-                    break;
+                MsSqlDataConnection connection = new()
+                {
+                    ConnectionString = exporterModelDTO.ConnectionString
+                };
+                report.Dictionary.Connections.Add(connection);
+                report.Load(exporterModelDTO.FullPath);
+                #region Get Company Logo Path
+                var picture = report.FindObject(AmgadKeys.ReportCompanyLogo) as PictureObject;
+                if (picture != null)
+                {
+                    string CompanyLogoPath = exporterModelDTO.CompanyLogoPath;
+                    if (!string.IsNullOrEmpty(CompanyLogoPath))
+                    {
+                        picture.ImageLocation = CompanyLogoPath;
+                    }
+                }
+                #endregion
+               
             }
-            return response;
+            catch (Exception e)
+            {
+
+            }
+
+            #endregion
+
+            return report;
+           
         }
         public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType)
         {
@@ -268,6 +365,146 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 
 
             return result;
+        }
+
+
+        #region Set Paremetes Methods
+        private static void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
+        {
+            report.SetParameterValue("DateFrom", param.DateFrom);
+            report.SetParameterValue("DateTo", param.DateTo);
+            report.SetParameterValue("EmployeeID", param.EmployeeID ?? 0);
+            report.SetParameterValue("DepartmentID", param.DepartmentId ?? 0);
+            report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
+            report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
+            report.SetParameterValue("DateFromString", param.DateFrom.ToShortDateString());
+            report.SetParameterValue("DateToString", param.DateTo.ToShortDateString());
+            report.SetParameterValue("CompanyEmail", exporterModelDTO.CompanyEmail);
+            report.SetParameterValue("CountryName", exporterModelDTO.CountryName);
+
+
+        }
+        //private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //}
+        //private static void SetAttendaceLeaveStatusShortGroupByJobReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //}
+        //private static void SetAttendaceLeaveStatusByDepartmentIDReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //}
+        //private static void SetAttendanceDetailsByEmployeeIDReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //}
+        //private static void SetLateEarlyArrivalGroupByDepartmentReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //}
+        //private static void SetEmployeeAbsenseInPeriodGroupByEmployeeReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+        //}
+        //private static void SetEmployeeAbsenseInPeriodGroupByDepartmentReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("WithoutPermision", param.WithoutPermision == null ? false : true);
+        //}
+
+        //private static void SetOverTimeInSelectedPeriodReportParameters(Report report, BaseReportCritria param)
+        //{
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("OverTimeFrom", param.OverTimeFrom ?? 0);
+        //    report.SetParameterValue("OverTimeTo", param.OverTimeTo ?? 0);
+
+        //}
+        //private static void SetAttendaceLeaveSummaryReportParameters(Report report, BaseReportCritria param)
+        //{
+
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //}
+
+        //private static void SetBriefingSummonsInPeriodReportParameters(Report report, BaseReportCritria param)
+        //{
+
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("NotifiyWay", param.NotifiyWay);
+        //    report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+        //    report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+        //    report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+        //    report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+        //    report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+        //    report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+        //}
+
+        //private static void SetSummonsDetailsInPeriodReportParameters(Report report, BaseReportCritria param)
+        //{
+
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+        //    report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+        //    report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+        //    report.SetParameterValue("NoOfRequiredEmployeeFrom", param.NoOfRequiredEmployeeFrom);
+        //    report.SetParameterValue("NoOfRequiredEmployeeTo", param.NoOfRequiredEmployeeTo);
+        //    report.SetParameterValue("PercentageOfDoneFrom", param.PercentageOfDoneFrom);
+        //    report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
+        //    report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+
+        //}
+
+        //private static void SetSummonsDetailsGroupByEmployeeReportParameters(Report report, BaseReportCritria param)
+        //{
+
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
+        //    report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
+        //    report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
+        //    report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
+
+        //}
+        //private static void SetStatisticsOverAperiodReportParameters(Report report, BaseReportCritria param)
+        //{
+
+        //    report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
+        //    report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+        //    report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
+
+        //}
+
+        #endregion
+
+        public HttpResponseMessage ExportReport(Report report,ExportFormat exportFormat)
+        {
+
+            HttpResponseMessage response = null;
+            switch (exportFormat)
+            {
+                case ExportFormat.Pdf:
+                    response = ReportExporter.ExportToPdf(report);
+                    break;
+                case ExportFormat.Excel:
+                    // Call method to generate Excel report
+                    // response = ReportHelper.GenerateExcelWithConnectionString(reportPath, "CompaniesReport.xlsx", Global.ConnectionStringWork);
+                    break;
+                // Handle other export types as needed
+                default:
+                    // Handle unsupported export types
+                    break;
+            }
+            return response;
         }
 
 

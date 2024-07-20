@@ -1,8 +1,8 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.Dawem.Attendances
+namespace Dawem.Models.Response.Dawem.ReportCritrias
 {
-    public class ReportCritria
+    public class BaseReportCritria
     {
         public int? EmployeeID { get; set; }
         public DateTime DateFrom { get; set; }

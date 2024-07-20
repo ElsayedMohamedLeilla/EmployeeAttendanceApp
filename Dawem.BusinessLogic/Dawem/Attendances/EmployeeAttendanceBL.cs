@@ -15,6 +15,7 @@ using Dawem.Models.Dtos.Dawem.Excel.EmployeeAttendances;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
+using Dawem.Models.Response.Dawem.ReportCritrias;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Microsoft.Data.SqlClient;
@@ -904,7 +905,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             return result;
         }
-        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(ReportCritria Critria)
+        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(BaseReportCritria Critria)
         {
 
             using (var context = new ApplicationDBContext())

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/19/2024 04:24:56" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/19/2024 05:09:32" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table2" Alias="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetLateEarlyArrivalGroupByDepartment &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@ZoneIDs,&#13;&#10;@DepartmentIDs,&#13;&#10;@EmployeeIDs,&#13;&#10;@JobTitleIDs&#13;&#10;">
@@ -43,10 +43,10 @@
       <TextObject Name="Text48" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeeID" Font="Arial, 10pt"/>
       <TextObject Name="Text49" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="JobTitleID" Font="Arial, 10pt"/>
       <TextObject Name="Text51" Left="9.45" Top="94.5" Width="691.05" Height="28.8" Border.Lines="All" Border.Style="Dash" Border.Width="1.5" Fill.Color="LightGray" Text="تقرير التأخير والحضور المبكر على مستوى القسم " HorzAlign="Center" VertAlign="Center" Font="Arial, 18pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text2" Left="500.85" Top="132.3" Width="67.35" Height="28.8" Border.Lines="All" Text="من " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text4" Left="349.65" Top="132.3" Width="142.95" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateFromString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text3" Left="264.6" Top="132.3" Width="57.9" Height="28.8" Border.Lines="All" Text="الى " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text26" Left="122.85" Top="132.3" Width="133.5" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateToString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text2" Left="519.75" Top="132.3" Width="67.35" Height="28.8" Border.Lines="All" Text="من " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text4" Left="368.55" Top="132.3" Width="142.95" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateFromString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text3" Left="283.5" Top="132.3" Width="57.9" Height="28.8" Border.Lines="All" Text="الى " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text26" Left="141.75" Top="132.3" Width="133.5" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateToString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text54" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeeDailyAttendanceGroupByDayReport" Font="Arial, 10pt"/>
       <ContainerObject Name="Container1" Left="9.45" Top="9.45" Width="689.85" Height="75.6" Border.Lines="All" Border.Color="DimGray" Border.Style="Double">
         <TextObject Name="Text56" Left="85.05" Top="47.25" Width="199.65" Height="19.35" Border.Color="DimGray" Border.Style="Dash" Border.Width="2" Text="[CompanyEmail]" Font="Arial, 8pt, style=Bold" TextFill.Color="Brown"/>

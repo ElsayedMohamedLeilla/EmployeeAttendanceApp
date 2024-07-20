@@ -494,7 +494,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var checkIfLastFingerPrintAllowTwoDaysShift =
                 getLastFingerprint != null &&
                 getLastFingerprint.FingerPrintType == FingerPrintType.CheckIn &&
-                (clientLocalDate - getLastFingerprint.LocalDate).Days == 1 &&
+                (clientLocalDate - getLastFingerprint.LocalDate.Date).Days == 1 &&
                 (clientLocalDate - getLastFingerprint.FingerPrintDate.Date).Days == 1;
 
             if (checkIfLastFingerPrintAllowTwoDaysShift)
@@ -506,6 +506,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     FirstOrDefault(d => (DayOfWeek)d.WeekDay == lastClientLocalDateTime.DayOfWeek).
                     ShiftInfo;
 
+                var getNextShiftInfo = getSchedule.ScheduleDays.
+                    FirstOrDefault(d => (DayOfWeek)d.WeekDay == requestInfo.LocalDateTime.DayOfWeek).
+                    ShiftInfo;
+
                 if (getLastShiftInfo != null)
                 {
                     #region Check If Shift Is Two Days Shift
@@ -513,7 +517,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     var isTwoDaysShift =
                         TimeHelper.IsTwoDaysShift(getLastShiftInfo.ShiftCheckInTime, getLastShiftInfo.ShiftCheckOutTime);
 
-                    if (isTwoDaysShift && clientLocalDateTime.TimeOfDay <= getLastShiftInfo.ShiftCheckOutTime)
+                    if (isTwoDaysShift && 
+                        (getNextShiftInfo == null || clientLocalDateTime.TimeOfDay < getNextShiftInfo.ShiftCheckInTime))
                     {
                         theTwoDaysShift = getLastShiftInfo;
                         clientLocalDate = lastClientLocalDate;

@@ -151,7 +151,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             {
                 Id = subscription.Id,
                 Code = subscription.Code,
-                PlanName = subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                PlanName = subscription.Plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 CompanyName = subscription.Company.Name,
                 StatusName = TranslationHelper.GetTranslation(nameof(SubscriptionStatus) + LeillaKeys.Dash + subscription.Status.ToString(), requestInfo.Lang),
                 IsWaitingForApproval = subscription.IsWaitingForApproval,
@@ -191,7 +191,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             {
                 Id = subscription.Id,
                 Name = subscription.Code + LeillaKeys.Dash + subscription.Company.Name
-                    + LeillaKeys.Dash + subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    + LeillaKeys.Dash + subscription.Plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
             }).ToListAsync();
 
             return new GetSubscriptionsForDropDownResponse
@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 {
                     Code = subscription.Code,
                     CompanyName = subscription.Company.Name,
-                    PlanName = subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    PlanName = subscription.Plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     DurationInDays = subscription.DurationInDays,
                     StartDate = subscription.StartDate,
                     EndDate = subscription.EndDate,
@@ -301,7 +301,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                                             <body>
                                             <h1>مرحباً</h1>
                                             <h2> تم قبول إشتراكك علي داوم بنجاح.</h2>
-                                            <h2> تقدر تسجل الدخول و تستخدم داوم الان.</h2>
+                                            <h2> يمكنك تسجل الدخول و إستخدام داوم الان.</h2>
                                             <h1>تاريخ بداية الإشتراك:  " + subscription.StartDate.ToString("dd-MM-yyyy") + @"</h1>
                                             <h1>تاريخ انتهاء الإشتراك:  " + subscription.EndDate.ToString("dd-MM-yyyy") + @"</h1>
                                             <p>فريق خدمة العملاء لشركة داوم يتطلع لخدمتك.</p>

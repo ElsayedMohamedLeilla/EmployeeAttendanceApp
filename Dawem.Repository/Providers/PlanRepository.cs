@@ -24,7 +24,7 @@ namespace Dawem.Repository.Providers
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.Or(x => x.PlanNameTranslations.Any(pn => pn.Name.ToLower().Trim().StartsWith(criteria.FreeText)));
+                inner = inner.Or(x => x.NameTranslations.Any(pn => pn.Name.ToLower().Trim().StartsWith(criteria.FreeText)));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;

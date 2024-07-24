@@ -42,7 +42,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 getCurrentEmployeeId = model.EmployeeId;
             }
 
-            var CheckIfEmployeeeHasVacation = await repositoryManager
+            var checkIfEmployeeeHasVacation = await repositoryManager
                 .RequestVacationRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
@@ -52,12 +52,12 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .FirstOrDefaultAsync();
 
-            if (CheckIfEmployeeeHasVacation != null)
+            if (checkIfEmployeeeHasVacation != null)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasVacationRequestInTheSameDate);
             }
 
-            var CheckIfEmployeeeHasTask = await repositoryManager
+            var checkIfEmployeeeHasTask = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
                 (c.RequestTask.Request.Status == RequestStatus.Pending || c.RequestTask.Request.Status == RequestStatus.Accepted) &&
                 c.RequestTask.Request.CompanyId == requestInfo.CompanyId &&
@@ -67,7 +67,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date))
                 .FirstOrDefaultAsync();
 
-            if (CheckIfEmployeeeHasVacation != null)
+            if (checkIfEmployeeeHasTask != null)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate);
             }
@@ -124,7 +124,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 getCurrentEmployeeId = model.EmployeeId;
             }
 
-            var CheckIfEmployeeeHasVacation = await repositoryManager
+            var checkIfEmployeeeHasVacation = await repositoryManager
                 .RequestVacationRepository.Get(c => !c.Request.IsDeleted &&
                 c.Request.Id != model.Id &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
@@ -135,12 +135,12 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
                 .FirstOrDefaultAsync();
 
-            if (CheckIfEmployeeeHasVacation != null)
+            if (checkIfEmployeeeHasVacation != null)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasVacationRequestInTheSameDate);
             }
 
-            var CheckIfEmployeeeHasTask = await repositoryManager
+            var checkIfEmployeeeHasTask = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
                 (c.RequestTask.Request.Status == RequestStatus.Pending || c.RequestTask.Request.Status == RequestStatus.Accepted) &&
                 c.RequestTask.Request.CompanyId == requestInfo.CompanyId &&
@@ -150,7 +150,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date))
                 .FirstOrDefaultAsync();
 
-            if (CheckIfEmployeeeHasVacation != null)
+            if (checkIfEmployeeeHasTask != null)
             {
                 throw new BusinessValidationException(LeillaKeys.SorryCannotMakeAssignmentRequestEmployeeHasTaskRequestInTheSameDate);
             }

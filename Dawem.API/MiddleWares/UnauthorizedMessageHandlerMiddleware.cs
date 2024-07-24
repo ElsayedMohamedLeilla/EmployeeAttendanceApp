@@ -24,7 +24,7 @@ namespace Dawem.API.MiddleWares
 
             var isForbiddenUser = false;
 
-            if (!requestInfo.IsSignInRequest && ((requestInfo.IsAdminPanelRequest && !requestInfo.IsAdminPanelUser) ||
+            if (!requestInfo.IsAnonymousRequest && ((requestInfo.IsAdminPanelRequest && !requestInfo.IsAdminPanelUser) ||
                 (!requestInfo.IsAdminPanelRequest && requestInfo.IsAdminPanelUser)))
             {
                 isForbiddenUser = true;

@@ -322,7 +322,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                                             </head>
                                             <body>
                                             <h1>مرحباً  " + user.Name + @"</h1>
-                                            <h2>شكراً لتسجيلك بالتجربة المجانية مع شركة داوم.</h2>
+                                            <h2>شكراً لتسجيلك مع شركة داوم.</h2>
                                             <h3>الكود التعريفي لشركتك هو:  " + identityCode + @"</h3>
                                             <h3>يرجي الاحتفاظ بالكود التعريفي لتسجيل الدخول بإستخدامه لاحقا.</h3>
                                             <p>لاستكمال عملية التسجيل، يرجى الضغط على الرابط التالي لتأكيد عنوان البريد الإلكتروني الخاص بك وتفعيل الحساب الجديد:</p>                   
@@ -485,6 +485,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                         {
                             new()
                             {
+                                CompanyId = user.CompanyId ?? 0,
                                 FCMToken = model.FCMToken,
                                 DeviceType = model.ApplicationType,
                                 LastLogInDate = DateTime.UtcNow

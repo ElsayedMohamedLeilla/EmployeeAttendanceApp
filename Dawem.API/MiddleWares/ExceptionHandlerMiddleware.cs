@@ -113,6 +113,7 @@ namespace Dawem.API.MiddleWares
             }
             catch (Exception exception)
             {
+                
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 response.State = ResponseStatus.Error;
                 response.Message = TranslationHelper.

@@ -45,7 +45,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, getEmployeesThatOverlaped) + LeillaKeys.RightBracket);
             }
 
-            var CheckIfTaskEmployeesHasAnotherRequestVacation = await repositoryManager
+            var checkIfTaskEmployeesHasAnotherRequestVacation = await repositoryManager
                 .RequestVacationRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
@@ -58,17 +58,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .Take(5)
                 .ToListAsync();
 
-            if (CheckIfTaskEmployeesHasAnotherRequestVacation != null && CheckIfTaskEmployeesHasAnotherRequestVacation.Count > 0)
+            if (checkIfTaskEmployeesHasAnotherRequestVacation != null && checkIfTaskEmployeesHasAnotherRequestVacation.Count > 0)
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
                     .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
-                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestVacation) + LeillaKeys.RightBracket);
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, checkIfTaskEmployeesHasAnotherRequestVacation) + LeillaKeys.RightBracket);
             }
 
-            var CheckIfTaskEmployeesHasAnotherRequestAssignment = await repositoryManager
+            var checkIfTaskEmployeesHasAnotherRequestAssignment = await repositoryManager
                 .RequestAssignmentRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
@@ -81,14 +81,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .Take(5)
                 .ToListAsync();
 
-            if (CheckIfTaskEmployeesHasAnotherRequestAssignment != null && CheckIfTaskEmployeesHasAnotherRequestAssignment.Count > 0)
+            if (checkIfTaskEmployeesHasAnotherRequestAssignment != null && checkIfTaskEmployeesHasAnotherRequestAssignment.Count > 0)
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
                     .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasAssignmentRequestThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
-                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, checkIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
             }
 
             int? getCurrentEmployeeId = null;
@@ -169,7 +169,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, getEmployeesThatOverlaped) + LeillaKeys.RightBracket);
             }
 
-            var CheckIfTaskEmployeesHasAnotherRequestVacation = await repositoryManager
+            var checkIfTaskEmployeesHasAnotherRequestVacation = await repositoryManager
                 .RequestVacationRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
@@ -182,17 +182,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .Take(5)
                 .ToListAsync();
 
-            if (CheckIfTaskEmployeesHasAnotherRequestVacation != null && CheckIfTaskEmployeesHasAnotherRequestVacation.Count > 0)
+            if (checkIfTaskEmployeesHasAnotherRequestVacation != null && checkIfTaskEmployeesHasAnotherRequestVacation.Count > 0)
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
                     .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
-                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestVacation) + LeillaKeys.RightBracket);
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, checkIfTaskEmployeesHasAnotherRequestVacation) + LeillaKeys.RightBracket);
             }
 
-            var CheckIfTaskEmployeesHasAnotherRequestAssignment = await repositoryManager
+            var checkIfTaskEmployeesHasAnotherRequestAssignment = await repositoryManager
                 .RequestAssignmentRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
@@ -205,14 +205,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .Take(5)
                 .ToListAsync();
 
-            if (CheckIfTaskEmployeesHasAnotherRequestAssignment != null && CheckIfTaskEmployeesHasAnotherRequestAssignment.Count > 0)
+            if (checkIfTaskEmployeesHasAnotherRequestAssignment != null && checkIfTaskEmployeesHasAnotherRequestAssignment.Count > 0)
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
                     .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasVacationRequestThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
-                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, CheckIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, checkIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
             }
 
             int? getCurrentEmployeeId = null;

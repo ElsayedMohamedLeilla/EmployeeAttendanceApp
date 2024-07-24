@@ -12,7 +12,7 @@ namespace Dawem.Domain.Entities.Subscriptions
         public decimal EmployeeCost { get; set; }
         public bool IsTrial { get; set; }
         public bool AllScreensAvailable { get; set; }
-        public List<PlanNameTranslation> PlanNameTranslations { get; set; }
+        public List<PlanNameTranslation> NameTranslations { get; set; }
         public List<Subscription> Subscriptions { get; set; }
         public List<PlanScreen> PlanScreens { get; set; }
     }

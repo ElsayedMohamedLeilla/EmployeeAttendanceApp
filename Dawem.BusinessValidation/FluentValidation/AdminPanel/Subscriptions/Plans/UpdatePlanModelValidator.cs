@@ -20,7 +20,7 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
                 WithMessage(LeillaKeys.SorryYouMustEnterPlanMaxNumberOfEmployees);
 
             RuleFor(model => model.EmployeeCost).
-                Must(x => x > 0).
+                Must(x => x >= 0).
                 WithMessage(LeillaKeys.SorryYouMustEnterPlanEmployeeCost);
 
             RuleFor(model => model).

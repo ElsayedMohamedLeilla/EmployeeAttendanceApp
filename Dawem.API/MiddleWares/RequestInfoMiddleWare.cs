@@ -101,7 +101,8 @@ namespace Dawem.API.MiddleWares
                 requestInfo.CompanyId = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 
-            requestInfo.IsSignInRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.SignIn);
+            
+            requestInfo.IsAnonymousRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.Authentication.ToLower());
             requestInfo.IsAdminPanelRequest = requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
             requestInfo.IsAdminPanelUser = requestInfo?.User != null & requestInfo?.User?.Type == AuthenticationType.AdminPanel;
 

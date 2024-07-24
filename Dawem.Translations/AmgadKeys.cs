@@ -65,6 +65,7 @@
         public const string SorryYouMustEnterDateFromForJustificationRequest = "Sorry!!YouMustEnterDateFromForJustificationRequest!";
         public const string SorryYouMustEnterDateToForJustificationRequest = "Sorry!!YouMustEnterDateToForJustificationRequest!";
         public const string SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod!";
+        public const string SorryThisEmployeeHasVacationInSelectedPeriod = "Sorry!!ThisEmployeeHasVacationInSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod!";
         public const string DoneCreateVacationRequestSuccessfully = "DoneCreateVacationRequestSuccessfully";

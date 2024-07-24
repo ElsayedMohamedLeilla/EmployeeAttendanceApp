@@ -202,6 +202,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         #endregion
 
         #region Summon Reports
+        //11
         public HttpResponseMessage GenerateBriefingSummonsInPeriodReport(BriefingSummonsInPeriodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -211,8 +212,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
+            report.SetParameterValue("ZoneIDs", param.ZoneIDs == null || !param.ZoneIDs.Any() ? null : string.Join(',', param.ZoneIDs));
+            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
             report.SetParameterValue("NotifiyWay", param.NotifiyWay);
             report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
             report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
@@ -232,8 +234,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
+            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
+            report.SetParameterValue("EmployeeIDs", param.EmployeeIDs == null || !param.EmployeeIDs.Any() ? null : string.Join(',', param.EmployeeIDs));
             report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
             report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
             report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);
@@ -254,8 +257,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
+            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
+            report.SetParameterValue("EmployeeIDs", param.EmployeeIDs == null || !param.EmployeeIDs.Any() ? null : string.Join(',', param.EmployeeIDs));
             report.SetParameterValue("NotifiyWay", param.NotifiyWay ?? ReportNotifyWay.All);
             report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
             report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);

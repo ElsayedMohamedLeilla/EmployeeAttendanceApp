@@ -29,6 +29,7 @@ namespace Dawem.API.MiddleWares
             ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.Lang = requestInfo.Lang == null || requestInfo.Lang.Length > 2 ? "ar" : requestInfo.Lang;
             requestInfo.RequestPath = httpContext.Request.Path;
 
             int userId = 0;

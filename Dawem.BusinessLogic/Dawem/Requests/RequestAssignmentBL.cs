@@ -314,7 +314,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestAssignmentsList = await queryPaged.Select(requestAssignment => new GetRequestAssignmentsResponseModel
+            var requestAssignmentsList = await queryPaged.IgnoreQueryFilters().Select(requestAssignment => new GetRequestAssignmentsResponseModel
             {
                 Id = requestAssignment.Request.Id,
                 Code = requestAssignment.Request.Code,
@@ -356,7 +356,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             var employeeAssignments = await repositoryManager.RequestAssignmentRepository
                 .Get(a => !a.Request.IsDeleted && a.Request.EmployeeId == getEmployeeId
                 && a.Request.Date.Month == criteria.Month
-                && a.Request.Date.Year == criteria.Year)
+                && a.Request.Date.Year == criteria.Year).IgnoreQueryFilters()
                 .Select(requestAssignment => new
                 {
                     requestAssignment.Request.Id,
@@ -522,7 +522,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestAssignmentInfoResponseModel> GetInfo(int requestId)
         {
-            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestAssignment => new GetRequestAssignmentInfoResponseModel
                 {
                     Code = requestAssignment.Request.Code,
@@ -553,7 +554,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestAssignmentByIdResponseModel> GetById(int RequestAssignmentId)
         {
-            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == RequestAssignmentId && !e.IsDeleted)
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.
+                Get(e => e.Request.Id == RequestAssignmentId && !e.IsDeleted).IgnoreQueryFilters()
                 .Select(requestAssignment => new GetRequestAssignmentByIdResponseModel
                 {
                     Id = requestAssignment.Request.Id,

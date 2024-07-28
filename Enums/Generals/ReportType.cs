@@ -18,7 +18,20 @@
         StatisticsOverAperiodReport,
         StatisticsReportOverAperiodByDepartmentReport,
         StatisticsReportOverAperiodGroupByMonthReport,
-        EmployeesReport
+        AttendanceAndDepartureForEmployeesReport,
+        DepartmentsReport,
+        EmployeesReport,
+        GroupsReport,
+        RequestsReport,
+        SanctionsReport,
+        SchedulePlanLogsReport,
+        SchedulePlansReport,
+        SchedulesReport,
+        ShiftsReport,
+        SummonsLogsReport,
+        SummonsReport,
+        VacationBalancesReport,
+        ZonesReport
 
     }
 }

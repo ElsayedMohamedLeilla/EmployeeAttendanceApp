@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/08/2024 07:43:11" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/28/2024 18:03:36" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table2" Alias="RequestsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetRequestsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@EmployeesIds ,&#13;&#10;@Ids,&#13;&#10;@Lang &#13;&#10;&#13;&#10;">
+      <TableDataSource Name="Table2" Alias="RequestsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetRequestsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@EmployeesIds ,&#13;&#10;@GroupsIds ,&#13;&#10;@DepartmentsIds ,&#13;&#10;@Ids,&#13;&#10;@Lang,&#13;&#10;@DateFromString,&#13;&#10;@DateToString&#13;&#10;&#13;&#10;">
         <Column Name="RowIndex" DataType="System.Int64"/>
         <Column Name="EmployeeName" DataType="System.String"/>
         <Column Name="Code" DataType="System.Int32"/>
@@ -16,7 +16,11 @@
         <CommandParameter Name="IsActive" DataType="2" Expression="[IsActive]"/>
         <CommandParameter Name="Ids" DataType="12" Expression="[Ids]"/>
         <CommandParameter Name="Lang" DataType="12" Expression="[Lang]"/>
-        <CommandParameter Name="EmployeesIds" DataType="22" Expression="[EmployeesIds]"/>
+        <CommandParameter Name="EmployeesIds" DataType="12" Expression="[EmployeesIds]"/>
+        <CommandParameter Name="GroupsIds" DataType="12" Expression="[GroupsIds]"/>
+        <CommandParameter Name="DepartmentsIds" DataType="12" Expression="[DepartmentsIds]"/>
+        <CommandParameter Name="DateFromString" DataType="12" Expression="[DateFromString]"/>
+        <CommandParameter Name="DateToString" DataType="12" Expression="[DateToString]"/>
       </TableDataSource>
     </MsSqlDataConnection>
     <Parameter Name="CompanyID" DataType="System.Int32" AsString=""/>
@@ -33,6 +37,8 @@
     <Parameter Name="EmployeesIds" DataType="System.String" AsString=""/>
     <Parameter Name="GroupsIds" DataType="System.String" AsString=""/>
     <Parameter Name="DepartmentsIds" DataType="System.String" AsString=""/>
+    <Parameter Name="DateFromString" DataType="System.String" AsString=""/>
+    <Parameter Name="DateToString" DataType="System.String" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Border.Lines="All" Border.Style="Double" Watermark.Enabled="true" Watermark.Text="DAWEM" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="132.75" Guides="28.35,47.25">
@@ -49,33 +55,25 @@
       </ContainerObject>
       <TextObject Name="Text85" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeesIds" Font="Arial, 10pt"/>
       <TextObject Name="Text87" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeesIds" Font="Arial, 10pt"/>
+      <TextObject Name="Text97" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="String" Font="Arial, 10pt"/>
     </ReportTitleBand>
-    <PageHeaderBand Name="PageHeader1" Top="136.75" Width="718.2" Height="0.45"/>
-    <DataBand Name="Data1" Top="141.2" Width="718.2" Height="76.05" Border.Lines="All" Guides="160.65,160.65,160.65" DataSource="Table2">
-      <TextObject Name="Text75" Left="661.5" Top="18.9" Width="39" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text81" Left="274.05" Top="18.9" Width="114.6" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="نوع الطلب" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TableObject Name="Table3" Left="9.45" Top="47.25" Width="694.99" Height="28.35" Border.Lines="All" Border.Width="1.5">
-        <TableColumn Name="Column1" Width="138.29"/>
-        <TableColumn Name="Column2" Width="128.88"/>
-        <TableColumn Name="Column10" Width="113.4"/>
-        <TableColumn Name="Column8" Width="176.15"/>
-        <TableColumn Name="Column9" Width="94.49"/>
-        <TableColumn Name="Column7" Width="43.78"/>
-        <TableRow Name="Row1" Height="28.35">
-          <TableCell Name="Cell1" Border.Lines="All" Border.Width="2" Text="[RequestsTable.RequestDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell2" Border.Lines="All" Text="[RequestsTable.RequestStatus]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell10" Border.Lines="All" Text="[RequestsTable.RequestType]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell8" Border.Lines="All" Text="[RequestsTable.EmployeeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell9" Border.Lines="All" Text="[RequestsTable.Code]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell7" Border.Lines="All" Text="[RequestsTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-        </TableRow>
-      </TableObject>
-      <TextObject Name="Text72" Left="151.2" Top="18.9" Width="124.05" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حالة الطب" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text89" Left="567" Top="18.9" Width="95.7" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="كود الطلب" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text74" Left="9.45" Top="18.9" Width="142.95" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="التاريخ" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text90" Left="387.45" Top="18.9" Width="180.75" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="إسم الموظف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+    <PageHeaderBand Name="PageHeader1" Top="136.75" Width="718.2" Height="38.25">
+      <TextObject Name="Text75" Left="661.5" Top="9.45" Width="39" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text81" Left="274.05" Top="9.45" Width="114.6" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="نوع الطلب" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text72" Left="151.2" Top="9.45" Width="124.05" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حالة الطب" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text89" Left="567" Top="9.45" Width="95.7" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="كود الطلب" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text74" Left="9.45" Top="9.45" Width="142.95" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="التاريخ" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text90" Left="387.45" Top="9.45" Width="180.75" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="إسم الموظف" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="179" Width="718.2" Height="28.8" Border.Lines="All" Guides="160.65,160.65,160.65" DataSource="Table2">
+      <TextObject Name="Text91" Left="661.5" Width="37.8" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text92" Left="567" Width="94.5" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.Code]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text93" Left="387.45" Width="179.55" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.EmployeeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text94" Left="274.05" Width="113.4" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.RequestType]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text95" Left="151.2" Width="122.85" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.RequestStatus]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text96" Left="9.45" Width="141.75" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[RequestsTable.RequestDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
     </DataBand>
-    <PageFooterBand Name="PageFooter1" Top="221.25" Width="718.2" Height="28.35" Border.Lines="Top" Border.Style="Double" Border.Width="1.5" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
+    <PageFooterBand Name="PageFooter1" Top="211.8" Width="718.2" Height="28.35" Border.Lines="Top" Border.Style="Double" Border.Width="1.5" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
       <TextObject Name="Text33" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
       <TextObject Name="Text35" Left="557.55" Width="160.65" Height="28.35" Text="[Date]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>

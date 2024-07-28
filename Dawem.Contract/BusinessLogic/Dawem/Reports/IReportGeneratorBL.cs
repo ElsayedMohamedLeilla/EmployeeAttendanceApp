@@ -37,6 +37,15 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
 
         #endregion
 
+        #region Base Data
+        HttpResponseMessage GenerateAttendanceAndDepartureForEmployeesReport(AttendanceAndDepartureForEmployeesReportCritria param);
+        HttpResponseMessage GenerateDepartmentsReport(DepartmentsReportCritria param);
+        HttpResponseMessage GenerateEmployeesReport(EmployeesReportCritria param);
+        HttpResponseMessage GenerateGroupsReport(GroupsReportCritria param);
+        HttpResponseMessage GenerateRequestsReport(RequestsReportCritria param);
+
+        #endregion
+
 
         //Report GenerateReport(ExporterModelDTO exporterModelDTO, BaseReportCritria param);
         public IEnumerable<dynamic> GetDataSource(object[] parameters, ReportType reportType);

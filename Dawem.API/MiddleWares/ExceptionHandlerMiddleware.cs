@@ -109,11 +109,9 @@ namespace Dawem.API.MiddleWares
                 statusCode = (int)HttpStatusCode.UnprocessableEntity;
                 response.State = ResponseStatus.ValidationError;
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
-
             }
             catch (Exception exception)
-            {
-                
+            {                
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 response.State = ResponseStatus.Error;
                 response.Message = TranslationHelper.
@@ -121,6 +119,5 @@ namespace Dawem.API.MiddleWares
                 await ReturnHelper.Return(unitOfWork, context, statusCode, response);
             }
         }
-
     }
 }

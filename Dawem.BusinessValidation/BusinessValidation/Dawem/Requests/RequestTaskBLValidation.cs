@@ -22,11 +22,36 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
         }
         public async Task<int?> CreateValidation(CreateRequestTaskModelDTO model)
         {
-            var getEmployeesThatOverlaped = await repositoryManager
+            #region Request Employee
+
+            int? getCurrentEmployeeId = null;
+
+            if (!model.ForEmployee)
+            {
+                getCurrentEmployeeId = model.EmployeeId = await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null).AnyAsync() ?
+                 await repositoryManager.UserRepository
+               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null)
+               .Select(e => e.EmployeeId)
+               .FirstOrDefaultAsync() : null;
+
+                if (getCurrentEmployeeId == null)
+                {
+                    throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
+                }
+            }
+            else
+            {
+                getCurrentEmployeeId = model.EmployeeId;
+            }
+
+            #endregion
+
+            var getEmployeesThatOverlapedRequestTaskEmployees = await repositoryManager
                 .RequestTaskEmployeeRepository.Get(c => !c.RequestTask.Request.IsDeleted &&
                 (c.RequestTask.Request.Status == RequestStatus.Pending || c.RequestTask.Request.Status == RequestStatus.Accepted) &&
                 c.RequestTask.Request.CompanyId == requestInfo.CompanyId &&
-                model.TaskEmployeeIds.Contains(c.EmployeeId) &&
+                (c.RequestTask.Request.EmployeeId == model.EmployeeId || model.TaskEmployeeIds.Contains(c.EmployeeId)) &&
                 (model.DateFrom.Date >= c.RequestTask.Request.Date.Date && model.DateFrom.Date <= c.RequestTask.DateTo.Date ||
                 model.DateTo.Date >= c.RequestTask.Request.Date.Date && model.DateTo.Date <= c.RequestTask.DateTo.Date ||
                 model.DateFrom.Date <= c.RequestTask.Request.Date.Date && model.DateTo.Date >= c.RequestTask.DateTo.Date))
@@ -35,14 +60,37 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .Take(5)
                 .ToListAsync();
 
-            if (getEmployeesThatOverlaped != null && getEmployeesThatOverlaped.Count > 0)
+            if (getEmployeesThatOverlapedRequestTaskEmployees != null && getEmployeesThatOverlapedRequestTaskEmployees.Count > 0)
             {
                 throw new BusinessValidationException(messageCode: null,
                     message: TranslationHelper
                     .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate, requestInfo.Lang)
                     + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
-                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, getEmployeesThatOverlaped) + LeillaKeys.RightBracket);
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, getEmployeesThatOverlapedRequestTaskEmployees) + LeillaKeys.RightBracket);
+            }
+
+            var getEmployeesThatOverlapedRequestTask = await repositoryManager
+                .RequestTaskRepository.Get(c => !c.Request.IsDeleted &&
+                (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
+                c.Request.CompanyId == requestInfo.CompanyId &&
+                c.Request.EmployeeId == model.EmployeeId &&
+                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
+                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
+                .Select(t => t.Request.Employee.Name)
+                .Distinct()
+                .Take(5)
+                .ToListAsync();
+
+            if (getEmployeesThatOverlapedRequestTask != null && getEmployeesThatOverlapedRequestTask.Count > 0)
+            {
+                throw new BusinessValidationException(messageCode: null,
+                    message: TranslationHelper
+                    .GetTranslation(LeillaKeys.SorryYouChooseEmployeesThatHasAnotherRequestTaskThatOverlappedInDate, requestInfo.Lang)
+                    + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.EmployeesNames, requestInfo.Lang)
+                    + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, getEmployeesThatOverlapedRequestTask) + LeillaKeys.RightBracket);
             }
 
             var checkIfTaskEmployeesHasAnotherRequestVacation = await repositoryManager
@@ -72,7 +120,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 .RequestAssignmentRepository.Get(c => !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
-                model.TaskEmployeeIds.Contains(c.Request.EmployeeId) &&
+                (c.Request.EmployeeId == model.EmployeeId || model.TaskEmployeeIds.Contains(c.Request.EmployeeId)) &&
                 (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
                 model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
                 model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
@@ -91,27 +139,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                     + LeillaKeys.LeftBracket + string.Join(LeillaKeys.CommaThenSpace, checkIfTaskEmployeesHasAnotherRequestAssignment) + LeillaKeys.RightBracket);
             }
 
-            int? getCurrentEmployeeId = null;
-
-            if (!model.ForEmployee)
-            {
-                getCurrentEmployeeId = await repositoryManager.UserRepository
-               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null).AnyAsync() ?
-                 await repositoryManager.UserRepository
-               .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Id == requestInfo.UserId && e.EmployeeId != null)
-               .Select(e => e.EmployeeId)
-               .FirstOrDefaultAsync() : null;
-
-                if (getCurrentEmployeeId == null)
-                {
-                    throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
-                }
-            }
-            else
-            {
-                getCurrentEmployeeId = model.EmployeeId;
-            }
-
             #region Validate Request Type
 
             var checkRequestType = await repositoryManager.TaskTypeRepository
@@ -124,7 +151,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
             }
 
             #endregion
-
 
             return getCurrentEmployeeId;
         }

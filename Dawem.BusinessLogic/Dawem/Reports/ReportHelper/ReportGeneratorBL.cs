@@ -14,6 +14,7 @@ using FastReport.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 {
     public class ReportGeneratorBL : IReportGeneratorBL
@@ -313,9 +314,75 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         }
         #endregion
 
+        #region Base Data
+
+        public HttpResponseMessage GenerateAttendanceAndDepartureForEmployeesReport(AttendanceAndDepartureForEmployeesReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.AttendanceAndDepartureForEmployeesReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateDepartmentsReport(DepartmentsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.DepartmentsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateEmployeesReport(EmployeesReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.EmployeesReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateGroupsReport(GroupsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.GroupsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateRequestsReport(RequestsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.RequestsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+        
+            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
+            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
+            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+
+        #endregion
+
         public Report GenerateReport(ExporterModelDTO exporterModelDTO, BaseReportCritria param)
         {
             #region Fill Main Date
+
             exporterModelDTO.ReportName = param.ExportFormat == ExportFormat.Pdf ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Pdf :
                              param.ExportFormat == ExportFormat.Excel ? exporterModelDTO.ReportType.ToString() + AmgadKeys.Xlsx :
                              "";
@@ -328,6 +395,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
                 com.Country.NameAr,
                 com.LogoImageName
             }).FirstOrDefault();
+
             exporterModelDTO.CompanyName = ComObj.Name;
             exporterModelDTO.CompanyEmail = ComObj.Email ?? "No Email";
             exporterModelDTO.CountryName = ComObj.NameAr;
@@ -402,18 +470,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 
 
         #region Set Paremetes Methods
-        private static void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
+        private void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
         {
-            report.SetParameterValue("DateFrom", param.DateFrom);
-            report.SetParameterValue("DateTo", param.DateTo);
+            report.SetParameterValue("Lang", _requestInfo.Lang);
+            report.SetParameterValue("FreeText", param.FreeText);
             report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
             report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
-            report.SetParameterValue("DateFromString", param.DateFrom.ToShortDateString());
-            report.SetParameterValue("DateToString", param.DateTo.ToShortDateString());
+            report.SetParameterValue("DateFromString", param.DateFrom != null ? param.DateFrom.Value.ToString("dd-MM-yyyy") : null);
+            report.SetParameterValue("DateToString", param.DateTo != null ? param.DateTo.Value.ToString("dd-MM-yyyy") : null);
             report.SetParameterValue("CompanyEmail", exporterModelDTO.CompanyEmail);
             report.SetParameterValue("CountryName", exporterModelDTO.CountryName);
-
-
         }
         //private static void SetEmployeeDailyAttendanceGroupByDayReportParameters(Report report, BaseReportCritria param)
         //{

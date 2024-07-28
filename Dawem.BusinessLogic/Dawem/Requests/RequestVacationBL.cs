@@ -307,7 +307,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestVacationsList = await queryPaged.Select(requestVacation => new GetRequestVacationsResponseModelDTO
+            var requestVacationsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestVacation => new GetRequestVacationsResponseModelDTO
             {
                 Id = requestVacation.Request.Id,
                 Code = requestVacation.Request.Code,
@@ -363,7 +364,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestVacationsList = await queryPaged.Select(requestVacation => new EmployeeGetRequestVacationsResponseModelDTO
+            var requestVacationsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestVacation => new EmployeeGetRequestVacationsResponseModelDTO
             {
                 Id = requestVacation.Request.Id,
                 Code = requestVacation.Request.Code,
@@ -426,7 +428,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestVacationInfoResponseDTO> GetInfo(int requestId)
         {
-            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestVacation = await repositoryManager.RequestVacationRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestVacation => new GetRequestVacationInfoResponseDTO
                 {
                     Code = requestVacation.Request.Code,
@@ -460,7 +463,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestVacationByIdResponseDTO> GetById(int RequestVacationId)
         {
-            var requestVacation = await repositoryManager.RequestVacationRepository.Get(e => e.Request.Id == RequestVacationId && !e.IsDeleted)
+            var requestVacation = await repositoryManager.RequestVacationRepository.
+                Get(e => e.Request.Id == RequestVacationId && !e.IsDeleted).IgnoreQueryFilters()
                 .Select(requestVacation => new GetRequestVacationByIdResponseDTO
                 {
                     Id = requestVacation.Request.Id,

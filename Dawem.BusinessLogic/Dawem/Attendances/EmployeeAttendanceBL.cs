@@ -292,7 +292,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             checkOutDateTime.Value.TimeOfDay < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,
                             TotalTime = checkOutDateTime != null && checkOutDateTime != null ?
-                            new DateTime((checkOutDateTime.Value - checkInDateTime.Value).Ticks).ToString("hh:mm") + 
+                            new DateTime((checkOutDateTime.Value - checkInDateTime.Value).Ticks).ToString("hh:mm") +
                             LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
                             Notes = isScheduleVacationDay ?
                             TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
@@ -665,23 +665,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Delays
 
-            var dayTotalDelaysCount = await employeeRepository.Get(employee => !employee.IsDeleted &&
-            employee.CompanyId == currentCompanyId &&
-            employee.ScheduleId != null &&
-            employee.Schedule.ScheduleDays != null &&
-            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
-            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
-            clientLocalTimeOnly >= employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
-            employee.EmployeeAttendances != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks.FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn) != null &&
-
-            EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
-            (DateTime)(object)employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
-            .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate)
-            > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes)
-                .CountAsync();
+            var dayTotalDelaysCount = await employeeAttendanceRepository.
+                Get(ea => !ea.IsDeleted && ea.CompanyId == currentCompanyId &&
+                ea.LocalDate.Date == clientLocalDate &&
+                EF.Functions.DateDiffMinute((DateTime)(object)ea.ShiftCheckInTime, (DateTime)(object)ea.CheckInDateTime) > ea.AllowedMinutes).
+                 CountAsync();
 
             #endregion
 

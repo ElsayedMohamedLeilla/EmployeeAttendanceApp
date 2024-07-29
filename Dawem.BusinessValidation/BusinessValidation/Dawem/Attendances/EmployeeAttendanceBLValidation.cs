@@ -238,11 +238,11 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 !model.FromExcel)
             {
                 if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) /*&& getEmployee.Id != 13*/)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }
-                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }

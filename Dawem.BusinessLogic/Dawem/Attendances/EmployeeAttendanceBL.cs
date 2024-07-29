@@ -667,8 +667,8 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             var dayTotalDelaysCount = await employeeAttendanceRepository.
                 Get(ea => !ea.IsDeleted && ea.CompanyId == currentCompanyId &&
-                ea.LocalDate.Date == clientLocalDate &&
-                EF.Functions.DateDiffMinute((DateTime)(object)ea.ShiftCheckInTime, (DateTime)(object)ea.CheckInDateTime) > ea.AllowedMinutes).
+                ea.LocalDate.Date == clientLocalDate && ea.CheckInDateTime != null &&
+                EF.Functions.DateDiffMinute((DateTime)(object)ea.ShiftCheckInTime, (DateTime)(object)ea.CheckInDateTime.Value.TimeOfDay) > ea.AllowedMinutes).
                  CountAsync();
 
             #endregion

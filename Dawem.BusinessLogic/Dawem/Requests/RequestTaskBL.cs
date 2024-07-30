@@ -341,7 +341,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestTasksList = await queryPaged.Select(requestTask => new GetRequestTasksResponseModel
+            var requestTasksList = await queryPaged.IgnoreQueryFilters().Select(requestTask => new GetRequestTasksResponseModel
             {
                 Id = requestTask.Request.Id,
                 Code = requestTask.Request.Code,
@@ -385,7 +385,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 a.TaskEmployees.Any(e => e.EmployeeId == getEmployeeId))
                 && ((a.Request.Date.Month == criteria.Month
                 && a.Request.Date.Year == criteria.Year) || (a.Request.RequestTask.DateTo.Month == criteria.Month
-                && a.Request.RequestTask.DateTo.Year == criteria.Year)))
+                && a.Request.RequestTask.DateTo.Year == criteria.Year))).IgnoreQueryFilters()
                 .Select(requestTask => new
                 {
                     requestTask.Request.Id,
@@ -561,7 +561,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestTaskInfoResponseModel> GetInfo(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestTask = await repositoryManager.RequestTaskRepository
+                .Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestTask => new GetRequestTaskInfoResponseModel
                 {
                     Code = requestTask.Request.Code,
@@ -593,7 +594,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestTaskByIdResponseModel> GetById(int requestId)
         {
-            var requestTask = await repositoryManager.RequestTaskRepository.Get(e => e.Request.Id == requestId && !e.IsDeleted)
+            var requestTask = await repositoryManager.RequestTaskRepository.
+                Get(e => e.Request.Id == requestId && !e.IsDeleted).IgnoreQueryFilters()
                 .Select(requestTask => new GetRequestTaskByIdResponseModel
                 {
                     Id = requestTask.Request.Id,

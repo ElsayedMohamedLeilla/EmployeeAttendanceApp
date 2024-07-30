@@ -29,6 +29,7 @@ namespace Dawem.API.MiddleWares
             ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.Lang = requestInfo.Lang == null || requestInfo.Lang.Length > 2 ? "ar" : requestInfo.Lang;
             requestInfo.RequestPath = httpContext.Request.Path;
 
             int userId = 0;
@@ -101,7 +102,8 @@ namespace Dawem.API.MiddleWares
                 requestInfo.CompanyId = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 
-            requestInfo.IsSignInRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.SignIn);
+            
+            requestInfo.IsAnonymousRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.Authentication.ToLower());
             requestInfo.IsAdminPanelRequest = requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
             requestInfo.IsAdminPanelUser = requestInfo?.User != null & requestInfo?.User?.Type == AuthenticationType.AdminPanel;
 

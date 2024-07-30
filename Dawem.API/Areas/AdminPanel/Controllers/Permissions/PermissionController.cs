@@ -137,5 +137,11 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Permissions
             var count = response?.MenuItems?.Count ?? 0;
             return Success(response, count);
         }
+        [HttpGet]
+        public ActionResult GetAllActions()
+        {
+            var response = ControllerActionHelper.GetAllActions(requestInfo);
+            return Success(response, response.Actions.Count);
+        }
     }
 }

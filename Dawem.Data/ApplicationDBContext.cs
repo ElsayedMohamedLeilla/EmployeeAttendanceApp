@@ -135,7 +135,7 @@ namespace Dawem.Data
 
             modelBuilder.Entity<PlanNameTranslation>().
                 HasOne(p => p.Plan).
-                WithMany(b => b.PlanNameTranslations).
+                WithMany(b => b.NameTranslations).
                 HasForeignKey(p => p.PlanId).
                 OnDelete(DeleteBehavior.Cascade);
 

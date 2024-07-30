@@ -315,7 +315,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestJustificationsList = await queryPaged.Select(requestJustification => new GetRequestJustificationsResponseModelDTO
+            var requestJustificationsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestJustification => new GetRequestJustificationsResponseModelDTO
             {
                 Id = requestJustification.Request.Id,
                 Code = requestJustification.Request.Code,
@@ -370,14 +371,14 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestJustificationsList = await queryPaged.
+            var requestJustificationsList = await queryPaged.IgnoreQueryFilters().
                 Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
                 {
                     Id = requestJustification.Request.Id,
                     Code = requestJustification.Request.Code,
                     AddedDate = requestJustification.Request.AddedDate,
                     DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
-                requestJustification.Request.Employee.DirectManager.Name : null,
+                    requestJustification.Request.Employee.DirectManager.Name : null,
                     JustificationTypeName = requestJustification.JustificatioType.Name,
                     DateFrom = requestJustification.Request.Date,
                     DateTo = requestJustification.DateTo,
@@ -432,7 +433,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestJustificationInfoResponseDTO> GetInfo(int requestId)
         {
-            var requestJustification = await repositoryManager.RequestJustificationRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestJustification = await repositoryManager.RequestJustificationRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestJustification => new GetRequestJustificationInfoResponseDTO
                 {
                     Code = requestJustification.Request.Code,

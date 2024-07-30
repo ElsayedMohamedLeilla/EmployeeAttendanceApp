@@ -11,6 +11,7 @@
         public const string AttendanceReports = "AttendanceReports";
         public const string SummonReports = "SummonReports";
         public const string StatisticsReports = "StatisticsReports";
+        public const string BaseData = "BaseData";
         public const string InfoImageName = "info.jpg";
         public const string WarningImageName = "warning.jpg";
         public const string ErrorImageName = "error.jpg";
@@ -65,6 +66,7 @@
         public const string SorryYouMustEnterDateFromForJustificationRequest = "Sorry!!YouMustEnterDateFromForJustificationRequest!";
         public const string SorryYouMustEnterDateToForJustificationRequest = "Sorry!!YouMustEnterDateToForJustificationRequest!";
         public const string SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod!";
+        public const string SorryThisEmployeeHasVacationInSelectedPeriod = "Sorry!!ThisEmployeeHasVacationInSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod!";
         public const string DoneCreateVacationRequestSuccessfully = "DoneCreateVacationRequestSuccessfully";

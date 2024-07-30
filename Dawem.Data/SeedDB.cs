@@ -174,7 +174,7 @@ namespace Dawem.Data
                     IsTrial = true,
                     MinNumberOfEmployees = 1,
                     MaxNumberOfEmployees = 2,
-                    PlanNameTranslations = new()
+                    NameTranslations = new()
                     {
                         new ()
                         {
@@ -195,7 +195,7 @@ namespace Dawem.Data
                     EmployeeCost = 5,
                     MinNumberOfEmployees = 1,
                     MaxNumberOfEmployees = 100,
-                    PlanNameTranslations = new()
+                    NameTranslations = new()
                     {
                         new ()
                         {
@@ -216,7 +216,7 @@ namespace Dawem.Data
                     EmployeeCost = 4,
                     MinNumberOfEmployees = 101,
                     MaxNumberOfEmployees = 500,
-                    PlanNameTranslations = new()
+                    NameTranslations = new()
                     {
                         new ()
                         {
@@ -237,7 +237,7 @@ namespace Dawem.Data
                     EmployeeCost = 3,
                     MinNumberOfEmployees = 501,
                     MaxNumberOfEmployees = 1000,
-                    PlanNameTranslations = new()
+                    NameTranslations = new()
                     {
                         new ()
                         {
@@ -270,7 +270,7 @@ namespace Dawem.Data
                 var getAllCompanies = context.Companies.ToList();
                 var code = 0;
                 var getBasicPlan = context.Plans
-                    .FirstOrDefault(p => p.PlanNameTranslations.Any(pt => pt.Name == "Medium"));
+                    .FirstOrDefault(p => p.NameTranslations.Any(pt => pt.Name == "Medium"));
 
                 foreach (var company in getAllCompanies)
                 {

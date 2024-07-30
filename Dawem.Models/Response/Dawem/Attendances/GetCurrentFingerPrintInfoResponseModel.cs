@@ -9,6 +9,7 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public int? Code { get; set; }
         public DateTime? CheckInDateTime { get; set; }
         public DateTime? CheckOutDateTime { get; set; }
+        public DateTime? BreakInDateTime { get; set; }
         public FingerPrintType? LastFingetPrintType { get; set; }
         public FingerPrintType DefaultCheckType { get; set; }
         public DateTime LocalDate { get; set; }

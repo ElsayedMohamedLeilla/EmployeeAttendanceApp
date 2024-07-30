@@ -9,27 +9,22 @@ namespace Dawem.Models.AutoMapper.Dawem.Subscriptions
     {
         public PlanMapProfile()
         {
-            CreateMap<CreatePlanModel, Plan>().
-                ForMember(dest => dest.PlanNameTranslations, opt => opt.MapFrom(src => src.NameTranslations))
-                .AfterMap(MapPlanScreens); ;
-            CreateMap<UpdatePlanModel, Plan>().
-                ForMember(dest => dest.PlanNameTranslations, opt => opt.MapFrom(src => src.NameTranslations))
-                .AfterMap(MapPlanScreens); ;
-
+            CreateMap<CreatePlanModel, Plan>().AfterMap(MapPlanScreens);
+            CreateMap<UpdatePlanModel, Plan>().AfterMap(MapPlanScreens);
 
             CreateMap<NameTranslationModel, PlanNameTranslation>();
         }
         private void MapPlanScreens(CreatePlanModel source, Plan destination, ResolutionContext context)
         {
-            destination.PlanScreens = source.ScreensIds
+            destination.PlanScreens = source.ScreensIds != null ? source.ScreensIds
                 .Select(screenId => new PlanScreen { ScreenId = screenId })
-                .ToList();
+                .ToList() : null;
         }
         private void MapPlanScreens(UpdatePlanModel source, Plan destination, ResolutionContext context)
         {
-            destination.PlanScreens = source.ScreensIds
+            destination.PlanScreens = source.ScreensIds != null ? source.ScreensIds
                 .Select(screenId => new PlanScreen { ScreenId = screenId })
-                .ToList();
+                .ToList() : null;
         }
     }
 }

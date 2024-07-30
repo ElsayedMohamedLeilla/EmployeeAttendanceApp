@@ -238,11 +238,11 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 !model.FromExcel)
             {
                 if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13)
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) /*&& getEmployee.Id != 13*/)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }
-                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13)
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }
@@ -385,6 +385,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                      a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate : null,
                     CheckOutDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.CheckOut).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
+                    BreakInDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.BreakIn) != null ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.BreakIn).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
                     LastFingetPrintType = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted) ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted).OrderByDescending(c=>c.Id).First().FingerPrintType : null,
                     LocalDate = clientLocalDateTime
@@ -416,6 +418,14 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #endregion
 
+            var defaultCheckType = getAttendance?.CheckInDateTime == null &&
+                getAttendance?.CheckOutDateTime == null ? FingerPrintType.CheckIn :
+                (getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null) ? FingerPrintType.NotSet :
+                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerPrintType.Summon :
+                getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn ?
+                FingerPrintType.BreakOut : FingerPrintType.CheckOut :
+                FingerPrintType.NotSet;
+
             return new GetCurrentFingerPrintInfoResponseModel
             {
                 Id = getAttendance?.Id,
@@ -424,13 +434,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 CheckOutDateTime = getAttendance?.CheckOutDateTime,
                 LastFingetPrintType = getAttendance?.LastFingetPrintType,
 
-                DefaultCheckType = getAttendance?.CheckInDateTime == null &&
-                getAttendance?.CheckOutDateTime == null ? FingerPrintType.CheckIn :
-                (getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null) ? FingerPrintType.NotSet :
-                getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerPrintType.Summon :
-                getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn ?
-                FingerPrintType.BreakOut : FingerPrintType.CheckOut :
-                FingerPrintType.NotSet,
+                DefaultCheckType = defaultCheckType,
+                BreakInDateTime = defaultCheckType == FingerPrintType.BreakOut ? getAttendance.BreakInDateTime : null,
 
                 EmployeeStatus = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? EmployeeStatus.NotAttendYet :
                 getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? EmployeeStatus.AttendThenLeaved :

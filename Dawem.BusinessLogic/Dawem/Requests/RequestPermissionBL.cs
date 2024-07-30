@@ -314,7 +314,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestPermissionsList = await queryPaged.Select(requestPermission => new GetRequestPermissionsResponseModel
+            var requestPermissionsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestPermission => new GetRequestPermissionsResponseModel
             {
                 Id = requestPermission.Request.Id,
                 Code = requestPermission.Request.Code,
@@ -372,7 +373,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestPermissionsList = await queryPaged.Select(requestPermission => new EmployeeGetRequestPermissionsResponseModelDTO
+            var requestPermissionsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestPermission => new EmployeeGetRequestPermissionsResponseModelDTO
             {
                 Id = requestPermission.Request.Id,
                 Code = requestPermission.Request.Code,
@@ -433,7 +435,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestPermissionInfoResponseModel> GetInfo(int requestId)
         {
-            var requestPermission = await repositoryManager.RequestPermissionRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestPermission = await repositoryManager.RequestPermissionRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestPermission => new GetRequestPermissionInfoResponseModel
                 {
                     Code = requestPermission.Request.Code,
@@ -467,7 +470,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestPermissionByIdResponseModel> GetById(int RequestPermissionId)
         {
-            var requestPermission = await repositoryManager.RequestPermissionRepository.Get(e => e.Request.Id == RequestPermissionId && !e.IsDeleted)
+            var requestPermission = await repositoryManager.RequestPermissionRepository
+                .Get(e => e.Request.Id == RequestPermissionId && !e.IsDeleted).IgnoreQueryFilters()
                 .Select(requestPermission => new GetRequestPermissionByIdResponseModel
                 {
                     Id = requestPermission.Request.Id,

@@ -223,7 +223,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             {
                 Id = plan.Id,
                 Code = plan.Code,
-                Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Name = plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 EmployeeCost = Math.Round(plan.EmployeeCost, 2) + LeillaKeys.EmptyString,
                 IsTrial = plan.IsTrial,
                 IsActive = plan.IsActive,
@@ -262,7 +262,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
             var plansList = await queryPaged.Select(plan => new GetPlansForDropDownResponseModel
             {
                 Id = plan.Id,
-                Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                Name = plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
             }).ToListAsync();
 
             return new GetPlansForDropDownResponse
@@ -280,7 +280,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 .Select(plan => new GetPlanInfoResponseModel
                 {
                     Code = plan.Code,
-                    Name = plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    Name = plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     IsTrial = plan.IsTrial,
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
@@ -293,7 +293,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name).
                     ToList() : null,
-                    NameTranslations = plan.PlanNameTranslations.
+                    NameTranslations = plan.NameTranslations.
                     Select(pt =>
                     new NameTranslationGetInfoModel
                     {
@@ -319,7 +319,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     AllScreensAvailable = plan.AllScreensAvailable,
                     ScreenIds = plan.PlanScreens != null ? plan.PlanScreens.Select(s => s.ScreenId).ToList() : null,
                     Notes = plan.Notes,
-                    NameTranslations = plan.PlanNameTranslations.
+                    NameTranslations = plan.NameTranslations.
                     Select(pt => new NameTranslationModel
                     {
                         Id = pt.Id,

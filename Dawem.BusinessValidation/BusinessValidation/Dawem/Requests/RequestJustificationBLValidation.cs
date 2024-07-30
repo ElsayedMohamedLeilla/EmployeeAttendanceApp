@@ -21,82 +21,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
         }
         public async Task<int?> CreateValidation(CreateRequestJustificationDTO model)
         {
-            var CheckIfVacationEmployeesHasAnotherRequestVacation = await repositoryManager
-          .RequestVacationRepository.Get(c =>
-        !c.Request.IsDeleted &&
-        (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-        c.Request.CompanyId == requestInfo.CompanyId &&
-
-        (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-        (
-            model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date ||
-            model.DateTo.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-            model.DateFrom.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date))
-           .Select(t => t.Request.Employee.Name)
-           .Distinct()
-           .Take(5)
-           .ToListAsync();
-
-            if (CheckIfVacationEmployeesHasAnotherRequestVacation != null && CheckIfVacationEmployeesHasAnotherRequestVacation.Count > 0)
-            {
-                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod);
-            }
-
-
-
-            var CheckIfJustificationEmployeesHasAnotherRequestTask = await repositoryManager
-              .RequestTaskRepository.Get(c => !c.Request.IsDeleted &&
-              (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-              c.Request.CompanyId == requestInfo.CompanyId &&
-              (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-              (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-              model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
-              model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
-              .Select(t => t.Request.Employee.Name)
-              .Distinct()
-              .Take(5)
-              .ToListAsync();
-
-            if (CheckIfJustificationEmployeesHasAnotherRequestTask != null && CheckIfJustificationEmployeesHasAnotherRequestTask.Count > 0)
-            {
-                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod);
-            }
-
-
-            //var CheckIfJustificationEmployeesHasAnotherRequestJustification = await repositoryManager
-            //    .RequestJustificationRepository.Get(c => !c.Request.IsDeleted &&
-            //    (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-            //    c.Request.CompanyId == requestInfo.CompanyId &&
-            //    (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-            //    (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-            //    model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
-            //    model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
-            //    .Select(t => t.Request.Employee.Name)
-            //    .Distinct()
-            //    .Take(5)
-            //    .ToListAsync();
-
-            //if (CheckIfJustificationEmployeesHasAnotherRequestJustification != null && CheckIfJustificationEmployeesHasAnotherRequestJustification.Count > 0)
-            //{
-            //    throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedJustificationWithSelectedPeriod);
-            //}
-
-            var CheckIfJustificationEmployeesHasAnotherRequestAssignment = await repositoryManager
-                .RequestAssignmentRepository.Get(c => !c.Request.IsDeleted &&
-                (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-                c.Request.CompanyId == requestInfo.CompanyId &&
+            var checkIfEmployeesHasVacationRequest = await repositoryManager.
+                RequestVacationRepository.Get(c => !c.Request.IsDeleted && (c.Request.Status == RequestStatus.Pending ||
+                c.Request.Status == RequestStatus.Accepted) && c.Request.CompanyId == requestInfo.CompanyId &&
                 (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-                (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-                model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
-                model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
-                .Select(t => t.Request.Employee.Name)
-                .Distinct()
-                .Take(5)
-                .ToListAsync();
+                (model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateFrom.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date)).
+                Select(t => t.Request.Employee.Name).
+                Distinct().
+                Take(5).
+                ToListAsync();
 
-            if (CheckIfJustificationEmployeesHasAnotherRequestAssignment != null && CheckIfJustificationEmployeesHasAnotherRequestAssignment.Count > 0)
+            if (checkIfEmployeesHasVacationRequest != null && checkIfEmployeesHasVacationRequest.Count > 0)
             {
-                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod);
+                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasVacationInSelectedPeriod);
             }
 
             int? getCurrentEmployeeId = null;
@@ -152,65 +91,25 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 throw new BusinessValidationException(LeillaKeys.SorryRequestIsRejectedEditNotAllowed);
             }
 
-            var CheckIfVacationEmployeesHasAnotherRequestVacation = await repositoryManager
-    .RequestVacationRepository.Get(c =>
-        !c.Request.IsDeleted &&
-        (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-        c.Request.CompanyId == requestInfo.CompanyId &&
-        c.Request.Id != model.Id && // Exclude the edited request
-        (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-        (
-            model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date ||
-            model.DateTo.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-            model.DateFrom.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date))
-           .Select(t => t.Request.Employee.Name)
-           .Distinct()
-           .Take(5)
-           .ToListAsync();
+            var checkIfEmployeesHasVacationRequest = await repositoryManager
+            .RequestVacationRepository.Get(c =>
+                !c.Request.IsDeleted &&
+                (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
+                c.Request.CompanyId == requestInfo.CompanyId &&
+                c.Request.Id != model.Id && 
+                (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
+                (
+                model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date ||
+                model.DateTo.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
+                model.DateFrom.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date))
+                .Select(t => t.Request.Employee.Name)
+                .Distinct()
+                .Take(5)
+                .ToListAsync();
 
-            if (CheckIfVacationEmployeesHasAnotherRequestVacation != null && CheckIfVacationEmployeesHasAnotherRequestVacation.Count > 0)
+            if (checkIfEmployeesHasVacationRequest != null && checkIfEmployeesHasVacationRequest.Count > 0)
             {
-                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod);
-            }
-
-
-            //       var CheckIfJustificationEmployeesHasAnotherRequestJustification = await repositoryManager
-            //.RequestJustificationRepository.Get(c =>
-            //    !c.Request.IsDeleted &&
-            //    (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-            //    c.Request.CompanyId == requestInfo.CompanyId &&
-            //    c.Request.Id != model.Id && // Exclude the edited request
-            //    (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-            //    (
-            //        (model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date) ||
-            //        (model.DateTo.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date) ||
-            //        (model.DateFrom.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date)))
-            //       .Select(t => t.Request.Employee.Name)
-            //       .Distinct()
-            //       .Take(5)
-            //       .ToListAsync();
-
-            //       if (CheckIfJustificationEmployeesHasAnotherRequestJustification != null && CheckIfJustificationEmployeesHasAnotherRequestJustification.Count > 0)
-            //       {
-            //           throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedJustificationWithSelectedPeriod);
-            //       }
-
-            var CheckIfJustificationEmployeesHasAnotherRequestAssignment = await repositoryManager
-                           .RequestAssignmentRepository.Get(c => !c.Request.IsDeleted &&
-                           (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-                           c.Request.CompanyId == requestInfo.CompanyId &&
-                           (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
-                           (model.DateFrom.Date >= c.Request.Date.Date && model.DateFrom.Date <= c.DateTo.Date ||
-                           model.DateTo.Date >= c.Request.Date.Date && model.DateTo.Date <= c.DateTo.Date ||
-                           model.DateFrom.Date <= c.Request.Date.Date && model.DateTo.Date >= c.DateTo.Date))
-                           .Select(t => t.Request.Employee.Name)
-                           .Distinct()
-                           .Take(5)
-                           .ToListAsync();
-
-            if (CheckIfJustificationEmployeesHasAnotherRequestAssignment != null && CheckIfJustificationEmployeesHasAnotherRequestAssignment.Count > 0)
-            {
-                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod);
+                throw new BusinessValidationException(AmgadKeys.SorryThisEmployeeHasVacationInSelectedPeriod);
             }
 
             int? getCurrentEmployeeId = null;

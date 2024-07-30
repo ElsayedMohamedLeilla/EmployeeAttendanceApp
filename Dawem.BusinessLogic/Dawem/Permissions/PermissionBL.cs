@@ -698,7 +698,15 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     screensIds.AddRange(getResponsibilitiesPermissionsScreensIds);
                 }
 
-                criteria.ScreensIds = screensIds;
+                var getScreensParentsIds = await repositoryManager.MenuItemRepository.
+                    Get(m => m.ParentId > 0 && screensIds.Contains(m.Id)).
+                    Select(m => m.ParentId.Value).
+                    ToListAsync();
+
+                screensIds.AddRange(getScreensParentsIds);
+
+                criteria.ScreensIds = screensIds.Distinct().ToList();
+
                 resonse.MenuItems = await GetMenuItems(criteria);
             }
 

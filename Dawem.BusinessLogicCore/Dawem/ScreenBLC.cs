@@ -81,7 +81,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             #region Handle Response
 
-            var screensTypes = await queryPaged.
+            var screensTypes = await queryPaged.IgnoreQueryFilters().
                 GroupBy(s => s.AuthenticationType).
                 Select(screenGroup => new
                 {

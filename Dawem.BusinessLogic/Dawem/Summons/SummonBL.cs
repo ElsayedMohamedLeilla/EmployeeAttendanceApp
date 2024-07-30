@@ -598,8 +598,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
                     s.SummonSanctions.Select(e => new SummonSancationModel
                     {
-                        Name = e.Sanction.Name,
-                        WarningMessage = e.Sanction.WarningMessage
+                        Name = e.Sanction.Name
                     }).ToList() : null,
                     NumberOfTargetedEmployees = s.SummonLogs.Count,
                     
@@ -629,8 +628,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
                     s.SummonSanctions.Select(e => new SummonSancationModel
                     {
-                        Name = e.Sanction.Name,
-                        WarningMessage = e.Sanction.WarningMessage
+                        Name = e.Sanction.Name
                     }).ToList() : null,
                     SummonStatus = utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
                     Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?

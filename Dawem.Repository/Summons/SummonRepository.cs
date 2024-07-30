@@ -127,11 +127,13 @@ namespace Dawem.Repository.Summons
                         predicate = predicate.And(e => utcDate >= e.StartDateAndTimeUTC && utcDate <= e.EndDateAndTimeUTC);
                         break;
                     case SummonStatus.Finished:
-                        predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC);
+                        predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC && e.EmployeeAttendanceChecks.
+                        Any(c => c.EmployeeAttendance.EmployeeId == employeeId &&
+                        c.FingerPrintType == FingerPrintType.Summon));
                         break;
                     case SummonStatus.FinishedAndMissed:
                         predicate = predicate.And(e => utcDate > e.EndDateAndTimeUTC && !e.EmployeeAttendanceChecks.
-                        Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && 
+                        Any(c => c.EmployeeAttendance.EmployeeId == employeeId && 
                         c.FingerPrintType == FingerPrintType.Summon));
                         break;
                     default:

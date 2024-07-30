@@ -470,16 +470,16 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
 
 
         #region Set Paremetes Methods
-        private void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
+        private static void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
         {
             report.SetParameterValue("DateFrom", param.DateFrom);
             report.SetParameterValue("DateTo", param.DateTo);
-            report.SetParameterValue("Lang", _requestInfo.Lang);
+            report.SetParameterValue("Lang", "ar" /*_requestInfo.Lang*/);
             report.SetParameterValue("FreeText", param.FreeText);
             report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);
             report.SetParameterValue("CompanyName", exporterModelDTO.CompanyName);
-            report.SetParameterValue("DateFromString", param.DateFrom != null ? param.DateFrom.Value.ToString("dd-MM-yyyy") : null);
-            report.SetParameterValue("DateToString", param.DateTo != null ? param.DateTo.Value.ToString("dd-MM-yyyy") : null);
+            report.SetParameterValue("DateFromString", param.DateFrom.ToShortDateString());
+            report.SetParameterValue("DateToString", param.DateFrom.ToShortDateString());
             report.SetParameterValue("CompanyEmail", exporterModelDTO.CompanyEmail);
             report.SetParameterValue("CountryName", exporterModelDTO.CountryName);
         }

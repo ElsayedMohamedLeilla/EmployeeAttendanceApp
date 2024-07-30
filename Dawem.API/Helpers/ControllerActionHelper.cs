@@ -4,8 +4,8 @@ using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
-using Dawem.Models.Response;
 using Dawem.Models.Response.Dawem.Attendances.FingerprintDevices;
+using Dawem.Models.Response;
 using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
@@ -163,6 +163,56 @@ namespace Dawem.API.Helpers
             }
 
             return actions.Distinct().Order().ToList();
+        }
+        public static GetScreensForDropDownResponse GetAllScreens(RequestInfo requestInfo)
+        {
+            var response = new GetScreensForDropDownResponse();
+
+            var allScreenCodes = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
+                Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
+
+            foreach (var tempScreenCode in allScreenCodes)
+            {
+                dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                    (AdminPanelApplicationScreenCode)tempScreenCode :
+                    (DawemAdminApplicationScreenCode)tempScreenCode;
+
+                var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
+                var screensWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
+                {
+                    Id = (int)screenCode,
+                    Name = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
+                };
+
+                response.Screens.Add(screensWithAvailableActionsDTO);
+            }
+            return response;
+        }
+        public static GetActionsForDropDownResponse GetAllActions(RequestInfo requestInfo)
+        {
+            var response = new GetActionsForDropDownResponse();
+
+            var allActionCodes = Enum.GetValues(typeof(ApplicationActionCode)).Cast<int>().ToList();
+
+            foreach (var tempActionCode in allActionCodes)
+            {
+                dynamic actionCode = (ApplicationActionCode)tempActionCode;
+
+                var actionNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelAction :
+                    LeillaKeys.DawemAction;
+
+                var actionsWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
+                {
+                    Id = (int)actionCode,
+                    Name = TranslationHelper.GetTranslation(actionCode.ToString(), requestInfo.Lang)
+                };
+
+                response.Actions.Add(actionsWithAvailableActionsDTO);
+            }
+            return response;
         }
     }
 }

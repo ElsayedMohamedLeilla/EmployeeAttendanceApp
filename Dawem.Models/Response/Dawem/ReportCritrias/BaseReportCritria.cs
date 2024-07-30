@@ -6,8 +6,8 @@ namespace Dawem.Models.Response.Dawem.ReportCritrias
     {
         public string FreeText { get; set; }
         public int? EmployeeID { get; set; }
-        public DateTime? DateFrom { get; set; }
-        public DateTime? DateTo { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
         public int? DepartmentId { get; set; }
         public int? ZoneId { get; set; }
         public int? JobTitleID { get; set; }

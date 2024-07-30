@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/19/2024 05:20:00" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/26/2024 02:27:36" ReportInfo.CreatorVersion="2024.2.0.0">
   <Styles>
     <Style Name="Style1" Border.Lines="All" Font="Arial Narrow, 10pt, style=Bold"/>
   </Styles>
@@ -58,8 +58,8 @@
       <TextObject Name="Text58" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="@EmployeeIDs" Font="Arial, 10pt"/>
       <TextObject Name="Text59" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="@EmployeeIDs" Font="Arial, 10pt"/>
     </ReportTitleBand>
-    <PageHeaderBand Name="PageHeader1" Top="138.08" Width="1047.06"/>
-    <GroupHeaderBand Name="GroupHeader1" Top="143.42" Width="1047.06" Height="94.95" Guides="9.45" Condition="[Table.Day]">
+    <PageHeaderBand Name="PageHeader1" Top="139.53" Width="1047.06"/>
+    <GroupHeaderBand Name="GroupHeader1" Top="146.31" Width="1047.06" Height="94.95" Guides="9.45" Condition="[Table.Day]">
       <TextObject Name="Text44" Left="189" Top="37.8" Width="265.8" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تــــاريـــــــــخ" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text47" Left="9.45" Top="37.8" Width="180.75" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الـــــــوقــــــــت" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text53" Left="727.65" Top="9.45" Width="180.75" Height="28.8" Border.Lines="All" Border.Style="Dash" Text="[[Table.Day]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
@@ -73,8 +73,7 @@
       <TextObject Name="Text46" Left="9.45" Top="66.15" Width="105.15" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الاضافي" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text60" Left="718.2" Top="66.15" Width="142.95" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text61" Left="576.45" Top="66.15" Width="142.95" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="المنطقه" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
-      <DataBand Name="Data1" Top="243.7" Width="1047.06" Guides="160.65,160.65,160.65" DataSource="Table"/>
-      <GroupFooterBand Name="GroupFooter1" Top="249.03" Width="1047.06" Height="28.35">
+      <DataBand Name="Data1" Top="248.04" Width="1047.06" Height="28.35" Guides="160.65,160.65,160.65" DataSource="Table">
         <TableObject Name="Table1" Left="9.45" Width="1020.6" Height="28.35" Border.Lines="All" Border.Width="1.5">
           <TableColumn Name="Column1" Width="103.95"/>
           <TableColumn Name="Column2" Width="75.6"/>
@@ -97,13 +96,14 @@
             <TableCell Name="Cell33" Border.Lines="All" Border.Width="1.5" Text="[Table.RowIndex]" HorzAlign="Center" Font="Arial, 9pt, style=Bold" TextFill.Color="IndianRed"/>
           </TableRow>
         </TableObject>
-      </GroupFooterBand>
+      </DataBand>
+      <GroupFooterBand Name="GroupFooter1" Top="283.17" Width="1047.06"/>
     </GroupHeaderBand>
-    <PageFooterBand Name="PageFooter1" Top="282.72" Width="1047.06" Height="37.8" Border.Lines="Left, Right, Top" Border.Style="Dash" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
-      <TextObject Name="Text31" Left="793.8" Top="9.45" Width="94.5" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+    <PageFooterBand Name="PageFooter1" Top="289.95" Width="1047.06" Height="37.8" Border.Lines="Left, Right, Top" Border.Style="Dash" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
+      <TextObject Name="Text31" Left="774.9" Top="9.45" Width="94.5" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text33" Left="18.9" Top="9.45" Width="198.45" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text35" Left="888.3" Top="9.45" Width="141.75" Height="28.35" Text="[Date]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text50" Left="18.9" Top="9.45" Width="1011.15" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text35" Left="869.4" Top="9.45" Width="160.65" Height="28.35" Text="[Date]" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text50" Left="18.9" Top="9.45" Width="652.05" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
     </PageFooterBand>
   </ReportPage>
 </Report>

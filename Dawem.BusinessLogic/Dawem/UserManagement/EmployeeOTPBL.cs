@@ -108,7 +108,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             savedOtp.IsActive = true;
             savedOtp.IsDeleted = false;
             savedOtp.ExpirationTime = savedOtp.AddedDate.AddMinutes(30); //expire after half hour
-            savedOtp.CompanyId = getCompany.Id;
+            savedOtp.CompanyId =  getCompany.Id;
             savedOtp.OTP = savedOTP;
             savedOtp.EmployeeId = getEmployee.Id;
             repositoryManager.EmployeeOTPRepository.Insert(savedOtp);

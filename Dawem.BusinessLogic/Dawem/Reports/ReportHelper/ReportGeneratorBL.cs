@@ -224,7 +224,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             report.SetParameterValue("PercentageOfDoneTo", param.PercentageOfDoneTo);
             return ExportReport(report, param.ExportFormat);
         }
-
+        //12
         public HttpResponseMessage GenerateSummonsDetailsInPeriodReport(SummonsDetailsInPeriodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -247,7 +247,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             report.SetParameterValue("DoneStatus", param.DoneStatus ?? DoneStatus.Both);
             return ExportReport(report, param.ExportFormat);
         }
-
+        //13
         public HttpResponseMessage GenerateSummonsDetailsGroupByEmployeeReport(SummonsDetailsGroupByEmployeeReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -269,6 +269,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         #endregion
 
         #region  Statistics
+        //14
         public HttpResponseMessage GenerateStatisticsOverAperiodReport(StatisticsOverAperiodReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -278,11 +279,10 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
             return ExportReport(report, param.ExportFormat);
         }
+        //15
         public HttpResponseMessage GenerateStatisticsReportOverAperiodByDepartmentReport(StatisticsReportOverAperiodByDepartmentReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -292,11 +292,12 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
+            report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
             report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
             return ExportReport(report, param.ExportFormat);
         }
+        
+        //16
         public HttpResponseMessage GenerateStatisticsReportOverAperiodGroupByMonthReport(StatisticsReportOverAperiodGroupByMonthReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -306,8 +307,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-            report.SetParameterValue("JobTitleID", param.JobTitleID ?? 0);
-            report.SetParameterValue("ZoneID", param.ZoneId ?? 0);
             report.SetParameterValue("OrderBy", param.statisticsReportOrderBy ?? StatisticsReportOrderBy.Date);
             return ExportReport(report, param.ExportFormat);
         }

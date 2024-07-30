@@ -8,6 +8,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.DTOs.Dawem.Generic;
+using DocumentFormat.OpenXml.InkML;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +18,15 @@ namespace Dawem.Repository.Employees
     {
         private readonly RequestInfo requestInfo;
         private readonly IUserRepository userRepository;
+        private ApplicationDBContext Context { get; set; }
+
 
         public EmployeeRepository(IUserRepository _userRepository, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
             userRepository = _userRepository;
+            Context = unitOfWork.Context;
+
         }
         public IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria)
         {
@@ -131,7 +136,11 @@ namespace Dawem.Repository.Employees
             }
             if (criteria.IsFreeEmployee)
             {
-                criteria.FreeEmployeeIds = userRepository.GetEmployeeIdsNotConnectedToUser();
+                var employeeIdsWithUsers = Context.MyUser.Where(c=> c.CompanyId == requestInfo.CompanyId).Select(u => u.EmployeeId).ToList();
+                var allEmployeeIds = Context.Employees.Where(c => c.CompanyId == requestInfo.CompanyId).Select(e => e.Id).ToList();
+                var result = allEmployeeIds.Where(id => !employeeIdsWithUsers.Contains(id)).Select(id => (int?)id).ToList();
+
+                criteria.FreeEmployeeIds = result;
                 if (criteria.FreeEmployeeIds != null && criteria.FreeEmployeeIds.Count() > 0)
                 {
                     predicate = predicate.And(e => criteria.FreeEmployeeIds.Contains(e.Id));

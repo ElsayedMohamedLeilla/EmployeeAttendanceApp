@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="07/19/2024 03:26:01" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="08/01/2024 01:17:47" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table" Alias="GetAttendaceLeaveShortStatusByDepartmentIDORJobID" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetAttendaceLeaveShortStatusByDepartmentIDORJobID  &#13;&#10; @DateFrom ,&#13;&#10; @DateTo,&#13;&#10; @CompanyID,&#13;&#10; @DepartmentIDs, &#13;&#10; @EmployeeIDs,&#13;&#10; @JobTitleIDs">
@@ -29,18 +29,19 @@
     <Parameter Name="CountryName" DataType="System.String" AsString=""/>
     <Parameter Name="CompanyEmail" DataType="System.String" AsString=""/>
     <Parameter Name="JobTitleIDs" DataType="System.String" AsString=""/>
+    <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Guides="585.9" Border.Lines="All" Border.Style="Double" Watermark.Font="Arial, 60pt">
-    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="180">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="170.55">
       <TextObject Name="Text31" Left="-8968.05" Top="-9450" Width="85.05" Height="28.35" Text="Printed on :" VertAlign="Center" Font="Arial, 10pt"/>
       <TextObject Name="Text33" Left="-9450" Top="-9450" Width="179.55" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
       <TextObject Name="Text35" Left="-8892.45" Top="-9450" Width="151.2" Height="28.35" Text="[Date]" VertAlign="Center" Font="Arial, 10pt"/>
       <TextObject Name="Text50" Left="-9175.95" Top="-9450" Width="122.85" Height="28.35" Text="[Page#] of [TotalPages#]" Font="Arial, 10pt"/>
-      <TextObject Name="Text2" Left="528" Top="141.75" Width="67.35" Height="28.8" Border.Lines="All" Text="من " HorzAlign="Center" VertAlign="Center" Font="Arial Black, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text4" Left="367.35" Top="141.75" Width="152.4" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateFromString]" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text3" Left="291.75" Top="141.75" Width="57.9" Height="28.8" Border.Lines="All" Text="الى " HorzAlign="Center" VertAlign="Center" Font="Arial Black, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text26" Left="112.2" Top="141.75" Width="171.3" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateToString]" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text60" Left="8.25" Top="94.5" Width="691.05" Height="38.25" Border.Lines="All" Border.Style="Dash" Border.Width="1.5" Fill.Color="LightGray" Text="تقرير الحضور و الإنصراف المختصر على مستوي القسم" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 18pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text2" Left="528" Top="141.75" Width="67.35" Height="28.8" Border.Lines="All" Text="من " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text4" Left="367.35" Top="141.75" Width="152.4" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateFromString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text3" Left="291.75" Top="141.75" Width="57.9" Height="28.8" Border.Lines="All" Text="الى " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text26" Left="112.2" Top="141.75" Width="171.3" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateToString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text60" Left="8.25" Top="94.5" Width="691.05" Height="38.25" Border.Lines="All" Border.Style="Dash" Border.Width="1.5" Fill.Color="LightGray" Text="تقرير الحضور و الإنصراف المختصر على مستوي القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 18pt, style=Bold" TextFill.Color="Brown"/>
       <ContainerObject Name="Container1" Left="9.45" Top="9.45" Width="689.85" Height="75.6" Border.Lines="All" Border.Color="DimGray" Border.Style="Double">
         <TextObject Name="Text56" Left="85.05" Top="47.25" Width="199.65" Height="19.35" Border.Color="DimGray" Border.Style="Dash" Border.Width="2" Text="[CompanyEmail]" Font="Arial, 8pt, style=Bold" TextFill.Color="Brown"/>
         <TextObject Name="Text57" Left="85.05" Top="9.45" Width="199.65" Height="19.35" Border.Color="DimGray" Border.Style="Dash" Border.Width="2" Text="[CompanyName]" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
@@ -49,42 +50,45 @@
         <PictureObject Name="Picture3" Left="604.8" Top="9.45" Width="75.6" Height="56.7" ImageFormat="Jpeg" Image="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"/>
       </ContainerObject>
     </ReportTitleBand>
-    <GroupHeaderBand Name="GroupHeader1" Top="185.33" Width="718.2" Height="75.6" Condition="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceDate]">
-      <TextObject Name="Text5" Left="444.15" Top="9.45" Width="113.4" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceDate]]" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text58" Left="567" Top="9.45" Width="133.5" Height="28.8" Border.Lines="All" Text="التاريخ" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text10" Left="28.35" Top="9.45" Width="113.4" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.DepartmentName]]" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text59" Left="160.65" Top="9.45" Width="142.95" Height="28.8" Border.Lines="All" Text="القسم" HorzAlign="Center" VertAlign="Center" Font="Arial Black, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
-      <TextObject Name="Text6" Left="415.8" Top="47.25" Width="217.35" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="اسم الموظف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text7" Left="217.35" Top="47.25" Width="198.45" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الوظيفه" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text8" Left="122.85" Top="47.25" Width="94.5" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الحضور" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text9" Left="28.35" Top="47.25" Width="94.5" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الانصراف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text61" Left="633.15" Top="47.25" Width="66.15" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-      <DataBand Name="Data1" Top="266.27" Width="718.2" Height="37.8" Guides="18.9" DataSource="Table">
-        <TableObject Name="Table1" Left="28.35" Width="670" Height="37.8">
-          <TableColumn Name="Column1" Width="93.56"/>
-          <TableColumn Name="Column2" Width="93.56"/>
-          <TableColumn Name="Column3" Width="201.28"/>
-          <TableColumn Name="Column4" Width="216.4"/>
-          <TableColumn Name="Column5" Width="65.2"/>
-          <TableRow Name="Row1" Height="37.8">
-            <TableCell Name="Cell1" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown">
-              <CheckBoxObject Name="CheckBox2" Left="37.8" Top="9.45" Width="18.9" Height="18.9" Border.Lines="All" Border.Style="Double" Border.Width="0.25" DataColumn="GetAttendaceLeaveShortStatusByDepartmentIDORJobID.LeaveStatus"/>
-            </TableCell>
-            <TableCell Name="Cell2" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown">
-              <CheckBoxObject Name="CheckBox1" Left="37.8" Top="9.45" Width="18.9" Height="18.9" Border.Lines="All" Border.Style="Double" Border.Width="0.25" DataColumn="GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceStatus"/>
-            </TableCell>
-            <TableCell Name="Cell3" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.JobTitleName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
-            <TableCell Name="Cell4" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.EmployeeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
-            <TableCell Name="Cell5" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.ColumnIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
-          </TableRow>
-        </TableObject>
-      </DataBand>
-      <GroupFooterBand Name="GroupFooter1" Top="309.4" Width="718.2"/>
+    <GroupHeaderBand Name="GroupHeader1" Top="175.88" Width="718.2" Height="47.7" Condition="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceDate]">
+      <TextObject Name="Text5" Left="444.15" Top="9.45" Width="113.4" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceDate]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text58" Left="567" Top="9.45" Width="133.5" Height="28.8" Border.Lines="All" Text="التاريخ" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text59" Left="160.65" Top="9.45" Width="142.95" Height="28.8" Border.Lines="All" Text="القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <TextObject Name="Text1" Left="28.35" Top="9.45" Width="122.85" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.DepartmentName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold, Italic" TextFill.Color="Brown"/>
+      <GroupHeaderBand Name="GroupHeader2" Top="228.92" Width="718.2" Height="28.35" Condition="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.DepartmentName]">
+        <TextObject Name="Text6" Left="415.8" Width="217.35" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="اسم الموظف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text7" Left="217.35" Width="198.45" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الوظيفه" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text8" Left="122.85" Width="94.5" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الحضور" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text9" Left="28.35" Width="94.5" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="الانصراف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text61" Left="633.15" Width="66.15" Height="28.35" Border.Lines="All" Fill.Color="DarkGray" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <DataBand Name="Data1" Top="262.6" Width="718.2" Height="37.8" Guides="18.9" DataSource="Table">
+          <TableObject Name="Table1" Left="28.35" Width="670" Height="37.8">
+            <TableColumn Name="Column1" Width="93.56"/>
+            <TableColumn Name="Column2" Width="93.56"/>
+            <TableColumn Name="Column3" Width="201.28"/>
+            <TableColumn Name="Column4" Width="216.4"/>
+            <TableColumn Name="Column5" Width="65.2"/>
+            <TableRow Name="Row1" Height="37.8">
+              <TableCell Name="Cell1" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown">
+                <CheckBoxObject Name="CheckBox2" Left="37.8" Top="9.45" Width="18.9" Height="18.9" Border.Lines="All" Border.Style="Double" Border.Width="0.25" DataColumn="GetAttendaceLeaveShortStatusByDepartmentIDORJobID.LeaveStatus"/>
+              </TableCell>
+              <TableCell Name="Cell2" Border.Lines="All" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown">
+                <CheckBoxObject Name="CheckBox1" Left="37.8" Top="9.45" Width="18.9" Height="18.9" Border.Lines="All" Border.Style="Double" Border.Width="0.25" DataColumn="GetAttendaceLeaveShortStatusByDepartmentIDORJobID.AttendanceStatus"/>
+              </TableCell>
+              <TableCell Name="Cell3" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.JobTitleName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
+              <TableCell Name="Cell4" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.EmployeeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
+              <TableCell Name="Cell5" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.ColumnIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
+            </TableRow>
+          </TableObject>
+        </DataBand>
+        <GroupFooterBand Name="GroupFooter2" Top="305.73" Width="718.2"/>
+      </GroupHeaderBand>
+      <GroupFooterBand Name="GroupFooter1" Top="311.07" Width="718.2"/>
     </GroupHeaderBand>
-    <PageFooterBand Name="PageFooter1" Top="314.73" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash">
+    <PageFooterBand Name="PageFooter1" Top="316.4" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash">
       <TextObject Name="Text51" Left="491.4" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text52" Left="9.45" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text53" Left="567" Width="151.2" Height="28.35" Text="[Date]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text53" Left="567" Width="151.2" Height="28.35" Text="[PrintDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text54" Left="292.95" Width="122.85" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
     </PageFooterBand>
   </ReportPage>

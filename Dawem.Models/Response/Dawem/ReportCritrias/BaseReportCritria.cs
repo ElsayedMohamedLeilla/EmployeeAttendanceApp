@@ -24,7 +24,6 @@ namespace Dawem.Models.Response.Dawem.ReportCritrias
         public int? PercentageOfDoneTo { get; set; }
         public DoneStatus? DoneStatus { get; set; }
         public StatisticsReportOrderBy? statisticsReportOrderBy { get; set; }
-        public string PrintDate { get; set; }
 
 
     }

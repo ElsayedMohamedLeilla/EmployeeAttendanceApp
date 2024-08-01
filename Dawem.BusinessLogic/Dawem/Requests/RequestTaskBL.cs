@@ -23,6 +23,7 @@ using Dawem.Models.Response.Dawem.Requests.Tasks;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Tasks;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace Dawem.BusinessLogic.Dawem.Requests
 {
@@ -131,6 +132,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             var employeeIds = model.TaskEmployeeIds;
             employeeIds.Add(employeeId ?? 0);
+
+            var directManagerIds = await repositoryManager
+                .EmployeeRepository.Get(e => employeeIds.Contains(e.Id) && e.DirectManagerId > 0)
+                .Select(e => e.DirectManagerId.Value).ToListAsync();
+
+            employeeIds.AddRange(directManagerIds);
 
             var notificationUsers = await repositoryManager.UserRepository.
                 Get(user => !user.IsDeleted && user.IsActive & user.EmployeeId > 0 &&

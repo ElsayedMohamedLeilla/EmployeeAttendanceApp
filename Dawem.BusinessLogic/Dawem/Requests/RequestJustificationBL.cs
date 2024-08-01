@@ -164,7 +164,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             {
                 NotificationUsers = notificationUsers,
                 EmployeeIds = employeeIds,
-                NotificationType = NotificationType.NewVacationRequest,
+                NotificationType = NotificationType.NewJustificationRequest,
                 NotificationStatus = NotificationStatus.Info,
                 Priority = NotificationPriority.Medium
             };

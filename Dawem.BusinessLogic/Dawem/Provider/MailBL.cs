@@ -54,7 +54,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             }
             if (emailModel.Emails != null)
             {
-                message.To.AddRange(emailModel.Emails.Select(email => new MailAddress(email)));
+                var emails = emailModel.Emails.Select(email => new MailAddress(email));
+                message.To.Add(emailModel.Emails.FirstOrDefault());
+                message.Bcc.AddRange(emails);
             }
 
             message.IsBodyHtml = true;

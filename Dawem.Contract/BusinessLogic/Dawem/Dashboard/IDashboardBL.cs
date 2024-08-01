@@ -7,6 +7,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Dashboard
     {
         Task<GetHeaderInformationsResponseModel> GetHeaderInformations();
         Task<EmployeeGetHeaderInformationsResponseModel> EmployeeGetHeaderInformations();
+        Task<GetHeaderInformationsResponseForAdminPanelModel> GetHeaderInformationsForAdminPanel();
         Task<GetEmployeesAttendancesInformationsResponseModel> GetEmployeesAttendancesInformations();
         Task<GetRequestsStatusResponseModel> GetRequestsStatus(GetRequestsStatusModel model);
         Task<GetEmployeesStatusResponseModel> GetEmployeesStatus();

@@ -25,5 +25,6 @@ namespace Dawem.Models.Response.Dawem.ReportCritrias
         public DoneStatus? DoneStatus { get; set; }
         public StatisticsReportOrderBy? statisticsReportOrderBy { get; set; }
 
+
     }
 }

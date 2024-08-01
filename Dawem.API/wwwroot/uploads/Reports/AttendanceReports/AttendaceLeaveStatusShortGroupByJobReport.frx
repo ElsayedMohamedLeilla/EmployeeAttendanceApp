@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="07/19/2024 04:05:44" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="08/01/2024 01:29:50" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table" Alias="AttendaceLeaveStatusShortGroupByJobReport" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetEmployeeAttendanceLeaveShortGroupByJob  &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@ZoneIDs,&#13;&#10;@DepartmentIDs,&#13;&#10;@EmployeeIDs,&#13;&#10;@JobTitleIDs&#13;&#10;">
@@ -32,6 +32,7 @@
     <Parameter Name="CompanyEmail" DataType="System.String" AsString=""/>
     <Parameter Name="ZoneIDs" DataType="System.String" AsString=""/>
     <Parameter Name="JobTitleIDs" DataType="System.String" AsString=""/>
+    <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Guides="585.9" Border.Lines="All" Border.Style="Double" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="170.55">
@@ -89,8 +90,8 @@
     <PageFooterBand Name="PageFooter1" Top="352.53" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash">
       <TextObject Name="Text51" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text52" Left="9.45" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text53" Left="557.55" Width="151.2" Height="28.35" Text="[Date]" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text54" Left="292.95" Width="122.85" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text53" Left="557.55" Width="151.2" Height="28.35" Text="[PrintDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
     </PageFooterBand>
   </ReportPage>
 </Report>

@@ -80,7 +80,10 @@ namespace Dawem.Repository.UserManagement
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
-
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
             predicate = predicate.And(e => e.Type == requestInfo.AuthenticationType);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))

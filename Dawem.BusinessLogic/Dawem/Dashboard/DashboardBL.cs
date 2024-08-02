@@ -65,6 +65,21 @@ namespace Dawem.BusinessLogic.Dawem.Dashboard
 
             #endregion
         }
+        public async Task<GetHeaderInformationsResponseForAdminPanelModel> GetHeaderInformationsForAdminPanel()
+        {
+            var userName = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)
+               .Select(u => u.Name)
+               .FirstOrDefaultAsync();
+
+            #region Handle Response
+
+            return new GetHeaderInformationsResponseForAdminPanelModel
+            {
+                Name = userName
+            };
+
+            #endregion
+        }
         public async Task<EmployeeGetHeaderInformationsResponseModel> EmployeeGetHeaderInformations()
         {
             var employeeId = await repositoryManager.UserRepository.Get(u => !u.IsDeleted && u.Id == requestInfo.UserId)

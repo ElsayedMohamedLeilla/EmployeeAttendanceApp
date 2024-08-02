@@ -275,14 +275,18 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
           
             #endregion
-            if (model.IsActive == true)
+            if(user != null)
             {
-                user.IsActive = true;
+                if (model.IsActive == true)
+                {
+                    user.IsActive = true;
+                }
+                else
+                {
+                    user.IsActive = true;
+                }
             }
-            else
-            {
-                user.IsActive = true;
-            }
+            
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -562,6 +566,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Enable Related user
             var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == employeeId);
+            if(user != null)
             user.IsActive = true;
             #endregion
             await unitOfWork.SaveAsync();

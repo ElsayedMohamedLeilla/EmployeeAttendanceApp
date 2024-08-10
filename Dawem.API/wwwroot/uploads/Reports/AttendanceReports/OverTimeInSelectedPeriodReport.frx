@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/01/2024 01:23:18" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/10/2024 11:26:27" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table2" Alias="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetOverTimeInSelectedPeriod &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@OverTimeFrom,&#13;&#10;@OverTimeTo,&#13;&#10;@DepartmentIDs,&#13;&#10;@EmployeeIDs,&#13;&#10;@JobTitleIDs&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;">
@@ -10,10 +10,11 @@
         <Column Name="EmployeeAttendanceID" DataType="System.Int32"/>
         <Column Name="ShiftCheckIn" DataType="System.String"/>
         <Column Name="AttendDate" DataType="System.String"/>
-        <Column Name="EarlyArrivalMinutes" DataType="System.Int32"/>
         <Column Name="ShiftCheckOut" DataType="System.String"/>
         <Column Name="LeaveDate" DataType="System.String"/>
-        <Column Name="LateDepartureMinutes" DataType="System.Int32"/>
+        <Column Name="TotalOverTime" DataType="System.Int32"/>
+        <Column Name="EarlyArrivalHours" DataType="System.Decimal"/>
+        <Column Name="LateDepartureHours" DataType="System.Decimal"/>
         <CommandParameter Name="DateFrom" DataType="4" Expression="[DateFrom]"/>
         <CommandParameter Name="DateTo" DataType="4" Expression="[DateTo]"/>
         <CommandParameter Name="CompanyID" DataType="8" Expression="[CompanyID]"/>
@@ -60,20 +61,20 @@
       </ContainerObject>
     </ReportTitleBand>
     <PageHeaderBand Name="PageHeader1" Top="166.43" Width="718.2" Height="0.45"/>
-    <GroupHeaderBand Name="GroupHeader1" Top="172.22" Width="718.2" Height="76.05" Fill.Color="White" Guides="28.35" Condition="[Table.DepartmentName]">
-      <TextObject Name="Text1" Left="302.4" Top="9.45" Width="264.6" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.DepartmentName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text82" Left="576.45" Top="9.45" Width="124.05" Height="28.8" Border.Lines="All" Text=" : القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text84" Left="217.35" Top="9.45" Width="76.8" Height="66.6" Border.Lines="All" Text=" : الوظيفه " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text83" Left="576.45" Top="47.25" Width="124.05" Height="28.8" Border.Lines="All" Text=" : الموظف " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text5" Left="302.4" Top="47.25" Width="264.6" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.EmployeeName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text6" Left="9.45" Top="9.45" Width="198.45" Height="66.15" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.JobName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <GroupHeaderBand Name="GroupHeader2" Top="253.6" Width="718.2" Height="0.45" Condition="[Table.EmployeeName]">
-        <GroupHeaderBand Name="GroupHeader3" Top="259.38" Width="718.2" Height="47.7" Condition="[Table.JobName]">
-          <TextObject Name="Text72" Left="151.2" Top="9.45" Width="199.65" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الانصراف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-          <TextObject Name="Text74" Left="472.5" Top="9.45" Width="190.2" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الحضور" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-          <TextObject Name="Text75" Left="661.5" Top="9.45" Width="39" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-          <TextObject Name="Text80" Left="9.45" Top="9.45" Width="142.95" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="انصراف متأخر" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-          <TextObject Name="Text81" Left="349.65" Top="9" Width="124.05" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حضور مبكر" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+    <GroupHeaderBand Name="GroupHeader1" Top="172.22" Width="718.2" Height="38.25" Border.Lines="All" Fill.Color="White" Guides="28.35" Condition="[Table.DepartmentName]">
+      <TextObject Name="Text1" Left="151.2" Top="9.45" Width="264.6" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.DepartmentName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text82" Left="425.25" Top="9.45" Width="124.05" Height="28.8" Border.Lines="All" Text=" : القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+      <GroupHeaderBand Name="GroupHeader2" Top="215.8" Width="718.2" Height="85.5" Condition="[Table.EmployeeName]">
+        <TextObject Name="Text83" Left="576.45" Top="9.45" Width="124.05" Height="28.8" Border.Lines="All" Text=" : الموظف " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text5" Left="302.4" Top="9.45" Width="264.6" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.EmployeeName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text84" Left="217.35" Top="9.45" Width="76.8" Height="28.8" Border.Lines="All" Text=" : الوظيفه " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text6" Left="9.45" Top="9.45" Width="198.45" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.JobName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text72" Left="151.2" Top="47.25" Width="199.65" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الانصراف" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text74" Left="472.5" Top="47.25" Width="190.2" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الحضور" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text75" Left="661.5" Top="47.25" Width="39" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text80" Left="9.45" Top="47.25" Width="142.95" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="انصراف متأخر" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <TextObject Name="Text81" Left="349.65" Top="46.8" Width="124.05" Height="38.25" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حضور مبكر" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+        <GroupHeaderBand Name="GroupHeader3" Top="306.63" Width="718.2" Height="0.45" Condition="[Table.JobName]">
           <DataBand Name="Data1" Top="312.42" Width="718.2" Height="28.35" Guides="160.65,160.65,160.65,151.2,141.75" DataSource="Table2">
             <TableObject Name="Table1" Left="9.45" Width="689.85" Height="28.35" Border.Lines="All" Border.Color="DimGray">
               <TableColumn Name="Column10" Width="141.75"/>
@@ -82,21 +83,28 @@
               <TableColumn Name="Column6" Width="189"/>
               <TableColumn Name="Column7" Width="37.8"/>
               <TableRow Name="Row1" Height="28.35">
-                <TableCell Name="Cell34" Border.Lines="All" Text="[Table.LateDepartureMinutes]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+                <TableCell Name="Cell34" Border.Lines="All" Text="[Table.LateDepartureHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
                 <TableCell Name="Cell33" Border.Lines="All" Text="[Table.LeaveDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-                <TableCell Name="Cell32" Border.Lines="All" Text="[Table.EarlyArrivalMinutes]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+                <TableCell Name="Cell32" Border.Lines="All" Text="[Table.EarlyArrivalHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
                 <TableCell Name="Cell26" Border.Lines="All" Text="[Table.AttendDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
                 <TableCell Name="Cell31" Border.Lines="All" Text="[Table.ColumnIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
               </TableRow>
             </TableObject>
+            <Sort>
+              <Sort Expression="[Table.EmployeeName]"/>
+              <Sort Expression="[Table.ColumnIndex]"/>
+            </Sort>
           </DataBand>
           <GroupFooterBand Name="GroupFooter3" Top="346.1" Width="718.2"/>
         </GroupHeaderBand>
-        <GroupFooterBand Name="GroupFooter2" Top="351.43" Width="718.2"/>
+        <GroupFooterBand Name="GroupFooter2" Top="351.43" Width="718.2" Height="47.7">
+          <TextObject Name="Text85" Left="160.65" Top="9.45" Width="190.2" Height="28.8" Border.Lines="All" Text=" : الوقت الاضافى " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
+          <TextObject Name="Text86" Left="9.45" Top="9.45" Width="141.75" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[Table.TotalOverTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+        </GroupFooterBand>
       </GroupHeaderBand>
-      <GroupFooterBand Name="GroupFooter1" Top="356.77" Width="718.2"/>
+      <GroupFooterBand Name="GroupFooter1" Top="404.47" Width="718.2"/>
     </GroupHeaderBand>
-    <PageFooterBand Name="PageFooter1" Top="362.1" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
+    <PageFooterBand Name="PageFooter1" Top="409.8" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text33" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text50" Left="283.5" Width="141.75" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>

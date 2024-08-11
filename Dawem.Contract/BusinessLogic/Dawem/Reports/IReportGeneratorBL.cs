@@ -43,6 +43,15 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Reports
         HttpResponseMessage GenerateEmployeesReport(EmployeesReportCritria param);
         HttpResponseMessage GenerateGroupsReport(GroupsReportCritria param);
         HttpResponseMessage GenerateRequestsReport(RequestsReportCritria param);
+        HttpResponseMessage GenerateSummonsReport(SummonsReportCritria param);
+        HttpResponseMessage GenerateSummonLogsReport(SummonLogsReportCritria param);
+        HttpResponseMessage GenerateSanctionsReport(SancationsReportCritria param);
+        HttpResponseMessage GenerateSchedulePlanLogsReport(SchedulePlanLogsReportCritria param);
+        HttpResponseMessage GenerateSchedulePlansReport(SchedulePlansReportCritria param);
+        HttpResponseMessage GenerateSchedulesReport(SchedulesReportCritria param);
+        HttpResponseMessage GenerateShiftsReport(ShiftsReportCritria param);
+        HttpResponseMessage GenerateVacationBalancesReport(VacationBalancesReportCritria param);
+        HttpResponseMessage GenerateZonesReport(ZonesReportCritria param);
 
         #endregion
 

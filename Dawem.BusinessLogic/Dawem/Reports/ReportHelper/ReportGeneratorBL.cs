@@ -375,6 +375,122 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
             return ExportReport(report, param.ExportFormat);
         }
+        public HttpResponseMessage GenerateSummonsReport(SummonsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SummonsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
+            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
+            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateSummonLogsReport(SummonLogsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SummonsLogsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
+            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
+            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateSanctionsReport(SancationsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SanctionsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateSchedulePlanLogsReport(SchedulePlanLogsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SchedulePlanLogsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
+            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
+            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateSchedulePlansReport(SchedulePlansReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SchedulePlansReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateSchedulesReport(SchedulesReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SchedulesReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateShiftsReport(ShiftsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.ShiftsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateVacationBalancesReport(VacationBalancesReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.VacationBalancesReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
+        public HttpResponseMessage GenerateZonesReport(ZonesReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.ZonesReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            return ExportReport(report, param.ExportFormat);
+        }
 
         #endregion
 
@@ -471,9 +587,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
         #region Set Paremetes Methods
         private void SetGeneralParameters(Report report, BaseReportCritria param, ExporterModelDTO exporterModelDTO)
         {
-            report.SetParameterValue("PrintDate", DateTime.Now.ToString());
-            report.SetParameterValue("DateFrom", param.DateFrom);
-            report.SetParameterValue("DateTo", param.DateTo);
+            report.SetParameterValue("PrintDate", _requestInfo.LocalDateTime.ToString());
+            report.SetParameterValue("DateFrom", param.DateFrom != null ? param.DateFrom.Value.Date : null);
+            report.SetParameterValue("DateTo", param.DateTo != null ? param.DateTo.Value.Date : null);
             report.SetParameterValue("Lang", _requestInfo.Lang);
             report.SetParameterValue("FreeText", param.FreeText);
             report.SetParameterValue("CompanyID", exporterModelDTO.CompanyID);

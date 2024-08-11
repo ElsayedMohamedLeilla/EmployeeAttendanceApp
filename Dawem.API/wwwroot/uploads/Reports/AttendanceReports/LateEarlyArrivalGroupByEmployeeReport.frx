@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Name="Report" ReportInfo.Author="Amgad Mohamed" ReportInfo.Version="0" ReportInfo.Description="Get Employee Attendance" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/02/2024 03:22:35" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Name="Report" ReportInfo.Author="Amgad Mohamed" ReportInfo.Version="0" ReportInfo.Description="Get Employee Attendance" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/12/2024 01:37:04" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table2" Alias="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetLateEarlyArrivalGroupByDepartment &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@EmployeeIDs,&#13;&#10;@DepartmentIDs,&#13;&#10;@ZoneIDs,&#13;&#10;@JobTitleIDs">
+      <TableDataSource Name="Table2" Alias="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetLateEarlyArrivalGroupByDepartment &#13;&#10;  @DateFrom , &#13;&#10;  @DateTo,&#13;&#10;  @CompanyID,&#13;&#10;  @ZoneIDs, &#13;&#10;  @DepartmentIDs, &#13;&#10;  @EmployeeIDs,&#13;&#10;  @JobTitleIDs">
         <Column Name="ColumnIndex" DataType="System.Int64"/>
         <Column Name="EmployeeName" DataType="System.String"/>
         <Column Name="DepartmentName" DataType="System.String"/>
@@ -13,7 +13,7 @@
         <Column Name="LeaveDate" DataType="System.String"/>
         <Column Name="EarlyArrivalTime" DataType="System.Decimal"/>
         <Column Name="Id" DataType="System.Int32"/>
-        <Column Name="TotalLateArrivalsMinutes" DataType="System.Decimal"/>
+        <Column Name="TotalLateArrivalHours" DataType="System.Decimal"/>
         <CommandParameter Name="DateFrom" DataType="4" Expression="[DateFrom]"/>
         <CommandParameter Name="DateTo" DataType="4" Expression="[DateTo]"/>
         <CommandParameter Name="CompanyID" DataType="8" Expression="[CompanyID]"/>
@@ -43,7 +43,7 @@
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="170.55" Guides="28.35">
       <TextObject Name="Text48" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeeID" Font="Arial, 10pt"/>
       <TextObject Name="Text49" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="JobTitleID" Font="Arial, 10pt"/>
-      <TextObject Name="Text51" Left="18.9" Top="94.5" Width="681.6" Height="28.8" Border.Lines="All" Border.Style="Dash" Border.Width="1.5" Fill.Color="LightGray" Text="تقرير التأخير والحضور المبكر على مستوى الموظفين " HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text51" Left="18.9" Top="94.5" Width="681.6" Height="28.8" Border.Lines="All" Border.Style="Dash" Border.Width="1.5" Fill.Color="LightGray" Text="تقرير التاخير والانصراف المبكر على مستوى الموظفين" HorzAlign="Center" VertAlign="Center" Font="Arial, 16pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text2" Left="567" Top="132.3" Width="95.7" Height="28.8" Border.Lines="All" Text="من " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text4" Left="387.45" Top="132.3" Width="171.3" Height="28.8" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[DateFromString]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text3" Left="274.05" Top="132.3" Width="95.7" Height="28.8" Border.Lines="All" Text="الى " HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
@@ -89,8 +89,8 @@
             </TableObject>
           </DataBand>
           <GroupFooterBand Name="GroupFooter3" Top="429.49" Width="718.2" Height="38.25">
-            <TextObject Name="Text67" Left="529.2" Top="9.45" Width="171.3" Height="28.8" Border.Lines="All" Text="اجمالى وقت التأخير بالدقائق" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
-            <TextObject Name="Text68" Left="396.9" Top="9.45" Width="113.4" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[Table.TotalLateArrivalsMinutes]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+            <TextObject Name="Text67" Left="529.2" Top="9.45" Width="171.3" Height="28.8" Border.Lines="All" Text="اجمالى وقت التأخير بالساعه" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" TextFill.Color="Brown"/>
+            <TextObject Name="Text68" Left="396.9" Top="9.45" Width="113.4" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[Table.TotalLateArrivalHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
           </GroupFooterBand>
         </GroupHeaderBand>
         <GroupFooterBand Name="GroupFooter4" Top="473.07" Width="718.2"/>
@@ -101,7 +101,7 @@
     <PageFooterBand Name="PageFooter1" Top="489.07" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text33" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <TextObject Name="Text50" Left="283.5" Width="141.75" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+      <TextObject Name="Text50" Width="708.75" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text53" Left="557.55" Width="151.2" Height="28.35" Text="[PrintDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
     </PageFooterBand>
   </ReportPage>

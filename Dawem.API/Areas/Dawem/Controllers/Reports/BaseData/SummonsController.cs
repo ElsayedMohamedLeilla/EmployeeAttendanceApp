@@ -7,24 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dawem.API.Areas.Dawem.Controllers.Reports.BaseData
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    public class GroupsController : DawemControllerBase
+    public class SummonsController : DawemControllerBase
     {
         private readonly IReportGeneratorBL _reportGeneratorBL;
-        public GroupsController(IReportGeneratorBL reportGeneratorBL)
+        public SummonsController(IReportGeneratorBL reportGeneratorBL)
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
-        [HttpPost]
-        public IActionResult GetGroupsReport([FromQuery] GroupsReportCritria param)
+        [HttpGet]
+        public IActionResult GetSummonsReport([FromQuery] SummonsReportCritria param)
         {
-            var response = _reportGeneratorBL.GenerateGroupsReport(param);
+            var response = _reportGeneratorBL.GenerateSummonsReport(param);
             if (response != null && response.IsSuccessStatusCode)
             {
                 var contentStream = response.Content.ReadAsStream();
                 switch (param.ExportFormat)
                 {
                     case ExportFormat.Pdf:
-                        return File(contentStream, "application/pdf", "GroupsReport.pdf");
+                        return File(contentStream, "application/pdf", "SummonsReport.pdf");
                     case ExportFormat.Excel:
                         // Return Excel file
                         // return File(contentStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CompaniesReport.xlsx");

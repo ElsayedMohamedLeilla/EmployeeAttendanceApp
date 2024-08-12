@@ -1,0 +1,6 @@
+﻿namespace Dawem.Models.Response.Dawem.ReportCritrias
+{
+    public class SchedulesReportCritria : BaseReportCritria
+    {
+    }
+}

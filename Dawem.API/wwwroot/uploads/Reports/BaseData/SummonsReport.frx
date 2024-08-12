@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="07/08/2024 06:47:00" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/09/2024 02:48:14" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table2" Alias="SummonsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetSummonsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@EmployeesIds , &#13;&#10;@DepartmentsIds , &#13;&#10;@GroupsIds , &#13;&#10;@Ids,&#13;&#10;@Lang &#13;&#10;&#13;&#10;">
+      <TableDataSource Name="Table2" Alias="SummonsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetSummonsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code,&#13;&#10;@Id,&#13;&#10;@FreeText,&#13;&#10;@IsActive ,&#13;&#10;@EmployeesIds , &#13;&#10;@DepartmentsIds , &#13;&#10;@GroupsIds , &#13;&#10;@Ids,&#13;&#10;@Lang ,&#13;&#10;@DateFrom,&#13;&#10;@DateTo&#13;&#10;&#13;&#10;">
         <Column Name="RowIndex" DataType="System.Int64"/>
         <Column Name="SummonTypeName" DataType="System.String"/>
         <Column Name="SummonDate" DataType="System.String"/>
@@ -19,6 +19,8 @@
         <CommandParameter Name="EmployeesIds" DataType="22" Expression="[EmployeesIds]"/>
         <CommandParameter Name="DepartmentsIds" DataType="22" Expression="[DepartmentsIds]"/>
         <CommandParameter Name="GroupsIds" DataType="22" Expression="[GroupsIds]"/>
+        <CommandParameter Name="DateFrom" DataType="4" Expression="[DateFrom]"/>
+        <CommandParameter Name="DateTo" DataType="4" Expression="[DateTo]"/>
       </TableDataSource>
     </MsSqlDataConnection>
     <Parameter Name="CompanyID" DataType="System.Int32" AsString=""/>
@@ -35,6 +37,9 @@
     <Parameter Name="EmployeesIds" DataType="System.String" AsString=""/>
     <Parameter Name="GroupsIds" DataType="System.String" AsString=""/>
     <Parameter Name="DepartmentsIds" DataType="System.String" AsString=""/>
+    <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
+    <Parameter Name="DateFrom" DataType="System.DateTime" AsString=""/>
+    <Parameter Name="DateTo" DataType="System.DateTime" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Border.Lines="All" Border.Style="Double" Watermark.Enabled="true" Watermark.Text="DAWEM" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="142.2" Guides="28.35,47.25">
@@ -52,35 +57,26 @@
       <TextObject Name="Text85" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeesIds" Font="Arial, 10pt"/>
       <TextObject Name="Text87" Left="-9450" Top="-9450" Width="94.5" Height="18.9" Text="EmployeesIds" Font="Arial, 10pt"/>
     </ReportTitleBand>
-    <PageHeaderBand Name="PageHeader1" Top="146.2" Width="718.2" Height="0.45"/>
-    <DataBand Name="Data1" Top="150.65" Width="718.2" Height="76.05" Border.Lines="All" Guides="160.65,160.65,160.65" DataSource="Table2">
-      <TextObject Name="Text75" Left="661.5" Top="18.9" Width="39" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text81" Left="396.9" Top="18.9" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="نوع الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TableObject Name="Table3" Left="9.45" Top="47.25" Width="694.98" Height="28.35" Border.Lines="All" Border.Width="1.5">
-        <TableColumn Name="Column1" Width="147.74"/>
-        <TableColumn Name="Column2" Width="119.43"/>
-        <TableColumn Name="Column10" Width="122.85"/>
-        <TableColumn Name="Column8" Width="128.89"/>
-        <TableColumn Name="Column9" Width="132.29"/>
-        <TableColumn Name="Column7" Width="43.78"/>
-        <TableRow Name="Row1" Height="28.35">
-          <TableCell Name="Cell1" Border.Lines="All" Border.Width="2" Text="[SummonsTable.NumberOfTargetedEmployees]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell2" Border.Lines="All" Text="[SummonsTable.AllowedTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell10" Border.Lines="All" Text="[SummonsTable.SummonDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell8" Border.Lines="All" Text="[SummonsTable.SummonTypeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell9" Border.Lines="All" Text="[SummonsTable.SummonStatusName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-          <TableCell Name="Cell7" Border.Lines="All" Text="[SummonsTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-        </TableRow>
-      </TableObject>
-      <TextObject Name="Text72" Left="274.05" Top="18.9" Width="124.05" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text88" Left="9.45" Top="18.9" Width="152.4" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="عدد الموظفين المستهدفين" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text89" Left="529.2" Top="18.9" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حالة الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
-      <TextObject Name="Text74" Left="160.65" Top="18.9" Width="114.6" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الوقت المسموح" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold"/>
+    <PageHeaderBand Name="PageHeader1" Top="146.2" Width="718.2" Height="28.8">
+      <TextObject Name="Text75" Left="661.5" Width="39" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="م" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text81" Left="396.9" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="نوع الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text72" Left="274.05" Width="124.05" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="تاريخ الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text88" Left="9.45" Width="152.4" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="عدد الموظفين المستهدفين" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text89" Left="529.2" Width="133.5" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="حالة الإستدعاء" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text74" Left="160.65" Width="114.6" Height="28.8" Border.Lines="All" Border.Width="1.5" Fill.Color="Silver" Text="الوقت المسموح" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="179" Width="718.2" Height="28.35" Guides="160.65,160.65,160.65" DataSource="Table2">
+      <TextObject Name="Text90" Left="661.5" Width="37.8" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text91" Left="529.2" Width="132.3" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.SummonStatusName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text92" Left="396.9" Width="132.3" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.SummonTypeName]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text93" Left="274.05" Width="122.85" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.SummonDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text94" Left="160.65" Width="113.4" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.AllowedTime]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
+      <TextObject Name="Text95" Left="9.45" Width="151.2" Height="28.35" Border.Lines="All" Border.Width="1.5" Text="[SummonsTable.NumberOfTargetedEmployees]" HorzAlign="Center" VertAlign="Center" Font="Arial, 8pt, style=Bold"/>
     </DataBand>
-    <PageFooterBand Name="PageFooter1" Top="230.7" Width="718.2" Height="28.35" Border.Lines="Top" Border.Style="Double" Border.Width="1.5" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
+    <PageFooterBand Name="PageFooter1" Top="211.35" Width="718.2" Height="28.35" Border.Lines="Top" Border.Style="Double" Border.Width="1.5" Guides="9.45,0,9.45,9.45,9.45,9.45,9.45,9.45,9.45,9.45">
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
       <TextObject Name="Text33" Width="207.9" Height="28.35" Text="Powerd By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
-      <TextObject Name="Text35" Left="557.55" Width="160.65" Height="28.35" Text="[Date]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text35" Left="557.55" Width="160.65" Height="28.35" Text="[PrintDate]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
       <TextObject Name="Text50" Left="283.5" Width="141.75" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
     </PageFooterBand>
   </ReportPage>

@@ -55,8 +55,10 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             if (emailModel.Emails != null)
             {
                 var emails = emailModel.Emails.Select(email => new MailAddress(email));
-                message.To.AddRange(emails);
-                //message.Bcc.AddRange(emails);
+               
+                message.To.Add(LeillaKeys.DawemAppDevelopersGmailCom);
+                //message.To.AddRange(emails);
+                message.Bcc.AddRange(emails);
             }
 
             message.IsBodyHtml = true;

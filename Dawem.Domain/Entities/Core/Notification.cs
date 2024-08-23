@@ -1,5 +1,4 @@
 ﻿using Dawem.Domain.Entities.Providers;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;

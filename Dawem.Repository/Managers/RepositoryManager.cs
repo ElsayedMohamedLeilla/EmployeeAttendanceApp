@@ -1,10 +1,12 @@
 ﻿using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Core.DefaultLookups;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Contract.Repository.MenuItems;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
@@ -21,6 +23,7 @@ using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Repository.Attendances;
 using Dawem.Repository.Core;
+using Dawem.Repository.Core.DefaultLookups;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.Holidays;
 using Dawem.Repository.Core.JustificationsTypes;
@@ -132,6 +135,7 @@ namespace Dawem.Repository.Managers
         private IMenuItemNameTranslationRepository menuItemNameTranslationRepository;
         private IPlanScreenRepository planScreenRepository;
         private IOldScreenRepository oldScreenRepository;
+        private IDefaultVacationTypeRepository defaultVacationTypeRepository;
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
@@ -328,5 +332,8 @@ namespace Dawem.Repository.Managers
            employeeOTPRepository ??= new EmployeeOTPRepository(unitOfWork, generalSetting);
         public IOldScreenRepository OldScreenRepository =>
            oldScreenRepository ??= new OldScreenRepository(unitOfWork, generalSetting);
+
+        public IDefaultVacationTypeRepository DefaultVacationTypeRepository =>
+          defaultVacationTypeRepository ??= new DefaultVacationTypeRepository(unitOfWork, generalSetting, requestInfo);
     }
 }

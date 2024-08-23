@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport
+﻿namespace Dawem.Models.Dtos.Dawem.Reports.SummonsReports
 {
     public class BriefingSummonsInPeriodCritria
     {

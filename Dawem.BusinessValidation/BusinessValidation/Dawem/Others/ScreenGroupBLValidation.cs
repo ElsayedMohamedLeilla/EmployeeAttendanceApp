@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+﻿using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
@@ -12,7 +12,7 @@ using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Validation.BusinessValidation.Dawem.Others
 {
 
     public class ScreenGroupBLValidation : IScreenGroupBLValidation
@@ -64,7 +64,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
-            await ValidateOrderDuplication(model.Order, model.Id , model.AuthenticationType);
+            await ValidateOrderDuplication(model.Order, model.Id, model.AuthenticationType);
 
             await ValidateParent(model.Id, model.ParentId);
 

@@ -4,7 +4,7 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
+namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employees
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     [ApiExplorerSettings(IgnoreApi = true)]

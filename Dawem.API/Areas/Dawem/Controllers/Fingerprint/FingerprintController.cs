@@ -3,13 +3,13 @@ using Dawem.Contract.Repository.Attendances;
 using Dawem.Data.UnitOfWork;
 using Dawem.Data;
 using Dawem.Domain.Entities.Core;
-using Dawem.Models.DTOs.Dawem.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Dawem.Models.Context;
 using Microsoft.EntityFrameworkCore;
+using Dawem.Models.Dtos.Dawem.Fingerprint;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Schedules
+namespace Dawem.API.Areas.Dawem.Controllers.Fingerprint
 {
     [ApiController]
     [Route("")]
@@ -39,7 +39,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
             {
                 Name = "(iclock/cdata) post" + DateTime.UtcNow,
                 Code = getNextCode,
-                Notes ="Data:" + JsonConvert.SerializeObject(query),
+                Notes = "Data:" + JsonConvert.SerializeObject(query),
                 AddedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.Now,
                 CompanyId = 7,

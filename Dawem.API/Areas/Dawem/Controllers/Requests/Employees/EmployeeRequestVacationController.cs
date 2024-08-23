@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employee
+namespace Dawem.API.Areas.Dawem.Controllers.Requests.Employees
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+
+
     public class EmployeeRequestVacationController : DawemControllerBase
     {
         private readonly IRequestVacationBL requestVacationBL;

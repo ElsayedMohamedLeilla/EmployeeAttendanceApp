@@ -11,7 +11,7 @@ using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
+namespace Dawem.BusinessLogic.Dawem.Core.Notifications
 {
     public class NotificationHandleBL : INotificationHandleBL
     {

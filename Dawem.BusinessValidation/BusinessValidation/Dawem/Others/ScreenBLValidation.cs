@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+﻿using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
@@ -12,7 +12,7 @@ using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Validation.BusinessValidation.Dawem.Others
 {
 
     public class ScreenBLValidation : IScreenBLValidation
@@ -101,7 +101,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
         private async Task<bool> ValidateOrderDuplication(int order, int id, AuthenticationType authenticationType)
         {
             var checkOrderDuplicate = await repositoryManager.MenuItemRepository.
-                Get(m => !m.IsDeleted && m.GroupOrScreenType == GroupOrScreenType.Screen && 
+                Get(m => !m.IsDeleted && m.GroupOrScreenType == GroupOrScreenType.Screen &&
                 m.AuthenticationType == authenticationType &&
                 m.Id != id && m.Order == order).
                 Select(screenGroup => new

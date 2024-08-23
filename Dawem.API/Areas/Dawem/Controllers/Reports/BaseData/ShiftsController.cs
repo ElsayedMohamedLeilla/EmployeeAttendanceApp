@@ -1,6 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Reports;
 using Dawem.Enums.Generals;
-using Dawem.Models.Response.Dawem.ReportCritrias;
+using Dawem.Models.Response.Dawem.ReportCritrias.BaseData;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 

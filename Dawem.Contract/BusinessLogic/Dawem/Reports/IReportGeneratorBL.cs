@@ -1,7 +1,9 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Reports.ExporterModel;
-using Dawem.Models.Response.Dawem.ReportCritrias;
 using Dawem.Models.Response.Dawem.ReportCritrias.AttendanceReports;
+using Dawem.Models.Response.Dawem.ReportCritrias.BaseData;
+using Dawem.Models.Response.Dawem.ReportCritrias.StatisticsReports;
+using Dawem.Models.Response.Dawem.ReportCritrias.SummonReports;
 
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Reports

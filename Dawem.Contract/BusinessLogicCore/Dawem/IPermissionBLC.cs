@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 
-namespace Dawem.Contract.BusinessLogic.Dawem.Permissions
+namespace Dawem.Contract.BusinessLogicCore.Dawem
 {
     public interface IPermissionBLC
     {

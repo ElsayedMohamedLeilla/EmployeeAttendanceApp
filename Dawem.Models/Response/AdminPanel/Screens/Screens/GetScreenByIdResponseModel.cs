@@ -1,7 +1,7 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Dtos.Dawem.Shared;
 
-namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
+namespace Dawem.Models.Response.AdminPanel.Screens.Screens
 {
     public class GetScreenByIdResponseModel
     {

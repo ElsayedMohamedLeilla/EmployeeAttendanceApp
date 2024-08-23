@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
-using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
+using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -15,7 +15,7 @@ using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
+namespace Dawem.BusinessLogicCore.Dawem
 {
     public class ScreenBLC : IScreenBLC
     {

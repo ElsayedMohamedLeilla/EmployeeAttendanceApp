@@ -1,7 +1,7 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
+using Dawem.Models.Response.AdminPanel.Screens.ScreenGroups;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
 {

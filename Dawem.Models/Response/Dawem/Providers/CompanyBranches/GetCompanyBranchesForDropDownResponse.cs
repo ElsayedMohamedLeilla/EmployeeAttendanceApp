@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Dawem.Providers.Companies
+﻿namespace Dawem.Models.Response.Dawem.Providers.CompanyBranches
 {
     public class GetCompanyBranchesForDropDownResponse
     {

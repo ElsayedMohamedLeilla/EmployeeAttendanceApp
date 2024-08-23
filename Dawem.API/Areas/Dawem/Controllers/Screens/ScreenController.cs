@@ -1,5 +1,6 @@
 ﻿using Dawem.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Enums.Permissions;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Translations;

@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 
-namespace Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Contract.BusinessValidation.Dawem.Others
 {
     public interface IScreenGroupBLValidation
     {

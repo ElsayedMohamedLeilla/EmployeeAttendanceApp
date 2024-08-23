@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
+using Dawem.Models.Response.AdminPanel.Screens.Screens;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
 {

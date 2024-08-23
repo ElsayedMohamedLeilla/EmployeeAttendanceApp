@@ -1,5 +1,5 @@
 ﻿using Dawem.Models.Criteria.Providers;
-using Dawem.Models.Response.Dawem.Providers.Companies;
+using Dawem.Models.Response.Dawem.Providers.CompanyBranches;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Provider
 {

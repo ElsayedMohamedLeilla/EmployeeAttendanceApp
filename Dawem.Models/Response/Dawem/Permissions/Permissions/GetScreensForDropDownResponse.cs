@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.Dawem.Attendances.FingerprintDevices
+﻿namespace Dawem.Models.Response.Dawem.Permissions.Permissions
 {
     public class GetScreensForDropDownResponse
     {

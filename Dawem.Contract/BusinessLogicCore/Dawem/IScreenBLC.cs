@@ -1,7 +1,7 @@
 ﻿using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.Dawem.Others;
 
-namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
+namespace Dawem.Contract.BusinessLogicCore.Dawem
 {
     public interface IScreenBLC
     {

@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Dawem.Core.NotificationsStores
+namespace Dawem.Models.Dtos.Dawem.Core.Notifications
 {
     public class NotificationDataModel
     {

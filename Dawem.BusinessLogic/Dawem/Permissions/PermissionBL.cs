@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Contract.BusinessLogic.Dawem.Permissions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;

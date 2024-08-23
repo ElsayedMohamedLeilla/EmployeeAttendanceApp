@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Attendances
+namespace Dawem.API.Areas.Dawem.Controllers.Attendances.DawemAdmins
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class AttendanceController : DawemControllerBase

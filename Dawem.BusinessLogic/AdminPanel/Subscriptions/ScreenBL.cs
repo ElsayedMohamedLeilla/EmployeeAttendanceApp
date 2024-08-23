@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
-using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
@@ -14,7 +13,7 @@ using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
+using Dawem.Models.Response.AdminPanel.Screens.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

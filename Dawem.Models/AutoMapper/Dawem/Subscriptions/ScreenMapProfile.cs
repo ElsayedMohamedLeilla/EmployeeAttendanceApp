@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Dawem.Domain.Entities.Others;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;

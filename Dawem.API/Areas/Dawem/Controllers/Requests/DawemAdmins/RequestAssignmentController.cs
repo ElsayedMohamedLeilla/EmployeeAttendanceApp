@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Requests.Admin
+namespace Dawem.API.Areas.Dawem.Controllers.Requests.DawemAdmins
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+
+
     public class RequestAssignmentController : DawemControllerBase
     {
         private readonly IRequestAssignmentBL requestAssignmentBL;

@@ -1,10 +1,10 @@
 ﻿using Dawem.Domain.Entities.Attendances;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Lookups;
 using Dawem.Domain.Entities.Others;
 using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Domain.Entities.Schedules;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;

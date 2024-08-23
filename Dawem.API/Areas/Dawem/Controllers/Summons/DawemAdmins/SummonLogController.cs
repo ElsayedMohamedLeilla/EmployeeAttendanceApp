@@ -4,11 +4,11 @@ using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Summons
+namespace Dawem.API.Areas.Dawem.Controllers.Summons.DawemAdmins
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
-    
-    
+
+
     public class SummonLogController : DawemControllerBase
     {
         private readonly ISummonLogBL summonLogBL;

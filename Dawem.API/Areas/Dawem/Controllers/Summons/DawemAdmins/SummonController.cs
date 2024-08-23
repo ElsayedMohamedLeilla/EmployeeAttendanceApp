@@ -4,7 +4,7 @@ using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Summons
+namespace Dawem.API.Areas.Dawem.Controllers.Summons.DawemAdmins
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class SummonController : DawemControllerBase

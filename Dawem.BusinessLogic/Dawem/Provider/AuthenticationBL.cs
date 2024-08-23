@@ -1,6 +1,7 @@
 ﻿using Dawem.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;

@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+﻿using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Permissions;

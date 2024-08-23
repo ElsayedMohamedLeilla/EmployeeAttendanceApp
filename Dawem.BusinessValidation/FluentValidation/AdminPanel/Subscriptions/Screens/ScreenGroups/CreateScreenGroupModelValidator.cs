@@ -2,7 +2,7 @@
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
+namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Screens.ScreenGroups
 {
     public class CreateScreenGroupModelValidator : AbstractValidator<CreateScreenGroupModel>
     {

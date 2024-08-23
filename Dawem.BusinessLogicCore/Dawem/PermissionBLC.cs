@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Dawem.Contract.BusinessLogic.Dawem.Permissions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
@@ -9,7 +9,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Dawem.Permissions
+namespace Dawem.BusinessLogicCore.Dawem
 {
     public class PermissionBLC : IPermissionBLC
     {
@@ -43,8 +43,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             #region Set Permission Code
             var getNextCode = await repositoryManager.PermissionRepository
                 .Get(permission => permission.AuthenticationType == requestInfo.AuthenticationType &&
-                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)))
+                (requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId ||
+                requestInfo.CompanyId <= 0 && permission.CompanyId == null))
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;

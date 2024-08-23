@@ -1,6 +1,7 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
 using Dawem.API.Helpers;
 using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;

@@ -1,9 +1,8 @@
-﻿using Dawem.Domain.Entities.Others;
-using Dawem.Enums.Permissions;
+﻿using Dawem.Enums.Permissions;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Subscriptions
+namespace Dawem.Domain.Entities.Others
 {
     [Table(nameof(MenuItemAction) + LeillaKeys.S)]
     public class MenuItemAction : BaseEntity

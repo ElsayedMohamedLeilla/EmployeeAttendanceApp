@@ -4,7 +4,7 @@ using Dawem.Models.Response.Dawem.ReportCritrias.AttendanceReports;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Reports.Attendance
+namespace Dawem.API.Areas.Dawem.Controllers.Reports.Attendances
 {
 
 

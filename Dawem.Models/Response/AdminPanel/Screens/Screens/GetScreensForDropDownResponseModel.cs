@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.Screens
+﻿namespace Dawem.Models.Response.AdminPanel.Screens.Screens
 {
     public class GetScreensForDropDownResponseModel : BaseGetForDropDownResponseModel
     {

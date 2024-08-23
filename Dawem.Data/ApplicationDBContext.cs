@@ -1,6 +1,7 @@
 ﻿using Dawem.Domain.Entities;
 using Dawem.Domain.Entities.Attendances;
 using Dawem.Domain.Entities.Core;
+using Dawem.Domain.Entities.Core.DefaultLookus;
 using Dawem.Domain.Entities.Dawem;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.Localization;
@@ -739,6 +740,9 @@ namespace Dawem.Data
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EmployeeOTP> EmployeeOTPs { get; set; }
+
+        public DbSet<DefaultLookup> DefaultLookups { get; set; }
+        public DbSet<DefaultLookupsTranslation> DefaultLookupsTranslations { get; set; }
 
 
 

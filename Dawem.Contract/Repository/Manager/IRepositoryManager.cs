@@ -1,9 +1,11 @@
 ﻿using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Core.DefaultLookups;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
+using Dawem.Contract.Repository.MenuItems;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
@@ -101,5 +103,7 @@ namespace Dawem.Contract.Repository.Manager
         IMenuItemActionRepository MenuItemActionRepository { get; }
         IMenuItemNameTranslationRepository MenuItemNameTranslationRepository { get; }
         IPlanScreenRepository PlanScreenRepository { get; }
+        IDefaultVacationTypeRepository DefaultVacationTypeRepository { get; }
+
     }
 }

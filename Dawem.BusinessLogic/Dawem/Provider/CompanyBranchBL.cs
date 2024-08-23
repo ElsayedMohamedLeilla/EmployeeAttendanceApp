@@ -6,6 +6,7 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Providers;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Providers.Companies;
+using Dawem.Models.Response.Dawem.Providers.CompanyBranches;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 

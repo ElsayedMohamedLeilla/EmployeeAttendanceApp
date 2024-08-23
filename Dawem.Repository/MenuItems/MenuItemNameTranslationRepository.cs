@@ -1,11 +1,11 @@
-﻿using Dawem.Contract.Repository.Settings;
+﻿using Dawem.Contract.Repository.MenuItems;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Subscriptions;
+using Dawem.Domain.Entities.Others;
 using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
 
-namespace Dawem.Repository.Providers
+namespace Dawem.Repository.MenuItems
 {
     public class MenuItemNameTranslationRepository : GenericRepository<MenuItemNameTranslation>, IMenuItemNameTranslationRepository
     {

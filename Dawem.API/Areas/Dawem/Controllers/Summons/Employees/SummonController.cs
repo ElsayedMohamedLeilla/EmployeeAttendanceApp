@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Summons
+namespace Dawem.API.Areas.Dawem.Controllers.Summons.Employees
 {
     [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class EmployeeSummonController : DawemControllerBase

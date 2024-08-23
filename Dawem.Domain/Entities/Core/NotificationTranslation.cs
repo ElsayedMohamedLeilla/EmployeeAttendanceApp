@@ -1,9 +1,8 @@
-﻿using Dawem.Domain.Entities.Core;
-using Dawem.Domain.Entities.Lookups;
+﻿using Dawem.Domain.Entities.Lookups;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dawem.Domain.Entities.Subscriptions
+namespace Dawem.Domain.Entities.Core
 {
     [Table(nameof(NotificationTranslation) + LeillaKeys.S)]
     public class NotificationTranslation : BaseEntity

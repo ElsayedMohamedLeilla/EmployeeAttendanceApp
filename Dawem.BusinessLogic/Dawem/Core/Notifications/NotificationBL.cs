@@ -13,7 +13,7 @@ using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
+namespace Dawem.BusinessLogic.Dawem.Core.Notifications
 {
     public class NotificationBL : INotificationBL
     {
@@ -54,7 +54,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
             {
                 Id = notification.Id,
                 Title = notification.NotificationTranslations.
-                FirstOrDefault(t=>t.Language.ISO2 == requestInfo.Lang).Title,
+                FirstOrDefault(t => t.Language.ISO2 == requestInfo.Lang).Title,
                 Body = notification.NotificationTranslations.
                 FirstOrDefault(t => t.Language.ISO2 == requestInfo.Lang).Body,
                 IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
@@ -78,7 +78,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.NotificationsStores
 
             var notifications = await repositoryManager.
                 NotificationRepository.
-                GetWithTracking(n => !n.IsViewed && !n.IsDeleted && n.NotificationEmployees.Any( ne => ne.EmployeeId == employeeId)).
+                GetWithTracking(n => !n.IsViewed && !n.IsDeleted && n.NotificationEmployees.Any(ne => ne.EmployeeId == employeeId)).
                 ToListAsync();
 
             for (int i = 0; i < notifications.Count; i++)

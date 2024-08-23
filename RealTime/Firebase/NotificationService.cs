@@ -6,7 +6,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Core;
-using Dawem.Models.Dtos.Dawem.Core.NotificationsStores;
+using Dawem.Models.Dtos.Dawem.Core.Notifications;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;

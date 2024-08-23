@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <Folder Include="AutoMapper\AdminPanel\" />
-    <Folder Include="DTOs\AdminPanel\" />
+    <Folder Include="DTOs\AdminPanel\DefaultLookups\General\" />
   </ItemGroup>
 
 </Project>

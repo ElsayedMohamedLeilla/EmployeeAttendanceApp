@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.Repository.Settings;
+﻿using Dawem.Contract.Repository.MenuItems;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Others;
@@ -9,7 +9,7 @@ using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using LinqKit;
 
-namespace Dawem.Repository.Providers
+namespace Dawem.Repository.MenuItems
 {
     public class MenuItemRepository : GenericRepository<MenuItem>, IMenuItemRepository
     {
@@ -81,7 +81,7 @@ namespace Dawem.Repository.Providers
             {
                 predicate = predicate.And(e => e.GroupOrScreenType == criteria.GroupOrScreenType);
             }
-            
+
             predicate = predicate.And(inner);
             var Query = Get(predicate);
             return Query;
@@ -92,8 +92,8 @@ namespace Dawem.Repository.Providers
             var predicate = PredicateBuilder.New<MenuItem>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MenuItem>(true);
 
-            predicate = predicate.And(e => (requestInfo.AuthenticationType == AuthenticationType.AdminPanel && e.AuthenticationType == AuthenticationType.AdminPanel) || 
-            (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin && e.AuthenticationType != AuthenticationType.AdminPanel));
+            predicate = predicate.And(e => requestInfo.AuthenticationType == AuthenticationType.AdminPanel && e.AuthenticationType == AuthenticationType.AdminPanel ||
+            requestInfo.AuthenticationType == AuthenticationType.DawemAdmin && e.AuthenticationType != AuthenticationType.AdminPanel);
 
             if (criteria.IsActive != null)
             {

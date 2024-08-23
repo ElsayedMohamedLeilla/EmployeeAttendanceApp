@@ -1,5 +1,4 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Providers;

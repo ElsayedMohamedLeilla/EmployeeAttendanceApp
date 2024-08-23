@@ -1,7 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Models.Requests;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Requests.DawemAdmins

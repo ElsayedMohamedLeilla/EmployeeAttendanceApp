@@ -742,7 +742,7 @@ namespace Dawem.Data
         public DbSet<EmployeeOTP> EmployeeOTPs { get; set; }
 
         public DbSet<DefaultLookup> DefaultLookups { get; set; }
-        public DbSet<DefaultLookupsTranslation> DefaultLookupsTranslations { get; set; }
+        public DbSet<DefaultLookupsNameTranslation> DefaultLookupsTranslations { get; set; }
 
 
 

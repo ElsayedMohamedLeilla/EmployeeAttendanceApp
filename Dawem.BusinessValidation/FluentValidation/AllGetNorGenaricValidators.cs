@@ -1,4 +1,5 @@
 ﻿using Dawem.Models.Criteria.Core;
+using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.Criteria.Lookups;
 using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Dawem.Attendances;
@@ -387,6 +388,14 @@ namespace Dawem.Validation.FluentValidation
     public class GetPlansCriteriaValidator : AbstractValidator<GetPlansCriteria>
     {
         public GetPlansCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+
+    public class GetDefaultVacationsTypesCriteriaValidator : AbstractValidator<GetDefaultVacationTypeCriteria>
+    {
+        public GetDefaultVacationsTypesCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }

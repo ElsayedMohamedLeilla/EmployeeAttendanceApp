@@ -266,8 +266,13 @@
         public const string PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation = "PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation";
         public const string CompanyVerificationCode = "CompanyVerificationCode";
         public const string EmploymentNumber = "EmploymentNumber";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisVacation = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisVacation!";
 
         
+
+
+
+
 
 
 

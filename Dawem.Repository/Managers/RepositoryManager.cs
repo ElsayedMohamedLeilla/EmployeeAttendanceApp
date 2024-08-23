@@ -34,6 +34,7 @@ using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
+using Dawem.Repository.MenuItems;
 using Dawem.Repository.Others;
 using Dawem.Repository.Providers;
 using Dawem.Repository.RealTime.Firebase;

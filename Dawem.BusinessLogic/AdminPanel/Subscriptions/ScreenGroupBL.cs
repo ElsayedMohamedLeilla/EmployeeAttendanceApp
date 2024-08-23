@@ -15,7 +15,6 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
 using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Response.AdminPanel.Screens.ScreenGroups;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Screens;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -240,7 +239,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
         }
         public async Task<GetScreenGroupInfoResponseModel> GetInfo(int screenGroupId)
         {
-            var screenGroup = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted && 
+            var screenGroup = await repositoryManager.MenuItemRepository.Get(e => e.Id == screenGroupId && !e.IsDeleted &&
             e.GroupOrScreenType == GroupOrScreenType.Group)
                 .Select(screenGroup => new GetScreenGroupInfoResponseModel
                 {

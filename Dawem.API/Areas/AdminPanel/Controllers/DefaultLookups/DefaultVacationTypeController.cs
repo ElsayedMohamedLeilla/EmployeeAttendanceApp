@@ -1,20 +1,15 @@
-﻿using Dawem.BusinessLogic.Dawem.Core.Groups;
-using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
-using Dawem.Contract.BusinessLogic.Dawem.Core;
-using Dawem.Models.Criteria.Core;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
 using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
-using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Core
 {
 
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]    
-    public class DefaultVacationTypeController : DawemControllerBase
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
+    public class DefaultVacationTypeController : AdminPanelControllerBase
     {
         private readonly IDefaultVacationTypeBL vacationTypeBL;
         public DefaultVacationTypeController(IDefaultVacationTypeBL _vacationTypeBL)

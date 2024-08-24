@@ -10,8 +10,8 @@ namespace Dawem.Validation.FluentValidation.Dawem.Core.VacationsTypes
         public CreateDefaultVacationsTypeModelValidator()
         {
 
-            RuleFor(model => model.Name).NotNull().
-                   WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
+            //RuleFor(model => model.Name).NotNull().
+            //       WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
             RuleFor(model => model.DefaultType).IsInEnum().
                    WithMessage(LeillaKeys.SorryYouMustEnterCorrectVacationType);
         }

@@ -12,8 +12,8 @@ namespace Dawem.Validation.FluentValidation.Dawem.Core.VacationsTypes
             RuleFor(model => model.Id).GreaterThan(0).
                     WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeId);
 
-            RuleFor(model => model.Name).NotNull().
-                   WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
+            //RuleFor(model => model.Name).NotNull().
+            //       WithMessage(LeillaKeys.SorryYouMustEnterVacationsTypeName);
 
             RuleFor(model => model.DefaultType).IsInEnum().
                    WithMessage(LeillaKeys.SorryYouMustEnterCorrectVacationType);

@@ -1,11 +1,7 @@
-﻿using Dawem.Contract.Repository.Manager;
-using Dawem.Data.UnitOfWork;
-using Dawem.Models.Criteria.DefaultLookups;
+﻿using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultVacationsTypes;
-using Dawem.Translations;
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups
 {
@@ -19,10 +15,10 @@ namespace Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups
         Task<GetDefaultVacationsTypeDropDownResponseDTO> GetForDropDown(GetDefaultVacationTypeCriteria model);
         Task<bool> Delete(int DefaultVacationsTypeId);
 
-        public  Task<bool> Enable(int GroupId);
+        public Task<bool> Enable(int GroupId);
 
-        public  Task<bool> Disable(DisableModelDTO model);
-       
+        public Task<bool> Disable(DisableModelDTO model);
+
 
     }
 }

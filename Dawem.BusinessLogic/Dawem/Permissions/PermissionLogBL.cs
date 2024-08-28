@@ -38,7 +38,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var queryOrdered = permissionLogRepository.OrderBy(query, nameof(Permission.Id), LeillaKeys.Desc);
             #endregion
 
-            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = model.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response

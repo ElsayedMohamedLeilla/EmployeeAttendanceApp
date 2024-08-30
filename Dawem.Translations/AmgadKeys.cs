@@ -270,6 +270,9 @@
         public const string SorryShiftTypeNotFound = "Sorry!!ShiftTypeNotFound!";
         public const string DoneCreateShiftsTypeSuccessfully = "DoneCreateShiftsTypeSuccessfully";
         public const string DoneUpdatedShiftsTypeSuccessfully = "DoneUpdatedShiftsTypeSuccessfully";
+        public const string SorryShiftsTypeNameIsDuplicated = "Sorry!!ShiftsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisShift = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisShift!";
+
 
 
 

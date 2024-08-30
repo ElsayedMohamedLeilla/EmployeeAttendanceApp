@@ -1,6 +1,6 @@
 ﻿using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
 
-namespace Dawem.Contract.BusinessValidation.Dawem.Core
+namespace Dawem.Contract.BusinessValidation.AdminPanel.DefaultLookups
 {
     public interface IDefaultVacationTypeBLValidation
     {

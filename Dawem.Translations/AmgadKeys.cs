@@ -267,8 +267,11 @@
         public const string CompanyVerificationCode = "CompanyVerificationCode";
         public const string EmploymentNumber = "EmploymentNumber";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisVacation = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisVacation!";
+        public const string SorryShiftTypeNotFound = "Sorry!!ShiftTypeNotFound!";
+        public const string DoneCreateShiftsTypeSuccessfully = "DoneCreateShiftsTypeSuccessfully";
+        public const string DoneUpdatedShiftsTypeSuccessfully = "DoneUpdatedShiftsTypeSuccessfully";
 
-        
+
 
 
 

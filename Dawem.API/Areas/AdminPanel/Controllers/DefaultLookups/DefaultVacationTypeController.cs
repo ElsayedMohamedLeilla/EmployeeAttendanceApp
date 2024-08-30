@@ -1,11 +1,12 @@
-﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
+﻿using Dawem.API.Areas.Dawem.Controllers;
+using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
 using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.Dawem.Controllers.Core
+namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
 {
 
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
@@ -78,13 +79,13 @@ namespace Dawem.API.Areas.Dawem.Controllers.Core
             return Success(await vacationTypeBL.Delete(vacationTypeId));
         }
         [HttpPut]
-        public async Task<ActionResult> Enable(int GroupId)
+        public async Task<ActionResult> Enable(int vacationTypeId)
         {
-            if (GroupId < 1)
+            if (vacationTypeId < 1)
             {
                 return BadRequest();
             }
-            return Success(await vacationTypeBL.Enable(GroupId));
+            return Success(await vacationTypeBL.Enable(vacationTypeId));
         }
         [HttpPut]
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)

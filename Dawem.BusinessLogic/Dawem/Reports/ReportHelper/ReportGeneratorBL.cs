@@ -517,8 +517,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             exporterModelDTO.CompanyName = ComObj.Name;
             exporterModelDTO.CompanyEmail = ComObj.Email ?? "No Email";
             exporterModelDTO.CountryName = ComObj.NameAr;
-            exporterModelDTO.CompanyLogoPath = uploadBLC.GetFilePath(ComObj.LogoImageName, LeillaKeys.Companies); ;
-
+            exporterModelDTO.CompanyLogoPath = uploadBLC.GetFilePath(ComObj.LogoImageName, LeillaKeys.Companies);
             exporterModelDTO.BasePath = "uploads\\Reports";
             string connectionString = _configuration.GetConnectionString(LeillaKeys.DawemConnectionString);
             exporterModelDTO.ConnectionString = connectionString;

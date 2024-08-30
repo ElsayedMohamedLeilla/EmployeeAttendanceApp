@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/18/2024 23:37:54" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/27/2024 23:01:57" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table2" Alias="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].StatisticsReportOverAperiod  &#13;&#10;@DateFrom,&#13;&#10;@DateTO,&#13;&#10;@CompanyID,&#13;&#10;@OrderBy&#13;&#10;&#13;&#10;&#13;&#10;">
@@ -30,7 +30,7 @@
     <Parameter Name="DateToString" DataType="System.String" AsString=""/>
     <Parameter Name="CountryName" DataType="System.String" AsString=""/>
     <Parameter Name="CompanyEmail" DataType="System.String" AsString=""/>
-    <Parameter Name="CompanyImage" DataType="System.Byte[]" AsString=""/>
+    <Parameter Name="CompanyLogo" DataType="System.Byte[]" AsString=""/>
     <Parameter Name="OrderBy" DataType="System.Int32" AsString=""/>
     <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
   </Dictionary>

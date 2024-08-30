@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.RealTime.Firebase;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Core.DefaultLookups;
@@ -103,7 +104,13 @@ namespace Dawem.Contract.Repository.Manager
         IMenuItemActionRepository MenuItemActionRepository { get; }
         IMenuItemNameTranslationRepository MenuItemNameTranslationRepository { get; }
         IPlanScreenRepository PlanScreenRepository { get; }
+        IDefaultLookupsNameTranslationRepository DefaultLookupsNameTranslationRepository { get; }
+
         IDefaultVacationTypeRepository DefaultVacationTypeRepository { get; }
+        IDefaultShiftTypeRepository DefaultShiftTypeRepository { get; }
+
+
+
 
     }
 }

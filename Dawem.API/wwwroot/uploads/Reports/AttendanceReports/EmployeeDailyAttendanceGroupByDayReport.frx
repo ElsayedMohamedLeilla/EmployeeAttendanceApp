@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/10/2024 11:53:38" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="08/27/2024 22:55:16" ReportInfo.CreatorVersion="2024.2.0.0">
   <Styles>
     <Style Name="Style1" Border.Lines="All" Font="Arial Narrow, 10pt, style=Bold"/>
   </Styles>
@@ -44,6 +44,7 @@
     <Parameter Name="DateFrom" DataType="System.DateTime" AsString=""/>
     <Parameter Name="DateTo" DataType="System.DateTime" AsString=""/>
     <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
+    <Parameter Name="CompanyLogo" DataType="System.Byte[]" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" Border.Lines="All" Border.Style="Double" Border.Width="1.5" Watermark.Enabled="true" Watermark.Text="DAWEM" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="132.75">

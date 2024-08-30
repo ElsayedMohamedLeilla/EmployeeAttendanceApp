@@ -9,7 +9,7 @@ namespace Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes
 
         [JsonIgnore]
         public string Name { get; set; }
-        public DefaultVacationType DefaultType { get; set; }
+        //public DefaultVacationType DefaultType { get; set; }
         public bool IsActive { get; set; }
     }
 }

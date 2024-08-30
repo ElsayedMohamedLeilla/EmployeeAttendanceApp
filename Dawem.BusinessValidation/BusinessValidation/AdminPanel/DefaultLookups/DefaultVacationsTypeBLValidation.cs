@@ -1,4 +1,4 @@
-﻿using Dawem.Contract.BusinessValidation.Dawem.Core;
+﻿using Dawem.Contract.BusinessValidation.AdminPanel.DefaultLookups;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
@@ -7,7 +7,7 @@ using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dawem.Validation.BusinessValidation.Dawem.Core
+namespace Dawem.Validation.BusinessValidation.AdminPanel.DefaultLookups
 {
     public class DefaultVacationsTypeBLValidation : IDefaultVacationTypeBLValidation
     {

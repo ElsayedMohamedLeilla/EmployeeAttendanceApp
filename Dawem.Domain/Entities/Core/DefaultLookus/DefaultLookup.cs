@@ -10,8 +10,7 @@ namespace Dawem.Domain.Entities.Core.DefaultLookus
         public LookupsType LookupType { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
-        public DefaultVacationType DefaultType { get; set; }
-
+        //public DefaultVacationType DefaultType { get; set; }
         public List<DefaultLookupsNameTranslation> NameTranslations { get; set; }
 
 

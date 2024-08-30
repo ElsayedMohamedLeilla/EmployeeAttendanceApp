@@ -5,70 +5,69 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core.DefaultLookus;
-using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.DefaultLookups;
-using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
+using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultShiftsTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
-using Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultVacationsTypes;
+using Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultShiftsTypes;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 {
-    public class DefaultVacationTypeBL : IDefaultVacationTypeBL
+    public class DefaultShiftTypeBL : IDefaultShiftTypeBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IDefaultVacationTypeBLValidation vacationTypeBLValidation;
+        private readonly IDefaultShiftTypeBLValidation ShiftTypeBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
 
 
-        public DefaultVacationTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public DefaultShiftTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
         RequestInfo _requestHeaderContext,
-        IDefaultVacationTypeBLValidation _VacationsTypeBLValidation)
+        IDefaultShiftTypeBLValidation _ShiftsTypeBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            vacationTypeBLValidation = _VacationsTypeBLValidation;
+            ShiftTypeBLValidation = _ShiftsTypeBLValidation;
             mapper = _mapper;
         }
-        public async Task<int> Create(CreateDefaultVacationsTypeDTO model)
+        public async Task<int> Create(CreateDefaultShiftsTypeDTO model)
         {
             #region Business Validation
 
-            await vacationTypeBLValidation.CreateValidation(model);
+            await ShiftTypeBLValidation.CreateValidation(model);
 
             #endregion
 
             unitOfWork.CreateTransaction();
 
-            #region Insert VacationsType
+            #region Insert ShiftsType
 
-            #region Set VacationsType code
+            #region Set ShiftsType code
 
-            var getNextCode = await repositoryManager.DefaultVacationTypeRepository
-                .Get(e => e.LookupType == LookupsType.VacationsTypes)
+            var getNextCode = await repositoryManager.DefaultShiftTypeRepository
+                .Get(e => e.LookupType == LookupsType.ShiftsTypes)
                 .Select(e => e.Code)
                 .DefaultIfEmpty()
                 .MaxAsync() + 1;
 
             #endregion
 
-            var vacationType = mapper.Map<DefaultLookup>(model);
-            vacationType.Name = model.NameTranslations.FirstOrDefault().Name; // first Language is the default
-            vacationType.LookupType = LookupsType.VacationsTypes;
-            vacationType.AddUserId = requestInfo.UserId;
-            vacationType.Code = getNextCode;
-            repositoryManager.DefaultVacationTypeRepository.Insert(vacationType);
+            var ShiftType = mapper.Map<DefaultLookup>(model);
+            ShiftType.Name = model.NameTranslations.FirstOrDefault().Name; // first Language is the default
+            ShiftType.LookupType = LookupsType.ShiftsTypes;
+            ShiftType.AddUserId = requestInfo.UserId;
+            ShiftType.Code = getNextCode;
+            repositoryManager.DefaultShiftTypeRepository.Insert(ShiftType);
             await unitOfWork.SaveAsync();
 
             #endregion
@@ -76,35 +75,35 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
             #region Handle Response
 
             await unitOfWork.CommitAsync();
-            return vacationType.Id;
+            return ShiftType.Id;
 
             #endregion
 
         }
-        public async Task<bool> Update(UpdateDefaultVacationsTypeDTO model)
+        public async Task<bool> Update(UpdateDefaultShiftsTypeDTO model)
         {
             #region Business Validation
 
-            await vacationTypeBLValidation.UpdateValidation(model);
+            await ShiftTypeBLValidation.UpdateValidation(model);
 
             #endregion
 
             unitOfWork.CreateTransaction();
 
-            #region Update VacationsType
-            var getVacationsType = await repositoryManager.DefaultVacationTypeRepository.GetByIdAsync(model.Id);
-            getVacationsType.Name = model.NameTranslations.FirstOrDefault().Name; // first Language is the default;
-            //getVacationsType.DefaultType = model.DefaultType;
-            getVacationsType.IsActive = model.IsActive;
-            getVacationsType.ModifiedDate = DateTime.Now;
-            getVacationsType.ModifyUserId = requestInfo.UserId;
+            #region Update ShiftsType
+            var getShiftsType = await repositoryManager.DefaultShiftTypeRepository.GetByIdAsync(model.Id);
+            getShiftsType.Name = model.NameTranslations.FirstOrDefault().Name; // first Language is the default;
+            //getShiftsType.DefaultType = model.DefaultType;
+            getShiftsType.IsActive = model.IsActive;
+            getShiftsType.ModifiedDate = DateTime.Now;
+            getShiftsType.ModifyUserId = requestInfo.UserId;
             await unitOfWork.SaveAsync();
             #endregion
 
             #region Handle Update Name Translations
 
             var exisNameTranslationsDbList = await repositoryManager.DefaultLookupsNameTranslationRepository
-                    .Get(e => e.DefaultLookupId == getVacationsType.Id)
+                    .Get(e => e.DefaultLookupId == getShiftsType.Id)
                     .ToListAsync();
 
             var existingNameTranslationsIds = exisNameTranslationsDbList.Select(e => e.Id)
@@ -168,10 +167,10 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
 
 
-        public async Task<GetDefaultVacationsTypeResponseDTO> Get(GetDefaultVacationTypeCriteria criteria)
+        public async Task<GetDefaultShiftsTypeResponseDTO> Get(GetDefaultShiftTypeCriteria criteria)
         {
-            var VacationsTypeRepository = repositoryManager.DefaultVacationTypeRepository;
-            var query = VacationsTypeRepository.GetAsQueryable(criteria);
+            var ShiftsTypeRepository = repositoryManager.DefaultShiftTypeRepository;
+            var query = ShiftsTypeRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -180,7 +179,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
+            var queryOrdered = ShiftsTypeRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -190,19 +189,19 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
             #region Handle Response
 
-            var VacationsTypesList = await queryPaged.Select(vacationType => new GetDefaultVacationsTypeResponseModelDTO
+            var ShiftsTypesList = await queryPaged.Select(ShiftType => new GetDefaultShiftsTypeResponseModelDTO
             {
-                Id = vacationType.Id,
-                Code = vacationType.Code,
-                Name = vacationType.Name,
-                //DefaultType = vacationType.DefaultType,
-                // DefaultTypeName = TranslationHelper.GetTranslation(vacationType.DefaultType.ToString(), requestInfo.Lang),
-                IsActive = vacationType.IsActive,
+                Id = ShiftType.Id,
+                Code = ShiftType.Code,
+                Name = ShiftType.Name,
+                //DefaultType = ShiftType.DefaultType,
+                // DefaultTypeName = TranslationHelper.GetTranslation(ShiftType.DefaultType.ToString(), requestInfo.Lang),
+                IsActive = ShiftType.IsActive,
             }).ToListAsync();
 
-            return new GetDefaultVacationsTypeResponseDTO
+            return new GetDefaultShiftsTypeResponseDTO
             {
-                DefaultVacationsTypes = VacationsTypesList,
+                DefaultShiftsTypes = ShiftsTypesList,
                 TotalCount = await query.CountAsync()
             };
 
@@ -211,11 +210,11 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
 
 
-        public async Task<GetDefaultVacationsTypeDropDownResponseDTO> GetForDropDown(GetDefaultVacationTypeCriteria criteria)
+        public async Task<GetDefaultShiftsTypeDropDownResponseDTO> GetForDropDown(GetDefaultShiftTypeCriteria criteria)
         {
             criteria.IsActive = true;
-            var VacationsTypeRepository = repositoryManager.DefaultVacationTypeRepository;
-            var query = VacationsTypeRepository.GetAsQueryable(criteria);
+            var ShiftsTypeRepository = repositoryManager.DefaultShiftTypeRepository;
+            var query = ShiftsTypeRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -224,7 +223,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
             #region sorting
 
-            var queryOrdered = VacationsTypeRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
+            var queryOrdered = ShiftsTypeRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -234,53 +233,53 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
             #region Handle Response
 
-            var VacationsTypesList = await queryPaged.Select(e => new GetDefaultVacationsTypeForDropDownResponseModelDTO
+            var ShiftsTypesList = await queryPaged.Select(e => new GetDefaultShiftsTypeForDropDownResponseModelDTO
             {
                 Id = e.Id,
                 Name = e.Name
             }).ToListAsync();
 
-            return new GetDefaultVacationsTypeDropDownResponseDTO
+            return new GetDefaultShiftsTypeDropDownResponseDTO
             {
-                DefaultVacationsTypes = VacationsTypesList,
+                DefaultShiftsTypes = ShiftsTypesList,
                 TotalCount = await query.CountAsync()
             };
 
             #endregion
 
         }
-        public async Task<GetDefaultVacationsTypeInfoResponseDTO> GetInfo(int VacationsTypeId)
+        public async Task<GetDefaultShiftsTypeInfoResponseDTO> GetInfo(int ShiftsTypeId)
         {
-            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
-                .Select(vacationType => new GetDefaultVacationsTypeInfoResponseDTO
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.Id == ShiftsTypeId && !e.IsDeleted)
+                .Select(ShiftType => new GetDefaultShiftsTypeInfoResponseDTO
                 {
-                    Code = vacationType.Code,
-                    Name = vacationType.Name,
-                    //DefaultType = vacationType.DefaultType,
-                    //DefaultTypeName = TranslationHelper.GetTranslation(vacationType.DefaultType.ToString(), requestInfo.Lang),
-                    IsActive = vacationType.IsActive,
-                    NameTranslations = vacationType.NameTranslations.
+                    Code = ShiftType.Code,
+                    Name = ShiftType.Name,
+                    //DefaultType = ShiftType.DefaultType,
+                    //DefaultTypeName = TranslationHelper.GetTranslation(ShiftType.DefaultType.ToString(), requestInfo.Lang),
+                    IsActive = ShiftType.IsActive,
+                    NameTranslations = ShiftType.NameTranslations.
                     Select(pt =>
                     new NameTranslationGetInfoModel
                     {
                         Name = pt.Name,
                         LanguageName = pt.Language.NativeName
                     }).ToList()
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
 
-            return VacationsType;
+            return ShiftsType;
         }
-        public async Task<GetDefaultVacationsTypeByIdResponseDTO> GetById(int VacationsTypeId)
+        public async Task<GetDefaultShiftsTypeByIdResponseDTO> GetById(int ShiftsTypeId)
         {
-            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
-                .Select(vacationType => new GetDefaultVacationsTypeByIdResponseDTO
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.Id == ShiftsTypeId && !e.IsDeleted)
+                .Select(ShiftType => new GetDefaultShiftsTypeByIdResponseDTO
                 {
-                    Id = vacationType.Id,
-                    Code = vacationType.Code,
-                    Name = vacationType.Name,
-                    //DefaultType = vacationType.DefaultType,
-                    IsActive = vacationType.IsActive,
-                    NameTranslations = vacationType.NameTranslations.
+                    Id = ShiftType.Id,
+                    Code = ShiftType.Code,
+                    Name = ShiftType.Name,
+                    //DefaultType = ShiftType.DefaultType,
+                    IsActive = ShiftType.IsActive,
+                    NameTranslations = ShiftType.NameTranslations.
                     Select(pt => new NameTranslationModel
                     {
                         Id = pt.Id,
@@ -288,33 +287,33 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
                         LanguageId = pt.LanguageId
                     }).ToList()
 
-                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
 
-            return VacationsType;
+            return ShiftsType;
 
         }
-        public async Task<bool> Delete(int VacationsTypeId)
+        public async Task<bool> Delete(int ShiftsTypeId)
         {
-            var vacationsType = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
-            vacationsType.Delete();
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftsTypeId) ??
+                throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
+            ShiftsType.Delete();
 
             await unitOfWork.SaveAsync();
             return true;
         }
 
-        public async Task<bool> Enable(int vacationTypeId)
+        public async Task<bool> Enable(int ShiftTypeId)
         {
-            var vacationType = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == vacationTypeId) ??
-                throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
-            vacationType.Enable();
+            var ShiftType = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == ShiftTypeId) ??
+                throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
+            ShiftType.Enable();
             await unitOfWork.SaveAsync();
             return true;
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
-                throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
+            var group = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+                throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
             return true;

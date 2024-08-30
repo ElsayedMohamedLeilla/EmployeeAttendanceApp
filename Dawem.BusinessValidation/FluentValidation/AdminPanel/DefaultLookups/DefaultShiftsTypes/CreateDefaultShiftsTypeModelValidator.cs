@@ -1,13 +1,14 @@
-﻿using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
+﻿using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultShiftsTypes;
+using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
 using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
 using Dawem.Translations;
 using FluentValidation;
 
 namespace Dawem.Validation.FluentValidation.AdminPanel.DefaultLookups.DefaultVacationsTypes
 {
-    public class CreateDefaultVacationsTypeModelValidator : AbstractValidator<CreateDefaultVacationsTypeDTO>
+    public class CreateDefaultShiftsTypeModelValidator : AbstractValidator<CreateDefaultShiftsTypeDTO>
     {
-        public CreateDefaultVacationsTypeModelValidator()
+        public CreateDefaultShiftsTypeModelValidator()
         {
 
             //RuleFor(model => model.Name).NotNull().

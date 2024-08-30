@@ -1,8 +1,8 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultVacationsTypes
+namespace Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultShiftsTypes
 {
-    public class GetDefaultVacationsTypeResponseModelDTO
+    public class GetDefaultShiftsTypeResponseModelDTO
     {
         public int Id { get; set; }
         public int Code { get; set; }

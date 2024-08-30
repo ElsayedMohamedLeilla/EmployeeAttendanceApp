@@ -400,4 +400,11 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetDefaultShiftsTypesCriteriaValidator : AbstractValidator<GetDefaultShiftTypeCriteria>
+    {
+        public GetDefaultShiftsTypesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

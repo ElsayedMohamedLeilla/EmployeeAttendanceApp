@@ -3,7 +3,7 @@ using Dawem.Domain.Entities.Core.DefaultLookus;
 using Dawem.Models.Dtos.AdminPanel.DefaultLookups.DefaultVacationsTypes;
 using Dawem.Models.Dtos.Dawem.Shared;
 
-namespace Dawem.Models.AutoMapper.Dawem.Core
+namespace Dawem.Models.AutoMapper.AdminPanel.DefaultLookups
 {
     public class DefaultVacationsTypeMapProfile : Profile
     {

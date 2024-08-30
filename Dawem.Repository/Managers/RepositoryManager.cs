@@ -1,4 +1,5 @@
-﻿using Dawem.Contract.RealTime.Firebase;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
 using Dawem.Contract.Repository.Core.DefaultLookups;
@@ -136,7 +137,11 @@ namespace Dawem.Repository.Managers
         private IMenuItemNameTranslationRepository menuItemNameTranslationRepository;
         private IPlanScreenRepository planScreenRepository;
         private IOldScreenRepository oldScreenRepository;
+        private IDefaultLookupsNameTranslationRepository defaultLookupsNameTranslationRepository;
+
         private IDefaultVacationTypeRepository defaultVacationTypeRepository;
+        private IDefaultShiftTypeRepository defaultShiftTypeRepository;
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
@@ -334,7 +339,12 @@ namespace Dawem.Repository.Managers
         public IOldScreenRepository OldScreenRepository =>
            oldScreenRepository ??= new OldScreenRepository(unitOfWork, generalSetting);
 
+        public IDefaultLookupsNameTranslationRepository DefaultLookupsNameTranslationRepository =>
+ defaultLookupsNameTranslationRepository ??= new DefaultLookupsNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+
         public IDefaultVacationTypeRepository DefaultVacationTypeRepository =>
           defaultVacationTypeRepository ??= new DefaultVacationTypeRepository(unitOfWork, generalSetting, requestInfo);
+        public IDefaultShiftTypeRepository DefaultShiftTypeRepository =>
+         defaultShiftTypeRepository ??= new DefaultShiftTypeRepository(unitOfWork, generalSetting, requestInfo);
     }
 }

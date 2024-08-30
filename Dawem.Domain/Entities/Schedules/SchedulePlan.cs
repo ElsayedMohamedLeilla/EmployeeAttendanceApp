@@ -26,6 +26,7 @@ namespace Dawem.Domain.Entities.Schedules
         public int Code { get; set; }
         public ForType SchedulePlanType { get; set; }
         public DateTime DateFrom { get; set; }
+        public int DoneRetryCount { get; set; }
         public List<SchedulePlanLog> SchedulePlanLogs { get; set; }
     }
 }

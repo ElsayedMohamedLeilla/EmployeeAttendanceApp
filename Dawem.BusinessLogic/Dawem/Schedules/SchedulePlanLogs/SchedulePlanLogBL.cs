@@ -125,7 +125,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlanLogs
 
             #endregion
 
-            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = model.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

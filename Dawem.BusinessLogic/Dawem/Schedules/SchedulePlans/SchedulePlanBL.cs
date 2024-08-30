@@ -318,20 +318,30 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
             try
             {
                 var utcDate = DateTime.UtcNow;
-                var getNextSchedulePlans = await repositoryManager.SchedulePlanRepository.Get(p => !p.IsDeleted && p.IsActive &&
-                !p.SchedulePlanLogs.Any() &&
-                p.DateFrom.Date == utcDate.AddHours((double?)p.Company.Country.TimeZoneToUTC ?? 0).Date)
-                    .Select(p => new GetSchedulePlanLogModel
+
+                var getNextSchedulePlansFromDB = await repositoryManager.SchedulePlanRepository.
+                    GetWithTracking(p => !p.IsDeleted && p.IsActive &&
+                    !p.SchedulePlanLogs.Any() && p.DoneRetryCount < 2 &&
+                    utcDate.AddHours((double?)p.Company.Country.TimeZoneToUTC ?? 0).Date >= p.DateFrom.Date).
+                    Include(p => p.Schedule).
+                    Include(p => p.SchedulePlanEmployee).
+                    Include(p => p.SchedulePlanGroup).
+                    Include(p => p.SchedulePlanDepartment).
+                    ToListAsync();
+
+                var getNextSchedulePlans = getNextSchedulePlansFromDB.
+                    Select(p => new GetSchedulePlanLogModel
                     {
+                        Id = p.Id,
                         CompanyId = p.CompanyId,
                         SchedulePlanId = p.Id,
                         NewScheduleId = p.ScheduleId,
                         ScheduleName = p.Schedule.Name,
                         SchedulePlanType = p.SchedulePlanType,
-                        EmployeeId = p.SchedulePlanEmployee.EmployeeId,
-                        GroupId = p.SchedulePlanGroup.GroupId,
-                        DepartmentId = p.SchedulePlanDepartment.DepartmentId
-                    }).ToListAsync();
+                        EmployeeId = p.SchedulePlanEmployee?.EmployeeId,
+                        GroupId = p.SchedulePlanGroup?.GroupId,
+                        DepartmentId = p.SchedulePlanDepartment?.DepartmentId
+                    }).ToList();
 
                 if (getNextSchedulePlans is not null && getNextSchedulePlans.Count > 0)
                 {
@@ -387,7 +397,14 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
                             default:
                                 break;
                         }
+                        var getSchedulePlansFromDBForUpdate = getNextSchedulePlansFromDB.
+                            FirstOrDefault(p => p.Id == nextSchedulePlan.Id);
+                        if (getSchedulePlansFromDBForUpdate != null)
+                        {
+                            getSchedulePlansFromDBForUpdate.DoneRetryCount++;
+                        }
                     }
+                    await unitOfWork.SaveAsync();
                 }
             }
             catch (Exception ex)

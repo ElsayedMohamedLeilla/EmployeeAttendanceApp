@@ -90,7 +90,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 #region sorting
                 var queryOrdered = result.OrderByDescending(s => s.EmployeeId);
                 #endregion
-                var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+                var queryPaged = model.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
                 #endregion
                 var output = queryPaged.Select(employee => new AttendanceSummaryModel
                 {

@@ -39,6 +39,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var clientLocalDateTime = requestInfo.LocalDateTime;
             var clientLocalDate = requestInfo.LocalDateTime.Date;
 
+            var realClientLocalDateTime = requestInfo.LocalDateTime;
+            var realclientLocalDate = requestInfo.LocalDateTime.Date;
+
             #endregion
 
             #region Validate Latitude And Longitude 
@@ -207,10 +210,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             if (model.Type == FingerPrintType.Summon)
             {
                 summonId = await repositoryManager.SummonRepository
-                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && clientLocalDateTime >= s.LocalDateAndTime &&
-                    (s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime ||
-                    s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime ||
-                    s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.LocalDateAndTime, clientLocalDateTime) <= s.AllowedTime) &&
+                    .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && realClientLocalDateTime >= s.LocalDateAndTime &&
+                    (s.TimeType == TimeType.Second && EF.Functions.DateDiffSecond(s.LocalDateAndTime, realClientLocalDateTime) <= s.AllowedTime ||
+                    s.TimeType == TimeType.Minute && EF.Functions.DateDiffMinute(s.LocalDateAndTime, realClientLocalDateTime) <= s.AllowedTime ||
+                    s.TimeType == TimeType.Hour && EF.Functions.DateDiffHour(s.LocalDateAndTime, realClientLocalDateTime) <= s.AllowedTime) &&
                     (s.ForAllEmployees.HasValue && s.ForAllEmployees.Value ||
                     s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId) ||
                     s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId)) ||
@@ -452,7 +455,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
         {
             #region Get Schedule
 
-            var getSchedule = await repositoryManager.ScheduleRepository.Get(schedule => schedule.Id == model.ScheduleId &&
+            var getSchedule = await repositoryManager.
+                ScheduleRepository.
+                Get(schedule => schedule.Id == model.ScheduleId &&
                 !schedule.IsDeleted)
                    .Select(schedule => new GetScheduleModel
                    {
@@ -485,9 +490,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             ShiftInfoModel theTwoDaysShift = null;
 
-            var getLastFingerprint = await repositoryManager.
+            var getLastFingerprintCheckInOrOut = await repositoryManager.
                 EmployeeAttendanceCheckRepository.
-                Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId).
+                Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId && 
+                (e.FingerPrintType == FingerPrintType.CheckIn || e.FingerPrintType == FingerPrintType.CheckOut)).
                 OrderByDescending(a => a.Id).
                 Select(check => new
                 {
@@ -497,10 +503,10 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 }).FirstOrDefaultAsync();
 
             var checkIfLastFingerPrintAllowTwoDaysShift =
-                getLastFingerprint != null &&
-                getLastFingerprint.FingerPrintType == FingerPrintType.CheckIn &&
-                (clientLocalDate - getLastFingerprint.LocalDate.Date).Days == 1 &&
-                (clientLocalDate - getLastFingerprint.FingerPrintDate.Date).Days == 1;
+                getLastFingerprintCheckInOrOut != null &&
+                getLastFingerprintCheckInOrOut.FingerPrintType == FingerPrintType.CheckIn &&
+                (clientLocalDate - getLastFingerprintCheckInOrOut.LocalDate.Date).Days == 1 &&
+                (clientLocalDate - getLastFingerprintCheckInOrOut.FingerPrintDate.Date).Days == 1;
 
             if (checkIfLastFingerPrintAllowTwoDaysShift)
             {

@@ -14,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports.BaseData
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetEmployeesReport([FromQuery] EmployeesReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateEmployeesReport(param);

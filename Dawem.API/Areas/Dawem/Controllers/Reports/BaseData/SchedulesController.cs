@@ -14,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports.BaseData
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetSchedulesReport([FromQuery] SchedulesReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateSchedulesReport(param);

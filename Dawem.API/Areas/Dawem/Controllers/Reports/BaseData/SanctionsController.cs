@@ -14,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports.BaseData
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetSanctionsReport([FromQuery] SancationsReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateSanctionsReport(param);

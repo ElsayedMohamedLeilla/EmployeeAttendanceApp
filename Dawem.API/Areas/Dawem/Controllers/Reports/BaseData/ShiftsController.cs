@@ -14,7 +14,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Reports.BaseData
         {
             _reportGeneratorBL = reportGeneratorBL;
         }
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetShiftsReport([FromQuery] ShiftsReportCritria param)
         {
             var response = _reportGeneratorBL.GenerateShiftsReport(param);

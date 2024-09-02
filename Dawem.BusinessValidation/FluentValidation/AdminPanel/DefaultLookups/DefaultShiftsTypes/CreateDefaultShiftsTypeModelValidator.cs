@@ -4,7 +4,7 @@ using Dawem.Models.Dtos.Dawem.Core.VacationsTypes;
 using Dawem.Translations;
 using FluentValidation;
 
-namespace Dawem.Validation.FluentValidation.AdminPanel.DefaultLookups.DefaultVacationsTypes
+namespace Dawem.Validation.FluentValidation.AdminPanel.DefaultLookups.DefaultShiftsTypes
 {
     public class CreateDefaultShiftsTypeModelValidator : AbstractValidator<CreateDefaultShiftsTypeDTO>
     {

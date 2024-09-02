@@ -141,6 +141,7 @@ namespace Dawem.Repository.Managers
 
         private IDefaultVacationTypeRepository defaultVacationTypeRepository;
         private IDefaultShiftTypeRepository defaultShiftTypeRepository;
+        private IDefaultJustificationTypeRepository defaultJustificationTypeRepository;
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
@@ -346,5 +347,8 @@ namespace Dawem.Repository.Managers
           defaultVacationTypeRepository ??= new DefaultVacationTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IDefaultShiftTypeRepository DefaultShiftTypeRepository =>
          defaultShiftTypeRepository ??= new DefaultShiftTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultJustificationTypeRepository DefaultJustificationTypeRepository =>
+        defaultJustificationTypeRepository ??= new DefaultJustificationTypeRepository(unitOfWork, generalSetting, requestInfo);
     }
 }

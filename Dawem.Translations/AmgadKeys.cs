@@ -272,7 +272,9 @@
         public const string DoneUpdatedShiftsTypeSuccessfully = "DoneUpdatedShiftsTypeSuccessfully";
         public const string SorryShiftsTypeNameIsDuplicated = "Sorry!!ShiftsTypeNameIsDuplicated!";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisShift = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisShift!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisJustification = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisJustification!";
 
+        
 
 
 

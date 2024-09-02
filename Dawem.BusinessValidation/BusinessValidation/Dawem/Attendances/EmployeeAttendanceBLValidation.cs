@@ -148,8 +148,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             var todayFingerPrintTypes = await repositoryManager
                 .EmployeeAttendanceCheckRepository
-                .Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == getEmployeeId
-                && e.EmployeeAttendance.LocalDate.Date == clientLocalDate)
+                .Get(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId
+                && eac.EmployeeAttendance.LocalDate.Date == clientLocalDate && 
+                eac.FingerPrintType != FingerPrintType.Summon)
                 .OrderByDescending(e => e.Id)
                 .Select(a => a.FingerPrintType)
                 .ToListAsync();
@@ -192,8 +193,9 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Validate Break In And Break Out
 
-            if (lastFingetprint == FingerPrintType.BreakIn &&
-                            fingerPrintType != FingerPrintType.BreakOut)
+            if (lastFingetprint == FingerPrintType.BreakIn && 
+                fingerPrintType != FingerPrintType.BreakOut && 
+                fingerPrintType != FingerPrintType.Summon)
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn);
 
             if (fingerPrintType == FingerPrintType.BreakOut && lastFingetprint != FingerPrintType.BreakIn)

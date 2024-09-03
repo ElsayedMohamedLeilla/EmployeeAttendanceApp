@@ -273,8 +273,17 @@
         public const string SorryShiftsTypeNameIsDuplicated = "Sorry!!ShiftsTypeNameIsDuplicated!";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisShift = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisShift!";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisJustification = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisJustification!";
+        public const string SorryYouMustEnterTasksTypeId = "Sorry!!YouMustEnterTasksTypeId!";
+        public const string SorryTasksTypeNameIsDuplicated = "Sorry!!TasksTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId!";
+        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisTask = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisTaskType!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisPermission = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisPermissionType!";
+
 
         
+
+
 
 
 

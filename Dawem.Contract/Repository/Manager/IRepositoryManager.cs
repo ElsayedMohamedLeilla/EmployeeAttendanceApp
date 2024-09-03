@@ -110,6 +110,9 @@ namespace Dawem.Contract.Repository.Manager
         IDefaultShiftTypeRepository DefaultShiftTypeRepository { get; }
         IDefaultJustificationTypeRepository DefaultJustificationTypeRepository { get; }
 
+        IDefaultTaskTypeRepository DefaultTaskTypeRepository { get; }
+
+        IDefaultPermissionTypeRepository DefaultPermissionTypeRepository { get; }
 
 
 

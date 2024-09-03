@@ -142,6 +142,8 @@ namespace Dawem.Repository.Managers
         private IDefaultVacationTypeRepository defaultVacationTypeRepository;
         private IDefaultShiftTypeRepository defaultShiftTypeRepository;
         private IDefaultJustificationTypeRepository defaultJustificationTypeRepository;
+        private IDefaultTaskTypeRepository defaultTaskTypeRepository;
+        private IDefaultPermissionTypeRepository defaultPermissionTypeRepository;
 
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
@@ -350,5 +352,12 @@ namespace Dawem.Repository.Managers
 
         public IDefaultJustificationTypeRepository DefaultJustificationTypeRepository =>
         defaultJustificationTypeRepository ??= new DefaultJustificationTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultPermissionTypeRepository DefaultPermissionTypeRepository =>
+        defaultPermissionTypeRepository ??= new DefaultPermissionTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultTaskTypeRepository DefaultTaskTypeRepository =>
+defaultTaskTypeRepository ??= new DefaultTaskTypeRepository(unitOfWork, generalSetting, requestInfo);
+
     }
 }

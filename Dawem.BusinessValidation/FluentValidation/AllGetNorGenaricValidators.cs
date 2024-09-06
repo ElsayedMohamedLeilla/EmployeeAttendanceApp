@@ -407,4 +407,12 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+
+    public class GetDefaultJustificationsTypesCriteriaValidator : AbstractValidator<GetDefaultJustificationTypeCriteria>
+    {
+        public GetDefaultJustificationsTypesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

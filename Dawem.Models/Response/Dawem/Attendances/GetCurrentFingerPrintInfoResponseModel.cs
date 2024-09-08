@@ -1,5 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 using Dawem.Models.Response.Dawem.Core.Zones;
+using Newtonsoft.Json;
 
 namespace Dawem.Models.Response.Dawem.Attendances
 {
@@ -11,6 +12,8 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public DateTime? CheckOutDateTime { get; set; }
         public DateTime? BreakInDateTime { get; set; }
         public FingerPrintType? LastFingetPrintType { get; set; }
+        [JsonIgnore]
+        public FingerPrintType? LastFingetPrintTypeForCheck { get; set; }
         public FingerPrintType DefaultCheckType { get; set; }
         public DateTime LocalDate { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }

@@ -394,6 +394,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.BreakIn).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
                     LastFingetPrintType = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted) ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted).OrderByDescending(c=>c.Id).First().FingerPrintType : null,
+                    LastFingetPrintTypeForCheck = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted && c.FingerPrintType != FingerPrintType.Summon) ?
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType != FingerPrintType.Summon).OrderByDescending(c => c.Id).First().FingerPrintType : null,
                     LocalDate = clientLocalDateTime
                 }).FirstOrDefaultAsync();
 
@@ -411,23 +413,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                    (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
                    .AnyAsync();
 
-            var get = await repositoryManager.SummonRepository
-                   .Get(s => !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && utcDateTime >= s.StartDateAndTimeUTC &&
-                   utcDateTime <= s.EndDateAndTimeUTC &&
-                   !s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId && eac.SummonId == s.Id) &&
-                   ((s.ForAllEmployees.HasValue && s.ForAllEmployees.Value) ||
-                   (s.SummonEmployees != null && s.SummonEmployees.Any(e => !e.IsDeleted && e.EmployeeId == getEmployeeId)) ||
-                   (s.SummonGroups != null && s.SummonGroups.Any(sg => !sg.IsDeleted && sg.Group.GroupEmployees != null && sg.Group.GroupEmployees.Any(ge => !ge.IsDeleted && ge.EmployeeId == getEmployeeId))) ||
-                   (s.SummonDepartments != null && s.SummonDepartments.Any(sd => !sd.IsDeleted && sd.Department.Employees != null && sd.Department.Employees.Any(e => !e.IsDeleted && e.Id == getEmployeeId)))))
-                   .FirstOrDefaultAsync();
-
             #endregion
 
             var defaultCheckType = getAttendance?.CheckInDateTime == null &&
                 getAttendance?.CheckOutDateTime == null ? FingerPrintType.CheckIn :
                 (getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null) ? FingerPrintType.NotSet :
                 getAttendance?.CheckInDateTime != null ? checkIfHasSummon ? FingerPrintType.Summon :
-                getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn ?
+                getAttendance?.LastFingetPrintTypeForCheck == FingerPrintType.BreakIn ?
                 FingerPrintType.BreakOut : FingerPrintType.CheckOut :
                 FingerPrintType.NotSet;
 
@@ -444,7 +436,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
                 EmployeeStatus = getAttendance?.CheckInDateTime == null && getAttendance?.CheckOutDateTime == null ? EmployeeStatus.NotAttendYet :
                 getAttendance?.CheckInDateTime != null && getAttendance?.CheckOutDateTime != null ? EmployeeStatus.AttendThenLeaved :
-                getAttendance?.CheckInDateTime != null && getAttendance?.LastFingetPrintType == FingerPrintType.BreakIn
+                getAttendance?.CheckInDateTime != null && getAttendance?.LastFingetPrintTypeForCheck == FingerPrintType.BreakIn
                 ? EmployeeStatus.AtBreak :
                 getAttendance?.CheckInDateTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,

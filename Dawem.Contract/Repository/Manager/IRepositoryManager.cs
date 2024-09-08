@@ -114,6 +114,7 @@ namespace Dawem.Contract.Repository.Manager
 
         IDefaultPermissionTypeRepository DefaultPermissionTypeRepository { get; }
 
+        IDefaultOfficialHolidayRepository DefaultOfficialHolidayRepository { get; }
 
 
     }

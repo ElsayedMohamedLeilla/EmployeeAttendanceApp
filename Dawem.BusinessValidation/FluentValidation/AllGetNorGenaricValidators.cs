@@ -415,4 +415,11 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetDefaultOfficialHolidaysCriteriaValidator : AbstractValidator<GetDefaultOfficialHolidayTypeCriteria>
+    {
+        public GetDefaultOfficialHolidaysCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

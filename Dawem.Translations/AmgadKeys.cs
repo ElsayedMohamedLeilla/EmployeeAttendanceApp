@@ -279,9 +279,12 @@
         public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated!";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisTask = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisTaskType!";
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisPermission = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisPermissionType!";
-
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisHoliday = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisHoliday!";
+        public const string SorryYouMustEnterHolidayId = "Sorry!!YouMustEnterHolidayId!";
 
         
+
+
 
 
 

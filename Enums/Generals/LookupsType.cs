@@ -7,7 +7,7 @@
         JustificationsTypes,
         PermissionsTypes,
         TasksTypes,
-        HolidaysTypes,
+        OfficialHoliday,
         Departments,
         JobTitles,
         Penalties

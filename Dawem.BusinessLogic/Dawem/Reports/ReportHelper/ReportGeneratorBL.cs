@@ -373,9 +373,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
         
-            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
-            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
-            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
+            report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
+            report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);
             return ExportReport(report, param.ExportFormat);
         }
         public HttpResponseMessage GenerateSummonsReport(SummonsReportCritria param)
@@ -388,9 +388,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
 
-            report.SetParameterValue("EmployeesIds", param.EmployeesIds != null ? string.Join(',', param.EmployeesIds) : null);
-            report.SetParameterValue("GroupsIds", param.GroupsIds != null ? string.Join(',', param.GroupsIds) : null);
-            report.SetParameterValue("DepartmentsIds", param.DepartmentsIds != null ? string.Join(',', param.DepartmentsIds) : null);
+            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
+            report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
+            report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);
             return ExportReport(report, param.ExportFormat);
         }
         public HttpResponseMessage GenerateSummonLogsReport(SummonLogsReportCritria param)

@@ -6,6 +6,7 @@ namespace Dawem.Models.Dtos.Dawem.Providers.Companies
     public class BaseCompanyModel
     {
         public int CountryId { get; set; }
+        public bool ImportDefaultData { get; set; }
         public int? PreferredLanguageId { get; set; }
         public string WebSite { get; set; }
         public string HeadquarterAddress { get; set; }
@@ -14,7 +15,6 @@ namespace Dawem.Models.Dtos.Dawem.Providers.Companies
         public string HeadquarterPostalCode { get; set; }
         public string Email { get; set; }
         public int? TotalNumberOfEmployees { get; set; }
-        public bool ImportDefaultData { get; set; }
         public List<CompanyIndustryModel> Industries { get; set; }
         public List<CompanyBranchModel> Branches { get; set; }
         public IFormFile LogoImageFile { get; set; }

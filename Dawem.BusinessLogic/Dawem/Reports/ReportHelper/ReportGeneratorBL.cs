@@ -330,6 +330,21 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
             return ExportReport(report, param.ExportFormat);
         }
+        public HttpResponseMessage GenerateSummonsReport(SummonsReportCritria param)
+        {
+            ExporterModelDTO exporterModelDTO = new()
+            {
+                FolderName = AmgadKeys.BaseData,
+                ReportType = ReportType.SummonsReport,
+            };
+            Report report = GenerateReport(exporterModelDTO, param);
+            SetGeneralParameters(report, param, exporterModelDTO);
+
+            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
+            report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
+            report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);
+            return ExportReport(report, param.ExportFormat);
+        }
         public HttpResponseMessage GenerateDepartmentsReport(DepartmentsReportCritria param)
         {
             ExporterModelDTO exporterModelDTO = new()
@@ -373,21 +388,6 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
         
-            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
-            report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
-            report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);
-            return ExportReport(report, param.ExportFormat);
-        }
-        public HttpResponseMessage GenerateSummonsReport(SummonsReportCritria param)
-        {
-            ExporterModelDTO exporterModelDTO = new()
-            {
-                FolderName = AmgadKeys.BaseData,
-                ReportType = ReportType.SummonsReport,
-            };
-            Report report = GenerateReport(exporterModelDTO, param);
-            SetGeneralParameters(report, param, exporterModelDTO);
-
             report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
             report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
             report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);

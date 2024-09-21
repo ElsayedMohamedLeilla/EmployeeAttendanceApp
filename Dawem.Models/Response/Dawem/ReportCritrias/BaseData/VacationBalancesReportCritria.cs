@@ -2,6 +2,6 @@
 {
     public class VacationBalancesReportCritria : BaseReportCritria
     {
-        public List<int> EmployeesIds { get; set; }
+        public List<int> EmployeeIds { get; set; }
     }
 }

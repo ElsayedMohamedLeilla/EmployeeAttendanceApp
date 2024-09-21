@@ -2,8 +2,8 @@
 {
     public class SummonLogsReportCritria : BaseReportCritria
     {
-        public List<int> EmployeesIds { get; set; }
-        public List<int> GroupsIds { get; set; }
-        public List<int> DepartmentsIds { get; set; }
+        public List<int> EmployeeIds { get; set; }
+        public List<int> GroupIds { get; set; }
+        public List<int> DepartmentIds { get; set; }
     }
 }

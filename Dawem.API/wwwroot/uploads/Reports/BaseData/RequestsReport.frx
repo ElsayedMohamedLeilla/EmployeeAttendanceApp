@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="09/13/2024 16:45:02" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/29/2024 22:38:41" ReportInfo.Modified="09/21/2024 03:54:13" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="MSConnection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table2" Alias="RequestsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetRequestsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code ,&#13;&#10;@Id  ,&#13;&#10;@FreeText ,&#13;&#10;@IsActive ,&#13;&#10;@Ids,&#13;&#10;@EmployeesIds , &#13;&#10;@GroupsIds , &#13;&#10;@DepartmentsIds , &#13;&#10;@DateFrom ,&#13;&#10;@DateTo ,&#13;&#10;@Lang&#13;&#10;&#13;&#10;">
+      <TableDataSource Name="Table2" Alias="RequestsTable" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [Reports].[BasicData.GetRequestsList]  &#13;&#10;&#13;&#10;@CompanyId ,&#13;&#10;@Code ,&#13;&#10;@Id  ,&#13;&#10;@FreeText ,&#13;&#10;@IsActive ,&#13;&#10;@Ids,&#13;&#10;@EmployeeIds , &#13;&#10;@GroupIds , &#13;&#10;@DepartmentIds , &#13;&#10;@DateFrom ,&#13;&#10;@DateTo ,&#13;&#10;@Lang&#13;&#10;&#13;&#10;">
         <Column Name="RowIndex" DataType="System.Int64"/>
         <Column Name="EmployeeName" DataType="System.String"/>
         <Column Name="Code" DataType="System.Int32"/>
@@ -16,11 +16,11 @@
         <CommandParameter Name="IsActive" DataType="2" Expression="[IsActive]"/>
         <CommandParameter Name="Ids" DataType="12" Expression="[Ids]"/>
         <CommandParameter Name="Lang" DataType="12" Expression="[Lang]"/>
-        <CommandParameter Name="EmployeesIds" DataType="12" Expression="[EmployeesIds]"/>
-        <CommandParameter Name="GroupsIds" DataType="12" Expression="[GroupsIds]"/>
-        <CommandParameter Name="DepartmentsIds" DataType="12" Expression="[DepartmentsIds]"/>
         <CommandParameter Name="DateFrom" DataType="4" Expression="[DateFrom]"/>
         <CommandParameter Name="DateTo" DataType="33" Expression="[DateTo]"/>
+        <CommandParameter Name="EmployeeIds" DataType="12" Expression="[EmployeeIds]"/>
+        <CommandParameter Name="GroupIds" DataType="12" Expression="[GroupIds]"/>
+        <CommandParameter Name="DepartmentIds" DataType="12" Expression="[DepartmentIds]"/>
       </TableDataSource>
     </MsSqlDataConnection>
     <Parameter Name="CompanyID" DataType="System.Int32" AsString=""/>
@@ -34,9 +34,9 @@
     <Parameter Name="FreeText" DataType="System.String" AsString=""/>
     <Parameter Name="IsActive" DataType="System.Boolean" AsString=""/>
     <Parameter Name="Lang" DataType="System.String" AsString=""/>
-    <Parameter Name="EmployeesIds" DataType="System.String" AsString=""/>
-    <Parameter Name="GroupsIds" DataType="System.String" AsString=""/>
-    <Parameter Name="DepartmentsIds" DataType="System.String" AsString=""/>
+    <Parameter Name="EmployeeIds" DataType="System.String" AsString=""/>
+    <Parameter Name="GroupIds" DataType="System.String" AsString=""/>
+    <Parameter Name="DepartmentIds" DataType="System.String" AsString=""/>
     <Parameter Name="DateFrom" DataType="System.DateTime" AsString=""/>
     <Parameter Name="DateTo" DataType="System.DateTime" AsString=""/>
     <Parameter Name="PrintDate" DataType="System.String" AsString=""/>

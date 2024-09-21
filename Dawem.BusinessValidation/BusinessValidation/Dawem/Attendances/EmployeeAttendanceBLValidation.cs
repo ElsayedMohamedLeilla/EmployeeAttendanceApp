@@ -149,7 +149,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             var todayFingerPrintTypes = await repositoryManager
                 .EmployeeAttendanceCheckRepository
                 .Get(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == getEmployeeId
-                && eac.EmployeeAttendance.LocalDate.Date == clientLocalDate && 
+                && eac.EmployeeAttendance.LocalDate.Date == clientLocalDate &&
                 eac.FingerPrintType != FingerPrintType.Summon)
                 .OrderByDescending(e => e.Id)
                 .Select(a => a.FingerPrintType)
@@ -193,8 +193,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Validate Break In And Break Out
 
-            if (lastFingetprint == FingerPrintType.BreakIn && 
-                fingerPrintType != FingerPrintType.BreakOut && 
+            if (lastFingetprint == FingerPrintType.BreakIn &&
+                fingerPrintType != FingerPrintType.BreakOut &&
                 fingerPrintType != FingerPrintType.Summon)
                 throw new BusinessValidationException(LeillaKeys.SorryYouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn);
 
@@ -227,7 +227,8 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     throw new BusinessValidationException(LeillaKeys.SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon);
 
                 var checkDoneBefore = await repositoryManager.EmployeeAttendanceCheckRepository.
-                    Get(c => !c.IsDeleted && c.SummonId == summonId && c.FingerPrintType == FingerPrintType.Summon).
+                    Get(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == getEmployeeId &&
+                    c.SummonId == summonId && c.FingerPrintType == FingerPrintType.Summon).
                     AnyAsync();
 
                 if (checkDoneBefore)
@@ -393,7 +394,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     BreakInDateTime = a.EmployeeAttendanceChecks.FirstOrDefault(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.BreakIn) != null ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType == FingerPrintType.BreakIn).OrderByDescending(c => c.Id).FirstOrDefault().FingerPrintDate : null,
                     LastFingetPrintType = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted) ?
-                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted).OrderByDescending(c=>c.Id).First().FingerPrintType : null,
+                     a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted).OrderByDescending(c => c.Id).First().FingerPrintType : null,
                     LastFingetPrintTypeForCheck = a.EmployeeAttendanceChecks.Any(c => !c.IsDeleted && c.FingerPrintType != FingerPrintType.Summon) ?
                      a.EmployeeAttendanceChecks.Where(c => !c.IsDeleted && c.FingerPrintType != FingerPrintType.Summon).OrderByDescending(c => c.Id).First().FingerPrintType : null,
                     LocalDate = clientLocalDateTime
@@ -486,7 +487,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             var getLastFingerprintCheckInOrOut = await repositoryManager.
                 EmployeeAttendanceCheckRepository.
-                Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId && 
+                Get(e => !e.IsDeleted && e.EmployeeAttendance.EmployeeId == model.EmployeeId &&
                 (e.FingerPrintType == FingerPrintType.CheckIn || e.FingerPrintType == FingerPrintType.CheckOut)).
                 OrderByDescending(a => a.Id).
                 Select(check => new
@@ -522,7 +523,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     var isTwoDaysShift =
                         TimeHelper.IsTwoDaysShift(getLastShiftInfo.ShiftCheckInTime, getLastShiftInfo.ShiftCheckOutTime);
 
-                    if (isTwoDaysShift && 
+                    if (isTwoDaysShift &&
                         (getNextShiftInfo == null || clientLocalDateTime.TimeOfDay < getNextShiftInfo.ShiftCheckInTime))
                     {
                         theTwoDaysShift = getLastShiftInfo;

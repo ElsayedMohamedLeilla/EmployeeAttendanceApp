@@ -4,12 +4,9 @@ using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
 using Dawem.Models.Dtos.Dawem.Fingerprint;
-using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Text;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {

@@ -131,7 +131,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 Id = fp.Id,
                 Code = fp.Code,
                 Name = fp.Name,
-                LastSeenDate = fp.LastSeenDateUTC.AddHours((double?)fp.Company.Country.TimeZoneToUTC ?? 0),
+                LastSeenDate = fp.LastSeenDateUTC.AddHours(requestInfo.CompanyTimeZoneToUTC),
                 IsActive = fp.IsActive
             }).ToListAsync();
             return new GetFingerprintDevicesResponse
@@ -188,7 +188,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     IpAddress = fp.IpAddress,
                     PortNumber = fp.PortNumber,
                     SerialNumber = fp.SerialNumber,
-                    LastSeenDate = fp.LastSeenDateUTC.AddHours((double?)fp.Company.Country.TimeZoneToUTC ?? 0),
+                    LastSeenDate = fp.LastSeenDateUTC.AddHours(requestInfo.CompanyTimeZoneToUTC),
                     Model = fp.Model,
                     IsActive = fp.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryFingerprintDeviceNotFound);

@@ -28,5 +28,6 @@ namespace Dawem.Models.Context
         public bool IsAdminPanelRequest { get; set; }
         public bool IsAdminPanelUser { get; set; }
         public bool NotAuthorized { get; set;}
+        public double CompanyTimeZoneToUTC { get; set; }
     }
 }

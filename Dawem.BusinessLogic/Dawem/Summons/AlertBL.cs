@@ -186,8 +186,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckInTime &&         
-                            EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0), (DateTime)(object)sd.Shift.CheckInTime) <= 15) &&
+                            ((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC) < (DateTime)(object)sd.Shift.CheckInTime &&         
+                            EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC), (DateTime)(object)sd.Shift.CheckInTime) <= 15) &&
 
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
@@ -297,7 +297,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek &&
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckInTime) &&
+                            ((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC) > (DateTime)(object)sd.Shift.CheckInTime) &&
 
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationEmployees.Any(ne => ne.EmployeeId == employee.Id) &&
@@ -410,8 +410,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             employee.Schedule.ScheduleDays.Any(sd => !sd.IsDeleted && sd.ShiftId != null &&
                             ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek) &&
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) < (DateTime)(object)sd.Shift.CheckOutTime &&
-                            EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0), (DateTime)(object)sd.Shift.CheckOutTime) <= 15) &&
+                            ((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC) < (DateTime)(object)sd.Shift.CheckOutTime &&
+                            EF.Functions.DateDiffMinute(((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC), (DateTime)(object)sd.Shift.CheckOutTime) <= 15) &&
 
                             !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationType == NotificationType.DoNotForgetSignOut &&
@@ -527,8 +527,8 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                             ((sd.Shift.IsTwoDaysShift && sd.WeekDay == (WeekDay)utcDateTimeMinusOne.DayOfWeek) || sd.WeekDay == (WeekDay)utcDateTime.DayOfWeek) &&
 
-                            ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0) > (DateTime)(object)sd.Shift.CheckOutTime &&
-                            EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckOutTime, ((DateTime)(object)utcTime).AddHours((double?)employee.Company.Country.TimeZoneToUTC ?? 0)) <= 15) &&
+                            ((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC) > (DateTime)(object)sd.Shift.CheckOutTime &&
+                            EF.Functions.DateDiffMinute((DateTime)(object)sd.Shift.CheckOutTime, ((DateTime)(object)utcTime).AddHours(requestInfo.CompanyTimeZoneToUTC)) <= 15) &&
 
                              !employee.Company.Notifications.Any(en => !en.IsDeleted &&
                                 en.NotificationType == NotificationType.ForgetSignOut &&

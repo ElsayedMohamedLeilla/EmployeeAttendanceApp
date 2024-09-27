@@ -75,12 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
             #region Handle End Date
 
-            var getTimeZoneToUTC = await repositoryManager.CompanyRepository
-                        .Get(c => !c.IsDeleted && c.Id == requestInfo.CompanyId)
-                        .Select(c => c.Country.TimeZoneToUTC)
-                        .FirstOrDefaultAsync();
-
-            var getTimeZoneToUTCDouble = (double)getTimeZoneToUTC;
+            var getTimeZoneToUTCDouble = requestInfo.CompanyTimeZoneToUTC;
             var utcDateTime = summon.LocalDateAndTime.AddHours(-getTimeZoneToUTCDouble);
 
             summon.StartDateAndTimeUTC = utcDateTime;

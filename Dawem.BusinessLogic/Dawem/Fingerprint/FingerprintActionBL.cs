@@ -57,8 +57,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     return true;
 
                 var getFingerprintDevice = await repositoryManager.FingerprintDeviceRepository.
-                    GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.SerialNumber == model.SN &&
-                    d.Company.Country.TimeZoneToUTC != null);
+                    GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.SerialNumber == model.SN);
 
                 if (getFingerprintDevice != null && model.RequestBody != null)
                 {
@@ -121,12 +120,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                                         #region Insert Employee Attendance Check
 
-                                        var getCompanyTimeZoneToUTC = await repositoryManager.CompanyRepository.
-                                            Get(c => c.Id == getDeviceCompanyId).
-                                            Select(c => c.Country.TimeZoneToUTC).
-                                            FirstOrDefaultAsync() ?? 0;
-
-                                        var localDateTime = DateTime.UtcNow.AddHours((double)getCompanyTimeZoneToUTC);
+                                        var localDateTime = DateTime.UtcNow.AddHours(requestInfo.CompanyTimeZoneToUTC);
 
                                         var getAttandanceId = await repositoryManager.EmployeeAttendanceRepository.
                                             Get(e => !e.IsDeleted && e.EmployeeId == getEmployeeInfo.Id && e.LocalDate.Date == localDateTime.Date).

@@ -27,13 +27,13 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Employee != null && x.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
-                inner = inner.Or(x => x.RequestAssignment.AssignmentType != null && x.RequestAssignment.AssignmentType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestJustification.JustificatioType != null && x.RequestJustification.JustificatioType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestPermission.PermissionType != null && x.RequestPermission.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestTask.TaskType != null && x.RequestTask.TaskType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestVacation.VacationType != null && x.RequestVacation.VacationType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.RequestAssignment.AssignmentType != null && x.RequestAssignment.AssignmentType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestJustification.JustificatioType != null && x.RequestJustification.JustificatioType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestPermission.PermissionType != null && x.RequestPermission.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestTask.TaskType != null && x.RequestTask.TaskType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestVacation.VacationType != null && x.RequestVacation.VacationType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
@@ -41,6 +41,7 @@ namespace Dawem.Repository.Requests
                 }
             }
 
+            predicate = predicate.And(request => !request.IsDeleted);
             predicate = predicate.And(request => request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)
@@ -90,13 +91,13 @@ namespace Dawem.Repository.Requests
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Employee != null && x.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
-                inner = inner.Or(x => x.RequestAssignment.AssignmentType != null && x.RequestAssignment.AssignmentType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestJustification.JustificatioType != null && x.RequestJustification.JustificatioType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestPermission.PermissionType != null && x.RequestPermission.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestTask.TaskType != null && x.RequestTask.TaskType.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.RequestVacation.VacationType != null && x.RequestVacation.VacationType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.RequestAssignment.AssignmentType != null && x.RequestAssignment.AssignmentType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestJustification.JustificatioType != null && x.RequestJustification.JustificatioType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestPermission.PermissionType != null && x.RequestPermission.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestTask.TaskType != null && x.RequestTask.TaskType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.RequestVacation.VacationType != null && x.RequestVacation.VacationType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {

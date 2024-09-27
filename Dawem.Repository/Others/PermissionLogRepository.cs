@@ -26,23 +26,23 @@ namespace Dawem.Repository.Others
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Start(x => x.User != null && x.User.Name.ToLower().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.User != null && x.User.Name.ToLower().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     inner = inner.Or(x => x.Id == id);
                 }
             }
 
-            if (requestInfo.Type == AuthenticationType.AdminPanel)
+            if (requestInfo.AuthenticationType == AuthenticationType.AdminPanel)
             {
                 outerpredicate = outerpredicate.And(e => e.CompanyId == null);
             }
-            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
+            else if (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
             {
                 outerpredicate = outerpredicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            outerpredicate = outerpredicate.And(e => e.Type == requestInfo.Type);
+            outerpredicate = outerpredicate.And(e => e.Type == requestInfo.AuthenticationType);
 
             if (criteria.Id != null)
             {
@@ -58,9 +58,9 @@ namespace Dawem.Repository.Others
                 outerpredicate = outerpredicate.And(x => x.ActionCode == criteria.ActionCode);
             }
 
-            if (criteria.ScreenCode != null)
+            if (criteria.ScreenId != null)
             {
-                outerpredicate = outerpredicate.And(x => x.ScreenCode == criteria.ScreenCode);
+                outerpredicate = outerpredicate.And(x => x.ScreenId == criteria.ScreenId);
             }
 
             outerpredicate = outerpredicate.And(inner);

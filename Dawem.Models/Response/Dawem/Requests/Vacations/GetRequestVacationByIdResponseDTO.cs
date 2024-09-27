@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Dawem.Others;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Dtos.Dawem.Others;
 
 namespace Dawem.Models.Response.Dawem.Requests.Vacations
 {
@@ -12,7 +13,9 @@ namespace Dawem.Models.Response.Dawem.Requests.Vacations
         public int VacationTypeId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public RequestStatus Status { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
+        public string Notes { get; set; }
     }
 }

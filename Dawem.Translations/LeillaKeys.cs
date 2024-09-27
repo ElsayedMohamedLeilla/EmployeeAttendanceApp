@@ -19,7 +19,9 @@
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string BaseData = "BaseData";
         public const string AdminPanel = "adminpanel";
+        public const string SignIn = "signin";
         public const string Companies = "Companies";
         public const string ProfileImageName = "ProfileImageName";
         public const string LogoImageName = "LogoImageName";
@@ -93,10 +95,15 @@
         public const string BL = "BL";
         public const string BLC = "BLC";
         public const string GetForDropDown = "GetForDropDown";
-        public const string NotificationStoreController = "NotificationStoreController";
+        public const string GetAllScreens = "GetAllScreens";
+        public const string GetAllActions = "GetAllActions";
+        public const string GetHeaderInformations = "GetHeaderInformations";
+        public const string SignOut = "SignOut";
+        public const string NotificationController = "NotificationController";
         public const string MarkAsViewed = "MarkAsViewed";
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
+        public const string IsDeleted = "IX_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
         public const string BLValidationCore = "BLValidationCore";
@@ -105,6 +112,7 @@
         public const string Comma = ",";
         public const string CommaThenSpace = ", ";
         public const string Dot = ".";
+        public const string DotThenSpace = ". ";
         public const string Slash = "/";
         public const string BackSlash = @"\";
         public const string UnderScore = "_";
@@ -176,6 +184,7 @@
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn = "DoneSignUpSuccessfully.CheckYourEmailToVerifyItAndLogIn";
         public const string DoneSignYouInSuccessfully = "DoneSignYouInSuccessfully";
+        public const string DoneSignYouOutSuccessfully = "DoneSignYouOutSuccessfully";
         public const string SorryYouMustEnterOldPassword = "Sorry!!YouMustEnterOldPassword!";
         public const string SorryYouMustEnterNewPassword = "Sorry!!YouMustEnterNewPassword!";
         public const string SorryYouMustEnterConfirmNewPassword = "Sorry!!YouMustEnterConfirmNewPassword!";
@@ -271,6 +280,7 @@
         public const string DoneUpdateHolidayTypeSuccessfully = "DoneUpdateHolidayTypeSuccessfully";
         public const string MainDepartment = "MainDepartment";
         public const string AdminEmployee = "AdminEmployee";
+        public const string Employee = "Employee";
         public const string SorryYouMustEnterUserName = "Sorry!!YouMustEnterUserName!";
         public const string SorryUserNameIsDuplicated = "Sorry!!UserNameIsDuplicated!";
         public const string SorrySelectedEmployeeNotFound = "Sorry!!SelectedEmployeeNotFound!";
@@ -341,6 +351,8 @@
         public const string EndOfWeekVacations = "EndOfWeekVacations:";
         public const string DoneCheckInSuccessfully = "DoneCheckInSuccessfully";
         public const string DoneCheckOutSuccessfully = "DoneCheckOutSuccessfully";
+        public const string DoneBreakInSuccessfully = "DoneBreakInSuccessfully";
+        public const string DoneBreakOutSuccessfully = "DoneBreakOutSuccessfully";
         public const string DoneMakeSummonSuccessfully = "DoneMakeSummonSuccessfully";
         public const string SorryYouMustEnterTheLatitude = "Sorry!!YouMustEnterTheLatitude!";
         public const string SorryYouMustEnterTheLongitude = "Sorry!!YouMustEnterTheLongitude!";
@@ -422,6 +434,8 @@
         public const string SorryThereIsNoAssignmentsRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoAssignmentsRequestsInSelectedYearAndMonth!";
         public const string SorryThereIsNoTasksRequestsInSelectedYearAndMonth = "Sorry!!ThereIsNoTasksRequestsInSelectedYearAndMonth!";
         public const string SorryYouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay = "Sorry!!YouAlreadyDoneRegisterCheckInAndCheckOutInCurrentDay!";
+        public const string SorryYouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn = "Sorry!!YouMustDoBreakOutFirstBecauseLastFingerprintIsBreakIn!";
+
         public const string SorryCannotFindChecksForEnteredId = "Sorry!!CannotFindChecksForEnteredId!";
         public const string SorryCannotDeleteCheckIfBecauseThereIsCheckOutRecord = "Sorry!!CannotDeleteCheckIfBecauseThereIsCheckOutRecord!";
         public const string SorryCannotFindCheckInRecord = "Sorry!!CannotFindCheckInRecord!";
@@ -450,6 +464,8 @@
         public const string Controller = "Controller";
         public const string AdminPanelScreen = "AdminPanelScreen";
         public const string DawemScreen = "DawemScreen";
+        public const string AdminPanelAction = "AdminPanelAction";
+        public const string DawemAction = "DawemAction";
         public const string Create = "Create";
         public const string Update = "Update";
         public const string Delete = "Delete";
@@ -514,8 +530,9 @@
         public const string SorryYouMustEnterSanctionType = "Sorry!!YouMustEnterSanctionType!";
         public const string SorryYouMustEnterSanctionWarningMessage = "Sorry!!YouMustEnterSanctionWarningMessage!";
         public const string SorryYouMustChooseAtLeastOneNotifyWay = "Sorry!!YouMustChooseAtLeastOneNotifyWay!";
-        public const string SorryYouMustEnterFCMToken = "Sorry!!YouMustEnterFCMToken!";
+        public const string SorryYouMustEnterDeviceNotificationsToken = "Sorry!!YouMustEnterDeviceNotificationsToken!";
         public const string SorryCannotDoSummonFingerprintOutsideWorkingHours = "Sorry!!CannotDoSummonFingerprintOutsideWorkingHours!";
+        public const string SorryCannotDoBreakFingerprintOutsideWorkingHours = "Sorry!!CannotDoBreakFingerprintOutsideWorkingHours!";
         public const string SorryNotAllowedToDoSummonFingerprintAtCurrentTimeThereIsNoSummon = "Sorry!!NotAllowedToDoSummonFingerprintAtCurrentTime.ThereIsNoSummon!";
         public const string SorrySummonLogNotFound = "Sorry!!SummonLogNotFound!";
         public const string TimeType = "TimeType";
@@ -596,6 +613,7 @@
         public const string SorryFilterTypeFromMustLessThanOrEqualFilterTypeTo = "Sorry!!FilterTypeFromMustLessThanOrEqualFilterTypeTo!";
         public const string SorryYouAlreadyDoneThisSummonBefore = "Sorry!!YouAlreadyDoneThisSummonBefore!";
         public const string SorryResponsibilityNameIsDuplicated = "Sorry!!ResponsibilityNameIsDuplicated!";
+        public const string SorryThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed = "Sorry!!ThereIsAnotherResponsibilityForEmployeesApplicationOnlyOneIsAllowed!";
         public const string SorryYouMustEnterResponsibilityName = "Sorry!!YouMustEnterResponsibilityName!";
         public const string SorryResponsibilityNotFound = "Sorry!!ResponsibilityNotFound!";
         public const string DoneCreateResponsibilitySuccessfully = "DoneCreateResponsibilitySuccessfully";
@@ -632,5 +650,69 @@
         public const string SorryDeleteSummonNotAllowedAfterSummonStarted = "Sorry!!DeleteSummonNotAllowedAfterSummonStarted!";
         public const string SorryEnableSummonNotAllowedAfterSummonStarted = "Sorry!!EnableSummonNotAllowedAfterSummonStarted!";
         public const string SorryDisableSummonNotAllowedAfterSummonStarted = "Sorry!!DisableSummonNotAllowedAfterSummonStarted!";
+        public const string YouHaveNewSummon = "YouHaveNewSummon";
+        public const string YouHaveMissedTheSummon = "YouHaveMissedTheSummon";
+        public const string YouHaveMissedTheSummonAssignedToYou = "YouHaveMissedTheSummonAssignedToYou";
+        public const string InDate = "InDate";
+        public const string TheTime = "TheTime";
+        public const string AvailableFor = "AvailableForPeriod";
+        public const string SummonDone = "SummonDone";
+        public const string SummonMissed = "SummonMissed";
+        public const string ClickForDetails = "ClickForDetails";
+        public const string YourScheduleHaveBeenChangedToNewSchedule = "YourScheduleHaveBeenChangedToNewSchedule";
+        public const string OldSchedule = "OldSchedule";
+        public const string NewSchedule = "NewSchedule";
+        public const string NotExist = "NotExist";
+        public const string ScheduleName = "ScheduleName";
+        public const string UpdatedScheduleDaysCount = "UpdatedScheduleDaysCount";
+        public const string ThereIsNewUpdateInWorkingHoursInOneShiftOfYourScheduleShifts = "ThereIsNewUpdateInWorkingHoursInOneShiftOfYourScheduleShifts";
+        public const string ShiftName = "ShiftName";
+        public const string CheckInTime = "CheckInTime";
+        public const string CheckOutTime = "CheckOutTime";
+        public const string AllowedMinutes = "AllowedMinutes";
+        public const string NewChangeInYourSchedule = "NewChangeInYourSchedule";
+        public const string DoNotForgetYourSummonFingerprint = "DoNotForgetYourSummonFingerprint";
+        public const string DoNotForgetToFingerprintForTheSummonAssignedForYou = "DoNotForgetToFingerprintForTheSummonAssignedForYou";
+        public const string SummonDate = "SummonDate";
+        public const string DoNotForgetSignIn = "DoNotForgetSignIn";
+        public const string DoNotForgetToFingerprintForYourSignIn = "DoNotForgetToFingerprintForYourSignIn";
+        public const string ForgetSignIn = "ForgetSignIn";
+        public const string DoNotForgetSignOut = "DoNotForgetSignOut";
+        public const string ForgetSignOut = "ForgetSignOut";
+        public const string YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignInYouMustFingerprintAsSoonAsPossible";
+        public const string DoNotForgetToFingerprintForYourSignOut = "DoNotForgetToFingerprintForYourSignOut";
+        public const string YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible = "YouForgetToFingerprintForYourSignOutYouMustFingerprintAsSoonAsPossible";
+        public const string DoneCreateScreenSuccessfully = "DoneCreateScreenSuccessfully";
+        public const string DoneUpdateScreenSuccessfully = "DoneUpdateScreenSuccessfully";
+        public const string SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt = "Sorry!!YouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt!";
+        public const string SorryYouMustChooseScreensWithPlan = "Sorry!!YouMustChooseScreensWithPlan!";
+        public const string SorryYouMustEnterScreenName = "Sorry!!YouMustEnterScreenName!";
+        public const string SorryYouMustEnterScreenGroupName = "Sorry!!YouMustEnterScreenGroupName!";
+        public const string SorryYouMustEnterScreenId = "Sorry!!YouMustEnterScreenId!";
+        public const string SorryYouMustEnterScreenGroupId = "Sorry!!YouMustEnterScreenGroupId!";
+        public const string SorryScreenGroupNotFound = "Sorry!!ScreenGroupNotFound!";
+        public const string DoneCreateScreenGroupSuccessfully = "DoneCreateScreenGroupSuccessfully";
+        public const string DoneUpdateScreenGroupSuccessfully = "DoneUpdateScreenGroupSuccessfully";
+        public const string SorryYourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen = "Sorry!!YourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen!";
+        public const string SorryYouMustEnterCorrectScreenId = "Sorry!!YouMustEnterCorrectScreenId!";
+        public const string SorryScreenNameIsDuplicated = "Sorry!!ScreenNameIsDuplicated!";
+        public const string DuplicatedScreenName = "DuplicatedScreenName";
+        public const string DuplicatedScreenLanguage = "DuplicatedScreenLanguage";
+        public const string SorryScreenGroupNameIsDuplicated = "Sorry!!ScreenGroupNameIsDuplicated!";
+        public const string DuplicatedScreenGroupName = "DuplicatedScreenGroupName";
+        public const string DuplicatedScreenGroupLanguage = "DuplicatedScreenGroupLanguage";
+        public const string SorryScreenGroupOrderIsDuplicated = "Sorry!!ScreenGroupOrderIsDuplicated!";
+        public const string DuplicatedWithScreenGroupName = "DuplicatedWithScreenGroupName";
+        public const string SorryScreenParentMustBeScreenGroup = "Sorry!!ScreenParentMustBeScreenGroup!";
+        public const string SorryGroupParentMustBeScreenGroup = "Sorry!!GroupParentMustBeScreenGroup!";
+        public const string SorryYouMustEnterCorrectOrder = "Sorry!!YouMustEnterCorrectOrder!";
+        public const string SorryYouMustEnterCorrectAuthenticationType = "Sorry!!YouMustEnterCorrectAuthenticationType!";
+        public const string SorryParentGroupMustNotBeTheGroup = "Sorry!!ParentGroupMustNotBeTheGroup!";
+        public const string SorryGroupParentCannotBeOneOfItsChildren = "Sorry!!GroupParentCannotBeOneOfItsChildren!";
+        public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
+        public const string SorryPlanScreensMustChoosenFromWebOrMobileApp = "Sorry!!PlanScreensMustChoosenFromWebOrMobileApp!";
+        public const string SorryYouCannotDoBreakOutYouMustHaveBreakInFirst = "Sorry!!YouCannotDoBreakOut.YouMustHaveBreakInFirst!";
+
+
     }
 }

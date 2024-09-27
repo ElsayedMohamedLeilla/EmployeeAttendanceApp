@@ -41,6 +41,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         public async Task<string> PreSignUp(PreSignUpDTO model)
         {
             #region Model Validation
+
             var PreSignUpModel = new PreSignUpModelValidator();
             var createUserModelResult = PreSignUpModel.Validate(model);
             if (!createUserModelResult.IsValid)
@@ -107,7 +108,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             savedOtp.IsActive = true;
             savedOtp.IsDeleted = false;
             savedOtp.ExpirationTime = savedOtp.AddedDate.AddMinutes(30); //expire after half hour
-            savedOtp.CompanyId = getCompany.Id;
+            savedOtp.CompanyId =  getCompany.Id;
             savedOtp.OTP = savedOTP;
             savedOtp.EmployeeId = getEmployee.Id;
             repositoryManager.EmployeeOTPRepository.Insert(savedOtp);
@@ -158,7 +159,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             MyUser user = await repositoryManager.UserRepository.
                 GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted && user.Id == userId &&
-                user.Type == requestInfo.Type &&
+                user.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);

@@ -27,7 +27,7 @@ namespace Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.SchedulePlan.Schedule != null && x.SchedulePlan.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.SchedulePlan.Schedule != null && x.SchedulePlan.Schedule.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
@@ -37,10 +37,6 @@ namespace Dawem.Repository.Schedules.SchedulePlanBackgroundJobLogs
             if (criteria.IsActive != null)
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
-            }
-            if (criteria.Code is not null)
-            {
-                predicate = predicate.And(e => e.Code == criteria.Code);
             }
 
             predicate = predicate.And(inner);

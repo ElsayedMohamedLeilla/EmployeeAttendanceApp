@@ -51,8 +51,6 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             uploadBLC = _uploadBLC;
             userManagerRepository = _userManagerRepository;
         }
-
-
         public async Task<int> SignUp(UserSignUpModel model)
         {
             //#region business validation
@@ -62,7 +60,11 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             unitOfWork.CreateTransaction();
 
             #region get Company
-            var getCompany = repositoryManager.CompanyRepository.Get(e => !e.IsDeleted && e.IsActive && e.IdentityCode == model.CompanyVerficationCode).FirstOrDefault();
+
+            var getCompany = repositoryManager.CompanyRepository.
+                Get(e => !e.IsDeleted && e.IsActive && e.IdentityCode == model.CompanyVerficationCode).
+                FirstOrDefault();
+
             #endregion
 
             #region get Employee
@@ -70,6 +72,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             #endregion
 
             #region GetMax OTP
+
             var employeeOTPs = await repositoryManager.EmployeeOTPRepository.Get(o => !o.IsDeleted && o.IsActive && o.EmployeeId == getEmployee.Id).ToListAsync();
             if (employeeOTPs.Any())
             {
@@ -80,7 +83,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     throw new BusinessValidationException(AmgadKeys.SorryWrongOTPPleaseUseLastRecieviedOne);
                 }
                 // Check if the retrieved OTP has expired
-                bool isExpired = maxOTP.ExpirationTime.AddHours(2) < DateTime.Now;
+                bool isExpired = DateTime.UtcNow > maxOTP.ExpirationTime;
                 if (isExpired)
                 {
                     if (maxOTP.OTPCount < 5)
@@ -90,13 +93,13 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                 }
                 else
                 {
-                    #region Set User
-                    var getNextCode = await repositoryManager.UserRepository
-                        .Get(e => (e.Type == AuthenticationType.DawemAdmin && e.CompanyId == getCompany.Id && !e.IsDeleted))
-                        .Select(e => e.Code)
-                        .DefaultIfEmpty()
-                        .MaxAsync() + 1;
-                    #endregion
+                    //#region Set User
+                    //var getNextCode = await repositoryManager.UserRepository
+                    //    .Get(e => (e.Type == AuthenticationType.DawemAdmin && e.CompanyId == getCompany.Id && !e.IsDeleted))
+                    //    .Select(e => e.Code)
+                    //    .DefaultIfEmpty()
+                    //    .MaxAsync() + 1;
+                    //#endregion
 
                     user.UserName = getEmployee.Email;
                     user.Email = getEmployee.Email;
@@ -105,7 +108,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     user.CompanyId = getCompany.Id;
                     user.MobileCountryId = getEmployee.MobileCountryId;
                     user.ProfileImageName = getEmployee.ProfileImageName;
-                    user.Code = getNextCode;
+                    user.Code = getEmployee.Code;
                     user.EmployeeId = getEmployee.Id;
                     user.VerificationCode = maxOTP.OTP.ToString();
                     user.IsActive = true;
@@ -151,9 +154,34 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             {
                 throw new BusinessValidationException(AmgadKeys.SorryNoOTPWasFoundForThisUser);
             }
+
             #endregion
-            #region Handle Response
+
+            #region Handle User Permissions
+
+            var companyId = getCompany.Id;
+
+            var getEmployeesResponsibility = await repositoryManager.
+                ResponsibilityRepository.
+                Get(r => r.CompanyId == companyId && r.ForEmployeesApplication).
+                FirstOrDefaultAsync();
+
+            if (getEmployeesResponsibility != null)
+            {
+                repositoryManager.UserResponsibilityRepository.
+                    Insert(new UserResponsibility
+                    {
+                        UserId = user.Id,
+                        ResponsibilityId = getEmployeesResponsibility.Id
+                    });
+            }
+
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Response
+
             await unitOfWork.CommitAsync();
             return user.Id;
 
@@ -323,10 +351,12 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.AddUserId = requestInfo.UserId;
             user.UserName = foundEmployee.Email;
             user.Email = foundEmployee.Email;
+            user.PhoneNumber = foundEmployee.MobileNumber;
             user.ProfileImageName = foundEmployee.ProfileImageName;
             user.Code = foundEmployee.Code;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
+            user.IsActive = foundEmployee.IsActive;
             user.Type = AuthenticationType.DawemAdmin;
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
@@ -507,6 +537,9 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             getUser.ModifiedDate = DateTime.Now;
             getUser.ModifyUserId = requestInfo.UserId;
             getUser.ProfileImageName = foundEmployee.ProfileImageName;
+            getUser.PhoneNumber = foundEmployee.MobileNumber;
+            getUser.IsActive = foundEmployee.IsActive;
+
 
             var updateUserResponse = await userManagerRepository.UpdateAsync(getUser);
 
@@ -809,7 +842,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
                     MobileCountryFlagPath = uploadBLC.GetFilePath(user.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = user.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
                     ProfileImageName = user.ProfileImageName,
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.Responsibility.Name).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
@@ -832,7 +865,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryId = user.MobileCountryId ?? 0,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Users),
+                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 
@@ -884,7 +917,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         {
             MyUser user = await repositoryManager.UserRepository.
                 GetEntityByConditionWithTrackingAsync(user => !user.IsDeleted && user.Id == userId &&
-                user.Type == requestInfo.Type &&
+                user.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null))) ??
                 throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
@@ -895,7 +928,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
         public async Task<GetUsersInformationsResponseDTO> GetUsersInformations()
         {
             var userRepository = repositoryManager.UserRepository;
-            var query = userRepository.Get(user => user.Type == requestInfo.Type &&
+            var query = userRepository.Get(user => user.Type == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && user.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && user.CompanyId == null)));
 

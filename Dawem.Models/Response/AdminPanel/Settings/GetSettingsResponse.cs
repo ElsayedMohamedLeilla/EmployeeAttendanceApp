@@ -1,6 +1,6 @@
-﻿using Dawem.Models.Dtos.Dawem.Attendances;
+﻿using Dawem.Models.Dtos.Dawem.Settings;
 
-namespace Dawem.Models.Response.AdminPanel.Subscriptions.Plans
+namespace Dawem.Models.Response.AdminPanel.Settings
 {
     public class GetSettingsResponse
     {

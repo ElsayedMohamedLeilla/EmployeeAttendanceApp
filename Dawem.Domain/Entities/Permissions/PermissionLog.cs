@@ -1,4 +1,5 @@
-﻿using Dawem.Domain.Entities.Providers;
+﻿using Dawem.Domain.Entities.Others;
+using Dawem.Domain.Entities.Providers;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Enums.Permissions;
@@ -10,15 +11,18 @@ namespace Dawem.Domain.Entities.Permissions
     [Table(nameof(PermissionLog) + LeillaKeys.S)]
     public class PermissionLog : BaseEntity
     {
-        public DateTime Date { get; set; } = DateTime.UtcNow;
+        public DateTime DateUTC { get; set; } = DateTime.UtcNow;
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual MyUser User { get; set; }
-        public int ScreenCode { get; set; }
-        public ApplicationAction ActionCode { get; set; }
+        public int ScreenId { get; set; }
+        [ForeignKey(nameof(ScreenId))]
+        public virtual MenuItem Screen { get; set; }
+        //public int ScreenCode { get; set; }
+        public ApplicationActionCode ActionCode { get; set; }
         public AuthenticationType Type { get; set; }
     }
 }

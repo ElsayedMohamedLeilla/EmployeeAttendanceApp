@@ -2,7 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Subscriptions;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.DTOs.Dawem.Generic;
 using LinqKit;
 
@@ -21,7 +21,7 @@ namespace Dawem.Repository.Providers
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.Or(x => x.Subscription.Company.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Subscription.Company.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;

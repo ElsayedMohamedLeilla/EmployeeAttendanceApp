@@ -11,6 +11,7 @@ namespace Dawem.Contract.BusinessLogic.Dawem.Provider
         Task<bool> SignUp(SignUpModel model);
         Task<bool> VerifyEmail(string token, string email);
         Task<TokenDto> SignIn(SignInModel model);
+        Task<bool> SignOut();
         Task<TokenDto> AdminPanelSignIn(AdminPanelSignInModel model);
         Task<bool> ChangePassword(ChangePasswordModel model);
     }

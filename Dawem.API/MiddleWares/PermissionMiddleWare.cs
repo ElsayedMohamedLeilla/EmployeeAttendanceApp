@@ -21,8 +21,8 @@ namespace Dawem.API.MiddleWares
         {
             _next = next;
         }
-        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown };
-        public List<string> ExcludedControllers = new() { LeillaKeys.NotificationStoreController };
+        public List<string> ExcludedApis = new() { LeillaKeys.GetForDropDown, LeillaKeys.GetAllScreens, LeillaKeys.GetAllActions, LeillaKeys.GetHeaderInformations, LeillaKeys.SignOut };
+        public List<string> ExcludedControllers = new() { LeillaKeys.NotificationController };
 
         public async Task Invoke(HttpContext httpContext, RequestInfo requestInfo, IPermissionBL permissionBL, IUnitOfWork<ApplicationDBContext> unitOfWork)
         {
@@ -36,36 +36,69 @@ namespace Dawem.API.MiddleWares
 
             var userId = requestInfo.UserId;
 
-            if (httpContext != null && userId > 0 && 
+            if (false && httpContext != null && userId > 0 && 
                 !string.IsNullOrWhiteSpace(controllerName) && 
                 !string.IsNullOrWhiteSpace(actionName) && 
                 !ExcludedControllers.Contains(controllerName) && 
                 !ExcludedApis.Contains(actionName))
             {
-                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.Type);
-                if (mapResult.Screen != null && mapResult.Method != null)
+                var mapResult = ControllerActionHelper.MapControllerAndAction(controllerName: controllerName, actionName: actionName, requestInfo.AuthenticationType);
+                if (mapResult.ScreenCode != null && mapResult.ActionCode != null)
                 {
-                    var model = new CheckUserPermissionModel
-                    {
-                        CompanyId = requestInfo.CompanyId,
-                        UserId = userId,
-                        ScreenCode = mapResult.Screen.Value,
-                        ActionCode = mapResult.Method.Value,
-                        ActionName = actionName,
-                        AuthenticationType = requestInfo.Type
-                    };
+                    dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                    (AdminPanelApplicationScreenCode)mapResult.ScreenCode.Value :
+                    (DawemAdminApplicationScreenCode)mapResult.ScreenCode.Value;
 
-                    dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)mapResult.Screen.Value :
-                    (DawemAdminApplicationScreenCode)mapResult.Screen.Value;
-
-                    var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
-                    var checkPermissionResponse = await permissionBL.CheckUserPermission(model);
-                    if (checkPermissionResponse)
+                    var checkScreenInPlanModel = new CheckScreenInPlanModel{
+                        CompanyId = requestInfo.CompanyId,
+                        ScreenCode = mapResult.ScreenCode.Value,
+                        AuthenticationType = requestInfo.AuthenticationType,
+                        ApplicationType = requestInfo.ApplicationType
+                    };
+
+                    var checkScreenInPlanResponse = await permissionBL.CheckScreenInPlan(checkScreenInPlanModel);
+
+                    if (checkScreenInPlanResponse)
                     {
-                        await _next.Invoke(httpContext);
+                        var checkUserPermissionModel = new CheckUserPermissionModel
+                        {
+                            CompanyId = requestInfo.CompanyId,
+                            UserId = userId,
+                            ScreenCode = mapResult.ScreenCode.Value,
+                            ActionCode = mapResult.ActionCode.Value,
+                            ActionName = actionName,
+                            AuthenticationType = requestInfo.AuthenticationType,
+                            ApplicationType = requestInfo.ApplicationType
+                        };
+
+                        var checkUserPermissionResponse = await permissionBL.CheckUserPermission(checkUserPermissionModel);
+
+                        if (checkUserPermissionResponse)
+                        {
+                            await _next.Invoke(httpContext);
+                        }
+                        else
+                        {
+                            int statusCode = StatusCodes.Status403Forbidden;
+                            var response = new ErrorResponse
+                            {
+                                State = ResponseStatus.Forbidden,
+                                Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouDoNotHavePermission,
+                                       requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
+                                       TranslationHelper.GetTranslation(mapResult.ActionCode.Value.ToString(),
+                                       requestInfo.Lang) + LeillaKeys.RightBracket +
+                                       LeillaKeys.Space +
+                                       TranslationHelper.GetTranslation(LeillaKeys.InScreen,
+                                       requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
+                                       TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix,
+                                       requestInfo.Lang) + LeillaKeys.RightBracket
+                            };
+
+                            await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
+                        }
                     }
                     else
                     {
@@ -73,12 +106,9 @@ namespace Dawem.API.MiddleWares
                         var response = new ErrorResponse
                         {
                             State = ResponseStatus.Forbidden,
-                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYouDoNotHavePermission,
-                                   requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
-                                   TranslationHelper.GetTranslation(mapResult.Method.Value.ToString(),
-                                   requestInfo.Lang) + LeillaKeys.RightBracket +
-                                   LeillaKeys.Space +
-                                   TranslationHelper.GetTranslation(LeillaKeys.InScreen,
+                            Message = TranslationHelper.GetTranslation(LeillaKeys.SorryYourCurrentSubscriptionPlanDoNotHaveTheRequiredScreen,
+                                   requestInfo.Lang) +  LeillaKeys.Space +
+                                   TranslationHelper.GetTranslation(LeillaKeys.ScreenName,
                                    requestInfo.Lang) + LeillaKeys.Space + LeillaKeys.LeftBracket +
                                    TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix,
                                    requestInfo.Lang) + LeillaKeys.RightBracket
@@ -86,6 +116,8 @@ namespace Dawem.API.MiddleWares
 
                         await ReturnHelper.Return(unitOfWork, httpContext, statusCode, response);
                     }
+
+                   
                 }
                 else
                 {

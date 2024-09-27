@@ -5,14 +5,11 @@ using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Permissions
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
-    
-    
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class PermissionController : DawemControllerBase
     {
         private readonly IPermissionBL permissionBL;
@@ -109,17 +106,23 @@ namespace Dawem.API.Areas.Dawem.Controllers.Permissions
             return Success(await permissionBL.GetPermissionsInformations());
         }
         [HttpGet]
-        public ActionResult GetAllScreensWithAvailableActions()
+        public ActionResult GetAllScreensWithAvailableActions([FromQuery] bool IsForMenu)
         {
-            var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo);
+            var response = ControllerActionHelper.GetAllScreensWithAvailableActions(requestInfo, IsForMenu);
             return Success(response, response.Screens.Count);
         }
         [HttpGet]
-        public async Task<ActionResult> GetCurrentUserPermissions()
+        public async Task<ActionResult> GetCurrentUserMenuItems()
         {
-            var response = await permissionBL.GetCurrentUserPermissions();
-            var count = response?.UserPermissions?.Count ?? 0;
+            var response = await permissionBL.GetCurrentUserMenuItems();
+            var count = response?.MenuItems?.Count ?? 0;
             return Success(response, count);
+        }
+        [HttpGet]
+        public ActionResult GetAllActions()
+        {
+            var response = ControllerActionHelper.GetAllActions(requestInfo);
+            return Success(response, response.Actions.Count);
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
-using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
-using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+using Dawem.Contract.BusinessLogic.AdminPanel.Settings;
+using Dawem.Models.Dtos.Dawem.Settings;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
+namespace Dawem.API.Areas.AdminPanel.Controllers.Settings
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class SettingController : AdminPanelControllerBase
     {
         private readonly ISettingBL settingBL;

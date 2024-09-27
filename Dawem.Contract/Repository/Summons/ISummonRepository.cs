@@ -7,5 +7,6 @@ namespace Dawem.Contract.Repository.Summons
     public interface ISummonRepository : IGenericRepository<Summon>
     {
         IQueryable<Summon> GetAsQueryable(GetSummonsCriteria criteria);
+        IQueryable<Summon> EmployeeGetAsQueryable(GetSummonsCriteria criteria);
     }
 }

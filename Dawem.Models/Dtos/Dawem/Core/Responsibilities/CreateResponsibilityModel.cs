@@ -3,6 +3,7 @@
     public class CreateResponsibilityModel
     {
         public string Name { get; set; }
+        public bool ForEmployeesApplication { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace Dawem.Helpers
 {
     public static class APIHelper
     {
-        public static GetAllScreensWithAvailableActionsResponse? AllScreensWithAvailableActions { get; set; }
-        public static GetAllScreensWithAvailableActionsResponse? AdminPanelAllScreensWithAvailableActions { get; set; }
+        public static OldGetAllScreensWithAvailableActionsResponse? AllScreensWithAvailableActions { get; set; }
+        public static OldGetAllScreensWithAvailableActionsResponse? AdminPanelAllScreensWithAvailableActions { get; set; }
     }
 }

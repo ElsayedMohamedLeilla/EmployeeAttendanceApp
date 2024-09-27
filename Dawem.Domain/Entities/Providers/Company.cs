@@ -6,6 +6,7 @@ using Dawem.Domain.Entities.Schedules;
 using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
+using Dawem.Domain.RealTime.Firebase;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Providers
@@ -32,6 +33,9 @@ namespace Dawem.Domain.Entities.Providers
         public List<FingerprintDevice> FingerprintDevices { get; set; }
         public List<Zone> Zones { get; set; }
         public List<MyUser> Users { get; set; }
+        public List<Notification> Notifications { get; set; }
+        public List<NotificationUserFCMToken> NotificationUserFCMTokens { get; set; }
+        
         #endregion
         public string IdentityCode { get; set; }
         public int Code { get; set; }

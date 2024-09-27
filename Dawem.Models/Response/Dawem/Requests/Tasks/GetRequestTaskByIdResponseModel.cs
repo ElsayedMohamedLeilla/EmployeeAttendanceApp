@@ -1,4 +1,5 @@
-﻿using Dawem.Models.Dtos.Dawem.Others;
+﻿using Dawem.Enums.Generals;
+using Dawem.Models.Dtos.Dawem.Others;
 
 namespace Dawem.Models.Response.Dawem.Requests.Tasks
 {
@@ -15,6 +16,7 @@ namespace Dawem.Models.Response.Dawem.Requests.Tasks
         public List<int> TaskEmployeeIds { get; set; }
         public List<FileDTO> Attachments { get; set; }
         public bool IsActive { get; set; }
+        public RequestStatus Status { get; set; }
         public string Notes { get; set; }
     }
 }

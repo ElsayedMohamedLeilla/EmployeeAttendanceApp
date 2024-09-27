@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Schedules.Schedules;
 using Dawem.Contract.BusinessValidation.Dawem.Schedules.Schedules;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Schedules;
+using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Schedules.Schedules;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +26,15 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
         private readonly IScheduleBLValidation scheduleBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly INotificationHandleBL notificationHandleBL;
         public ScheduleBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
            RequestInfo _requestHeaderContext,
            IScheduleBLValidation _scheduleBLValidation)
         {
             unitOfWork = _unitOfWork;
+            notificationHandleBL = _notificationHandleBL;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
             scheduleBLValidation = _scheduleBLValidation;
@@ -96,18 +102,103 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.Schedules
 
             #region Handle Week Shifts
 
+            var scheduleDaysChangedCount = 0;
+
             var getDBScheduleDays = await repositoryManager.ScheduleDayRepository
                 .GetWithTracking(w => w.ScheduleId == model.Id)
                 .ToListAsync();
 
             foreach (var getDBScheduleDay in getDBScheduleDays)
             {
-                getDBScheduleDay.ShiftId = model?.ScheduleDays?.FirstOrDefault(w => w.WeekDay == getDBScheduleDay.WeekDay)?.ShiftId;
+                var modelShiftId = model?.ScheduleDays?.FirstOrDefault(w => w.WeekDay == getDBScheduleDay.WeekDay)?.ShiftId;
+
+                if (getDBScheduleDay.ShiftId != modelShiftId)
+                {
+                    scheduleDaysChangedCount++;
+                }
+                getDBScheduleDay.ShiftId = modelShiftId;
             }
 
             await unitOfWork.SaveAsync();
 
             #endregion
+
+            #endregion
+
+            #region Handle Notifications
+
+            if (scheduleDaysChangedCount > 0)
+            {
+
+                var employees = await repositoryManager.EmployeeRepository.
+                    Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId &&
+                    e.ScheduleId == model.Id).
+                    Select(e => new
+                    {
+                        e.Id,
+                        NotificationUsers = e.Users != null ? e.Users.Where(u => !u.IsDeleted).
+                        Select(u => new NotificationUserModel
+                        {
+                            Id = u.Id,
+                            Email = u.Email,
+                            UserTokens = u.NotificationUsers.
+                            Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                            Any(f => !f.IsDeleted)).
+                            SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                            Select(f => new NotificationUserTokenModel
+                            {
+                                ApplicationType = f.DeviceType,
+                                Token = f.FCMToken
+                            })).ToList()
+                        }).ToList() : null
+                    }).ToListAsync();
+
+                var employeeIds = employees.Select(e => e.Id).ToList();
+                var notificationUsers = employees.Where(e => e.NotificationUsers != null)
+                    .SelectMany(e => e.NotificationUsers).Distinct().ToList();
+                var scheduleName = model.Name;
+
+                #region Handle Notification Description
+
+                var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                       Select(l => new ActiveLanguageModel
+                       {
+                           Id = l.Id,
+                           ISO2 = l.ISO2
+                       }).ToListAsync();
+
+                foreach (var language in getActiveLanguages)
+                {
+                    notificationDescriptions.Add(new NotificationDescriptionModel
+                    {
+                        LanguageIso2 = language.ISO2,
+                        Description = TranslationHelper.GetTranslation(LeillaKeys.YourScheduleHaveBeenChangedToNewSchedule, language.ISO2) +
+                            LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.ScheduleName, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace +
+                            scheduleName + LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.UpdatedScheduleDaysCount, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace + scheduleDaysChangedCount
+                    });
+                }
+
+                #endregion
+
+                var handleNotificationModel = new HandleNotificationModel
+                {
+                    NotificationUsers = notificationUsers,
+                    EmployeeIds = employeeIds,
+                    NotificationType = NotificationType.NewChangeInSchedule,
+                    NotificationStatus = NotificationStatus.Info,
+                    Priority = NotificationPriority.Medium,
+                    NotificationDescriptions = notificationDescriptions,
+                    ActiveLanguages = getActiveLanguages
+                };
+
+                await notificationHandleBL.HandleNotifications(handleNotificationModel);
+            }
 
             #endregion
 

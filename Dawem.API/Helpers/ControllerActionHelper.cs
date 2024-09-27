@@ -4,10 +4,12 @@ using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Others;
+using Dawem.Models.Response;
 using Dawem.Models.Response.Dawem.Others;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Dawem.Models.Response.Dawem.Permissions.Permissions;
 
 namespace Dawem.API.Helpers
 {
@@ -18,7 +20,7 @@ namespace Dawem.API.Helpers
             var response = new MapControllerAndActionResponse();
 
             int? screen = null;
-            ApplicationAction? method = null;
+            ApplicationActionCode? method = null;
 
             var allScreenCodes = type == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
@@ -31,76 +33,83 @@ namespace Dawem.API.Helpers
             {
                 if (actionName.Contains(LeillaKeys.Create))
                 {
-                    method = ApplicationAction.AdditionAction;
+                    method = ApplicationActionCode.AdditionAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Update))
                 {
-                    method = ApplicationAction.EditAction;
+                    method = ApplicationActionCode.EditAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Delete))
                 {
-                    method = ApplicationAction.DeletionAction;
+                    method = ApplicationActionCode.DeletionAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Get))
                 {
-                    method = ApplicationAction.ViewingAction;
+                    method = ApplicationActionCode.ViewingAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Accept))
                 {
-                    method = ApplicationAction.AcceptAction;
+                    method = ApplicationActionCode.AcceptAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Reject))
                 {
-                    method = ApplicationAction.RejectAction;
+                    method = ApplicationActionCode.RejectAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Enable))
                 {
-                    method = ApplicationAction.EnableAction;
+                    method = ApplicationActionCode.EnableAction;
                 }
                 else if (actionName.Contains(LeillaKeys.Disable))
                 {
-                    method = ApplicationAction.DisableAction;
+                    method = ApplicationActionCode.DisableAction;
                 }
             }
 
-            response.Screen = screen;
-            response.Method = method;
+            response.ScreenCode = screen;
+            response.ActionCode = method;
             return response;
         }
-        public static GetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo)
+        public static OldGetAllScreensWithAvailableActionsResponse GetAllScreensWithAvailableActions(RequestInfo requestInfo, bool? IsForMenu = false)
         {
-            var response = new GetAllScreensWithAvailableActionsResponse();
+            var response = new OldGetAllScreensWithAvailableActionsResponse();
 
-            var allScreenCodes = requestInfo.Type == AuthenticationType.AdminPanel ?
+            var allScreenCodes = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                 Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
                 Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
 
             foreach (var tempScreenCode in allScreenCodes)
             {
-                dynamic screenCode = requestInfo.Type == AuthenticationType.AdminPanel ?
-                    (AdminPanelApplicationScreenCode)tempScreenCode:
+                dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                    (AdminPanelApplicationScreenCode)tempScreenCode :
                     (DawemAdminApplicationScreenCode)tempScreenCode;
 
-                var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                if (IsForMenu.HasValue && IsForMenu.Value && requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
+                {
+                    var screenName = screenCode.ToString();
+                    if (screenName.StartsWith(LeillaKeys.Employee) && screenName.Length > LeillaKeys.Employee.Length)
+                        continue;
+                }
+
+                var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
-                var screensWithAvailableActionsDTO = new ScreensWithAvailableActionsDTO
+                var screensWithAvailableActionsDTO = new OldScreenWithAvailableActionsDTO
                 {
                     ScreenCode = (int)screenCode,
                     ScreenName = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang),
-                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.Type)
+                    AvailableActions = GetScreenAvailableActions(screenCode.ToString(), requestInfo.AuthenticationType)
                 };
 
                 response.Screens.Add(screensWithAvailableActionsDTO);
             }
             return response;
         }
-        public static List<ApplicationAction> GetScreenAvailableActions(string screenName, AuthenticationType type)
+        public static List<ApplicationActionCode> GetScreenAvailableActions(string screenName, AuthenticationType type)
         {
-            var actions = new List<ApplicationAction>();
+            var actions = new List<ApplicationActionCode>();
 
             var assembly = Assembly.GetExecutingAssembly();
-            var controllerType = type == AuthenticationType.AdminPanel ?  
+            var controllerType = type == AuthenticationType.AdminPanel ?
                 assembly.GetTypes()
                 .Where(type => typeof(AdminPanelControllerBase).IsAssignableFrom(type))
                 .FirstOrDefault(c => c.Name == screenName + LeillaKeys.Controller) :
@@ -120,40 +129,90 @@ namespace Dawem.API.Helpers
                 {
                     if (methodName.Contains(LeillaKeys.Create))
                     {
-                        actions.Add(ApplicationAction.AdditionAction);
+                        actions.Add(ApplicationActionCode.AdditionAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Update))
                     {
-                        actions.Add(ApplicationAction.EditAction);
+                        actions.Add(ApplicationActionCode.EditAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Delete))
                     {
-                        actions.Add(ApplicationAction.DeletionAction);
+                        actions.Add(ApplicationActionCode.DeletionAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Get))
                     {
-                        actions.Add(ApplicationAction.ViewingAction);
+                        actions.Add(ApplicationActionCode.ViewingAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Accept))
                     {
-                        actions.Add(ApplicationAction.AcceptAction);
+                        actions.Add(ApplicationActionCode.AcceptAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Reject))
                     {
-                        actions.Add(ApplicationAction.RejectAction);
+                        actions.Add(ApplicationActionCode.RejectAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Enable))
                     {
-                        actions.Add(ApplicationAction.EnableAction);
+                        actions.Add(ApplicationActionCode.EnableAction);
                     }
                     else if (methodName.Contains(LeillaKeys.Disable))
                     {
-                        actions.Add(ApplicationAction.DisableAction);
+                        actions.Add(ApplicationActionCode.DisableAction);
                     }
                 }
             }
 
             return actions.Distinct().Order().ToList();
+        }
+        public static GetScreensForDropDownResponse GetAllScreens(RequestInfo requestInfo)
+        {
+            var response = new GetScreensForDropDownResponse();
+
+            var allScreenCodes = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                Enum.GetValues(typeof(AdminPanelApplicationScreenCode)).Cast<int>().ToList() :
+                Enum.GetValues(typeof(DawemAdminApplicationScreenCode)).Cast<int>().ToList();
+
+            foreach (var tempScreenCode in allScreenCodes)
+            {
+                dynamic screenCode = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
+                    (AdminPanelApplicationScreenCode)tempScreenCode :
+                    (DawemAdminApplicationScreenCode)tempScreenCode;
+
+                var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
+                var screensWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
+                {
+                    Id = (int)screenCode,
+                    Name = TranslationHelper.GetTranslation(screenCode.ToString() + screenNameSuffix, requestInfo.Lang)
+                };
+
+                response.Screens.Add(screensWithAvailableActionsDTO);
+            }
+            return response;
+        }
+        public static GetActionsForDropDownResponse GetAllActions(RequestInfo requestInfo)
+        {
+            var response = new GetActionsForDropDownResponse();
+
+            var allActionCodes = Enum.GetValues(typeof(ApplicationActionCode)).Cast<int>().ToList();
+
+            foreach (var tempActionCode in allActionCodes)
+            {
+                dynamic actionCode = (ApplicationActionCode)tempActionCode;
+
+                var actionNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelAction :
+                    LeillaKeys.DawemAction;
+
+                var actionsWithAvailableActionsDTO = new BaseGetForDropDownResponseModel
+                {
+                    Id = (int)actionCode,
+                    Name = TranslationHelper.GetTranslation(actionCode.ToString(), requestInfo.Lang)
+                };
+
+                response.Actions.Add(actionsWithAvailableActionsDTO);
+            }
+            return response;
         }
     }
 }

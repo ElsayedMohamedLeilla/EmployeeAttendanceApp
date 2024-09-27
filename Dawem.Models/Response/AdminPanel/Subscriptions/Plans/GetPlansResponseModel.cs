@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
-        public decimal EmployeeCost { get; set; }
+        public string EmployeeCost { get; set; }
         public bool IsTrial { get; set; }
         public bool IsActive { get; set; }
         public int SubscriptionsCount { get; set; }

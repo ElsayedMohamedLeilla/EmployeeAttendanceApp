@@ -14,5 +14,6 @@ namespace Dawem.Models.Requests.Justifications
         public List<IFormFile> Attachments { get; set; }
         [JsonIgnore]
         public List<string> AttachmentsNames { get; set; }
+        public string Notes { get; set; }
     }
 }

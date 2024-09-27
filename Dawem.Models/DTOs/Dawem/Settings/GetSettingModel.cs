@@ -1,6 +1,6 @@
 ﻿using Dawem.Enums.Generals;
 
-namespace Dawem.Models.Dtos.Dawem.Attendances
+namespace Dawem.Models.Dtos.Dawem.Settings
 {
     public class GetSettingModel
     {

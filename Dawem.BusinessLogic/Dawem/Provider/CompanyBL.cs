@@ -347,6 +347,12 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
+            #region Import Default Data
+
+
+            
+            #endregion
+
             #region Handle Response
 
             await unitOfWork.CommitAsync();
@@ -414,6 +420,8 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             var getCompany = await repositoryManager.CompanyRepository
                 .GetEntityByConditionWithTrackingAsync(company => !company.IsDeleted
             && company.Id == model.Id);
+            getCompany.Name = model.Name;
+            getCompany.NumberOfEmployees = model.NumberOfEmployees;
             getCompany.ModifiedDate = DateTime.Now;
             getCompany.ModifyUserId = requestInfo.UserId;
             getCompany.Email = model.Email;

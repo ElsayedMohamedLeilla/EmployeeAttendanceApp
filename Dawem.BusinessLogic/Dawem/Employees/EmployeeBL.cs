@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Employees;
+using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Employees;
 using Dawem.Contract.Repository.Manager;
@@ -11,16 +13,21 @@ using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Excel;
 using Dawem.Models.Dtos.Dawem.Excel.Employees;
+using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Employees.Employees;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Dawem.Validation.FluentValidation.Dawem.Employees.Employees;
 using Microsoft.EntityFrameworkCore;
+
+
 
 namespace Dawem.BusinessLogic.Dawem.Employees
 {
@@ -32,12 +39,14 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly IMailBL mailBL;
+        private readonly INotificationHandleBL notificationHandleBL;
         public EmployeeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IEmployeeBLValidation _employeeBLValidation)
+           IEmployeeBLValidation _employeeBLValidation, IMailBL _mailBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -45,6 +54,8 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employeeBLValidation = _employeeBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            notificationHandleBL = _notificationHandleBL;
+            mailBL = _mailBL;
         }
         public async Task<int> Create(CreateEmployeeModel model)
         {
@@ -89,6 +100,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #region Insert Employee
 
+
             #region Set Employee code
 
             var getNextCode = await repositoryManager.EmployeeRepository
@@ -107,6 +119,41 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employee.Code = getNextCode;
             repositoryManager.EmployeeRepository.Insert(employee);
             await unitOfWork.SaveAsync();
+
+            #region Send Email RegistrationInfo
+            if (employee.IsActive)
+            {
+                #region get CompanyVerficationCode
+                var CompanyVerificationCode = repositoryManager.CompanyRepository.Get(c => c.Id == requestInfo.CompanyId).Select(ss => ss.IdentityCode).FirstOrDefault();
+                #endregion
+                var verifyEmail = new VerifyEmailModel
+                {
+                    Email = employee.Email,
+                    Subject = TranslationHelper.GetTranslation(AmgadKeys.RegistrationInformation, requestInfo?.Lang),
+                    Body = $@"
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>{TranslationHelper.GetTranslation(AmgadKeys.RegistrationInformation, requestInfo?.Lang)} </title>
+                            </head>
+                            <body>
+                                <p>
+                                    {TranslationHelper.GetTranslation(AmgadKeys.PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation, requestInfo?.Lang)}
+                                </p>
+                                <p>
+                                    <strong>  {TranslationHelper.GetTranslation(AmgadKeys.CompanyVerificationCode, requestInfo?.Lang) + " : " + LeillaKeys.Space + CompanyVerificationCode} </strong> 
+                                </p>
+                                <p>
+                                    <strong>  {TranslationHelper.GetTranslation(AmgadKeys.EmploymentNumber, requestInfo?.Lang) + " : " + LeillaKeys.Space + employee.EmployeeNumber} </strong> 
+                                </p>
+                            </body>
+                            </html>
+                    "
+                };
+
+                await mailBL.SendEmail(verifyEmail);
+            }
+            #endregion
 
             #endregion
 
@@ -161,6 +208,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetEntityByConditionWithTrackingAsync(employee => !employee.IsDeleted
             && employee.Id == model.Id);
+
+            var oldScheduleId = getEmployee.ScheduleId;
+            var newScheduleId = model.ScheduleId;
+
             getEmployee.Name = model.Name;
             getEmployee.DepartmentId = model.DepartmentId;
             getEmployee.IsActive = model.IsActive;
@@ -218,7 +269,107 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #endregion
 
+            //await unitOfWork.SaveAsync();
+
+            #region Enable Related user
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
+          
+            #endregion
+            if(user != null)
+            {
+                if (model.IsActive == true)
+                {
+                    user.IsActive = true;
+                }
+                else
+                {
+                    user.IsActive = true;
+                }
+            }
+            
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Notifications
+
+            if (oldScheduleId != newScheduleId)
+            {
+                var employeeIds = new List<int> { getEmployee.Id };
+
+                var scheduleNames = await repositoryManager.ScheduleRepository.
+                    Get(s => !s.IsDeleted && (s.Id == oldScheduleId || s.Id == newScheduleId)).
+                    Select(s =>
+                    new
+                    {
+                        s.Id,
+                        s.Name
+                    }).ToListAsync();
+
+                var oldScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == oldScheduleId)?.Name;
+                var newScheduleName = scheduleNames?.FirstOrDefault(s => s.Id == newScheduleId)?.Name;
+
+                var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId > 0 &
+                employeeIds.Contains(s.EmployeeId.Value)).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
+
+                #region Handle Notification Description
+
+                var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                       Select(l => new ActiveLanguageModel
+                       {
+                           Id = l.Id,
+                           ISO2 = l.ISO2
+                       }).ToListAsync();
+
+                foreach (var language in getActiveLanguages)
+                {
+                    notificationDescriptions.Add(new NotificationDescriptionModel
+                    {
+                        LanguageIso2 = language.ISO2,
+                        Description = TranslationHelper.GetTranslation(LeillaKeys.YourScheduleHaveBeenChangedToNewSchedule, language.ISO2) +
+                            LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.OldSchedule, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace +
+                            (oldScheduleName ?? TranslationHelper.GetTranslation(LeillaKeys.NotExist, language.ISO2)) +
+                            LeillaKeys.Space +
+                            TranslationHelper.GetTranslation(LeillaKeys.NewSchedule, language.ISO2) +
+                            LeillaKeys.ColonsThenSpace +
+                            (newScheduleName ?? TranslationHelper.GetTranslation(LeillaKeys.NotExist, language.ISO2))
+                    });
+                }
+
+                #endregion
+
+                var handleNotificationModel = new HandleNotificationModel
+                {
+                    NotificationUsers = notificationUsers,
+                    EmployeeIds = employeeIds,
+                    NotificationType = NotificationType.NewChangeInSchedule,
+                    NotificationStatus = NotificationStatus.Info,
+                    Priority = NotificationPriority.Medium,
+                    NotificationDescriptions = notificationDescriptions,
+                    ActiveLanguages = getActiveLanguages
+                };
+
+                await notificationHandleBL.HandleNotifications(handleNotificationModel);
+            }
 
             #endregion
 
@@ -414,12 +565,9 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             employee.Enable();
 
             #region Enable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
-            foreach (var user in users)
-            {
-                user.IsActive = true;
-                await unitOfWork.SaveAsync();
-            }
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == employeeId);
+            if(user != null)
+            user.IsActive = true;
             #endregion
             await unitOfWork.SaveAsync();
             return true;
@@ -431,15 +579,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             employee.Disable(model.DisableReason);
             #region Disable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.IsActive && d.EmployeeId == model.Id).ToListAsync();
-            foreach (var user in users)
-            {
-                user.DisableReason = "Employee Disabled";
-                user.IsActive = false;
-                await unitOfWork.SaveAsync();
-            }
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
+            user.DisableReason = "Employee Disabled";
+            user.IsActive = false;
             #endregion
-
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -448,15 +591,10 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             var employee = await repositoryManager.EmployeeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == employeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
             employee.Delete();
-            #region Enable Related user
-            var users = await repositoryManager.UserRepository.Get(d => !d.IsDeleted && d.EmployeeId == employeeId).ToListAsync();
-            foreach (var user in users)
-            {
-                user.IsDeleted = true;
-                await unitOfWork.SaveAsync();
-            }
+            #region Delete Related user
+            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == employeeId);
+            user.IsDeleted = true;
             #endregion
-
             await unitOfWork.SaveAsync();
             return true;
         }
@@ -868,37 +1006,38 @@ namespace Dawem.BusinessLogic.Dawem.Employees
         }
         public async Task<GetEmployeesForDropDownResponse> GetForDropDownEmployeeNotHaveUser(GetEmployeesCriteria criteria)
         {
-            List<int> employeeAssiotedToUserIdes = await repositoryManager.UserRepository.Get(u => !u.IsDeleted &
-            u.IsActive & u.CompanyId == requestInfo.CompanyId
-            && (u.EmployeeId > 0 &&  u.EmployeeId == null)
-            ).Select(e => e.EmployeeId.Value).ToListAsync();
-
-            var employeeList = await repositoryManager.EmployeeRepository.Get(e =>
-                !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && !employeeAssiotedToUserIdes.Contains(e.Id)).OrderByDescending(eo => eo.Id)
-                .ToListAsync();
-
+            criteria.IsFreeEmployee = true;
+            criteria.IsActive = true;
+            var employeeRepository = repositoryManager.EmployeeRepository;
+            var query = employeeRepository.GetAsQueryable(criteria);
 
             #region paging
 
             int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
             int take = PagingHelper.Take(criteria.PageSize);
 
-            var queryPaged = criteria.GetPagingEnabled() ? employeeList.Skip(skip).Take(take) : employeeList;
+            #region sorting
+
+            var queryOrdered = employeeRepository.OrderBy(query, nameof(Employee.Id), LeillaKeys.Desc);
+
+            #endregion
+
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 
             #region Handle Response
 
-            var employeesList = queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
+            var employeesList = await queryPaged.Select(e => new GetEmployeesForDropDownResponseModel
             {
                 Id = e.Id,
                 Name = e.Name
-            }).ToList();
+            }).ToListAsync();
 
             return new GetEmployeesForDropDownResponse
             {
                 Employees = employeesList,
-                TotalCount = employeeList.Count()
+                TotalCount = await query.CountAsync()
             };
 
             #endregion

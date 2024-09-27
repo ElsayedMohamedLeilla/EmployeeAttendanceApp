@@ -9,15 +9,19 @@ using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using LinqKit;
+using System.Linq;
 
 namespace Dawem.Repository.UserManagement
 {
     public class UserRepository : GenericRepository<MyUser>, IUserRepository
     {
         private readonly RequestInfo requestInfo;
+        private ApplicationDBContext Context { get; set; }
+
         public UserRepository(RequestInfo _requestInfo, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
+            Context = unitOfWork.Context;
         }
 
         public IQueryable<MyUser> GetAsQueryableOld(UserSearchCriteria criteria, string includeProperties = LeillaKeys.EmptyString)
@@ -38,11 +42,11 @@ namespace Dawem.Repository.UserManagement
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().Contains(criteria.FreeText));
+                userPredicate = userPredicate.Start(x => x.UserName.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                userPredicate = userPredicate.Or(x => x.PhoneNumber.ToLower().Trim().StartsWith(criteria.FreeText));
             }
             if (criteria.Code != null)
             {
@@ -51,7 +55,7 @@ namespace Dawem.Repository.UserManagement
 
             if (!string.IsNullOrWhiteSpace(criteria.UserName))
             {
-                userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().Contains(criteria.UserName.ToLower().Trim()));
+                userPredicate = userPredicate.And(x => x.UserName.ToLower().Trim().StartsWith(criteria.UserName.ToLower().Trim()));
             }
 
             if (criteria.IsActive != null)
@@ -68,24 +72,27 @@ namespace Dawem.Repository.UserManagement
             var predicate = PredicateBuilder.New<MyUser>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<MyUser>(true);
 
-            if (requestInfo.Type == AuthenticationType.AdminPanel)
+            if (requestInfo.AuthenticationType == AuthenticationType.AdminPanel)
             {
                 predicate = predicate.And(e => e.CompanyId == null);
             }
-            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
+            else if (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
-
-            predicate = predicate.And(e => e.Type == requestInfo.Type);
+            if (criteria.Id != null)
+            {
+                predicate = predicate.And(e => e.Id == criteria.Id);
+            }
+            predicate = predicate.And(e => e.Type == requestInfo.AuthenticationType);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.Email != null && x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Email != null && x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Employee != null && x.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
@@ -105,6 +112,13 @@ namespace Dawem.Repository.UserManagement
             var Query = Get(predicate);
             return Query;
 
+        }
+        public List<int?> GetEmployeeIdsNotConnectedToUser()
+        {
+            var employeeIdsWithUsers = Context.MyUser.Select(u => u.EmployeeId).ToList();
+            var allEmployeeIds = Context.Employees.Select(e => e.Id).ToList();
+            var result = allEmployeeIds.Where(id => !employeeIdsWithUsers.Contains(id)).Select(id => (int?)id).ToList();
+            return (List<int?>)result;
         }
     }
 

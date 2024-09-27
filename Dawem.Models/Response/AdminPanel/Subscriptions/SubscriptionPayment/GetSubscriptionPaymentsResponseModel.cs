@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.Plans
+﻿namespace Dawem.Models.Response.AdminPanel.Subscriptions.SubscriptionPayment
 {
     public class GetSubscriptionPaymentsResponseModel
     {
@@ -7,6 +7,5 @@
         public string SubscriptionInfo { get; set; }
         public bool IsActive { get; set; }
         public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
     }
 }

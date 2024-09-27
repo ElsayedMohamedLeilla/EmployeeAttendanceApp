@@ -25,13 +25,15 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestPermission => !requestPermission.Request.IsDeleted);
 
             predicate = predicate.And(requestPermission => requestPermission.Request.CompanyId == requestInfo.CompanyId);
 
@@ -82,13 +84,15 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.PermissionType != null && x.PermissionType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestPermission => !requestPermission.Request.IsDeleted && !requestPermission.IsDeleted);
 
             predicate = predicate.And(requestPermission => requestPermission.Request.CompanyId == requestInfo.CompanyId);
 

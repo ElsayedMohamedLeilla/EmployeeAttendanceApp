@@ -9,7 +9,7 @@ namespace Dawem.Models.Response.Dawem.Permissions.Permissions
         public int? ResponsibilityId { get; set; }
         public int? UserId { get; set; }
         public int Code { get; set; }
-        public List<PermissionScreenResponseModel> PermissionScreens { get; set; }
+        public List<PermissionScreenResponseModel> Screens { get; set; }
         public bool IsActive { get; set; }
     }
 }

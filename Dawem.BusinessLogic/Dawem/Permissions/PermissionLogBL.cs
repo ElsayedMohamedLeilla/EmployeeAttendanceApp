@@ -2,7 +2,6 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
-using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
@@ -27,16 +26,19 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var permissionLogRepository = repositoryManager.PermissionLogRepository;
             var query = permissionLogRepository.GetAsQueryable(model);
 
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             #region paging
+
             int skip = PagingHelper.Skip(model.PageNumber, model.PageSize);
             int take = PagingHelper.Take(model.PageSize);
+
             #region sorting
             var queryOrdered = permissionLogRepository.OrderBy(query, nameof(Permission.Id), LeillaKeys.Desc);
             #endregion
-            var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+
+            var queryPaged = model.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
             #endregion
 
             #region Handle Response
@@ -45,8 +47,9 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             {
                 Id = pl.Id,
                 UserName = pl.User.Name,
-                ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
-                IsActive = pl.IsActive,
+                ScreenName = pl.Screen.MenuItemNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang)
             }).ToListAsync();
 
             return new GetPermissionLogsResponse
@@ -55,25 +58,26 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 TotalCount = await query.CountAsync()
             };
             #endregion
-
         }
         public async Task<GetPermissionLogInfoResponseModel> GetInfo(int permissionLogId)
         {
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             var permissionLog = await repositoryManager.PermissionLogRepository.
                 Get(permissionLog => permissionLog.Id == permissionLogId && !permissionLog.IsDeleted &&
                 ((requestInfo.CompanyId > 0 && permissionLog.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permissionLog.CompanyId == null)) &&
-                permissionLog.Type == requestInfo.Type)
+                permissionLog.Type == requestInfo.AuthenticationType)
                 .Select(pl => new GetPermissionLogInfoResponseModel
                 {
                     UserName = pl.User.Name,
-                    ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(pl.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
+                    ScreenName = pl.Screen.MenuItemNameTranslations.
+                    FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
-                    Date = pl.Date,
-                    IsActive = pl.IsActive
+                    DateAndTime = pl.Company.Country.TimeZoneToUTC != null ?
+                    pl.DateUTC.AddHours((double)pl.Company.Country.TimeZoneToUTC.Value) :
+                    pl.DateUTC.AddHours(2),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permissionLog;

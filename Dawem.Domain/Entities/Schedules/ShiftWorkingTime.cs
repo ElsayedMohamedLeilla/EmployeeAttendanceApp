@@ -19,6 +19,7 @@ namespace Dawem.Domain.Entities.Schedules
         public TimeSpan CheckInTime { get; set; }
         public TimeSpan CheckOutTime { get; set; }
         public int AllowedMinutes { get; set; }
+        public bool IsTwoDaysShift { get; set; }
         public List<ScheduleDay> ScheduleDays { get; set; }
     }
 }

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Dawem.API.Areas.AdminPanel.Controllers.Core.UserManagement
+namespace Dawem.API.Areas.AdminPanel.Controllers.Core
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class UserController : AdminPanelControllerBase
     {
         private readonly IUserBL userBL;
@@ -96,7 +96,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Core.UserManagement
             return Success(await userBL.AdminPanelGetById(userId));
         }
         [HttpDelete]
-        
+
         public async Task<ActionResult> Delete(int userId)
         {
             if (userId < 1)

@@ -28,15 +28,23 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
                .When(m => m.ForType == ForResponsibilityOrUser.Responsibility)
                .WithMessage(LeillaKeys.SorryYouMustNotChooseUserForPermissionWithTypeResponsibility);
 
-            RuleFor(model => model.PermissionScreens)
+            RuleFor(model => model.Screens)
                 .Must(model => model != null && model.Count > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseOneScreenAtLeast);
 
-            RuleFor(model => model.PermissionScreens)
+            RuleFor(model => model.Screens)
+                .Must(model => model.All(s => s.ScreenId > 0))
+                .WithMessage(LeillaKeys.SorryYouMustEnterScreenId);
+
+            /*RuleFor(model => model.Screens)
                 .Must(model => model.GroupBy(s => s.ScreenCode).ToList().All(g => g.Count() == 1))
+                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreens);*/
+
+            RuleFor(model => model.Screens)
+                .Must(model => model.GroupBy(s => s.ScreenId).ToList().All(g => g.Count() == 1))
                 .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreens);
 
-            RuleForEach(x => x.PermissionScreens).SetValidator(new CreatePermissionScreenModelValidator());
+            RuleForEach(x => x.Screens).SetValidator(new CreatePermissionScreenModelValidator());
 
         }
     }
@@ -44,27 +52,35 @@ namespace Dawem.Validation.FluentValidation.Dawem.Permissons
     {
         public CreatePermissionScreenModelValidator()
         {
-            RuleFor(model => model.PermissionScreenActions)
+            /*RuleFor(model => model.ScreenCode).
+                Must(screenCode => screenCode >= 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenCode);*/
+
+            RuleFor(model => model.ScreenId).
+                Must(screenId => screenId >= 0).
+                WithMessage(LeillaKeys.SorryYouMustEnterCorrectScreenId);
+
+            RuleFor(model => model.Actions)
                 .Must(model => model != null && model.Count > 0)
                 .WithMessage(LeillaKeys.SorryYouMustChooseOneActionAtLeast);
 
-            RuleFor(model => model.PermissionScreenActions)
-               .Must(model => model.GroupBy(s => s.ActionCode).ToList().All(g => g.Count() == 1))
+            RuleFor(model => model.Actions)
+               .Must(model => model.GroupBy(actionCode => actionCode).ToList().All(g => g.Count() == 1))
                .WithMessage(LeillaKeys.SorryYouMustNotDuplicateScreenActions);
 
-            RuleFor(model => model.PermissionScreenActions)
-               .Must(model => model.Any(a => a.ActionCode == ApplicationAction.ViewingAction))
+            RuleFor(model => model.Actions)
+               .Must(model => model.Any(actionCode => actionCode == ApplicationActionCode.ViewingAction))
                .WithMessage(LeillaKeys.SorryYouMustSelectViewingActionWhenSelectAnyActionForAnyScreen);
 
-            RuleForEach(x => x.PermissionScreenActions).SetValidator(new CreatePermissionScreenActionModelValidator());
+            RuleForEach(x => x.Actions).SetValidator(new CreatePermissionScreenActionModelValidator());
 
         }
     }
-    public class CreatePermissionScreenActionModelValidator : AbstractValidator<PermissionScreenActionModel>
+    public class CreatePermissionScreenActionModelValidator : AbstractValidator<ApplicationActionCode>
     {
         public CreatePermissionScreenActionModelValidator()
         {
-            RuleFor(model => model.ActionCode).IsInEnum()
+            RuleFor(actionCode => actionCode).IsInEnum()
                 .WithMessage(LeillaKeys.SorryYouMustEnterCorrectAction);
 
         }

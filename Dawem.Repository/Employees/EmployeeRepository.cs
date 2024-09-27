@@ -1,14 +1,14 @@
 ﻿using Dawem.Contract.Repository.Employees;
+using Dawem.Contract.Repository.UserManagement;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Employees;
-using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
-using Dawem.Models.DTOs.Dawem.Employees.Employees;
 using Dawem.Models.DTOs.Dawem.Generic;
+using DocumentFormat.OpenXml.InkML;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +17,16 @@ namespace Dawem.Repository.Employees
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
         private readonly RequestInfo requestInfo;
-        public EmployeeRepository(IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
+        private readonly IUserRepository userRepository;
+        private ApplicationDBContext Context { get; set; }
+
+
+        public EmployeeRepository(IUserRepository _userRepository, IUnitOfWork<ApplicationDBContext> unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo) : base(unitOfWork, _generalSetting)
         {
             requestInfo = _requestInfo;
+            userRepository = _userRepository;
+            Context = unitOfWork.Context;
+
         }
         public IQueryable<Employee> GetAsQueryable(GetEmployeesCriteria criteria)
         {
@@ -32,12 +39,12 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
@@ -127,6 +134,18 @@ namespace Dawem.Repository.Employees
                         break;
                 }
             }
+            if (criteria.IsFreeEmployee)
+            {
+                var employeeIdsWithUsers = Context.MyUser.Where(c=> c.CompanyId == requestInfo.CompanyId).Select(u => u.EmployeeId).ToList();
+                var allEmployeeIds = Context.Employees.Where(c => c.CompanyId == requestInfo.CompanyId).Select(e => e.Id).ToList();
+                var result = allEmployeeIds.Where(id => !employeeIdsWithUsers.Contains(id)).Select(id => (int?)id).ToList();
+
+                criteria.FreeEmployeeIds = result;
+                if (criteria.FreeEmployeeIds != null && criteria.FreeEmployeeIds.Count() > 0)
+                {
+                    predicate = predicate.And(e => criteria.FreeEmployeeIds.Contains(e.Id));
+                }
+            }
 
             predicate = predicate.And(inner);
             var Query = Get(predicate);
@@ -144,14 +163,14 @@ namespace Dawem.Repository.Employees
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Email.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.Address.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.JobTitle.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Schedule.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.DirectManager.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Email.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.MobileNumber.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Address.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {

@@ -21,23 +21,23 @@ namespace Dawem.Repository.Others
             var predicate = PredicateBuilder.New<Permission>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<Permission>(true);
 
-            if (requestInfo.Type == AuthenticationType.AdminPanel)
+            if (requestInfo.AuthenticationType == AuthenticationType.AdminPanel)
             {
                 predicate = predicate.And(e => e.CompanyId == null);
             }
-            else if (requestInfo.Type == AuthenticationType.DawemAdmin)
+            else if (requestInfo.AuthenticationType == AuthenticationType.DawemAdmin)
             {
                 predicate = predicate.And(e => e.CompanyId == requestInfo.CompanyId);
             }
 
-            predicate = predicate.And(e => e.Type == requestInfo.Type);
+            predicate = predicate.And(e => e.AuthenticationType == requestInfo.AuthenticationType);
 
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Or(x => x.Responsibility.Name != null && x.Responsibility.Name.Contains(criteria.FreeText));
-                inner = inner.Or(x => x.User != null && x.User.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Or(x => x.Responsibility.Name != null && x.Responsibility.Name.StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.User != null && x.User.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
@@ -60,9 +60,9 @@ namespace Dawem.Repository.Others
             {
                 predicate = predicate.And(e => e.IsActive == criteria.IsActive);
             }
-            if (criteria.ScreenCode != null)
+            if (criteria.ScreenId != null)
             {
-                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.ScreenCode == criteria.ScreenCode));
+                predicate = predicate.And(e => e.PermissionScreens.Any(ps => ps.ScreenId == criteria.ScreenId));
             }
             if (criteria.ActionCode != null)
             {

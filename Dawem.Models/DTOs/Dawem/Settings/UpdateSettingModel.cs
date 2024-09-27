@@ -1,4 +1,4 @@
-﻿namespace Dawem.Models.Dtos.Dawem.Core.Responsibilities
+﻿namespace Dawem.Models.Dtos.Dawem.Settings
 {
     public class UpdateSettingModel
     {

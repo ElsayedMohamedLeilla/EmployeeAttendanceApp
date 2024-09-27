@@ -15,6 +15,7 @@ using Dawem.Models.Dtos.Dawem.Excel.EmployeeAttendances;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Dashboard;
+using Dawem.Models.Response.Dawem.ReportCritrias;
 using Dawem.Translations;
 using Dawem.Validation.BusinessValidation.Dawem.ExcelValidations;
 using Microsoft.Data.SqlClient;
@@ -50,19 +51,18 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Hanlde FingerPrint
 
-            var getAttandanceId = await repositoryManager
+            var getEmployeeAttendance = await repositoryManager
                 .EmployeeAttendanceRepository
-                .Get(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
+                .GetWithTracking(e => !e.IsDeleted && e.EmployeeId == validationResult.EmployeeId
                 && e.LocalDate.Date == validationResult.LocalDateTime.Date)
-                .Select(a => a.Id)
                 .FirstOrDefaultAsync();
 
             //checkout or summon
-            if (getAttandanceId > 0)
+            if (getEmployeeAttendance != null)
             {
                 repositoryManager.EmployeeAttendanceCheckRepository.Insert(new EmployeeAttendanceCheck
                 {
-                    EmployeeAttendanceId = getAttandanceId,
+                    EmployeeAttendanceId = getEmployeeAttendance.Id,
                     SummonId = validationResult.SummonId,
                     ZoneId = validationResult.ZoneId,
                     FingerPrintType = validationResult.FingerPrintType,
@@ -76,6 +76,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     RecognitionWay.FingerPrint : model.RecognitionWay,
                     FingerprintSource = FingerprintSource.MobileDevice
                 });
+
+                getEmployeeAttendance.FingerPrintStatus = AttendanceFingerPrintStatus.CheckInAndCheckOut;
+                await unitOfWork.SaveAsync();
 
                 #region Summon Log
 
@@ -117,13 +120,15 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ShiftId = validationResult.ShiftId,
                     ShiftCheckInTime = validationResult.ShiftCheckInTime,
                     ShiftCheckOutTime = validationResult.ShiftCheckOutTime,
+                    IsTwoDaysShift = validationResult.IsTwoDaysShift,
                     AllowedMinutes = validationResult.AllowedMinutes,
                     AddedApplicationType = requestInfo.ApplicationType,
                     AddUserId = requestInfo.UserId,
                     LocalDate = validationResult.LocalDateTime,
                     EmployeeId = validationResult.EmployeeId,
                     IsActive = true,
-                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new EmployeeAttendanceCheck() {
+                    FingerPrintStatus = AttendanceFingerPrintStatus.CheckIn,
+                    EmployeeAttendanceChecks = new List<EmployeeAttendanceCheck> { new() {
                         FingerPrintType = validationResult.FingerPrintType,
                         IsActive = true,
                         ZoneId = validationResult.ZoneId,
@@ -186,6 +191,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     ShiftCheckInTime = a.ShiftCheckInTime,
                     ShiftCheckOutTime = a.ShiftCheckOutTime,
                     AllowedMinutes = a.AllowedMinutes,
+                    TotalWorkingHours = a.TotalWorkingHours,
                     EmployeeAttendanceChecks = a.EmployeeAttendanceChecks != null ?
                     a.EmployeeAttendanceChecks.Select(c => new EmployeeAttendanceCheck
                     {
@@ -231,6 +237,13 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 var checkOutDateTime = employeeAttendance?.EmployeeAttendanceChecks?
                     .Where(c => c.FingerPrintType == FingerPrintType.CheckOut)?
                     .OrderByDescending(c => c.Id)?.FirstOrDefault()?.FingerPrintDate;
+
+                if (checkInDateTime != null || checkOutDateTime != null)
+                {
+                    var schedu656leId = employeePlans.Where(s => s.DateFrom.Date <= date.Date)
+                    .OrderByDescending(c => c.DateFrom.Date)?.FirstOrDefault()?.ScheduleId;
+                }
+
 
                 #region Check For Vacation
 
@@ -278,8 +291,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             CheckOutStatus = checkOutDateTime == null ? EmployeeAttendanceStatus.Error :
                             checkOutDateTime.Value.TimeOfDay < employeeAttendance.ShiftCheckOutTime ? EmployeeAttendanceStatus.Warning :
                             EmployeeAttendanceStatus.Success,
-                            TotalTime = checkOutDateTime != null ?
-                            TimeOnly.FromTimeSpan(checkOutDateTime.Value - checkInDateTime.Value).ToString("HH:mm:ss") : null,
+                            TotalTime = checkOutDateTime != null && checkOutDateTime != null ?
+                            new DateTime((checkOutDateTime.Value - checkInDateTime.Value).Ticks).ToString("hh:mm") +
+                            LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
                             Notes = isScheduleVacationDay ?
                             TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                         }
@@ -355,7 +369,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -364,7 +378,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -398,10 +412,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 TotalCount = await query.CountAsync()
             };
 
-        }
-        public static string TranslateAmAndPm(string AmOrPm, string lang)
-        {
-            return LeillaKeys.Space + TranslationHelper.GetTranslation(AmOrPm, lang);
         }
         public static string GetWayOfRecognition(RecognitionWay MinCheckinRecognitionWay, RecognitionWay MaxCheckOutRecognitionWay, string lang)
         {
@@ -474,7 +484,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
-                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Min(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckIn)
                     .Min(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -483,7 +493,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut) != null ?
                      empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
-                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
+                    .Max(check => check.FingerPrintDate).ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(empAttendance.EmployeeAttendanceChecks
                     .Where(check => check.FingerPrintType == FingerPrintType.CheckOut)
                     .Max(check => check.FingerPrintDate).ToString("tt"), requestInfo.Lang) : null,
 
@@ -517,17 +527,21 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     OverTime = (empAttendance.TotalOverTimeHours ?? 0) + LeillaKeys.Space +
                     TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
 
+                    BreakHours = (empAttendance.TotalBreakHours ?? 0) + LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang),
+
 
                     Fingerprints = empAttendance.EmployeeAttendanceChecks
                     .Select(employeeAttendanceCheck => new GetEmployeeAttendanceInfoFingerprintDTO
                     {
                         ZoneName = employeeAttendanceCheck.Zone.Name,
-                        Time = employeeAttendanceCheck.FingerPrintDate.ToString("dd-MM-yyyy hh:mm") + TranslateAmAndPm(employeeAttendanceCheck.FingerPrintDate.ToString("tt"), requestInfo.Lang),
+                        Time = employeeAttendanceCheck.FingerPrintDate.ToString("dd-MM-yyyy hh:mm") + DateHelper.TranslateAmAndPm(employeeAttendanceCheck.FingerPrintDate.ToString("tt"), requestInfo.Lang),
                         Type = employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckIn ? TranslationHelper.GetTranslation(AmgadKeys.AttendanceRegistration, requestInfo.Lang) :
                         employeeAttendanceCheck.FingerPrintType == FingerPrintType.CheckOut ? TranslationHelper.GetTranslation(AmgadKeys.DismissalRegistration, requestInfo.Lang) :
-                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
-                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
-                        AmgadKeys.Unknown,
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakIn ? TranslationHelper.GetTranslation(AmgadKeys.StartABreak, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.BreakOut ? TranslationHelper.GetTranslation(AmgadKeys.FinishABreak, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerPrintType == FingerPrintType.Summon ? TranslationHelper.GetTranslation(AmgadKeys.Summon, requestInfo.Lang) :
+                        TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
                         RecognitionWay = employeeAttendanceCheck.RecognitionWay == RecognitionWay.FingerPrint ? TranslationHelper.GetTranslation(AmgadKeys.FingerPrint, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.NotSet ? TranslationHelper.GetTranslation(AmgadKeys.NotSet, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.FaceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.FaceRecognition, requestInfo.Lang) :
@@ -535,7 +549,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.VoiceRecognition ? TranslationHelper.GetTranslation(AmgadKeys.VoiceRecognition, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
-                        AmgadKeys.Unknown,
+                         TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
                     }).ToList()
 
 
@@ -651,23 +665,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
             #region Delays
 
-            var dayTotalDelaysCount = await employeeRepository.Get(employee => !employee.IsDeleted &&
-            employee.CompanyId == currentCompanyId &&
-            employee.ScheduleId != null &&
-            employee.Schedule.ScheduleDays != null &&
-            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay) != null &&
-            employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift != null &&
-            clientLocalTimeOnly >= employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime &&
-            employee.EmployeeAttendances != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate) != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks != null &&
-            employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks.FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn) != null &&
-
-            EF.Functions.DateDiffMinute((DateTime)(object)employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.CheckInTime,
-            (DateTime)(object)employee.EmployeeAttendances.FirstOrDefault(e => !e.IsDeleted && e.LocalDate.Date == clientLocalDate).EmployeeAttendanceChecks
-            .FirstOrDefault(e => !e.IsDeleted && e.FingerPrintType == FingerPrintType.CheckIn).FingerPrintDate)
-            > employee.Schedule.ScheduleDays.FirstOrDefault(d => !d.IsDeleted && d.WeekDay == clientLocalDateWeekDay).Shift.AllowedMinutes)
-                .CountAsync();
+            var dayTotalDelaysCount = await employeeAttendanceRepository.
+                Get(ea => !ea.IsDeleted && ea.CompanyId == currentCompanyId &&
+                ea.LocalDate.Date == clientLocalDate && ea.CheckInDateTime != null &&
+                EF.Functions.DateDiffMinute((DateTime)(object)ea.ShiftCheckInTime, (DateTime)(object)ea.CheckInDateTime.Value.TimeOfDay) > ea.AllowedMinutes).
+                 CountAsync();
 
             #endregion
 
@@ -684,7 +686,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             #endregion
 
         }
-
         public async Task<MemoryStream> ExportDraft()
         {
             EmptyExcelDraftModelDTO employeeAttendanceHeaderDraftDTO = new();
@@ -693,7 +694,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             employeeAttendanceHeaderDraftDTO.ExcelExportScreen = ExcelExportScreen.EmployeeAttendance;
             return ExcelManager.ExportEmptyDraft(employeeAttendanceHeaderDraftDTO);
         }
-
         public async Task<Dictionary<string, string>> ImportDataFromExcelToDB(Stream importedFile)
         {
             #region Fill IniValidationModelDTO
@@ -717,6 +717,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             else
             {
+                //requestInfo.CompanyId = 17;
                 List<EmployeeAttendance> ImportedList = new();
                 List<EmployeeAttendanceCheck> CImportedList = new();
                 EmployeeAttendance Temp = new();
@@ -782,17 +783,18 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     {
                         Latitude = tempLatitude,
                         Longitude = tempLongtude,
-                        RecognitionWay = row.Cell(6).GetString() == "FingerPrint" ? RecognitionWay.FingerPrint :
-                                         row.Cell(6).GetString() == "FaceRecognition" ? RecognitionWay.FaceRecognition :
-                                         row.Cell(6).GetString() == "PinRecognition" ? RecognitionWay.PinRecognition :
-                                         row.Cell(6).GetString() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
-                                         row.Cell(6).GetString() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
+                        RecognitionWay = row.Cell(6).GetString().Trim() == "FingerPrint" ? RecognitionWay.FingerPrint :
+                                         row.Cell(6).GetString().Trim() == "FaceRecognition" ? RecognitionWay.FaceRecognition :
+                                         row.Cell(6).GetString().Trim() == "PinRecognition" ? RecognitionWay.PinRecognition :
+                                         row.Cell(6).GetString().Trim() == "PaternRecognition" ? RecognitionWay.PaternRecognition :
+                                         row.Cell(6).GetString().Trim() == "VoiceRecognition" ? RecognitionWay.VoiceRecognition :
                                          RecognitionWay.NotSet,
-                        Type = row.Cell(9).GetString() == "CheckIn" ? FingerPrintType.CheckIn :
-                                         row.Cell(5).GetString() == "CheckOut" ? FingerPrintType.CheckOut :
-                                         row.Cell(5).GetString() == "Summon" ? FingerPrintType.Summon :
-                                         row.Cell(5).GetString() == "BreakIn" ? FingerPrintType.BreakIn :
-                                         row.Cell(5).GetString() == "BreakOut" ? FingerPrintType.BreakOut :
+
+                        Type = row.Cell(5).GetString().Trim() == "CheckIn" ? FingerPrintType.CheckIn :
+                                         row.Cell(5).GetString().Trim() == "CheckOut" ? FingerPrintType.CheckOut :
+                                         row.Cell(5).GetString().Trim() == "Summon" ? FingerPrintType.Summon :
+                                         row.Cell(5).GetString().Trim() == "BreakIn" ? FingerPrintType.BreakIn :
+                                         row.Cell(5).GetString().Trim() == "BreakOut" ? FingerPrintType.BreakOut :
                                          FingerPrintType.NotSet,
                         FromExcel = true
 
@@ -871,7 +873,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                             FingerPrintType = validationResult.FingerPrintType,
                             IsActive = true,
                             ZoneId = validationResult.ZoneId,
-                            FingerPrintDate = requestInfo.LocalDateTime,
+                            FingerPrintDate = localDate,
                             FingerPrintDateUTC = DateTime.UtcNow,
                             Latitude = model.Latitude,
                             Longitude = model.Longitude,
@@ -891,8 +893,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             return result;
         }
-
-        public async Task<List<GetEmployeeAttendanceInPeriodReportModel>> GetEmployeeAttendanceInPeriodReport(GetEmployeeAttendanceInPeriodReportParameters Critria)
+        public async Task<List<EmployeeDailyAttendanceGroupByDayReportModel>> GetEmployeeAttendanceInPeriodReport(BaseReportCritria Critria)
         {
 
             using (var context = new ApplicationDBContext())
@@ -907,7 +908,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             new SqlParameter("@JobTitleID", Critria.JobTitleID),
             new SqlParameter("@CompanyID", requestInfo.CompanyId)
         };
-                var result = context.Database.SqlQueryRaw<GetEmployeeAttendanceInPeriodReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
+                var result = context.Database.SqlQueryRaw<EmployeeDailyAttendanceGroupByDayReportModel>("GetEmployeeAttendanceReportInAperiod @DateFrom, @DateTo, @EmployeeID, @DepartmentId, @ZoneId, @JobTitleID, @CompanyID", parameters.ToArray()).ToList();
 
                 return result;
             }
@@ -956,19 +957,22 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Date = date
                 };
                 var day = GetCurrentEmployeeScheduleDays(currentEmployeeScheduleDaysAndPlansResponseModel);
-               
+
                 schedules.Add(new GetEmployeeScheduleResponseModel
                 {
                     DayName = date.ToString("dd-MM") + LeillaKeys.Space + TranslationHelper.GetTranslation(((WeekDay)date.DayOfWeek).ToString(), requestInfo.Lang),
                     IsVacation = day.IsVacation,
-                    TimeFrom = day?.StartTime != null ? day.StartTime.Value.ToString("HH:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.StartTime.Value.ToString("tt"), requestInfo.Lang) : null,
-                    TimeTo = day?.EndTime != null ? day.EndTime.Value.ToString("HH:mm") +
-                    LeillaKeys.Space + TranslationHelper.GetTranslation(day.EndTime.Value.ToString("tt"), requestInfo.Lang) : null,
-                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) : null,
-                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndTime - day.StartTime).Value.TotalHours, 2) + 
-                    LeillaKeys.Space + 
-                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null
+                    TimeFrom = day?.StartDateTime != null ? new DateTime(day.StartDateTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.StartDateTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
+                    TimeTo = day?.EndDateTime != null ? new DateTime(day.EndDateTime.Value.Ticks).ToString("hh:mm") +
+                    LeillaKeys.Space + TranslationHelper.GetTranslation(new DateTime(day.EndDateTime.Value.Ticks).ToString("tt"), requestInfo.Lang) : null,
+                    WorkingHoursNumber = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) : null,
+                    WorkingHours = !day.IsVacation ? Math.Round((decimal)(day.EndDateTime - day.StartDateTime).Value.TotalHours, 2) +
+                    LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Hour, requestInfo.Lang) : null,
+                    AllowedMinutes = !day.IsVacation && day.AllowedMinutes > 0 ? day.AllowedMinutes.Value +
+                    LeillaKeys.Space +
+                    TranslationHelper.GetTranslation(LeillaKeys.Minute, requestInfo.Lang) : null,
                 });
             }
 
@@ -988,8 +992,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 {
                     WeekDay = s.WeekDay,
                     IsVacation = s.ShiftId == null,
-                    StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
-                    EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                    StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
+                    EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
+                    AllowedMinutes = s.ShiftId > 0 ? s.Shift.AllowedMinutes : null
                 }).ToListAsync();
 
             var getEmployeeSchedulePlans = await repositoryManager.EmployeeRepository.
@@ -1016,8 +1021,9 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         {
                             WeekDay = s.WeekDay,
                             IsVacation = s.ShiftId == null,
-                            StartTime = s.ShiftId > 0 ? s.Shift.CheckInTime : null,
-                            EndTime = s.ShiftId > 0 ? s.Shift.CheckOutTime : null,
+                            StartDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckInTime.Ticks) : null,
+                            EndDateTime = s.ShiftId > 0 ? new DateTime(s.Shift.CheckOutTime.Ticks) : null,
+                            AllowedMinutes = s.ShiftId > 0 ? s.Shift.AllowedMinutes : null
                         }).ToList()
                     }).ToList() : null
                 }).FirstOrDefaultAsync();
@@ -1048,6 +1054,21 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
 
             var day = days.FirstOrDefault(s => s.WeekDay == (WeekDay)model.Date.DayOfWeek);
+
+            if (day != null && day.StartDateTime != null && day.EndDateTime != null)
+            {
+                var startDateTime = day.StartDateTime.Value.TimeOfDay;
+                var endDateTime = day.EndDateTime.Value.TimeOfDay;
+
+                var isTwoDaysShift = TimeHelper.IsTwoDaysShift(startDateTime, endDateTime);
+
+                if (isTwoDaysShift)
+                {
+                    day.StartDateTime = new DateTime(day.StartDateTime.Value.TimeOfDay.Ticks);
+                    day.EndDateTime = new DateTime(day.EndDateTime.Value.TimeOfDay.Ticks).AddDays(1);
+                }
+            }
+
             return day;
         }
 
@@ -1093,9 +1114,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
 
         #endregion
-
-
-
 
     }
 }

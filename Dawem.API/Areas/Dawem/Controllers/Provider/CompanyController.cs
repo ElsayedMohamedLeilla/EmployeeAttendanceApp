@@ -1,13 +1,12 @@
 ﻿using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Provider
 {
-    [Route(LeillaKeys.DawemApiControllerAction), ApiController, Authorize, DawemAuthorize]
+    [Route(LeillaKeys.DawemApiControllerAction), ApiController, DawemAuthorize]
     public class CompanyController : DawemControllerBase
     {
         private readonly ICompanyBL companyBL;

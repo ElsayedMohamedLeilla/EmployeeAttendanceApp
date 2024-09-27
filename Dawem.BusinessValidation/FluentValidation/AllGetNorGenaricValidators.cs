@@ -1,5 +1,7 @@
 ﻿using Dawem.Models.Criteria.Core;
+using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.Criteria.Lookups;
+using Dawem.Models.Criteria.Providers;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Dashboard;
 using Dawem.Models.Dtos.Dawem.Employees.AssignmentTypes;
@@ -11,13 +13,19 @@ using Dawem.Models.Dtos.Dawem.Employees.TaskTypes;
 using Dawem.Models.Dtos.Dawem.Employees.Users;
 using Dawem.Models.Dtos.Dawem.Permissions.PermissionLogs;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
+using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Models.Dtos.Dawem.Reports.AttendanceSummaryReport;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlanBackgroundJobLogs;
 using Dawem.Models.Dtos.Dawem.Schedules.SchedulePlans;
 using Dawem.Models.Dtos.Dawem.Schedules.Schedules;
 using Dawem.Models.Dtos.Dawem.Schedules.ShiftWorkingTimes;
+using Dawem.Models.Dtos.Dawem.Subscriptions;
+using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.Dtos.Dawem.Summons.Sanctions;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
+using Dawem.Models.DTOs.Dawem.Screens.ScreenGroups;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Assignments;
 using Dawem.Models.Requests.Justifications;
@@ -328,9 +336,9 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-    public class GetNotificationStoreCriteriaValidator : AbstractValidator<GetNotificationStoreCriteria>
+    public class GetNotificationSCriteriaValidator : AbstractValidator<GetNotificationCriteria>
     {
-        public GetNotificationStoreCriteriaValidator()
+        public GetNotificationSCriteriaValidator()
         {
             Include(new GetGenaricValidator());
         }
@@ -342,6 +350,76 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
-   
+    public class GetCompaniesCriteriaValidator : AbstractValidator<GetCompaniesCriteria>
+    {
+        public GetCompaniesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetCompanyBranchesCriteriaValidator : AbstractValidator<GetCompanyBranchesCriteria>
+    {
+        public GetCompanyBranchesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSubscriptionsCriteriaValidator : AbstractValidator<GetSubscriptionsCriteria>
+    {
+        public GetSubscriptionsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetSubscriptionPaymentsCriteriaValidator : AbstractValidator<GetSubscriptionPaymentsCriteria>
+    {
+        public GetSubscriptionPaymentsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetScreensCriteriaValidator : AbstractValidator<GetScreensCriteria>
+    {
+        public GetScreensCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetPlansCriteriaValidator : AbstractValidator<GetPlansCriteria>
+    {
+        public GetPlansCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 
+    public class GetDefaultVacationsTypesCriteriaValidator : AbstractValidator<GetDefaultVacationTypeCriteria>
+    {
+        public GetDefaultVacationsTypesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetDefaultShiftsTypesCriteriaValidator : AbstractValidator<GetDefaultShiftTypeCriteria>
+    {
+        public GetDefaultShiftsTypesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+
+    public class GetDefaultJustificationsTypesCriteriaValidator : AbstractValidator<GetDefaultJustificationTypeCriteria>
+    {
+        public GetDefaultJustificationsTypesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetDefaultOfficialHolidaysCriteriaValidator : AbstractValidator<GetDefaultOfficialHolidayTypeCriteria>
+    {
+        public GetDefaultOfficialHolidaysCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

@@ -1,9 +1,12 @@
-﻿using Dawem.Contract.RealTime.Firebase;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Core.DefaultLookups;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
+using Dawem.Contract.Repository.MenuItems;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
@@ -39,7 +42,6 @@ namespace Dawem.Contract.Repository.Manager
         IPermissionLogRepository PermissionLogRepository { get; }
         IUserBranchRepository UserBranchRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
-        IScreenRepository ScreenRepository { get; }
         IUserRoleRepository UserRoleRepository { get; }
         ITranslationRepository TranslationRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
@@ -85,7 +87,7 @@ namespace Dawem.Contract.Repository.Manager
         IRequestVacationRepository RequestVacationRepository { get; }
         IHolidayRepository HolidayRepository { get; }
         IVacationBalanceRepository VacationBalanceRepository { get; }
-        INotificationStoreRepository NotificationStoreRepository { get; }
+        INotificationRepository NotificationRepository { get; }
         ISummonRepository SummonRepository { get; }
         ISummonLogSanctionRepository SummonLogSanctionRepository { get; }
         ISummonLogRepository SummonLogRepository { get; }
@@ -98,6 +100,23 @@ namespace Dawem.Contract.Repository.Manager
         INotificationUserRepository NotificationUserRepository { get; }
         INotificationUserFCMTokenRepository NotificationUserFCMTokenRepository { get; }
         IEmployeeOTPRepository EmployeeOTPRepository { get; }
+        IMenuItemRepository MenuItemRepository { get; }
+        IOldScreenRepository OldScreenRepository { get; }
+        IMenuItemActionRepository MenuItemActionRepository { get; }
+        IMenuItemNameTranslationRepository MenuItemNameTranslationRepository { get; }
+        IPlanScreenRepository PlanScreenRepository { get; }
+        IDefaultLookupsNameTranslationRepository DefaultLookupsNameTranslationRepository { get; }
+
+        IDefaultVacationTypeRepository DefaultVacationTypeRepository { get; }
+        IDefaultShiftTypeRepository DefaultShiftTypeRepository { get; }
+        IDefaultJustificationTypeRepository DefaultJustificationTypeRepository { get; }
+
+        IDefaultTaskTypeRepository DefaultTaskTypeRepository { get; }
+
+        IDefaultPermissionTypeRepository DefaultPermissionTypeRepository { get; }
+
+        IDefaultOfficialHolidayRepository DefaultOfficialHolidayRepository { get; }
+
 
     }
 }

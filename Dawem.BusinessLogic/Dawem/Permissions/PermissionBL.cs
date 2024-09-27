@@ -1,17 +1,22 @@
 ﻿using AutoMapper;
 using Dawem.Contract.BusinessLogic.Dawem.Permissions;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Permissions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Permissions;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.Screens.Screens;
+using Dawem.Models.Response.Dawem.Others;
 using Dawem.Models.Response.Dawem.Permissions.Permissions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +30,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         private readonly IPermissionBLValidation permissionBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly IScreenBLC screenBLC;
+        private readonly IPermissionBLC permissionBLC;
         public PermissionBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IRepositoryManager _repositoryManager, IScreenBLC _screenBLC,
+            IMapper _mapper, IPermissionBLC _permissionBLC,
            RequestInfo _requestHeaderContext,
            IPermissionBLValidation _permissionBLValidation)
         {
@@ -36,46 +43,18 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             repositoryManager = _repositoryManager;
             permissionBLValidation = _permissionBLValidation;
             mapper = _mapper;
+            permissionBLC = _permissionBLC;
+            screenBLC = _screenBLC;
         }
         public async Task<int> Create(CreatePermissionModel model)
         {
-            #region Business Validation
+            await unitOfWork.CreateTransactionAsync();
 
-            await permissionBLValidation.CreateValidation(model);
-
-            #endregion
-
-            unitOfWork.CreateTransaction();
-
-            #region Insert Permission
-
-            #region Set Permission Code
-            var getNextCode = await repositoryManager.PermissionRepository
-                .Get(permission => permission.Type == requestInfo.Type &&
-                ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
-                (requestInfo.CompanyId <= 0 && permission.CompanyId == null)))
-                .Select(e => e.Code)
-                .DefaultIfEmpty()
-                .MaxAsync() + 1;
-            #endregion
-
-            var permission = mapper.Map<Permission>(model);
-            permission.CompanyId = requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null;
-            permission.AddUserId = requestInfo.UserId;
-            permission.Type = requestInfo.Type;
-            permission.Code = getNextCode;
-            repositoryManager.PermissionRepository.Insert(permission);
-            await unitOfWork.SaveAsync();
-
-            #endregion
-
-            #region Handle Response
+            var permissionId = await permissionBLC.Create(model);
 
             await unitOfWork.CommitAsync();
-            return permission.Id;
 
-            #endregion
-
+            return permissionId;
         }
         public async Task<bool> Update(UpdatePermissionModel model)
         {
@@ -92,7 +71,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var getPermission = await repositoryManager.PermissionRepository
                 .GetWithTracking(permission => !permission.IsDeleted
                 && permission.Id == model.Id
-                && permission.Type == requestInfo.Type &&
+                && permission.AuthenticationType == requestInfo.AuthenticationType &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)))
                 .Include(p => p.PermissionScreens)
@@ -111,30 +90,30 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 #region Update Related Screens
 
                 var dbPermissionScreens = getPermission.PermissionScreens;
-                var modelPermissionScreens = model.PermissionScreens;
+                var modelPermissionScreens = model.Screens;
 
                 var getAddedPermissionScreens = modelPermissionScreens
-                    .Where(m => !dbPermissionScreens.Any(d => d.ScreenCode == m.ScreenCode))
+                    .Where(m => !dbPermissionScreens.Any(d => d.ScreenId == m.ScreenId))
                     .Select(m => new PermissionScreen
                     {
                         PermissionId = model.Id,
-                        ScreenCode = m.ScreenCode,
-                        PermissionScreenActions = m.PermissionScreenActions.Select(m => new PermissionScreenAction
+                        ScreenId = m.ScreenId,
+                        PermissionScreenActions = m.Actions.Select(actionCode => new PermissionScreenAction
                         {
-                            ActionCode = m.ActionCode
+                            ActionCode = actionCode
                         }).ToList()
                     }).ToList();
 
                 var getDeletedPermissionScreens = dbPermissionScreens
-                    .Where(d => !modelPermissionScreens.Any(m => m.ScreenCode == d.ScreenCode))
+                    .Where(d => !modelPermissionScreens.Any(m => m.ScreenId == d.ScreenId))
                     .ToList();
 
                 repositoryManager.PermissionScreenRepository.BulkInsert(getAddedPermissionScreens);
                 repositoryManager.PermissionScreenRepository.BulkDeleteIfExist(getDeletedPermissionScreens);
 
                 var getUpdatedPermissionScreens = modelPermissionScreens
-                    .Where(d => !getAddedPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode)
-                    && !getDeletedPermissionScreens.Any(d => d.ScreenCode == d.ScreenCode))
+                    .Where(ms => !getAddedPermissionScreens.Any(adds => adds.ScreenId == ms.ScreenId)
+                    && !getDeletedPermissionScreens.Any(dele => dele.ScreenId == ms.ScreenId))
                     .ToList();
 
 
@@ -145,20 +124,20 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     foreach (var permissionScreen in getUpdatedPermissionScreens)
                     {
                         var dbPermissionScreen = dbPermissionScreens
-                            .FirstOrDefault(ps => ps.ScreenCode == permissionScreen.ScreenCode);
+                            .FirstOrDefault(ps => ps.ScreenId == permissionScreen.ScreenId);
                         var dbPermissionScreenActions = dbPermissionScreen.PermissionScreenActions;
-                        var modelPermissionScreenActions = permissionScreen.PermissionScreenActions;
+                        var modelPermissionScreenActions = permissionScreen.Actions;
 
                         var getAddedPermissionScreenActions = modelPermissionScreenActions
-                            .Where(m => !dbPermissionScreenActions.Any(d => d.ActionCode == m.ActionCode))
-                            .Select(m => new PermissionScreenAction
+                            .Where(actionCode => !dbPermissionScreenActions.Any(d => d.ActionCode == actionCode))
+                            .Select(actionCode => new PermissionScreenAction
                             {
                                 PermissionScreenId = dbPermissionScreen.Id,
-                                ActionCode = m.ActionCode,
+                                ActionCode = actionCode,
                             }).ToList();
 
                         var getDeletedPermissionScreenActions = dbPermissionScreenActions
-                            .Where(d => !modelPermissionScreenActions.Any(m => m.ActionCode == d.ActionCode))
+                            .Where(d => !modelPermissionScreenActions.Any(actionCode => actionCode == d.ActionCode))
                             .ToList();
 
                         repositoryManager.PermissionScreenActionRepository.BulkInsert(getAddedPermissionScreenActions);
@@ -218,13 +197,13 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
         }
         public async Task<GetPermissionInfoResponseModel> GetInfo(int permissionId)
         {
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             var permission = await repositoryManager.PermissionRepository.Get(permission => permission.Id == permissionId
             && !permission.IsDeleted && ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
-                permission.Type == requestInfo.Type)
+                permission.AuthenticationType == requestInfo.AuthenticationType)
                 .Select(p => new GetPermissionInfoResponseModel
                 {
                     Code = p.Code,
@@ -237,8 +216,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     .Take(5)
                     .Select(ps => new PermissionScreenResponseWithNamesModel
                     {
-                        ScreenCode = ps.ScreenCode,
-                        ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(ps.ScreenCode, requestInfo.Type) + screenNameSuffix, requestInfo.Lang),
+                        ScreenName = ps.Screen.MenuItemNameTranslations.FirstOrDefault(s => s.Language.ISO2 == requestInfo.Lang).Name,
                         PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = psa.ActionCode,
@@ -275,13 +253,12 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
 
             #region Handle Response
 
-            var screenNameSuffix = requestInfo.Type == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+            var screenNameSuffix = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
                     LeillaKeys.DawemScreen;
 
             var permissionScreensList = await queryPaged.Select(ps => new GetPermissionScreenInfoModel
             {
-                ScreenCode = ps.ScreenCode,
-                ScreenName = TranslationHelper.GetTranslation(ps.ScreenCode.ToString() + screenNameSuffix, requestInfo.Lang),
+                ScreenName = ps.Screen.MenuItemNameTranslations.FirstOrDefault(s => s.Language.ISO2 == requestInfo.Lang).Name,
                 PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseWithNamesModel
                 {
                     ActionCode = psa.ActionCode,
@@ -304,7 +281,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 .Get(permission => permission.Id == permissionId && !permission.IsDeleted && permission.IsActive &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
-                permission.Type == requestInfo.Type)
+                permission.AuthenticationType == requestInfo.AuthenticationType)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
                     Id = p.Id,
@@ -312,13 +289,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ForType = p.ForType,
                     UserId = p.UserId,
                     ResponsibilityId = p.ResponsibilityId,
-                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
+                    Screens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenCode = ps.ScreenCode,
-                        PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseModel
-                        {
-                            ActionCode = psa.ActionCode
-                        }).ToList()
+                        Id = ps.ScreenId,
+                        //ScreenCode = ps.ScreenCode,
+                        Actions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),
                     IsActive = p.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
@@ -339,7 +314,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             #endregion
 
             var permission = await repositoryManager.PermissionRepository
-                .Get(permission => permission.CompanyId == requestInfo.CompanyId && (model.ResponsibilityId != null && model.ResponsibilityId == permission.ResponsibilityId ||
+                .Get(permission => permission.CompanyId == requestInfo.CompanyId && 
+                (model.ResponsibilityId != null && model.ResponsibilityId == permission.ResponsibilityId ||
                 model.UserId != null && model.UserId == permission.UserId) && !permission.IsDeleted)
                 .Select(p => new GetPermissionByIdResponseModel
                 {
@@ -348,13 +324,11 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ForType = p.ForType,
                     UserId = p.UserId,
                     ResponsibilityId = p.ResponsibilityId,
-                    PermissionScreens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
+                    Screens = p.PermissionScreens.Select(ps => new PermissionScreenResponseModel
                     {
-                        ScreenCode = ps.ScreenCode,
-                        PermissionScreenActions = ps.PermissionScreenActions.Select(psa => new PermissionScreenActionResponseModel
-                        {
-                            ActionCode = psa.ActionCode
-                        }).ToList()
+                        Id = ps.ScreenId,
+                        //ScreenCode = ps.ScreenCode,
+                        Actions = ps.PermissionScreenActions.Select(psa => psa.ActionCode).ToList()
                     }).ToList(),
                     IsActive = p.IsActive
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
@@ -368,7 +342,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive
                 && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null))
-                && d.Type == requestInfo.Type && d.Id == permissionId) ??
+                && d.AuthenticationType == requestInfo.AuthenticationType && d.Id == permissionId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
             responsibility.Enable();
             await unitOfWork.SaveAsync();
@@ -380,7 +354,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted
                 && ((requestInfo.CompanyId > 0 && d.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && d.CompanyId == null))
-                && d.Type == requestInfo.Type && d.IsActive && d.Id == model.Id) ??
+                && d.AuthenticationType == requestInfo.AuthenticationType && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
             responsibility.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();
@@ -392,7 +366,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 GetEntityByConditionWithTrackingAsync(permission => !permission.IsDeleted && permission.Id == permissiond &&
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null)) &&
-                permission.Type == requestInfo.Type) ??
+                permission.AuthenticationType == requestInfo.AuthenticationType) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
             permission.Delete();
             await unitOfWork.SaveAsync();
@@ -404,7 +378,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var query = permissionRepository.Get(permission =>
                 ((requestInfo.CompanyId > 0 && permission.CompanyId == requestInfo.CompanyId) ||
                 (requestInfo.CompanyId <= 0 && permission.CompanyId == null))
-                && permission.Type == requestInfo.Type);
+                && permission.AuthenticationType == requestInfo.AuthenticationType);
 
             #region Handle Response
 
@@ -417,7 +391,69 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             };
 
             #endregion
-        } 
+        }
+        public async Task<bool> CheckScreenInPlan(CheckScreenInPlanModel model)
+        {
+            var currentCompanyId = model.AuthenticationType == AuthenticationType.AdminPanel ? null : model.CompanyId;
+
+            var currentType = model.AuthenticationType == AuthenticationType.AdminPanel ?
+                AuthenticationType.AdminPanel : model.AuthenticationType == AuthenticationType.DawemAdmin &&
+                model.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+                AuthenticationType.DawemEmployee;
+
+            var checkScreenInPlan = false;
+
+            #region Handle Plan Screens
+
+            var getScreenId = await repositoryManager.MenuItemRepository.
+                    Get(s => !s.IsDeleted && s.IsActive && s.MenuItemCode == model.ScreenCode &&
+                    s.AuthenticationType == currentType).
+                    Select(s => s.Id).
+                    FirstOrDefaultAsync();
+
+            var allScreensAvailableForPlan = true;
+            var planScreensIds = new List<int>();
+
+            if (currentCompanyId > 0)
+            {
+                var getCompanySubscriptionPlanId = await repositoryManager.CompanyRepository.
+                    Get(c => !c.IsDeleted && c.Id == currentCompanyId).
+                    Select(c => c.Subscription.PlanId).
+                    FirstOrDefaultAsync();
+
+                if (getCompanySubscriptionPlanId > 0)
+                {
+                    var getPlanInfo = await repositoryManager.PlanRepository.
+                                    Get(c => !c.IsDeleted && c.Id == getCompanySubscriptionPlanId).
+                                    Select(c => new
+                                    {
+                                        c.AllScreensAvailable,
+                                        PlanScreens = c.PlanScreens.Any() ?
+                                        c.PlanScreens.Select(ps => ps.ScreenId).ToList() : null
+                                    }).FirstOrDefaultAsync();
+
+                    if (getPlanInfo != null)
+                    {
+                        allScreensAvailableForPlan = getPlanInfo.AllScreensAvailable;
+
+                        if (!getPlanInfo.AllScreensAvailable)
+                        {
+                            planScreensIds = getPlanInfo.PlanScreens;
+                        }
+                    }
+                }
+
+            }
+
+            #endregion
+
+            if (allScreensAvailableForPlan || (planScreensIds != null && planScreensIds.Any(screenId => screenId == getScreenId)))
+            {
+                checkScreenInPlan = true;
+            }
+
+            return checkScreenInPlan;
+        }
         public async Task<bool> CheckUserPermission(CheckUserPermissionModel model)
         {
             var permissionRepository = repositoryManager.PermissionRepository;
@@ -425,6 +461,17 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
             var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;
             var currentUserId = model?.UserId ?? requestInfo.UserId;
             var currentCompanyId = model.AuthenticationType == AuthenticationType.AdminPanel ? null : model.CompanyId;
+
+            var currentType = model.AuthenticationType == AuthenticationType.AdminPanel ?
+                AuthenticationType.AdminPanel : model.AuthenticationType == AuthenticationType.DawemAdmin &&
+                model.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+                AuthenticationType.DawemEmployee;
+
+            var getScreenId = await repositoryManager.MenuItemRepository.
+                    Get(s => !s.IsDeleted && s.IsActive && s.MenuItemCode == model.ScreenCode &&
+                    s.AuthenticationType == currentType).
+                    Select(s => s.Id).
+                    FirstOrDefaultAsync();
 
             var isUserIsAdmin = await repositoryManager.UserRepository
               .Get(p => !p.IsDeleted && p.IsActive &&
@@ -443,7 +490,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserHasPermissions = await repositoryManager.PermissionRepository
                     .Get(p => !p.IsDeleted && p.IsActive &&
                     p.CompanyId == currentCompanyId
-                    && p.Type == model.AuthenticationType && p.UserId == currentUserId).AnyAsync();
+                    && p.AuthenticationType == model.AuthenticationType && p.UserId == currentUserId).AnyAsync();
 
                 var getUserResponsibilitiesIds = await userResponsibilityRepository
                     .Get(u => u.UserId == currentUserId)
@@ -453,7 +500,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserResponsibilitiesHasPermissions = await repositoryManager.PermissionRepository
                             .Get(p => !p.IsDeleted && p.IsActive &&
                             p.CompanyId == currentCompanyId
-                             && p.Type == model.AuthenticationType &&
+                             && p.AuthenticationType == model.AuthenticationType &&
                             p.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(p.ResponsibilityId.Value)).AnyAsync();
 
                 if (isUserHasPermissions)
@@ -462,8 +509,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                         Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted &&
                         !p.PermissionScreen.Permission.IsDeleted &&
                         p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
-                        p.PermissionScreen.Permission.Type == model.AuthenticationType &&
-                        p.PermissionScreen.ScreenCode == model.ScreenCode &&
+                        p.PermissionScreen.Permission.AuthenticationType == model.AuthenticationType &&
+                        p.PermissionScreen.ScreenId == getScreenId &&
                         p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.UserId == model.UserId).
                         AnyAsync();
                 }
@@ -473,8 +520,8 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                                  .Get(p => !p.IsDeleted && p.IsActive && !p.PermissionScreen.IsDeleted &&
                                  !p.PermissionScreen.Permission.IsDeleted &&
                                  p.PermissionScreen.Permission.CompanyId == currentCompanyId &&
-                                 p.PermissionScreen.Permission.Type == model.AuthenticationType &&
-                                 p.PermissionScreen.ScreenCode == model.ScreenCode
+                                 p.PermissionScreen.Permission.AuthenticationType == model.AuthenticationType &&
+                                 p.PermissionScreen.ScreenId == getScreenId
                                  && p.ActionCode == model.ActionCode && p.PermissionScreen.Permission.ResponsibilityId > 0
                                  && getUserResponsibilitiesIds.Contains(p.PermissionScreen.Permission.ResponsibilityId.Value)).AnyAsync();
                 }
@@ -482,12 +529,16 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
 
             return checkIfHasPermission;
         }
-        public async Task<GetUserPermissionsResponseModel> GetCurrentUserPermissions(GetCurrentUserPermissionsModel model = null)
+        public async Task<GetUserPermissionsResponseModel> OldGetCurrentUserPermissions(GetCurrentUserMenuItemsModel model = null)
         {
             var resonse = new GetUserPermissionsResponseModel();
             var currentUserId = model?.UserId ?? requestInfo.UserId;
             var currentCompanyId = model?.CompanyId ?? (requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null);
-            var authenticationType = model?.AuthenticationType ?? requestInfo.Type;
+
+            var authenticationType = model.AuthenticationType == AuthenticationType.AdminPanel ?
+                AuthenticationType.AdminPanel : model.AuthenticationType == AuthenticationType.DawemAdmin &&
+                requestInfo.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+                AuthenticationType.DawemEmployee;
 
             var lang = requestInfo.Lang;
             var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
@@ -511,7 +562,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserHasPermission = await repositoryManager.PermissionRepository
                     .Get(p => !p.IsDeleted && p.IsActive &&
                     p.CompanyId == currentCompanyId
-                    && p.Type == authenticationType && p.UserId == currentUserId).AnyAsync();
+                    && p.AuthenticationType == authenticationType && p.UserId == currentUserId).AnyAsync();
 
                 var getUserResponsibilitiesIds = await userResponsibilityRepository
                     .Get(u => u.UserId == currentUserId)
@@ -520,27 +571,26 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                 var isUserResponsibilitiesHasPermission = await repositoryManager.PermissionRepository
                             .Get(p => !p.IsDeleted && p.IsActive &&
                             p.CompanyId == currentCompanyId
-                             && p.Type == authenticationType &&
+                             && p.AuthenticationType == authenticationType &&
                             p.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(p.ResponsibilityId.Value)).AnyAsync();
 
                 if (isUserHasPermission)
                 {
                     var getUserPermissions = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
                     && ps.Permission.CompanyId == currentCompanyId
-                    && ps.Permission.Type == authenticationType &&
+                    && ps.Permission.AuthenticationType == authenticationType &&
                     ps.Permission.UserId == currentUserId)
-                        .GroupBy(ps => ps.ScreenCode)
+                        .GroupBy(ps => ps.ScreenId)
                         .Select(g => new PermissionScreenResponseWithNamesModel
                         {
-                            ScreenCode = g.First().ScreenCode,
-                            ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(g.First().ScreenCode, authenticationType) + screenNameSuffix, lang),
+                            ScreenName = g.First().Screen.MenuItemNameTranslations.FirstOrDefault(s => s.Language.ISO2 == requestInfo.Lang).Name,
                             PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
                             .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
                             {
                                 ActionCode = g.First().ActionCode,
                                 ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
                             }).OrderBy(a => a.ActionCode).ToList()
-                        }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+                        }).OrderBy(ps => ps.ScreenName).ToListAsync();
 
                     resonse.UserPermissions.AddRange(getUserPermissions);
                 }
@@ -549,26 +599,127 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     var getResponsibilitiesPermissions = await permissionScreenRepository.
                         Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted &&
                         ps.Permission.CompanyId == currentCompanyId &&
-                        ps.Permission.Type == authenticationType &&
+                        ps.Permission.AuthenticationType == authenticationType &&
                         ps.Permission.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(ps.Permission.ResponsibilityId.Value)).
-                        GroupBy(ps => ps.ScreenCode).
+                        GroupBy(ps => ps.ScreenId).
                         Select(g => new PermissionScreenResponseWithNamesModel
                         {
-                            ScreenCode = g.First().ScreenCode,
-                            ScreenName = TranslationHelper.GetTranslation(EnumHelper.GetScreenName(g.First().ScreenCode, authenticationType) + screenNameSuffix, lang),
+                            ScreenName = g.First().Screen.MenuItemNameTranslations.FirstOrDefault(s => s.Language.ISO2 == requestInfo.Lang).Name,
                             PermissionScreenActions = g.SelectMany(a => a.PermissionScreenActions)
                         .GroupBy(a => a.ActionCode).Select(g => new PermissionScreenActionResponseWithNamesModel
                         {
                             ActionCode = g.First().ActionCode,
                             ActionName = TranslationHelper.GetTranslation(g.First().ActionCode.ToString(), lang)
                         }).OrderBy(a => a.ActionCode).ToList()
-                        }).OrderBy(ps => ps.ScreenCode).ToListAsync();
+                        }).OrderBy(ps => ps.ScreenName).ToListAsync();
 
                     resonse.UserPermissions.AddRange(getResponsibilitiesPermissions);
                 }
             }
 
             return resonse;
+        }
+        public async Task<GetUserMenuItemsWithAvailableActionsResponse> GetCurrentUserMenuItems(GetCurrentUserMenuItemsModel model = null)
+        {
+            var resonse = new GetUserMenuItemsWithAvailableActionsResponse();
+            var currentUserId = model?.UserId ?? requestInfo.UserId;
+            var currentCompanyId = model?.CompanyId ?? (requestInfo.CompanyId > 0 ? requestInfo.CompanyId : null);
+            var currentAuthenticationType = model?.AuthenticationType != null ? model?.AuthenticationType : 
+                requestInfo.AuthenticationType;
+
+            var authenticationType = currentAuthenticationType == AuthenticationType.AdminPanel ?
+                AuthenticationType.AdminPanel : currentAuthenticationType == AuthenticationType.DawemAdmin &&
+                requestInfo.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+                AuthenticationType.DawemEmployee;
+
+            var lang = requestInfo.Lang;
+            var permissionScreenRepository = repositoryManager.PermissionScreenRepository;
+            var userResponsibilityRepository = repositoryManager.UserResponsibilityRepository;
+            var screenNameSuffix = authenticationType == AuthenticationType.AdminPanel ? LeillaKeys.AdminPanelScreen :
+                    LeillaKeys.DawemScreen;
+
+            var isUserIsAdmin = await repositoryManager.UserRepository
+               .Get(p => !p.IsDeleted && p.IsActive &&
+               p.CompanyId == currentCompanyId
+                && p.Type == authenticationType && p.IsAdmin &&
+               p.Id == currentUserId).AnyAsync();
+
+            var criteria = new GetScreensCriteria
+            {
+                IsActive = true,
+                AuthenticationType = authenticationType,
+                CompanyId = currentCompanyId
+            };
+
+            if (isUserIsAdmin)
+            {
+                resonse.MenuItems = await GetMenuItems(criteria);
+            }
+            else
+            {
+                var isUserHasPermission = await repositoryManager.PermissionRepository
+                    .Get(p => !p.IsDeleted && p.IsActive &&
+                    p.CompanyId == currentCompanyId
+                    && p.AuthenticationType == authenticationType && p.UserId == currentUserId).AnyAsync();
+
+                var getUserResponsibilitiesIds = await userResponsibilityRepository
+                    .Get(u => u.UserId == currentUserId)
+                    .Select(ur => ur.ResponsibilityId)
+                    .ToListAsync();
+                var isUserResponsibilitiesHasPermission = await repositoryManager.PermissionRepository
+                            .Get(p => !p.IsDeleted && p.IsActive &&
+                            p.CompanyId == currentCompanyId
+                             && p.AuthenticationType == authenticationType &&
+                            p.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(p.ResponsibilityId.Value)).AnyAsync();
+
+                var screensIds = new List<int>();
+
+                if (isUserHasPermission)
+                {
+                    var getUserPermissionsScreensIds = await permissionScreenRepository.Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted
+                    && ps.Permission.CompanyId == currentCompanyId
+                    && ps.Permission.AuthenticationType == authenticationType &&
+                    ps.Permission.UserId == currentUserId).
+                    Select(g => g.ScreenId).
+                    ToListAsync();
+
+                    screensIds.AddRange(getUserPermissionsScreensIds);
+                }
+                if (isUserResponsibilitiesHasPermission)
+                {
+                    var getResponsibilitiesPermissionsScreensIds = await permissionScreenRepository.
+                        Get(ps => !ps.IsDeleted && !ps.Permission.IsDeleted &&
+                        ps.Permission.CompanyId == currentCompanyId &&
+                        ps.Permission.AuthenticationType == authenticationType &&
+                        ps.Permission.ResponsibilityId > 0 && getUserResponsibilitiesIds.Contains(ps.Permission.ResponsibilityId.Value)).
+                        Select(g => g.ScreenId).
+                        ToListAsync();
+
+                    screensIds.AddRange(getResponsibilitiesPermissionsScreensIds);
+                }
+
+                var getScreensParentsIds = await repositoryManager.MenuItemRepository.
+                    Get(m => m.ParentId > 0 && screensIds.Contains(m.Id)).
+                    Select(m => m.ParentId.Value).
+                    ToListAsync();
+
+                screensIds.AddRange(getScreensParentsIds);
+
+                criteria.ScreensIds = screensIds.Distinct().ToList();
+
+                resonse.MenuItems = await GetMenuItems(criteria);
+            }
+
+            return resonse;
+        }
+        private async Task<List<MenuItemWithAvailableActionsDTO>> GetMenuItems(GetScreensCriteria criteria)
+        {
+            criteria.ScreensForType = ScreensForType.Menu;
+
+            var allScreensResponse = await screenBLC.GetAllScreensWithAvailableActions(criteria);
+            var allScreens = allScreensResponse.MenuItemsTypes.SelectMany(m => m.MenuItems).ToList();
+
+            return allScreens;
         }
     }
 }

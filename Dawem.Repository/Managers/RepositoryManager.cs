@@ -1,10 +1,13 @@
-﻿using Dawem.Contract.RealTime.Firebase;
+﻿using Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups;
+using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Attendances;
 using Dawem.Contract.Repository.Core;
+using Dawem.Contract.Repository.Core.DefaultLookups;
 using Dawem.Contract.Repository.Employees;
 using Dawem.Contract.Repository.Localization;
 using Dawem.Contract.Repository.Lookups;
 using Dawem.Contract.Repository.Manager;
+using Dawem.Contract.Repository.MenuItems;
 using Dawem.Contract.Repository.Others;
 using Dawem.Contract.Repository.Permissions;
 using Dawem.Contract.Repository.Provider;
@@ -21,16 +24,18 @@ using Dawem.Models.Context;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Repository.Attendances;
 using Dawem.Repository.Core;
+using Dawem.Repository.Core.DefaultLookups;
 using Dawem.Repository.Core.Groups;
 using Dawem.Repository.Core.Holidays;
 using Dawem.Repository.Core.JustificationsTypes;
-using Dawem.Repository.Core.NotificationsStores;
+using Dawem.Repository.Core.Notifications;
 using Dawem.Repository.Core.PermissionsTypes;
 using Dawem.Repository.Core.Roles;
 using Dawem.Repository.Core.VacationsTypes;
 using Dawem.Repository.Employees;
 using Dawem.Repository.Localizations;
 using Dawem.Repository.Lookups;
+using Dawem.Repository.MenuItems;
 using Dawem.Repository.Others;
 using Dawem.Repository.Providers;
 using Dawem.Repository.RealTime.Firebase;
@@ -46,6 +51,8 @@ namespace Dawem.Repository.Managers
     public class RepositoryManager : IRepositoryManager
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
+        private readonly ApplicationDBContext context;
+
         private readonly GeneralSetting generalSetting;
         private readonly RequestInfo requestInfo;
         private IUserRepository userRepository;
@@ -68,7 +75,6 @@ namespace Dawem.Repository.Managers
         private ISettingRepository dawemSettingRepository;
         private ICountryRepository countryRepository;
         private ICurrencyRepository currencyRepository;
-        private IScreenRepository screenRepository;
         private IUserRoleRepository userRoleRepository;
         private ITranslationRepository translationRepository;
         private IEmployeeRepository employeeRepository;
@@ -113,7 +119,7 @@ namespace Dawem.Repository.Managers
         private IRequestAttachmentRepository requestAttachmentRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
         private IHolidayRepository holidayRepository;
-        private INotificationStoreRepository notificationStoreRepository;
+        private INotificationRepository notificationRepository;
         private IVacationBalanceRepository vacationBalanceRepository;
         private ISummonRepository summonRepository;
         private ISummonLogSanctionRepository summonLogSanctionRepository;
@@ -127,14 +133,26 @@ namespace Dawem.Repository.Managers
         private INotificationUserRepository notificationUserRepository;
         private INotificationUserFCMTokenRepository notificationUserFCMTokenRepository;
         private IEmployeeOTPRepository employeeOTPRepository;
+        private IMenuItemRepository menuItemRepository;
+        private IMenuItemActionRepository menuItemActionRepository;
+        private IMenuItemNameTranslationRepository menuItemNameTranslationRepository;
+        private IPlanScreenRepository planScreenRepository;
+        private IOldScreenRepository oldScreenRepository;
+        private IDefaultLookupsNameTranslationRepository defaultLookupsNameTranslationRepository;
+
+        private IDefaultVacationTypeRepository defaultVacationTypeRepository;
+        private IDefaultShiftTypeRepository defaultShiftTypeRepository;
+        private IDefaultJustificationTypeRepository defaultJustificationTypeRepository;
+        private IDefaultTaskTypeRepository defaultTaskTypeRepository;
+        private IDefaultPermissionTypeRepository defaultPermissionTypeRepository;
+        private IDefaultOfficialHolidayRepository defaultOfficialHolidayRepository;
 
 
-
-        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestHeaderContext)
+        public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
             unitOfWork = _unitOfWork;
             generalSetting = _generalSetting;
-            requestInfo = _requestHeaderContext;
+            requestInfo = _requestInfo;
         }
         public ICountryRepository CountryRepository =>
             countryRepository ??= new CountryRepository(unitOfWork, generalSetting);
@@ -181,14 +199,20 @@ namespace Dawem.Repository.Managers
         userBranchRepository ??= new UserBranchRepository(unitOfWork, generalSetting);
         public IUserTokenRepository UserTokenRepository =>
          userTokenRepository ??= new UserTokenRepository(unitOfWork, generalSetting);
-        public IScreenRepository ScreenRepository =>
-        screenRepository ??= new ScreenRepository(unitOfWork, generalSetting);
+        public IMenuItemRepository MenuItemRepository =>
+        menuItemRepository ??= new MenuItemRepository(unitOfWork, generalSetting, requestInfo);
+        public IMenuItemActionRepository MenuItemActionRepository =>
+        menuItemActionRepository ??= new MenuItemActionRepository(unitOfWork, generalSetting, requestInfo);
+        public IMenuItemNameTranslationRepository MenuItemNameTranslationRepository =>
+        menuItemNameTranslationRepository ??= new MenuItemNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+        public IPlanScreenRepository PlanScreenRepository =>
+        planScreenRepository ??= new PlanScreenRepository(unitOfWork, generalSetting, requestInfo);
         public IUserRoleRepository UserRoleRepository =>
         userRoleRepository ??= new UserRoleRepository(unitOfWork, generalSetting);
         public ITranslationRepository TranslationRepository =>
         translationRepository ??= new TranslationRepository(unitOfWork, generalSetting);
         public IEmployeeRepository EmployeeRepository =>
-        employeeRepository ??= new EmployeeRepository(unitOfWork, generalSetting, requestInfo);
+        employeeRepository ??= new EmployeeRepository(userRepository, unitOfWork, generalSetting, requestInfo);
         public IDepartmentRepository DepartmentRepository =>
         departmentRepository ??= new DepartmentRepository(unitOfWork, generalSetting, requestInfo);
         public IAssignmentTypeRepository AssignmentTypeRepository =>
@@ -290,8 +314,8 @@ namespace Dawem.Repository.Managers
         public IHolidayRepository HolidayRepository =>
           holidayRepository ??= new HolidayRepository(unitOfWork, generalSetting, requestInfo);
 
-        public INotificationStoreRepository NotificationStoreRepository =>
-            notificationStoreRepository ??= new NotificationStoreRepository(unitOfWork, generalSetting, requestInfo);
+        public INotificationRepository NotificationRepository =>
+            notificationRepository ??= new NotificationRepository(unitOfWork, generalSetting, requestInfo);
 
         public ISummonRepository SummonRepository =>
             summonRepository ??= new SummonRepository(unitOfWork, generalSetting, requestInfo);
@@ -320,7 +344,28 @@ namespace Dawem.Repository.Managers
             notificationUserFCMTokenRepository ??= new NotificationUserFCMTokenRepository(unitOfWork, generalSetting);
         public IEmployeeOTPRepository EmployeeOTPRepository =>
            employeeOTPRepository ??= new EmployeeOTPRepository(unitOfWork, generalSetting);
+        public IOldScreenRepository OldScreenRepository =>
+           oldScreenRepository ??= new OldScreenRepository(unitOfWork, generalSetting);
 
+        public IDefaultLookupsNameTranslationRepository DefaultLookupsNameTranslationRepository =>
+ defaultLookupsNameTranslationRepository ??= new DefaultLookupsNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultVacationTypeRepository DefaultVacationTypeRepository =>
+          defaultVacationTypeRepository ??= new DefaultVacationTypeRepository(unitOfWork, generalSetting, requestInfo);
+        public IDefaultShiftTypeRepository DefaultShiftTypeRepository =>
+         defaultShiftTypeRepository ??= new DefaultShiftTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultJustificationTypeRepository DefaultJustificationTypeRepository =>
+        defaultJustificationTypeRepository ??= new DefaultJustificationTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultPermissionTypeRepository DefaultPermissionTypeRepository =>
+        defaultPermissionTypeRepository ??= new DefaultPermissionTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultTaskTypeRepository DefaultTaskTypeRepository =>
+        defaultTaskTypeRepository ??= new DefaultTaskTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultOfficialHolidayRepository DefaultOfficialHolidayRepository =>
+        defaultOfficialHolidayRepository ??= new DefaultOfficialHolidayRepository(unitOfWork, generalSetting, requestInfo);
 
     }
 }

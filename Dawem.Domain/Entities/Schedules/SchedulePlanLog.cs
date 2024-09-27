@@ -23,7 +23,6 @@ namespace Dawem.Domain.Entities.Schedules
         public SchedulePlan SchedulePlan { get; set; }
 
         #endregion
-        public int Code { get; set; }
         public ForType SchedulePlanType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }

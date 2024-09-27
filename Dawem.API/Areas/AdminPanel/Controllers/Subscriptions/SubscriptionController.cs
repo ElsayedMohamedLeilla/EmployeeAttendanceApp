@@ -3,12 +3,11 @@ using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class SubscriptionController : AdminPanelControllerBase
     {
         private readonly ISubscriptionBL subscriptionBL;
@@ -98,13 +97,13 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(await subscriptionBL.Disable(model));
         }
         [HttpPut]
-        public async Task<ActionResult> Approve(ApproveSubscriptionModel model)
+        public async Task<ActionResult> Accept([FromQuery] AcceptSubscriptionModel model)
         {
             if (model is null)
             {
                 return BadRequest();
             }
-            return Success(await subscriptionBL.Approve(model));
+            return Success(await subscriptionBL.Accept(model));
         }
         [HttpGet]
         public async Task<ActionResult> GetSubscriptionsInformations()

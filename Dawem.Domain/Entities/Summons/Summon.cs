@@ -28,6 +28,6 @@ namespace Dawem.Domain.Entities.Summons
         public List<SummonDepartment> SummonDepartments { get; set; }
         public List<SummonSanction> SummonSanctions { get; set; }
         public List<SummonLog> SummonLogs { get; set; }
-        public  List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
+        public List<EmployeeAttendanceCheck> EmployeeAttendanceChecks { get; set; }
     }
 }

@@ -1,0 +1,11 @@
+﻿namespace Dawem.Models.Response.Dawem.ReportCritrias.AttendanceReports
+{
+    public class AttendaceLeaveStatusShortGroupByJobReportCritria : BaseReportCritria
+    {
+        public List<int> EmployeeIDs { get; set; }
+        public List<int> ZoneIDs { get; set; }
+        public List<int> DepartmentIDs { get; set; }
+        public List<int> JobTitleIDs { get; set; }
+
+    }
+}

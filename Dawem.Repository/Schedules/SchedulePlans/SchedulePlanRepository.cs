@@ -27,10 +27,10 @@ namespace Dawem.Repository.Schedules.SchedulePlans
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Schedule.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.SchedulePlanEmployee != null && x.SchedulePlanEmployee.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.SchedulePlanGroup != null && x.SchedulePlanGroup.Group.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.And(x => x.SchedulePlanDepartment != null && x.SchedulePlanDepartment.Department.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Schedule.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.SchedulePlanEmployee != null && x.SchedulePlanEmployee.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.SchedulePlanGroup != null && x.SchedulePlanGroup.Group.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.SchedulePlanDepartment != null && x.SchedulePlanDepartment.Department.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

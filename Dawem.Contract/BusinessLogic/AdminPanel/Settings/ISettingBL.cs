@@ -1,7 +1,7 @@
-﻿using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
+﻿using Dawem.Models.Dtos.Dawem.Settings;
+using Dawem.Models.Response.AdminPanel.Settings;
 
-namespace Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions
+namespace Dawem.Contract.BusinessLogic.AdminPanel.Settings
 {
     public interface ISettingBL
     {

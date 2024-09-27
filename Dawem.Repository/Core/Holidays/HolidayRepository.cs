@@ -27,7 +27,7 @@ namespace Dawem.Repository.Core.Holidays
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                inner = inner.And(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int id))
                 {
                     criteria.Id = id;
@@ -57,12 +57,12 @@ namespace Dawem.Repository.Core.Holidays
             //// search by year get all year is zero or year = critraia.year
             //if (criteria.Year > 0 || criteria.Year != null)
             //{
-            //    inner = inner.And(e => e.StartYear == criteria.Year || e.StartYear == null);
+            //    inner = inner.Start(e => e.StartYear == criteria.Year || e.StartYear == null);
 
             //}
             if (criteria.DateType != null)
             {
-                inner = inner.And(e => e.DateType == criteria.DateType);
+                inner = inner.Start(e => e.DateType == criteria.DateType);
             }
 
 

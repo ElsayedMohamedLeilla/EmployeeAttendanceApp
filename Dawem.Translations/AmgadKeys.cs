@@ -2,6 +2,16 @@
 {
     public static class AmgadKeys
     {
+
+        public const string ReportBasePath = "uploads\\Reports";
+        public const string ReportCompanyLogo = "CompanyLogo";
+        public const string Pdf = ".pdf";
+        public const string frx = ".frx";
+        public const string Xlsx = ".xlsx";
+        public const string AttendanceReports = "AttendanceReports";
+        public const string SummonReports = "SummonReports";
+        public const string StatisticsReports = "StatisticsReports";
+        public const string BaseData = "BaseData";
         public const string InfoImageName = "info.jpg";
         public const string WarningImageName = "warning.jpg";
         public const string ErrorImageName = "error.jpg";
@@ -10,18 +20,9 @@
         public const string EmployeeEmptyDraft = "EmployeeEmptyDraft";
         public const string DepartmentEmptyDraft = "DepartmentEmptyDraft";
         public const string EmployeeAttendanceEmptyDraft = "EmployeeAttendanceEmptyDraft";
-
         public const string MissMatchDataType = "MissMatchDataType";
-
-        
-
-
         public const string Success = "Success";
-
-
         public const string NoEmail = "NoEmail";
-
-
         public const string EmployeeGroup = "EmployeeGroup";
         public const string JustificationRequests = "justificationRequests";
         public const string SorryYouMustChooseValidTimePeriod0Or1 = "Sorry!!YouMustChooseValidTimePeriod0Or1!";
@@ -65,6 +66,7 @@
         public const string SorryYouMustEnterDateFromForJustificationRequest = "Sorry!!YouMustEnterDateFromForJustificationRequest!";
         public const string SorryYouMustEnterDateToForJustificationRequest = "Sorry!!YouMustEnterDateToForJustificationRequest!";
         public const string SorryThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedVacationWithSelectedPeriod!";
+        public const string SorryThisEmployeeHasVacationInSelectedPeriod = "Sorry!!ThisEmployeeHasVacationInSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedAssignmentWithSelectedPeriod!";
         public const string SorryThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod = "Sorry!!ThisEmployeeHasAnotherOverlappedTaskWithSelectedPeriod!";
         public const string DoneCreateVacationRequestSuccessfully = "DoneCreateVacationRequestSuccessfully";
@@ -77,6 +79,7 @@
         public const string StartABreak = "StartABreak";
         public const string FinishABreak = "FinishABreak";
         public const string NotSet = "NotSet";
+        public const string Summon = "Summon";
         public const string SorryYouMustEnterHolidayName = "Sorry!!YouMustEnterHolidayName!";
         public const string SorryDateTypeMustBe0ForGregorianDateOr1HijriDate = "Sorry!!DateTypeMustBe0ForGregorianDateOr1HijriDate!";
         public const string SorryYouMustEnterStartDateForHoliday = "Sorry!!YouMustEnterStartDateForHoliday!";
@@ -104,37 +107,39 @@
         public const string October = "October";
         public const string November = "November";
         public const string December = "December";
-        public const string Muharram       ="Muharram";
-        public const string Safar      ="Safar";
-        public const string RabiAwwal ="RabialAwwal";
-        public const string RabialThani ="RabialThani";
-        public const string JumadaalAwwal ="JumadaalAwwal";
-        public const string JumadaalThani ="JumadaalThani";
-        public const string Rajab        ="Rajab";
-        public const string Shaaban      ="Shaaban";
-        public const string Ramadan       ="Ramadan";
-        public const string Shawwal      ="Shawwal";
-        public const string DhualQidah  ="DhualQidah";
-        public const string DhualHijjah  = "DhualHijjah";
+        public const string Muharram = "Muharram";
+        public const string Safar = "Safar";
+        public const string RabiAwwal = "RabialAwwal";
+        public const string RabialThani = "RabialThani";
+        public const string JumadaalAwwal = "JumadaalAwwal";
+        public const string JumadaalThani = "JumadaalThani";
+        public const string Rajab = "Rajab";
+        public const string Shaaban = "Shaaban";
+        public const string Ramadan = "Ramadan";
+        public const string Shawwal = "Shawwal";
+        public const string DhualQidah = "DhualQidah";
+        public const string DhualHijjah = "DhualHijjah";
         public const string InvalidMonthNumber = "InvalidMonthNumber";
         public const string Ended = "Ended";
         public const string WillStart = "WillStart";
         public const string Started = "Started";
         public const string SorryNotificationNotFound = "Sorry!!NotificationNotFound!";
         public const string NewNotification = "NewNotification";
-        public const string NewVacationRequest  = "NewVacationRequest";
+        public const string NewVacationRequest = "NewVacationRequest";
         public const string VacationRequest = "VacationRequest";
         public const string AcceptingVacationRequest = "AcceptingVacationRequest";
         public const string RejectingVacationRequest = "RejectingVacationRequest";
         public const string JustificationRequest = "JustificationRequest";
         public const string PermisionRequest = "PermisionRequest";
         public const string AddingInMission = "AddingInMission";
-        public const string NewSummons = "NewSummons";
+        public const string NewSummon = "NewSummon";
+        public const string NewSummonDescription = "NewSummonDescription";
         public const string NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction = "NewSummonsWasAddedPleaseAttendInSpecifiedTimeToFingerPrintOrYouWillHasSomeSanction";
         public const string High = "High";
-        public const string Medium = "Medium"; 
+        public const string Medium = "Medium";
         public const string Low = "Low";
-        public const string AddingNewVacationWaitingApproval= "AddingNewVacationWaitingApproval";
+        public const string NewVacationRequestWaitingApproval = "NewVacationRequestWaitingApproval";
+        public const string NewTaskRequestWaitingApproval = "NewTaskRequestWaitingApproval";
         public const string YourVacationIsAccepted = "YourVacationIsAccepted";
         public const string YourVacationIsRejected = "YourVacationIsRejected";
         public const string Dear = "Dear";
@@ -210,7 +215,7 @@
         public const string SorryThisUserAlreadySignedUp = "Sorry!!ThisUserAlreadySignedUp";
         public const string SorryCompanyVerificationCodeNotFound = "Sorry!!CompanyVerificationCodeNotFound";
         public const string ThanksForUsingDawemApplication = "ThanksForUsingDawemApplication";
-        public const string PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow= "PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow";
+        public const string PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow = "PleaseUseThisOneTimePasswordToCompleateSignUpProcessThisOTPWillExpireAfterHalfHourFromNow";
         public const string SorryYouMustEnterCompanyVerificationCode = "Sorry!!YouMustEnterCompanyVerificationCode";
         public const string DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep = "DoneOTPGeneratedSuccessfullyPleaseUseThisPasswordInTheNextStep";
         public const string PleaseManuallyCopyTheOneTimePasswordToCompleteTheSignUpProcess = "PleaseManuallyCopyTheOneTimePasswordToCompleteTheSignUpProcess";
@@ -229,6 +234,7 @@
         public const string DoneOTPDeletedSucessfully = "DoneOTPDeletedSucessfully";
         public const string NewPermisionRequest = "NewPermisionRequest";
         public const string NewPermisionRequestWaitingApproval = "NewPermisionRequestWaitingApproval";
+        public const string NewAssignmentRequestWaitingApproval = "NewAssignmentRequestWaitingApproval";
         public const string YourPermissionRequestIsAccepted = "YourPermissionRequestIsAccepted";
         public const string YourPermissionRequestIsRejected = "YourPermissionRequestIsRejected";
         public const string AcceptingPermissionRequest = "AcceptingPermissionRequest";
@@ -237,9 +243,10 @@
         public const string NewJustificationRequestWaitingApproval = "NewJustificationRequestWaitingApproval";
         public const string YourJustificationRequestIsAccepted = "YourJustificationRequestIsAccepted";
         public const string YourJustificationRequestIsRejected = "YourJustificationRequestIsRejected";
+        public const string YourTaskRequestIsAccepted = "YourTaskRequestIsAccepted";
+        public const string YourTaskRequestIsRejected = "YourTaskRequestIsRejected";
         public const string AcceptingJustificationRequest = "AcceptingJustificationRequest";
         public const string RejectingJustificationRequest = "RejectingJustificationRequest";
-
         public const string SorryTheEmployeeEmailIsInValid = "Sorry!!TheEmployeeEmailIsInValid";
         public const string InvalidExportFormatSpecified = "InvalidExportFormatSpecified";
         public const string MissMatchValue = "MissMatchValue";
@@ -247,61 +254,35 @@
         public const string FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues = "FingerPrintTypeValueNotCorrectPleaseLookReadMeFileToSeeExpectedValues";
         public const string YourUserNameIs = "YourUserNameIs";
         public const string NewAccount = "NewAccount";
+        public const string AssignmentRequest = "AssignmentRequest";
+        public const string NewAssignmentRequest = "NewAssignmentRequest";
+        public const string YourAssignmentRequestIsAccepted = "YourAssignmentRequestIsAccepted";
+        public const string YourAssignmentRequestIsRejected = "YourAssignmentRequestIsRejected";
+        public const string AcceptingAssignmentRequest = "AcceptingAssignmentRequest";
+        public const string RejectingAssignmentRequest = "RejectingAssignmentRequest";
+
+        public const string SorryErrorHappendDuringExtractingReport = "Sorry!!ErrorHappendDuringExtractingReport!";
+        public const string RegistrationInformation = "RegistrationInformation";
+        public const string PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation = "PleaseUseThisInformationToCompleateYourSignUpOnMobileDontMakeAnyOneSeeThisInformation";
+        public const string CompanyVerificationCode = "CompanyVerificationCode";
+        public const string EmploymentNumber = "EmploymentNumber";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisVacation = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisVacation!";
+        public const string SorryShiftTypeNotFound = "Sorry!!ShiftTypeNotFound!";
+        public const string DoneCreateShiftsTypeSuccessfully = "DoneCreateShiftsTypeSuccessfully";
+        public const string DoneUpdatedShiftsTypeSuccessfully = "DoneUpdatedShiftsTypeSuccessfully";
+        public const string SorryShiftsTypeNameIsDuplicated = "Sorry!!ShiftsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisShift = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisShift!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisJustification = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisJustification!";
+        public const string SorryYouMustEnterTasksTypeId = "Sorry!!YouMustEnterTasksTypeId!";
+        public const string SorryTasksTypeNameIsDuplicated = "Sorry!!TasksTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterPermissionsTypeId = "Sorry!!YouMustEnterPermissionsTypeId!";
+        public const string SorryPermissionsTypeNameIsDuplicated = "Sorry!!PermissionsTypeNameIsDuplicated!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisTask = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisTaskType!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisPermission = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisPermissionType!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisHoliday = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisHoliday!";
+        public const string SorryYouMustEnterHolidayId = "Sorry!!YouMustEnterHolidayId!";
 
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -5,23 +5,26 @@
         NewVacationRequest,
         AcceptingVacationRequest,
         RejectingVacationRequest,
-
         NewTaskRequest,
-        AccecptingTaskRequest,
+        AcceptingTaskRequest,
         RejectingTaskRequest,
-
         NewJustificationRequest,
         AcceptingJustificationRequest, 
         RejectingJustificationRequest,
-
         AddingInMission,
-
         NewPermissionRequent,
         AcceptingPermissionRequest,
         RejectingPermissionRequest,
-
-        NewSummons 
-
-
+        NewAssignmentRequest,
+        AcceptingAssignmentRequest,
+        RejectingAssignmentRequest,
+        NewSummon,
+        SummonMissed,
+        NewChangeInSchedule,
+        DoNotForgetSummon,
+        DoNotForgetSignIn,
+        ForgetSignIn,
+        DoNotForgetSignOut,
+        ForgetSignOut
     }
 }

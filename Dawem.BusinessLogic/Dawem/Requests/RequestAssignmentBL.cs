@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
@@ -10,9 +11,11 @@ using Dawem.Domain.Entities.Schedules;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Attendances;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Assignments;
 using Dawem.Models.Response.Dawem.Requests;
@@ -31,12 +34,15 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
+        private readonly INotificationHandleBL notificationHandleBL;
+
         public RequestAssignmentBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
             IMapper _mapper,
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
-           IRequestAssignmentBLValidation _requestAssignmentBLValidation)
+           IRequestAssignmentBLValidation _requestAssignmentBLValidation,
+           INotificationHandleBL _notificationHandleBL)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -44,6 +50,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             requestAssignmentBLValidation = _requestAssignmentBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
+            notificationHandleBL = _notificationHandleBL;
+
         }
         public async Task<int> Create(CreateRequestAssignmentModelDTO model)
         {
@@ -113,12 +121,54 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestAssignment.Code = getRequestAssignmentNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestAssignment.IsActive = true;
 
             repositoryManager.RequestRepository.Insert(request);
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Handle Notifications
+
+            var requestEmployee = await repositoryManager
+                .EmployeeRepository.Get(r => r.Id == employeeId && r.DirectManagerId > 0)
+                .Select(e => new
+                {
+                    DirectManagerId = e.DirectManagerId.Value
+                }).FirstOrDefaultAsync();
+
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == requestEmployee.DirectManagerId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
+
+            var employeeIds = new List<int>() { requestEmployee.DirectManagerId };
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.NewAssignmentRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
             #endregion
 
@@ -192,9 +242,11 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.ModifyUserId = requestInfo.UserId;
 
 
+            getRequestAssignment.AssignmentTypeId = model.AssignmentTypeId;
             getRequestAssignment.ModifiedDate = DateTime.Now;
             getRequestAssignment.ModifyUserId = requestInfo.UserId;
             getRequestAssignment.DateTo = model.DateTo;
+            getRequestAssignment.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
 
@@ -262,7 +314,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestAssignmentsList = await queryPaged.Select(requestAssignment => new GetRequestAssignmentsResponseModel
+            var requestAssignmentsList = await queryPaged.IgnoreQueryFilters().Select(requestAssignment => new GetRequestAssignmentsResponseModel
             {
                 Id = requestAssignment.Request.Id,
                 Code = requestAssignment.Request.Code,
@@ -304,7 +356,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             var employeeAssignments = await repositoryManager.RequestAssignmentRepository
                 .Get(a => !a.Request.IsDeleted && a.Request.EmployeeId == getEmployeeId
                 && a.Request.Date.Month == criteria.Month
-                && a.Request.Date.Year == criteria.Year)
+                && a.Request.Date.Year == criteria.Year).IgnoreQueryFilters()
                 .Select(requestAssignment => new
                 {
                     requestAssignment.Request.Id,
@@ -401,7 +453,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                                 Status = ds.Status,
                                 StatusName = ds.StatusName,
                                 Employees = ds.Employees,
-                                Notes = isScheduleVacationDay ? 
+                                Notes = isScheduleVacationDay ?
                                 TranslationHelper.GetTranslation(LeillaKeys.WeekVacation, requestInfo.Lang) : null
                             }).ToList()
                         }
@@ -470,7 +522,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestAssignmentInfoResponseModel> GetInfo(int requestId)
         {
-            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestAssignment => new GetRequestAssignmentInfoResponseModel
                 {
                     Code = requestAssignment.Request.Code,
@@ -501,7 +554,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestAssignmentByIdResponseModel> GetById(int RequestAssignmentId)
         {
-            var requestAssignment = await repositoryManager.RequestAssignmentRepository.Get(e => e.Request.Id == RequestAssignmentId && !e.IsDeleted)
+            var requestAssignment = await repositoryManager.RequestAssignmentRepository.
+                Get(e => e.Request.Id == RequestAssignmentId && !e.IsDeleted).IgnoreQueryFilters()
                 .Select(requestAssignment => new GetRequestAssignmentByIdResponseModel
                 {
                     Id = requestAssignment.Request.Id,
@@ -510,6 +564,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     AssignmentTypeId = requestAssignment.AssignmentTypeId,
                     DateFrom = requestAssignment.Request.Date,
                     DateTo = requestAssignment.DateTo,
+                    Status = requestAssignment.Request.Status,
                     IsActive = requestAssignment.Request.IsActive,
                     IsNecessary = requestAssignment.Request.IsNecessary,
                     ForEmployee = requestAssignment.Request.ForEmployee,
@@ -554,6 +609,41 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.DecisionDate = DateTime.UtcNow;
 
             await unitOfWork.SaveAsync();
+
+            #region Handle Notifications
+
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.Any() ? u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList() : null
+                }).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.AcceptingAssignmentRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
+
             return true;
         }
         public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
@@ -577,6 +667,41 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
+
+            #region Handle Notifications
+
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.Any() ? u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList() : null
+                }).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.RejectingAssignmentRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
+
             return true;
         }
         public async Task<GetAssignmentsInformationsResponseDTO> GetAssignmentsInformations()

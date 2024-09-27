@@ -44,6 +44,8 @@
         Summon,
         SummonLog,
         AttendanceSummaryReport,
-        Company
+        Company,
+        Attendance,
+        EmployeeSummon
     }
 }

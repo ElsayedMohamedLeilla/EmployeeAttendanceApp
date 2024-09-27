@@ -28,10 +28,10 @@ namespace Dawem.Repository.Lookups
             if (!string.IsNullOrWhiteSpace(criteria.FreeText))
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
-                predicate = predicate.Start(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
-                predicate = predicate.Or(x => x.NativeName.ToLower().Trim().Contains(criteria.FreeText));
-                predicate = predicate.Or(x => x.ISO2.ToLower().Trim().Contains(criteria.FreeText));
-                predicate = predicate.Or(x => x.ISO3.ToLower().Trim().Contains(criteria.FreeText));
+                predicate = predicate.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                predicate = predicate.Or(x => x.NativeName.ToLower().Trim().StartsWith(criteria.FreeText));
+                predicate = predicate.Or(x => x.ISO2.ToLower().Trim().StartsWith(criteria.FreeText));
+                predicate = predicate.Or(x => x.ISO3.ToLower().Trim().StartsWith(criteria.FreeText));
             }
 
             var query = Get(predicate, includeProperties: includeProperties);

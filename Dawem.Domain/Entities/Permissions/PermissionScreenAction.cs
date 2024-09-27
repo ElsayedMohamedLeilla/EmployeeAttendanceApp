@@ -10,6 +10,6 @@ namespace Dawem.Domain.Entities.Permissions
         public int PermissionScreenId { get; set; }
         [ForeignKey(nameof(PermissionScreenId))]
         public virtual PermissionScreen PermissionScreen { get; set; }
-        public ApplicationAction ActionCode { get; set; }
+        public ApplicationActionCode ActionCode { get; set; }
     }
 }

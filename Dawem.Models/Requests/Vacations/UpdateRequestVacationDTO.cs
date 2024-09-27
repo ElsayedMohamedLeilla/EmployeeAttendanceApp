@@ -18,5 +18,6 @@ namespace Dawem.Models.Requests.Vacations
         public float BalanceBeforeRequest { get; set; }
         [JsonIgnore]
         public float BalanceAfterRequest { get; set; }
+        public string Notes { get; set; }
     }
 }

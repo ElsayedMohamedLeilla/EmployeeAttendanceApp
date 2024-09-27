@@ -12,6 +12,7 @@
     <PackageReference Include="IPinfo" Version="3.0.0" />
     <PackageReference Include="LinqKit" Version="1.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\Dawem.Domain\Dawem.Domain.csproj" />
     <ProjectReference Include="..\Dawem.Helpers\Dawem.Helpers.csproj" />
     <ProjectReference Include="..\Dawem.Models\Dawem.Models.csproj" />
+    <ProjectReference Include="..\Dawem.ReportsModule\Dawem.ReportsModule.csproj" />
     <ProjectReference Include="..\Dawem.Repository\Dawem.Repository.csproj" />
     <ProjectReference Include="..\Dawem.Translations\Dawem.Translations.csproj" />
     <ProjectReference Include="..\Enums\Dawem.Enums.csproj" />

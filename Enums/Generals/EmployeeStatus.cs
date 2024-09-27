@@ -5,6 +5,7 @@
         NotAttendYet,
         AtWork,
         AttendThenLeaved,
-        LeavedOnly
+        LeavedOnly,
+        AtBreak
     }
 }

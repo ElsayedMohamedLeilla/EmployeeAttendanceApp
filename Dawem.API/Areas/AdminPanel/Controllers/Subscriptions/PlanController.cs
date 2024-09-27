@@ -3,12 +3,11 @@ using Dawem.Contract.BusinessLogic.AdminPanel.Subscriptions;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class PlanController : AdminPanelControllerBase
     {
         private readonly IPlanBL planBL;
@@ -72,7 +71,6 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Subscriptions
             return Success(await planBL.GetById(planId));
         }
         [HttpDelete]
-        
         public async Task<ActionResult> Delete(int planId)
         {
             if (planId < 1)

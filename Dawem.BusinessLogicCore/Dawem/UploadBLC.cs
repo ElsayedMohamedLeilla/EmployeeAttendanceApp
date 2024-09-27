@@ -75,13 +75,19 @@ namespace Dawem.BusinessLogicCore.Dawem
         }
         public string GetFilePath(string fileName, string folderName)
         {
+            string filePath = null;
             var protocol = accessor?.HttpContext?.Request?.IsHttps ?? true ? LeillaKeys.Https : LeillaKeys.Http;
             var host = accessor?.HttpContext?.Request?.Host.Value;
             var path = generator.GetPathByAction(LeillaKeys.Browse, LeillaKeys.Browse, null);
-            var browseLink = $"{protocol}://{host}{path}";
-
-            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName)) return null;
-            return browseLink + LeillaKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
+            
+            if (!string.IsNullOrEmpty(host) && !string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(folderName))
+            {
+                var browseLink = $"{protocol}://{host}{path}";
+                if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrEmpty(fileName));
+                filePath = browseLink + LeillaKeys.QuestionMark + "fileName=" + fileName + "&folderName=" + folderName;
+            }
+         
+            return filePath;
         }
         private static string GetUniqueFileName(string fileName)
         {

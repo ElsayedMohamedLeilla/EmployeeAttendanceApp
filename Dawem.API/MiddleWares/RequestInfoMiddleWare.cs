@@ -29,6 +29,7 @@ namespace Dawem.API.MiddleWares
             ICompanyBranchRepository branchRepository, IOptions<Jwt> appSettings)
         {
             requestInfo.Lang = HttpRequestHelper.getLangKey(httpContext.Request);
+            requestInfo.Lang = requestInfo.Lang == null || requestInfo.Lang.Length > 2 ? "ar" : requestInfo.Lang;
             requestInfo.RequestPath = httpContext.Request.Path;
 
             int userId = 0;
@@ -37,21 +38,19 @@ namespace Dawem.API.MiddleWares
 
             try
             {
-
-
                 string token = httpContext.Request.Headers[LeillaKeys.Authorization];
                 if (!string.IsNullOrEmpty(token))
                 {
                     var tok = token.Replace(LeillaKeys.Bearer, LeillaKeys.EmptyString);
                     var jwttoken = new JwtSecurityTokenHandler().ReadJwtToken(tok);
 
-                    var userIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.UserId)?.Value;
-                    var companyIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.CompanyId)?.Value;
-                    var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.ApplicationType)?.Value;
+                    var userIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.UserId)?.Value ?? LeillaKeys.EmptyString;
+                    var companyIdText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.CompanyId)?.Value ?? LeillaKeys.EmptyString;
+                    var applicationTypeText = jwttoken.Claims.First(claim => claim.Type == LeillaKeys.ApplicationType)?.Value ?? LeillaKeys.EmptyString;
 
-                    int.TryParse(userIdText.ToString(), out userId);
-                    int.TryParse(companyIdText.ToString(), out companyId);
-                    int.TryParse(applicationTypeText.ToString(), out applicationType);
+                    _ = int.TryParse(userIdText.ToString(), out userId);
+                    _ = int.TryParse(companyIdText.ToString(), out companyId);
+                    _ = int.TryParse(applicationTypeText.ToString(), out applicationType);
 
                     requestInfo.UserId = userId;
                     requestInfo.CompanyId = companyId;
@@ -61,7 +60,7 @@ namespace Dawem.API.MiddleWares
                     var currentCompanyId = requestInfo.CompanyId;
 
                     var getTimeZoneToUTC = await repositoryManager.CompanyRepository
-                        .Get(c => !c.IsDeleted && c.Id == currentCompanyId)
+                        .Get(c => !c.IsDeleted & c.Id == currentCompanyId)
                         .Select(c => c.Country.TimeZoneToUTC)
                         .FirstOrDefaultAsync();
 
@@ -88,23 +87,25 @@ namespace Dawem.API.MiddleWares
                 requestInfo.User = await userManager.FindByIdAsync(userIdString);
 
 
-                if ((requestInfo?.User != null && requestInfo.User.Type == AuthenticationType.AdminPanel) ||
+                if ((requestInfo?.User != null & requestInfo?.User?.Type == AuthenticationType.AdminPanel) ||
                     requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel))
                 {
-                    requestInfo.Type = AuthenticationType.AdminPanel;
+                    requestInfo.AuthenticationType = AuthenticationType.AdminPanel;
                 }
                 else
                 {
-                    requestInfo.Type = AuthenticationType.DawemAdmin;
+                    requestInfo.AuthenticationType = AuthenticationType.DawemAdmin;
                 }
 
 
                 requestInfo.EmployeeId = requestInfo?.User?.EmployeeId;
-                requestInfo.CompanyId = requestInfo.Type == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
+                requestInfo.CompanyId = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ? 0 : requestInfo.CompanyId;
             }
 
+            
+            requestInfo.IsAnonymousRequest = userId == 00 & requestInfo.RequestPath.ToLower().Contains(LeillaKeys.Authentication.ToLower());
             requestInfo.IsAdminPanelRequest = requestInfo.RequestPath.ToLower().Contains(LeillaKeys.AdminPanel);
-            requestInfo.IsAdminPanelUser = requestInfo?.User != null && requestInfo.User.Type == AuthenticationType.AdminPanel;
+            requestInfo.IsAdminPanelUser = requestInfo?.User != null & requestInfo?.User?.Type == AuthenticationType.AdminPanel;
 
             if (Thread.CurrentThread.CurrentUICulture.Name.ToLower().StartsWith(LeillaKeys.Ar))
             {

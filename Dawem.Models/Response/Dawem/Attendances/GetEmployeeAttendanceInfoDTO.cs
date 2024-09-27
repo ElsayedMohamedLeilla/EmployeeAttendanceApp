@@ -10,6 +10,7 @@
         public string LateArrivals { get; set; }
         public string EarlyDepartures { get; set; }
         public string WorkingHours { get; set; }
+        public string BreakHours { get; set; }
         public string OverTime { get; set; }
         public string ZoneName { get; set; }
         public List<GetEmployeeAttendanceInfoFingerprintDTO> Fingerprints { get; set; }

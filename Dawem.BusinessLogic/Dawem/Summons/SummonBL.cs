@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Summons;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Summons;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
@@ -10,9 +10,11 @@ using Dawem.Domain.Entities.Summons;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
 using Dawem.Models.Dtos.Dawem.Summons.Summons;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Response.Dawem.Summons.Summons;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
@@ -27,13 +29,13 @@ namespace Dawem.BusinessLogic.Dawem.Summons
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private readonly INotificationHandleBL notificationHandleBL;
 
         public SummonBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
-            IMapper _mapper,
+            IMapper _mapper, INotificationHandleBL _notificationHandleBL,
            RequestInfo _requestHeaderContext,
-           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC, INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           ISummonBLValidation _summonBLValidation, IUploadBLC _uploadBLC)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
@@ -41,7 +43,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             summonBLValidation = _summonBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            notificationHandleBL = _notificationHandleBL;
         }
 
         public async Task<int> Create(CreateSummonModel model)
@@ -133,93 +135,89 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             await unitOfWork.SaveAsync();
             #endregion
 
-            #region Notifiacations
-            /*
-            var notificationNextCode = await repositoryManager.NotificationStoreRepository
-               .Get(e => e.CompanyId == requestInfo.CompanyId)
-               .Select(e => e.Code)
-               .DefaultIfEmpty()
-               .MaxAsync();
+            #region Handle Notifications
 
-            #region For All Employee
+            var forAllEmployees = model.ForAllEmployees.HasValue && model.ForAllEmployees.Value;
 
-            List<NotificationRecieverDTO> notificationRecieverDTO = new();
-            if (model.ForAllEmployees.HasValue && model.ForAllEmployees.Value)
+            var employees = await repositoryManager.EmployeeRepository.
+                    Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId &&
+                    (forAllEmployees || (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                    (model.Departments != null && e.DepartmentId > 00 && model.Departments.Contains(e.DepartmentId.Value)) ||
+                    (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Departments.Contains(eg.GroupId))))).
+                    Select(e => new
+                    {
+                        e.Id,
+                        NotificationUsers = e.Users != null ? e.Users.Where(u => !u.IsDeleted).
+                        Select(u => new NotificationUserModel
+                        {
+                            Id = u.Id,
+                            Email = u.Email,
+                            UserTokens = u.NotificationUsers.
+                            Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                            Any(f => !f.IsDeleted)).
+                            SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                            Select(f => new NotificationUserTokenModel
+                            {
+                                ApplicationType = f.DeviceType,
+                                Token = f.FCMToken
+                            })).ToList()
+                        }).ToList() : null
+                    }).ToListAsync();
+
+            var employeeIds = employees.Select(e => e.Id).ToList();
+
+            var notificationUsers = employees.Where(e => e.NotificationUsers != null).
+                SelectMany(e => e.NotificationUsers).
+                Distinct().
+                ToList();
+
+            #region Handle Notification Description
+
+            var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                Select(l => new ActiveLanguageModel
+                {
+                    Id = l.Id,
+                    ISO2 = l.ISO2
+                }).ToListAsync();
+
+            var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+            foreach (var language in getActiveLanguages)
             {
-                notificationRecieverDTO = repositoryManager.UserRepository
-                    .Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null)
-                    .Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id })
-                    .ToList();
+                notificationDescriptions.Add(new NotificationDescriptionModel
+                {
+                    LanguageIso2 = language.ISO2,
+                    Description = TranslationHelper.GetTranslation(LeillaKeys.YouHaveNewSummon, language.ISO2) +
+                        LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.InDate, language.ISO2) +
+                        LeillaKeys.ColonsThenSpace +
+                        model.LocalDateAndTime.ToString("dd-MM-yyyy") +
+                        LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.TheTime, language.ISO2) +
+                        LeillaKeys.ColonsThenSpace +
+                        model.LocalDateAndTime.ToString("hh:mm") + LeillaKeys.Space +
+                        DateHelper.TranslateAmAndPm(model.LocalDateAndTime.ToString("tt"), language.ISO2) +
+                        LeillaKeys.Space + TranslationHelper.GetTranslation(LeillaKeys.AvailableFor, language.ISO2) + LeillaKeys.ColonsThenSpace +
+                        model.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(model.TimeType.ToString(), language.ISO2)
+                });
             }
-            else
-            {
-                if (model.Employees != null && model.Employees.Any())
-                {
-                    notificationRecieverDTO = repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Employees.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList();
-                }
-                if (model.Groups != null && model.Groups.Any())
-                {
-                    List<int> groupEmployeeIds = repositoryManager.GroupEmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Groups.Contains(s.Id)).Select(g => g.EmployeeId).ToList();
-                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && groupEmployeeIds.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
-                }
-                if (model.Departments != null && model.Departments.Any())
-                {
-                    List<int> departmentEmployeeIds = repositoryManager.EmployeeRepository.Get(s => s.IsActive && !s.IsDeleted && model.Departments.Contains(s.DepartmentId ?? 0)).Select(g => g.Id).ToList();
-                    notificationRecieverDTO.AddRange(repositoryManager.UserRepository.Get(s => s.IsActive && !s.IsDeleted && s.CompanyId == requestInfo.CompanyId && s.EmployeeId != null && model.Departments.Contains(s.EmployeeId ?? 0)).Select(u => new NotificationRecieverDTO { EmployeeId = u.EmployeeId ?? 0, UserId = u.Id }).ToList());
-                }
-            }
-
-            List<NotificationStore> notificationStores = new();
-            for (int i = 0; i < notificationRecieverDTO.Count; i++)
-            {
-                var notificationStore = new NotificationStore()
-                {
-                    Code = notificationNextCode++,
-                    EmployeeId = notificationRecieverDTO[i].EmployeeId,
-                    CompanyId = requestInfo.CompanyId,
-                    AddUserId = requestInfo.UserId,
-                    AddedDate = DateTime.UtcNow,
-                    Status = NotificationStatus.Info,
-                    NotificationType = NotificationType.NewSummons,
-                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Warning, uploadBLC),
-                    IsRead = false,
-                    IsActive = true,
-                    IsViewed = false,
-                    Priority = Priority.High
-                };
-                notificationStores.Add(notificationStore);
-                #region Fire Notification & Email
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(notificationRecieverDTO.Select(S => S.UserId).ToList(), NotificationType.NewSummons, NotificationStatus.Warning);
-                #endregion
-            }
-            repositoryManager.NotificationStoreRepository.BulkInsert(notificationStores);
-            await unitOfWork.SaveAsync();
-
 
 
             #endregion
 
-            #region Save Notification In DB
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.NewSummon,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium,
+                NotificationDescriptions = notificationDescriptions,
+                ActiveLanguages = getActiveLanguages
+            };
 
-            //var notificationStore = new NotificationStore()
-            //{
-            //    Code = notificationNextCode,
-            //    EmployeeId = requestEmployee.DirectManagerId ?? 0,
-            //    CompanyId = requestInfo.CompanyId,
-            //    AddUserId = requestInfo.UserId,
-            //    AddedDate = DateTime.UtcNow,
-            //    Status = NotificationStatus.Info,
-            //    NotificationType = NotificationType.NewVacationRequest,
-            //    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
-            //    IsRead = false,
-            //    IsActive = true,
-            //    Priority = Priority.Medium
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
 
-            //};
-            //repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-            //await unitOfWork.SaveAsync();
-            #endregion
-            */
             #endregion
 
             #region Handle Response
@@ -513,7 +511,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                 LocalDateAndTime = s.LocalDateAndTime,
                 ForTypeName = TranslationHelper.GetTranslation(s.ForType.ToString(), requestInfo.Lang),
                 NumberOfTargetedEmployees = s.SummonLogs.Count,
-                SummonStatus = GetSummonStatus(s.StartDateAndTimeUTC, s.EndDateAndTimeUTC),
+                SummonStatus = GetSummonStatus(s.StartDateAndTimeUTC, s.EndDateAndTimeUTC, utcDate),
                 SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
@@ -527,10 +525,57 @@ namespace Dawem.BusinessLogic.Dawem.Summons
             #endregion
 
         }
-        private static SummonStatus GetSummonStatus(DateTime startDateAndTimeUTC, DateTime endDateAndTimeUTC)
+        public async Task<EmployeeGetSummonsResponse> EmployeeGet(GetSummonsCriteria criteria)
         {
+            var summonRepository = repositoryManager.SummonRepository;
+            var query = summonRepository.EmployeeGetAsQueryable(criteria);
             var utcDate = DateTime.UtcNow;
+            var employeeId = requestInfo.EmployeeId;
 
+            #region paging
+            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            int take = PagingHelper.Take(criteria.PageSize);
+            #region sorting
+            var queryOrdered = summonRepository.OrderBy(query, nameof(Summon.Id), LeillaKeys.Desc);
+            #endregion
+            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            #endregion
+
+            #region Handle Response
+
+            var summonsList = await queryPaged.Select(s => new EmployeeGetSummonsResponseModel
+            {
+                Id = s.Id,
+                Code = s.Code,
+                LocalDateAndTime = s.LocalDateAndTime,
+                SummonStatus = utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing,
+                SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
+                EmployeeStatusName = s.EmployeeAttendanceChecks.Any(eac => !eac.IsDeleted && eac.EmployeeAttendance.EmployeeId == requestInfo.EmployeeId && eac.SummonId == s.Id) ?
+                TranslationHelper.GetTranslation(LeillaKeys.SummonDone, requestInfo.Lang) : TranslationHelper.GetTranslation(LeillaKeys.SummonMissed, requestInfo.Lang)
+            }).ToListAsync();
+
+            return new EmployeeGetSummonsResponse
+            {
+                Summons = summonsList,
+                TotalCount = await query.CountAsync()
+            };
+
+            #endregion
+
+        }
+        private static SummonStatus GetSummonStatus(DateTime startDateAndTimeUTC, DateTime endDateAndTimeUTC, DateTime utcDate)
+        {
             return utcDate > endDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < startDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing;
@@ -550,15 +595,54 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Employees = s.SummonEmployees.Count > 0 ? s.SummonEmployees.Select(e => e.Employee.Name).ToList() : null,
                     Groups = s.SummonGroups.Count > 0 ? s.SummonGroups.Select(e => e.Group.Name).ToList() : null,
                     Departments = s.SummonDepartments.Count > 0 ? s.SummonDepartments.Select(e => e.Department.Name).ToList() : null,
-                    Sanctions = s.SummonSanctions.Count > 0 ? s.SummonSanctions.Select(e => e.Sanction.Name).ToList() : null,
+                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
+                    s.SummonSanctions.Select(e => new SummonSancationModel
+                    {
+                        Name = e.Sanction.Name
+                    }).ToList() : null,
                     NumberOfTargetedEmployees = s.SummonLogs.Count,
+                    
                     SummonStatus = utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing,
+
                     SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC ?
                     SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
                     SummonStatus.NotStarted : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                     IsActive = s.IsActive
+                }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
+
+            return summon;
+        }
+        public async Task<EmployeeGetSummonInfoResponseModel> EmployeeGetInfo(int summonId)
+        {
+            var utcDate = DateTime.UtcNow;
+            var employeeId = requestInfo.EmployeeId;
+
+            var summon = await repositoryManager.SummonRepository.Get(e => e.Id == summonId && !e.IsDeleted)
+                .Select(s => new EmployeeGetSummonInfoResponseModel
+                {
+                    Code = s.Code,
+                    LocalDateAndTime = s.LocalDateAndTime,
+                    AllowedTimeName = s.AllowedTime + LeillaKeys.Space + TranslationHelper.GetTranslation(s.TimeType.ToString() + LeillaKeys.TimeType, requestInfo.Lang),
+                    Sanctions = utcDate > s.EndDateAndTimeUTC && s.SummonSanctions.Count > 0 ?
+                    s.SummonSanctions.Select(e => new SummonSancationModel
+                    {
+                        Name = e.Sanction.Name
+                    }).ToList() : null,
+                    SummonStatus = utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate > s.EndDateAndTimeUTC ?
+                    SummonStatus.Finished : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing,
+                    SummonStatusName = TranslationHelper.GetTranslation(nameof(SummonStatus) + (utcDate > s.EndDateAndTimeUTC && !s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId && c.FingerPrintType == FingerPrintType.Summon) ?
+                    SummonStatus.FinishedAndMissed : utcDate < s.StartDateAndTimeUTC ?
+                    SummonStatus.NotStarted : s.EmployeeAttendanceChecks.
+                    Any(c => !c.IsDeleted && c.EmployeeAttendance.EmployeeId == employeeId &&
+                    c.FingerPrintType == FingerPrintType.Summon) ? SummonStatus.Finished : SummonStatus.OnGoing).ToString(), requestInfo.Lang),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorrySummonNotFound);
 
             return summon;
@@ -656,16 +740,39 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     !summonLog.DoneSummon && !summonLog.DoneTakeActions && utcDateTime >= summonLog.Summon.EndDateAndTimeUTC).
                     Select(summonLog => new
                     {
+                        summonLog.CompanyId,
+                        summonLog.SummonId,
                         summonLog.Id,
                         SummonSanctions = summonLog.Summon.SummonSanctions
                             .Select(ss => new
                             {
                                 ss.Id,
                                 SanctionType = ss.Sanction.Type,
-                                SanctionName = ss.Sanction.Name,
-                                SanctionWarningMessage = ss.Sanction.WarningMessage
+                                //SanctionName = ss.Sanction.Name,
+                                //SanctionWarningMessage = ss.Sanction.WarningMessage
                             }),
-                        EmployeeId = summonLog.Id,
+
+                        summonLog.EmployeeId,
+
+                        NotificationUsers = summonLog.Summon.Company.Users.Where(u => !u.IsDeleted && u.IsActive & u.EmployeeId > 0 &
+                             u.EmployeeId.Value == summonLog.EmployeeId).
+                             Select(u => new NotificationUserModel
+                             {
+                                 Id = u.Id,
+                                 Email = u.Email,
+                                 UserTokens = u.NotificationUsers.
+                                Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                                Any(f => !f.IsDeleted)).
+                                SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                                Select(f => new NotificationUserTokenModel
+                                {
+                                    ApplicationType = f.DeviceType,
+                                    Token = f.FCMToken
+                                })).ToList()
+                             }).ToList(),
+
+                        SummonDate = summonLog.Summon.LocalDateAndTime,
+
                         WillCanceledEmployeeAttendanceId = summonLog.Summon.SummonSanctions
                             .Any(ss => ss.Sanction.Type == SanctionType.CancelDayFingerprint) && summonLog.Employee.EmployeeAttendances
                             .Any(ea => !ea.IsDeleted && ea.IsActive && ea.LocalDate.Date == summonLog.Summon.LocalDateAndTime.Date) ?
@@ -720,28 +827,6 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
                     foreach (var missingEmployee in getMissingEmployeesList)
                     {
-                        #region Send Notification To Employees Missing Summon
-
-                        var doneSendNotification = false;
-                        var getNotificationsSancations = missingEmployee.SummonSanctions.
-                            Where(s => s.SanctionType == SanctionType.Notification);
-
-                        if (getNotificationsSancations.Count() > 0)
-                        {
-                            var employeeId = missingEmployee.EmployeeId;
-
-                            foreach (var getNotificationsSancation in getNotificationsSancations)
-                            {
-                                var sanctionName = getNotificationsSancation.SanctionName;
-                                var sanctionWarningMessage = getNotificationsSancation.SanctionWarningMessage;
-
-                                // here
-                            }
-
-                        }
-
-                        #endregion
-
                         addedSummonLogSanctions.
                             AddRange(missingEmployee.SummonSanctions.
                             Select(ss => new SummonLogSanction()
@@ -749,14 +834,76 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                                 SummonLogId = missingEmployee.Id,
                                 SummonSanctionId = ss.Id,
                                 Done = ss.SanctionType == SanctionType.CancelDayFingerprint ||
-                                (ss.SanctionType == SanctionType.Notification && doneSendNotification)
+                                (ss.SanctionType == SanctionType.Notification)
                             }).ToList());
                     }
 
                     repositoryManager.SummonLogSanctionRepository.BulkInsert(addedSummonLogSanctions);
                     await unitOfWork.SaveAsync();
 
-                    #endregion               
+                    #endregion
+
+                    #region Handle Notifications
+
+                    requestInfo.Lang = LeillaKeys.Ar;
+
+                    var getActiveLanguages = await repositoryManager.LanguageRepository.Get(l => !l.IsDeleted && l.IsActive).
+                            Select(l => new ActiveLanguageModel
+                            {
+                                Id = l.Id,
+                                ISO2 = l.ISO2
+                            }).ToListAsync();
+
+                    var missingEmployeesGroupedBySummon = getMissingEmployeesList.GroupBy(m => m.SummonId).ToList();
+
+                    foreach (var missingGroup in missingEmployeesGroupedBySummon)
+                    {
+                        var employeeIds = missingGroup.Select(m => m.EmployeeId).ToList();
+                        var notificationUsers = missingGroup.SelectMany(m => m.NotificationUsers).Distinct().ToList();
+                        var summonDate = missingGroup.First().SummonDate;
+                        var companyId = missingGroup.First().CompanyId;
+
+                        #region Handle Summon Description
+
+                        var notificationDescriptions = new List<NotificationDescriptionModel>();
+
+                        foreach (var language in getActiveLanguages)
+                        {
+                            notificationDescriptions.Add(new NotificationDescriptionModel
+                            {
+                                LanguageIso2 = language.ISO2,
+                                Description = TranslationHelper.GetTranslation(LeillaKeys.YouHaveMissedTheSummonAssignedToYou, language.ISO2) +
+                                    LeillaKeys.Space +
+                                    TranslationHelper.GetTranslation(LeillaKeys.InDate, language.ISO2) +
+                                    LeillaKeys.ColonsThenSpace +
+                                    summonDate.ToString("dd-MM-yyyy") +
+                                    LeillaKeys.Space +
+                                    TranslationHelper.GetTranslation(LeillaKeys.TheTime, language.ISO2) +
+                                    LeillaKeys.ColonsThenSpace +
+                                    summonDate.ToString("hh:mm") + LeillaKeys.Space +
+                                    DateHelper.TranslateAmAndPm(summonDate.ToString("tt"), language.ISO2)
+                            });
+                        }
+
+
+                        #endregion
+
+                        var handleNotificationModel = new HandleNotificationModel
+                        {
+                            CompanyId = companyId,
+                            NotificationUsers = notificationUsers,
+                            EmployeeIds = employeeIds,
+                            NotificationType = NotificationType.SummonMissed,
+                            NotificationStatus = NotificationStatus.Info,
+                            Priority = NotificationPriority.Medium,
+                            NotificationDescriptions = notificationDescriptions,
+                            ActiveLanguages = getActiveLanguages
+                        };
+
+                        await notificationHandleBL.HandleNotifications(handleNotificationModel);
+                    }
+
+                    #endregion
                 }
             }
             catch (Exception ex)

@@ -25,47 +25,48 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.AssignmentType != null && x.AssignmentType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                //inner = inner.Or(x => x.AssignmentType != null && x.AssignmentType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;
                 }
             }
 
+            predicate = predicate.And(requestVacation => !requestVacation.Request.IsDeleted);
             predicate = predicate.And(requestVacation => requestVacation.Request.CompanyId == requestInfo.CompanyId);
 
             if (criteria.Id != null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Id == criteria.Id);
+                predicate = predicate.And(requestAssignment => requestAssignment.Request.Id == criteria.Id);
             }
             if (criteria.Ids != null && criteria.Ids.Count > 0)
             {
-                predicate = predicate.And(requestTask => criteria.Ids.Contains(requestTask.Request.Id));
+                predicate = predicate.And(requestAssignment => criteria.Ids.Contains(requestAssignment.Request.Id));
             }
             if (criteria.IsActive is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.IsActive == criteria.IsActive);
+                predicate = predicate.And(requestAssignment => requestAssignment.Request.IsActive == criteria.IsActive);
             }
             if (criteria.Code is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Code == criteria.Code);
+                predicate = predicate.And(requestAssignment => requestAssignment.Request.Code == criteria.Code);
             }
             if (criteria.EmployeeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.EmployeeId == criteria.EmployeeId);
+                predicate = predicate.And(requestAssignment => requestAssignment.Request.EmployeeId == criteria.EmployeeId);
             }
             if (criteria.AssignmentTypeId is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.AssignmentTypeId == criteria.AssignmentTypeId);
+                predicate = predicate.And(requestAssignment => requestAssignment.AssignmentTypeId == criteria.AssignmentTypeId);
             }
             if (criteria.Status is not null)
             {
-                predicate = predicate.And(requestTask => requestTask.Request.Status == criteria.Status);
+                predicate = predicate.And(requestAssignment => requestAssignment.Request.Status == criteria.Status);
             }
             if (criteria.Date is not null)
             {
-                predicate = predicate.And(requestTask => criteria.Date.Value.Date >= requestTask.Request.Date.Date && criteria.Date.Value.Date <= requestTask.DateTo.Date);
+                predicate = predicate.And(requestAssignment => criteria.Date.Value.Date >= requestAssignment.Request.Date.Date && criteria.Date.Value.Date <= requestAssignment.DateTo.Date);
             }
 
             predicate = predicate.And(inner);
@@ -82,14 +83,16 @@ namespace Dawem.Repository.Requests
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.And(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().Contains(criteria.FreeText));
-                inner = inner.Or(x => x.AssignmentType != null && x.AssignmentType.Name.ToLower().Trim().Contains(criteria.FreeText));
+                inner = inner.Start(x => x.Request.Employee != null && x.Request.Employee.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.AssignmentType != null && x.AssignmentType.Name.ToLower().Trim().StartsWith(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int code))
                 {
                     criteria.Code = code;
                 }
             }
+
+            predicate = predicate.And(requestAssignment => !requestAssignment.Request.IsDeleted);
 
             predicate = predicate.And(requestAssignment => requestAssignment.Request.CompanyId == requestInfo.CompanyId);
 

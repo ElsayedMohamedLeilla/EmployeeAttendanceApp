@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
+using Dawem.Contract.BusinessLogic.Dawem.Core;
 using Dawem.Contract.BusinessLogic.Dawem.Requests;
 using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Requests;
-using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Requests;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Others;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
+using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.Models.Requests;
 using Dawem.Models.Requests.Justifications;
 using Dawem.Models.Response.Dawem.Requests;
 using Dawem.Models.Response.Dawem.Requests.Justifications;
-using Dawem.RealTime.Helper;
 using Dawem.Translations;
 using Dawem.Validation.FluentValidation.Dawem.Requests.Justifications;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
         private readonly IUploadBLC uploadBLC;
-        private readonly INotificationServiceByFireBaseAdmin notificationServiceByFireBaseAdmin;
+        private readonly INotificationHandleBL notificationHandleBL;
 
         public RequestJustificationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
             IRepositoryManager _repositoryManager,
@@ -42,7 +42,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             IUploadBLC _uploadBLC,
            RequestInfo _requestHeaderContext,
            IRequestJustificationBLValidation _requestJustificationBLValidation,
-           INotificationServiceByFireBaseAdmin _notificationServiceByFireBaseAdmin)
+           INotificationHandleBL _notificationHandleBL)
         {
             unitOfWork = _unitOfWork;
             requestBLValidation = _requestBLValidation;
@@ -51,7 +51,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             requestJustificationBLValidation = _requestJustificationBLValidation;
             mapper = _mapper;
             uploadBLC = _uploadBLC;
-            notificationServiceByFireBaseAdmin = _notificationServiceByFireBaseAdmin;
+            notificationHandleBL = _notificationHandleBL;
 
         }
         public async Task<int> Create(CreateRequestJustificationDTO model)
@@ -75,7 +75,6 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             #endregion
 
             unitOfWork.CreateTransaction();
-
 
             #region Upload Files
 
@@ -123,7 +122,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.EmployeeId = employeeId ?? 0;
             request.Code = getRequestNextCode;
             request.RequestJustification.Code = getRequestJustificationNextCode;
-            request.Status = RequestStatus.Pending;
+            request.Status = requestInfo.ApplicationType == ApplicationType.Web ? RequestStatus.Accepted : RequestStatus.Pending;
             request.IsActive = true;
             request.RequestJustification.IsActive = true;
 
@@ -132,51 +131,47 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #endregion
 
+            #region Handle Notifications
+
             var requestEmployee = await repositoryManager
-               .EmployeeRepository.Get(r => r.Id == employeeId)
-               .Select(e => new
-               {
-                   e.Name,
-                   e.DirectManagerId 
-               }).FirstOrDefaultAsync();
-
-            #region Save Notification In DB
-            if(requestEmployee.DirectManagerId > 0)
-            {
-                var getNotificationNextCode = await repositoryManager.NotificationStoreRepository
-              .Get(e => e.CompanyId == requestInfo.CompanyId)
-              .Select(e => e.Code)
-              .DefaultIfEmpty()
-              .MaxAsync() + 1;
-                var notificationStore = new NotificationStore()
+                .EmployeeRepository.Get(r => r.Id == employeeId && r.DirectManagerId > 0)
+                .Select(e => new
                 {
-                    Code = getNotificationNextCode,
-                    EmployeeId = requestEmployee.DirectManagerId ?? 0,
-                    CompanyId = requestInfo.CompanyId,
-                    AddUserId = requestInfo.UserId,
-                    AddedDate = DateTime.UtcNow,
-                    Status = NotificationStatus.Info,
-                    NotificationType = NotificationType.NewJustificationRequest,
-                    ImageUrl = NotificationHelper.GetNotificationImage(NotificationStatus.Info, uploadBLC),
-                    IsRead = false,
-                    IsActive = true,
-                    Priority = Priority.Medium
+                    DirectManagerId = e.DirectManagerId.Value
+                }).FirstOrDefaultAsync();
 
-                };
-                repositoryManager.NotificationStoreRepository.Insert(notificationStore);
-                await unitOfWork.SaveAsync();
-            
-           
-            #endregion
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == requestEmployee.DirectManagerId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
 
-            #region Fire Notification & Email
-            List<int> userIds = repositoryManager.UserRepository.Get(s => !s.IsDeleted && s.IsActive & s.EmployeeId == requestEmployee.DirectManagerId).Select(u => u.Id).ToList();
-            if (userIds.Count > 0)
+            var employeeIds = new List<int>() { requestEmployee.DirectManagerId };
+
+            var handleNotificationModel = new HandleNotificationModel
             {
-                await notificationServiceByFireBaseAdmin.Send_Notification_Email(userIds, NotificationType.NewVacationRequest, NotificationStatus.Info);
-            }
-                #endregion
-            }
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.NewJustificationRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
 
             #region Handle Response
 
@@ -245,15 +240,16 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.Date = model.DateFrom;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
+            getRequest.Notes = model.Notes;
 
 
+            getRequestJustification.JustificationTypeId = model.JustificationTypeId;
             getRequestJustification.ModifiedDate = DateTime.Now;
             getRequestJustification.ModifyUserId = requestInfo.UserId;
             getRequestJustification.DateTo = model.DateTo;
+            getRequestJustification.Notes = model.Notes;
 
             await unitOfWork.SaveAsync();
-
-
 
             #region Update Attachements 
 
@@ -319,7 +315,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestJustificationsList = await queryPaged.Select(requestJustification => new GetRequestJustificationsResponseModelDTO
+            var requestJustificationsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestJustification => new GetRequestJustificationsResponseModelDTO
             {
                 Id = requestJustification.Request.Id,
                 Code = requestJustification.Request.Code,
@@ -374,19 +371,20 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             #region Handle Response
 
-            var requestJustificationsList = await queryPaged.Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
-            {
-                Id = requestJustification.Request.Id,
-                Code = requestJustification.Request.Code,
-                AddedDate = requestJustification.Request.AddedDate,
-                DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
-                requestJustification.Request.Employee.DirectManager.Name : null,
-                JustificationTypeName = requestJustification.JustificatioType.Name,
-                DateFrom = requestJustification.Request.Date,
-                DateTo = requestJustification.DateTo,
-                Status = requestJustification.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
-            }).ToListAsync();
+            var requestJustificationsList = await queryPaged.IgnoreQueryFilters().
+                Select(requestJustification => new EmployeeGetRequestJustificationsResponseModelDTO
+                {
+                    Id = requestJustification.Request.Id,
+                    Code = requestJustification.Request.Code,
+                    AddedDate = requestJustification.Request.AddedDate,
+                    DirectManagerName = requestJustification.Request.Employee.DirectManager != null ?
+                    requestJustification.Request.Employee.DirectManager.Name : null,
+                    JustificationTypeName = requestJustification.JustificatioType.Name,
+                    DateFrom = requestJustification.Request.Date,
+                    DateTo = requestJustification.DateTo,
+                    Status = requestJustification.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
+                }).ToListAsync();
 
             return new EmployeeGetRequestJustificationsResponseDTO
             {
@@ -435,7 +433,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
         }
         public async Task<GetRequestJustificationInfoResponseDTO> GetInfo(int requestId)
         {
-            var requestJustification = await repositoryManager.RequestJustificationRepository.Get(e => e.Request.Id == requestId && !e.Request.IsDeleted)
+            var requestJustification = await repositoryManager.RequestJustificationRepository.
+                Get(e => e.Request.Id == requestId && !e.Request.IsDeleted).IgnoreQueryFilters()
                 .Select(requestJustification => new GetRequestJustificationInfoResponseDTO
                 {
                     Code = requestJustification.Request.Code,
@@ -458,7 +457,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                         FilePath = uploadBLC.GetFilePath(a.FileName, AmgadKeys.JustificationRequests),
                     }).ToList(),
                     Status = requestJustification.Request.Status,
-                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang)
+                    StatusName = TranslationHelper.GetTranslation(requestJustification.Request.Status.ToString(), requestInfo.Lang),
+                    Notes = requestJustification.Request.Notes,
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryCannotFindRequest);
 
             return requestJustification;
@@ -470,10 +470,12 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                 {
                     Id = requestJustification.Request.Id,
                     Code = requestJustification.Request.Code,
+
                     EmployeeId = requestJustification.Request.EmployeeId,
                     JustificationTypeId = requestJustification.JustificationTypeId,
                     DateFrom = requestJustification.Request.Date,
                     DateTo = requestJustification.DateTo,
+                    Status = requestJustification.Request.Status,
                     IsActive = requestJustification.Request.IsActive,
                     IsNecessary = requestJustification.Request.IsNecessary,
                     ForEmployee = requestJustification.Request.ForEmployee,
@@ -518,6 +520,42 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.DecisionDate = DateTime.UtcNow;
 
             await unitOfWork.SaveAsync();
+
+            #region Handle Notifications
+
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.AcceptingJustificationRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
+
             return true;
         }
         public async Task<bool> Reject(RejectModelDTO rejectModelDTO)
@@ -541,6 +579,42 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             request.RejectReason = rejectModelDTO.RejectReason;
 
             await unitOfWork.SaveAsync();
+
+            #region Handle Notifications
+
+            var notificationUsers = await repositoryManager.UserRepository.
+                Get(s => !s.IsDeleted && s.IsActive &
+                s.EmployeeId == request.EmployeeId).
+                Select(u => new NotificationUserModel
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    UserTokens = u.NotificationUsers.
+                    Where(nu => !nu.IsDeleted && nu.NotificationUserFCMTokens.
+                    Any(f => !f.IsDeleted)).
+                    SelectMany(nu => nu.NotificationUserFCMTokens.Where(f => !f.IsDeleted).
+                    Select(f => new NotificationUserTokenModel
+                    {
+                        ApplicationType = f.DeviceType,
+                        Token = f.FCMToken
+                    })).ToList()
+                }).ToListAsync();
+
+            var employeeIds = new List<int>() { request.EmployeeId };
+
+            var handleNotificationModel = new HandleNotificationModel
+            {
+                NotificationUsers = notificationUsers,
+                EmployeeIds = employeeIds,
+                NotificationType = NotificationType.RejectingJustificationRequest,
+                NotificationStatus = NotificationStatus.Info,
+                Priority = NotificationPriority.Medium
+            };
+
+            await notificationHandleBL.HandleNotifications(handleNotificationModel);
+
+            #endregion
+
             return true;
         }
         public async Task<GetJustificationsInformationsResponseDTO> GetJustificationsInformations()

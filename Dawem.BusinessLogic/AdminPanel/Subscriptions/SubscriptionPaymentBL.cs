@@ -9,9 +9,9 @@ using Dawem.Domain.Entities.Subscriptions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
-using Dawem.Models.Dtos.Dawem.Subscriptions.Plans;
+using Dawem.Models.Dtos.Dawem.Subscriptions.SubscriptionPayment;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
-using Dawem.Models.Response.AdminPanel.Subscriptions.Plans;
+using Dawem.Models.Response.AdminPanel.Subscriptions.SubscriptionPayment;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
@@ -134,9 +134,8 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Id = subscriptionPayment.Id,
                 Code = subscriptionPayment.Code,
                 SubscriptionInfo = subscriptionPayment.Subscription.Code + LeillaKeys.Dash + subscriptionPayment.Subscription.Company.Name
-                + LeillaKeys.Dash + subscriptionPayment.Subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                + LeillaKeys.Dash + subscriptionPayment.Subscription.Plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                 Amount = subscriptionPayment.Amount,
-                Date = subscriptionPayment.Date,
                 IsActive = subscriptionPayment.IsActive
             }).ToListAsync();
 
@@ -155,7 +154,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 {
                     Code = subscriptionPayment.Code,
                     SubscriptionInfo = subscriptionPayment.Subscription.Code + LeillaKeys.Dash + subscriptionPayment.Subscription.Company.Name
-                    + LeillaKeys.Dash + subscriptionPayment.Subscription.Plan.PlanNameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
+                    + LeillaKeys.Dash + subscriptionPayment.Subscription.Plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     Amount = subscriptionPayment.Amount,
                     Date = subscriptionPayment.Date,
                     IsActive = subscriptionPayment.IsActive,

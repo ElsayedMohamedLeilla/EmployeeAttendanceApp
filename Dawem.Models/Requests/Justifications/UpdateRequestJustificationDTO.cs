@@ -13,5 +13,6 @@ namespace Dawem.Models.Requests.Justifications
         public DateTime DateTo { get; set; }
         public List<IFormFile> Attachments { get; set; }
         public List<string> AttachmentsNames { get; set; }
+        public string Notes { get; set; }
     }
 }

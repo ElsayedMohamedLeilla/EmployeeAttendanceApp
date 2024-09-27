@@ -1,18 +1,23 @@
-﻿using Dawem.Contract.BusinessLogic.Dawem.Permissions;
+﻿using Dawem.BusinessLogic.Dawem.Permissions;
+using Dawem.Contract.BusinessLogic.Dawem.Permissions;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
+using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Contract.BusinessValidation.Dawem.Others;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
+using Dawem.Domain.Entities.Core;
 using Dawem.Domain.Entities.Employees;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Domain.RealTime.Firebase;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.Others;
 using Dawem.Models.Criteria.UserManagement;
 using Dawem.Models.Dtos.Dawem.Identities;
+using Dawem.Models.Dtos.Dawem.Permissions.Permissions;
 using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -43,10 +48,12 @@ namespace Dawem.BusinessLogic.Dawem.Provider
         private readonly IAccountBLValidation accountBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IPermissionBL permissionBL;
+        private readonly RequestInfo requestInfo;
+        private readonly IPermissionBLC permissionBLC;
         public AuthenticationBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
-            IRepositoryManager _repositoryManager,
+            IRepositoryManager _repositoryManager, IPermissionBLC _permissionBLC,
             UserManagerRepository _userManagerRepository,
-            IOptions<Jwt> _appSettings,
+            IOptions<Jwt> _appSettings, RequestInfo _requestInfo,
             IPermissionBL _permissionBL,
            RequestInfo _userContext,
             IMailBL _mailBL, IHttpContextAccessor _accessor,
@@ -56,8 +63,10 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             userManagerRepository = _userManagerRepository;
             requestHeaderContext = _userContext;
             jwt = _appSettings.Value;
+            requestInfo = _requestInfo;
             repositoryManager = _repositoryManager;
             mailBL = _mailBL;
+            permissionBLC = _permissionBLC;
             permissionBL = _permissionBL;
             accessor = _accessor;
             generator = _generator;
@@ -211,6 +220,13 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
+            #region Handle Set Request Info
+
+            requestInfo.AuthenticationType = AuthenticationType.DawemAdmin;
+            requestInfo.CompanyId = companyId;
+
+            #endregion
+
             #region Insert Department And Employee
 
             var employee = repositoryManager.EmployeeRepository.Insert(new Employee
@@ -231,6 +247,49 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 Name = TranslationHelper.GetTranslation(LeillaKeys.AdminEmployee, LeillaKeys.Ar)
             });
             await unitOfWork.SaveAsync();
+
+            #endregion
+
+            #region Insert Employees Responsibility
+
+            var employeesResponsibility = repositoryManager.ResponsibilityRepository.Insert(new Responsibility
+            {
+                CompanyId = companyId,
+                ForEmployeesApplication = true,
+                Type = AuthenticationType.DawemAdmin,
+                Code = 1,
+                IsActive = true,
+                Name = TranslationHelper.GetTranslation(LeillaKeys.Employees, requestInfo?.Lang)
+            });
+
+            await unitOfWork.SaveAsync();
+
+            #region Insert Employees Responsibility Permissions
+
+            var getEmployeesScreens = await repositoryManager.MenuItemRepository.
+                Get(m => m.IsActive && m.AuthenticationType == AuthenticationType.DawemEmployee &&
+                m.GroupOrScreenType == GroupOrScreenType.Screen).
+                Select(m => new
+                {
+                    m.Id,
+                    Actions = m.MenuItemActions.Select(a => a.ActionCode).ToList()
+                }).ToListAsync();
+
+            var createPermissionModel = new CreatePermissionModel
+            {
+                ForType = ForResponsibilityOrUser.Responsibility,
+                ResponsibilityId = employeesResponsibility.Id,
+                IsActive = true,
+                Screens = getEmployeesScreens.Select(s=> new PermissionScreenModel
+                {
+                    ScreenId = s.Id,
+                    Actions = s.Actions
+                }).ToList()
+            };
+
+            await permissionBLC.Create(createPermissionModel);
+
+            #endregion
 
             #endregion
 
@@ -264,7 +323,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                                             </head>
                                             <body>
                                             <h1>مرحباً  " + user.Name + @"</h1>
-                                            <h2>شكراً لتسجيلك بالتجربة المجانية مع شركة داوم.</h2>
+                                            <h2>شكراً لتسجيلك مع شركة داوم.</h2>
                                             <h3>الكود التعريفي لشركتك هو:  " + identityCode + @"</h3>
                                             <h3>يرجي الاحتفاظ بالكود التعريفي لتسجيل الدخول بإستخدامه لاحقا.</h3>
                                             <p>لاستكمال عملية التسجيل، يرجى الضغط على الرابط التالي لتأكيد عنوان البريد الإلكتروني الخاص بك وتفعيل الحساب الجديد:</p>                   
@@ -367,16 +426,23 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
-            var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel
+            var authenticationType = user.Type == AuthenticationType.AdminPanel ?
+               AuthenticationType.AdminPanel : user.Type == AuthenticationType.DawemAdmin &&
+               model.ApplicationType == ApplicationType.Web ? AuthenticationType.DawemAdmin :
+               AuthenticationType.DawemEmployee;
+
+            requestInfo.AuthenticationType = authenticationType;
+            requestInfo.CompanyId = user.CompanyId ?? 0;
+
+            var getCurrentUserMenuItemsResponse = await permissionBL
+                .GetCurrentUserMenuItems(new GetCurrentUserMenuItemsModel
                 {
                     CompanyId = user.CompanyId,
                     UserId = user.Id,
-                    AuthenticationType = AuthenticationType.DawemAdmin
+                    AuthenticationType = authenticationType
                 });
 
-            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
-            tokenData.IsAdmin = permissionsResponse.IsAdmin;
+            tokenData.MenuItems = getCurrentUserMenuItemsResponse.MenuItems ?? null;
 
             #region Handle Device Token
 
@@ -396,6 +462,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     {
                         var notificationUserDeviceToken = new NotificationUserFCMToken
                         {
+                            CompanyId = user.CompanyId ?? 0,
                             NotificationUserId = getNotificationUser.Id,
                             FCMToken = model.FCMToken,
                             DeviceType = model.ApplicationType,
@@ -419,6 +486,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                         {
                             new()
                             {
+                                CompanyId = user.CompanyId ?? 0,
                                 FCMToken = model.FCMToken,
                                 DeviceType = model.ApplicationType,
                                 LastLogInDate = DateTime.UtcNow
@@ -472,6 +540,26 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             return tokenData;
         }
+        public async Task<bool> SignOut()
+        {
+            var getNotificationUserDeviceTokens = await repositoryManager.NotificationUserFCMTokenRepository.
+                GetWithTracking(f => !f.IsDeleted && !f.NotificationUser.IsDeleted &&
+                f.NotificationUser.CompanyId == requestInfo.CompanyId && f.NotificationUser.UserId == requestInfo.UserId &&
+                f.DeviceType == requestInfo.ApplicationType).
+                ToListAsync();
+
+            if (getNotificationUserDeviceTokens != null && getNotificationUserDeviceTokens.Count > 0)
+            {
+                foreach (var getNotificationUserDeviceToken in getNotificationUserDeviceTokens)
+                {
+                    getNotificationUserDeviceToken.Delete();
+                }
+
+                await unitOfWork.SaveAsync();
+            }
+
+            return true;
+        }
         public async Task<TokenDto> AdminPanelSignIn(AdminPanelSignInModel model)
         {
             #region Business Validation
@@ -501,11 +589,14 @@ namespace Dawem.BusinessLogic.Dawem.Provider
 
             #endregion
 
-            var permissionsResponse = await permissionBL
-                .GetCurrentUserPermissions(new GetCurrentUserPermissionsModel { AuthenticationType = AuthenticationType.AdminPanel, UserId = user.Id });
+            var getCurrentUserMenuItemsResponse = await permissionBL
+                .GetCurrentUserMenuItems(new GetCurrentUserMenuItemsModel
+                {
+                    AuthenticationType = AuthenticationType.AdminPanel,
+                    UserId = user.Id
+                });
 
-            tokenData.AvailablePermissions = permissionsResponse.UserPermissions ?? null;
-            tokenData.IsAdmin = permissionsResponse.IsAdmin;
+            tokenData.MenuItems = getCurrentUserMenuItemsResponse.MenuItems ?? null;
 
             return tokenData;
         }
@@ -520,7 +611,7 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 new Claim(ClaimTypes.Name, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.UserId, criteria.UserId.ToString()),
                 new Claim(LeillaKeys.CompanyId , criteria.CompanyId.ToString()),
-                new Claim(LeillaKeys.ApplicationType , criteria.ApplicationType.ToString())
+                new Claim(LeillaKeys.ApplicationType , ((int)criteria.ApplicationType).ToString())
             });
             if (criteria.RememberMe)
             {

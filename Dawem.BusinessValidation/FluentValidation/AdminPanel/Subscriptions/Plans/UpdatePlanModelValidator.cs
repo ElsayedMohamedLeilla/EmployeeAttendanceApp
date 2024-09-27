@@ -20,7 +20,7 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
                 WithMessage(LeillaKeys.SorryYouMustEnterPlanMaxNumberOfEmployees);
 
             RuleFor(model => model.EmployeeCost).
-                Must(x => x > 0).
+                Must(x => x >= 0).
                 WithMessage(LeillaKeys.SorryYouMustEnterPlanEmployeeCost);
 
             RuleFor(model => model).
@@ -42,6 +42,16 @@ namespace Dawem.Validation.FluentValidation.AdminPanel.Subscriptions.Plans
             RuleFor(model => model.NameTranslations).
                 Must(nt => nt.GroupBy(nt => nt.LanguageId).ToList().All(g => g.Count() == 1)).
                 WithMessage(LeillaKeys.SorryYouMustNotRepeatLanguagesWithNames);
+
+            RuleFor(model => model.ScreensIds).
+               Must(x => x == null || x.Count <= 0).
+               When(x => x.AllScreensAvailable).
+               WithMessage(LeillaKeys.SorryYouMustNotChooseScreensWithPlanWhenAllScreensAvailableInIt);
+
+            RuleFor(model => model.ScreensIds).
+               Must(x => x != null && x.Count > 0).
+               When(x => !x.AllScreensAvailable).
+               WithMessage(LeillaKeys.SorryYouMustChooseScreensWithPlan);
         }
     }
 }

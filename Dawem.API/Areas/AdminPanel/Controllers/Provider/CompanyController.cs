@@ -1,22 +1,24 @@
 ﻿using Dawem.API.Areas.Dawem.Controllers;
 using Dawem.Contract.BusinessLogic.Dawem.Provider;
 using Dawem.Models.Dtos.Dawem.Employees.Employees;
+using Dawem.Models.Dtos.Dawem.Providers;
 using Dawem.Models.Dtos.Dawem.Providers.Companies;
 using Dawem.Translations;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
 {
-    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, Authorize, AdminPanelAuthorize]
+    [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController, AdminPanelAuthorize]
     public class CompanyController : AdminPanelControllerBase
     {
         private readonly ICompanyBL companyBL;
+        private readonly IAuthenticationBL authenticationBL;
 
-        public CompanyController(ICompanyBL _companyBL)
+        public CompanyController(ICompanyBL _companyBL, IAuthenticationBL _authenticationBL)
         {
             companyBL = _companyBL;
+            authenticationBL = _authenticationBL;
         }
 
         [HttpPost, DisableRequestSizeLimit]
@@ -33,7 +35,11 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             var result = await companyBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateCompanySuccessfully);
         }
-
+        [HttpPost]
+        public async Task<ActionResult> CreateSignUp(SignUpModel model)
+        {
+            return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+        }
         [HttpPut, DisableRequestSizeLimit]
         public async Task<ActionResult> Update([FromForm] UpdateCompanyWithFilesModel formData)
         {
@@ -106,7 +112,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.Provider
             return Success(await companyBL.Disable(model));
         }
         [HttpDelete]
-        
+
         public async Task<ActionResult> Delete(int companyId)
         {
             if (companyId < 1)

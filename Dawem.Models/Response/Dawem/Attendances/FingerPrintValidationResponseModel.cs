@@ -12,6 +12,7 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public DateTime LocalDateTime { get; set; }
         public TimeSpan ShiftCheckInTime { get; set; }
         public TimeSpan ShiftCheckOutTime { get; set; }
+        public bool IsTwoDaysShift { get; set; }
         public int AllowedMinutes { get; set; }
         public FingerPrintType FingerPrintType { get; set; }
     }

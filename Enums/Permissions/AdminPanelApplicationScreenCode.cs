@@ -9,6 +9,9 @@
         Plan,
         Subscription,
         User,
-        SubscriptionPayment
+        SubscriptionPayment,
+        Setting,
+        Screen,
+        ScreenGroup
     }
 }

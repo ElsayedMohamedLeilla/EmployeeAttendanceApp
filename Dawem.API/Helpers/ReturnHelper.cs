@@ -22,7 +22,6 @@ namespace Dawem.API.Helpers
                 };
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(response, settings));
             }
-            
         }
         public static async Task Return(IUnitOfWork<ApplicationDBContext> unitOfWork, HttpContext context, int statusCode, ErrorResponseGenaric<int> response)
         {

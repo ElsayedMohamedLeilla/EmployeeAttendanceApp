@@ -1,17 +1,17 @@
-﻿using Dawem.Contract.BusinessValidation.AdminPanel.Subscriptions;
+﻿using Dawem.Contract.BusinessValidation.AdminPanel.Settings;
 using Dawem.Contract.BusinessValidationCore.AdminPanel.Subscriptions;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Domain.Entities.Dawem;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
-using Dawem.Models.Dtos.Dawem.Core.Responsibilities;
+using Dawem.Models.Dtos.Dawem.Settings;
 using Dawem.Models.DTOs.Dawem.Generic.Exceptions;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
+namespace Dawem.Validation.BusinessValidation.AdminPanel.Settings
 {
 
     public class SettingBLValidation : ISettingBLValidation
@@ -29,12 +29,12 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
         }
         public async Task<List<Setting>> UpdateValidation(UpdateSettingModel model)
         {
-            int? companyId = requestInfo.Type == AuthenticationType.DawemAdmin ?
+            int? companyId = requestInfo.AuthenticationType == AuthenticationType.DawemAdmin ?
                 requestInfo.CompanyId : null;
 
             var getSettings = await repositoryManager
                 .SettingRepository.
-                GetWithTracking(c => !c.IsDeleted && c.Type == requestInfo.Type && c.CompanyId == companyId).
+                GetWithTracking(c => !c.IsDeleted && c.Type == requestInfo.AuthenticationType && c.CompanyId == companyId).
                 ToListAsync();
 
             #region Validate Count And Type
@@ -52,10 +52,10 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             foreach (var setting in getSettings)
             {
-                var enumTypeName = requestInfo.Type == AuthenticationType.AdminPanel ?
+                var enumTypeName = requestInfo.AuthenticationType == AuthenticationType.AdminPanel ?
                     nameof(AdminPanelSettingType) : nameof(DawemSettingType);
 
-                var settingName = EnumHelper.GetSettingName(setting.SettingType, requestInfo.Type);
+                var settingName = EnumHelper.GetSettingName(setting.SettingType, requestInfo.AuthenticationType);
 
                 var settingTypeName = TranslationHelper.
                     GetTranslation(enumTypeName + LeillaKeys.Dash + settingName, requestInfo.Lang);

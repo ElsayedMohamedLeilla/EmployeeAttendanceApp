@@ -90,7 +90,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports
                 #region sorting
                 var queryOrdered = result.OrderByDescending(s => s.EmployeeId);
                 #endregion
-                var queryPaged = model.PagingEnabled ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+                var queryPaged = model.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
                 #endregion
                 var output = queryPaged.Select(employee => new AttendanceSummaryModel
                 {
@@ -153,7 +153,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports
             {
                 lateArrivalThreshold = lateArrivalThreshold.AddDays(1);
             }
-            return TimeOnlyHelper.ToTimeOnly(lateArrivalThreshold.TimeOfDay);
+            return TimeHelper.ToTimeOnly(lateArrivalThreshold.TimeOfDay);
         }
         #endregion
 

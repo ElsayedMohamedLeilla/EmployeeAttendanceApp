@@ -7,7 +7,7 @@ namespace Dawem.Models.Dtos.Dawem.Others
     {
         public int Id { get; set; }
         public DawemAdminApplicationScreenCode ActionPlace { get; set; }
-        public ApplicationAction ActionType { get; set; }
+        public ApplicationActionCode ActionType { get; set; }
         public int BranchId { get; set; }
         public string BranchGlobalName { get; set; }
         public ResponseStatus ResponseStatus { get; set; }

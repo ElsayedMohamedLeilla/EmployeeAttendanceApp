@@ -443,7 +443,9 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             };
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
-
+            report.SetParameterValue("EmployeeIds", param.EmployeeIds != null ? string.Join(',', param.EmployeeIds) : null);
+            report.SetParameterValue("GroupIds", param.GroupIds != null ? string.Join(',', param.GroupIds) : null);
+            report.SetParameterValue("DepartmentIds", param.DepartmentIds != null ? string.Join(',', param.DepartmentIds) : null);
             return ExportReport(report, param.ExportFormat);
         }
         public HttpResponseMessage GenerateSchedulesReport(SchedulesReportCritria param)

@@ -3,6 +3,7 @@ using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core;
+using Dawem.Models.Dtos.Dawem.Fingerprint;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;

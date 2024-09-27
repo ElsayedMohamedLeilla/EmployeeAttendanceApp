@@ -7,6 +7,7 @@ using Dawem.Domain.Entities.Core;
 using Dawem.Enums.Generals;
 using Dawem.Helpers;
 using Dawem.Models.Context;
+using Dawem.Models.Dtos.Dawem.Fingerprint;
 using Dawem.Models.DTOs.Dawem.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Text;

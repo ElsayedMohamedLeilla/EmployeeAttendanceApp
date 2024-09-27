@@ -1,4 +1,4 @@
-﻿using Dawem.Models.DTOs.Dawem.Generic;
+﻿using Dawem.Models.Dtos.Dawem.Fingerprint;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Attendances
 {

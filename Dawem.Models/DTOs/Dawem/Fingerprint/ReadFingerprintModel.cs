@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 
-namespace Dawem.Models.DTOs.Dawem.Generic
 namespace Dawem.Models.Dtos.Dawem.Fingerprint
 {
     public class ReadFingerprintModel

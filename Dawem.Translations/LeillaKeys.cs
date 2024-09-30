@@ -74,6 +74,10 @@
         public const string UnAuthorized = "UnAuthorized";
         public const string RedirectToRegister = "Redirect to register";
         public const string Jwt = "Jwt";
+        public const string FingerprintSourceMobileDevice = "FingerprintSourceMobileDevice";
+        public const string FingerprintSourceFingerPrintDevice = "FingerprintSourceFingerPrintDevice";
+        public const string FingerprintSourceExcelFile = "FingerprintSourceExcelFile";
+
         public const string UserId = "UserId";
         public const string BranchId = "BranchId";
         public const string CompanyId = "CompanyId";

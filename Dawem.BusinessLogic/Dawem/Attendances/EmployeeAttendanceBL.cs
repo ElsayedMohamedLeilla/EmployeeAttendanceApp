@@ -550,6 +550,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PaternRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PaternRecognition, requestInfo.Lang) :
                         employeeAttendanceCheck.RecognitionWay == RecognitionWay.PasswordRecognition ? TranslationHelper.GetTranslation(AmgadKeys.PasswordRecognition, requestInfo.Lang) :
                          TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
+                        FingerprintSource = employeeAttendanceCheck.FingerprintSource == FingerprintSource.MobileDevice ? TranslationHelper.GetTranslation(LeillaKeys.FingerprintSourceMobileDevice, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerprintSource == FingerprintSource.FingerPrintDevice ? TranslationHelper.GetTranslation(LeillaKeys.FingerprintSourceFingerPrintDevice, requestInfo.Lang) :
+                        employeeAttendanceCheck.FingerprintSource == FingerprintSource.ExcelFile ? TranslationHelper.GetTranslation(LeillaKeys.FingerprintSourceExcelFile, requestInfo.Lang) :
+                         TranslationHelper.GetTranslation(AmgadKeys.Unknown, requestInfo.Lang),
+
                     }).ToList()
 
 

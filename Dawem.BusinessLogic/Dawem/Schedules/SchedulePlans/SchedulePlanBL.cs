@@ -322,7 +322,7 @@ namespace Dawem.BusinessLogic.Dawem.Schedules.SchedulePlans
                 var getNextSchedulePlansFromDB = await repositoryManager.SchedulePlanRepository.
                     GetWithTracking(p => !p.IsDeleted && p.IsActive &&
                     !p.SchedulePlanLogs.Any() && p.DoneRetryCount < 2 &&
-                    utcDate.AddHours((double?)p.Company.Country.TimeZoneToUTC ?? 0).Date >= p.DateFrom.Date).
+                    utcDate.AddHours(requestInfo.CompanyTimeZoneToUTC).Date >= p.DateFrom.Date).
                     Include(p => p.Schedule).
                     Include(p => p.SchedulePlanEmployee).
                     Include(p => p.SchedulePlanGroup).

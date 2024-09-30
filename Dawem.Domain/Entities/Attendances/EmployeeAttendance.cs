@@ -20,7 +20,7 @@ namespace Dawem.Domain.Entities.Attendances
         public int ScheduleId { get; set; }
         [ForeignKey(nameof(ScheduleId))]
         public Schedule Schedule { get; set; }
-        public int ShiftId { get; set; }
+        public int? ShiftId { get; set; }
         [ForeignKey(nameof(ShiftId))]
         public ShiftWorkingTime Shift { get; set; }
         #endregion

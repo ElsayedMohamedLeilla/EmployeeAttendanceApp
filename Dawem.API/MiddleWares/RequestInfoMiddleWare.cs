@@ -67,6 +67,8 @@ namespace Dawem.API.MiddleWares
                     if (getTimeZoneToUTC != null)
                     {
                         var getTimeZoneToUTCDouble = (double)getTimeZoneToUTC;
+
+                        requestInfo.CompanyTimeZoneToUTC = getTimeZoneToUTCDouble;
                         requestInfo.LocalDateTime = DateTime.UtcNow.AddHours(getTimeZoneToUTCDouble);
                     }
 

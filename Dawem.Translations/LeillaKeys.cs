@@ -16,9 +16,12 @@
         public const string Ar1 = "1";
         public const string En2 = "2";
         public const string PlusSign = "+";
+        public const string Log = "Log";
+        public const string Exception = "Exception";
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string Body = "Body";
         public const string BaseData = "BaseData";
         public const string AdminPanel = "adminpanel";
         public const string SignIn = "signin";
@@ -71,6 +74,10 @@
         public const string UnAuthorized = "UnAuthorized";
         public const string RedirectToRegister = "Redirect to register";
         public const string Jwt = "Jwt";
+        public const string FingerprintSourceMobileDevice = "FingerprintSourceMobileDevice";
+        public const string FingerprintSourceFingerPrintDevice = "FingerprintSourceFingerPrintDevice";
+        public const string FingerprintSourceExcelFile = "FingerprintSourceExcelFile";
+
         public const string UserId = "UserId";
         public const string BranchId = "BranchId";
         public const string CompanyId = "CompanyId";
@@ -475,6 +482,9 @@
         public const string Enable = "Enable";
         public const string Disable = "Disable";
         public const string MarkAsRead = "MarkAsRead";
+        public const string ReadFingerprintRoute = "iclock/cdata";
+        public const string OK = "OK";
+        public const string Error = "Error";
         public const string Send = "Send";
         public const string SorryYouDoNotHavePermission = "Sorry!!YouDoNotHavePermission";
         public const string InScreen = "InScreen";

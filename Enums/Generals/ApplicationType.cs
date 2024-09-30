@@ -4,6 +4,7 @@
     {
         Web,
         Android,
-        Ios
+        Ios,
+        FingerprintDevice
     }
 }

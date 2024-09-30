@@ -60,7 +60,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.Notifications
                 IconUrl = NotificationHelper.GetNotificationImage(notification.Status, uploadBLC),
                 Priority = notification.Priority,
                 IsRead = notification.IsRead,
-                Date = notification.AddedDate.AddHours((double?)notification.Company.Country.TimeZoneToUTC ?? 0),
+                Date = notification.AddedDate.AddHours(requestInfo.CompanyTimeZoneToUTC),
                 NotificationType = notification.NotificationType,
                 Status = notification.Status
             }).ToListAsync();

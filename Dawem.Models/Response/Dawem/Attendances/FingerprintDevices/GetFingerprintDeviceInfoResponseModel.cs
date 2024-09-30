@@ -8,6 +8,7 @@
         public string PortNumber { get; set; }
         public string Model { get; set; }
         public string SerialNumber { get; set; }
+        public DateTime LastSeenDate { get; set; }
         public bool IsActive { get; set; }
     }
 }

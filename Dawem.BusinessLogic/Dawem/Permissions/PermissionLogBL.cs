@@ -75,9 +75,7 @@ namespace Dawem.BusinessLogic.Dawem.Permissions
                     ScreenName = pl.Screen.MenuItemNameTranslations.
                     FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
                     ActionName = TranslationHelper.GetTranslation(pl.ActionCode.ToString(), requestInfo.Lang),
-                    DateAndTime = pl.Company.Country.TimeZoneToUTC != null ?
-                    pl.DateUTC.AddHours((double)pl.Company.Country.TimeZoneToUTC.Value) :
-                    pl.DateUTC.AddHours(2),
+                    DateAndTime = pl.DateUTC.AddHours(requestInfo.CompanyTimeZoneToUTC),
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryPermissionNotFound);
 
             return permissionLog;

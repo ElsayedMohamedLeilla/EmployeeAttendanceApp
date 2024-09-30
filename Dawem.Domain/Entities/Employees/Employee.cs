@@ -9,6 +9,7 @@ using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
@@ -58,6 +59,7 @@ namespace Dawem.Domain.Entities.Employees
         public List<RequestTaskEmployee> EmployeeTasks { get; set; }
         public List<MyUser> Users { get; set; }
         public List<SchedulePlanEmployee> SchedulePlanEmployees { get; set; }
+        public int? FingerprintDeviceUserCode { get; set; }
         public List<SummonLog> SummonLogs { get; set; }
         public virtual List<NotificationEmployee> NotificationEmployees { get; set; }
     }

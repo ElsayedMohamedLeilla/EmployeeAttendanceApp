@@ -146,6 +146,11 @@ namespace Dawem.Repository.Managers
         private IDefaultPermissionTypeRepository defaultPermissionTypeRepository;
         private IDefaultOfficialHolidayRepository defaultOfficialHolidayRepository;
 
+        private IDefaultDepartmentsRepository defaultDepartmentsRepository;
+        private IDefaultJobTitlesRepository defaultJobTitlesRepository;
+        private IDefaultPenaltiesRepository defaultPenaltiesRepository;
+
+
 
         public RepositoryManager(IUnitOfWork<ApplicationDBContext> _unitOfWork, GeneralSetting _generalSetting, RequestInfo _requestInfo)
         {
@@ -344,15 +349,15 @@ namespace Dawem.Repository.Managers
            oldScreenRepository ??= new OldScreenRepository(unitOfWork, generalSetting);
 
         public IDefaultLookupsNameTranslationRepository DefaultLookupsNameTranslationRepository =>
- defaultLookupsNameTranslationRepository ??= new DefaultLookupsNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
+          defaultLookupsNameTranslationRepository ??= new DefaultLookupsNameTranslationRepository(unitOfWork, generalSetting, requestInfo);
 
         public IDefaultVacationTypeRepository DefaultVacationTypeRepository =>
           defaultVacationTypeRepository ??= new DefaultVacationTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IDefaultShiftTypeRepository DefaultShiftTypeRepository =>
-         defaultShiftTypeRepository ??= new DefaultShiftTypeRepository(unitOfWork, generalSetting, requestInfo);
+          defaultShiftTypeRepository ??= new DefaultShiftTypeRepository(unitOfWork, generalSetting, requestInfo);
 
         public IDefaultJustificationTypeRepository DefaultJustificationTypeRepository =>
-        defaultJustificationTypeRepository ??= new DefaultJustificationTypeRepository(unitOfWork, generalSetting, requestInfo);
+         defaultJustificationTypeRepository ??= new DefaultJustificationTypeRepository(unitOfWork, generalSetting, requestInfo);
 
         public IDefaultPermissionTypeRepository DefaultPermissionTypeRepository =>
         defaultPermissionTypeRepository ??= new DefaultPermissionTypeRepository(unitOfWork, generalSetting, requestInfo);
@@ -362,6 +367,13 @@ namespace Dawem.Repository.Managers
 
         public IDefaultOfficialHolidayRepository DefaultOfficialHolidayRepository =>
         defaultOfficialHolidayRepository ??= new DefaultOfficialHolidayRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IDefaultDepartmentsRepository DefaultDepartmentsRepository =>
+            defaultDepartmentsRepository ??= new DefaultDepartmentsRepository(unitOfWork, generalSetting, requestInfo);
+        public IDefaultJobTitlesRepository DefaultJobTitlesRepository =>
+           defaultJobTitlesRepository ??= new DefaultJobTitlesRepository(unitOfWork, generalSetting, requestInfo);
+        public IDefaultPenaltiesRepository DefaultPenaltiesRepository =>
+           defaultPenaltiesRepository ??= new DefaultPenaltiesRepository(unitOfWork, generalSetting, requestInfo);
 
     }
 }

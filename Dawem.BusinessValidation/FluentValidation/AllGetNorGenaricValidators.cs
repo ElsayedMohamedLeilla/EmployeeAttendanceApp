@@ -422,4 +422,25 @@ namespace Dawem.Validation.FluentValidation
             Include(new GetGenaricValidator());
         }
     }
+    public class GetDefaultDepartmentsCriteriaValidator : AbstractValidator<GetDefaultDepartmentsCriteria>
+    {
+        public GetDefaultDepartmentsCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetDefaultJobTitlesCriteriaValidator : AbstractValidator<GetDefaultJobTitlesCriteria>
+    {
+        public GetDefaultJobTitlesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
+    public class GetDefaultPenaltiesCriteriaValidator : AbstractValidator<GetDefaultPenaltiesCriteria>
+    {
+        public GetDefaultPenaltiesCriteriaValidator()
+        {
+            Include(new GetGenaricValidator());
+        }
+    }
 }

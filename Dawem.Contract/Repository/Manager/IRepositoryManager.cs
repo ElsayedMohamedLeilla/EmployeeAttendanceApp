@@ -116,6 +116,13 @@ namespace Dawem.Contract.Repository.Manager
 
         IDefaultOfficialHolidayRepository DefaultOfficialHolidayRepository { get; }
 
+        IDefaultDepartmentsRepository DefaultDepartmentsRepository { get; }
+
+        IDefaultJobTitlesRepository DefaultJobTitlesRepository { get; }
+
+        IDefaultPenaltiesRepository DefaultPenaltiesRepository { get; }
+
+
 
     }
 }

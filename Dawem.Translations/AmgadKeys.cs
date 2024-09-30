@@ -282,7 +282,21 @@
         public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisHoliday = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisHoliday!";
         public const string SorryYouMustEnterHolidayId = "Sorry!!YouMustEnterHolidayId!";
 
-        
+
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisDepartment = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisDepartment!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisJobTitle = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisJobTitle!";
+        public const string SorryYouMustEnterNameArabicAndEnglishAtLeastForThisPenaltie = "Sorry!!YouMustEnterNameArabicAndEnglishAtLeastForThisPenaltie!";
+
+        public const string SorryPenaltyNameIsDuplicated = "Sorry!!PenaltyNameIsDuplicated!";
+        public const string SorryPenaltyNotFound = "Sorry!!PenaltyNotFound!";
+        public const string SorryYouMustEnterPenaltyId = "Sorry!!YouMustEnterPenaltyId!";
+        public const string DoneCreatePenaltySuccessfully = "DoneCreatePenaltySuccessfully";
+        public const string DoneUpdatePenaltySuccessfully = "DoneCreatePenaltySuccessfully";
+
+
+
+
+
 
 
 

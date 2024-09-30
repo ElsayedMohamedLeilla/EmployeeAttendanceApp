@@ -215,7 +215,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     CompanyId = getCompanyId > 0 ? getCompanyId : null,
                     DeviceLogType = model.Table,
                     DateUTC = DateTime.UtcNow,
-                    RequestBody = model.RequestBody.ToString(),
+                    RequestBody = model.RequestBody != null ? model.RequestBody.ToString() : "null",
                     Notes = "FingerprintActionBL.cs" + " " + (model.Exception != null ? model.Exception.Message : ""),
                     AddedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.UtcNow,

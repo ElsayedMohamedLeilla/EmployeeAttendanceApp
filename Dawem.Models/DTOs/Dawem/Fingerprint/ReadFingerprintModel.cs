@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Models.Dtos.Dawem.Fingerprint
 {
@@ -14,5 +15,9 @@ namespace Dawem.Models.Dtos.Dawem.Fingerprint
         public string PushCommkey { get; set; }
         public Stream RequestBody { get; set; }
         public string RequestBodyString { get; set; }
+        [NotMapped] // for fingerprint log
+        public string LogType { get; set; }
+        [NotMapped] // for fingerprint log
+        public Exception Exception { get; set; }
     }
 }

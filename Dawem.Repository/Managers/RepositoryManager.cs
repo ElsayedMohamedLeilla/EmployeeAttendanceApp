@@ -110,6 +110,7 @@ namespace Dawem.Repository.Managers
         private IZoneRepository zoneRepository;
         private IFingerprintDeviceRepository fingerprintDeviceRepository;
         private IFingerprintTransactionRepository fingerprintTransactionRepository;
+        private IFingerprintDeviceLogRepository fingerprintDeviceLogRepository;
         private IRequestRepository requestRepository;
         private IRequestAssignmentRepository requestAssignmentRepository;
         private IRequestJustificationRepository requestJustificationRepository;
@@ -283,6 +284,9 @@ namespace Dawem.Repository.Managers
         public IFingerprintTransactionRepository FingerprintTransactionRepository =>
        fingerprintTransactionRepository ??= new FingerprintTransactionRepository(unitOfWork, generalSetting, requestInfo);
 
+        public IFingerprintDeviceLogRepository FingerprintDeviceLogRepository =>
+       fingerprintDeviceLogRepository ??= new FingerprintDeviceLogRepository(unitOfWork, generalSetting, requestInfo);
+        
         public IRequestRepository RequestRepository =>
             requestRepository ??= new RequestRepository(unitOfWork, generalSetting, requestInfo);
 

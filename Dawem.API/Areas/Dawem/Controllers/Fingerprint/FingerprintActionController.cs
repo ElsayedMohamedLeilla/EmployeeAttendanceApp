@@ -36,6 +36,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
                     return BadRequest();
                 }
 
+                model.LogType = LeillaKeys.Log;
+                await fingerprintActionBL.AddFingerprintLog(model);
+
                 if (model.Table != "ATTLOG")
                     return Ok("Ok");
 
@@ -52,26 +55,9 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
             }
             catch (Exception ex)
             {
-                #region Insert Exception
-
-                var getNextCodes = await repositoryManager.FingerprintDeviceRepository
-                       .Get(e => e.CompanyId == 7)
-                       .Select(e => e.Code)
-                       .DefaultIfEmpty()
-                       .MaxAsync() + 1;
-                repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
-                {
-                    Name = model.Table + DateTime.UtcNow,
-                    Code = getNextCodes,
-                    Notes = "Data:" + "###" + ex.Message,
-                    AddedDate = DateTime.UtcNow,
-                    ModifiedDate = DateTime.Now,
-                    CompanyId = 7,
-                    SerialNumber = "Hatch"
-                });
-                await unitOfWork.SaveAsync();
-
-                #endregion
+                model.Exception = ex;
+                model.LogType = LeillaKeys.Exception;
+                await fingerprintActionBL.AddFingerprintLog(model);
             }
 
             return BadRequest();

@@ -9,6 +9,7 @@ using Dawem.Helpers;
 using Dawem.Models.Context;
 using Dawem.Models.Dtos.Dawem.Fingerprint;
 using Dawem.Models.DTOs.Dawem.Generic;
+using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -31,28 +32,6 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
         {
             try
             {
-                #region Insert Log
-
-                var getNextCodes = await repositoryManager.FingerprintDeviceRepository
-                       .Get(e => e.CompanyId == 7)
-                       .Select(e => e.Code)
-                       .DefaultIfEmpty()
-                       .MaxAsync() + 1;
-
-                repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
-                {
-                    Name = "1111++" + model.Table + DateTime.UtcNow,
-                    Code = getNextCodes,
-                    Notes = "Data:" + "###" + model.Table,
-                    AddedDate = DateTime.UtcNow,
-                    ModifiedDate = DateTime.Now,
-                    CompanyId = 7,
-                    SerialNumber = model.SN + "+" + (model.RequestBody == null ? "Null" : "NotNull")
-                });
-                await unitOfWork.SaveAsync();
-
-                #endregion
-
                 if (model.Table != "ATTLOG")
                     return true;
 
@@ -212,28 +191,44 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             catch (Exception ex)
             {
-                #region Insert Exception
+                model.Exception = ex;
+                model.LogType = LeillaKeys.Exception;
+                await AddFingerprintLog(model);
 
-                var getNextCodes = await repositoryManager.FingerprintDeviceRepository
-                       .Get(e => e.CompanyId == 7)
-                       .Select(e => e.Code)
-                       .DefaultIfEmpty()
-                       .MaxAsync() + 1;
+                return false;
+            }
 
-                repositoryManager.FingerprintDeviceRepository.Insert(new FingerprintDevice
+            return false;
+        }
+        public async Task<bool> AddFingerprintLog(ReadFingerprintModel model)
+        {
+            try
+            {
+                var getCompanyId = await repositoryManager.FingerprintDeviceRepository.Get(c => c.SerialNumber == model.SN).
+                    Select(d => d.CompanyId).FirstOrDefaultAsync();
+
+                #region Insert Log
+
+                repositoryManager.FingerprintDeviceLogRepository.Insert(new FingerprintDeviceLog
                 {
-                    Name = "Exception Log" + DateTime.UtcNow,
-                    Code = getNextCodes,
-                    Notes = "Data:" + "###" + ex.Message,
+                    LogType = model.LogType,
+                    CompanyId = getCompanyId > 0 ? getCompanyId : null,
+                    DeviceLogType = model.Table,
+                    DateUTC = DateTime.UtcNow,
+                    RequestBody = model.RequestBody.ToString(),
+                    Notes = "FingerprintActionBL.cs" + " " + (model.Exception != null ? model.Exception.Message : ""),
                     AddedDate = DateTime.UtcNow,
-                    ModifiedDate = DateTime.Now,
-                    CompanyId = 7,
-                    SerialNumber = "Hatch"
+                    ModifiedDate = DateTime.UtcNow,
+                    DeviceSerialNumber = model.SN,
+                    IsActive = true
                 });
                 await unitOfWork.SaveAsync();
 
                 #endregion
 
+            }
+            catch (Exception ex)
+            {
                 return false;
             }
 

@@ -16,9 +16,12 @@
         public const string Ar1 = "1";
         public const string En2 = "2";
         public const string PlusSign = "+";
+        public const string Log = "Log";
+        public const string Exception = "Exception";
         public const string Entity = "entity";
         public const string Mobile = "Mobile";
         public const string Phone = "Phone";
+        public const string Body = "Body";
         public const string BaseData = "BaseData";
         public const string AdminPanel = "adminpanel";
         public const string SignIn = "signin";

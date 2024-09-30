@@ -537,7 +537,7 @@ namespace Dawem.Data
                      .Where(p => p.ClrType == typeof(string)
                      && p.Name != nameof(BaseEntity.Notes)
                      && p.Name != nameof(Employee.Address)
-                     && p.Name != nameof(NotificationTranslation.Body)
+                     && !p.Name.Contains(LeillaKeys.Body)
                      && !p.Name.Contains(LeillaKeys.Mobile)
                      && !p.Name.Contains(LeillaKeys.Phone));
 
@@ -559,7 +559,7 @@ namespace Dawem.Data
             var allStringPropertiesWithFullMessage = allEntity
                     .SelectMany(t => t.GetProperties())
                     .Where(p => p.ClrType == typeof(string)
-                    && (p.Name == nameof(NotificationTranslation.Body)));
+                    && p.Name.Contains(nameof(LeillaKeys.Body)));
 
             foreach (var property in allStringPropertiesWithFullMessage)
             {
@@ -713,6 +713,7 @@ namespace Dawem.Data
         public DbSet<MyUser> MyUser { get; set; }
         public DbSet<FingerprintDevice> FingerprintDevices { get; set; }
         public DbSet<FingerprintTransaction> FingerprintTransactions { get; set; }
+        public DbSet<FingerprintDeviceLog> FingerprintDeviceLogs { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<CompanyBranch> CompanyBranches { get; set; }
         public DbSet<Company> Companies { get; set; }

@@ -7,6 +7,7 @@ using Dawem.Models.Dtos.Dawem.Fingerprint;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {
@@ -35,6 +36,16 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
                 {
                     return BadRequest();
                 }
+
+                #region Set Request Body
+
+                using StreamReader reader = new(Request.Body, Encoding.UTF8);
+                var bodyString = await reader.ReadToEndAsync();
+
+                model.RequestBody = Request.Body;
+                model.RequestBodyString = bodyString;
+
+                #endregion
 
                 model.LogType = LeillaKeys.Log;
                 await fingerprintActionBL.AddFingerprintLog(model);

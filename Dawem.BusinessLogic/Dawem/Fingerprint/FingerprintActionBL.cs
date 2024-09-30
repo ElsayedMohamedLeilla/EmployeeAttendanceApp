@@ -40,11 +40,13 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
 
                 if (getFingerprintDevice != null && model.RequestBody != null)
                 {
-                    string bodyString;
+                    string bodyString = model.RequestBodyString;
                     var getDeviceCompanyId = getFingerprintDevice.CompanyId;
 
-                    using StreamReader reader = new(model.RequestBody, Encoding.UTF8);
-                    bodyString = await reader.ReadToEndAsync();
+                    //using StreamReader reader = new(model.RequestBody, Encoding.UTF8);
+                    //bodyString = await reader.ReadToEndAsync();
+
+
                     if (!string.IsNullOrEmpty(bodyString) && model.Table == "ATTLOG")
                     {
                         if (!bodyString.Contains("\t"))
@@ -215,7 +217,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     CompanyId = getCompanyId > 0 ? getCompanyId : null,
                     DeviceLogType = model.Table,
                     DateUTC = DateTime.UtcNow,
-                    RequestBody = model.RequestBody != null ? model.RequestBody.ToString() : "null",
+                    RequestBody = model.RequestBodyString,
                     Notes = "FingerprintActionBL.cs" + " " + (model.Exception != null ? model.Exception.Message : ""),
                     AddedDate = DateTime.UtcNow,
                     ModifiedDate = DateTime.UtcNow,

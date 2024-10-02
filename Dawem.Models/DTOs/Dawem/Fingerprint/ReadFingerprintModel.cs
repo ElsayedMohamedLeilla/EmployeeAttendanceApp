@@ -13,6 +13,8 @@ namespace Dawem.Models.Dtos.Dawem.Fingerprint
         public string Pushver { get; set; }
         public string Language { get; set; }
         public string PushCommkey { get; set; }
+        [NotMapped]
+        [JsonIgnore]
         public Stream RequestBody { get; set; }
         public string RequestBodyString { get; set; }
         [NotMapped] // for fingerprint log

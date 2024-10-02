@@ -13,6 +13,7 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {
     [ApiController]
     [Route(LeillaKeys.EmptyString)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class FingerprintActionController : DawemControllerBase
     {
         private readonly IFingerprintActionBL fingerprintActionBL;

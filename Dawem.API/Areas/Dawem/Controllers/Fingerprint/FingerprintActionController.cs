@@ -2,18 +2,15 @@
 using Dawem.Contract.Repository.Manager;
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
-using Dawem.Domain.Entities.Core;
 using Dawem.Models.Dtos.Dawem.Fingerprint;
 using Dawem.Translations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace Dawem.API.Areas.Dawem.Controllers.Schedules
 {
     [ApiController]
     [Route(LeillaKeys.EmptyString)]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class FingerprintActionController : DawemControllerBase
     {
         private readonly IFingerprintActionBL fingerprintActionBL;
@@ -29,15 +26,31 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         }
         [HttpPost]
         [Route(LeillaKeys.ReadFingerprintRoute)]
-        public async Task<ActionResult> ReadFingerprint([FromQuery] ReadFingerprintModel model)
+        public async Task<ActionResult> ReadFingerprint([FromQuery] ReadFingerprintControllerModel controllerModel)
         {
+            if (controllerModel == null)
+            {
+                return BadRequest();
+            }
+
+            #region Map Model
+
+            var model = new ReadFingerprintModel
+            {
+                SN = controllerModel.SN,
+                Table = controllerModel.Table,
+                INFO = controllerModel.INFO,
+                Stamp = controllerModel.Stamp,
+                Options = controllerModel.Options,
+                Pushver = controllerModel.Pushver,
+                Language = controllerModel.Language,
+                PushCommkey = controllerModel.PushCommkey
+            };
+
+            #endregion
+
             try
             {
-                if (model == null)
-                {
-                    return BadRequest();
-                }
-
                 #region Set Request Body
 
                 using StreamReader reader = new(Request.Body, Encoding.UTF8);
@@ -76,25 +89,25 @@ namespace Dawem.API.Areas.Dawem.Controllers.Schedules
         }
         [HttpPost]
         [Route("iclock/devicecmd")]
-        public async Task<ActionResult> Test1([FromQuery] ReadFingerprintModel query)
+        public async Task<ActionResult> Test1([FromQuery] ReadFingerprintControllerModel query)
         {
             return Ok("Ok");
         }
         [HttpGet]
         [Route("iclock/ping")]
-        public async Task<ActionResult> Test2([FromQuery] ReadFingerprintModel query)
+        public async Task<ActionResult> Test2([FromQuery] ReadFingerprintControllerModel query)
         {
             return Ok("Ok");
         }
         [HttpGet]
         [Route("iclock/getrequest")]
-        public async Task<ActionResult> Test3([FromQuery] ReadFingerprintModel query)
+        public async Task<ActionResult> Test3([FromQuery] ReadFingerprintControllerModel query)
         {
             return Ok("Ok");
         }
         [HttpGet]
         [Route("iclock/cdata")]
-        public async Task<ActionResult> Test4([FromQuery] ReadFingerprintModel query)
+        public async Task<ActionResult> Test4([FromQuery] ReadFingerprintControllerModel query)
         {
             return Ok("Ok");
         }

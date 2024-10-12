@@ -1,6 +1,6 @@
 ﻿namespace Dawem.Models.Criteria.DefaultLookups
 {
-    public class GetDefaultOfficialHolidayTypeCriteria : BaseCriteria
+    public class GetDefaultOfficialHolidayCriteria : BaseCriteria
     {
 
     }

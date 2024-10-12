@@ -6,6 +6,6 @@ namespace Dawem.Contract.Repository.Core.DefaultLookups
 {
     public interface IDefaultOfficialHolidayRepository : IGenericRepository<DefaultLookup>
     {
-        IQueryable<DefaultLookup> GetAsQueryable(GetDefaultOfficialHolidayTypeCriteria criteria);
+        IQueryable<DefaultLookup> GetAsQueryable(GetDefaultOfficialHolidayCriteria criteria);
     }
 }

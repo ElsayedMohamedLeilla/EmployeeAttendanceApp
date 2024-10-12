@@ -2,7 +2,7 @@
 
 namespace Dawem.Contract.BusinessValidation.AdminPanel.DefaultLookups
 {
-    public interface IDefaultOfficialHolidayTypeBLValidation
+    public interface IDefaultOfficialHolidayBLValidation
     {
         Task<bool> CreateValidation(CreateDefaultOfficialHolidaysDTO model);
         Task<bool> UpdateValidation(UpdateDefaultOfficialHolidaysDTO model);

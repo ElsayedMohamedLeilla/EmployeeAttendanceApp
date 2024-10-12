@@ -10,44 +10,44 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
 {
 
     [Route(LeillaKeys.AdminPanelApiControllerAction), ApiController]
-    public class DefaultOfficialHolidayTypeController : AdminPanelControllerBase
+    public class DefaultOfficialHolidayController : AdminPanelControllerBase
     {
-        private readonly IDefaultOfficialHolidayTypeBL OfficialHolidayTypeBL;
-        public DefaultOfficialHolidayTypeController(IDefaultOfficialHolidayTypeBL _OfficialHolidayTypeBL)
+        private readonly IDefaultOfficialHolidayBL OfficialHolidayBL;
+        public DefaultOfficialHolidayController(IDefaultOfficialHolidayBL _OfficialHolidayTypeBL)
         {
-            OfficialHolidayTypeBL = _OfficialHolidayTypeBL;
+            OfficialHolidayBL = _OfficialHolidayTypeBL;
         }
         [HttpPost]
         public async Task<ActionResult> Create(CreateDefaultOfficialHolidaysDTO model)
         {
-            var result = await OfficialHolidayTypeBL.Create(model);
+            var result = await OfficialHolidayBL.Create(model);
             return Success(result, messageCode: LeillaKeys.DoneCreateHolidayTypeSuccessfully);
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateDefaultOfficialHolidaysDTO model)
         {
 
-            var result = await OfficialHolidayTypeBL.Update(model);
+            var result = await OfficialHolidayBL.Update(model);
             return Success(result, messageCode: LeillaKeys.DoneUpdateHolidayTypeSuccessfully);
         }
         [HttpGet]
-        public async Task<ActionResult> Get([FromQuery] GetDefaultOfficialHolidayTypeCriteria criteria)
+        public async Task<ActionResult> Get([FromQuery] GetDefaultOfficialHolidayCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var result = await OfficialHolidayTypeBL.Get(criteria);
+            var result = await OfficialHolidayBL.Get(criteria);
             return Success(result.DefaultOfficialHolidaysTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetForDropDown([FromQuery] GetDefaultOfficialHolidayTypeCriteria criteria)
+        public async Task<ActionResult> GetForDropDown([FromQuery] GetDefaultOfficialHolidayCriteria criteria)
         {
             if (criteria == null)
             {
                 return BadRequest();
             }
-            var result = await OfficialHolidayTypeBL.GetForDropDown(criteria);
+            var result = await OfficialHolidayBL.GetForDropDown(criteria);
             return Success(result.DefaultOfficialHolidaysTypes, result.TotalCount);
         }
         [HttpGet]
@@ -57,7 +57,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayTypeBL.GetInfo(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.GetInfo(OfficialHolidayTypeId));
         }
 
         [HttpGet]
@@ -67,7 +67,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayTypeBL.GetById(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.GetById(OfficialHolidayTypeId));
         }
         [HttpDelete]
         public async Task<ActionResult> Delete(int OfficialHolidayTypeId)
@@ -76,7 +76,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayTypeBL.Delete(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.Delete(OfficialHolidayTypeId));
         }
         [HttpPut]
         public async Task<ActionResult> Enable(int OfficialHolidayTypeId)
@@ -85,7 +85,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayTypeBL.Enable(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.Enable(OfficialHolidayTypeId));
         }
         [HttpPut]
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)
@@ -94,7 +94,7 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayTypeBL.Disable(model));
+            return Success(await OfficialHolidayBL.Disable(model));
         }
 
     }

@@ -19,32 +19,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 {
-    public class DefaultOfficialHolidayTypeBL : IDefaultOfficialHolidayTypeBL
+    public class DefaultOfficialHolidayBL : IDefaultOfficialHolidayBL
     {
         private readonly IUnitOfWork<ApplicationDBContext> unitOfWork;
         private readonly RequestInfo requestInfo;
-        private readonly IDefaultOfficialHolidayTypeBLValidation OfficialHolidayTypeBLValidation;
+        private readonly IDefaultOfficialHolidayBLValidation OfficialHolidayBLValidation;
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
 
 
-        public DefaultOfficialHolidayTypeBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
+        public DefaultOfficialHolidayBL(IUnitOfWork<ApplicationDBContext> _unitOfWork,
          IRepositoryManager _repositoryManager,
          IMapper _mapper,
         RequestInfo _requestHeaderContext,
-        IDefaultOfficialHolidayTypeBLValidation _OfficialHolidaysTypeBLValidation)
+        IDefaultOfficialHolidayBLValidation _OfficialHolidaysBLValidation)
         {
             unitOfWork = _unitOfWork;
             requestInfo = _requestHeaderContext;
             repositoryManager = _repositoryManager;
-            OfficialHolidayTypeBLValidation = _OfficialHolidaysTypeBLValidation;
+            OfficialHolidayBLValidation = _OfficialHolidaysBLValidation;
             mapper = _mapper;
         }
         public async Task<int> Create(CreateDefaultOfficialHolidaysDTO model)
         {
             #region Business Validation
 
-            await OfficialHolidayTypeBLValidation.CreateValidation(model);
+            await OfficialHolidayBLValidation.CreateValidation(model);
 
             #endregion
 
@@ -84,7 +84,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         {
             #region Business Validation
 
-            await OfficialHolidayTypeBLValidation.UpdateValidation(model);
+            await OfficialHolidayBLValidation.UpdateValidation(model);
 
             #endregion
 
@@ -167,10 +167,10 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
 
 
-        public async Task<GetDefaultOfficialHolidaysTypeResponseDTO> Get(GetDefaultOfficialHolidayTypeCriteria criteria)
+        public async Task<GetDefaultOfficialHolidaysResponseDTO> Get(GetDefaultOfficialHolidayCriteria criteria)
         {
-            var OfficialHolidaysTypeRepository = repositoryManager.DefaultOfficialHolidayRepository;
-            var query = OfficialHolidaysTypeRepository.GetAsQueryable(criteria);
+            var OfficialHolidaysRepository = repositoryManager.DefaultOfficialHolidayRepository;
+            var query = OfficialHolidaysRepository.GetAsQueryable(criteria);
 
             #region paging
 
@@ -179,7 +179,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
             #region sorting
 
-            var queryOrdered = OfficialHolidaysTypeRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
+            var queryOrdered = OfficialHolidaysRepository.OrderBy(query, nameof(DefaultLookup.Id), LeillaKeys.Desc);
 
             #endregion
 
@@ -199,7 +199,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
                 IsActive = OfficialHolidayType.IsActive,
             }).ToListAsync();
 
-            return new GetDefaultOfficialHolidaysTypeResponseDTO
+            return new GetDefaultOfficialHolidaysResponseDTO
             {
                 DefaultOfficialHolidaysTypes = OfficialHolidaysTypesList,
                 TotalCount = await query.CountAsync()
@@ -210,7 +210,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
 
 
-        public async Task<GetDefaultOfficialHolidaysTypeDropDownResponseDTO> GetForDropDown(GetDefaultOfficialHolidayTypeCriteria criteria)
+        public async Task<GetDefaultOfficialHolidaysDropDownResponseDTO> GetForDropDown(GetDefaultOfficialHolidayCriteria criteria)
         {
             criteria.IsActive = true;
             var OfficialHolidaysTypeRepository = repositoryManager.DefaultOfficialHolidayRepository;
@@ -239,7 +239,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
                 Name = e.Name
             }).ToListAsync();
 
-            return new GetDefaultOfficialHolidaysTypeDropDownResponseDTO
+            return new GetDefaultOfficialHolidaysDropDownResponseDTO
             {
                 DefaultOfficialHolidaysTypes = OfficialHolidaysTypesList,
                 TotalCount = await query.CountAsync()
@@ -248,10 +248,10 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
             #endregion
 
         }
-        public async Task<GetDefaultOfficialHolidaysTypeInfoResponseDTO> GetInfo(int OfficialHolidaysTypeId)
+        public async Task<GetDefaultOfficialHolidaysInfoResponseDTO> GetInfo(int OfficialHolidaysTypeId)
         {
-            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == OfficialHolidaysTypeId && !e.IsDeleted)
-                .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysTypeInfoResponseDTO
+            var officialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == OfficialHolidaysTypeId && !e.IsDeleted)
+                .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysInfoResponseDTO
                 {
                     Code = OfficialHolidayType.Code,
                     Name = OfficialHolidayType.Name,
@@ -267,12 +267,12 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
                     }).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
 
-            return OfficialHolidaysType;
+            return officialHolidaysType;
         }
-        public async Task<GetDefaultOfficialHolidaysTypeByIdResponseDTO> GetById(int OfficialHolidaysTypeId)
+        public async Task<GetDefaultOfficialHolidaysByIdResponseDTO> GetById(int officialHolidaysId)
         {
-            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == OfficialHolidaysTypeId && !e.IsDeleted)
-                .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysTypeByIdResponseDTO
+            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == officialHolidaysId && !e.IsDeleted)
+                .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysByIdResponseDTO
                 {
                     Id = OfficialHolidayType.Id,
                     Code = OfficialHolidayType.Code,

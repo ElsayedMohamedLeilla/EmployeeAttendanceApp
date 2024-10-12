@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dawem.Validation.BusinessValidation.AdminPanel.DefaultLookups
 {
-    public class DefaultOfficialHolidaysTypeBLValidation : IDefaultOfficialHolidayTypeBLValidation
+    public class DefaultOfficialHolidaysBLValidation : IDefaultOfficialHolidayBLValidation
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly RequestInfo requestInfo; // header
-        public DefaultOfficialHolidaysTypeBLValidation(IRepositoryManager _repositoryManager, RequestInfo _requestInfo)
+        public DefaultOfficialHolidaysBLValidation(IRepositoryManager _repositoryManager, RequestInfo _requestInfo)
         {
             repositoryManager = _repositoryManager;
             requestInfo = _requestInfo;

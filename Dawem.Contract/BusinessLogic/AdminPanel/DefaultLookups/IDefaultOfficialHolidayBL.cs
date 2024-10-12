@@ -5,14 +5,14 @@ using Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultOfficialHolidaysTyp
 
 namespace Dawem.Contract.BusinessLogic.AdminPanel.DefaultLookups
 {
-    public interface IDefaultOfficialHolidayTypeBL
+    public interface IDefaultOfficialHolidayBL
     {
         Task<int> Create(CreateDefaultOfficialHolidaysDTO model);
         Task<bool> Update(UpdateDefaultOfficialHolidaysDTO model);
-        Task<GetDefaultOfficialHolidaysTypeInfoResponseDTO> GetInfo(int DefaultOfficialHolidaysTypeId);
-        Task<GetDefaultOfficialHolidaysTypeByIdResponseDTO> GetById(int DefaultOfficialHolidaysTypeId);
-        Task<GetDefaultOfficialHolidaysTypeResponseDTO> Get(GetDefaultOfficialHolidayTypeCriteria model);
-        Task<GetDefaultOfficialHolidaysTypeDropDownResponseDTO> GetForDropDown(GetDefaultOfficialHolidayTypeCriteria model);
+        Task<GetDefaultOfficialHolidaysInfoResponseDTO> GetInfo(int DefaultOfficialHolidaysTypeId);
+        Task<GetDefaultOfficialHolidaysByIdResponseDTO> GetById(int DefaultOfficialHolidaysTypeId);
+        Task<GetDefaultOfficialHolidaysResponseDTO> Get(GetDefaultOfficialHolidayCriteria model);
+        Task<GetDefaultOfficialHolidaysDropDownResponseDTO> GetForDropDown(GetDefaultOfficialHolidayCriteria model);
         Task<bool> Delete(int DefaultOfficialHolidaysTypeId);
 
         public Task<bool> Enable(int GroupId);

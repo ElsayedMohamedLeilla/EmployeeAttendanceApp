@@ -3,7 +3,7 @@ using Dawem.Models.Dtos.Dawem.Shared;
 
 namespace Dawem.Models.Response.AdminPanel.DefaultLookups.DefaultOfficialHolidaysTypes
 {
-    public class GetDefaultOfficialHolidaysTypeInfoResponseDTO
+    public class GetDefaultOfficialHolidaysInfoResponseDTO
     {
         public int Code { get; set; }
         public string Name { get; set; }

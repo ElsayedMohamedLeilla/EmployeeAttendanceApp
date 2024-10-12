@@ -18,7 +18,7 @@ namespace Dawem.Repository.Core.DefaultLookups
             requestInfo = _requestInfo;
         }
 
-        public IQueryable<DefaultLookup> GetAsQueryable(GetDefaultOfficialHolidayTypeCriteria criteria)
+        public IQueryable<DefaultLookup> GetAsQueryable(GetDefaultOfficialHolidayCriteria criteria)
         {
             var predicate = PredicateBuilder.New<DefaultLookup>(a => !a.IsDeleted);
             var inner = PredicateBuilder.New<DefaultLookup>(true);

@@ -51,41 +51,41 @@ namespace Dawem.API.Areas.AdminPanel.Controllers.DefaultLookups
             return Success(result.DefaultOfficialHolidaysTypes, result.TotalCount);
         }
         [HttpGet]
-        public async Task<ActionResult> GetInfo([FromQuery] int OfficialHolidayTypeId)
+        public async Task<ActionResult> GetInfo([FromQuery] int officialHolidayId)
         {
-            if (OfficialHolidayTypeId < 1)
+            if (officialHolidayId < 1)
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayBL.GetInfo(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.GetInfo(officialHolidayId));
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById([FromQuery] int OfficialHolidayTypeId)
+        public async Task<ActionResult> GetById([FromQuery] int officialHolidayId)
         {
-            if (OfficialHolidayTypeId < 1)
+            if (officialHolidayId < 1)
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayBL.GetById(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.GetById(officialHolidayId));
         }
         [HttpDelete]
-        public async Task<ActionResult> Delete(int OfficialHolidayTypeId)
+        public async Task<ActionResult> Delete(int officialHolidayId)
         {
-            if (OfficialHolidayTypeId < 1)
+            if (officialHolidayId < 1)
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayBL.Delete(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.Delete(officialHolidayId));
         }
         [HttpPut]
-        public async Task<ActionResult> Enable(int OfficialHolidayTypeId)
+        public async Task<ActionResult> Enable(int officialHolidayId)
         {
-            if (OfficialHolidayTypeId < 1)
+            if (officialHolidayId < 1)
             {
                 return BadRequest();
             }
-            return Success(await OfficialHolidayBL.Enable(OfficialHolidayTypeId));
+            return Success(await OfficialHolidayBL.Enable(officialHolidayId));
         }
         [HttpPut]
         public async Task<ActionResult> Disable([FromQuery] DisableModelDTO model)

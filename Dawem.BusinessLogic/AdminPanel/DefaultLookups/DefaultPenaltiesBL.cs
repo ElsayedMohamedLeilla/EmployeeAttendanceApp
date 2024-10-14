@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultPenaltiesInfoResponseDTO> GetInfo(int PenaltiesId)
         {
-            var Penalties = await repositoryManager.DefaultPenaltiesRepository.Get(e => e.Id == PenaltiesId && !e.IsDeleted)
+            var Penalties = await repositoryManager.DefaultPenaltiesRepository.Get(e => e.LookupType == LookupsType.Penalties && e.Id == PenaltiesId && !e.IsDeleted)
                 .Select(Penalties => new GetDefaultPenaltiesInfoResponseDTO
                 {
                     Code = Penalties.Code,
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultPenaltiesByIdResponseDTO> GetById(int PenaltiesId)
         {
-            var Penalties = await repositoryManager.DefaultPenaltiesRepository.Get(e => e.Id == PenaltiesId && !e.IsDeleted)
+            var Penalties = await repositoryManager.DefaultPenaltiesRepository.Get(e => e.LookupType == LookupsType.Penalties && e.Id == PenaltiesId && !e.IsDeleted)
                 .Select(Penalties => new GetDefaultPenaltiesByIdResponseDTO
                 {
                     Id = Penalties.Id,
@@ -294,7 +294,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int PenaltiesId)
         {
-            var Penalties = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PenaltiesId) ??
+            var Penalties = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Penalties && d.Id == PenaltiesId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryPenaltyNotFound);
             Penalties.Delete();
 
@@ -304,7 +304,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int PenaltiesId)
         {
-            var Penalties = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == PenaltiesId) ??
+            var Penalties = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Penalties && !d.IsActive && d.Id == PenaltiesId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryPenaltyNotFound);
             Penalties.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +312,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultPenaltiesRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Penalties && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(AmgadKeys.SorryPenaltyNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

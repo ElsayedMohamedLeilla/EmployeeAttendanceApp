@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultJustificationsTypeInfoResponseDTO> GetInfo(int JustificationsTypeId)
         {
-            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.Get(e => e.Id == JustificationsTypeId && !e.IsDeleted)
+            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.Get(e => e.LookupType == LookupsType.JustificationsTypes && e.Id == JustificationsTypeId && !e.IsDeleted)
                 .Select(JustificationType => new GetDefaultJustificationsTypeInfoResponseDTO
                 {
                     Code = JustificationType.Code,
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultJustificationsTypeByIdResponseDTO> GetById(int JustificationsTypeId)
         {
-            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.Get(e => e.Id == JustificationsTypeId && !e.IsDeleted)
+            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.Get(e => e.LookupType == LookupsType.JustificationsTypes && e.Id == JustificationsTypeId && !e.IsDeleted)
                 .Select(JustificationType => new GetDefaultJustificationsTypeByIdResponseDTO
                 {
                     Id = JustificationType.Id,
@@ -294,7 +294,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int JustificationsTypeId)
         {
-            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == JustificationsTypeId) ??
+            var JustificationsType = await repositoryManager.DefaultJustificationTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JustificationsTypes && d.Id == JustificationsTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
             JustificationsType.Delete();
 
@@ -304,7 +305,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int JustificationTypeId)
         {
-            var JustificationType = await repositoryManager.DefaultJustificationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == JustificationTypeId) ??
+            var JustificationType = await repositoryManager.DefaultJustificationTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JustificationsTypes && !d.IsActive && d.Id == JustificationTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
             JustificationType.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +314,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultJustificationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultJustificationTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JustificationsTypes && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJustificationsTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

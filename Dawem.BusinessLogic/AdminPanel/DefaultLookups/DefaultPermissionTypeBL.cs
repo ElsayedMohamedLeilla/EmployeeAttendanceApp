@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultPermissionsTypeInfoResponseDTO> GetInfo(int PermissionsTypeId)
         {
-            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.Get(e => e.Id == PermissionsTypeId && !e.IsDeleted)
+            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.Get(e => e.LookupType == LookupsType.PermissionsTypes && e.Id == PermissionsTypeId && !e.IsDeleted)
                 .Select(PermissionType => new GetDefaultPermissionsTypeInfoResponseDTO
                 {
                     Code = PermissionType.Code,
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultPermissionsTypeByIdResponseDTO> GetById(int PermissionsTypeId)
         {
-            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.Get(e => e.Id == PermissionsTypeId && !e.IsDeleted)
+            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.Get(e => e.LookupType == LookupsType.PermissionsTypes && e.Id == PermissionsTypeId && !e.IsDeleted)
                 .Select(PermissionType => new GetDefaultPermissionsTypeByIdResponseDTO
                 {
                     Id = PermissionType.Id,
@@ -294,7 +294,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int PermissionsTypeId)
         {
-            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == PermissionsTypeId) ??
+            var PermissionsType = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.PermissionsTypes && d.Id == PermissionsTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
             PermissionsType.Delete();
 
@@ -304,7 +304,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int PermissionTypeId)
         {
-            var PermissionType = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == PermissionTypeId) ??
+            var PermissionType = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.PermissionsTypes && !d.IsActive && d.Id == PermissionTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
             PermissionType.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +312,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultPermissionTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.PermissionsTypes && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryPermissionsTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

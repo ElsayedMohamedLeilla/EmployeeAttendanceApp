@@ -2,6 +2,7 @@
 using Dawem.Data;
 using Dawem.Data.UnitOfWork;
 using Dawem.Domain.Entities.Core.DefaultLookus;
+using Dawem.Enums.Generals;
 using Dawem.Models.Context;
 using Dawem.Models.Criteria.DefaultLookups;
 using Dawem.Models.DTOs.Dawem.Generic;
@@ -20,7 +21,7 @@ namespace Dawem.Repository.Core.DefaultLookups
 
         public IQueryable<DefaultLookup> GetAsQueryable(GetDefaultOfficialHolidayCriteria criteria)
         {
-            var predicate = PredicateBuilder.New<DefaultLookup>(a => !a.IsDeleted);
+            var predicate = PredicateBuilder.New<DefaultLookup>(a => a.LookupType == LookupsType.OfficialHoliday);
             var inner = PredicateBuilder.New<DefaultLookup>(true);
 
 

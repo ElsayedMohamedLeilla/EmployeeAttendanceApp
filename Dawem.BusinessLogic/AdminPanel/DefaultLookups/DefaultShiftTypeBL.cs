@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultShiftsTypeInfoResponseDTO> GetInfo(int ShiftsTypeId)
         {
-            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.Id == ShiftsTypeId && !e.IsDeleted)
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.LookupType == LookupsType.ShiftsTypes && e.Id == ShiftsTypeId && !e.IsDeleted)
                 .Select(ShiftType => new GetDefaultShiftsTypeInfoResponseDTO
                 {
                     Code = ShiftType.Code,
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultShiftsTypeByIdResponseDTO> GetById(int ShiftsTypeId)
         {
-            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.Id == ShiftsTypeId && !e.IsDeleted)
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.Get(e => e.LookupType == LookupsType.ShiftsTypes && e.Id == ShiftsTypeId && !e.IsDeleted)
                 .Select(ShiftType => new GetDefaultShiftsTypeByIdResponseDTO
                 {
                     Id = ShiftType.Id,
@@ -294,7 +294,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int ShiftsTypeId)
         {
-            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == ShiftsTypeId) ??
+            var ShiftsType = await repositoryManager.DefaultShiftTypeRepository
+                .GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.ShiftsTypes && !d.IsDeleted && d.Id == ShiftsTypeId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
             ShiftsType.Delete();
 
@@ -304,7 +305,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int ShiftTypeId)
         {
-            var ShiftType = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == ShiftTypeId) ??
+            var ShiftType = await repositoryManager.DefaultShiftTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.ShiftsTypes && !d.IsActive && d.Id == ShiftTypeId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
             ShiftType.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +314,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultShiftTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultShiftTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.ShiftsTypes && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(AmgadKeys.SorryShiftTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

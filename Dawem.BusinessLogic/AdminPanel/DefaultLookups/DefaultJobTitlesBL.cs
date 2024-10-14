@@ -250,13 +250,11 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultJobTitlesInfoResponseDTO> GetInfo(int JobTitlesId)
         {
-            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.Get(e => e.Id == JobTitlesId && !e.IsDeleted)
+            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.Get(e => e.LookupType == LookupsType.JobTitles && e.Id == JobTitlesId && !e.IsDeleted)
                 .Select(JobTitles => new GetDefaultJobTitlesInfoResponseDTO
                 {
                     Code = JobTitles.Code,
                     Name = JobTitles.Name,
-                    //DefaultType = JobTitles.DefaultType,
-                    //DefaultTypeName = TranslationHelper.GetTranslation(JobTitles.DefaultType.ToString(), requestInfo.Lang),
                     IsActive = JobTitles.IsActive,
                     NameTranslations = JobTitles.NameTranslations.
                     Select(pt =>
@@ -271,7 +269,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultJobTitlesByIdResponseDTO> GetById(int JobTitlesId)
         {
-            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.Get(e => e.Id == JobTitlesId && !e.IsDeleted)
+            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.Get(e => e.LookupType == LookupsType.JobTitles && e.Id == JobTitlesId && !e.IsDeleted)
                 .Select(JobTitles => new GetDefaultJobTitlesByIdResponseDTO
                 {
                     Id = JobTitles.Id,
@@ -294,7 +292,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int JobTitlesId)
         {
-            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == JobTitlesId) ??
+            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JobTitles && !d.IsDeleted && d.Id == JobTitlesId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
             JobTitles.Delete();
 
@@ -304,7 +303,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int JobTitlesId)
         {
-            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == JobTitlesId) ??
+            var JobTitles = await repositoryManager.DefaultJobTitlesRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JobTitles && !d.IsDeleted && !d.IsActive && d.Id == JobTitlesId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
             JobTitles.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +312,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultJobTitlesRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultJobTitlesRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.JobTitles && !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryJobTitleNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

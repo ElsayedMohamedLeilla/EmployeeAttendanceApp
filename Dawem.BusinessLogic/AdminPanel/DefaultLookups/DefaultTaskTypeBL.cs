@@ -251,7 +251,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultTasksTypeInfoResponseDTO> GetInfo(int TasksTypeId)
         {
-            var TasksType = await repositoryManager.DefaultTaskTypeRepository.Get(e => e.Id == TasksTypeId && !e.IsDeleted)
+            var TasksType = await repositoryManager.DefaultTaskTypeRepository.Get(e => e.LookupType == LookupsType.TasksTypes && e.Id == TasksTypeId && !e.IsDeleted)
                 .Select(TaskType => new GetDefaultTasksTypeInfoResponseDTO
                 {
                     Code = TaskType.Code,
@@ -272,7 +272,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultTasksTypeByIdResponseDTO> GetById(int TasksTypeId)
         {
-            var TasksType = await repositoryManager.DefaultTaskTypeRepository.Get(e => e.Id == TasksTypeId && !e.IsDeleted)
+            var TasksType = await repositoryManager.DefaultTaskTypeRepository.Get(e => e.LookupType == LookupsType.TasksTypes && e.Id == TasksTypeId && !e.IsDeleted)
                 .Select(TaskType => new GetDefaultTasksTypeByIdResponseDTO
                 {
                     Id = TaskType.Id,
@@ -295,7 +295,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int TasksTypeId)
         {
-            var TasksType = await repositoryManager.DefaultTaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == TasksTypeId) ??
+            var TasksType = await repositoryManager.DefaultTaskTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.TasksTypes && d.Id == TasksTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
             TasksType.Delete();
 
@@ -305,7 +306,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int TaskTypeId)
         {
-            var TaskType = await repositoryManager.DefaultTaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == TaskTypeId) ??
+            var TaskType = await repositoryManager.DefaultTaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.TasksTypes && !d.IsActive && d.Id == TaskTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
             TaskType.Enable();
             await unitOfWork.SaveAsync();
@@ -313,7 +314,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultTaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultTaskTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.TasksTypes && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryTaskTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

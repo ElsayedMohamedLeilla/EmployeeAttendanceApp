@@ -250,7 +250,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultOfficialHolidaysInfoResponseDTO> GetInfo(int OfficialHolidaysTypeId)
         {
-            var officialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == OfficialHolidaysTypeId && !e.IsDeleted)
+            var officialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.
+                Get(e => e.Id == OfficialHolidaysTypeId && e.LookupType == LookupsType.OfficialHoliday)
                 .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysInfoResponseDTO
                 {
                     Code = OfficialHolidayType.Code,
@@ -271,7 +272,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultOfficialHolidaysByIdResponseDTO> GetById(int officialHolidaysId)
         {
-            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.Get(e => e.Id == officialHolidaysId && !e.IsDeleted)
+            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.
+                Get(e => e.Id == officialHolidaysId && e.LookupType == LookupsType.OfficialHoliday)
                 .Select(OfficialHolidayType => new GetDefaultOfficialHolidaysByIdResponseDTO
                 {
                     Id = OfficialHolidayType.Id,
@@ -294,7 +296,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int OfficialHolidaysTypeId)
         {
-            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == OfficialHolidaysTypeId) ??
+            var OfficialHolidaysType = await repositoryManager.DefaultOfficialHolidayRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.OfficialHoliday && d.Id == OfficialHolidaysTypeId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
             OfficialHolidaysType.Delete();
 
@@ -304,7 +307,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int OfficialHolidayTypeId)
         {
-            var OfficialHolidayType = await repositoryManager.DefaultOfficialHolidayRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == OfficialHolidayTypeId) ??
+            var OfficialHolidayType = await repositoryManager.DefaultOfficialHolidayRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.OfficialHoliday && !d.IsActive && d.Id == OfficialHolidayTypeId) ??
                 throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
             OfficialHolidayType.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +316,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultOfficialHolidayRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultOfficialHolidayRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.OfficialHoliday && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(AmgadKeys.SorryHolidayNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

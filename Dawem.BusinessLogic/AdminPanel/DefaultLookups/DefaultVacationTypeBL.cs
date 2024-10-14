@@ -251,7 +251,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultVacationsTypeInfoResponseDTO> GetInfo(int VacationsTypeId)
         {
-            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
+            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.LookupType == LookupsType.VacationsTypes && e.Id == VacationsTypeId && !e.IsDeleted)
                 .Select(vacationType => new GetDefaultVacationsTypeInfoResponseDTO
                 {
                     Code = vacationType.Code,
@@ -272,7 +272,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultVacationsTypeByIdResponseDTO> GetById(int VacationsTypeId)
         {
-            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.Id == VacationsTypeId && !e.IsDeleted)
+            var VacationsType = await repositoryManager.DefaultVacationTypeRepository.Get(e => e.LookupType == LookupsType.VacationsTypes && e.Id == VacationsTypeId && !e.IsDeleted)
                 .Select(vacationType => new GetDefaultVacationsTypeByIdResponseDTO
                 {
                     Id = vacationType.Id,
@@ -295,7 +295,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int VacationsTypeId)
         {
-            var vacationsType = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == VacationsTypeId) ??
+            var vacationsType = await repositoryManager.DefaultVacationTypeRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.VacationsTypes && d.Id == VacationsTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
             vacationsType.Delete();
 
@@ -305,7 +306,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int vacationTypeId)
         {
-            var vacationType = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == vacationTypeId) ??
+            var vacationType = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.VacationsTypes && !d.IsActive && d.Id == vacationTypeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
             vacationType.Enable();
             await unitOfWork.SaveAsync();
@@ -313,7 +314,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultVacationTypeRepository.GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.VacationsTypes && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryVacationTypeNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

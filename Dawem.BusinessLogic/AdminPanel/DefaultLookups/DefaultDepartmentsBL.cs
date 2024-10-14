@@ -250,7 +250,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultDepartmentsInfoResponseDTO> GetInfo(int DepartmentsId)
         {
-            var Departments = await repositoryManager.DefaultDepartmentsRepository.Get(e => e.Id == DepartmentsId && !e.IsDeleted)
+            var Departments = await repositoryManager.DefaultDepartmentsRepository.Get(e => e.LookupType == LookupsType.Departments && e.Id == DepartmentsId && !e.IsDeleted)
                 .Select(Departments => new GetDefaultDepartmentsInfoResponseDTO
                 {
                     Code = Departments.Code,
@@ -271,7 +271,7 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<GetDefaultDepartmentsByIdResponseDTO> GetById(int DepartmentsId)
         {
-            var Departments = await repositoryManager.DefaultDepartmentsRepository.Get(e => e.Id == DepartmentsId && !e.IsDeleted)
+            var Departments = await repositoryManager.DefaultDepartmentsRepository.Get(e => e.LookupType == LookupsType.Departments && e.Id == DepartmentsId && !e.IsDeleted)
                 .Select(Departments => new GetDefaultDepartmentsByIdResponseDTO
                 {
                     Id = Departments.Id,
@@ -294,7 +294,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Delete(int DepartmentsId)
         {
-            var Departments = await repositoryManager.DefaultDepartmentsRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.Id == DepartmentsId) ??
+            var Departments = await repositoryManager.DefaultDepartmentsRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Departments && d.Id == DepartmentsId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
             Departments.Delete();
 
@@ -304,7 +305,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
 
         public async Task<bool> Enable(int DepartmentsId)
         {
-            var Departments = await repositoryManager.DefaultDepartmentsRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && !d.IsActive && d.Id == DepartmentsId) ??
+            var Departments = await repositoryManager.DefaultDepartmentsRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Departments && !d.IsActive && d.Id == DepartmentsId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
             Departments.Enable();
             await unitOfWork.SaveAsync();
@@ -312,7 +314,8 @@ namespace Dawem.BusinessLogic.AdminPanel.DefaultLookups
         }
         public async Task<bool> Disable(DisableModelDTO model)
         {
-            var group = await repositoryManager.DefaultDepartmentsRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.IsActive && d.Id == model.Id) ??
+            var group = await repositoryManager.DefaultDepartmentsRepository.
+                GetEntityByConditionWithTrackingAsync(d => d.LookupType == LookupsType.Departments && d.IsActive && d.Id == model.Id) ??
                 throw new BusinessValidationException(LeillaKeys.SorryDepartmentNotFound);
             group.Disable(model.DisableReason);
             await unitOfWork.SaveAsync();

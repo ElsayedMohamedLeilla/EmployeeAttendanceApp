@@ -115,17 +115,20 @@ namespace Dawem.BusinessLogicCore.Dawem
 
                 foreach (var screen in masterScreens)
                 {
-                    screenTypeModel.MenuItems.Add(new MenuItemWithAvailableActionsDTO
+                    if (screen.GroupOrScreenType == GroupOrScreenType.Screen || HasChildren(screen.Id, screenType.Screens))
                     {
-                        Id = screen.Id,
-                        GroupOrScreenType = screen.GroupOrScreenType,
-                        Name = screen.Name,
-                        Icon = screen.Icon,
-                        URL = screen.URL,
-                        AvailableActions = screen.AvailableActions,
-                        Children = HasChildren(screen.Id, screenType.Screens) ?
-                        GetChildren(screen.Id, screenType.Screens) : null,
-                    });
+                        screenTypeModel.MenuItems.Add(new MenuItemWithAvailableActionsDTO
+                        {
+                            Id = screen.Id,
+                            GroupOrScreenType = screen.GroupOrScreenType,
+                            Name = screen.Name,
+                            Icon = screen.Icon,
+                            URL = screen.URL,
+                            AvailableActions = screen.AvailableActions,
+                            Children = HasChildren(screen.Id, screenType.Screens) ?
+                            GetChildren(screen.Id, screenType.Screens) : null,
+                        });
+                    }   
                 }
 
                 response.MenuItemsTypes.Add(screenTypeModel);

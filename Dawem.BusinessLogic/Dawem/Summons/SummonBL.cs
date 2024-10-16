@@ -138,7 +138,7 @@ namespace Dawem.BusinessLogic.Dawem.Summons
                     Get(e => !e.IsDeleted && e.IsActive && e.CompanyId == requestInfo.CompanyId &&
                     (forAllEmployees || (model.Employees != null && model.Employees.Contains(e.Id)) ||
                     (model.Departments != null && e.DepartmentId > 00 && model.Departments.Contains(e.DepartmentId.Value)) ||
-                    (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Departments.Contains(eg.GroupId))))).
+                    (model.Groups != null && e.EmployeeGroups != null && e.EmployeeGroups.Any(eg => model.Groups.Contains(eg.GroupId))))).
                     Select(e => new
                     {
                         e.Id,

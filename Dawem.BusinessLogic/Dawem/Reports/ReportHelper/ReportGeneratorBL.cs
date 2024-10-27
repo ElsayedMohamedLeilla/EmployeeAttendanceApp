@@ -529,7 +529,7 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
            
             #endregion
 
-            #region PrepareReport
+            #region Prepare Report
             Report report = new();
             try
             {

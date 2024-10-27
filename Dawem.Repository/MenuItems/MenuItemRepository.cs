@@ -30,7 +30,7 @@ namespace Dawem.Repository.MenuItems
             {
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
-                inner = inner.Or(x => x.MenuItemNameTranslations != null && x.MenuItemNameTranslations.Any(n => n.Name.StartsWith(criteria.FreeText)));
+                inner = inner.Or(x => x.MenuItemNameTranslations != null && x.MenuItemNameTranslations.Any(n => n.Name.Contains(criteria.FreeText)));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

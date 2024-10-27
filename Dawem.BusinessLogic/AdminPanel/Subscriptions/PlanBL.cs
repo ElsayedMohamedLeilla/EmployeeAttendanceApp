@@ -166,7 +166,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
 
             var existingScreenIds = existDbList.Select(e => e.ScreenId).ToList();
 
-            var addedScreens = model.ScreensIds
+            var addedScreens = model.ScreenIds
                 .Where(screenId => !existingScreenIds.Contains(screenId))
                 .Select(screenId => new PlanScreen
                 {
@@ -177,7 +177,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 }).ToList();
 
             var removedScreenIds = existDbList
-                .Where(ge => !model.ScreensIds.Contains(ge.ScreenId))
+                .Where(ge => !model.ScreenIds.Contains(ge.ScreenId))
                 .Select(ge => ge.ScreenId)
                 .ToList();
 
@@ -224,7 +224,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                 Id = plan.Id,
                 Code = plan.Code,
                 Name = plan.NameTranslations.FirstOrDefault(p => p.Language.ISO2 == requestInfo.Lang).Name,
-                EmployeeCost = Math.Round(plan.EmployeeCost, 2) + LeillaKeys.EmptyString,
+                EmployeeCost = Math.Round(plan.EmployeeCost, 2, MidpointRounding.AwayFromZero),
                 IsTrial = plan.IsTrial,
                 IsActive = plan.IsActive,
                 SubscriptionsCount = plan.Subscriptions.Count
@@ -284,7 +284,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     IsTrial = plan.IsTrial,
                     MinNumberOfEmployees = plan.MinNumberOfEmployees,
                     MaxNumberOfEmployees = plan.MaxNumberOfEmployees,
-                    EmployeeCost = Math.Round(plan.EmployeeCost, 2) + LeillaKeys.EmptyString,
+                    EmployeeCost = Math.Round(plan.EmployeeCost, 2, MidpointRounding.AwayFromZero),
                     IsActive = plan.IsActive,
                     Notes = plan.Notes,
                     SubscriptionsCount = plan.Subscriptions.Count,

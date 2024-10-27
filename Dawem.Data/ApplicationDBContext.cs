@@ -452,7 +452,7 @@ namespace Dawem.Data
            .WithOne(e => e.Department)
            .HasForeignKey(e => e.DepartmentId);
 
-            #region Add Index To All CompanyId And Name In All Tables
+            #region Add Index To All IsDeleted In All Tables
 
             var allIsDeletedEntities = modelBuilder.Model.GetEntityTypes()
                      .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.IsDeleted)));
@@ -486,6 +486,23 @@ namespace Dawem.Data
                 {
                     entityType.AddIndex(new List<IMutableProperty> { companyId, name, isDeleted }, LeillaKeys.UniqueIndexCompanyIdNameIsDeleted)
                     .IsUnique = true;
+                }
+            }
+
+            #endregion
+
+            #region Add Index To All Name In All Tables
+
+            var allNameOnlyEntities = modelBuilder.Model.GetEntityTypes()
+                     .Where(entity => entity.GetProperties().Any(p => p.Name == nameof(Employee.Name)));
+
+            foreach (var entityType in allNameOnlyEntities)
+            {
+                var name = entityType?.GetProperty(nameof(Employee.Name));
+
+                if (entityType != null && name != null)
+                {
+                    entityType.AddIndex( name, LeillaKeys.NonUniqueIndexName);
                 }
             }
 

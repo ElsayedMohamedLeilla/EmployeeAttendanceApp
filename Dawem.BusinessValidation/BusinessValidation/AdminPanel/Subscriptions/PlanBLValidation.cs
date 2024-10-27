@@ -111,7 +111,7 @@ namespace Dawem.Validation.BusinessValidation.AdminPanel.Subscriptions
 
             #endregion
 
-            await ValidatePlanScreens(model.ScreensIds);
+            await ValidatePlanScreens(model.ScreenIds);
 
             return true;
         }

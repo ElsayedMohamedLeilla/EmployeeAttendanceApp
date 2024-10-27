@@ -252,6 +252,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     Notes = screen.Notes,
                     Icon = screen.Icon,
                     URL = screen.URL,
+                    Order = screen.Order,
                     Actions = screen.MenuItemActions != null ?
                     screen.MenuItemActions.Select(a => TranslationHelper.
                     GetTranslation(a.ActionCode.ToString(), requestInfo.Lang)).
@@ -281,6 +282,7 @@ namespace Dawem.BusinessLogic.AdminPanel.Subscriptions
                     IsActive = screen.IsActive,
                     Notes = screen.Notes,
                     Icon = screen.Icon,
+                    Order = screen.Order,
                     URL = screen.URL,
                     NameTranslations = screen.MenuItemNameTranslations.
                     Select(pt => new NameTranslationModel

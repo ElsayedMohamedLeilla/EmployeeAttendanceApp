@@ -22,7 +22,7 @@ namespace Dawem.Models.AutoMapper.Dawem.Subscriptions
         }
         private void MapPlanScreens(UpdatePlanModel source, Plan destination, ResolutionContext context)
         {
-            destination.PlanScreens = source.ScreensIds != null ? source.ScreensIds
+            destination.PlanScreens = source.ScreenIds != null ? source.ScreenIds
                 .Select(screenId => new PlanScreen { ScreenId = screenId })
                 .ToList() : null;
         }

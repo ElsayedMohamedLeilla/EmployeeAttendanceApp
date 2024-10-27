@@ -28,6 +28,7 @@ namespace Dawem.Repository.Schedules.Schedules
                 criteria.FreeText = criteria.FreeText.ToLower().Trim();
 
                 inner = inner.Start(x => x.Name.ToLower().Trim().StartsWith(criteria.FreeText));
+                inner = inner.Or(x => x.Name.ToLower().Trim().Contains(criteria.FreeText));
 
                 if (int.TryParse(criteria.FreeText, out int id))
                 {

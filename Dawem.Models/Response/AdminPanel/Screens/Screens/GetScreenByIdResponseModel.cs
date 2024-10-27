@@ -8,6 +8,7 @@ namespace Dawem.Models.Response.AdminPanel.Screens.Screens
         public int Id { get; set; }
         public AuthenticationType AuthenticationType { get; set; }
         public int? ParentId { get; set; }
+        public int Order { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }

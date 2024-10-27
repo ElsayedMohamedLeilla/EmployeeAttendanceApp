@@ -8,7 +8,7 @@ namespace Dawem.Models.Response.AdminPanel.Subscriptions.Plans
         public string Name { get; set; }
         public int MinNumberOfEmployees { get; set; }
         public int MaxNumberOfEmployees { get; set; }
-        public string EmployeeCost { get; set; }
+        public decimal EmployeeCost { get; set; }
         public int SubscriptionsCount { get; set; }
         public bool IsTrial { get; set; }
         public bool IsActive { get; set; }

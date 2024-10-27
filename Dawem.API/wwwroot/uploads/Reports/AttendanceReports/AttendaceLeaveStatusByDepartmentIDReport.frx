@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="10/27/2024 15:18:15" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="10/27/2024 18:11:49" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
-      <TableDataSource Name="Table" Alias="GetAttendaceLeaveShortStatusByDepartmentIDORJobID" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetAttendaceLeaveShortStatusByDepartmentIDORJobID  &#13;&#10; @DateFrom ,&#13;&#10; @DateTo,&#13;&#10; @CompanyID,&#13;&#10; @DepartmentIDs, &#13;&#10; @EmployeeIDs,&#13;&#10; @JobTitleIDs">
+      <TableDataSource Name="Table" Alias="GetAttendaceLeaveShortStatusByDepartmentIDORJobID" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetAttendaceLeaveShortStatusByDepartmentIDORJobID  &#13;&#10; @DateFrom ,&#13;&#10; @DateTo,&#13;&#10; @CompanyID,&#13;&#10; @DepartmentIDs, &#13;&#10; @EmployeeIDs,&#13;&#10; @JobTitleIDs,&#13;&#10; @ZoneIDs">
         <Column Name="EmployeeName" DataType="System.String"/>
         <Column Name="DepartmentName" DataType="System.String"/>
         <Column Name="JobTitleName" DataType="System.String"/>
@@ -10,12 +10,14 @@
         <Column Name="AttendanceStatus" DataType="System.Int32"/>
         <Column Name="LeaveStatus" DataType="System.Int32"/>
         <Column Name="RowIndex" DataType="System.Int64"/>
+        <Column Name="minId" DataType="System.Int32"/>
         <CommandParameter Name="DateFrom" DataType="4" Expression="[DateFrom]"/>
         <CommandParameter Name="DateTo" DataType="4" Expression="[DateTo]"/>
         <CommandParameter Name="CompanyID" DataType="8" Expression="[CompanyID]"/>
         <CommandParameter Name="DepartmentIDs" DataType="22" Expression="[DepartmentIDs]"/>
         <CommandParameter Name="EmployeeIDs" DataType="22" Expression="[EmployeeIDs]"/>
         <CommandParameter Name="JobTitleIDs" DataType="22" Expression="[JobTitleIDs]"/>
+        <CommandParameter Name="ZoneIDs" DataType="22" Expression="[ZoneIDs]"/>
       </TableDataSource>
     </MsSqlDataConnection>
     <Parameter Name="DateFrom" DataType="System.DateTime" AsString=""/>
@@ -30,6 +32,7 @@
     <Parameter Name="JobTitleIDs" DataType="System.String" AsString=""/>
     <Parameter Name="PrintDate" DataType="System.String" AsString=""/>
     <Parameter Name="CompanyLogo" DataType="System.Byte[]" AsString=""/>
+    <Parameter Name="ZoneIDs" DataType="System.String" AsString=""/>
   </Dictionary>
   <ReportPage Name="Page1" Guides="585.9" Border.Lines="All" Border.Style="Double" Watermark.Font="Arial, 60pt">
     <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="170.55" Guides="28.35">

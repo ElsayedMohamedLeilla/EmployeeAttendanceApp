@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="10/27/2024 18:11:49" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="05/05/2024 11:08:33" ReportInfo.Modified="10/27/2024 18:56:56" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table" Alias="GetAttendaceLeaveShortStatusByDepartmentIDORJobID" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].GetAttendaceLeaveShortStatusByDepartmentIDORJobID  &#13;&#10; @DateFrom ,&#13;&#10; @DateTo,&#13;&#10; @CompanyID,&#13;&#10; @DepartmentIDs, &#13;&#10; @EmployeeIDs,&#13;&#10; @JobTitleIDs,&#13;&#10; @ZoneIDs">
@@ -83,6 +83,9 @@
               <TableCell Name="Cell5" Border.Lines="All" Text="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.RowIndex]" HorzAlign="Center" VertAlign="Center" Font="Arial, 11pt, style=Bold" TextFill.Color="Brown"/>
             </TableRow>
           </TableObject>
+          <Sort>
+            <Sort Expression="[GetAttendaceLeaveShortStatusByDepartmentIDORJobID.RowIndex]"/>
+          </Sort>
         </DataBand>
         <GroupFooterBand Name="GroupFooter2" Top="347.2" Width="718.2"/>
       </GroupHeaderBand>

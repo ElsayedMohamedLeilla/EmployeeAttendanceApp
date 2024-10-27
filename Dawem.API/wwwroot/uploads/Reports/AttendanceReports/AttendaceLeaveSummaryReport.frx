@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/26/2024 15:54:57" ReportInfo.Modified="08/27/2024 22:58:16" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/26/2024 15:54:57" ReportInfo.Modified="10/28/2024 00:25:28" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].TotalAttendanceInAperiod &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@DepartmentIDs, &#13;&#10;@EmployeeIDs,&#13;&#10;@JobTitleIDs&#13;&#10;&#13;&#10;">
@@ -11,7 +11,7 @@
         <Column Name="ActualAttend" DataType="System.Int32"/>
         <Column Name="VacationCount" DataType="System.Int32"/>
         <Column Name="AbsenseCount" DataType="System.Int32"/>
-        <Column Name="ActualWorkingHours" DataType="System.Int32"/>
+        <Column Name="ActualWorkingHours" DataType="System.String"/>
         <Column Name="TotalLateArrivalsHours" DataType="System.Decimal"/>
         <Column Name="TotalEarlyDeparturesHours" DataType="System.Decimal"/>
         <Column Name="TotalOverTimeHours" DataType="System.Decimal"/>
@@ -53,8 +53,8 @@
         <PictureObject Name="Picture3" Left="595.35" Width="75.6" Height="75.6" ImageFormat="Jpeg" Image="/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAtAGEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9U6KKKACiiuW1r4jeHNA8aaJ4D1Brkapr6SPZ7Isx4QEnc2ePuntW1GhVxEnGlFtpN6dkrt/JamdSrCiuao7JtL5vRfezqaKKKxNArz1td8feNNa1az8D6hpGi6Po102nyajeWT3k11dpjzVjjEkaoiE7CzEksrYGBz6FXB/DKeHS/DPiG+1KRbW3g8Sa/cSSzHYqRC/nYuSeAoAJz0xXo4K1OjUrqKlJOKV1da31s9G9LaprXa9jjxN51IUm2ou7dnba2l91vfTsXtB0P4mWeqQ3HiD4g6Vqdgu7zbWHw+bZ3ypAxJ9ofbg4P3TnGO+a6S41TTbSUQXWoW0MjdEkmVWP4E14V4k8b6546u/Jf+0LbSp4Dd2uiWt3/Z8stlnH23U7w/NaW7YJWNPnYHvyBzdlomi3ULS6N4b0G8t2zun034a3Oq27d/8Aj6nkD3B55ZRz2r3/AOwZ4hKpjJqMu0YKy9eRLXz5WnspNqy8r+1Y0fcw8eZd5Sd36c19Pndb211+hPFGm+MdSW2/4RHxXY6Ns3Gc3OlfbfNzjbj97Htxz65z2xXL6o3xj8H6fP4gn8QaF4qtbJGnurBNJewuHhUZfyZBPIpfAOFZcHpkZryjw/ePoJfVPDOrWOgpDMkM19o8dwmmRSnGItU0q4O+0VunnRkbS+SRivbvDvi5vF3hvVYL7T/sOtaaslpqen79/kzeXkFGx88bqQyMOqn1BAyxOCrZXGKtGpST1vCKlq+r1kt91K8bq/LeKd0MTTxzesoT6Wk2vktn/wCA2etr2dsH/hpD4S/9DF/5D/8Ar0V+ev8AYWuf9Aa+/wDAd/8ACiv0v/iGWT/8/pffH/I+L/12zD/n3H7mfpr8RvFj+BvAut+LorVbmTS7N544mOFdxwoJHOMkZ9q8I8LfFX40aLrXw81bxrr+kaxovxFmWGOzt7RYpLLfsCkMFBJHmLnJbow9DXQ/tR6LceKNQ+HPheRb59L1TxFHb6gtsWA8pmjQsxHAwrvgnpk1r+DP2YPBPg/xHp3iJte8Qaw2iszaXa6hdK8FoScgqqqOR17DPOK+Cy1ZTl+UqrjbSnV52lyczsk4xSlf3Xz2ldW001Pqsa8fi8wdPDXUafLrzWV21Jtr7S5dLdzznxp8Z/jNqsHjrxh4M1vStF8PeCNRGm/ZXtUmubtvOEe8l1YDJOeMYBxyQTWjrGq3mu/Gn4Ga3qLq93qGhfap2VdoMkluzMQBwOSeK8/+OPg/wlrHi/xFpfw/8F/EP/hKL6/CzRQ26f2TcS+YGeXjc5ByxGSqgnPABB+jdJ+DenSXngHxNrV9eR6x4L0iGwSGB08iRxCEfdlSTznGCO1e5ja2W5XhKNaMFBzhUSXKlO0qKiuZptyTm2+Z9/I8zDU8bjcRUpyk5KMoNvmbjdVLu10kvdWy7eZwXxO8X/HT4M6tH441jxVpOueDrrV/s76atksc1rbuzMgDKgYkIuNxY/NtyCCa+hgc8jkGvB9a/Y/8F69dXNzqHjfxfItzO1w0JvImjVmYngGM4AzxXu8aLHGsa9FAUfhXx2e4jL69CgsI06keZTcafs017vLotG171316n0WV0sZSq1XiE1B25U5c/e+vRbadB1eb/GfUYXttC8J3Uxjs9Zvmn1Qjvp1pE1zcL9G8uND6hzXpFeAfGbxPY69JqN1pNw+3SvCPiu3yylSLhJra1lwD6YfDDsc1z8PYaWIx0NNFfXs+V8r+9X+Rtm9ZUcLLu7ad1dX/AAOcjk1LUoFuLqzgv7zUTYarc2Nx/qb3WNRkIsLeYfxW9pboHMecHgnpTrqa11Oe2mvtQsNRmu5pLaz1DXtevrWfU3SQxNJbRWuIrGAy5SNj14z2J1rwrY+Mp3jjz9m8WX8yf9uPh1VgHtgsxrM0exifSbbR2+aF7bwLorc8/Z3m8+b6F2c5r7qNSPKqi0uovTSyk+VrTs9UusdPswcflnBpuO9nJa63cVdP5r8desrl7qE1ru15hd3c+nafe3EI1JhJdG1s5RHqujXjA/6SoVzJE7c98nv0PgSRvC/j7SbGG6eaGK+uvCMkjvlprP7KNQ01myeWjjZ4g3cNXJalO15ot7fPJ+/utE8TXm49BLqGqpak/SOIAY/lXVaTHC3xFtmkZkgj8X6jckcZCadpKWka+7HcX+mfrWOKgnh6kJfy1V843svkm5ecnd6mlCT9rGUe8Pue/wCNl6abHv8ARXiv/DYHwR/6DWo/+C6X/Civjf8AVfOv+gWp/wCAv/I+j/tzLf8An/D/AMCR7VRRRXgnqhRRRQAUUUUAFeCWvw91LxpaeJbWyubaCe3uvGGj3MU7MGzfzrNbvgA8cRv/ALrAjNe91yniL4baD4g1Rteju9V0fVJI1hmvdJvpLWSeMdFk2nbJjsWBI7EV6+U5gsDKXvcrdrO17NXWqutLSfmnY8/H4T6ylpe26vbTR7+qRxf/AArLxQ3iFdSuIbaSKTXoNSm2z4zFNpP2K8HQchgrLxzVTSfg/wCMIdHis57zToLpNJ0KISb2bbfaXdM8cnC/deLaCeue1d5oXw7j0LVIdUXxt4uvzDu/0e+1ZpoHypHzIRzjOR7gV11ddfPa9O0KMlJJR15bfC7pWbfXV9znpZXSneVSLTu+t/iWu33HnEPwU0WRbm31TUJp7OddYtRbxqEH2S/nWcxFuTmORSysMYz7V0+rWeg+F/Duu6r5MFnE0M99fXB43uIQrSMfUrGuT321J4m8L/8ACS/Zv+Ki1vSvs+//AJBl55Hmbsff4O7G3j0yfWsIfCPQrmaJ/EGveI9et4XEi2eqao8tszDkF4hhZMHBAYEZArnWMWJUZ4uu9LtxS87vsrve7/Q2+r+wbjh6S9W/K3m9D8/f+FW+Pv8AoWb7/v03+FFfp3RX33/EV8X/ANA8f/An/kfKf6h4f/n8/uR//9k="/>
       </ContainerObject>
     </ReportTitleBand>
-    <PageHeaderBand Name="PageHeader1" Top="185.33" Width="718.2" Border.Lines="All" Border.Style="Double" Fill.Color="White" Guides="37.8,66.60001,0,28.8,75.6"/>
-    <GroupHeaderBand Name="GroupHeader1" Top="190.67" Width="718.2" Height="85.05" Condition="[Table.DepartmentName]">
+    <PageHeaderBand Name="PageHeader1" Top="184" Width="718.2" Border.Lines="All" Border.Style="Double" Fill.Color="White" Guides="37.8,66.60001,0,28.8,75.6"/>
+    <GroupHeaderBand Name="GroupHeader1" Top="188" Width="718.2" Height="85.05" Condition="[Table.DepartmentName]">
       <TextObject Name="Text6" Left="604.8" Top="9.45" Width="95.7" Height="28.8" Border.Lines="All" Text="القسم" HorzAlign="Center" VertAlign="Center" Font="Arial, 14pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text2" Left="226.8" Top="9.45" Width="368.55" Height="28.35" Border.Lines="All" Border.Style="Dash" Fill.Color="White" Text="[[Table.DepartmentName]]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text16" Left="378" Top="47.25" Width="122.85" Height="18.9" Border.Lines="All" Fill.Color="Silver" Text="الحضــــــــــــــــور " HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
@@ -68,7 +68,7 @@
       <TextObject Name="Text20" Left="160.65" Top="66.15" Width="56.7" Height="18.9" Border.Lines="All" Fill.Color="Silver" Text="التأخير" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text21" Left="85.05" Top="66.15" Width="75.6" Height="18.9" Border.Lines="All" Fill.Color="Silver" Text="المغادره مبكرأ" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text22" Left="9.45" Top="66.15" Width="75.6" Height="18.9" Border.Lines="All" Fill.Color="Silver" Text="الوقت الاضافى" HorzAlign="Center" VertAlign="Bottom" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-      <DataBand Name="Data1" Top="281.05" Width="718.2" Height="18.9" Guides="9.449997,103.95,28.34999,47.24998,66.14999,85.04999" DataSource="Table">
+      <DataBand Name="Data1" Top="277.05" Width="718.2" Height="18.9" Guides="9.449997,103.95,28.34999,47.24998,66.14999,85.04999" DataSource="Table">
         <TableObject Name="Table1" Left="9.45" Width="689.85" Height="18.9">
           <TableColumn Name="Column1" Width="75.6"/>
           <TableColumn Name="Column2" Width="75.6"/>
@@ -81,10 +81,10 @@
           <TableColumn Name="Column9" Width="122.85"/>
           <TableColumn Name="Column10" Width="75.6"/>
           <TableRow Name="Row1">
-            <TableCell Name="Cell1" Border.Lines="All" Text="[Table.TotalOverTimeHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-            <TableCell Name="Cell2" Border.Lines="All" Text="[Table.TotalEarlyDeparturesHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-            <TableCell Name="Cell3" Border.Lines="All" Text="[Table.TotalLateArrivalsHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
-            <TableCell Name="Cell4" Border.Lines="All" Text="[Table.ActualWorkingHours]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+            <TableCell Name="Cell1" Border.Lines="All" Text="[Table.TotalOverTimeHours]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+            <TableCell Name="Cell2" Border.Lines="All" Text="[Table.TotalEarlyDeparturesHours]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+            <TableCell Name="Cell3" Border.Lines="All" Text="[Table.TotalLateArrivalsHours]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
+            <TableCell Name="Cell4" Border.Lines="All" Text="[Table.ActualWorkingHours]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
             <TableCell Name="Cell5" Border.Lines="All" Text="[Table.AbsenseCount]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
             <TableCell Name="Cell31" Border.Lines="All" Text="[Table.VacationCount]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
             <TableCell Name="Cell26" Border.Lines="All" Text="[Table.ActualAttend]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
@@ -94,9 +94,9 @@
           </TableRow>
         </TableObject>
       </DataBand>
-      <GroupFooterBand Name="GroupFooter1" Top="305.28" Width="718.2"/>
+      <GroupFooterBand Name="GroupFooter1" Top="299.95" Width="718.2"/>
     </GroupHeaderBand>
-    <PageFooterBand Name="PageFooter1" Top="310.62" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash">
+    <PageFooterBand Name="PageFooter1" Top="303.95" Width="718.2" Height="28.35" Border.Lines="Left, Right, Top" Border.Style="Dash">
       <TextObject Name="Text23" Left="-9.45" Width="217.35" Height="28.35" Text="Powered By Dawem Company" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text31" Left="472.5" Width="85.05" Height="28.35" Text="Printed on :" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
       <TextObject Name="Text50" Left="274.05" Width="141.75" Height="28.35" Text="[Page#] of [TotalPages#]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>

@@ -34,6 +34,7 @@ namespace Dawem.Domain.Entities.Attendances
         public decimal? TotalEarlyDeparturesHours { get; set; }
         public decimal? TotalOverTimeHours { get; set; }
         public decimal? TotalBreakHours { get; set; }
+        public decimal? DefaultWorkingHours { get; set; }
         public DateTime? CheckInDateTime { get; set; }
         public DateTime? CheckOutDateTime { get; set; }
         public AttendanceFingerPrintStatus FingerPrintStatus { get; set; }

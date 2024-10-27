@@ -644,6 +644,10 @@ namespace Dawem.Data
                 HasComputedColumnSql("dbo.TotalBreakHours(Id)");
 
             modelBuilder.Entity<EmployeeAttendance>().
+                Property(e => e.DefaultWorkingHours).
+                HasComputedColumnSql("dbo.DefaultWorkingHours(Id)");
+
+            modelBuilder.Entity<EmployeeAttendance>().
                 Property(e => e.CheckInDateTime).
                 HasComputedColumnSql("dbo.CheckInDateTime(Id)");
 
@@ -666,6 +670,9 @@ namespace Dawem.Data
 
             modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.TotalBreakHours(Id)"));
+
+            modelBuilder.Entity<EmployeeAttendance>().
+                ToTable(tbl => tbl.HasTrigger("dbo.DefaultWorkingHours(Id)"));
 
             modelBuilder.Entity<EmployeeAttendance>().
                 ToTable(tbl => tbl.HasTrigger("dbo.CheckInDateTime(Id)"));

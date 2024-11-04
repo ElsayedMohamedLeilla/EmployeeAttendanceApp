@@ -9,19 +9,14 @@ namespace Dawem.Models.Dtos.Dawem.Employees.Departments
         public int? ParentId { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }
-
         public int ManagerId { get; set; }
-
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
         public List<int> ManagerDelegatorIds { get; set; }
-
         [JsonIgnore]
         public List<DepartmentManagarDelegatorUpdateModelDTO> ManagerDelegators { get; set; }
-
         public List<int> ZoneIds { get; set; }
         [JsonIgnore]
         public List<DepartmentZonesUpdateModelDTO> Zones { get; set; }
-
-
         public void MapDepartmentManagarDelegators()
         {
             ManagerDelegators = ManagerDelegatorIds

@@ -47,6 +47,7 @@ namespace Dawem.Domain.Entities.Employees
         public string ProfileImageName { get; set; }
         public string FingerprintMobileCode { get; set; }
         public bool AllowChangeFingerprintMobileCode { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
         public bool InsertedFromExcel { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }

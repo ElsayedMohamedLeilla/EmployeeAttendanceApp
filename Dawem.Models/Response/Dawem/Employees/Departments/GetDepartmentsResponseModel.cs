@@ -10,7 +10,6 @@ namespace Dawem.Models.Response.Dawem.Employees.Departments
         public int NumberOfEmployees { get; set; }
         public bool IsActive { get; set; }
         public string Notes { get; set; }
-
         public DepartmentManagarForGridDTO Manager { get; set; } = null;
 
     }

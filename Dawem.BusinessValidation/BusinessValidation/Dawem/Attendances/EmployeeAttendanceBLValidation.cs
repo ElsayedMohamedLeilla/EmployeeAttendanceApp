@@ -33,6 +33,13 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 .GetByIdAsync(getEmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
 
+            var getEmployeeDapartment = await repositoryManager.DepartmentRepository
+               .GetByIdAsync(getEmployee.DepartmentId);
+
+            var allowFingerprintOutsideAllowedZones = getEmployee.AllowFingerprintOutsideAllowedZones ||
+                (getEmployeeDapartment?.AllowFingerprintOutsideAllowedZones != null && 
+                getEmployeeDapartment.AllowFingerprintOutsideAllowedZones);
+
             var getScheduleId = getEmployee.ScheduleId ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
 
@@ -64,7 +71,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
             if (employeeZones != null)
             {
                 zoneId = IsWithinZone(model.Latitude, model.Longitude, employeeZones);
-                if (zoneId == null || zoneId == 0)
+                if (zoneId == null && !allowFingerprintOutsideAllowedZones)
                     throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
             }
             else
@@ -90,7 +97,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                     if (groupZones != null)
                     {
                         zoneId = IsWithinZone(model.Latitude, model.Longitude, groupZones);
-                        if (zoneId == null || zoneId == 0)
+                        if (zoneId == null && !allowFingerprintOutsideAllowedZones)
                             throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
                     }
 
@@ -115,7 +122,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                             if (departmentZones != null)
                             {
                                 zoneId = IsWithinZone(model.Latitude, model.Longitude, departmentZones);
-                                if (zoneId == null || zoneId == 0)
+                                if (zoneId == null && !allowFingerprintOutsideAllowedZones)
                                     throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
                             }
                         }
@@ -277,10 +284,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             var getEmployeeId = requestInfo.EmployeeId ??
                  throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
-
+            
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetByIdAsync(getEmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
+
+            var getEmployeeDapartment = await repositoryManager.DepartmentRepository
+               .GetByIdAsync(getEmployee.DepartmentId);
+
+            var allowFingerprintOutsideAllowedZones = getEmployee.AllowFingerprintOutsideAllowedZones ||
+                (getEmployeeDapartment?.AllowFingerprintOutsideAllowedZones != null &&
+                getEmployeeDapartment.AllowFingerprintOutsideAllowedZones);
 
             var getScheduleId = getEmployee.ScheduleId ??
                throw new BusinessValidationException(LeillaKeys.SorryEmployeeDoNotHaveSchedule);
@@ -441,7 +455,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 ? EmployeeStatus.AtBreak :
                 getAttendance?.CheckInDateTime != null ? EmployeeStatus.AtWork :
                 EmployeeStatus.LeavedOnly,
-
+                AllowFingerprintOutsideAllowedZones = allowFingerprintOutsideAllowedZones,
                 LocalDate = clientLocalDateTime,
                 AvailableZones = availableZonesOutput
             };

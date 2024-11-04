@@ -10,6 +10,7 @@
         public List<string> ManagerDelegators { get; set; }
         public List<string> Zones { get; set; }
         public string Notes { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
 
 
     }

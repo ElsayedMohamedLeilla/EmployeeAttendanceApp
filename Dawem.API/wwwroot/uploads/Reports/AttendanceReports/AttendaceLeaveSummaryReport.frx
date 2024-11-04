@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="04/26/2024 15:54:57" ReportInfo.Modified="10/28/2024 00:25:28" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="04/26/2024 15:54:57" ReportInfo.Modified="10/28/2024 00:40:53" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
     <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqigMBsUqzlwfmyMIx/vAJ34VG9diee64Q3KmGx8avXO66zbEtWEgI30lXCExDB/bGRhsrCgYPU20EtPBMzejg4lite/R0DZZUBnItxP8KJqz8LZhkJOSvyw/Q6leV9xhugVpEacKUbiTLFzC384Mw89C/u13jY8UjnobQkymAH4VkTf03mWD5PflzcX8kb9x+pkzZTp/iwgBPCq15i+Avvg==">
       <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="EXEC [dbo].TotalAttendanceInAperiod &#13;&#10;@DateFrom,&#13;&#10;@DateTo,&#13;&#10;@CompanyID,&#13;&#10;@DepartmentIDs, &#13;&#10;@EmployeeIDs,&#13;&#10;@JobTitleIDs&#13;&#10;&#13;&#10;">
@@ -93,6 +93,9 @@
             <TableCell Name="Cell46" Border.Lines="All" Text="[Table.EmployeeNumber]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold" TextFill.Color="Brown"/>
           </TableRow>
         </TableObject>
+        <Sort>
+          <Sort Expression="[Table.EmployeeNumber]"/>
+        </Sort>
       </DataBand>
       <GroupFooterBand Name="GroupFooter1" Top="299.95" Width="718.2"/>
     </GroupHeaderBand>

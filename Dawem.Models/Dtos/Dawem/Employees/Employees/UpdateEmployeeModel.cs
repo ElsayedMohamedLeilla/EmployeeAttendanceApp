@@ -23,6 +23,7 @@ namespace Dawem.Models.Dtos.Dawem.Employees.Employees
         public AttendanceType AttendanceType { get; set; }
         public EmployeeType EmployeeType { get; set; }
         public bool AllowChangeFingerprintMobileCode { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
         public int EmployeeNumber { get; set; }
         public bool IsActive { get; set; }
         public List<int> ZoneIds { get; set; }

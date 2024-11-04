@@ -227,6 +227,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             getEmployee.EmployeeNumber = model.EmployeeNumber;
             getEmployee.Email = model.Email;
             getEmployee.AllowChangeFingerprintMobileCode = model.AllowChangeFingerprintMobileCode;
+            getEmployee.AllowFingerprintOutsideAllowedZones = model.AllowFingerprintOutsideAllowedZones;
             getEmployee.MobileNumber = model.MobileNumber;
             getEmployee.Address = model.Address;
             getEmployee.ProfileImageName = !string.IsNullOrEmpty(imageName) ? imageName : !string.IsNullOrEmpty(model.ProfileImageName)
@@ -489,6 +490,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Employees),
                     ProfileImageName = e.ProfileImageName,
                     DisableReason = e.DisableReason,
+                    AllowFingerprintOutsideAllowedZones = e.AllowFingerprintOutsideAllowedZones,
                     AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,
                     Zones = e.Zones
                     .Select(d => d.Zone.Name)
@@ -543,6 +545,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                     ScheduleId = e.ScheduleId,
                     AttendanceType = e.AttendanceType,
                     EmployeeType = e.EmployeeType,
+                    AllowFingerprintOutsideAllowedZones = e.AllowFingerprintOutsideAllowedZones,
                     EmployeeNumber = e.EmployeeNumber,
                     ProfileImageName = e.ProfileImageName,
                     AllowChangeFingerprintMobileCode = e.AllowChangeFingerprintMobileCode,

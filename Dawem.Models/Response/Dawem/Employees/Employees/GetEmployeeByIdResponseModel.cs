@@ -24,6 +24,7 @@ namespace Dawem.Models.Response.Dawem.Employees.Employees
         public string Address { get; set; }
         public string DisableReason { get; set; }
         public List<int> ZoneIds { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
         public bool AllowChangeFingerprintMobileCode { get; set; }
     }
 }

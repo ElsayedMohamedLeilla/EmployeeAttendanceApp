@@ -18,5 +18,6 @@ namespace Dawem.Models.Response.Dawem.Attendances
         public DateTime LocalDate { get; set; }
         public EmployeeStatus EmployeeStatus { get; set; }
         public List<AvailableZoneDTO> AvailableZones { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
     }
 }

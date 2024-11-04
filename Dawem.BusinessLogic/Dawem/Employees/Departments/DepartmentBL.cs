@@ -137,6 +137,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                 getDepartment.ModifyUserId = requestInfo.UserId;
                 getDepartment.ManagerId = model.ManagerId;
                 getDepartment.Notes = model.Notes;
+                getDepartment.AllowFingerprintOutsideAllowedZones = model.AllowFingerprintOutsideAllowedZones;
 
                 #region Update ZoneDepartment
 
@@ -347,6 +348,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                     .Select(d => d.Employee.Name)
                     .ToList(),
                     Manager = dep.Manager.Name,
+                    AllowFingerprintOutsideAllowedZones = dep.AllowFingerprintOutsideAllowedZones,
                     Zones = dep.Zones
                     .Select(d => d.Zone.Name)
                     .ToList()
@@ -368,6 +370,7 @@ namespace Dawem.BusinessLogic.Dawem.Employees.Departments
                     ManagerDelegatorIds = dep.ManagerDelegators
                     .Select(d => d.EmployeeId)
                     .ToList(),
+                    AllowFingerprintOutsideAllowedZones = dep.AllowFingerprintOutsideAllowedZones,
                     ZoneIds = dep.Zones
                     .Select(z => z.ZoneId)
                     .ToList(),

@@ -10,6 +10,7 @@ namespace Dawem.Models.Dtos.Dawem.Employees.Departments
         public int? ParentId { get; set; }
         public int ManagerId { get; set; }
         public List<int> ManagerDelegatorIds { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
 
         [JsonIgnore]
         public List<DepartmentManagarDelegatorCreateModelDTO> ManagerDelegators { get; set; }

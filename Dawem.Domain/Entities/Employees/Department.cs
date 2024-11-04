@@ -29,7 +29,7 @@ namespace Dawem.Domain.Entities.Employees
         public List<ZoneDepartment> Zones { get; set; }
         public List<DepartmentManagerDelegator> ManagerDelegators { get; set; }
         public List<SchedulePlanDepartment> SchedulePlanDepartments { get; set; }
-
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
         public bool InsertedFromExcel { get; set; }
     }
 }

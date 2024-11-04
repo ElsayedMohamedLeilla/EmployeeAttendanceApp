@@ -9,6 +9,7 @@
         public bool IsActive { get; set; }
         public List<int> ManagerDelegatorIds { get; set; }
         public int? ManagerId { get; set; }
+        public bool AllowFingerprintOutsideAllowedZones { get; set; }
 
         public List<int> ZoneIds { get; set; }
         public string Notes { get; set; }

@@ -26,6 +26,7 @@ namespace Dawem.Domain.Entities.Requests
         public RequestTask RequestTask { get; set; }
         public RequestJustification RequestJustification { get; set; }
         public RequestPermission RequestPermission { get; set; }
+        public RequestOvertime RequestOvertime { get; set; }
 
         #endregion
         public int Code { get; set; }

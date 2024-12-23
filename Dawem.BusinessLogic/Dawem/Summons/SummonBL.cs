@@ -101,10 +101,10 @@ namespace Dawem.BusinessLogic.Dawem.Summons
 
             summon.SummonLogs = await repositoryManager
                     .EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == companyId &&
-                    (model.ForAllEmployees.HasValue && model.ForAllEmployees.Value ||
-                    model.Employees != null && model.Employees.Contains(e.Id) ||
-                    model.Groups != null && e.EmployeeGroups.Any(eg => model.Groups.Contains(eg.GroupId)) ||
-                    model.Departments != null && e.DepartmentId > 0 && model.Departments.Contains(e.DepartmentId.Value)))
+                    ((model.ForAllEmployees.HasValue && model.ForAllEmployees.Value) ||
+                    (model.Employees != null && model.Employees.Contains(e.Id)) ||
+                    (model.Groups != null && e.EmployeeGroups.Any(eg => model.Groups.Contains(eg.GroupId))) ||
+                    (model.Departments != null && e.DepartmentId > 0 && model.Departments.Contains(e.DepartmentId.Value))))
                     .Select(e => new SummonLog
                     {
                         CompanyId = companyId,

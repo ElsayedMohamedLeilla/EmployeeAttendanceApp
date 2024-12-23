@@ -25,6 +25,9 @@
         DoNotForgetSignIn,
         ForgetSignIn,
         DoNotForgetSignOut,
-        ForgetSignOut
+        ForgetSignOut,
+        NewOvertimeRequest,
+        AcceptingOvertimeRequest,
+        RejectingOvertimeRequest
     }
 }

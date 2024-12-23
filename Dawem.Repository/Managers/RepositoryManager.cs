@@ -87,6 +87,7 @@ namespace Dawem.Repository.Managers
         private IResponsibilityRepository responsibilityRepository;
         private IUserResponsibilityRepository userResponsibilityRepository;
         private IPermissionsTypeRepository permissionsTypeRepository;
+        private IOvertimeTypeRepository overtimeTypeRepository;
         private IVacationsTypeRepository vacationsTypeRepository;
         private IRoleRepository roleRepository;
         private IScheduleRepository scheduleRepository;
@@ -117,6 +118,7 @@ namespace Dawem.Repository.Managers
         private IRequestTaskRepository requestTaskRepository;
         private IRequestPermissionRepository requestPermissionRepository;
         private IRequestVacationRepository requestVacationRepository;
+        private IRequestOvertimeRepository requestOvertimeRepository;
         private IRequestAttachmentRepository requestAttachmentRepository;
         private IRequestTaskEmployeeRepository requestTaskEmployeeRepository;
         private IHolidayRepository holidayRepository;
@@ -239,6 +241,9 @@ namespace Dawem.Repository.Managers
         vacationsTypeRepository ??= new VacationsTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IPermissionsTypeRepository PermissionsTypeRepository =>
         permissionsTypeRepository ??= new PermissionsTypeRepository(unitOfWork, generalSetting, requestInfo);
+
+        public IOvertimeTypeRepository OvertimeTypeRepository =>
+        overtimeTypeRepository ??= new OvertimeTypeRepository(unitOfWork, generalSetting, requestInfo);
         public IRoleRepository RoleRepository =>
         roleRepository ??= new RoleRepository(unitOfWork, generalSetting);
         public IShiftWorkingTimeRepository ShiftWorkingTimeRepository =>
@@ -316,6 +321,8 @@ namespace Dawem.Repository.Managers
         public IRequestVacationRepository RequestVacationRepository =>
             requestVacationRepository ??= new RequestVacationRepository(unitOfWork, generalSetting, requestInfo);
 
+        public IRequestOvertimeRepository RequestOvertimeRepository =>
+            requestOvertimeRepository ??= new RequestOvertimeRepository(unitOfWork, generalSetting, requestInfo);
         public IVacationBalanceRepository VacationBalanceRepository =>
             vacationBalanceRepository ??= new VacationBalanceRepository(unitOfWork, generalSetting, requestInfo);
 

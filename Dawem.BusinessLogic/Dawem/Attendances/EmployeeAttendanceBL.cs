@@ -85,7 +85,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                 if (validationResult.FingerPrintType == FingerPrintType.Summon)
                 {
                     var getSummonLog = await repositoryManager.SummonLogRepository
-                        .GetEntityByConditionWithTrackingAsync(s => !s.IsDeleted && s.SummonId == validationResult.SummonId &&
+                        .GetEntityByConditionWithTrackingAsync(s => s.SummonId == validationResult.SummonId &&
                         s.EmployeeId == validationResult.EmployeeId);
                     if (getSummonLog != null)
                     {

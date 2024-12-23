@@ -96,7 +96,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 !c.Request.IsDeleted &&
                 (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
                 c.Request.CompanyId == requestInfo.CompanyId &&
-                c.Request.Id != model.Id && 
+                c.Request.Id != model.Id &&
                 (model.EmployeeId == null || model.EmployeeId == c.Request.EmployeeId) &&
                 (
                 model.DateFrom.Date <= c.DateTo.Date && model.DateTo.Date >= c.Request.Date.Date ||

@@ -55,6 +55,7 @@
         public const string PermissionRequests = "PermissionRequests";
         public const string AssignmentRequests = "AssignmentRequests";
         public const string VacationRequests = "VacationRequests";
+        public const string OvertimeRequests = "OvertimeRequests";
         public const string Users = "Users";
         public const string GetDateSQL = "getdate()";
         public const string EmptyString = "";
@@ -111,7 +112,7 @@
         public const string UniqueIndexCompanyIdNameIsDeleted = "IX_Unique_CompanyId_Name_IsDeleted";
         public const string UniqueIndexNameIsDeleted = "IX_Unique_Name_IsDeleted";
         public const string NonUniqueIndexName = "IX_Non_Unique_Name";
-        public const string UniqueIndexCompanyIdCodeIsDeleted = "IX_Unique_CompanyId_Code_IsDeleted";
+        public const string UniqueIndexCompanyIdCode = "IX_Unique_CompanyId_Code";
         public const string IsDeleted = "IX_IsDeleted";
         public const string Image = "image";
         public const string BLValidation = "BLValidation";
@@ -721,7 +722,26 @@
         public const string SorryParentMustBeFromTheSameAuthenticationType = "Sorry!!ParentMustBeFromTheSameAuthenticationType!";
         public const string SorryPlanScreensMustChoosenFromWebOrMobileApp = "Sorry!!PlanScreensMustChoosenFromWebOrMobileApp!";
         public const string SorryYouCannotDoBreakOutYouMustHaveBreakInFirst = "Sorry!!YouCannotDoBreakOut.YouMustHaveBreakInFirst!";
-
+        public const string SorryYouMustChooseOvertimeType = "Sorry!!YouMustChooseOvertimeType!";
+        public const string SorryYouMustEnterOvertimeDate = "Sorry!!YouMustEnterOvertimeDate!";
+        public const string SorryYouMustEnterDateFromForOvertimeRequest = "Sorry!!YouMustEnterDateFromForOvertimeRequest!";
+        public const string SorryYouMustEnterDateToForOvertimeRequest = "Sorry!!YouMustEnterDateToForOvertimeRequest!";
+        public const string SorryOvertimeTypeNameIsDuplicated = "Sorry!!OvertimeTypeNameIsDuplicated!";
+        public const string SorryCannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime = "Sorry!!CannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime!";
+        public const string SorryEmployeeHasNoAttendanceAtTheOvertimeDate = "Sorry!!EmployeeHasNoAttendanceAtTheOvertimeDate!";
+        public const string DoneCreateOvertimeRequestSuccessfully = "DoneCreateOvertimeRequestSuccessfully";
+        public const string DoneUpdateOvertimeRequestSuccessfully = "DoneUpdateOvertimeRequestSuccessfully";
+        public const string SorryOvertimesTypeNotFound = "Sorry!!OvertimesTypeNotFound!";
+        public const string DoneCreateOvertimeTypeSuccessfully = "DoneCreateOvertimeTypeSuccessfully";
+        public const string DoneUpdateOvertimeTypeSuccessfully = "DoneUpdateOvertimeTypeSuccessfully";
+        public const string SorryOvertimeDateToMustGreaterThanDateFrom = "Sorry!!OvertimeDateToMustGreaterThanDateFrom!";
+        public const string NewOvertimeRequest = "NewOvertimeRequest";
+        public const string NewOvertimeRequestDescription = "NewOvertimeRequestDescription";
+        public const string AcceptingOvertimeRequest = "AcceptingOvertimeRequest";
+        public const string RejectingOvertimeRequest = "RejectingOvertimeRequest";
+        public const string YourOvertimeRequestIsAccepted = "YourOvertimeRequestIsAccepted";
+        public const string YourOvertimeRequestIsRejected = "YourOvertimeRequestIsRejected";
 
     }
+    
 }

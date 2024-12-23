@@ -51,6 +51,7 @@ namespace Dawem.Contract.Repository.Manager
         IUserResponsibilityRepository UserResponsibilityRepository { get; }
         IVacationsTypeRepository VacationsTypeRepository { get; }
         IPermissionsTypeRepository PermissionsTypeRepository { get; }
+        IOvertimeTypeRepository OvertimeTypeRepository { get; }
         IAssignmentTypeRepository AssignmentTypeRepository { get; }
         ITaskTypeRepository TaskTypeRepository { get; }
         IJobTitleRepository JobTitleRepository { get; }
@@ -86,6 +87,7 @@ namespace Dawem.Contract.Repository.Manager
         IRequestTaskRepository RequestTaskRepository { get; }
         IRequestTaskEmployeeRepository RequestTaskEmployeeRepository { get; }
         IRequestVacationRepository RequestVacationRepository { get; }
+        IRequestOvertimeRepository RequestOvertimeRepository { get; }
         IHolidayRepository HolidayRepository { get; }
         IVacationBalanceRepository VacationBalanceRepository { get; }
         INotificationRepository NotificationRepository { get; }

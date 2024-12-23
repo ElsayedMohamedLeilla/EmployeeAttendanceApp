@@ -38,6 +38,9 @@ namespace Dawem.RealTime.Helper
                 NotificationType.ForgetSignIn => TranslationHelper.GetTranslation(LeillaKeys.ForgetSignIn, lang),
                 NotificationType.DoNotForgetSignOut => TranslationHelper.GetTranslation(LeillaKeys.DoNotForgetSignOut, lang),
                 NotificationType.ForgetSignOut => TranslationHelper.GetTranslation(LeillaKeys.ForgetSignOut, lang),
+                NotificationType.NewOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.NewOvertimeRequest, lang),
+                NotificationType.AcceptingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.AcceptingOvertimeRequest, lang),
+                NotificationType.RejectingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.RejectingOvertimeRequest, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
 
             };
@@ -87,6 +90,9 @@ namespace Dawem.RealTime.Helper
                 NotificationType.RejectingAssignmentRequest => TranslationHelper.GetTranslation(AmgadKeys.YourAssignmentRequestIsRejected, lang),
                 NotificationType.AddingInMission => TranslationHelper.GetTranslation(AmgadKeys.AddingInMission, lang),
                 NotificationType.NewSummon => TranslationHelper.GetTranslation(AmgadKeys.NewSummonDescription, lang),
+                NotificationType.NewOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.NewOvertimeRequestDescription, lang),
+                NotificationType.AcceptingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.YourOvertimeRequestIsAccepted, lang),
+                NotificationType.RejectingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.YourOvertimeRequestIsRejected, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }

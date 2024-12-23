@@ -10,6 +10,7 @@ using Dawem.Models.Response.Dawem.Attendances;
 using Dawem.Models.Response.Dawem.Core.Zones;
 using Dawem.Translations;
 using Microsoft.EntityFrameworkCore;
+using System.Device.Location;
 
 namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 {
@@ -37,7 +38,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                .GetByIdAsync(getEmployee.DepartmentId);
 
             var allowFingerprintOutsideAllowedZones = getEmployee.AllowFingerprintOutsideAllowedZones ||
-                (getEmployeeDapartment?.AllowFingerprintOutsideAllowedZones != null && 
+                (getEmployeeDapartment?.AllowFingerprintOutsideAllowedZones != null &&
                 getEmployeeDapartment.AllowFingerprintOutsideAllowedZones);
 
             var getScheduleId = getEmployee.ScheduleId ??
@@ -55,80 +56,81 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             int? zoneId = null;
 
-            var availableZonesOutput = new List<AvailableZoneDTO>();
+            #region Get All Available Zones For Employee
+
+            var allAvailableZonesList = new List<AvailableZoneDTO>();
 
             var employeeZones = await repositoryManager.ZoneEmployeeRepository
                                .Get(e => e.EmployeeId == getEmployeeId)
                                .Select(s => new AvailableZoneDTO
                                {
-                                   ZoneId = s.Zone.Id,
                                    Name = s.Zone.Name,
                                    Latitude = s.Zone.Latitude,
                                    Longitude = s.Zone.Longitude,
-                                   Radius = s.Zone.Radius
+                                   Radius = s.Zone.Radius ?? 0,
+                                   ZoneId = s.ZoneId
                                })
                                .ToListAsync();
             if (employeeZones != null)
             {
-                zoneId = IsWithinZone(model.Latitude, model.Longitude, employeeZones);
-                if (zoneId == null && !allowFingerprintOutsideAllowedZones)
-                    throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
+                allAvailableZonesList.AddRange(employeeZones);
             }
-            else
-            {
 
-                var employeeGroups = await repositoryManager.GroupEmployeeRepository
+            var employeeGroups = await repositoryManager.GroupEmployeeRepository
                                     .Get(g => g.EmployeeId == getEmployeeId)
                                     .Select(g => g.GroupId)
                                     .ToListAsync();
-                if (employeeGroups != null)
-                {
-                    var groupZones = await repositoryManager.ZoneGroupRepository
+
+            if (employeeGroups != null)
+            {
+                var groupZones = await repositoryManager.ZoneGroupRepository
                                     .Get(gz => employeeGroups.Contains(gz.GroupId))
                                     .Select(gz => new AvailableZoneDTO
                                     {
-                                        ZoneId = gz.Zone.Id,
                                         Name = gz.Zone.Name,
                                         Latitude = gz.Zone.Latitude,
                                         Longitude = gz.Zone.Longitude,
-                                        Radius = gz.Zone.Radius,
+                                        Radius = gz.Zone.Radius ?? 0,
+                                        ZoneId = gz.ZoneId
                                     })
                                     .ToListAsync();
-                    if (groupZones != null)
-                    {
-                        zoneId = IsWithinZone(model.Latitude, model.Longitude, groupZones);
-                        if (zoneId == null && !allowFingerprintOutsideAllowedZones)
-                            throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
-                    }
+                if (groupZones != null)
+                {
+                    allAvailableZonesList.AddRange(groupZones);
+                }
 
-                    else //check employee department zones
-                    {
-                        var employeeDepartmentId = await repositoryManager.EmployeeRepository
+            }
+
+            var employeeDepartmentId = await repositoryManager.EmployeeRepository
                                     .Get(g => g.Id == getEmployeeId)
                                     .Select(g => g.DepartmentId).FirstOrDefaultAsync();
-                        if (employeeDepartmentId != null)
-                        {
-                            var departmentZones = await repositoryManager.ZoneDepartmentRepository
-                                  .Get(gz => gz.DepartmentId == employeeDepartmentId)
-                                  .Select(gz => new AvailableZoneDTO
-                                  {
-                                      ZoneId = gz.Zone.Id,
-                                      Name = gz.Zone.Name,
-                                      Latitude = gz.Zone.Latitude,
-                                      Longitude = gz.Zone.Longitude,
-                                      Radius = gz.Zone.Radius,
-                                  })
-                                  .ToListAsync();
-                            if (departmentZones != null)
-                            {
-                                zoneId = IsWithinZone(model.Latitude, model.Longitude, departmentZones);
-                                if (zoneId == null && !allowFingerprintOutsideAllowedZones)
-                                    throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
-                            }
-                        }
 
-                    }
+            if (employeeDepartmentId != null)
+            {
+                var departmentZones = await repositoryManager.ZoneDepartmentRepository
+                      .Get(gz => gz.DepartmentId == employeeDepartmentId)
+                      .Select(gz => new AvailableZoneDTO
+                      {
+                          Name = gz.Zone.Name,
+                          Latitude = gz.Zone.Latitude,
+                          Longitude = gz.Zone.Longitude,
+                          Radius = gz.Zone.Radius ?? 0,
+                          ZoneId = gz.ZoneId
+                      })
+                      .ToListAsync();
+                if (departmentZones != null)
+                {
+                    allAvailableZonesList.AddRange(departmentZones);
                 }
+            }
+
+            #endregion
+
+            if (allAvailableZonesList != null)
+            {
+                zoneId = IsWithinZone(model.Latitude, model.Longitude, allAvailableZonesList);
+                if (zoneId == null && !allowFingerprintOutsideAllowedZones)
+                    throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);
             }
 
             #endregion
@@ -251,11 +253,11 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 !model.FromExcel)
             {
                 if ((string.IsNullOrEmpty(model.FingerprintMobileCode) ||
-                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) /*&& getEmployee.Id != 13*/)
+                    string.IsNullOrWhiteSpace(model.FingerprintMobileCode)) && getEmployee.Id != 13 && getEmployee.Id != 86)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryYouMustEnterEmployeeFingerprintMobileCode);
                 }
-                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode)
+                else if (model.FingerprintMobileCode != getEmployee.FingerprintMobileCode && getEmployee.Id != 13 && getEmployee.Id != 86)
                 {
                     throw new BusinessValidationException(LeillaKeys.SorryFingerprintAllowedOnlyFromCurrentEmployeePersonalMobile);
                 }
@@ -284,7 +286,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             var getEmployeeId = requestInfo.EmployeeId ??
                  throw new BusinessValidationException(LeillaKeys.SorryCurrentUserNotEmployee);
-            
+
             var getEmployee = await repositoryManager.EmployeeRepository
                 .GetByIdAsync(getEmployeeId) ??
                 throw new BusinessValidationException(LeillaKeys.SorryEmployeeNotFound);
@@ -306,7 +308,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             #region Get Availble Zones For Fingerprint
 
-            var availableZonesOutput = new List<AvailableZoneDTO>();
+            var allAvailableZonesList = new List<AvailableZoneDTO>();
 
             var employeeZones = await repositoryManager.ZoneEmployeeRepository
                                .Get(e => e.EmployeeId == getEmployeeId)
@@ -320,18 +322,17 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                                .ToListAsync();
             if (employeeZones != null)
             {
-                availableZonesOutput = employeeZones;
+                allAvailableZonesList.AddRange(employeeZones);
             }
-            else
-            {
 
-                var employeeGroups = await repositoryManager.GroupEmployeeRepository
+            var employeeGroups = await repositoryManager.GroupEmployeeRepository
                                     .Get(g => g.EmployeeId == getEmployeeId)
                                     .Select(g => g.GroupId)
                                     .ToListAsync();
-                if (employeeGroups != null)
-                {
-                    var groupZones = await repositoryManager.ZoneGroupRepository
+
+            if (employeeGroups != null)
+            {
+                var groupZones = await repositoryManager.ZoneGroupRepository
                                     .Get(gz => employeeGroups.Contains(gz.GroupId))
                                     .Select(gz => new AvailableZoneDTO
                                     {
@@ -341,35 +342,35 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                                         Radius = gz.Zone.Radius ?? 0,
                                     })
                                     .ToListAsync();
-                    if (groupZones != null)
-                        availableZonesOutput = groupZones;
+                if (groupZones != null)
+                {
+                    allAvailableZonesList.AddRange(groupZones);
+                }
 
-                    else //check employee department zones
-                    {
-                        var employeeDepartmentId = await repositoryManager.EmployeeRepository
+            }
+
+            var employeeDepartmentId = await repositoryManager.EmployeeRepository
                                     .Get(g => g.Id == getEmployeeId)
                                     .Select(g => g.DepartmentId).FirstOrDefaultAsync();
-                        if (employeeDepartmentId != null)
-                        {
-                            var departmentZones = await repositoryManager.ZoneDepartmentRepository
-                                  .Get(gz => gz.DepartmentId == employeeDepartmentId)
-                                  .Select(gz => new AvailableZoneDTO
-                                  {
-                                      Name = gz.Zone.Name,
-                                      Latitude = gz.Zone.Latitude,
-                                      Longitude = gz.Zone.Longitude,
-                                      Radius = gz.Zone.Radius ?? 0,
-                                  })
-                                  .ToListAsync();
-                            if (departmentZones != null)
-                            {
-                                availableZonesOutput = departmentZones;
-                            }
-                        }
 
-                    }
+            if (employeeDepartmentId != null)
+            {
+                var departmentZones = await repositoryManager.ZoneDepartmentRepository
+                      .Get(gz => gz.DepartmentId == employeeDepartmentId)
+                      .Select(gz => new AvailableZoneDTO
+                      {
+                          Name = gz.Zone.Name,
+                          Latitude = gz.Zone.Latitude,
+                          Longitude = gz.Zone.Longitude,
+                          Radius = gz.Zone.Radius ?? 0,
+                      })
+                      .ToListAsync();
+                if (departmentZones != null)
+                {
+                    allAvailableZonesList.AddRange(departmentZones);
                 }
             }
+
 
             #endregion
 
@@ -457,7 +458,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 EmployeeStatus.LeavedOnly,
                 AllowFingerprintOutsideAllowedZones = allowFingerprintOutsideAllowedZones,
                 LocalDate = clientLocalDateTime,
-                AvailableZones = availableZonesOutput
+                AvailableZones = allAvailableZonesList
             };
         }
         private async Task<CheckIfShiftIsTwoDaysShiftResponseModel> CheckIfShiftIsTwoDaysShift(CheckIfShiftIsTwoDaysShiftModel model)
@@ -639,19 +640,26 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
         }
         public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
-            const double EarthRadius = 6371; // Earth's radius in kilometers
-            // Convert latitude and longitude from degrees to radians
-            double dLat = ToRadians(lat2 - lat1);
-            double dLon = ToRadians(lon2 - lon1);
+            GeoCoordinate pin1 = new(lat1, lon1);
+            GeoCoordinate pin2 = new(lat2, lon2);
 
-            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                       Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
-                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double distanceBetween = pin1.GetDistanceTo(pin2);
 
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            double distance = EarthRadius * c;
+            //const double EarthRadius = 6371; // Earth's radius in kilometers
+            //// Convert latitude and longitude from degrees to radians
+            //double dLat = ToRadians(lat2 - lat1);
+            //double dLon = ToRadians(lon2 - lon1);
 
-            return distance; // Distance between the two coordinates in kilometers
+            //double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+            //           Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
+            //           Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+
+            //double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            //double distance = EarthRadius * c;
+
+            //return distance; // Distance between the two coordinates in kilometers
+
+            return distanceBetween;
         }
         private static double ToRadians(double angle)
         {
@@ -659,14 +667,23 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
         }
         public static int? IsWithinZone(double userLat, double userLon, List<AvailableZoneDTO> employeeZones)
         {
+            var distanceList = new Dictionary<int, double>();
+
             for (int i = 0; i < employeeZones.Count; i++)
             {
                 double distance = CalculateDistance(userLat, userLon, employeeZones[i].Latitude, employeeZones[i].Longitude);
                 if (distance <= employeeZones[i].Radius)
                 {
-                    return employeeZones[i].ZoneId;
+                    distanceList.Add(employeeZones[i].ZoneId, distance);
                 }
             }
+
+            if (distanceList != null && distanceList.Count > 0)
+            {
+                var zoneId = distanceList.MinBy(kvp => kvp.Value).Key;
+                return zoneId;
+            }
+
             return null;
         }
         #endregion

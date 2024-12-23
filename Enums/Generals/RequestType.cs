@@ -6,6 +6,7 @@
         Justification,
         Permission,
         Task,           
-        Vacation
+        Vacation,
+        Overtime
     }
 }

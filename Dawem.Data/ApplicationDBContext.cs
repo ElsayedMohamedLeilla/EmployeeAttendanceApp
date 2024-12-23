@@ -207,6 +207,11 @@ namespace Dawem.Data
          .WithOne(b => b.RequestJustification)
          .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<RequestOvertime>()
+         .HasOne(p => p.Request)
+         .WithOne(b => b.RequestOvertime)
+         .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<RequestPermission>()
          .HasOne(p => p.Request)
@@ -502,7 +507,7 @@ namespace Dawem.Data
 
                 if (entityType != null && name != null)
                 {
-                    entityType.AddIndex( name, LeillaKeys.NonUniqueIndexName);
+                    entityType.AddIndex(name, LeillaKeys.NonUniqueIndexName);
                 }
             }
 
@@ -519,12 +524,13 @@ namespace Dawem.Data
             {
                 var compoanyId = entityType?.GetProperty(nameof(Employee.CompanyId));
                 var code = entityType?.GetProperty(nameof(Employee.Code));
-                var isDeleted = entityType?.GetProperty(nameof(BaseEntity.IsDeleted));
 
-                if (entityType != null && compoanyId != null && code != null && isDeleted != null)
+                if (entityType != null && compoanyId != null && code != null)
                 {
-                    entityType.AddIndex(new List<IMutableProperty> { compoanyId, code, isDeleted }, LeillaKeys.UniqueIndexCompanyIdCodeIsDeleted)
-                    .IsUnique = true;
+                    var index = entityType.AddIndex(new List<IMutableProperty> { compoanyId, code },
+                        LeillaKeys.UniqueIndexCompanyIdCode);
+                    index.IsUnique = true;
+                    index.SetFilter("[IsDeleted]=0 and [CompanyId] is not null");
                 }
             }
 
@@ -753,6 +759,7 @@ namespace Dawem.Data
         public DbSet<VacationBalance> VacationsBalances { get; set; }
         public DbSet<RequestAssignment> RequestAssignments { get; set; }
         public DbSet<RequestJustification> RequestJustifications { get; set; }
+        public DbSet<RequestOvertime> RequestOvertimes { get; set; }
         public DbSet<RequestPermission> RequestPermissions { get; set; }
         public DbSet<RequestVacation> RequestVacations { get; set; }
         public DbSet<RequestTask> RequestTasks { get; set; }

@@ -218,8 +218,8 @@ namespace Dawem.BusinessLogic.Dawem.Reports.ReportHelper
             Report report = GenerateReport(exporterModelDTO, param);
             SetGeneralParameters(report, param, exporterModelDTO);
             report.SetParameterValue("DepartmentIDs", param.DepartmentIDs == null || !param.DepartmentIDs.Any() ? null : string.Join(',', param.DepartmentIDs));
-            report.SetParameterValue("ZoneIDs", param.ZoneIDs == null || !param.ZoneIDs.Any() ? null : string.Join(',', param.ZoneIDs));
-            report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
+            //report.SetParameterValue("ZoneIDs", param.ZoneIDs == null || !param.ZoneIDs.Any() ? null : string.Join(',', param.ZoneIDs));
+            //report.SetParameterValue("JobTitleIDs", param.JobTitleIDs == null || !param.JobTitleIDs.Any() ? null : string.Join(',', param.JobTitleIDs));
             report.SetParameterValue("NotifiyWay", param.NotifiyWay);
             report.SetParameterValue("AllowedTimeWithMinutesFrom", param.AllowedTimeWithMinutesFrom);
             report.SetParameterValue("AllowedTimeWithMinutesTo", param.AllowedTimeWithMinutesTo);

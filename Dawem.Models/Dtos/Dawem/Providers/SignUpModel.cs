@@ -8,7 +8,7 @@
         public string CompanyAddress { get; set; }
         public string CompanyEmail { get; set; }
         public int NumberOfEmployees { get; set; }
-        public bool IsTrial { get; set; }
+        public bool IsTrial { get; set; } = true;
         public int? SubscriptionDurationInMonths { get; set; }
 
         #endregion
@@ -21,7 +21,7 @@
         public int UserMobileCountryId { get; set; }
         public string UserMobileNumber { get; set; }
         public string Name { get; set; }
-        public bool Agreed { get; set; }
+        public bool Agreed { get; set; } = true;
 
         #endregion
     }

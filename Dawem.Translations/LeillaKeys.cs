@@ -7,6 +7,9 @@
         public const string AllowSpecificOrigins = "_allowSpecificOrigins";
         public const string AppsettingsFile = "appsettings.json";
         public const string AccountFeatures = "AccountFeatures";
+        public const string DuplicateEmail = "DuplicateEmail";
+        public const string UserEmailIsDuplicated = "UserEmailIsDuplicated";
+        public const string UserNameIsDuplicated = "UserNameIsDuplicated";
         public const string ArabStandardTime = "Arab Standard Time";
         public const string EgyptStandardTime = "Egypt Standard Time";
         public const string ArSA = "ar-SA";
@@ -193,6 +196,7 @@
         public const string SorryCompanyNameAlreadyUsedPleaseSelectAnotherOne = "Sorry!!CompanyNameAlreadyUsedPleaseSelectAnotherOne!";
         public const string SorryUserEmailAlreadyUsedPleaseSelectAnotherOne = "Sorry!!UserEmailAlreadyUsedPleaseSelectAnotherOne!";
         public const string DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn = "DoneSignUpSuccessfully.CheckYourEmailToVerifyItAndLogIn";
+        public const string DoneSignUpSuccessfullyYouCanLogInNow = "DoneSignUpSuccessfully.YouCanLogInNow";
         public const string DoneSignYouInSuccessfully = "DoneSignYouInSuccessfully";
         public const string DoneSignYouOutSuccessfully = "DoneSignYouOutSuccessfully";
         public const string SorryYouMustEnterOldPassword = "Sorry!!YouMustEnterOldPassword!";

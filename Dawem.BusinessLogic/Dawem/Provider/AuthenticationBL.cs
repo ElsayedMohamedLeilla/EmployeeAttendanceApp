@@ -83,6 +83,10 @@ namespace Dawem.BusinessLogic.Dawem.Provider
             #endregion
 
             model.UserMobileNumber = MobileHelper.HandleMobile(model.UserMobileNumber);
+            model.UserEmail = model.CompanyEmail;
+            model.Name = model.CompanyName;
+            model.NumberOfEmployees = 20;
+            model.IsTrial = true;
 
             unitOfWork.CreateTransaction();
 
@@ -207,13 +211,13 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 DurationInDays = durationInDays,
                 StartDate = DateTime.UtcNow.Date,
                 EndDate = DateTime.UtcNow.Date.AddDays(durationInDays),
-                Status = SubscriptionStatus.Created,
+                Status = SubscriptionStatus.Active,
                 RenewalCount = 1,
                 FollowUpEmail = insertedCompany.Email,
                 NumberOfEmployees = insertedCompany.NumberOfEmployees,
                 EmployeeCost = employeeCost,
                 TotalAmount = insertedCompany.NumberOfEmployees * employeeCost,
-                IsWaitingForApproval = true
+                IsWaitingForApproval = false
             });
 
             #endregion
@@ -376,16 +380,30 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 MobileCountryId = model.UserMobileCountryId,
                 IsAdmin = true,
                 IsActive = true,
-                EmailConfirmed = model.UserEmail.Contains(LeillaKeys.DawemTest),
+                EmailConfirmed = true,//model.UserEmail.Contains(LeillaKeys.DawemTest),
                 Type = AuthenticationType.DawemAdmin
             };
 
             var createUserResponse = await userManagerRepository.CreateAsync(user, model.Password);
             if (!createUserResponse.Succeeded)
             {
-                //var errors1= string.Join(DawemKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
+                //var errors1= string.Join(LeillaKeys.Comma, createUserResponse.Errors.Select(x => x.Description).FirstOrDefault());
                 //var errors2 = createUserResponse.Errors.Select(x => x.Code).FirstOrDefault();
-                throw new BusinessValidationException(LeillaKeys.SorryErrorHappenWhileAddingUser); //default
+
+                var message = TranslationHelper.GetTranslation(LeillaKeys.SorryErrorHappenWhileAddingUser, requestInfo.Lang);
+
+                if (createUserResponse.Errors.Any(e=>e.Code == LeillaKeys.DuplicateEmail))
+                {
+                    message += LeillaKeys.Space + 
+                        TranslationHelper.GetTranslation(LeillaKeys.UserEmailIsDuplicated, requestInfo.Lang);
+                }
+                if (createUserResponse.Errors.Any(e => e.Code == LeillaKeys.DuplicateUserName))
+                {
+                    message += LeillaKeys.Space +
+                        TranslationHelper.GetTranslation(LeillaKeys.UserNameIsDuplicated, requestInfo.Lang);
+                }
+
+                throw new BusinessValidationException(message: message, messageCode:null); //default
             }
 
             var assignRole = await userManagerRepository.AddToRoleAsync(user, RoleName);

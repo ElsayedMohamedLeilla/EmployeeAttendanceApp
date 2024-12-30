@@ -676,7 +676,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
                 {
                     distanceList.Add(employeeZones[i].ZoneId, distance);
                 }
-            }
+            } 
 
             if (distanceList != null && distanceList.Count > 0)
             {

@@ -59,8 +59,8 @@ namespace Dawem.BusinessLogic.Dawem.Lookups
 
             #region paging
 
-            int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
-            int take = PagingHelper.Take(criteria.PageSize);
+            //int skip = PagingHelper.Skip(criteria.PageNumber, criteria.PageSize);
+            //int take = PagingHelper.Take(criteria.PageSize);
 
             var query = countryRepository.Get(countryPredicate);
 
@@ -70,7 +70,7 @@ namespace Dawem.BusinessLogic.Dawem.Lookups
 
             #endregion
 
-            var queryPaged = criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
+            var queryPaged = queryOrdered;// criteria.GetPagingEnabled() ? queryOrdered.Skip(skip).Take(take) : queryOrdered;
 
             #endregion
 

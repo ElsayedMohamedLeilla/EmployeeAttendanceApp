@@ -33,7 +33,8 @@ namespace Dawem.API.Areas.Dawem.Controllers.Provider
         [AllowAnonymous]
         public async Task<ActionResult> SignUp(SignUpModel model)
         {
-            return Success(await authenticationBL.SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyCheckYourEmailToVerifyItAndLogIn);
+            return Success(await authenticationBL.
+                SignUp(model), messageCode: LeillaKeys.DoneSignUpSuccessfullyYouCanLogInNow);
         }
         [HttpPost]
         [AllowAnonymous]

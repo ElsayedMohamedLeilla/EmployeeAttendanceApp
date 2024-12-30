@@ -706,16 +706,18 @@ namespace Dawem.BusinessLogic.Dawem.Employees
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
                     //EGY for egypt
-                    var foundCountryInDB = await repositoryManager.CountryRepository.Get(e => !e.IsDeleted && e.Iso3 == row.Cell(14).GetString()).FirstOrDefaultAsync();
+                    var foundCountryInDB = await repositoryManager.CountryRepository.
+                        Get(e => !e.IsDeleted && e.Iso3 == row.Cell(14).GetString()).FirstOrDefaultAsync();
                     if (foundCountryInDB == null) //validate on Mobile Number code
                     {
-                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        result.Add(AmgadKeys.MissingData, TranslationHelper.
+                            GetTranslation(AmgadKeys.SorryMobileCountryCodeNotValidOrNotExistPleaseSeeInstructions, requestInfo?.Lang) + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
 
                     if (row.Cell(8).GetString().Trim().Length != foundCountryInDB.PhoneLength + 1)
                     {
-                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + foundCountryInDB.PhoneLength + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
+                        result.Add(AmgadKeys.MissingData, TranslationHelper.GetTranslation(AmgadKeys.SorryTheMobileLenghtOfCountry, requestInfo?.Lang) + LeillaKeys.Space + requestInfo?.Lang == "ar" ? foundCountryInDB.NameAr : foundCountryInDB.NameEn + LeillaKeys.Space + TranslationHelper.GetTranslation(AmgadKeys.MustBe, requestInfo?.Lang) + LeillaKeys.Space + (foundCountryInDB.PhoneLength + 1) + TranslationHelper.GetTranslation(AmgadKeys.OnRowNumber, requestInfo?.Lang) + LeillaKeys.Space + row.RowNumber());
                         return result;
                     }
 

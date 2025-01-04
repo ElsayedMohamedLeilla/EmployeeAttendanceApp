@@ -328,15 +328,16 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             #region Insert User
 
-            //#region Set User code
+            #region Set User code
 
-            //var getNextCode = await repositoryManager.UserRepository
-            //    .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
-            //    .Select(e => e.Code)
-            //    .DefaultIfEmpty()
-            //    .MaxAsync() + 1;
+            var getNextCode = await repositoryManager.UserRepository
+                .Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId)
+                .Select(e => e.Code)
+                .DefaultIfEmpty()
+                .MaxAsync() + 1;
 
-            //#endregion
+            #endregion
+
             #region GetEmployee
             requestInfo.CompanyId = requestInfo.CompanyId;
             // requestInfo.CompanyId = 17;
@@ -353,7 +354,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
             user.Email = foundEmployee.Email;
             user.PhoneNumber = foundEmployee.MobileNumber;
             user.ProfileImageName = foundEmployee.ProfileImageName;
-            user.Code = foundEmployee.Code;
+            user.Code = getNextCode;//foundEmployee.Code;
             user.EmailConfirmed = true;
             user.PhoneNumberConfirmed = true;
             user.IsActive = foundEmployee.IsActive;

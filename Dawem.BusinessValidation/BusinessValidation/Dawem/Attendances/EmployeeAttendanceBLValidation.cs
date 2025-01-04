@@ -128,6 +128,7 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Attendances
 
             if (allAvailableZonesList != null)
             {
+                allAvailableZonesList = allAvailableZonesList.DistinctBy(z=>z.ZoneId).ToList();
                 zoneId = IsWithinZone(model.Latitude, model.Longitude, allAvailableZonesList);
                 if (zoneId == null && !allowFingerprintOutsideAllowedZones)
                     throw new BusinessValidationException(AmgadKeys.SorryFingerprintingIsNotAllowedInThisArea);

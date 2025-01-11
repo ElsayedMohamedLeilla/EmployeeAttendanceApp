@@ -1,5 +1,6 @@
 ﻿using Dawem.Models.Requests;
 using Dawem.Models.Requests.Justifications;
+using Dawem.Models.Response.Dawem.Requests.Justifications;
 using Dawem.Models.Response.Dawem.Requests.Permissions;
 
 namespace Dawem.Contract.BusinessLogic.Dawem.Requests

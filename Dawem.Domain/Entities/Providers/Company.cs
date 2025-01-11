@@ -35,7 +35,7 @@ namespace Dawem.Domain.Entities.Providers
         public List<MyUser> Users { get; set; }
         public List<Notification> Notifications { get; set; }
         public List<NotificationUserFCMToken> NotificationUserFCMTokens { get; set; }
-        
+
         #endregion
         public string IdentityCode { get; set; }
         public int Code { get; set; }

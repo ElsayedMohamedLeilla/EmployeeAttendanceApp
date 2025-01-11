@@ -17,7 +17,7 @@ namespace Dawem.Models.AutoMapper.Dawem.Requests
             CreateMap<CreateRequestOvertimeDTO, RequestOvertime>();
 
             CreateMap<UpdateRequestOvertimeDTO, Request>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.DateFrom))
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.OvertimeDate))
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => RequestType.Overtime))
                 .AfterMap(MapRequestOvertime);
         }

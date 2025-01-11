@@ -615,12 +615,15 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                 Id = company.Id,
                 Code = company.Code,
                 Name = company.Name,
-                CountryName = isArabic ? company.Country.NameAr : company.Country.NameEn,
+                ResponsibleMobileNumber = company.Users.FirstOrDefault().MobileNumber != null ?
+                company.Users.First().MobileNumber : TranslationHelper.
+                GetTranslation(LeillaKeys.NotExist, requestInfo.Lang),
+                //CountryName = isArabic ? company.Country.NameAr : company.Country.NameEn,
                 SubscriptionTypeName = TranslationHelper.
                 GetTranslation(nameof(SubscriptionType) + LeillaKeys.Dash +
                 (company.Subscription.Plan.IsTrial ? LeillaKeys.Trial : LeillaKeys.Subscription), requestInfo.Lang),
                 IsActive = company.IsActive,
-                NumberOfEmployees = company.NumberOfEmployees,
+                //NumberOfEmployees = company.NumberOfEmployees,
                 LogoImagePath = uploadBLC.GetFilePath(company.LogoImageName, LeillaKeys.Companies)
             }).ToListAsync();
 
@@ -701,6 +704,9 @@ namespace Dawem.BusinessLogic.Dawem.Provider
                     Industries = company.CompanyIndustries
                     .Select(industry => industry.Name)
                     .ToList(),
+                    ResponsibleMobileNumber = company.Users.FirstOrDefault().MobileNumber != null ?
+                    company.Users.First().MobileNumber : TranslationHelper.
+                    GetTranslation(LeillaKeys.NotExist, requestInfo.Lang),
                     Branches = company.CompanyBranches
                     .Select(branch => new CompanyBranchModel
                     {

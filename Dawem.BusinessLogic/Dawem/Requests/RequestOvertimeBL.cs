@@ -237,7 +237,7 @@ namespace Dawem.BusinessLogic.Dawem.Requests
             getRequest.EmployeeId = employeeId ?? 0;
             getRequest.ForEmployee = model.ForEmployee;
             getRequest.IsNecessary = model.IsNecessary;
-            getRequest.Date = model.OvertimeDate;            
+            getRequest.Date = model.OvertimeDate;
             getRequest.ModifiedDate = DateTime.Now;
             getRequest.ModifyUserId = requestInfo.UserId;
             getRequest.Notes = model.Notes;
@@ -318,22 +318,23 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
             var requestOvertimesList = await queryPaged.IgnoreQueryFilters().
                 Select(requestOvertime => new GetRequestOvertimesResponseModel
-            {
-                Id = requestOvertime.Request.Id,
-                Code = requestOvertime.Request.Code,
-                Employee = new RequestEmployeeModel
                 {
-                    EmployeeNumber = requestOvertime.Request.Employee.EmployeeNumber,
-                    Name = requestOvertime.Request.Employee.Name,
-                    ProfileImagePath = uploadBLC.GetFilePath(requestOvertime.Request.Employee.ProfileImageName, LeillaKeys.Employees)
-                },
-                OvertimeTypeName = requestOvertime.OvertimeType.Name,
-                DateFrom = requestOvertime.Request.Date,
-                DateTo = requestOvertime.DateTo,
-                Status = requestOvertime.Request.Status,
-                StatusName = TranslationHelper.GetTranslation(requestOvertime.Request.Status.ToString(), requestInfo.Lang)
+                    Id = requestOvertime.Request.Id,
+                    Code = requestOvertime.Request.Code,
+                    Employee = new RequestEmployeeModel
+                    {
+                        EmployeeNumber = requestOvertime.Request.Employee.EmployeeNumber,
+                        Name = requestOvertime.Request.Employee.Name,
+                        ProfileImagePath = uploadBLC.GetFilePath(requestOvertime.Request.Employee.ProfileImageName, LeillaKeys.Employees)
+                    },
+                    OvertimeTypeName = requestOvertime.OvertimeType.Name,
+                    OvertimeDate = requestOvertime.Request.Date,
+                    DateFrom = requestOvertime.DateFrom,
+                    DateTo = requestOvertime.DateTo,
+                    Status = requestOvertime.Request.Status,
+                    StatusName = TranslationHelper.GetTranslation(requestOvertime.Request.Status.ToString(), requestInfo.Lang)
 
-            }).ToListAsync();
+                }).ToListAsync();
 
             return new GetRequestOvertimesResponse
             {
@@ -381,7 +382,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                     DirectManagerName = requestOvertime.Request.Employee.DirectManager != null ?
                     requestOvertime.Request.Employee.DirectManager.Name : null,
                     OvertimeTypeName = requestOvertime.OvertimeType.Name,
-                    DateFrom = requestOvertime.Request.Date,
+                    OvertimeDate = requestOvertime.Request.Date,
+                    DateFrom = requestOvertime.DateFrom,
                     DateTo = requestOvertime.DateTo,
                     Status = requestOvertime.Request.Status,
                     StatusName = TranslationHelper.GetTranslation(requestOvertime.Request.Status.ToString(), requestInfo.Lang)
@@ -446,7 +448,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
                         ProfileImagePath = uploadBLC.GetFilePath(requestOvertime.Request.Employee.ProfileImageName, LeillaKeys.Employees)
                     },
                     OvertimeTypeName = requestOvertime.OvertimeType.Name,
-                    DateFrom = requestOvertime.Request.Date,
+                    OvertimeDate = requestOvertime.Request.Date,
+                    DateFrom = requestOvertime.DateFrom,
                     DateTo = requestOvertime.DateTo,
                     IsActive = requestOvertime.Request.IsActive,
                     IsNecessary = requestOvertime.Request.IsNecessary,
@@ -475,7 +478,8 @@ namespace Dawem.BusinessLogic.Dawem.Requests
 
                     EmployeeId = requestOvertime.Request.EmployeeId,
                     OvertimeTypeId = requestOvertime.OvertimeTypeId,
-                    DateFrom = requestOvertime.Request.Date,
+                    OvertimeDate = requestOvertime.Request.Date,
+                    DateFrom = requestOvertime.DateFrom,
                     DateTo = requestOvertime.DateTo,
                     Status = requestOvertime.Request.Status,
                     IsActive = requestOvertime.Request.IsActive,

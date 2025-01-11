@@ -28,5 +28,7 @@ namespace Dawem.Models.Response.Dawem.Providers.Companies
         public int NumberOfZones { get; set; }
         public int NumberOfFingerprintDevices { get; set; }
         public int NumberOfUsers { get; set; }
+        public string ResponsibleMobileNumber { get; set; }
+        
     }
 }

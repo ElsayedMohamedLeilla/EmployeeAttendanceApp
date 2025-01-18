@@ -722,14 +722,15 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
             }
             else
             {
-                //requestInfo.CompanyId = 17;
                 List<EmployeeAttendance> ImportedList = new();
                 List<EmployeeAttendanceCheck> CImportedList = new();
                 EmployeeAttendance Temp = new();
                 EmployeeAttendanceCheck CTemp = new();
                 using var workbook = new XLWorkbook(iniValidationModelDTO.FileStream);
                 var worksheet = workbook.Worksheet(1);
+
                 #region Set Employee Attendance code
+
                 var getNextCode = await repositoryManager.EmployeeAttendanceRepository
                     .Get(e => e.CompanyId == requestInfo.CompanyId)
                     .Select(e => e.Code)
@@ -737,9 +738,11 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     .MaxAsync();
 
                 #endregion
+
                 foreach (var row in worksheet.RowsUsed().Skip(1)) // Skip header row
                 {
                     getNextCode++;
+
                     #region Check Valid Lat Long
                     double tempLatitude;
                     double tempLongtude;
@@ -747,6 +750,7 @@ namespace Dawem.BusinessLogic.Dawem.Attendances
                     Temp = new();
                     int employeeId = await repositoryManager.EmployeeRepository.Get(e => !e.IsDeleted && e.CompanyId == requestInfo.CompanyId && e.Name == row.Cell(1).GetString().Trim()).Select(es => es.Id).FirstOrDefaultAsync();
                     #endregion
+
                     if (employeeId != 0)
                     {
                         if (DateTime.TryParse(row.Cell(2).GetString().Trim(), out localDate))

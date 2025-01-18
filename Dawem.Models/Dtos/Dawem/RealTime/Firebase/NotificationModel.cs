@@ -12,7 +12,7 @@ namespace Dawem.Models.DTOs.Dawem.RealTime.Firebase
         public List<string> Tokens { get; set; }
         public Dictionary<string, string> Data { get; set; }
         public string ImageUrl { get; set; }
-
+        public string Topic { get; set; }
 
     }
 

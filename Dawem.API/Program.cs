@@ -151,10 +151,12 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 });
 
 #region FireBase
-var credential = GoogleCredential.FromFile("ConfigrationFiles\\Firebase\\firebase-adminsdk.json");
+var credential = GoogleCredential.FromFile("ConfigrationFiles\\Firebase\\dawem-5361a-firebase-adminsdk-9enre-8d71e7fc86.json");
 var firebaseApp = FirebaseApp.Create(new AppOptions
 {
     Credential = credential,
+    ProjectId = "dawem-5361a",
+    ServiceAccountId = "firebase-adminsdk-9enre@dawem-5361a.iam.gserviceaccount.com"
 });
 builder.Services.AddTransient<INotificationService, NotificationService>();
 #endregion

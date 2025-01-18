@@ -5,12 +5,12 @@ using Dawem.Contract.RealTime.Firebase;
 using Dawem.Contract.Repository.Manager;
 using Dawem.Enums.Generals;
 using Dawem.Models.Context;
-using Dawem.Models.Criteria.Core;
 using Dawem.Models.Dtos.Dawem.Core.Notifications;
 using Dawem.Models.Dtos.Dawem.Shared;
 using Dawem.Models.DTOs.Dawem.RealTime.Firebase;
 using Dawem.RealTime.Helper;
 using Dawem.Translations;
+using FirebaseAdmin.Auth;
 using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -42,36 +42,50 @@ public class NotificationService : INotificationService
 
         var notificationData = GetNotificationData(notificationType);
         var imageUrl = NotificationHelper.GetNotificationImage(notificationStatus, uploadBLC);
-        var usersTokens = model.NotificationUsers?.
-            Where(n=>n.UserTokens != null)?.
-            SelectMany(u => u.UserTokens)?.
-            ToList() ?? new List<NotificationUserTokenModel>(); //GetUserTokens(userIds);
-        var (webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(usersTokens);
 
         #region Send Notification
 
-        NotificationModel notificationModel = new()
-        {
-            Title = model.Title,
-            Body = model.Body,
-            Data = notificationData,
-            ImageUrl = imageUrl
-        };
+        var usersTokens = model.NotificationUsers?.
+            Where(n => n.UserTokens != null)?.
+            SelectMany(u => u.UserTokens)?.
+            ToList() ?? new List<NotificationUserTokenModel>();
 
-        if (webTokens.Count > 0)
+        if (usersTokens != null && usersTokens.Any())
         {
-            notificationModel.Tokens = webTokens;
-            response = await SendWebNotification(notificationModel);
-        }
-        if (androidTokens.Count > 0)
-        {
-            notificationModel.Tokens = androidTokens;
-            response = await SendAndroidNotification(notificationModel);
-        }
-        if (iosTokens.Count > 0)
-        {
-            notificationModel.Tokens = iosTokens;
-            response = await SendIosNotification(notificationModel);
+            var (allokens, webTokens, androidTokens, iosTokens) = GetTokenClassificationByDeviceType(usersTokens);
+
+            //var newTopic = Guid.NewGuid().ToString();
+
+            //var registrationTokensResponse = await FirebaseMessaging.DefaultInstance.SubscribeToTopicAsync(
+            //        allokens, newTopic);
+
+            NotificationModel notificationModel = new()
+            {
+                Title = model.Title,
+                Body = model.Body,
+                Data = notificationData,
+                ImageUrl = imageUrl,
+                //Topic = newTopic
+            };
+
+            if (webTokens.Count > 0)
+            {
+                notificationModel.Tokens = webTokens;
+                response = await SendWebNotification(notificationModel);
+            }
+            if (androidTokens.Count > 0)
+            {
+                notificationModel.Tokens = androidTokens;
+                response = await SendAndroidNotification(notificationModel);
+            }
+            if (iosTokens.Count > 0)
+            {
+                notificationModel.Tokens = iosTokens;
+                response = await SendIosNotification(notificationModel);
+            }
+
+            //var unRegistrationTokensResponse = await FirebaseMessaging.DefaultInstance.UnsubscribeFromTopicAsync(
+            //        allokens, newTopic);
         }
 
         #endregion
@@ -95,6 +109,11 @@ public class NotificationService : INotificationService
         var response = new ResponseModel();
         try
         {
+            #region For Test
+            var uid = "some-uid";
+            string customToken = await FirebaseAuth.DefaultInstance.CreateCustomTokenAsync(uid);
+            #endregion
+
             // Create a message
             var message = new MulticastMessage
             {
@@ -103,15 +122,29 @@ public class NotificationService : INotificationService
                     Title = notificationModel.Title,
                     Body = notificationModel.Body,
                     ImageUrl = notificationModel.ImageUrl
-
                 },
 
-                Tokens = notificationModel.Tokens, // List of FCM tokens
+                Tokens = notificationModel.Tokens, // List of FCM tokens,
                 Data = notificationModel.Data
             };
+
+            //var responseMessage = await FirebaseMessaging.DefaultInstance.SendAsync(new Message
+            //{
+            //    Notification = new Notification
+            //    {
+            //        Title = notificationModel.Title,
+            //        Body = notificationModel.Body,
+            //        ImageUrl = notificationModel.ImageUrl
+            //    },
+            //    Data = notificationModel.Data,
+            //    Topic = notificationModel.Topic
+
+            //});
+
             // Send the message
-            var responseMessage = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
-            // Check if the message was sent successfully
+            var responseMessage = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
+
+            //Check if the message was sent successfully
             if (responseMessage != null && responseMessage.SuccessCount > 0)
             {
                 response.IsSuccess = true;
@@ -148,7 +181,7 @@ public class NotificationService : INotificationService
                 Tokens = notificationModel.Tokens,
                 Android = new AndroidConfig
                 {
-                    Priority = FirebaseAdmin.Messaging.Priority.High,
+                    Priority = Priority.High,
                     Notification = new AndroidNotification
                     {
                         Icon = "your_notification_icon",
@@ -158,8 +191,31 @@ public class NotificationService : INotificationService
                 Data = notificationModel.Data
             };
 
+            //var responseMessage = await FirebaseMessaging.DefaultInstance.SendAsync(new Message
+            //{
+            //    Notification = new Notification
+            //    {
+            //        Title = notificationModel.Title,
+            //        Body = notificationModel.Body,
+            //        ImageUrl = notificationModel.ImageUrl
+
+            //    },
+            //    Android = new AndroidConfig
+            //    {
+            //        Priority = Priority.High,
+            //        Notification = new AndroidNotification
+            //        {
+            //            Icon = "your_notification_icon",
+            //            Color = "#1827b5",
+            //        },
+            //    },
+            //    Data = notificationModel.Data,
+            //    Topic = notificationModel.Topic
+
+            //});
+
             // Send the message
-            var responseMessage = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
+            var responseMessage = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
             // Check if the message was sent successfully
             if (responseMessage != null && responseMessage.SuccessCount > 0)
             {
@@ -211,8 +267,33 @@ public class NotificationService : INotificationService
                 Data = notificationModel.Data
             };
 
+            //var responseMessage = await FirebaseMessaging.DefaultInstance.SendAsync(new Message
+            //{
+            //    Notification = new Notification
+            //    {
+            //        Title = notificationModel.Title,
+            //        Body = notificationModel.Body,
+            //        ImageUrl = notificationModel.ImageUrl
+
+            //    },
+            //    Apns = new ApnsConfig
+            //    {
+            //        Headers = new Dictionary<string, string>
+            //    {
+            //        { "apns-priority", "10" },
+            //    },
+            //        Aps = new Aps
+            //        {
+            //            Badge = 1,
+            //            Sound = "default",
+            //        },
+            //    },
+            //    Data = notificationModel.Data,
+            //    Topic = notificationModel.Topic
+            //});
+
             // Send the message
-            var responseMessage = await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
+            var responseMessage = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
 
             if (responseMessage != null && responseMessage.SuccessCount > 0)
             {
@@ -232,9 +313,11 @@ public class NotificationService : INotificationService
         }
         return response;
     }
-    private static (List<string>, List<string>, List<string>) GetTokenClassificationByDeviceType(List<NotificationUserTokenModel> tokens)
+    private static (List<string>, List<string>, List<string>, List<string>) GetTokenClassificationByDeviceType(List<NotificationUserTokenModel> tokens)
     {
         return (tokens
+            .Select(t => t.Token)
+            .ToList(), tokens
             .Where(t => t.ApplicationType == ApplicationType.Web)
             .Select(t => t.Token)
             .ToList(), tokens

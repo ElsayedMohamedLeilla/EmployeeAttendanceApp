@@ -76,7 +76,9 @@
         StatisticsReportOverAperiodGroupByMonthReport,
         BriefingSummonsInPeriodReport,
         SummonsDetailsGroupByEmployeeReport,
-        SummonsDetailsInPeriodReport
+        SummonsDetailsInPeriodReport,
+        Overtimetype,
+        RequestOvertime
 
 
     }

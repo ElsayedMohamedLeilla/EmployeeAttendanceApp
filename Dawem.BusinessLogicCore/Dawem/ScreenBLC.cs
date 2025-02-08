@@ -92,6 +92,7 @@ namespace Dawem.BusinessLogicCore.Dawem
                         Id = screen.Id,
                         Order = screen.Order,
                         GroupOrScreenType = screen.GroupOrScreenType,
+                        MenuItemCode = screen.MenuItemCode,
                         ParentId = screen.ParentId,
                         Name = screen.MenuItemNameTranslations.
                         First(p => p.Language.ISO2 == requestInfo.Lang).Name,
@@ -121,6 +122,7 @@ namespace Dawem.BusinessLogicCore.Dawem
                         {
                             Id = screen.Id,
                             GroupOrScreenType = screen.GroupOrScreenType,
+                            ScreenCode = (DawemAdminApplicationScreenCode)(screen.MenuItemCode ?? 0),
                             Name = screen.Name,
                             Icon = screen.Icon,
                             URL = screen.URL,

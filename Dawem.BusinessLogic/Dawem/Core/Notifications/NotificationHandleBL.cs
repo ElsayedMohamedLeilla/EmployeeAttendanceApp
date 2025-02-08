@@ -65,6 +65,7 @@ namespace Dawem.BusinessLogic.Dawem.Core.Notifications
             repositoryManager.NotificationRepository.Insert(new Notification()
             {
                 NotificationType = model.NotificationType,
+                ScreenCode = NotificationHelper.GetNotificationScreenCode(model.NotificationType),
                 NotificationTypeName = model.NotificationType.ToString(),
                 CompanyId = requestInfo.CompanyId == 0 ? model.CompanyId : requestInfo.CompanyId,
                 AddUserId = requestInfo.UserId,

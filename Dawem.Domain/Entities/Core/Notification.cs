@@ -1,5 +1,6 @@
 ﻿using Dawem.Domain.Entities.Providers;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Translations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,7 @@ namespace Dawem.Domain.Entities.Core
         public NotificationStatus Status { get; set; }
         public NotificationPriority Priority { get; set; }
         public NotificationType NotificationType { get; set; }
+        public DawemAdminApplicationScreenCode ScreenCode { get; set; }
         public string NotificationTypeName { get; set; }
         public bool IsViewed { get; set; }
         public int? HelperNumber { get; set; }

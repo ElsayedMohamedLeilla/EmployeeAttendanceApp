@@ -1,5 +1,6 @@
 ﻿using Dawem.Contract.BusinessLogicCore.Dawem;
 using Dawem.Enums.Generals;
+using Dawem.Enums.Permissions;
 using Dawem.Helpers;
 using Dawem.Translations;
 
@@ -7,9 +8,6 @@ namespace Dawem.RealTime.Helper
 {
     public static class NotificationHelper
     {
-
-
-
         public static string GetNotificationType(NotificationType type, string lang)
         {
             return type switch
@@ -42,6 +40,41 @@ namespace Dawem.RealTime.Helper
                 NotificationType.AcceptingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.AcceptingOvertimeRequest, lang),
                 NotificationType.RejectingOvertimeRequest => TranslationHelper.GetTranslation(LeillaKeys.RejectingOvertimeRequest, lang),
                 _ => TranslationHelper.GetTranslation(AmgadKeys.NewNotification, lang),
+
+            };
+        }
+        public static DawemAdminApplicationScreenCode GetNotificationScreenCode(NotificationType type)
+        {
+            return type switch
+            {
+                NotificationType.NewVacationRequest => DawemAdminApplicationScreenCode.RequestVacation,
+                NotificationType.AcceptingVacationRequest => DawemAdminApplicationScreenCode.RequestVacation,
+                NotificationType.RejectingVacationRequest => DawemAdminApplicationScreenCode.RequestVacation,
+                NotificationType.NewTaskRequest => DawemAdminApplicationScreenCode.RequestTask,
+                NotificationType.AcceptingTaskRequest => DawemAdminApplicationScreenCode.RequestTask,
+                NotificationType.RejectingTaskRequest => DawemAdminApplicationScreenCode.RequestTask,
+                NotificationType.AddingInMission => DawemAdminApplicationScreenCode.RequestTask,
+                NotificationType.NewPermissionRequent => DawemAdminApplicationScreenCode.RequestPermission,
+                NotificationType.AcceptingPermissionRequest => DawemAdminApplicationScreenCode.RequestPermission,
+                NotificationType.RejectingPermissionRequest => DawemAdminApplicationScreenCode.RequestPermission,
+                NotificationType.NewJustificationRequest => DawemAdminApplicationScreenCode.RequestJustification,
+                NotificationType.AcceptingJustificationRequest => DawemAdminApplicationScreenCode.RequestJustification,
+                NotificationType.RejectingJustificationRequest => DawemAdminApplicationScreenCode.RequestJustification,
+                NotificationType.NewAssignmentRequest => DawemAdminApplicationScreenCode.RequestAssignment,
+                NotificationType.AcceptingAssignmentRequest => DawemAdminApplicationScreenCode.RequestAssignment,
+                NotificationType.RejectingAssignmentRequest => DawemAdminApplicationScreenCode.RequestAssignment,
+                NotificationType.NewSummon => DawemAdminApplicationScreenCode.Summon,
+                NotificationType.SummonMissed => DawemAdminApplicationScreenCode.Summon,
+                NotificationType.NewChangeInSchedule => DawemAdminApplicationScreenCode.Schedule,
+                NotificationType.DoNotForgetSummon => DawemAdminApplicationScreenCode.Summon,
+                NotificationType.DoNotForgetSignIn => DawemAdminApplicationScreenCode.Schedule,
+                NotificationType.ForgetSignIn => DawemAdminApplicationScreenCode.Schedule,
+                NotificationType.DoNotForgetSignOut => DawemAdminApplicationScreenCode.Schedule,
+                NotificationType.ForgetSignOut => DawemAdminApplicationScreenCode.Schedule,
+                NotificationType.NewOvertimeRequest => DawemAdminApplicationScreenCode.RequestOvertime,
+                NotificationType.AcceptingOvertimeRequest => DawemAdminApplicationScreenCode.RequestOvertime,
+                NotificationType.RejectingOvertimeRequest => DawemAdminApplicationScreenCode.RequestOvertime,
+                _ => DawemAdminApplicationScreenCode.Dashboard
 
             };
         }
@@ -96,7 +129,5 @@ namespace Dawem.RealTime.Helper
                 _ => TranslationHelper.GetTranslation(AmgadKeys.Unknown, lang),
             };
         }
-
-
     }
 }

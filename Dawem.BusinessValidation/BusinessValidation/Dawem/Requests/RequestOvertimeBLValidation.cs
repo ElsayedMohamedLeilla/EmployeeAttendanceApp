@@ -42,21 +42,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 getCurrentEmployeeId = model.EmployeeId;
             }
 
-            var checkIfEmployeeeOvertime = await repositoryManager
-               .RequestOvertimeRepository.Get(c => !c.Request.IsDeleted &&
-               (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-               c.Request.CompanyId == requestInfo.CompanyId &&
-               getCurrentEmployeeId == c.Request.EmployeeId &&
-               ((model.DateFrom > c.DateFrom && model.DateFrom < c.DateTo) ||
-               (model.DateTo > c.DateFrom && model.DateTo < c.DateTo) ||
-               (model.DateFrom == c.DateFrom && model.DateTo == c.DateTo)))
-               .FirstOrDefaultAsync();
-
-            if (checkIfEmployeeeOvertime != null)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryCannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime);
-            }
-
             var checkIfemployeeAttend = await repositoryManager.EmployeeAttendanceRepository.
                 Get(a => a.CompanyId == requestInfo.CompanyId &&
                 a.EmployeeId == getCurrentEmployeeId &&
@@ -80,6 +65,20 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
 
             #endregion
 
+            var checkIfEmployeeeOvertime = await repositoryManager
+               .RequestOvertimeRepository.Get(c => !c.Request.IsDeleted &&
+               (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
+               c.Request.CompanyId == requestInfo.CompanyId &&
+               getCurrentEmployeeId == c.Request.EmployeeId &&
+               ((model.DateFrom > c.DateFrom && model.DateFrom < c.DateTo) ||
+               (model.DateTo > c.DateFrom && model.DateTo < c.DateTo) ||
+               (model.DateFrom == c.DateFrom && model.DateTo == c.DateTo)))
+               .FirstOrDefaultAsync();
+
+            if (checkIfEmployeeeOvertime != null)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryCannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime);
+            }
 
             return getCurrentEmployeeId;
         }
@@ -121,21 +120,6 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
                 getCurrentEmployeeId = model.EmployeeId;
             }
 
-            var checkIfEmployeeeOvertime = await repositoryManager
-               .RequestOvertimeRepository.Get(c => !c.Request.IsDeleted &&
-               (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
-               c.Request.CompanyId == requestInfo.CompanyId &&
-               getCurrentEmployeeId == c.Request.EmployeeId &&
-               ((model.DateFrom > c.DateFrom && model.DateFrom < c.DateTo) ||
-               (model.DateTo > c.DateFrom && model.DateTo < c.DateTo) ||
-               (model.DateFrom == c.DateFrom && model.DateTo == c.DateTo)))
-               .FirstOrDefaultAsync();
-
-            if (checkIfEmployeeeOvertime != null)
-            {
-                throw new BusinessValidationException(LeillaKeys.SorryCannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime);
-            }
-
             var checkIfemployeeAttend = await repositoryManager.EmployeeAttendanceRepository.
                 Get(a => a.CompanyId == requestInfo.CompanyId &&
                 a.EmployeeId == getCurrentEmployeeId &&
@@ -157,6 +141,21 @@ namespace Dawem.Validation.BusinessValidation.Dawem.Requests
             }
 
             #endregion
+
+            var checkIfEmployeeeOvertime = await repositoryManager
+               .RequestOvertimeRepository.Get(c => c.Request.Id != model.Id && !c.Request.IsDeleted &&
+               (c.Request.Status == RequestStatus.Pending || c.Request.Status == RequestStatus.Accepted) &&
+               c.Request.CompanyId == requestInfo.CompanyId &&
+               getCurrentEmployeeId == c.Request.EmployeeId &&
+               ((model.DateFrom > c.DateFrom && model.DateFrom < c.DateTo) ||
+               (model.DateTo > c.DateFrom && model.DateTo < c.DateTo) ||
+               (model.DateFrom == c.DateFrom && model.DateTo == c.DateTo)))
+               .FirstOrDefaultAsync();
+
+            if (checkIfEmployeeeOvertime != null)
+            {
+                throw new BusinessValidationException(LeillaKeys.SorryCannotMakeOvertimeRequestEmployeeHasOvertimeRequestInTheSameTime);
+            }
 
             return getCurrentEmployeeId;
         }

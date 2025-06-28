@@ -767,14 +767,14 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
 
             #region Handle Response
 
-            var usersList = await queryPaged.Select(e => new GeUsersResponseModel
+            var usersList = await queryPaged.Select(user => new GeUsersResponseModel
             {
-                Id = e.Id,
-                Code = e.Code,
-                Name = e.Name,
-                IsActive = e.IsActive,
-                IsAdmin = e.IsAdmin,
-                ProfileImagePath = uploadBLC.GetFilePath(e.ProfileImageName, LeillaKeys.Users)
+                Id = user.Id,
+                Code = user.Code,
+                Name = user.Name,
+                IsActive = user.IsActive,
+                IsAdmin = user.IsAdmin,
+                ProfileImagePath = user.Employee != null ? uploadBLC.GetFilePath(user.Employee.ProfileImageName, LeillaKeys.Employees) : null
             }).ToListAsync();
 
             return new GetUsersResponse
@@ -843,7 +843,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryName = isArabic ? user.MobileCountry.NameAr : user.MobileCountry.NameEn,
                     MobileCountryFlagPath = uploadBLC.GetFilePath(user.MobileCountry.Iso + LeillaKeys.PNG, LeillaKeys.AllCountriesFlags),
                     MobileNumber = user.MobileNumber,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
+                    ProfileImagePath = user.Employee != null ? uploadBLC.GetFilePath(user.Employee.ProfileImageName, LeillaKeys.Employees) : null,
                     ProfileImageName = user.ProfileImageName,
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.Responsibility.Name).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
@@ -866,7 +866,7 @@ namespace Dawem.BusinessLogic.Dawem.UserManagement
                     MobileCountryId = user.MobileCountryId ?? 0,
                     MobileNumber = user.MobileNumber,
                     ProfileImageName = user.ProfileImageName,
-                    ProfileImagePath = uploadBLC.GetFilePath(user.ProfileImageName, LeillaKeys.Employees),
+                    ProfileImagePath = user.Employee != null ? uploadBLC.GetFilePath(user.Employee.ProfileImageName, LeillaKeys.Employees) : null,
                     Responsibilities = user.UserResponsibilities.Select(ur => ur.ResponsibilityId).ToList()
                 }).FirstOrDefaultAsync() ?? throw new BusinessValidationException(LeillaKeys.SorryUserNotFound);
 

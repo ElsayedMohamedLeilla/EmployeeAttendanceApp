@@ -273,9 +273,12 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             //await unitOfWork.SaveAsync();
 
             #region Enable Related user
-            var user = await repositoryManager.UserRepository.GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
+
+            var user = await repositoryManager.UserRepository.
+                GetEntityByConditionWithTrackingAsync(d => !d.IsDeleted && d.EmployeeId == model.Id);
           
             #endregion
+
             if(user != null)
             {
                 if (model.IsActive == true)
@@ -462,7 +465,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #endregion
 
         }
-
         public async Task<GetEmployeeInfoResponseModel> GetInfo(int employeeId)
         {
             var isArabic = requestInfo.Lang == LeillaKeys.Ar;
@@ -934,7 +936,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             return true;
             #endregion
         }
-
         public async Task<GetEmployeesSchedulePlanResponse> GetCurrentEmployeeShedulePlanInPeriod(GetEmployeeSchedulePlanCritria criteria)
         {
 
@@ -993,7 +994,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
             #endregion
             // return new GetEmployeesSchedulePlanResponse();
         }
-
         // Helper method to get the end date of the current schedule plan
         DateTime GetEndDate(List<SchedulePlan> lSchedulPlan, SchedulePlan currentPlan, DateTime overallEndDate)
         {
@@ -1047,15 +1047,6 @@ namespace Dawem.BusinessLogic.Dawem.Employees
 
             #endregion
         }
-
-
-
     }
-
-
-
-
-
-
 }
 

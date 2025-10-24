@@ -9,7 +9,6 @@ using Dawem.Domain.Entities.Summons;
 using Dawem.Domain.Entities.UserManagement;
 using Dawem.Enums.Generals;
 using Dawem.Translations;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dawem.Domain.Entities.Employees
@@ -51,7 +50,7 @@ namespace Dawem.Domain.Entities.Employees
         public bool InsertedFromExcel { get; set; }
         public DateTime JoiningDate { get; set; }
         public AttendanceType AttendanceType { get; set; }
-        public EmployeeType EmployeeType { get; set; }    
+        public EmployeeType EmployeeType { get; set; }
         public List<GroupEmployee> EmployeeGroups { get; set; }
         public List<ZoneEmployee> Zones { get; set; }
         public List<VacationBalance> VacationBalances { get; set; }
@@ -63,5 +62,37 @@ namespace Dawem.Domain.Entities.Employees
         public int? FingerprintDeviceUserCode { get; set; }
         public List<SummonLog> SummonLogs { get; set; }
         public virtual List<NotificationEmployee> NotificationEmployees { get; set; }
+
+        //#region New Proos
+
+        //public Gender Gender { get; set; }
+        //public DateTime? BirthDate { get; set; }
+        //public string Nationality { get; set; }
+        //public string MaritalStatus { get; set; }
+        //public string EmergencyContact { get; set; }
+        //public string BranchName { get; set; }
+        //public int? NumberOfYearsOfExperience { get; set; }
+        //public string CostCenterName { get; set; }
+        //public string NationalIdNumber { get; set; }
+        //public string PassportNumber { get; set; }
+        //public DateTime? PassportEndDate { get; set; }
+        //public DateTime? ResidenceEndDate { get; set; }
+
+        //#region Employee medical information
+        //public string BloodType { get; set; }
+        //public string MedicalInsuranceNumber { get; set; }
+        //public string DiseasesAndMedicalConditions { get; set; }
+
+        //#endregion
+
+        //#region Salary information
+        //public string BankAccountNumber { get; set; }
+        //public string BankAccountIBANNumber { get; set; }
+        //public decimal? TotalSalary { get; set; }              
+
+        //#endregion
+
+
+        //#endregion
     }
 }
